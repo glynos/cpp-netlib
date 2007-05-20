@@ -1,5 +1,0 @@
-"message_test.cpp" -Fo"bin\msvc-8.0\debug\threading-multi\message_test.obj"   -TP /Z7 /Od /Ob0 /W3 /GR /MDd /Zc:forScope /Zc:wchar_t /wd4675 /EHs -wd4275 -c 
--DBOOST_TEST_DYN_LINK=1 
--DBOOST_TEST_NO_AUTO_LINK=1 
-"-I..\..\.." 
-"-IC:\Documents and Settings\Friendster\My Documents\Sources\boost"
