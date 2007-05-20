@@ -30,3 +30,11 @@ BOOST_AUTO_TEST_CASE(header_directives_test) {
     headers_range<message>::type range = headers(msg)["SOME_HEADER"];
     BOOST_CHECK( range.first != range.second );
 }
+
+BOOST_AUTO_TEST_CASE(body_directive_test) {
+    using namespace boost::network;
+    message msg;
+    msg << body("The quick brown fox jumps over the lazy dog.") ;
+
+    BOOST_CHECK_EQUAL( body(msg), "The quick brown fox jumps over the lazy dog.");
+}

@@ -46,12 +46,17 @@ namespace boost { namespace network {
             return _headers;
         };
 
+        std::string & body() const {
+            return _body;
+        };
+
         private:
         
         friend struct detail::directive_base<tag> ;
         friend struct detail::wrapper_base<tag> ;
 
         mutable headers_container_type _headers;
+        mutable std::string _body;
     };
 
     typedef basic_message<> message; // default message type

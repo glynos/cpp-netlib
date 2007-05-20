@@ -12,5 +12,6 @@
  * Pulls in all the wrapper header files.
  */
 #include <boost/network/message/wrappers/headers.hpp>
+#include <boost/network/message/wrappers/body.hpp>
 
 #endif // __NETWORK_MESSAGE_WRAPPERS_HPP__
