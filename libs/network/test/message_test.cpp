@@ -9,16 +9,19 @@
 #include <boost/network.hpp>
 #include <algorithm>
 
-BOOST_AUTO_TEST_CASE(constructor_test) {
 
-    struct tags {
-        struct special { };
-    };
+namespace unit_test {
+struct tags {
+    struct special { };
+};
+}
+    
+BOOST_AUTO_TEST_CASE(constructor_test) {
 
     using namespace boost::network;
     message msg;
 
-    basic_message<tags::special> special_message;
+    basic_message<unit_test::tags::special> special_message;
 }
 
 BOOST_AUTO_TEST_CASE(header_directives_test) {

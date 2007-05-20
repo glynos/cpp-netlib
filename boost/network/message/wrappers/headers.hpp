@@ -32,11 +32,11 @@ namespace boost { namespace network {
                 { };
 
                 range_type operator[] (std::string const & key) const {
-                    return _message.headers().equal_range(key);
+                    return headers_wrapper<Tag>::_message.headers().equal_range(key);
                 };
 
                 typename message_type::headers_container_type::size_type count(std::string const & key) const {
-                    return _message.headers().count(key);
+                    return headers_wrapper<Tag>::_message.headers().count(key);
                 };
 
             };

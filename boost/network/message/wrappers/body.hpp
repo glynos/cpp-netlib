@@ -20,7 +20,7 @@ namespace boost { namespace network {
                 { };
 
                 operator std::string () const {
-                    return std::string(_message.body());
+                    return std::string(detail::wrapper_base<Tag>::_message.body());
                 };
             };
     }; // namespace impl
