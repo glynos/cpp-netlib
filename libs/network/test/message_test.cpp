@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE(header_directives_test) {
     message msg;
     msg << header("SOME_HEADER", "SOME_CONTENT") ;
     
-    BOOST_CHECK_EQUAL( headers(msg).count("SOME_HEADER") , 1 );
+    BOOST_CHECK_EQUAL( headers(msg).count("SOME_HEADER") , (size_t) 1 );
     headers_range<message>::type range = headers(msg)["SOME_HEADER"];
     BOOST_CHECK( range.first != range.second );
 }
@@ -40,4 +40,12 @@ BOOST_AUTO_TEST_CASE(body_directive_test) {
     msg << body("The quick brown fox jumps over the lazy dog.") ;
 
     BOOST_CHECK_EQUAL( body(msg), "The quick brown fox jumps over the lazy dog.");
+}
+
+BOOST_AUTO_TEST_CASE(source_directive_test) {
+	using namespace boost::network;
+	message msg;
+	msg << source("Somewhere Out There") ;
+	
+	BOOST_CHECK_EQUAL( source(msg), "Somewhere Out There");
 }

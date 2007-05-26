@@ -49,6 +49,10 @@ namespace boost { namespace network {
         std::string & body() const {
             return _body;
         };
+        
+        std::string & source() const {
+            return _source;
+        };
 
         private:
         
@@ -57,6 +61,7 @@ namespace boost { namespace network {
 
         mutable headers_container_type _headers;
         mutable std::string _body;
+        mutable std::string _source;
     };
 
     typedef basic_message<> message; // default message type
