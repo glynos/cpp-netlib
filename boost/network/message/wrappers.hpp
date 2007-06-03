@@ -14,5 +14,6 @@
 #include <boost/network/message/wrappers/headers.hpp>
 #include <boost/network/message/wrappers/body.hpp>
 #include <boost/network/message/wrappers/source.hpp>
+#include <boost/network/message/wrappers/destination.hpp>
 
 #endif // __NETWORK_MESSAGE_WRAPPERS_HPP__

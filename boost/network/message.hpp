@@ -54,6 +54,10 @@ namespace boost { namespace network {
             return _source;
         };
 
+        std::string & destination() const {
+            return _destination;
+        };
+
         private:
         
         friend struct detail::directive_base<tag> ;
@@ -62,6 +66,7 @@ namespace boost { namespace network {
         mutable headers_container_type _headers;
         mutable std::string _body;
         mutable std::string _source;
+        mutable std::string _destination;
     };
 
     typedef basic_message<> message; // default message type

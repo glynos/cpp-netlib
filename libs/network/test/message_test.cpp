@@ -49,3 +49,11 @@ BOOST_AUTO_TEST_CASE(source_directive_test) {
 	
 	BOOST_CHECK_EQUAL( source(msg), "Somewhere Out There");
 }
+
+BOOST_AUTO_TEST_CASE(destination_directive_test) {
+    using namespace boost::network;
+    message msg;
+    msg << destination("Somewhere Out There");
+
+    BOOST_CHECK_EQUAL( destination(msg), "Somewhere Out There");
+};

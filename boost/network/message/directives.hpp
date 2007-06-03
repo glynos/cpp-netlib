@@ -13,6 +13,7 @@
 #include <boost/network/message/directives/header.hpp>
 #include <boost/network/message/directives/body.hpp>
 #include <boost/network/message/directives/source.hpp>
+#include <boost/network/message/directives/destination.hpp>
 
 namespace boost { namespace network {
 

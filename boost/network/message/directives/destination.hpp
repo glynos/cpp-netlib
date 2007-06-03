@@ -4,13 +4,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_DIRECTIVES_SOURCE_HPP__
-#define __NETWORK_MESSAGE_DIRECTIVES_SOURCE_HPP__
+#ifndef __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__
+#define __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__
 
-/** source.hpp
+/** destination.hpp
  *
  * Defines the types involved and the semantics of adding
- * source information into message objects.
+ * destination information into message objects.
  *
  * WARNING: DO NOT INCLUDE THIS HEADER DIRECTLY. THIS REQUIRES
  * TYPES TO BE DEFINED FROM EARLIER FILES THAT INCLUDE THIS
@@ -20,31 +20,30 @@ namespace boost { namespace network {
     
     namespace impl {
         template <class Tag>
-            struct source_directive : public detail::directive_base<Tag> {
+            struct destination_directive : public detail::directive_base<Tag> {
                 typedef Tag tag;
 
-                explicit source_directive ( std::string const & source)
-                    : _source(source)
+                explicit destination_directive ( std::string const & destination)
+                    : _destination(destination)
                 { };
 
                 void operator() (basic_message<tag> & msg) const {
-                    msg.source() = _source;
+                    msg.destination() = _destination;
                 };
-                
+
                 private:
 
-                mutable std::string _source;
+                std::string _destination;
             };
-    } // namespace impl
+    }; // namespace impl
 
-    inline impl::source_directive<tags::default_>
-        source(std::string const & source_) {
-            return impl::source_directive<tags::default_>(source_);
+    inline impl::destination_directive<tags::default_>
+        destination(std::string const & destination_) {
+            return impl::destination_directive<tags::default_>(destination_);
         };
 
 }; // namespace network
 
 }; // namespace boost
 
-#endif // __NETWORK_MESSAGE_DIRECTIVES_SOURCE_HPP__
-
+#endif // __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__
