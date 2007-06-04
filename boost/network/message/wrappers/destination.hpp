@@ -35,5 +35,5 @@ namespace boost { namespace network {
 
 }; // namespace boost
 
-#endif __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
+#endif // __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
 
