@@ -12,3 +12,5 @@ project network_test :
     ;
 
 unit-test message_test : message_test.cpp ;
+
+unit-test message_transform_test : message_transform_test.cpp ;

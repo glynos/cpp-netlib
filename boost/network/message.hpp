@@ -80,5 +80,8 @@ namespace boost { namespace network {
 #include <boost/network/message/wrappers.hpp>
     // pull in wrappers header file
 
+#include <boost/network/message/transformers.hpp>
+    // pull in transformer header file
+
 #endif // __NETWORK_MESSAGE_HPP__
 
