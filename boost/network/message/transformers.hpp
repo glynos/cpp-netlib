@@ -18,7 +18,7 @@ namespace boost { namespace network {
     namespace impl {
         template <class Algorithm, class Selector>
             struct get_real_algorithm {
-                typedef typename Algorithm::type<Selector> type;
+                typedef typename Algorithm::template type<Selector> type;
             };
 
         template <class Algorithm, class Selector>
