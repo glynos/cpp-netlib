@@ -14,11 +14,25 @@
 #include <boost/network/message/transformers/selectors.hpp>
 #include <boost/network/message/transformers/to_upper.hpp>
 
+#include <boost/type_traits.hpp>
+
 namespace boost { namespace network {
     namespace impl {
         template <class Algorithm, class Selector>
             struct get_real_algorithm {
-                typedef typename Algorithm::template type<Selector> type;
+				typedef typename boost::function_traits<
+					typename boost::remove_pointer<
+						Algorithm
+					>::type
+				>
+				::result_type::
+				template type<
+					typename boost::function_traits<
+						typename boost::remove_pointer<
+							Selector
+						>::type
+					>::result_type
+				> type;
             };
 
         template <class Algorithm, class Selector>

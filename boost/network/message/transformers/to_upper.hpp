@@ -49,12 +49,30 @@ namespace boost { namespace network {
 
     }; // namespace impl
 
-    struct to_upper_placeholder { 
-        template <class Selector>
-            struct type : public impl::to_upper_transformer<Selector> { };
-    } ;
+	namespace detail {
+		struct to_upper_placeholder_helper;
+	};
 
-    extern to_upper_placeholder to_upper_;
+	detail::to_upper_placeholder_helper to_upper_(detail::to_upper_placeholder_helper);
+
+	namespace detail {
+
+		struct to_upper_placeholder_helper {
+			template <class Selector>
+				struct type : public impl::to_upper_transformer<Selector> { };
+		private:
+			to_upper_placeholder_helper() {};
+			to_upper_placeholder_helper(to_upper_placeholder_helper const &) {};
+			friend to_upper_placeholder_helper boost::network::to_upper_(to_upper_placeholder_helper);
+		};
+
+	};
+
+	typedef detail::to_upper_placeholder_helper (*to_upper_placeholder)(detail::to_upper_placeholder_helper);
+
+	inline detail::to_upper_placeholder_helper to_upper_(detail::to_upper_placeholder_helper) {
+		return detail::to_upper_placeholder_helper();
+	};
 
 }; // namespace network
 
