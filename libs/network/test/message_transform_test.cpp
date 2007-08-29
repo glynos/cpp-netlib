@@ -17,6 +17,10 @@ BOOST_AUTO_TEST_CASE ( message_transform_toupper ) {
     BOOST_CHECK_EQUAL ( source(msg), "me" );
     msg << transform(to_upper_, source_);
     BOOST_CHECK_EQUAL ( source(msg), "ME" );
+    msg << destination("you");
+    BOOST_CHECK_EQUAL ( destination(msg), "you");
+    msg << transform(to_upper_, destination_);
+    BOOST_CHECK_EQUAL ( destination(msg), "YOU");
 };
 
 BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
@@ -27,5 +31,9 @@ BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
     BOOST_CHECK_EQUAL ( source(msg), "ME" );
     msg << transform(to_lower_, source_);
     BOOST_CHECK_EQUAL ( source(msg), "me" );
+    msg << destination("YOU");
+    BOOST_CHECK_EQUAL ( destination(msg), "YOU" );
+    msg << transform(to_lower_, destination_);
+    BOOST_CHECK_EQUAL ( destination(msg), "you" );
 };
 
