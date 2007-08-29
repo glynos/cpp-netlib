@@ -9,7 +9,7 @@
 #include <boost/network.hpp>
 #include <algorithm>
 
-BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
+BOOST_AUTO_TEST_CASE ( message_transform_toupper ) {
     using namespace boost::network;
 
     message msg;
@@ -18,3 +18,14 @@ BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
     msg << transform(to_upper_, source_);
     BOOST_CHECK_EQUAL ( source(msg), "ME" );
 };
+
+BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
+    using namespace boost::network;
+
+    message msg;
+    msg << source("ME");
+    BOOST_CHECK_EQUAL ( source(msg), "ME" );
+    msg << transform(to_lower_, source_);
+    BOOST_CHECK_EQUAL ( source(msg), "me" );
+};
+

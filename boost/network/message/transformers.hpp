@@ -13,6 +13,7 @@
  */
 #include <boost/network/message/transformers/selectors.hpp>
 #include <boost/network/message/transformers/to_upper.hpp>
+#include <boost/network/message/transformers/to_lower.hpp>
 
 #include <boost/type_traits.hpp>
 
