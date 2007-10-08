@@ -11,3 +11,5 @@ local BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
 use-project /boost : $(BOOST_ROOT) ;
 
 using testing ;
+
+build-project libs/network/test ;

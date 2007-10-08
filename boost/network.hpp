@@ -12,6 +12,7 @@
 // Date: May 20, 2007
 
 #include <boost/network/message.hpp> // message type implementation
+#include <boost/network/protocol.hpp> // protocols implementation
 
 #endif // __NETWORK_HPP__
 

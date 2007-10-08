@@ -32,7 +32,9 @@ namespace boost { namespace network {
 namespace boost { namespace network {
 
     struct tags {
-        struct default_ { };
+        struct default_ {
+            typedef std::string str_type;
+        };
     };
 
     /** The common message type.

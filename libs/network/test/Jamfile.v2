@@ -8,9 +8,14 @@ project network_test :
     requirements
         <include>../../../
         <source>/boost//unit_test_framework
-#	<link>static
+        <source>/boost//system
+        <source>/boost//date_time
+        <source>/boost//regex
+	<link>static
     ;
 
 unit-test message_test : message_test.cpp ;
 
 unit-test message_transform_test : message_transform_test.cpp ;
+
+unit-test http_1_0_test : http_1_0_test.cpp ;
