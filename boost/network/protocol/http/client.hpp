@@ -63,7 +63,7 @@ namespace boost { namespace network { namespace http {
                     << 
                     header( line.substr(0, line.find(':')) , 
                     line.find(' ') == tag::str_type::npos ?
-                    tag::str_type()
+                    typename tag::str_type()
                     : line.substr(line.find(' ') + 1));
             };
 

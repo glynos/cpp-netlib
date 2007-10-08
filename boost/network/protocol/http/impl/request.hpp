@@ -107,23 +107,23 @@ namespace boost { namespace network { namespace http {
         { };
 
         typename tag::str_type const host() const {
-            return fusion::at_key<tags::host>(uri_parts);
+            return fusion::at_key<typename tags::host>(uri_parts);
         };
 
         unsigned int port() const {
-            return fusion::at_key<tags::port>(uri_parts);
+            return fusion::at_key<typename tags::port>(uri_parts);
         };
 
         typename tag::str_type const path() const {
-            return fusion::at_key<tags::path>(uri_parts);
+            return fusion::at_key<typename tags::path>(uri_parts);
         };
 
         typename tag::str_type const query() const {
-            return fusion::at_key<tags::query>(uri_parts);
+            return fusion::at_key<typename tags::query>(uri_parts);
         };
 
         typename tag::str_type const anchor() const {
-            return fusion::at_key<tags::anchor>(uri_parts);
+            return fusion::at_key<typename tags::anchor>(uri_parts);
         };
     };
 
