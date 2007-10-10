@@ -11,7 +11,9 @@ project network_test :
         <source>/boost//system
         <source>/boost//date_time
         <source>/boost//regex
-	<link>static
+        <source>/boost//thread
+        <toolset>gcc:<linkflags>-lpthread
+        <link>static
     ;
 
 unit-test message_test : message_test.cpp ;
