@@ -34,6 +34,7 @@ namespace boost { namespace network {
     struct tags {
         struct default_ {
             typedef std::string str_type;
+            typedef std::ostringstream ostringstream_type;
         };
     };
 

@@ -21,7 +21,7 @@ namespace boost { namespace network { namespace http {
     public:
         
         response const get (basic_request<tag> const & request_) {
-            // TODO: use Asio's iostream interface to perform
+            // use Asio's iostream interface to perform
             // a synchronous request for data via HTTP
             // and then craft a response object to be returned
             // based on the headers received, and the contents
@@ -51,7 +51,7 @@ namespace boost { namespace network { namespace http {
             socket_stream << std::flush;
             
             response response_;
-            std::ostringstream body_stream;
+            typename tag::ostringstream_type body_stream;
 
             while (!socket_stream.eof()) {
                 typename tag::str_type line;
