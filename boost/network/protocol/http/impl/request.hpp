@@ -7,7 +7,7 @@
 #ifndef __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
 #define __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
 
-#include <boost/fusion/container/map.hpp>
+#include <boost/fusion/sequence/container/map.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
 
