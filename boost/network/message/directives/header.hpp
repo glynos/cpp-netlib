@@ -31,32 +31,34 @@ namespace boost { namespace network {
                     _header_value(header_value)
                 { };
 
-                void operator() (basic_message<tag> & msg) const {
+                template <class MessageTag>
+                void operator() (basic_message<MessageTag> & msg) const {
                     msg.headers().insert(
-                            typename basic_message<tag>::headers_container_type::value_type(
+                            typename basic_message<MessageTag>::headers_container_type::value_type(
                                 _header_name,
                                 _header_value
                                 )
                             );
-                };
+                }
 
                 private:
 
                 mutable std::string _header_name;
                 mutable std::string _header_value;
             };
-    }; // namespace impl
+    } // namespace impl
 
+    template <class T1, class T2>
     inline impl::header_directive<tags::default_>
-    header(std::string const & header_name,
-            std::string const & header_value) {
+    header(T1 header_name,
+            T2 header_value) {
         return impl::header_directive<tags::default_>(header_name,
                 header_value);
-    };
+    }
 
-};
+}
 
-};
+}
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__
 

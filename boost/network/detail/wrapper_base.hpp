@@ -23,11 +23,11 @@ namespace boost { namespace network { namespace detail {
                 mutable basic_message<tag> & _message;
         };
 
-}; // namespace detail
+} // namespace detail
 
-}; // namespace network
+} // namespace network
 
-}; // namespace boost
+} // namespace boost
 
 #endif // __NETWORK_DETAIL_WRAPPER_BASE_HPP__
 

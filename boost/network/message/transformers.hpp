@@ -38,13 +38,13 @@ namespace boost { namespace network {
 
         template <class Algorithm, class Selector>
             struct transform_impl : public get_real_algorithm<Algorithm, Selector>::type { };
-    }; // namspace impl
+    } // namspace impl
 
     template <class Algorithm, class Selector>
         inline impl::transform_impl<Algorithm, Selector>
         transform(Algorithm, Selector) {
             return impl::transform_impl<Algorithm, Selector>();
-        };
+        }
 
     template <class Tag, class Algorithm, class Selector>
         inline basic_message<Tag> &
@@ -53,10 +53,10 @@ namespace boost { namespace network {
                     const & transformer) {
             transformer(msg_);
             return msg_;
-        };
+        }
 
-}; // namespace network
+} // namespace network
 
-}; // namespace boost
+} // namespace boost
 
 #endif // __NETWORK_MESSAGE_TRANSFORMERS_HPP__

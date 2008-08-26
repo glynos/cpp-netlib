@@ -29,24 +29,25 @@ namespace boost { namespace network {
                     _body(body)
                 { };
 
-                void operator() (basic_message<tag> & msg) const {
+                template <class MessageTag>
+                void operator() (basic_message<MessageTag> & msg) const {
                     msg.body() = _body;
-                };
+                }
 
                 private:
 
                 std::string _body;
             };
-    }; // namespace impl
+    } // namespace impl
 
     inline impl::body_directive<tags::default_>
         body(std::string const & body_) {
             return impl::body_directive<tags::default_>(body_);
-        };
+        }
 
-}; // namespace network
+} // namespace network
 
-}; // namespace boost
+} // namespace boost
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_BODY_HPP__
 

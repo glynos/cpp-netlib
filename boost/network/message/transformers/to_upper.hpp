@@ -30,7 +30,7 @@ namespace boost { namespace network {
                 template <class Tag>
                     void operator() (basic_message<Tag> & message_) const {
                         boost::to_upper(message_.source());
-                    };
+                    }
 
                 protected:
                     ~to_upper_transformer() { };
@@ -41,17 +41,17 @@ namespace boost { namespace network {
                 template <class Tag>
                     void operator() (basic_message<Tag> & message_) const {
                         boost::to_upper(message_.destination());
-                    };
+                    }
 
                 protected:
                     ~to_upper_transformer() { };
             };
 
-    }; // namespace impl
+    } // namespace impl
 
 	namespace detail {
 		struct to_upper_placeholder_helper;
-	};
+	}
 
 	detail::to_upper_placeholder_helper to_upper_(detail::to_upper_placeholder_helper);
 
@@ -61,22 +61,22 @@ namespace boost { namespace network {
 			template <class Selector>
 				struct type : public impl::to_upper_transformer<Selector> { };
 		private:
-			to_upper_placeholder_helper() {};
-			to_upper_placeholder_helper(to_upper_placeholder_helper const &) {};
+			to_upper_placeholder_helper() {}
+			to_upper_placeholder_helper(to_upper_placeholder_helper const &) {}
 			friend to_upper_placeholder_helper boost::network::to_upper_(to_upper_placeholder_helper);
 		};
 
-	};
+	}
 
 	typedef detail::to_upper_placeholder_helper (*to_upper_placeholder)(detail::to_upper_placeholder_helper);
 
 	inline detail::to_upper_placeholder_helper to_upper_(detail::to_upper_placeholder_helper) {
 		return detail::to_upper_placeholder_helper();
-	};
+	}
 
-}; // namespace network
+} // namespace network
 
-}; // namespace boost
+} // namespace boost
 
 #endif // __NETWORK_MESSAGE_TRANSFORMERS_TO_UPPER_HPP__
 

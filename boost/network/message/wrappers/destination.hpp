@@ -23,17 +23,17 @@ namespace boost { namespace network {
                     return std::string(detail::wrapper_base<tag>::_message.destination());
                 };
             };
-    }; // namespace impl
+    } // namespace impl
 
     template <class Tag>
         inline std::string
         destination(basic_message<Tag> & message_) {
             return impl::destination_wrapper<Tag>(message_);
-        };
+        }
 
-}; // namespace network
+} // namespace network
 
-}; // namespace boost
+} // namespace boost
 
 #endif // __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
 

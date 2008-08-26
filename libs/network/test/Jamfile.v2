@@ -13,11 +13,19 @@ project network_test :
         <source>/boost//regex
         <source>/boost//thread
         <toolset>gcc:<linkflags>-lpthread
+        <toolset>msvc:<define>BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN
+        <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
         <link>static
     ;
+
+unit-test localhost_tests : localhost_tests.cpp ;
 
 unit-test message_test : message_test.cpp ;
 
 unit-test message_transform_test : message_transform_test.cpp ;
 
 unit-test http_1_0_test : http_1_0_test.cpp ;
+
+unit-test http_message_test : http_message_test.cpp ;
+
+

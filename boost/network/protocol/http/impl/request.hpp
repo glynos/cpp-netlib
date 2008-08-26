@@ -1,11 +1,14 @@
 
 //          Copyright Dean Michael Berris 2007.
+//          Copyright Michael Dickey 2008.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
 #define __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
+
+#include <boost/network/protocol/http/message.hpp>
 
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
@@ -27,7 +30,9 @@ namespace boost { namespace network { namespace http {
       */
 
     template <class tag>
-    class basic_request {
+    class basic_request :
+        public basic_message<tag>
+    {
         struct tags {
             struct protocol { };
             struct host { };
@@ -38,18 +43,18 @@ namespace boost { namespace network { namespace http {
         };
 
         typedef fusion::map<
-            fusion::pair<typename tags::protocol,typename tag::str_type>,
-            fusion::pair<typename tags::host,typename tag::str_type>,
+            fusion::pair<typename tags::protocol,typename string_traits<tag>::type>,
+            fusion::pair<typename tags::host,typename string_traits<tag>::type>,
             fusion::pair<typename tags::port,unsigned int>,
-            fusion::pair<typename tags::path,typename tag::str_type>,
-            fusion::pair<typename tags::query,typename tag::str_type>,
-            fusion::pair<typename tags::anchor,typename tag::str_type>
+            fusion::pair<typename tags::path,typename string_traits<tag>::type>,
+            fusion::pair<typename tags::query,typename string_traits<tag>::type>,
+            fusion::pair<typename tags::anchor,typename string_traits<tag>::type>
         > uri_parts_type;
         
         mutable uri_parts_type uri_parts;
 
     public:
-        explicit basic_request(typename tag::str_type const & uri) {
+        explicit basic_request(typename string_traits<tag>::type const & uri) {
             using namespace boost::spirit;
             using namespace phoenix;
 
@@ -60,12 +65,12 @@ namespace boost { namespace network { namespace http {
                 // the parser
                 str_p("http")[
                     var(fusion::at_key<typename tags::protocol>(uri_parts))
-                        = construct_<typename tag::str_type>(arg1, arg2)
+                        = construct_<typename string_traits<tag>::type>(arg1, arg2)
                 ]
                 >> str_p("://")
                 >> (+(alnum_p | '.' | '-' | '_'))[
                     var(fusion::at_key<typename tags::host>(uri_parts))
-                        = construct_<typename tag::str_type>(arg1, arg2)
+                        = construct_<typename string_traits<tag>::type>(arg1, arg2)
                 ]
                 >> !(
                     ch_p(':')
@@ -77,36 +82,54 @@ namespace boost { namespace network { namespace http {
                 ) 
                 >> (+(alnum_p | '/' | '%' | '_' | '-' | '.'))[
                     var(fusion::at_key<typename tags::path>(uri_parts))
-                        = construct_<typename tag::str_type>(arg1, arg2)
+                        = construct_<typename string_traits<tag>::type>(arg1, arg2)
                 ]
                 >> !(ch_p('?')
                     >> (+(alnum_p | '&' | '=' | '%' | '_' ))[
                         var(fusion::at_key<typename tags::query>(uri_parts))
-                            = construct_<typename tag::str_type>(arg1, arg2)
+                            = construct_<typename string_traits<tag>::type>(arg1, arg2)
                     ]
                 )
                 >> !(ch_p('#')
                     >> (+(alnum_p | '_' | '%' | '-'))[
                         var(fusion::at_key<typename tags::anchor>(uri_parts))
-                            = construct_<typename tag::str_type>(arg1, arg2)
+                            = construct_<typename string_traits<tag>::type>(arg1, arg2)
                     ]
                 )
                 >> end_p
                 ,
                 nothing_p // no skip parser
                 );
+
+            // check if path is empty, set it to '/'
+            if (fusion::at_key<typename tags::path>(uri_parts).empty()) {
+                fusion::at_key<typename tags::path>(uri_parts) = "/";
+            }
         };
 
-        // conversion from a message object into a basic_request
-        basic_request(basic_message<tag> const & message_) {
-            //TODO: contruct from a network message object
-        };
-
-        basic_request(basic_request const & other) : 
-        uri_parts(other.uri_parts)
+        basic_request() :
+            basic_message<tag>(), uri_parts()
         { };
 
-        typename tag::str_type const host() const {
+        basic_request(basic_request const & other) : 
+        basic_message<tag>(other), uri_parts(other.uri_parts)
+        { };
+
+        basic_request & operator=(basic_request rhs) {
+            rhs.swap(*this);
+            return *this;
+        };
+
+        void swap(basic_request & other) {
+            basic_message<tag> & base_ref(other);
+            basic_message<tag> & this_ref(*this);
+            base_ref.swap(this_ref);
+            uri_parts_type & other_uri_parts(other.uri_parts);
+            uri_parts_type & this_uri_parts(this->uri_parts);
+            std::swap(other_uri_parts, this_uri_parts);
+        };
+
+        typename string_traits<tag>::type const host() const {
             return fusion::at_key<typename tags::host>(uri_parts);
         };
 
@@ -114,23 +137,28 @@ namespace boost { namespace network { namespace http {
             return fusion::at_key<typename tags::port>(uri_parts);
         };
 
-        typename tag::str_type const path() const {
+        typename string_traits<tag>::type const path() const {
             return fusion::at_key<typename tags::path>(uri_parts);
         };
 
-        typename tag::str_type const query() const {
+        typename string_traits<tag>::type const query() const {
             return fusion::at_key<typename tags::query>(uri_parts);
         };
 
-        typename tag::str_type const anchor() const {
+        typename string_traits<tag>::type const anchor() const {
             return fusion::at_key<typename tags::anchor>(uri_parts);
         };
     };
 
-}; // namespace http
+    template <class Tag>
+    inline void swap(basic_request<Tag> & lhs, basic_request<Tag> & rhs) {
+        lhs.swap(rhs);
+    };
 
-}; // namespace network
+} // namespace http
 
-}; // namespace boost
+} // namespace network
+
+} // namespace boost
 
 #endif // __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__

@@ -19,32 +19,31 @@
 namespace boost { namespace network {
     
     namespace impl {
-        template <class Tag>
-            struct source_directive : public detail::directive_base<Tag> {
-                typedef Tag tag;
+        struct source_directive : public detail::directive_base<tags::default_> {
 
-                explicit source_directive ( std::string const & source)
-                    : _source(source)
-                { };
+            explicit source_directive ( std::string const & source)
+                : _source(source)
+            { };
 
-                void operator() (basic_message<tag> & msg) const {
-                    msg.source() = _source;
-                };
-                
-                private:
+            template <class Tag>
+            void operator() (basic_message<Tag> & msg) const {
+                msg.source() = _source;
+            }
+            
+            private:
 
-                mutable std::string _source;
-            };
+            mutable std::string _source;
+        };
     } // namespace impl
 
-    inline impl::source_directive<tags::default_>
+    inline impl::source_directive
         source(std::string const & source_) {
-            return impl::source_directive<tags::default_>(source_);
-        };
+            return impl::source_directive(source_);
+        }
 
-}; // namespace network
+} // namespace network
 
-}; // namespace boost
+} // namespace boost
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_SOURCE_HPP__
 

@@ -14,19 +14,20 @@
 #include <boost/network/message/directives/body.hpp>
 #include <boost/network/message/directives/source.hpp>
 #include <boost/network/message/directives/destination.hpp>
+#include <boost/network/message/directives/remove_header.hpp>
 
 namespace boost { namespace network {
 
-    template <class Tag, template <class> class Directive>
+    template <class Tag, class Directive>
         inline basic_message<Tag> &
-        operator<< (basic_message<Tag> & message_, Directive<Tag> const & directive) {
+        operator<< (basic_message<Tag> & message_, Directive const & directive) {
             directive(message_);
             return message_;
-        };
+        }
 
-}; // namespace network
+} // namespace network
 
-}; // namespace boost
+} // namespace boost
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_HPP__
 

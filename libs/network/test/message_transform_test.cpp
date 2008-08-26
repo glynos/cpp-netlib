@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE ( message_transform_toupper ) {
     BOOST_CHECK_EQUAL ( destination(msg), "you");
     msg << transform(to_upper_, destination_);
     BOOST_CHECK_EQUAL ( destination(msg), "YOU");
-};
+}
 
 BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
     using namespace boost::network;
@@ -35,5 +35,5 @@ BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
     BOOST_CHECK_EQUAL ( destination(msg), "YOU" );
     msg << transform(to_lower_, destination_);
     BOOST_CHECK_EQUAL ( destination(msg), "you" );
-};
+}
 

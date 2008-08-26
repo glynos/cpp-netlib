@@ -35,15 +35,15 @@ namespace boost { namespace network {
 
                 std::string _destination;
             };
-    }; // namespace impl
+    } // namespace impl
 
     inline impl::destination_directive<tags::default_>
         destination(std::string const & destination_) {
             return impl::destination_directive<tags::default_>(destination_);
-        };
+        }
 
-}; // namespace network
+} // namespace network
 
-}; // namespace boost
+} // namespace boost
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__
