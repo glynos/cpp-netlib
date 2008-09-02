@@ -105,20 +105,20 @@ namespace boost { namespace network { namespace http {
             if (fusion::at_key<typename tags::path>(uri_parts).empty()) {
                 fusion::at_key<typename tags::path>(uri_parts) = "/";
             }
-        };
+        }
 
         basic_request() :
             basic_message<tag>(), uri_parts()
-        { };
+        { }
 
         basic_request(basic_request const & other) : 
         basic_message<tag>(other), uri_parts(other.uri_parts)
-        { };
+        { }
 
         basic_request & operator=(basic_request rhs) {
             rhs.swap(*this);
             return *this;
-        };
+        }
 
         void swap(basic_request & other) {
             basic_message<tag> & base_ref(other);
@@ -127,33 +127,33 @@ namespace boost { namespace network { namespace http {
             uri_parts_type & other_uri_parts(other.uri_parts);
             uri_parts_type & this_uri_parts(this->uri_parts);
             std::swap(other_uri_parts, this_uri_parts);
-        };
+        }
 
         typename string_traits<tag>::type const host() const {
             return fusion::at_key<typename tags::host>(uri_parts);
-        };
+        }
 
         unsigned int port() const {
             return fusion::at_key<typename tags::port>(uri_parts);
-        };
+        }
 
         typename string_traits<tag>::type const path() const {
             return fusion::at_key<typename tags::path>(uri_parts);
-        };
+        }
 
         typename string_traits<tag>::type const query() const {
             return fusion::at_key<typename tags::query>(uri_parts);
-        };
+        }
 
         typename string_traits<tag>::type const anchor() const {
             return fusion::at_key<typename tags::anchor>(uri_parts);
-        };
+        }
     };
 
     template <class Tag>
     inline void swap(basic_request<Tag> & lhs, basic_request<Tag> & rhs) {
         lhs.swap(rhs);
-    };
+    }
 
 } // namespace http
 

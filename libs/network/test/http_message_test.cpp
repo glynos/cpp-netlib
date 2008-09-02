@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(response_constructor_test) {
     using namespace boost::network;
     http::response response;
     BOOST_CHECK_EQUAL ( body(response), std::string() );
-};
+}
 
 BOOST_AUTO_TEST_CASE(response_copy_construct_test) {
     using namespace boost::network;
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(response_copy_construct_test) {
     BOOST_CHECK_EQUAL ( response.status(), copy.status() );
     BOOST_CHECK_EQUAL ( response.status_message(), copy.status_message() );
     BOOST_CHECK_EQUAL ( body(response), body(copy) );
-};
+}
 
 BOOST_AUTO_TEST_CASE(response_assignment_construct_test) {
     using namespace boost::network;
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_CASE(response_assignment_construct_test) {
     BOOST_CHECK_EQUAL ( response.status(), copy.status() );
     BOOST_CHECK_EQUAL ( response.status_message(), copy.status_message() );
     BOOST_CHECK_EQUAL ( body(response), body(copy) );
-};
+}
 
 BOOST_AUTO_TEST_CASE(response_swap_test) {
     boost::network::http::response response;
@@ -112,6 +112,6 @@ BOOST_AUTO_TEST_CASE(response_swap_test) {
     BOOST_CHECK_EQUAL ( swapped.status(), 200u );
     BOOST_CHECK_EQUAL ( swapped.status_message(), std::string("OK") );
     BOOST_CHECK_EQUAL ( boost::network::body(swapped), std::string("RESPONSE") );
-};
+}
 
 BOOST_AUTO_TEST_SUITE_END()

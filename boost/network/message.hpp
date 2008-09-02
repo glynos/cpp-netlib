@@ -95,7 +95,7 @@ namespace boost { namespace network {
     void swap(basic_message<Tag> & left, basic_message<Tag> & right) {
         // swap for ADL
         left.swap(right);
-    };
+    }
 
 } // namespace network
 

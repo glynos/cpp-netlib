@@ -1,0 +1,18 @@
+[/
+  (C) Copyright 2008 Glyn Matthews.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[section:architecture Architecture]
+__cnl__ is built upon the __boost_asio__, for reasons of portability.
+
+The architecture is driven by the requirement to separate requests from the transport mechanism.  Additionally, its possible to utilise templates and static mechanisms to make decisions at compile-time, resulting in more efficient and stable client code.
+
+[include message.qbk]
+
+
+[endsect]
+

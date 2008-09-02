@@ -1,0 +1,24 @@
+[/
+  (C) Copyright 2008 Glyn Matthews.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[section:motivation Motivation]
+The objectives of the __cnl__ are to:
+
+* develop a high quality, portable, easy to use C++ networking library
+* enable developers to easily extend the library
+* lower the barrier to entry for cross-platform network-aware C++ applications
+
+With the development of __boost_asio__, cross-platform network programming in C++ has become a very much easier task.  What still lacks is a set of libraries that utilise __boost_asio__ in order to provide application level support so that C++ developers are better able to develop internet and distributed applications more effectively.
+
+The goal of __cnl__ has never been to build a fully-featured web server - there are plenty of excellent options already available.  The niche that this library targets is the case where light-weight networking functionality is required by C++ applications.  This type of application is becoming increasingly common as software becomes more distributed, and applications need to communicate with services.
+
+While many languages provide direct library support for high level network programming, this feature is missing in C++.  Therefore, this library has been developed with the intention of eventually being submitted to __boost__, a collection of general, high quality libraries for C++ developers.
+
+Eventually, __cnl__ will be extended to support many of the application layer protocols such as SMTP, FTP, SOAP, XMPP etc.
+
+[endsect]

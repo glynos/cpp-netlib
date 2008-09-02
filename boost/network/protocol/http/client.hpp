@@ -26,7 +26,7 @@
 
 namespace boost { namespace network { namespace http {
 
-    template <class tag, unsigned int version_major = 1, unsigned version_minor = 0>
+    template <class Tag, unsigned int version_major = 1, unsigned version_minor = 0>
     class basic_client {
 
     private:
@@ -38,7 +38,7 @@ namespace boost { namespace network { namespace http {
 			boost::asio::ip::tcp::resolver::iterator
 		> resolver_iterator_pair;
 
-		typedef typename string_traits<tag>::type string_type;
+		typedef typename string_traits<Tag>::type string_type;
 
 		resolver_iterator_pair resolve(string_type const & hostname, string_type const & port) {
 			return std::make_pair(
@@ -67,7 +67,7 @@ namespace boost { namespace network { namespace http {
                 throw boost::system::system_error(error);
 		};
 
-		void create_request(boost::asio::streambuf & request_buffer, string_type const & method, basic_request<tag> request_) const {
+		void create_request(boost::asio::streambuf & request_buffer, string_type const & method, basic_request<Tag> request_) const {
 			std::ostream request_stream(&request_buffer);
 
             request_stream 
@@ -110,13 +110,13 @@ namespace boost { namespace network { namespace http {
 				request_stream << body_;
 		};
 
-		void send_request(boost::asio::ip::tcp::socket & socket, string_type const & method, basic_request<tag> const & request_) const {
+		void send_request(boost::asio::ip::tcp::socket & socket, string_type const & method, basic_request<Tag> const & request_) const {
 			boost::asio::streambuf request_buffer;
 			create_request(request_buffer, method, request_);
 			write(socket, request_buffer);
 		};
 
-		void read_status(basic_response<tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
+		void read_status(basic_response<Tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
 			boost::asio::read_until(socket, response_buffer, "\r\n");
 			std::istream response_stream(&response_buffer);
             string_type http_version;
@@ -136,7 +136,7 @@ namespace boost { namespace network { namespace http {
 			response_.status_message() = status_message;
 		};
 
-		void read_headers(basic_response<tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
+		void read_headers(basic_response<Tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
 			boost::asio::read_until(socket, response_buffer, "\r\n\r\n");
 			std::istream response_stream(&response_buffer);
 			string_type header_line, name;
@@ -160,8 +160,8 @@ namespace boost { namespace network { namespace http {
             };
 		};
 
-		void read_body(basic_response<tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
-			typename ostringstream_traits<tag>::type body_stream;
+		void read_body(basic_response<Tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
+			typename ostringstream_traits<Tag>::type body_stream;
 
             if (response_buffer.size() > 0)
                 body_stream << &response_buffer;
@@ -176,14 +176,14 @@ namespace boost { namespace network { namespace http {
             response_ << body(body_stream.str());
 		};
 
-		response const sync_request_skeleton(basic_request<tag> const & request_, string_type method, bool get_body) {
+		response const sync_request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
 			using boost::asio::ip::tcp;
 
 			tcp::socket socket(_service);
 			init_socket(socket, request_.host(), boost::lexical_cast<string_type>(request_.port()));
 			send_request(socket, method, request_);
 
-			basic_response<tag> response_;
+			basic_response<Tag> response_;
 			response_ << source(request_.host());
 
 			boost::asio::streambuf response_buffer;
@@ -199,47 +199,47 @@ namespace boost { namespace network { namespace http {
         basic_client()
             : _service(), _resolver(_service) { };
 
-		response const head (basic_request<tag> const & request_) {
+		response const head (basic_request<Tag> const & request_) {
 			return sync_request_skeleton(request_, "HEAD", false);
 		};
         
-        response const get (basic_request<tag> const & request_) {
+        response const get (basic_request<Tag> const & request_) {
 			return sync_request_skeleton(request_, "GET", true);
         };
 		
-		response const post (basic_request<tag> const & request_) {
+		response const post (basic_request<Tag> const & request_) {
 			return sync_request_skeleton(request_, "POST", true);
 		};
 
-		response const post (basic_request<tag> const & request_, string_type const & content_type, string_type const & body_) {
-			basic_request<tag> request_copy(request_);
+		response const post (basic_request<Tag> const & request_, string_type const & content_type, string_type const & body_) {
+			basic_request<Tag> request_copy(request_);
 			request_copy << body(body_)
 				<< header("Content-type", content_type)
 				<< header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
 			return post(request_copy);
 		};
 
-		response const post (basic_request<tag> const & request_, string_type const & body_) {
+		response const post (basic_request<Tag> const & request_, string_type const & body_) {
 			return post(request_, "x-application/octet-stream", body_);
 		};
 
-		response const put (basic_request<tag> const & request_) {
+		response const put (basic_request<Tag> const & request_) {
 			return sync_request_skeleton(request_, "PUT", true);
 		};
 
-		response const put (basic_request<tag> const & request_, string_type const & body_) {
+		response const put (basic_request<Tag> const & request_, string_type const & body_) {
 			return put(request_, "x-application/octet-stream", body_);
 		};
 
-		response const put (basic_request<tag> const & request_, string_type const & content_type, string_type const & body_) {
-			basic_request<tag> request_copy(request_);
+		response const put (basic_request<Tag> const & request_, string_type const & content_type, string_type const & body_) {
+			basic_request<Tag> request_copy(request_);
 			request_copy << body(body_)
 				<< header("Content-type", content_type)
 				<< header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
 			return put(request_copy);
 		};
 
-		response const delete_ (basic_request<tag> const & request_) {
+		response const delete_ (basic_request<Tag> const & request_) {
 			return sync_request_skeleton(request_, "DELETE", true);
 		};
 

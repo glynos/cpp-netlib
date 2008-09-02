@@ -58,7 +58,7 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
         inline void swap(basic_response<Tag> & lhs, basic_response<Tag> & rhs) {
             lhs.swap(rhs);
-        };
+        }
 
     typedef basic_response<http::message_tag> response;
 

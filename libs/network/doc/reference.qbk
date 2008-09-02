@@ -1,0 +1,29 @@
+[/
+  (C) Copyright 2008 Glyn Matthews.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[section:reference Reference]
+[variablelist
+   [
+      [
+         [@http://www.w3.org/Protocols/HTTP/1.0/spec.html HTTP 1.0]
+      ]
+      [
+         The HTTP 1.0 Specification.
+      ]
+   ]
+   [
+      [
+	 [@http://www.w3.org/Protocols/rfc2616/rfc2616.html HTTP 1.1 (RFC 2616)]
+      ]
+      [
+         The HTTP 1.1 Specification.
+      ]
+   ]
+]
+[endsect]
+
