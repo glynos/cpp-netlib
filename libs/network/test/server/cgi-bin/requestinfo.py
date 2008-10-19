@@ -13,11 +13,14 @@ import cgitb; cgitb.enable() # for debugging only
 import cgi
 import os, sys
 
-print "Content-type: text/plain; charset=us-ascii\r\n\r\n"
+sys.stdout.write( "HTTP/1.0 200 Requestinfo.py Output follows\r\n" )
+sys.stdout.write( "Content-type: text/plain; charset=us-ascii\r\n\r\n" )
 
 form = cgi.FieldStorage()
 qstring = ""
 qstring_dict = {}
+
+print "Headers: ",form.headers
 
 if os.environ.has_key("QUERY_STRING"):
 	qstring = os.environ["QUERY_STRING"]
@@ -36,8 +39,17 @@ print
 
 # Remove GET params and print only the POST ones
 print "POST parameters:",
-for i in form.keys():
-	if i not in qstring_dict.keys():
-		print i,"-",form.getfirst(i, ""),";",
-print
-	
+try:
+	for i in form.keys():
+		if i not in qstring_dict.keys():
+			print i,"-",form.getfirst(i, ""),";",
+	print
+except TypeError: # In case of empty POST bodies.
+	pass
+
+print 'HTTP HEADERS-------------------'
+print 'Content-Type:', os.environ.get('CONTENT_TYPE')
+print 'Content-Length:', os.environ.get('CONTENT_LENGTH')
+for k in os.environ.keys():
+        if k.startswith('HTTP_'):
+                print k, ':', os.environ[k]

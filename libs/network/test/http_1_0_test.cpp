@@ -11,7 +11,7 @@
 
 BOOST_AUTO_TEST_CASE(http_get_test) {
     using namespace boost::network;
-    http::request request("http://www.boost.org/");    
+    http::request request("http://www.boost.org/");
     http::client client_;
     http::response response_;
     response_ = client_.get(request);
@@ -48,4 +48,23 @@ BOOST_AUTO_TEST_CASE(http_get_details) {
 	BOOST_CHECK_EQUAL ( response_.version().substr(0,7), std::string("HTTP/1.") );
 	BOOST_CHECK_EQUAL ( response_.status(), 200u );
 	BOOST_CHECK_EQUAL ( response_.status_message(), std::string("OK") );
+}
+
+BOOST_AUTO_TEST_CASE(http_cached_resolve) {
+	using namespace boost::network;
+	http::request request("http://www.boost.org");
+	http::request other_request("http://www.boost.org/users/license.html");
+	http::client client_(http::client::cache_resolved);
+	http::response response_;
+	BOOST_CHECK_NO_THROW ( response_ = client_.get(request) );
+	BOOST_CHECK_NO_THROW ( response_ = client_.get(other_request) );
+}
+
+BOOST_AUTO_TEST_CASE(http_redirection_test) {
+	using namespace boost::network;
+	http::request request("http://boost.org");
+	http::client client_(http::client::follow_redirect);
+	http::response response_;
+	BOOST_CHECK_NO_THROW ( response_ = client_.get(request) );
+	BOOST_CHECK_EQUAL ( response_.status(), 200u );
 }

@@ -50,24 +50,30 @@ namespace boost { namespace network { namespace http {
             fusion::pair<typename tags::query,typename string_traits<tag>::type>,
             fusion::pair<typename tags::anchor,typename string_traits<tag>::type>
         > uri_parts_type;
-        
+
         mutable uri_parts_type uri_parts;
 
     public:
-        explicit basic_request(typename string_traits<tag>::type const & uri) {
+        explicit basic_request(typename string_traits<tag>::type const & uri_) {
+        	uri(uri_);
+        }
+
+        void uri(typename string_traits<tag>::type const & uri_) {
             using namespace boost::spirit;
             using namespace phoenix;
 
             fusion::at_key<typename tags::port>(uri_parts) = 80u;
 
             parse(
-                uri.begin(), uri.end(),
+                uri_.begin(), uri_.end(),
                 // the parser
-                str_p("http")[
-                    var(fusion::at_key<typename tags::protocol>(uri_parts))
-                        = construct_<typename string_traits<tag>::type>(arg1, arg2)
-                ]
-                >> str_p("://")
+                !(
+                		str_p("http")[
+                		              var(fusion::at_key<typename tags::protocol>(uri_parts))
+                		              = construct_<typename string_traits<tag>::type>(arg1, arg2)
+                		             ]
+                		>> str_p("://")
+                )
                 >> (+(alnum_p | '.' | '-' | '_'))[
                     var(fusion::at_key<typename tags::host>(uri_parts))
                         = construct_<typename string_traits<tag>::type>(arg1, arg2)
@@ -79,7 +85,7 @@ namespace boost { namespace network { namespace http {
                             = arg1
                     ]
                     >> !ch_p('/')
-                ) 
+                )
                 >> (+(alnum_p | '/' | '%' | '_' | '-' | '.'))[
                     var(fusion::at_key<typename tags::path>(uri_parts))
                         = construct_<typename string_traits<tag>::type>(arg1, arg2)
@@ -111,7 +117,7 @@ namespace boost { namespace network { namespace http {
             basic_message<tag>(), uri_parts()
         { }
 
-        basic_request(basic_request const & other) : 
+        basic_request(basic_request const & other) :
         basic_message<tag>(other), uri_parts(other.uri_parts)
         { }
 

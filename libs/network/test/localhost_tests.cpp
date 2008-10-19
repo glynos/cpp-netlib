@@ -4,122 +4,95 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
+// Changes by Kim Grasman 2008
+// Changes by Dean Michael Berris 2008
+
 #define BOOST_TEST_MODULE http 1.0 localhost tests
 
 #include <boost/config.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network.hpp>
 #include <boost/cast.hpp>
-#include <iostream>
 #include <string>
 #include <fstream>
-#include <cstring>
-#include <algorithm>
+#include <iostream>
 
-// Platform Specific Headers
-// Includes for MSVC/Windows Combination
-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(MIN)
-    #define _WIN32_DCOM 
-    #include <windows.h>
-    #include <shellapi.h> // for ShellExecute
-    #include <objbase.h>  // for CoInitialize and CoUninitialize
-    
-    // MSVC Specific inclusion of libraries
-    #pragma comment( lib, "shell32" ) // for ShellExecute
-    #pragma comment( lib, "ole32" )   // for CoInitialize, CoUninitialize
-
-    SHELLEXECUTEINFO server_info = {
-        sizeof(server_info),            // cbSize
-        SEE_MASK_NOCLOSEPROCESS,        // fMask
-        NULL,                           // hwnd
-        "open",                         // lpVerb
-        "python.exe",                   // lpFile
-        "cgi_server.py",                // lpParameters
-        "libs\\network\\test\\server",  // lpDirectory
-        SW_SHOWNOACTIVATE,              // nShow, use SW_HIDE if you don't like popup windows
-        0,                              // hInstApp
-        NULL,                           // lpIDList
-        NULL,                           // lpClass
-        NULL,                           // hkeyClass
-        0,                              // dwHotKey
-        NULL,                           // hIcon
-        NULL                            // hProcess
-    };
-
-    SHELLEXECUTEINFO server_info_alt = {
-       sizeof(server_info_alt),         // cbSize
-        SEE_MASK_NOCLOSEPROCESS,        // fMask
-        NULL,                           // hwnd
-        "open",                         // lpVerb
-        "python.exe",                   // lpFile
-        "cgi_server.py",                // lpParameters
-        "server",                       // lpDirectory
-        SW_SHOWNOACTIVATE,              // nShow, use SW_HIDE if you don't like popup windows
-        0,                              // hInstApp
-        NULL,                           // lpIDList
-        NULL,                           // lpClass
-        NULL,                           // hkeyClass
-        0,                              // dwHotKey
-        NULL,                           // hIcon
-        NULL                            // hProcess
-    };
-    
-#else 
-    #include <unistd.h>     // fork, execlp etc.
-    #include <sys/types.h>
-    #include <sys/wait.h>   // for waitpid
-    #include <sys/stat.h>   // for chmod
-    #include <signal.h>     // for kill 
-
-    pid_t server_child = (pid_t) 0; // Process id of the python server
-#endif
+#include "server/http_test_server.hpp"
 
 using std::cout;
 using std::endl;
 
-std::string base_url = "http://localhost:8000";
-std::string cgi_url = base_url + "/cgi-bin/requestinfo.py";
-
-BOOST_AUTO_TEST_CASE(server_start) {
-    #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-        // Executes the Python Server
-        // See http://msdn.microsoft.com/en-us/library/bb762153(VS.85).aspx for a description of ShellExecute
-        CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-        BOOST_REQUIRE_MESSAGE( ShellExecuteEx(&server_info) && ShellExecuteEx(&server_info_alt), "Python server execution failed.\n" );
-        CoUninitialize();
-    #else 
-        // Try general Unix code
-        server_child = fork();
-        BOOST_REQUIRE_MESSAGE(server_child >= 0, "Failed to fork!");
-        if( server_child == 0 ) { // child process
-            bool server_script_ok = true;
-            if ( access("server/cgi_server.py", F_OK)==0 ) {
-                // if executed from $CPP_NETLIB_HOME/libs/network/test
-                chdir("server");
-            }
-            else if ( access("libs/network/test/server/cgi_server.py", F_OK)==0 ) {
-                // if executed from $CPP_NETLIB_HOME
-                chdir("libs/network/test/server");
-            }
-            else { server_script_ok = false; }
-            BOOST_REQUIRE_MESSAGE(server_script_ok, "Cannot find python server script!");
-
-            // set the CGI script execute permission
-            bool handler_script_ok = true;
-            if ( access("cgi-bin/requestinfo.py", R_OK|X_OK) != 0 )
-                handler_script_ok = chmod("cgi-bin/requestinfo.py", S_IWUSR|S_IXUSR|S_IXGRP|S_IXOTH|S_IRUSR|S_IRGRP|S_IROTH) == 0;
-            BOOST_REQUIRE_MESSAGE(handler_script_ok, "Cannot execute request handler script!");
-
-            BOOST_REQUIRE_MESSAGE(execlp("python", "python", "cgi_server.py", (char *)NULL) != -1, 
-                    "Python server execution failed!\n");
-        } else { // parent
-            sleep(1);
+namespace {
+    const std::string base_url = "http://localhost:8000";
+    const std::string cgi_url = base_url + "/cgi-bin/requestinfo.py";
+    
+    struct running_server_fixture
+    {
+        // NOTE: Can't use BOOST_REQUIRE_MESSAGE here, as Boost.Test data structures
+        // are not fully set up when the global fixture runs.
+        running_server_fixture() {
+            if( !server.start() )
+                cout << "Failed to start HTTP server for test!" << endl;
         }
-    #endif 
+      
+        ~running_server_fixture() {
+            if( !server.stop() )
+                cout << "Failed to stop HTTP server for test!" << endl;
+        }
+     
+        http_test_server server;
+    };
+    
+    size_t readfile(std::ifstream& file, std::vector<char>& buffer) {
+        using std::ios;
+
+        std::istreambuf_iterator<char> src(file);
+        std::istreambuf_iterator<char> eof;
+        std::copy(src, eof, std::back_inserter(buffer));
+
+        return buffer.size();
+    }
+    
+    std::map<std::string, std::string> parse_headers(std::string const& body) {
+        std::map<std::string, std::string> headers;
+    
+        std::istringstream stream(body);
+        while (stream.good())
+        {
+            std::string line;
+            std::getline(stream, line);
+            if (!stream.eof())
+            {
+                size_t colon = line.find(':');
+                if (colon != std::string::npos)
+                {
+                    std::string header = line.substr(0, colon);
+                    std::string value = line.substr(colon + 2);
+                    headers[header] = value;
+                }
+            }
+        }
+        
+        return headers;
+    }
+    
+    std::string get_content_length(std::string const& content) {
+        return boost::lexical_cast<std::string>(content.length());
+    }
+
 }
 
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+    // Uncomment the below if you're running Python pre-2.6. There was a bug 
+    // in the Python HTTP server for earlier versions that causes this test 
+    // case to fail.
+    //BOOST_AUTO_TEST_CASE_EXPECTED_FAILURES(text_query_preserves_crlf, 2);
+#endif
+
+BOOST_GLOBAL_FIXTURE( running_server_fixture );
+
 BOOST_AUTO_TEST_CASE(body_test) {
-    // Tests presence of body in  http responses
+    // Tests presence of body in http responses
     using namespace boost::network;
     http::request request_(base_url);
     http::client client_;
@@ -164,7 +137,7 @@ BOOST_AUTO_TEST_CASE(content_length_header_test) {
 	BOOST_CHECK(body(response_).length() != 0);
 }
 
-BOOST_AUTO_TEST_CASE(text_file_query) {
+BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
     // Tests proper transfer of a text file
     using namespace boost::network;
     http::request request_(base_url + "/test.xml");
@@ -173,37 +146,26 @@ BOOST_AUTO_TEST_CASE(text_file_query) {
     
     BOOST_CHECK(body(response_).length() != 0);
 
-    char *memblock = 0;
-    try {
-        using std::ios;
+    using std::ios;
 
-        std::ifstream file("libs/network/test/server/test.xml", ios::in | ios::binary | ios::ate);
-        if( ! file ) {
-            file.clear();
-            file.open("server/test.xml", ios::in | ios::binary | ios::ate);
-        }
-        
-        BOOST_REQUIRE_MESSAGE( file, "Could not open local test.xml");
-
-        size_t size = file.tellg();
-        BOOST_CHECK(size != 0);
-        BOOST_CHECK_EQUAL(body(response_).length(), size);
-
-        memblock = new char [size+1];
-
-        file.seekg(0, ios::beg);
-        file.read(memblock, size);
-        memblock[size] = '\0';
-        
-        std::pair<char *,std::string::iterator> diff_pos = std::mismatch(memblock, memblock+size,body(response_).begin());
-        BOOST_CHECK_EQUAL(diff_pos.first - memblock, boost::numeric_cast<int>(size));
-        
-        delete[] memblock;
-    } catch(...) { 
-        delete[] memblock; 
-        memblock = 0;
+    std::ifstream file("libs/network/test/server/test.xml", ios::in | ios::binary);
+    if( ! file ) {
+        file.clear();
+        file.open("server/test.xml", ios::in | ios::binary);
     }
+    
+    BOOST_REQUIRE_MESSAGE( file, "Could not open local test.xml");
 
+    std::vector<char> memblock;
+    size_t size = readfile(file, memblock);
+
+    BOOST_CHECK(size != 0);
+    BOOST_CHECK_EQUAL(body(response_).length(), size);
+
+    if (body(response_).length() == size) {
+        std::pair<std::vector<char>::iterator, std::string::iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
+        BOOST_CHECK_EQUAL(boost::numeric_cast<size_t>(diff_pos.first - memblock.begin()), size);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(binary_file_query) {
@@ -216,37 +178,24 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
     
     BOOST_CHECK(body(response_).length() != 0);
 
-    char *memblock = 0;
-    try {
-        using std::ios;
-        
-        std::ifstream file("libs/network/test/server/boost.jpg", ios::in | ios::binary | ios::ate);
-        if( ! file ) {
-            file.clear();
-            file.open("server/boost.jpg", ios::in | ios::binary | ios::ate);
-        }
-        
-        BOOST_REQUIRE_MESSAGE( file, "Could not open boost.jpg locally");
-
-        size_t size = file.tellg();
-        BOOST_CHECK(size != 0);
-        BOOST_CHECK_EQUAL(body(response_).length(), size);
-
-        memblock = new char [size+1];
-
-        file.seekg(0, ios::beg);
-        file.read(memblock, size);
-        memblock[size] = '\0';
-        
-        std::pair<char *,std::string::iterator> diff_pos = std::mismatch(memblock, memblock+size,body(response_).begin());
-        BOOST_CHECK_EQUAL(diff_pos.first - memblock, boost::numeric_cast<int>(size));
-        
-        file.close();
-        delete[] memblock;
-    } catch(...) { 
-        delete[] memblock; 
-        memblock = 0;
+    using std::ios;
+    
+    std::ifstream file("libs/network/test/server/boost.jpg", ios::in | ios::binary);
+    if( ! file ) {
+        file.clear();
+        file.open("server/boost.jpg", ios::in | ios::binary);
     }
+    
+    BOOST_REQUIRE_MESSAGE( file, "Could not open boost.jpg locally");
+
+    std::vector<char> memblock;        
+    size_t size = readfile(file, memblock);
+
+    BOOST_CHECK(size != 0);
+    BOOST_CHECK_EQUAL(body(response_).length(), size);
+    
+    std::pair<std::vector<char>::iterator, std::string::iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
+    BOOST_CHECK_EQUAL(boost::numeric_cast<size_t>(diff_pos.first - memblock.begin()), size);
 }
 
 BOOST_AUTO_TEST_CASE(cgi_query) {
@@ -291,7 +240,7 @@ BOOST_AUTO_TEST_CASE(file_not_found) {
 }
 
 BOOST_AUTO_TEST_CASE(head_test) {
-	using namespace boost::network;
+    using namespace boost::network;
     http::request request_(base_url + "/test.xml");
     http::client client_;
     http::response response_ = client_.head(request_);
@@ -299,17 +248,97 @@ BOOST_AUTO_TEST_CASE(head_test) {
     headers_range<http::response>::type range = headers(response_)["Content-Length"];
     BOOST_CHECK_EQUAL(begin(range)->first, "Content-Length");
     BOOST_CHECK_EQUAL(begin(range)->second, "117");
-	BOOST_CHECK(body(response_).length() == 0);
+    BOOST_CHECK(body(response_).length() == 0);
 }
 
-BOOST_AUTO_TEST_CASE(server_kill) {
-    #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-        UINT exitcode = 0;
-        BOOST_REQUIRE_MESSAGE( TerminateProcess(server_info.hProcess, exitcode) || TerminateProcess(server_info_alt.hProcess, exitcode),
-                               "Failed to shutdown local server!\n" );
-        CloseHandle(server_info.hProcess);
-        CloseHandle(server_info_alt.hProcess);
-    #else
-        BOOST_REQUIRE_MESSAGE( kill(server_child, SIGTERM)==0 , "Failed to shutdown local server!\n"); 
-    #endif 
+BOOST_AUTO_TEST_CASE(post_with_explicit_headers) {
+    // This test checks that the headers echoed through echo_headers.py
+    // are in fact the same as what are sent through the POST request
+    using namespace boost::network;
+
+    const std::string postdata = "empty";
+    const std::string content_length = get_content_length(postdata);
+    const std::string content_type = "application/x-www-form-urlencoded";
+
+    http::request req(base_url + "/cgi-bin/echo_headers.py");
+    req << header("Content-Length", content_length);
+    req << header("Content-Type", content_type);
+    req << body(postdata);
+
+    http::client c;
+    http::response r;
+    BOOST_REQUIRE_NO_THROW(r = c.post(req));
+    
+    std::map<std::string, std::string> headers = parse_headers(body(r));
+    BOOST_CHECK_EQUAL(headers["content-length"], content_length);
+    BOOST_CHECK_EQUAL(headers["content-type"], content_type);
+}
+
+BOOST_AUTO_TEST_CASE(post_with_implicit_headers) {
+    // This test checks that post(request, body) derives Content-Length
+    // and Content-Type
+    using namespace boost::network;
+
+    const std::string postdata = "empty";
+
+    http::request req(base_url + "/cgi-bin/echo_headers.py");
+
+    http::client c;
+    http::response r;
+    BOOST_REQUIRE_NO_THROW(r = c.post(req, postdata));
+    
+    std::map<std::string, std::string> headers = parse_headers(body(r));
+    BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
+    BOOST_CHECK_EQUAL(headers["content-type"], "x-application/octet-stream");
+}
+
+BOOST_AUTO_TEST_CASE(post_with_explicit_content_type) {
+    // This test checks that post(request, content_type, body) derives Content-Length,
+    // and keeps Content-Type
+    using namespace boost::network;
+
+    const std::string postdata = "empty";
+    const std::string content_type = "application/x-my-content-type";
+
+    http::request req(base_url + "/cgi-bin/echo_headers.py");
+
+    http::client c;
+    http::response r;
+    BOOST_REQUIRE_NO_THROW(r = c.post(req, content_type, postdata));
+    
+    std::map<std::string, std::string> headers = parse_headers(body(r));
+    BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
+    BOOST_CHECK_EQUAL(headers["content-type"], content_type);
+}
+
+BOOST_AUTO_TEST_CASE(post_body_default_content_type) {
+    // This test checks that post(request, body) gets the post data
+    // through to the server
+    using namespace boost::network;
+
+    const std::string postdata = "firstname=bill&lastname=badger";
+
+    http::request req(base_url + "/cgi-bin/echo_body.py");
+
+    http::client c;
+    http::response r;
+    BOOST_REQUIRE_NO_THROW(r = c.post(req, postdata));
+    
+    BOOST_CHECK_EQUAL(postdata, body(r));
+}
+
+BOOST_AUTO_TEST_CASE(post_with_custom_headers) {
+    // This test checks that custom headers pass through to the server
+    // when posting
+    using namespace boost::network;
+
+    http::request req(base_url + "/cgi-bin/echo_headers.py");
+    req << header("X-Cpp-Netlib", "rocks!");
+    
+    http::client c;
+    http::response r;
+    BOOST_REQUIRE_NO_THROW(r = c.post(req, std::string()));
+    
+    std::map<std::string, std::string> headers = parse_headers(body(r));
+    BOOST_CHECK_EQUAL(headers["x-cpp-netlib"], "rocks!");
 }

@@ -19,3 +19,5 @@ project network_test :
     ;
 
 exe http_client : http_client.cpp ;
+
+exe dispatch_table : dispatch_table.cpp ;

@@ -12,9 +12,11 @@ project network_test :
         <source>/boost//date_time
         <source>/boost//regex
         <source>/boost//thread
+        <source>/boost//filesystem
         <toolset>gcc:<linkflags>-lpthread
         <toolset>msvc:<define>BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
+        <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
         <link>static
     ;
 

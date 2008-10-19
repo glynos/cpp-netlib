@@ -9,9 +9,12 @@
 [section:architecture Architecture]
 __cnl__ is built upon the __boost_asio__, for reasons of portability.
 
-The architecture is driven by the requirement to separate requests from the transport mechanism.  Additionally, its possible to utilise templates and static mechanisms to make decisions at compile-time, resulting in more efficient and stable client code.
+The architecture is driven by the requirement to separate requests from the transport mechanism.  Additionally, it's possible to utilise templates and static mechanisms to make decisions at compile-time, resulting in more efficient and stable client code.
+
+There are two main features of the architecture which use modern C++ techniques to allow extensibility without comprimising efficiency: tags and directives.  These underly the design of the message.
 
 [include message.qbk]
+[include tags_and_directives.qbk]
 
 
 [endsect]

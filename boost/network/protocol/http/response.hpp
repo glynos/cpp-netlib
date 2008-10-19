@@ -15,6 +15,7 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     struct basic_response : public message_impl<Tag> {
 	private:
+		typedef message_impl<Tag> base_type;
 		typedef typename string<Tag>::type string_type;
 
 		string_type version_;
@@ -25,7 +26,11 @@ namespace boost { namespace network { namespace http {
 		typedef Tag tag;
 
 		basic_response()
-			: version_(), status_(0u), status_message_()
+		: base_type(), version_(), status_(0u), status_message_()
+		{ };
+
+		basic_response(basic_response const & other)
+		: base_type(other), version_(other.version_), status_(other.status_), status_message_(other.status_message_)
 		{ };
 
 		string_type & version() {
@@ -64,7 +69,7 @@ namespace boost { namespace network { namespace http {
 
 } // namespace http
 
-} // namespace network 
+} // namespace network
 
 } // namespace boost
 

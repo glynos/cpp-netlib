@@ -7,7 +7,7 @@
 
 
 [section:http HTTP]
-__cnl__ provides direct support for HTTP.  A motivating example will show how it's intended to work:
+The __cnl__ provides direct support for HTTP.  A motivating example will show how it's intended to work:
 
  #include <boost/network/protocol/http.hpp>
  #include <iostream>
@@ -24,8 +24,8 @@ __cnl__ provides direct support for HTTP.  A motivating example will show how it
      headers_range<http::response>::type hdrs = headers(response);
      boost::range_iterator<headers_range<http::response>::type>::type
          it = boost::begin(hdrs), end = boost::end(hdrs);
-     for (; it != end; ++it) 
-        std::cout << it->first << ": " << it->second << std::endl;
+     for (; it != end; ++it) {
+         std::cout << it->first << ": " << it->second << std::endl;
      }
 
      // print response body
@@ -58,7 +58,7 @@ The [^response] encapsulates the data received from the server.
 
  http::request request("http://www.boost.org/");
 
-This line frames the request for the resource __boost_org__.  This is slightly different to what one would normally expect from a request type, but there are good reasons for this.  Its useful to consider a [^request] object as the base unit of data used to instruct the client what to do.
+This line frames the request for the resource __boost_org__.  This is slightly different to what one would normally expect from a request type, but there are good reasons for this.  Consider a [^request] object as the base unit of data used to instruct the client what to do.
 
  http::client client;
 
@@ -88,5 +88,25 @@ There are several advantages to this design:
 Once the request has been made, and the [^client] returns a [^response] object, the rest is simple.  This example outputs all the response headers and body, in this case just the Boost homepage.
 
 
-[endsect]
+[heading Using [^http::client]]
 
+The [^http::client] supports the following operations:
+
+* [^http::client::head]
+* [^http::client::get]
+* [^http::client::post]
+* [^http::client::put]
+* [^http::client::delete_]
+
+HTTP features can be enabled by using constructor arguments:
+
+* [^http::client(http::client::cache_resolved)]
+* [^http::client(http::client::follow_redirect)]
+
+[h5 [^http::client::cache_resolved]]
+This argument enables the caching of resolved endpoints and prevents the client from resolving IP addresses of previously resolved hostnames.
+
+[h5 [^http::client::follow_redirect(s)]]
+[^http::client::follow_redirects] / [^http::client::follow_redirect] follow HTTP redirect(s) (300..307) by looking at the "Location" header provided by the response(s); headers present in the original request are preserved in the subsequent request(s).
+
+[endsect]

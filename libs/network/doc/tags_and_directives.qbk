@@ -1,0 +1,120 @@
+[/
+  (C) Copyright 2008 Glyn Matthews, Dean Michael Berris.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[section:tags_and_directives Tags and Directives]
+[heading Tags]
+The __cnl__ uses tags to specialize the message interface at compile time.
+
+__message__ has a source, a destination, a body and some headers.  The storage requirements for each of these can differ depending on factors such as the encoding type or memory usage.  For different reasons, its possible to assume a string implementation might be:
+
+# [^std::string]
+# [^std::wstring]
+# [^std::vector<boost::uint32_t>]
+# [^CString]
+# [^QString]
+
+The __cnl__ defines a common set of defaults which can cover most usages:
+
+ namespace tags {
+     struct default_ { };
+ }
+
+ namespace boost {
+ namespace network {
+     typedef void tag_specialization_is_not_provided;
+
+     template <
+         class Tag
+     >
+     struct string {
+         typedef tag_specialization_is_not_provided type;
+     };
+
+
+     template <>
+     struct string<tags::default_> {
+         typedef std::string type;
+     };
+ }
+ }
+
+In a similar way it's possible to specialize other kinds of container for multiple destinations or multiple headers.  This abstraction allows the network components of the __cnl__ to be re-usable for any kind of message specialization.
+
+[heading Directives]
+Attributes can be specialized in this way, but not class member functions.  To able to do this, the __cnl__ uses directives.  Directives are already familiar in the C++ world as part of the I/O streams in the standard library ([^std::endl], [^std::flush] etc.).  For the __cnl__, directives are used to manipulate the message class.  A tag aware directive might be implemented as such:
+
+ namespace boost {
+ namespace network {
+     // This class is used to set the source.
+     template <
+         class Tag
+     >
+     class basic_source {
+         // Constructor.
+         basic_source(const typename Tag::string_type &source) : source_(source) {
+
+         }
+
+         // Overloaded operator to set the source in the message.
+         void operator () (basic_message<Tag> &message) const {
+             message_.source_ = source;
+         }
+
+     private:
+         mutable typename Tag::string_type source_;
+     };
+
+     // The source directive.
+     template <
+        class Tag
+     >
+     inline
+     basic_source<Tag>
+     source(const typename string<Tag>::type &s) {
+         return basic_source<Tag>(s);
+     };
+ }
+ }
+
+To use directives with messages, different overloads of the free [^operator <<] are provided:
+
+ template <
+     class Tag,
+     class Directive
+ >
+ inline
+ basic_message<Tag> &
+ operator << (basic_message<Tag> &message, const Directive &directive) {
+     directive(message);
+     return message;
+ }
+
+Client code looks like this:
+
+ message m;
+ m << source("London")
+   << destination("New York")
+   << body("Hello there chaps!")
+   ;
+
+This approach allows the developers of the __cnl__ to write network code, and the library users to be able to specialize the message to suit their own requirements.  Run-time efficiency is good, because compilers will be able to provide optimizations.  An extra advantage is the expressiveness of the code.
+
+[heading Customizing __message__]
+
+__message__ can be specialized based on three traits:
+
+* [^boost::network::string<Tag>]
+* [^boost::network::ostringstream<Tag>]
+* [^boost::network::headers_container<Tag>]
+
+This means that __message__ is not bound to a particular string type.  Moreover, this mechanism allows developers to provide custom conversion handlers for data compression or encryption.
+
+The fine-grained design of the tags/traits mechanism is strongly influenced by __boost_type_traits__.
+
+[endsect]
+

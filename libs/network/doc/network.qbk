@@ -23,17 +23,18 @@
 [def __boost_org__ [@http://www.boost.org/]]
 [def __boost_asio__ [@http://www.boost.org/libs/asio/index.html Boost.Asio]]
 [def __boost_system__ [@http://www.boost.org/libs/system/index.html Boost.System]]
+[def __boost_type_traits__ [@http://www.boost.org/libs/type_traits/index.html Boost.TypeTraits]]
 [def __pion__ [@http://www.pion.org/projects/pion-network-library the Pion Network Library]]
 [def __cnl__ C++ Network Library]
+[def __message__ [^basic_message]]
+[def __python__ [@http://www.python.org Python]]
 
 
 
 [include motivation.qbk]
 [include using.qbk]
 [include architecture.qbk]
-[section:protocol Application Layer Protocols]
-[include http.qbk]
-[endsect]
+[include protocol.qbk]
 [include examples.qbk]
 [include reference.qbk]
 [include acknowledgements.qbk]
