@@ -4,6 +4,14 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
+import os ;
+
+if [ os.name ] = CYGWIN
+{
+    lib ws2_32 ;
+    lib mswsock ;
+}
+
 project network_test :
     requirements
         <include>../../../
@@ -14,6 +22,10 @@ project network_test :
         <source>/boost//thread
         <source>/boost//filesystem
         <toolset>gcc:<linkflags>-lpthread
+        <os>cygwin,<toolset>gcc:<define>_WIN32_WINNT=0x0501
+        <os>cygwin,<toolset>gcc:<define>__USE_W32_SOCKETS
+        <os>cygwin,<toolset>gcc:<library>ws2_32
+        <os>cygwin,<toolset>gcc:<library>mswsock
         <toolset>msvc:<define>BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
