@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(content_length_header_test) {
     BOOST_REQUIRE(headers(response_).count("Content-Length") != 0);
     headers_range<http::response>::type range = headers(response_)["Content-Length"];
     BOOST_CHECK_EQUAL(begin(range)->first, "Content-Length");
-    BOOST_CHECK_EQUAL(begin(range)->second, "117");
+    BOOST_CHECK_EQUAL(begin(range)->second, "113");
 	BOOST_CHECK(body(response_).length() != 0);
 }
 
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(head_test) {
     BOOST_REQUIRE(headers(response_).count("Content-Length") != 0);
     headers_range<http::response>::type range = headers(response_)["Content-Length"];
     BOOST_CHECK_EQUAL(begin(range)->first, "Content-Length");
-    BOOST_CHECK_EQUAL(begin(range)->second, "117");
+    BOOST_CHECK_EQUAL(begin(range)->second, "113");
     BOOST_CHECK(body(response_).length() == 0);
 }
 
