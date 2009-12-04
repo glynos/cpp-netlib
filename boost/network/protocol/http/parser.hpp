@@ -11,6 +11,7 @@
 #define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_HPP
 
 #include <boost/network/protocol/http/traits.hpp>
+#include <boost/network/traits/string.hpp>
 #include <boost/network/message.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/cstdint.hpp>
@@ -36,7 +37,7 @@ namespace boost { namespace network { namespace http {
         
 		// import types from ParserTraits template
 		typedef ParserTraits    traits_type;
-
+        typedef typename string<Tag>::type string_type;
 
         // default destructor
         virtual ~basic_parser() {}
@@ -117,7 +118,7 @@ namespace boost { namespace network { namespace http {
          * @param ptr pointer to the first bytes available to be read
          * @param len number of bytes available to be read
          */
-        inline void set_read_buffer(const char *ptr, size_t len) {
+        inline void set_read_buffer(const char *ptr, std::size_t len) {
             m_read_ptr = ptr;
             m_read_end_ptr = ptr + len;
         }
@@ -166,7 +167,7 @@ namespace boost { namespace network { namespace http {
          * @return bool true if successful
          */
         static bool parse_url_encoded(types::query_params& params,
-                                      const char *ptr, const size_t len);
+                                      const char *ptr, const std::size_t len);
 
         /**
          * parse key-value pairs out of a "Cookie" request header
@@ -178,7 +179,7 @@ namespace boost { namespace network { namespace http {
          * @return bool true if successful
          */
         static bool parse_cookie_header(types::cookie_params& params,
-                                        const std::string& cookie_header);
+                                        const string_type& cookie_header);
 
 
         /// true if the message is an HTTP request; false if it is an HTTP response
@@ -262,25 +263,25 @@ namespace boost { namespace network { namespace http {
         boost::uint16_t						m_status_code;
         
         /// Used for parsing the HTTP response status message
-        std::string							m_status_message;
+        string_type							m_status_message;
         
         /// Used for parsing the request method
-        std::string							m_method;
+        string_type							m_method;
         
         /// Used for parsing the name of resource requested
-        std::string							m_resource;
+        string_type							m_resource;
         
         /// Used for parsing the query string portion of a URI
-        std::string							m_query_string;
+        string_type							m_query_string;
         
         /// Used for parsing the name of HTTP headers
-        std::string							m_header_name;
+        string_type							m_header_name;
     
         /// Used for parsing the value of HTTP headers
-        std::string							m_header_value;
+        string_type							m_header_value;
     
         /// Used for parsing the chunk size
-        std::string							m_chunk_size_str;
+        string_type							m_chunk_size_str;
     
         /// Used for parsing the current chunk
         std::vector<char>					m_current_chunk;

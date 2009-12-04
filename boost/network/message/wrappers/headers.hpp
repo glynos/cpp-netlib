@@ -7,7 +7,8 @@
 #ifndef __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
 #define __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
 
-#include <boost/network/message/traits/headers_container.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/network/traits/headers_container.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/functions.hpp>
 
@@ -39,6 +40,7 @@ namespace boost { namespace network {
             struct headers_wrapper : public detail::wrapper_base<Tag> {
                 typedef Tag tag;
                 typedef basic_message<Tag> message_type;
+                typedef typename string<Tag>::type string_type;
                 typedef typename headers_range<message_type>::type range_type;
                 typedef typename headers_container<Tag>::type headers_container_type;
 				typedef typename headers_container_type::const_iterator const_iterator;
@@ -48,11 +50,11 @@ namespace boost { namespace network {
                     : detail::wrapper_base<tag>(message_)
                 { };
 
-                range_type operator[] (std::string const & key) const {
+                range_type operator[] (string_type const & key) const {
                     return headers_wrapper<Tag>::_message.headers().equal_range(key);
                 };
 
-                typename message_type::headers_container_type::size_type count(std::string const & key) const {
+                typename message_type::headers_container_type::size_type count(string_type const & key) const {
                     return headers_wrapper<Tag>::_message.headers().count(key);
                 };
 

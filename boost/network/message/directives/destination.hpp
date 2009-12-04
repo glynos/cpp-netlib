@@ -7,6 +7,9 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__
 
+#include <boost/network/traits/string.hpp>
+
+
 /** destination.hpp
  *
  * Defines the types involved and the semantics of adding
@@ -18,32 +21,41 @@
  */
 namespace boost { namespace network {
     
-    namespace impl {
-        template <class Tag>
-            struct destination_directive : public detail::directive_base<Tag> {
-                typedef Tag tag;
+namespace impl {
+template <class T>
+struct destination_directive {
 
-                explicit destination_directive ( std::string const & destination)
-                    : _destination(destination)
-                { };
+    explicit destination_directive (T destination)
+        : _destination(destination)
+    { };
 
-                void operator() (basic_message<tag> & msg) const {
-                    msg.destination() = _destination;
-                };
+    template <
+        class MessageTag
+        >
+    void operator() (basic_message<MessageTag> & msg) const {
+        msg.destination() = _destination;
+    };
 
-                private:
+private:
+    
+    T _destination;
+};
+} // namespace impl
 
-                std::string _destination;
-            };
-    } // namespace impl
 
-    inline impl::destination_directive<tags::default_>
-        destination(std::string const & destination_) {
-            return impl::destination_directive<tags::default_>(destination_);
-        }
+inline
+impl::destination_directive<std::string>
+destination(std::string destination_) {
+    return impl::destination_directive<std::string>(destination_);
+}
 
+inline
+impl::destination_directive<std::wstring>
+destination(std::wstring destination_) {
+    return impl::destination_directive<std::wstring>(destination_);
+}
 } // namespace network
-
 } // namespace boost
+
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__

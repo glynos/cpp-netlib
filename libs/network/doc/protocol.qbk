@@ -8,5 +8,5 @@
 [section:protocol Application Layer Protocols]
 [include http.qbk]
 
-The message alone isn't any use.  This section describes some of the common network protocols that are implemented in the __cnl__.
+The message and URI alone don't make a useful library.  This section describes some of the common network protocols that are implemented in the __cnl__.
 [endsect]

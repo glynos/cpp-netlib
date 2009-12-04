@@ -7,6 +7,10 @@
 #ifndef __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
 #define __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
 
+
+#include <boost/network/traits/string.hpp>
+
+
 namespace boost { namespace network {
 
     namespace impl {
@@ -14,19 +18,20 @@ namespace boost { namespace network {
             struct destination_wrapper : public detail::wrapper_base<Tag> {
                 typedef Tag tag;
                 typedef basic_message<tag> message_type;
+                typedef typename string<Tag>::type string_type;
 
                 explicit destination_wrapper(message_type & message_)
                     : detail::wrapper_base<tag>(message_)
                 { };
 
-                operator std::string () const {
-                    return std::string(detail::wrapper_base<tag>::_message.destination());
+                operator string_type () const {
+                    return string_type(detail::wrapper_base<tag>::_message.destination());
                 };
             };
     } // namespace impl
 
     template <class Tag>
-        inline std::string
+        inline typename string<Tag>::type
         destination(basic_message<Tag> & message_) {
             return impl::destination_wrapper<Tag>(message_);
         }

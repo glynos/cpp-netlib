@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Glyn Matthews.
+  (C) Copyright 2008, 2009 Glyn Matthews.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -7,6 +7,7 @@
 
 
 [section:http_client HTTP Client]
-[/[include ../../../example/http_client.cpp]]
+[import ../../example/http_client.cpp]
+[http_client_main]
 [endsect]
 

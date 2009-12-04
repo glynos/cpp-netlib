@@ -7,38 +7,47 @@
 #ifndef NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP
 #define NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP
 
+
+#include <boost/network/traits/string.hpp>
+
+
 namespace boost { namespace network {
 
-	namespace impl {
-		template <class Tag>
-		struct remove_header_directive : public detail::directive_base<Tag> {
-			typedef Tag tag;
-			explicit remove_header_directive(
-				std::string const & header_name
-				) : 
-			header_name_(header_name)
-			{ };
+namespace impl {
+template <
+    class T
+    >
+struct remove_header_directive {
 
-			template <class MessageTag>
-			void operator() (basic_message<MessageTag> & msg) const {
-				msg.headers().erase(header_name_);
-			}
+    explicit remove_header_directive(T header_name) : 
+        header_name_(header_name)
+    { };
 
-		private:
-			mutable std::string header_name_;
-		};
+    template <class MessageTag>
+    void operator() (basic_message<MessageTag> & msg) const {
+        msg.headers().erase(header_name_);
+    }
 
-	} // namespace impl
+private:
+    mutable T header_name_;
+};
 
-	template <class T1>
-	inline impl::remove_header_directive<tags::default_>
-		remove_header(T1 header_name) {
-			return impl::remove_header_directive<tags::default_>(header_name);
-	}
+} // namespace impl
 
+inline
+impl::remove_header_directive<std::string>
+remove_header(std::string header_name) {
+    return impl::remove_header_directive<std::string>(header_name);
+}
+
+inline
+impl::remove_header_directive<std::wstring>
+remove_header(std::wstring header_name) {
+    return impl::remove_header_directive<std::wstring>(header_name);
+}
 } // namespace network
-
 } // namespace boost
+
 
 #endif // NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP
 

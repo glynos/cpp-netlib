@@ -16,8 +16,13 @@ project network_test :
         <toolset>msvc:<define>BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
         <link>static
+        <c++-template-depth>256
     ;
 
 exe http_client : http_client.cpp ;
 
 exe dispatch_table : dispatch_table.cpp ;
+
+exe uri : uri.cpp ;
+
+exe simple_wget. : simple_wget.cpp ;

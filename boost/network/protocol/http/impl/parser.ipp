@@ -595,7 +595,7 @@ namespace boost { namespace network { namespace http {
  
    template <typename Tag, typename ParserTraits>
    static bool basic_parser<Tag,Traits>::parse_url_encoded(types::query_params& params,
-                                                           const char *ptr, const size_t len)
+                                                           const char *ptr, const std::size_t len)
     {
         // used to track whether we are parsing the name or value
         enum query_parse_state_t {
@@ -604,8 +604,8 @@ namespace boost { namespace network { namespace http {
     
         // misc other variables used for parsing
         const char * const end = ptr + len;
-        std::string query_name;
-        std::string query_value;
+        string_type query_name;
+        string_type query_value;
         
         // iterate through each encoded character
         while (ptr < end) {
@@ -661,7 +661,7 @@ namespace boost { namespace network { namespace http {
                                  
     template <typename Tag, typename ParserTraits>
     static bool basic_parser<Tag,Traits>::parse_cookie_header(types::cookie_params& params,
-                                                              const std::string& cookie_header)
+                                                              const string_type& cookie_header)
     {
         // BASED ON RFC 2109
         // 
@@ -674,12 +674,12 @@ namespace boost { namespace network { namespace http {
         } parse_state = COOKIE_PARSE_NAME;
         
         // misc other variables used for parsing
-        std::string cookie_name;
-        std::string cookie_value;
+        string_type cookie_name;
+        string_type cookie_value;
         char value_quote_character = '\0';
         
         // iterate through each character
-        for (std::string::const_iterator string_iterator = cookie_header.begin();
+        for (string_type::const_iterator string_iterator = cookie_header.begin();
              string_iterator != cookie_header.end(); ++string_iterator)
         {
             switch (parse_state) {

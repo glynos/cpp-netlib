@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Glyn Matthews, Dean Michael Berris.
+  (C) Copyright 2008, 2009 Glyn Matthews, Dean Michael Berris.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -7,43 +7,6 @@
 
 
 [section:tags_and_directives Tags and Directives]
-[heading Tags]
-The __cnl__ uses tags to specialize the message interface at compile time.
-
-__message__ has a source, a destination, a body and some headers.  The storage requirements for each of these can differ depending on factors such as the encoding type or memory usage.  For different reasons, its possible to assume a string implementation might be:
-
-# [^std::string]
-# [^std::wstring]
-# [^std::vector<boost::uint32_t>]
-# [^CString]
-# [^QString]
-
-The __cnl__ defines a common set of defaults which can cover most usages:
-
- namespace tags {
-     struct default_ { };
- }
-
- namespace boost {
- namespace network {
-     typedef void tag_specialization_is_not_provided;
-
-     template <
-         class Tag
-     >
-     struct string {
-         typedef tag_specialization_is_not_provided type;
-     };
-
-
-     template <>
-     struct string<tags::default_> {
-         typedef std::string type;
-     };
- }
- }
-
-In a similar way it's possible to specialize other kinds of container for multiple destinations or multiple headers.  This abstraction allows the network components of the __cnl__ to be re-usable for any kind of message specialization.
 
 [heading Directives]
 Attributes can be specialized in this way, but not class member functions.  To able to do this, the __cnl__ uses directives.  Directives are already familiar in the C++ world as part of the I/O streams in the standard library ([^std::endl], [^std::flush] etc.).  For the __cnl__, directives are used to manipulate the message class.  A tag aware directive might be implemented as such:
@@ -62,7 +25,7 @@ Attributes can be specialized in this way, but not class member functions.  To a
 
          // Overloaded operator to set the source in the message.
          void operator () (basic_message<Tag> &message) const {
-             message_.source_ = source;
+             source_ = message.source_;
          }
 
      private:

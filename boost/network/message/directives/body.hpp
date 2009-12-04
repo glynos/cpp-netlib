@@ -7,6 +7,9 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_BODY_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_BODY_HPP__
 
+#include <boost/network/traits/string.hpp>
+
+
 /** body.hpp
  *
  * Defines the types involved and the semantics of adding
@@ -17,36 +20,51 @@
  * HEADER.
  */
 namespace boost { namespace network {
+namespace impl {
+template <
+    class T
+    >
+struct body_directive {
 
-    namespace impl {
-        template <class Tag>
-            struct body_directive : public detail::directive_base<Tag> {
-                typedef Tag tag;
+    explicit body_directive(T body) :
+        _body(body)
+    { };
 
-                explicit body_directive(
-                        std::string const & body
-                        ) :
-                    _body(body)
-                { };
+    template <class MessageTag>
+    void operator() (basic_message<MessageTag> & msg) const {
+        msg.body() = _body;
+    }
 
-                template <class MessageTag>
-                void operator() (basic_message<MessageTag> & msg) const {
-                    msg.body() = _body;
-                }
+private:
 
-                private:
+    T _body;
+};
+} // namespace impl
 
-                std::string _body;
-            };
-    } // namespace impl
 
-    inline impl::body_directive<tags::default_>
-        body(std::string const & body_) {
-            return impl::body_directive<tags::default_>(body_);
-        }
+// template <
+//     class T
+//     >
+// inline
+// impl::body_directive<T>
+// body(T body_, boost::disable_if<T::message>::type) {
+//     return impl::body_directive<T>(body_);
+// }
 
+
+inline
+impl::body_directive<std::string>
+body(std::string body_) {
+    return impl::body_directive<std::string>(body_);
+}
+
+
+inline
+impl::body_directive<std::wstring>
+body(std::wstring body_) {
+    return impl::body_directive<std::wstring>(body_);
+}
 } // namespace network
-
 } // namespace boost
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_BODY_HPP__

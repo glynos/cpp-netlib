@@ -7,7 +7,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_IMPL_STRING_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_IMPL_STRING_IPP
 
-#include <boost/network/message/traits/string.hpp>
+#include <boost/network/traits/string.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 
 namespace boost { namespace network {

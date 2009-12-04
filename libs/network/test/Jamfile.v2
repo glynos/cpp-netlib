@@ -29,6 +29,7 @@ project network_test :
         <toolset>msvc:<define>BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+        <c++-template-depth>256
         <link>static
     ;
 
@@ -42,4 +43,5 @@ unit-test http_1_0_test : http_1_0_test.cpp ;
 
 unit-test http_message_test : http_message_test.cpp ;
 
+unit-test url_test : url_test.cpp ;
 

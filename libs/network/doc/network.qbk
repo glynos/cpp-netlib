@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Glyn Matthews.
+  (C) Copyright 2008, 2009 Glyn Matthews.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -7,8 +7,9 @@
 
 [article C++ Network Library
     [quickbook 1.4]
+    [version 0.4]
     [authors [Matthews, Glyn]]
-    [copyright 2008 Glyn Matthews]
+    [copyright 2008, 2009 Glyn Matthews]
     [purpose C++ library for general network programming]
     [category text]
     [license
@@ -24,14 +25,21 @@
 [def __boost_asio__ [@http://www.boost.org/libs/asio/index.html Boost.Asio]]
 [def __boost_system__ [@http://www.boost.org/libs/system/index.html Boost.System]]
 [def __boost_type_traits__ [@http://www.boost.org/libs/type_traits/index.html Boost.TypeTraits]]
+[def __boost_doc__ [@http://www.boost.org/doc/libs/]]
 [def __pion__ [@http://www.pion.org/projects/pion-network-library the Pion Network Library]]
 [def __cnl__ C++ Network Library]
 [def __message__ [^basic_message]]
 [def __python__ [@http://www.python.org Python]]
+[def __libcurl__ [@http://curl.haxx.se/ libcurl]]
+[def __mozilla_netlib__ [@http://www.mozilla.org/projects/netlib/ mozilla-netlib]]
+
+
+[def __quick_start__ quick start]
 
 
 
-[include motivation.qbk]
+[include quick_start.qbk]
+[include intro.qbk]
 [include using.qbk]
 [include architecture.qbk]
 [include protocol.qbk]

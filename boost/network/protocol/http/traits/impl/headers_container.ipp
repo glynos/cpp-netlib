@@ -7,7 +7,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_HEADERS_CONTAINER_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_HEADERS_CONTAINER_IPP
 
-#include <boost/network/message/traits/headers_container.hpp>
+#include <boost/network/traits/headers_container.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <map>

@@ -15,7 +15,9 @@
 #include "boost/network/message_fwd.hpp"
 
 // include traits implementation
-#include <boost/network/message/traits.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/network/traits/ostringstream.hpp>
+#include <boost/network/traits/headers_container.hpp>
 
 // include directives base
 #include <boost/network/detail/directive_base.hpp>

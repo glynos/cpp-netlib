@@ -28,6 +28,9 @@ Goals
         -  (E)SMTP
         -  SNMP
         -  ICMP
+
+ *  Implement an easy to embed HTTP server container type that supports
+    most modern HTTP 1.1 features.
     
  *  Implement an efficient easy to use URI class/parser.
 

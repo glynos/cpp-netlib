@@ -11,6 +11,9 @@ This offers the following implementations:
      generate message objects from strings.
   o  Adapters and Wrappers -- A collection of Adapters and wrappers aimed
      towards making the message type STL friendly.
+  o  Network protocol client and server implementations -- A collection 
+     of network protocol implementations that include embeddable client 
+     and server types.
 
 This library is released under the Boost Software License (please see
 http://boost.org/LICENSE_1_0.txt or the accompanying LICENSE_1_0.txt file

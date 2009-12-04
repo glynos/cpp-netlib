@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Glyn Matthews.
+  (C) Copyright 2008, 2009 Glyn Matthews.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -7,7 +7,7 @@
 
 
 [section:http HTTP]
-The __cnl__ provides direct support for HTTP.  A motivating example will show how it's intended to work:
+The __cnl__ provides direct support for HTTP.   As a motivating example, here is the code again from the __quick_start__.
 
  #include <boost/network/protocol/http.hpp>
  #include <iostream>
@@ -33,24 +33,32 @@ The __cnl__ provides direct support for HTTP.  A motivating example will show ho
      return 0;
  }
 
-
 Before walking through exactly what is happening in this example, the principle components are described below:
 
 [heading HTTP Request]
 
- #include <boost/network/protocol/http/request.hpp>
+ namespace boost { namespace network { namespace http {
+     template <class Tag> class basic_request;
+     typedef basic_request<tags::default_> request;
+ }}}
 
 The [^request] encapsulates information about the request and the resource.
 
 [heading HTTP Client]
 
- #include <boost/network/protocol/http/client.hpp>
+ namespace boost { namespace network { namespace http {
+     template <class Tag> class basic_client;
+     typedef basic_client<tags::default_> client;
+ }}}
 
 The [^client] encapsulates the connection-mapping logic between the domain and the underlying socket.  Access to a resource is managed through the [^client] object.
 
 [heading HTTP Response]
 
- #include <boost/network/protocol/http/response.hpp>
+ namespace boost { namespace network { namespace http {
+     template <class Tag> class basic_response;
+     typedef basic_response<tags::default_> response;
+ }}}
 
 The [^response] encapsulates the data received from the server.
 
@@ -58,19 +66,19 @@ The [^response] encapsulates the data received from the server.
 
  http::request request("http://www.boost.org/");
 
-This line frames the request for the resource __boost_org__.  This is slightly different to what one would normally expect from a request type, but there are good reasons for this.  Consider a [^request] object as the base unit of data used to instruct the client what to do.
+This line frames the request for the resource __boost_org__.
 
  http::client client;
 
-Then a client is created that handles all HTTP requests and responses.
+Then a client object is created that handles all HTTP requests and responses.
 
  http::response response = client.get(request);
 
-The client performs the requests on the developer's behalf.  This might initially appear counter-intuitive, since the methods GET, POST, PUT and DELETE are associated with a request to an HTTP server.
+The client simply performs the requests.  The interface is trivially easy.  All HTTP methods are supported (HEAD, GET, POST, PUT, DELETE).
 
 There are several advantages to this design:
 
-# A [^client] object manages the connection, unencumbering the developer with this task, allowing them to better craft requests;
+# A [^client] object manages the connection, unencumbering the developer with this task;
 # A [^request] can be used with any instance of the [^client] without binding the [^client] to any destination;
 # By decoupling the method from the [^request] object it allows developers to create requests that may be re-used (e.g. perform a HEAD first; if the the headers don't fulfil a certain criteria, perform a GET using the same resource).
 

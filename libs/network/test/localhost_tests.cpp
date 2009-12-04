@@ -43,7 +43,7 @@ namespace {
         http_test_server server;
     };
     
-    size_t readfile(std::ifstream& file, std::vector<char>& buffer) {
+    std::size_t readfile(std::ifstream& file, std::vector<char>& buffer) {
         using std::ios;
 
         std::istreambuf_iterator<char> src(file);
@@ -63,7 +63,7 @@ namespace {
             std::getline(stream, line);
             if (!stream.eof())
             {
-                size_t colon = line.find(':');
+                std::size_t colon = line.find(':');
                 if (colon != std::string::npos)
                 {
                     std::string header = line.substr(0, colon);
@@ -157,14 +157,14 @@ BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
     BOOST_REQUIRE_MESSAGE( file, "Could not open local test.xml");
 
     std::vector<char> memblock;
-    size_t size = readfile(file, memblock);
+    std::size_t size = readfile(file, memblock);
 
     BOOST_CHECK(size != 0);
     BOOST_CHECK_EQUAL(body(response_).length(), size);
 
     if (body(response_).length() == size) {
         std::pair<std::vector<char>::iterator, std::string::iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
-        BOOST_CHECK_EQUAL(boost::numeric_cast<size_t>(diff_pos.first - memblock.begin()), size);
+        BOOST_CHECK_EQUAL(boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()), size);
     }
 }
 
@@ -189,13 +189,13 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
     BOOST_REQUIRE_MESSAGE( file, "Could not open boost.jpg locally");
 
     std::vector<char> memblock;        
-    size_t size = readfile(file, memblock);
+    std::size_t size = readfile(file, memblock);
 
     BOOST_CHECK(size != 0);
     BOOST_CHECK_EQUAL(body(response_).length(), size);
     
     std::pair<std::vector<char>::iterator, std::string::iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
-    BOOST_CHECK_EQUAL(boost::numeric_cast<size_t>(diff_pos.first - memblock.begin()), size);
+    BOOST_CHECK_EQUAL(boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()), size);
 }
 
 BOOST_AUTO_TEST_CASE(cgi_query) {

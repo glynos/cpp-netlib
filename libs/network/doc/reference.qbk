@@ -13,7 +13,7 @@
          [@http://www.w3.org/Protocols/HTTP/1.0/spec.html HTTP 1.0]
       ]
       [
-         The HTTP 1.0 Specification.
+         The HTTP 1.0 specification.
       ]
    ]
    [
@@ -21,7 +21,15 @@
 	 [@http://www.w3.org/Protocols/rfc2616/rfc2616.html HTTP 1.1 (RFC 2616)]
       ]
       [
-         The HTTP 1.1 Specification.
+         The HTTP 1.1 specification.
+      ]
+   ]
+   [
+      [
+         [@http://www.ietf.org/rfc/rfc2396.txt URI Generic Syntax RFC 2396)]
+      ]
+      [
+	 Generic URI syntax specification.
       ]
    ]
 ]
