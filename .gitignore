@@ -1,0 +1,9 @@
+*.cmake
+*.swp
+*.pyc
+CMakeCache.txt
+CMakeFiles
+Makefile
+Testing
+build
+
