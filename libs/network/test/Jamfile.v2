@@ -45,3 +45,10 @@ unit-test http_message_test : http_message_test.cpp ;
 
 unit-test url_test : url_test.cpp ;
 
+exe hello_world : hello_world.cpp ;
+
+make htpplib_acceptance.passed : httplib_acceptance.py hello_world : @python_runner ;
+actions python_runner {
+    python $(>) $(<)
+}
+

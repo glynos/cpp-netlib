@@ -16,6 +16,7 @@ namespace tags {
 struct default_string;
 struct default_wstring;
 struct http;
+struct pod;
 
 typedef default_string default_;
 

@@ -7,12 +7,12 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_CONTENT_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_CONTENT_IPP
 
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct content<http::message_tag> {
+        struct content<tags::http> {
             static char const * const type_html() {
                 static char const * const TYPE_HTML = "text/html";
                 return TYPE_HTML;

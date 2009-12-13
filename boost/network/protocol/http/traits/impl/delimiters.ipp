@@ -7,13 +7,13 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_DELIMITERS_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_DELIMITERS_IPP
 
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    // specialize on the http::message_tag type
+    // specialize on the tags::http type
     template <>
-        struct delimiters<http::message_tag> {
+        struct delimiters<tags::http> {
             static char const * const string_crlf() {
                 static char const * const CRLF = "\x0D\x0A";
                 return CRLF;

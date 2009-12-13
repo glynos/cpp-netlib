@@ -6,7 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/traits/string.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace uri {
 

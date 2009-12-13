@@ -7,7 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/uri/detail/uri_parts.hpp>
-#include <boost/network/protocol/http/traits/string.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace uri { 
 

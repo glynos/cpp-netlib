@@ -7,12 +7,12 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_HEADERS_HPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_HEADERS_HPP
 
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct headers_<http::message_tag> {
+        struct headers_<tags::http> {
             static char const * const host() {
                 static char const * const HOST = "Host";
                 return HOST;

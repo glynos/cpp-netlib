@@ -11,6 +11,7 @@
 #define BOOST_NETLIB_VERSION "0.3"
 #endif
 
+#include <boost/network/traits/ostringstream.hpp>
 #include <boost/network/protocol/http/message.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
@@ -42,7 +43,7 @@ namespace boost { namespace network { namespace http {
             boost::asio::ip::tcp::resolver::iterator
         > resolver_iterator_pair;
 
-        typedef typename string_traits<tag>::type string_type;
+        typedef typename string<tag>::type string_type;
 
         typedef std::map<string_type, resolver_iterator_pair> resolved_cache;
         resolved_cache endpoint_cache_;
@@ -200,7 +201,7 @@ namespace boost { namespace network { namespace http {
         };
 
         void read_body(basic_response<tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
-            typename ostringstream_traits<tag>::type body_stream;
+            typename ostringstream<tag>::type body_stream;
 
             if (response_buffer.size() > 0)
                 body_stream << &response_buffer;
@@ -333,7 +334,7 @@ namespace boost { namespace network { namespace http {
 
     };
 
-    typedef basic_client<http::message_tag, 1, 0> client;
+    typedef basic_client<tags::http, 1, 0> client;
 
 } // namespace http
 

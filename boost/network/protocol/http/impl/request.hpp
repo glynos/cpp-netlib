@@ -15,6 +15,8 @@
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
 
 #include <boost/network/uri.hpp>
+#include <boost/network/protocol/http/header.hpp>
+#include <boost/network/traits/vector.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -33,11 +35,13 @@ namespace boost { namespace network { namespace http {
         boost::network::uri::http::uri uri_;
 
     public:
-        explicit basic_request(typename string_traits<Tag>::type const & uri_)
+        typedef typename string<Tag>::type string_type;
+
+        explicit basic_request(string_type const & uri_)
         : uri_(uri_) 
         { }
 
-        void uri(typename string_traits<Tag>::type const & new_uri) {
+        void uri(string_type const & new_uri) {
             uri_ = new_uri;
         }
 
@@ -62,7 +66,7 @@ namespace boost { namespace network { namespace http {
             swap(other.uri_, this->uri_);
         }
 
-        typename string_traits<Tag>::type const host() const {
+        string_type const host() const {
             return uri_.host();
         }
 
@@ -70,15 +74,15 @@ namespace boost { namespace network { namespace http {
             return uri_.port();
         }
 
-        typename string_traits<Tag>::type const path() const {
+        string_type const path() const {
             return uri_.path();
         }
 
-        typename string_traits<Tag>::type const query() const {
+        string_type const query() const {
             return uri_.query();
         }
 
-        typename string_traits<Tag>::type const anchor() const {
+        string_type const anchor() const {
             return uri_.fragment();
         }
     };
@@ -87,6 +91,37 @@ namespace boost { namespace network { namespace http {
     inline void swap(basic_request<Tag> & lhs, basic_request<Tag> & rhs) {
         lhs.swap(rhs);
     }
+
+    /** This is the implementation of a POD request type
+     *  that is specificially used by the HTTP server
+     *  implementation. This fully specializes the
+     *  basic_request template above to be
+     *  primarily and be solely a POD for performance
+     *  reasons.
+     */
+    template <>
+    class basic_request<tags::pod> {
+        public:
+        typedef string<tags::pod>::type string_type;
+        typedef vector<tags::pod>::apply<request_header>::type vector_type;
+        string_type method;
+        string_type uri;
+        short http_version_major;
+        short http_version_minor;
+        vector_type headers;
+        string_type body;
+    };
+
+    template <>
+    inline void swap<tags::pod>(basic_request<tags::pod> & l, basic_request<tags::pod> & r) {
+        using std::swap;
+        swap(l.method, r.method);
+        swap(l.uri, r.uri);
+        swap(l.http_version_major, r.http_version_major);
+        swap(l.http_version_minor, r.http_version_minor);
+        swap(l.headers, r.headers);
+        swap(l.body, r.body);
+    };
 
 } // namespace http
 

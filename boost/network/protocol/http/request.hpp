@@ -10,7 +10,7 @@
 // Implement the HTTP Request Object
 
 #include <boost/network/message.hpp>
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 
 // forward declarations
 namespace boost { namespace network { namespace http {
@@ -28,7 +28,8 @@ namespace boost { namespace network { namespace http {
 
 namespace boost { namespace network { namespace http {
 
-    typedef basic_request<message_tag> request;
+    typedef basic_request<tags::http> request;
+    typedef basic_request<tags::pod> request_pod;
 
 } // namespace http
 

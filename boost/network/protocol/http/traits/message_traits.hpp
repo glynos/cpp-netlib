@@ -59,6 +59,5 @@ namespace boost { namespace network { namespace http {
 #include <boost/network/protocol/http/traits/impl/query_container.ipp>
 #include <boost/network/protocol/http/traits/impl/cookies_container.ipp>
 #include <boost/network/protocol/http/traits/impl/chunk_cache.ipp>
-#include <boost/network/protocol/http/traits/impl/string.ipp>
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_HPP

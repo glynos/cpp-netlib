@@ -7,7 +7,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_QUERY_CONTAINER_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_QUERY_CONTAINER_IPP
 
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 
 #include <map>
 
@@ -16,8 +16,8 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
         struct query_container {
             typedef std::multimap<
-                typename http::string_traits<Tag>::type,
-                typename http::string_traits<Tag>::type
+                typename string<Tag>::type,
+                typename string<Tag>::type
                     > type;
         };
 

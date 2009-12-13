@@ -7,12 +7,12 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_RESPONSE_CODE_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_RESPONSE_CODE_IPP
 
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 #include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    /* This glob doesn't have a specialization on the http::message_tag
+    /* This glob doesn't have a specialization on the tags::http
      * yet because it doesn't need to define different behaviour/types 
      * on different message tags -- for example, it doesn't need to
      * determine the type or change the values of the data no matter

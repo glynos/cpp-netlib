@@ -11,7 +11,7 @@
 #define BOOST_NETLIB_VERSION "0.3"
 #endif
 
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -19,7 +19,7 @@ namespace boost { namespace network { namespace http {
     template <class tag, unsigned version_major, unsigned version_minor>
         class basic_client;
 
-    typedef basic_client<http::message_tag, 1, 0> client;
+    typedef basic_client<tags::http, 1, 0> client;
 
 } // namespace http
 

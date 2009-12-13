@@ -8,7 +8,7 @@
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_HEADERS_CONTAINER_IPP
 
 #include <boost/network/traits/headers_container.hpp>
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <map>
 #include <string>
@@ -16,7 +16,7 @@
 namespace boost { namespace network {
 
     template <>
-        struct headers_container<http::message_tag> {
+        struct headers_container<tags::http> {
 
             // Moving implementation from original
             // message_traits implementation by
@@ -25,15 +25,15 @@ namespace boost { namespace network {
             // returns true if str1 < str2 (ignoring case)
             struct is_less_ignore_case {
                 inline bool operator() (
-                        http::string_traits<http::message_tag>::type const & str1, 
-                        http::string_traits<http::message_tag>::type const & str2) const {
+                        string<tags::http>::type const & str1, 
+                        string<tags::http>::type const & str2) const {
                     return to_lower_copy(str1) < to_lower_copy(str2);
                 };
             };
 
             typedef std::multimap<
-                http::string_traits<http::message_tag>::type,
-                http::string_traits<http::message_tag>::type,
+                string<tags::http>::type,
+                string<tags::http>::type,
                 is_less_ignore_case> type;
         };
 

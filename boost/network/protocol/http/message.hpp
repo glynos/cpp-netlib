@@ -12,9 +12,9 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HPP
 
-#include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/protocol/http/traits.hpp>
 #include <boost/network/message.hpp>
+#include <boost/network/tags.hpp>
 #include <string>
 
 namespace boost { namespace network { namespace http {
@@ -23,7 +23,7 @@ namespace boost { namespace network { namespace http {
     template <typename Tag>
     struct message_impl : public basic_message<Tag> {
 
-            typedef typename string_traits<Tag>::type string_type;
+            typedef typename string<Tag>::type string_type;
 
             /// escapes URL-encoded strings (a%20value+with%20spaces)
             static string_type const url_decode(string_type const & str);
@@ -68,7 +68,7 @@ namespace boost { namespace network { namespace http {
             static bool const base64_encode(string_type const &input, string_type & output);
     };
 
-    typedef message_impl<http::message_tag> message;
+    typedef message_impl<tags::http> message;
 
 } // namespace http
 

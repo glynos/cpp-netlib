@@ -9,7 +9,7 @@
 #include <boost/network/uri/http/detail/uri_parts.hpp>
 #include <boost/network/uri/detail/parse_uri.hpp>
 #include <boost/network/uri/detail/constants.hpp>
-#include <boost/network/protocol/http/traits/string.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace uri { 
 
@@ -72,7 +72,6 @@ namespace boost { namespace network { namespace uri {
                 using spirit::qi::uint_;
                 using spirit::qi::digit;
                 using spirit::qi::rule;
-                using fusion::tie;
                 
                 typedef string<tags::http>::type string_type;
                 typedef range_iterator<string_type>::type iterator;
@@ -87,7 +86,7 @@ namespace boost { namespace network { namespace uri {
                     optional<string_type> &,
                     optional<string_type> &
                         > result =
-                        tie(
+                        fusion::tie(
                                 parts.user_info,
                                 parts.host,
                                 parts.port,

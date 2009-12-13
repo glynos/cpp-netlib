@@ -5,9 +5,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef __BOOST_NETWORK_TRAITS_STRING_INC__
-# define __BOOST_NETWORK_TRAITS_STRING_INC__
-
+#ifndef BOOST_NETWORK_TRAITS_STRING_INC
+#define BOOST_NETWORK_TRAITS_STRING_INC
 
 # include <string>
 # include <boost/network/tags.hpp>
@@ -24,10 +23,19 @@ namespace boost { namespace network {
         typedef std::string type;
     };
 
-
     template <>
     struct string<tags::default_wstring> {
         typedef std::wstring type;
+    };
+
+    template <>
+    struct string<tags::pod> {
+        typedef std::string type;
+    };
+
+    template <>
+    struct string<tags::http> {
+        typedef std::string type;
     };
 
 } // namespace network
@@ -35,4 +43,4 @@ namespace boost { namespace network {
 } // namespace boost
 
 
-#endif // __BOOST_NETWORK_TRAITS_STRING_INC__
+#endif // BOOST_NETWORK_TRAITS_STRING_INC

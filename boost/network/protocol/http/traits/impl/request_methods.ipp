@@ -7,10 +7,12 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_REQUEST_METHODS_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_REQUEST_METHODS_IPP
 
+#include <boost/network/tags.hpp>
+
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct request_methods<http::message_tag> {
+        struct request_methods<tags::http> {
             static char const * const head() {
                 static char const * const HEAD = "HEAD";
                 return HEAD;

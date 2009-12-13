@@ -10,7 +10,7 @@
 
 #include <boost/network/tags.hpp>
 #include <boost/network/uri/basic_uri_fwd.hpp>
-#include <boost/network/protocol/http/traits/string.hpp>
+#include <boost/network/traits/string.hpp>
 #include <boost/network/uri/http/detail/parse_specific.hpp>
 #include <boost/network/uri/http/detail/uri_parts.hpp>
 #include <boost/network/uri/http/uri_concept.hpp>

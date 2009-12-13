@@ -7,12 +7,12 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_RESPONSE_MESSAGE_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_RESPONSE_MESSAGE_IPP
 
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct response_message<http::message_tag> {
+        struct response_message<tags::http> {
             static char const * const ok() {
                 static char const * const OK = "OK";
                 return OK;

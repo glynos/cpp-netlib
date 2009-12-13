@@ -7,12 +7,12 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_PARSER_TRAITS_METHOD_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_TRAITS_METHOD_IPP
 
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct method<http::message_tag> {
+        struct method<tags::http> {
             static boost::uint32_t const MAX = 1024u;
         };
 

@@ -7,12 +7,12 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_PARSER_TRAITS_COOKIE_NAME_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_TRAITS_COOKIE_NAME_IPP
 
-#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct cookie_name<http::message_tag> {
+        struct cookie_name<tags::http> {
             static boost::uint32_t const MAX = 1024u;
         };
 
