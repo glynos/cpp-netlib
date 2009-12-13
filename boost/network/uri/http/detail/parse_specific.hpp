@@ -43,7 +43,7 @@ namespace boost { namespace network { namespace uri {
         };
 
         template <>
-            bool parse_specific<
+            inline bool parse_specific<
                 string<tags::http>::type,
                 tags::http
                     >(

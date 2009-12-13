@@ -14,12 +14,12 @@ namespace boost { namespace network { namespace uri {
     namespace detail {
 
         template <class Range, class Tag>
-            bool parse_specific(Range & range, uri_parts<Tag> & parts) {
+            inline bool parse_specific(Range & range, uri_parts<Tag> & parts) {
                 return true;
             }
 
         template <class Range, class Tag>
-            bool parse_uri(Range & range, uri_parts<Tag> & parts) {
+            inline bool parse_uri(Range & range, uri_parts<Tag> & parts) {
                 using spirit::qi::parse;
                 using spirit::qi::lexeme;
                 using spirit::ascii::char_;
