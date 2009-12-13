@@ -8,7 +8,7 @@
 #define __NETWORK_PROTOCOL_HTTP_CLIENT_20080923_1_HPP__
 
 #ifndef BOOST_NETLIB_VERSION
-#define BOOST_NETLIB_VERSION "0.3"
+#define BOOST_NETLIB_VERSION "0.5"
 #endif
 
 #include <boost/network/tags.hpp>
@@ -16,7 +16,7 @@
 namespace boost { namespace network { namespace http {
 
     //! Forward declaration of basic_client template.
-    template <class tag, unsigned version_major, unsigned version_minor>
+    template <class Tag, unsigned version_major, unsigned version_minor>
         class basic_client;
 
     typedef basic_client<tags::http, 1, 0> client;
