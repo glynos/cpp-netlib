@@ -12,7 +12,7 @@
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct cookie_value<tags::http> {
+        struct cookie_value<tags::http_default_8bit_tcp_resolve> {
             static boost::uint32_t const MAX = 1024u * 1024u;
         };
 

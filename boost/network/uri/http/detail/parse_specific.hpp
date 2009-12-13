@@ -44,11 +44,11 @@ namespace boost { namespace network { namespace uri {
 
         template <>
             inline bool parse_specific<
-                string<tags::http>::type,
-                tags::http
+                string<tags::http_default_8bit_tcp_resolve>::type,
+                tags::http_default_8bit_tcp_resolve
                     >(
-                            string<tags::http>::type & range,
-                            uri_parts<tags::http> & parts
+                            string<tags::http_default_8bit_tcp_resolve>::type & range,
+                            uri_parts<tags::http_default_8bit_tcp_resolve> & parts
                      ) 
             {
                 // Require that parts.scheme is either http or https
@@ -73,7 +73,7 @@ namespace boost { namespace network { namespace uri {
                 using spirit::qi::digit;
                 using spirit::qi::rule;
                 
-                typedef string<tags::http>::type string_type;
+                typedef string<tags::http_default_8bit_tcp_resolve>::type string_type;
                 typedef range_iterator<string_type>::type iterator;
 
                 iterator start_ = begin(range);
@@ -95,7 +95,7 @@ namespace boost { namespace network { namespace uri {
                                 parts.fragment
                            );
 
-                hostname<tags::http>::parser<iterator> hostname;
+                hostname<tags::http_default_8bit_tcp_resolve>::parser<iterator> hostname;
                 bool ok = parse(
                         start_, end_,
                         (

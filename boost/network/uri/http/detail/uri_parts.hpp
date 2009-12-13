@@ -13,8 +13,8 @@ namespace boost { namespace network { namespace uri {
 
     namespace detail {
 
-        template <> struct uri_parts<tags::http> {
-            typedef string<tags::http>::type string_type;
+        template <> struct uri_parts<tags::http_default_8bit_tcp_resolve> {
+            typedef string<tags::http_default_8bit_tcp_resolve>::type string_type;
             string_type scheme;
             string_type scheme_specific_part;
             optional<string_type> user_info;
@@ -26,7 +26,7 @@ namespace boost { namespace network { namespace uri {
         };
 
         template <>
-            inline void swap<tags::http>(uri_parts<tags::http> & l, uri_parts<tags::http> & r) {
+            inline void swap<tags::http_default_8bit_tcp_resolve>(uri_parts<tags::http_default_8bit_tcp_resolve> & l, uri_parts<tags::http_default_8bit_tcp_resolve> & r) {
                 using std::swap;
                 swap(l.scheme, r.scheme);
                 swap(l.scheme_specific_part, r.scheme_specific_part);

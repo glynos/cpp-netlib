@@ -18,13 +18,13 @@
 namespace boost { namespace network { namespace uri {
 
     template <>
-        struct basic_uri<tags::http> : uri_base<tags::http> {
-            using uri_base<tags::http>::string_type;
-            using uri_base<tags::http>::operator=;
-            using uri_base<tags::http>::swap;
+        struct basic_uri<tags::http_default_8bit_tcp_resolve> : uri_base<tags::http_default_8bit_tcp_resolve> {
+            using uri_base<tags::http_default_8bit_tcp_resolve>::string_type;
+            using uri_base<tags::http_default_8bit_tcp_resolve>::operator=;
+            using uri_base<tags::http_default_8bit_tcp_resolve>::swap;
 
-            basic_uri() : uri_base<tags::http>() {}
-            basic_uri(uri_base<tags::http>::string_type const & uri) : uri_base<tags::http>(uri) {}
+            basic_uri() : uri_base<tags::http_default_8bit_tcp_resolve>() {}
+            basic_uri(uri_base<tags::http_default_8bit_tcp_resolve>::string_type const & uri) : uri_base<tags::http_default_8bit_tcp_resolve>(uri) {}
 
             string_type host() const {
                 return parts_.host;
@@ -54,42 +54,42 @@ namespace boost { namespace network { namespace uri {
         };
 
     inline 
-        basic_uri<tags::http>::string_type 
-        host(basic_uri<tags::http> const & uri) {
+        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type 
+        host(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
             return uri.host();
         }
 
     inline
         uint32_t
-        port(basic_uri<tags::http> const & uri) {
+        port(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
             return uri.port();
         }
 
     inline
-        basic_uri<tags::http>::string_type
-        path(basic_uri<tags::http> const & uri) {
+        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type
+        path(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
             return uri.path();
         }
 
     inline 
-        basic_uri<tags::http>::string_type
-        query(basic_uri<tags::http> const & uri) {
+        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type
+        query(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
             return uri.query();
         }
 
     inline 
-        basic_uri<tags::http>::string_type
-        fragment(basic_uri<tags::http> const & uri) {
+        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type
+        fragment(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
             return uri.fragment();
         }
 
     inline
-        basic_uri<tags::http>::string_type
-        user_info(basic_uri<tags::http> const & uri) {
+        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type
+        user_info(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
             return uri.user_info();
         }
 
-    BOOST_CONCEPT_ASSERT((HttpURI<basic_uri<tags::http> >));
+    BOOST_CONCEPT_ASSERT((HttpURI<basic_uri<tags::http_default_8bit_tcp_resolve> >));
 
 } // namespace uri
 

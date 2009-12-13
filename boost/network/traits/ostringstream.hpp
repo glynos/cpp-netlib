@@ -31,7 +31,7 @@ namespace boost { namespace network {
     };
 
     template <>
-    struct ostringstream<tags::http> {
+    struct ostringstream<tags::http_default_8bit_tcp_resolve> {
         typedef std::ostringstream type;
     };
 

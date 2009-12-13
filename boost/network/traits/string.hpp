@@ -34,7 +34,7 @@ namespace boost { namespace network {
     };
 
     template <>
-    struct string<tags::http> {
+    struct string<tags::http_default_8bit_tcp_resolve> {
         typedef std::string type;
     };
 

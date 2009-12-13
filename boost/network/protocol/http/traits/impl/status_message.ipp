@@ -12,7 +12,7 @@
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct status_message<tags::http> {
+        struct status_message<tags::http_default_8bit_tcp_resolve> {
             static boost::uint32_t const MAX = 1024u;
         };
 

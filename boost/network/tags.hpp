@@ -15,7 +15,8 @@ namespace tags {
 
 struct default_string;
 struct default_wstring;
-struct http;
+struct http_default_8bit_tcp_resolve;
+struct http_default_8bit_udp_resolve;
 struct pod;
 
 typedef default_string default_;

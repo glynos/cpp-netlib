@@ -28,7 +28,7 @@ namespace boost { namespace network { namespace http {
 
 namespace boost { namespace network { namespace http {
 
-    typedef basic_request<tags::http> request;
+    typedef basic_request<tags::http_default_8bit_tcp_resolve> request;
     typedef basic_request<tags::pod> request_pod;
 
 } // namespace http

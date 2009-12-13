@@ -8,19 +8,22 @@
 
 #include <utility>
 #include <boost/asio.hpp>
+#include <boost/network/protocol/http/traits/resolver.hpp>
 
 namespace boost { namespace network { namespace http { namespace policies {
 
     template <class Tag>
     struct sync_resolver {
 
-        typedef boost::asio::ip::tcp::resolver resolver_type;
+        typedef typename resolver<Tag>::type resolver_type;
+        typedef typename resolver_type::iterator resolver_iterator;
+        typedef typename resolver_type::query resolver_query;
 
         protected:
 
         typedef std::pair<
-            boost::asio::ip::tcp::resolver::iterator,
-            boost::asio::ip::tcp::resolver::iterator
+            resolver_iterator,
+            resolver_iterator
         > resolver_iterator_pair;
         typedef typename string<Tag>::type string_type;
         typedef std::map<string_type, resolver_iterator_pair> resolved_cache;
@@ -41,13 +44,13 @@ namespace boost { namespace network { namespace http { namespace policies {
                                         hostname,
                                         std::make_pair(
                                                 resolver_.resolve(
-                                                        boost::asio::ip::tcp::resolver::query(
+                                                        resolver_query(
                                                                 hostname,
                                                                 port,
-                                                                boost::asio::ip::tcp::resolver_query::numeric_service
+                                                                resolver_query::numeric_service
                                                                 )
                                                         )
-                                                        , boost::asio::ip::tcp::resolver::iterator()
+                                                        , resolver_iterator()
                                                 )
                                         )
                                 );
@@ -57,14 +60,14 @@ namespace boost { namespace network { namespace http { namespace policies {
 
             return std::make_pair(
                     resolver_.resolve(
-                            boost::asio::ip::tcp::resolver::query(
+                            resolver_query(
                                     hostname,
                                     port,
-                                    boost::asio::ip::tcp::resolver_query::numeric_service
+                                    resolver_query::numeric_service
                                     )
                             )
                             ,
-                            boost::asio::ip::tcp::resolver::iterator()
+                            resolver_iterator()
                     );
         };
 

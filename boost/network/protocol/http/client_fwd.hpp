@@ -19,7 +19,7 @@ namespace boost { namespace network { namespace http {
     template <class Tag, unsigned version_major, unsigned version_minor>
         class basic_client;
 
-    typedef basic_client<tags::http, 1, 0> client;
+    typedef basic_client<tags::http_default_8bit_tcp_resolve, 1, 0> client;
 
 } // namespace http
 

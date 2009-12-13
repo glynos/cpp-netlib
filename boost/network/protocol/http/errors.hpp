@@ -12,7 +12,7 @@
 
 namespace boost { namespace network { namespace http { namespace errors {
 
-    template <class Tag=tags::http>
+    template <class Tag=tags::http_default_8bit_tcp_resolve>
         struct connection_timeout_exception : 
             std::runtime_error
     {

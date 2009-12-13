@@ -46,7 +46,7 @@ namespace boost { namespace network { namespace http {
 
             boost::system::error_code error = boost::asio::error::host_not_found;
 
-            tcp::resolver::iterator endpoint_iterator, end;
+            typename resolver_base::resolver_type::iterator endpoint_iterator, end;
             boost::tie(endpoint_iterator, end) = resolve(resolver_, hostname, port);
 
             while (error && endpoint_iterator != end) {
@@ -287,7 +287,7 @@ namespace boost { namespace network { namespace http {
 
     };
 
-    typedef basic_client<tags::http, 1, 0> client;
+    typedef basic_client<tags::http_default_8bit_tcp_resolve, 1, 0> client;
 
 } // namespace http
 

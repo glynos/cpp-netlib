@@ -65,7 +65,7 @@ namespace boost { namespace network { namespace http {
             lhs.swap(rhs);
         }
 
-    typedef basic_response<tags::http> response;
+    typedef basic_response<tags::http_default_8bit_tcp_resolve> response;
 
 } // namespace http
 
