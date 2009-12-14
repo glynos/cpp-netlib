@@ -8,22 +8,20 @@
 #ifndef __BOOST_NETWORK_TAGS_INC__
 # define __BOOST_NETWORK_TAGS_INC__
 
-
-namespace boost {
-namespace network {
-namespace tags {
+namespace boost { namespace network { namespace tags {
 
 struct default_string {};
 struct default_wstring {};
 struct http_default_8bit_tcp_resolve {};
 struct http_default_8bit_udp_resolve {};
-struct pod {};
+struct http_server {};
 
 typedef default_string default_;
 
 } // namespace tags
-} // namespace network
-} // namespace boost
 
+} // namespace network
+
+} // namespace boost
 
 #endif // __BOOST_NETWORK_TAGS_INC__

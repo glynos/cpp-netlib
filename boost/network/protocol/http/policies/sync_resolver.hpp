@@ -18,13 +18,10 @@ namespace boost { namespace network { namespace http { namespace policies {
         typedef typename resolver<Tag>::type resolver_type;
         typedef typename resolver_type::iterator resolver_iterator;
         typedef typename resolver_type::query resolver_query;
+        typedef std::pair<resolver_iterator,resolver_iterator> resolver_iterator_pair;
 
         protected:
 
-        typedef std::pair<
-            resolver_iterator,
-            resolver_iterator
-        > resolver_iterator_pair;
         typedef typename string<Tag>::type string_type;
         typedef std::map<string_type, resolver_iterator_pair> resolved_cache;
         resolved_cache endpoint_cache_;

@@ -27,7 +27,6 @@ namespace boost { namespace network { namespace http {
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
 
         struct connection_impl {
-
             connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & hostname, string_type const & port, resolver_function_type resolve) 
             : resolver_(resolver), socket_(resolver.io_service()), follow_redirect_(follow_redirect), resolve_(resolve)
             { }
@@ -70,11 +69,9 @@ namespace boost { namespace network { namespace http {
 
             void init_socket(string_type const & hostname, string_type const & port) {
                 using boost::asio::ip::tcp;
-
                 boost::system::error_code error = boost::asio::error::host_not_found;
                 typename resolver_type::iterator endpoint_iterator, end;
                 boost::tie(endpoint_iterator, end) = resolve_(resolver_, hostname, port);
-
                 while (error && endpoint_iterator != end) {
                     socket_.close();
                     socket_.connect(
@@ -206,7 +203,6 @@ namespace boost { namespace network { namespace http {
         };
 
         typedef boost::shared_ptr<connection_impl> connection_ptr;
-
         connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_) {
             connection_ptr connection_(
                 new connection_impl(
@@ -217,15 +213,12 @@ namespace boost { namespace network { namespace http {
                     , bind(
                         &simple_connection_policy<Tag,version_major,version_minor>::resolve,
                         this,
-                        _1,
-                        _2,
-                        _3
+                        _1, _2, _3
                         )
                     )
                 );
             return connection_;
         }
-
 
         simple_connection_policy(bool cache_resolved, bool follow_redirect) 
         : resolver_base(cache_resolved), follow_redirect_(follow_redirect) {}

@@ -14,25 +14,21 @@
 // to reduce the dependence on building an external library.
 //
 
-#ifndef BOOST_NETWORK_HTTP_REPLY_HPP_
-#define BOOST_NETWORK_HTTP_REPLY_HPP_
+#ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
+#define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 
 #include <string>
 #include <vector>
 #include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp>
-#include "header.hpp"
+#include <boost/network/protocol/http/header.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    namespace tag {
-        struct default_;
-    }
-
     /// A reply to be sent to a client.
-    template <class Tag>
-    struct basic_reply
-    {
+    template <>
+    struct basic_response<tags::http_server> {
+
       /// The status of the reply.
       enum status_type
       {
@@ -86,9 +82,9 @@ namespace boost { namespace network { namespace http {
       }
 
       /// Get a stock reply.
-      static basic_reply stock_reply(status_type status) {
+      static basic_response<tags::http_server> stock_reply(status_type status) {
           using boost::lexical_cast;
-          basic_reply rep;
+          basic_response<tags::http_server> rep;
           rep.status = status;
           rep.content = to_string(status);
           rep.headers.resize(2);
@@ -191,41 +187,41 @@ namespace boost { namespace network { namespace http {
 
              switch (status)
               {
-              case basic_reply::ok:
+              case basic_response<tags::http_server>::ok:
                 return ok;
-              case basic_reply::created:
+              case basic_response<tags::http_server>::created:
                 return created;
-              case basic_reply::accepted:
+              case basic_response<tags::http_server>::accepted:
                 return accepted;
-              case basic_reply::no_content:
+              case basic_response<tags::http_server>::no_content:
                 return no_content;
-              case basic_reply::multiple_choices:
+              case basic_response<tags::http_server>::multiple_choices:
                 return multiple_choices;
-              case basic_reply::moved_permanently:
+              case basic_response<tags::http_server>::moved_permanently:
                 return moved_permanently;
-              case basic_reply::moved_temporarily:
+              case basic_response<tags::http_server>::moved_temporarily:
                 return moved_temporarily;
-              case basic_reply::not_modified:
+              case basic_response<tags::http_server>::not_modified:
                 return not_modified;
-              case basic_reply::bad_request:
+              case basic_response<tags::http_server>::bad_request:
                 return bad_request;
-              case basic_reply::unauthorized:
+              case basic_response<tags::http_server>::unauthorized:
                 return unauthorized;
-              case basic_reply::forbidden:
+              case basic_response<tags::http_server>::forbidden:
                 return forbidden;
-              case basic_reply::not_found:
+              case basic_response<tags::http_server>::not_found:
                 return not_found;
-              case basic_reply::not_supported:
+              case basic_response<tags::http_server>::not_supported:
                 return not_supported;
-              case basic_reply::not_acceptable:
+              case basic_response<tags::http_server>::not_acceptable:
                 return not_acceptable;
-              case basic_reply::internal_server_error:
+              case basic_response<tags::http_server>::internal_server_error:
                 return internal_server_error;
-              case basic_reply::not_implemented:
+              case basic_response<tags::http_server>::not_implemented:
                 return not_implemented;
-              case basic_reply::bad_gateway:
+              case basic_response<tags::http_server>::bad_gateway:
                 return bad_gateway;
-              case basic_reply::service_unavailable:
+              case basic_response<tags::http_server>::service_unavailable:
                 return service_unavailable;
               default:
                 return internal_server_error;
@@ -272,51 +268,55 @@ namespace boost { namespace network { namespace http {
               "HTTP/1.0 503 Service Unavailable\r\n";
 
             switch (status) {
-                case basic_reply::ok:
+                case basic_response<tags::http_server>::ok:
                     return buffer(ok);
-                case basic_reply::created:
+                case basic_response<tags::http_server>::created:
                     return buffer(created);
-                case basic_reply::accepted:
+                case basic_response<tags::http_server>::accepted:
                     return buffer(accepted);
-                case basic_reply::no_content:
+                case basic_response<tags::http_server>::no_content:
                     return buffer(no_content);
-                case basic_reply::multiple_choices:
+                case basic_response<tags::http_server>::multiple_choices:
                     return buffer(multiple_choices);
-                case basic_reply::moved_permanently:
+                case basic_response<tags::http_server>::moved_permanently:
                     return buffer(moved_permanently);
-                case basic_reply::moved_temporarily:
+                case basic_response<tags::http_server>::moved_temporarily:
                     return buffer(moved_temporarily);
-                case basic_reply::not_modified:
+                case basic_response<tags::http_server>::not_modified:
                     return buffer(not_modified);
-                case basic_reply::bad_request:
+                case basic_response<tags::http_server>::bad_request:
                     return buffer(bad_request);
-                case basic_reply::unauthorized:
+                case basic_response<tags::http_server>::unauthorized:
                     return buffer(unauthorized);
-                case basic_reply::forbidden:
+                case basic_response<tags::http_server>::forbidden:
                     return buffer(forbidden);
-                case basic_reply::not_found:
+                case basic_response<tags::http_server>::not_found:
                     return buffer(not_found);
-                case basic_reply::not_supported:
+                case basic_response<tags::http_server>::not_supported:
                     return buffer(not_supported);
-                case basic_reply::not_acceptable:
+                case basic_response<tags::http_server>::not_acceptable:
                     return buffer(not_acceptable);
-                case basic_reply::internal_server_error:
+                case basic_response<tags::http_server>::internal_server_error:
                     return buffer(internal_server_error);
-                case basic_reply::not_implemented:
+                case basic_response<tags::http_server>::not_implemented:
                     return buffer(not_implemented);
-                case basic_reply::bad_gateway:
+                case basic_response<tags::http_server>::bad_gateway:
                     return buffer(bad_gateway);
-                case basic_reply::service_unavailable:
+                case basic_response<tags::http_server>::service_unavailable:
                     return buffer(service_unavailable);
                 default:
                     return buffer(internal_server_error);
             }
         }
 
-
     };
 
-    typedef basic_reply<tag::default_> reply;
+    template <>
+    void swap(basic_response<tags::http_server> &l, basic_response<tags::http_server> &r) {
+        using std::swap;
+        swap(l.headers, r.headers);
+        swap(l.content, r.content);
+    }
 
 } // namespace http
 
@@ -324,5 +324,5 @@ namespace boost { namespace network { namespace http {
 
 } // namespace boost
 
-#endif // BOOST_NETWORK_HTTP_REPLY_HPP_
+#endif // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 

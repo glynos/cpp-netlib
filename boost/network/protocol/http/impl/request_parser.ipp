@@ -20,7 +20,7 @@
 namespace boost { namespace network { namespace http {
 
 template <class Tag>
-boost::tribool basic_request_parser<Tag>::consume(request_pod & req, char input)
+boost::tribool basic_request_parser<Tag>::consume(basic_request<Tag> & req, char input)
 {
   switch (state_)
   {

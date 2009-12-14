@@ -22,13 +22,16 @@ namespace boost { namespace network { namespace http {
     using boost::asio::ip::tcp;
     using boost::bind;
 
-    template <class Handler>
-    struct server {
-        server(string const & address, string const & port, Handler & handler)
+    template <class Tag, class Handler>
+    struct basic_server {
+        typedef basic_request<Tag> request;
+        typedef basic_response<Tag> response;
+
+        basic_server(string const & address, string const & port, Handler & handler)
         : handler_(handler)
         , service_()
         , acceptor_(service_)
-        , new_connection(new connection<Handler>(service_, handler))
+        , new_connection(new connection<Tag,Handler>(service_, handler))
         {
             tcp::resolver resolver(service_);
             tcp::resolver::query query(address, port);
@@ -38,7 +41,7 @@ namespace boost { namespace network { namespace http {
             acceptor_.bind(endpoint);
             acceptor_.listen();
             acceptor_.async_accept(new_connection->socket(),
-                bind(&server<Handler>::handle_accept, this, boost::asio::placeholders::error));
+                bind(&basic_server<Tag,Handler>::handle_accept, this, boost::asio::placeholders::error));
         }
 
         void run() {
@@ -55,16 +58,25 @@ namespace boost { namespace network { namespace http {
         Handler & handler_;
         io_service service_;
         tcp::acceptor acceptor_;
-        shared_ptr<connection<Handler> > new_connection;
+        shared_ptr<connection<Tag,Handler> > new_connection;
 
         void handle_accept(boost::system::error_code const & ec) {
             if (!ec) {
                 new_connection->start();
-                new_connection.reset(new connection<Handler>(service_, handler_));
+                new_connection.reset(new connection<Tag,Handler>(service_, handler_));
                 acceptor_.async_accept(new_connection->socket(),
-                    bind(&server<Handler>::handle_accept, this, boost::asio::placeholders::error));
+                    bind(&basic_server<Tag,Handler>::handle_accept, this, boost::asio::placeholders::error));
             }
         }
+    };
+
+    template <class Handler>
+    struct server : basic_server<tags::http_server, Handler> {
+        server(string const & address, string const & port, Handler & handler)
+        : basic_server<tags::http_server,Handler>(address, port, handler) {}
+
+        typedef typename basic_server<tags::http_server,Handler>::request request;
+        typedef typename basic_server<tags::http_server,Handler>::response response;
     };
 
 } // namespace http

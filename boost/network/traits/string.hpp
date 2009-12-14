@@ -32,7 +32,7 @@ namespace boost { namespace network {
     };
 
     template <>
-    struct string<tags::pod> {
+    struct string<tags::http_server> {
         typedef std::string type;
     };
 

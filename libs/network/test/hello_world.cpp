@@ -15,23 +15,24 @@ using boost::assign::list_of;
 using boost::lexical_cast;
 using std::string;
 
+struct hello_world;
+typedef http::server<hello_world> server;
+
 struct hello_world {
-    void operator()(http::request_pod const & request, http::reply & reply) {
-        reply.content = "Hello, World!";
-        http::request_header content_length = { "Content-Length", lexical_cast<string>(reply.content.size()) };
+    void operator()(server::request const & request, server::response & response) {
+        response.content = "Hello, World!";
+        http::request_header content_length = { "Content-Length", lexical_cast<string>(response.content.size()) };
         http::request_header content_type = { "Content-Type", "text/plain" };
-        reply.headers = list_of(content_length)(content_type);
-        reply.status = http::reply::ok;
-        assert(reply.status == http::reply::ok);
-        assert(reply.headers.size() == 2);
-        assert(reply.content == "Hello, World!");
+        response.headers = list_of(content_length)(content_type);
+        response.status = server::response::ok;
+        assert(response.status == server::response::ok);
+        assert(response.headers.size() == 2);
+        assert(response.content == "Hello, World!");
     }
     void log(...) {
         // do nothing
     }
 };
-
-typedef http::server<hello_world> server;
 
 int main(int argc, char * argv[]) {
     hello_world handler;

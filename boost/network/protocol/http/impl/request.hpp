@@ -28,8 +28,7 @@ namespace boost { namespace network { namespace http {
       */
 
     template <class Tag>
-    class basic_request :
-        public basic_message<Tag>
+    class basic_request : public basic_message<Tag>
     {
 
         boost::network::uri::http::uri uri_;
@@ -100,20 +99,20 @@ namespace boost { namespace network { namespace http {
      *  reasons.
      */
     template <>
-    class basic_request<tags::pod> {
+    class basic_request<tags::http_server> {
         public:
-        typedef string<tags::pod>::type string_type;
-        typedef vector<tags::pod>::apply<request_header>::type vector_type;
+        typedef string<tags::http_server>::type string_type;
+        typedef vector<tags::http_server>::apply<request_header>::type vector_type;
         string_type method;
         string_type uri;
-        short http_version_major;
-        short http_version_minor;
+        boost::uint8_t http_version_major;
+        boost::uint8_t http_version_minor;
         vector_type headers;
         string_type body;
     };
 
     template <>
-    inline void swap<tags::pod>(basic_request<tags::pod> & l, basic_request<tags::pod> & r) {
+    inline void swap<tags::http_server>(basic_request<tags::http_server> & l, basic_request<tags::http_server> & r) {
         using std::swap;
         swap(l.method, r.method);
         swap(l.uri, r.uri);

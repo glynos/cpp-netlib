@@ -24,7 +24,7 @@ namespace boost { namespace network {
     };
 
     template <>
-    struct vector<tags::pod> {
+    struct vector<tags::http_server> {
 
         template <class Type>
         struct apply {
