@@ -7,10 +7,7 @@
 #ifndef __NETWORK_PROTOCOL_HTTP_CLIENT_20080923_1_HPP__
 #define __NETWORK_PROTOCOL_HTTP_CLIENT_20080923_1_HPP__
 
-#ifndef BOOST_NETLIB_VERSION
-#define BOOST_NETLIB_VERSION "0.5"
-#endif
-
+#include <boost/network/version.hpp>
 #include <boost/network/tags.hpp>
 
 namespace boost { namespace network { namespace http {

@@ -7,20 +7,16 @@
 #ifndef __NETWORK_PROTOCOL_HTTP_CLIENT_20070908_1_HPP__
 #define __NETWORK_PROTOCOL_HTTP_CLIENT_20070908_1_HPP__
 
-#ifndef BOOST_NETLIB_VERSION
-#define BOOST_NETLIB_VERSION "0.5"
-#endif
-
+#include <boost/network/version.hpp>
 #include <boost/network/traits/ostringstream.hpp>
 #include <boost/network/protocol/http/message.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/traits/resolver_policy.hpp>
+#include <boost/network/protocol/http/traits/connection_policy.hpp>
 #include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <boost/foreach.hpp>
 #include <ostream>
 #include <istream>
@@ -31,184 +27,22 @@
 namespace boost { namespace network { namespace http {
 
     template <class Tag, unsigned version_major, unsigned version_minor>
-    class basic_client : resolver_policy<Tag>::type {
+    class basic_client : connection_policy<Tag, version_major, version_minor>::type {
 
     private:
-        typedef typename resolver_policy<Tag>::type resolver_base;
+        typedef typename connection_policy<Tag, version_major, version_minor>::type connection_base;
         boost::asio::io_service service_;
-        typename resolver_base::resolver_type resolver_;
-        bool follow_redirect_;
+        typename connection_base::resolver_type resolver_;
 
         typedef typename string<Tag>::type string_type;
-
-        void init_socket(boost::asio::ip::tcp::socket & socket_, string_type const & hostname, string_type const & port) {
-            using boost::asio::ip::tcp;
-
-            boost::system::error_code error = boost::asio::error::host_not_found;
-
-            typename resolver_base::resolver_type::iterator endpoint_iterator, end;
-            boost::tie(endpoint_iterator, end) = resolve(resolver_, hostname, port);
-
-            while (error && endpoint_iterator != end) {
-                socket_.close();
-                socket_.connect(
-                    tcp::endpoint(
-                        endpoint_iterator->endpoint().address()
-                        , endpoint_iterator->endpoint().port()
-                        )
-                    , error
-                    );
-                ++endpoint_iterator;
-            }
-
-            if (error)
-                throw boost::system::system_error(error);
-        };
-
-        void create_request(boost::asio::streambuf & request_buffer, string_type const & method, basic_request<Tag> request_) const {
-            std::ostream request_stream(&request_buffer);
-
-            request_stream
-                << method << " ";
-
-            if (request_.path().empty() || request_.path()[0] != '/')
-                request_stream << '/';
-
-            request_stream
-                << request_.path()
-                ;
-
-            if (!request_.query().empty())
-                request_stream
-                    << '?'
-                    << request_.query()
-                    ;
-
-            if (!request_.anchor().empty())
-                request_stream
-                    << '#'
-                    << request_.anchor()
-                    ;
-
-            request_stream << " HTTP/" << version_major << '.' << version_minor << "\r\n"
-                << "Host: " << request_.host() << "\r\n"
-                << "Accept: */*\r\n";
-
-            typename headers_range<http::basic_request<Tag> >::type range = headers(request_);
-            BOOST_FOREACH(typename headers_range<http::basic_request<Tag> >::type::value_type const & header, range) {
-                request_stream << header.first << ": " << header.second << "\r\n";
-            };
-
-            range = headers(request_)["user-agent"];
-            if (begin(range) == end(range)) request_stream << "User-Agent: cpp-netlib/" << BOOST_NETLIB_VERSION << "\r\n";
-
-            request_stream
-                << "Connection: close\r\n\r\n";
-
-            string_type body_ = body(request_);
-            if (!body_.empty())
-                request_stream << body_;
-        };
-
-        void send_request(boost::asio::ip::tcp::socket & socket, string_type const & method, basic_request<Tag> const & request_) const {
-            boost::asio::streambuf request_buffer;
-            create_request(request_buffer, method, request_);
-            write(socket, request_buffer);
-        };
-
-        void read_status(basic_response<Tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
-            boost::asio::read_until(socket, response_buffer, "\r\n");
-            std::istream response_stream(&response_buffer);
-            string_type http_version;
-            unsigned int status_code;
-            string_type status_message;
-            response_stream >> http_version
-                >> status_code;
-            std::getline(response_stream, status_message);
-            trim_left(status_message);
-            trim_right_if(status_message, boost::is_space() || boost::is_any_of("\r"));
-
-            if (!response_stream || http_version.substr(0, 5) != "HTTP/")
-                throw std::runtime_error("Invalid response");
-
-            response_.version() = http_version;
-            response_.status() = status_code;
-            response_.status_message() = status_message;
-        };
-
-        void read_headers(basic_response<Tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
-            boost::asio::read_until(socket, response_buffer, "\r\n\r\n");
-            std::istream response_stream(&response_buffer);
-            string_type header_line, name;
-            while (std::getline(response_stream, header_line) && header_line != "\r") {
-                trim_right_if(header_line, boost::is_space() || boost::is_any_of("\r"));
-                typename string_type::size_type colon_offset;
-                if (header_line.size() && header_line[0] == ' ') {
-                    assert(!name.empty());
-                    if (name.empty())
-                        throw std::runtime_error(
-                                std::string("Malformed header: ")
-                                + header_line
-                                );
-                    response_
-                        << header(name, trim_left_copy(header_line));
-                } else if ((colon_offset = header_line.find_first_of(':')) != string_type::npos) {
-                    name = header_line.substr(0, colon_offset);
-                    response_
-                        << header(name, header_line.substr(colon_offset+2));
-                };
-            };
-        };
-
-        void read_body(basic_response<Tag> & response_, boost::asio::ip::tcp::socket & socket, boost::asio::streambuf & response_buffer) const {
-            typename ostringstream<Tag>::type body_stream;
-
-            if (response_buffer.size() > 0)
-                body_stream << &response_buffer;
-
-            boost::system::error_code error;
-            while (boost::asio::read(socket, response_buffer, boost::asio::transfer_at_least(1), error))
-                body_stream << &response_buffer;
-
-            if (error != boost::asio::error::eof)
-                throw boost::system::system_error(error);
-
-            response_ << body(body_stream.str());
-        };
 
         basic_response<Tag> const sync_request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
             using boost::asio::ip::tcp;
 
-            basic_request<Tag> request_copy(request_);
-            basic_response<Tag> response_;
-            do {
-                tcp::socket socket(service_);
-                init_socket(socket, request_copy.host(), boost::lexical_cast<string_type>(request_copy.port()));
-                send_request(socket, method, request_copy);
-
-                response_ = basic_response<Tag>();
-                response_ << source(request_copy.host());
-
-                boost::asio::streambuf response_buffer;
-                read_status(response_, socket, response_buffer);
-                read_headers(response_, socket, response_buffer);
-                if (get_body)
-                    read_body(response_, socket, response_buffer);
-
-                if (follow_redirect_) {
-                    uint16_t status = response_.status();
-                    if (status >= 300 && status <= 307) {
-                        typename headers_range<http::basic_response<Tag> >::type location_range = headers(response_)["Location"];
-                        typename range_iterator<typename headers_range<http::basic_request<Tag> >::type>::type location_header = begin(location_range);
-                        if (location_header != end(location_range)) {
-                            request_copy.uri(location_header->second);
-                        } else throw std::runtime_error("Location header not defined in redirect response.");
-                    } else break;
-                } else break;
-            } while(true);
-
-            return response_;
-        };
+            typename connection_base::connection_ptr connection_;
+            connection_ = connection_base::get_connection(resolver_, request_);
+            return connection_->send_request(method, request_, get_body);
+        }
 
     public:
 
@@ -229,23 +63,23 @@ namespace boost { namespace network { namespace http {
         };
 
         basic_client()
-        : resolver_base(false), service_(), resolver_(service_), follow_redirect_(false)
+        : connection_base(false, false), service_(), resolver_(service_)
         {};
 
         explicit basic_client(cache_resolved_type (*)())
-        : resolver_base(true), service_(), resolver_(service_), follow_redirect_(false)
+        : connection_base(true, false), service_(), resolver_(service_)
         {};
 
         explicit basic_client(follow_redirect_type (*)())
-        : resolver_base(false), service_(), resolver_(service_), follow_redirect_(true)
+        : connection_base(false, true), service_(), resolver_(service_)
         {};
 
         basic_client(cache_resolved_type (*)(), follow_redirect_type (*)())
-        : resolver_base(false), service_(), resolver_(service_), follow_redirect_(true)
+        : connection_base(true, true), service_(), resolver_(service_)
         {};
 
         void clear_resolved_cache() {
-            resolver_base::endpoint_cache_.clear();
+            connection_base::endpoint_cache_.clear();
         }
 
         basic_response<Tag> const head (basic_request<Tag> const & request_) {
