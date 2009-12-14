@@ -51,7 +51,14 @@ namespace boost { namespace network { namespace http {
 
             while (error && endpoint_iterator != end) {
                 socket_.close();
-                socket_.connect(*endpoint_iterator++, error);
+                socket_.connect(
+                    tcp::endpoint(
+                        endpoint_iterator->endpoint().address()
+                        , endpoint_iterator->endpoint().port()
+                        )
+                    , error
+                    );
+                ++endpoint_iterator;
             }
 
             if (error)
@@ -87,8 +94,8 @@ namespace boost { namespace network { namespace http {
                 << "Host: " << request_.host() << "\r\n"
                 << "Accept: */*\r\n";
 
-            headers_range<http::request>::type range = headers(request_);
-            BOOST_FOREACH(headers_range<http::request>::type::value_type const & header, range) {
+            typename headers_range<http::basic_request<Tag> >::type range = headers(request_);
+            BOOST_FOREACH(typename headers_range<http::basic_request<Tag> >::type::value_type const & header, range) {
                 request_stream << header.first << ": " << header.second << "\r\n";
             };
 
@@ -169,7 +176,7 @@ namespace boost { namespace network { namespace http {
             response_ << body(body_stream.str());
         };
 
-        response const sync_request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
+        basic_response<Tag> const sync_request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
             using boost::asio::ip::tcp;
 
             basic_request<Tag> request_copy(request_);
@@ -191,8 +198,8 @@ namespace boost { namespace network { namespace http {
                 if (follow_redirect_) {
                     uint16_t status = response_.status();
                     if (status >= 300 && status <= 307) {
-                        headers_range<http::request>::type location_range = headers(response_)["Location"];
-                        range_iterator<headers_range<http::request>::type>::type location_header = begin(location_range);
+                        typename headers_range<http::basic_response<Tag> >::type location_range = headers(response_)["Location"];
+                        typename range_iterator<typename headers_range<http::basic_request<Tag> >::type>::type location_header = begin(location_range);
                         if (location_header != end(location_range)) {
                             request_copy.uri(location_header->second);
                         } else throw std::runtime_error("Location header not defined in redirect response.");
@@ -241,19 +248,19 @@ namespace boost { namespace network { namespace http {
             resolver_base::endpoint_cache_.clear();
         }
 
-        response const head (basic_request<Tag> const & request_) {
+        basic_response<Tag> const head (basic_request<Tag> const & request_) {
             return sync_request_skeleton(request_, "HEAD", false);
         };
 
-        response const get (basic_request<Tag> const & request_) {
+        basic_response<Tag> const get (basic_request<Tag> const & request_) {
             return sync_request_skeleton(request_, "GET", true);
         };
 
-        response const post (basic_request<Tag> const & request_) {
+        basic_response<Tag> const post (basic_request<Tag> const & request_) {
             return sync_request_skeleton(request_, "POST", true);
         };
 
-        response const post (basic_request<Tag> const & request_, string_type const & content_type, string_type const & body_) {
+        basic_response<Tag> const post (basic_request<Tag> const & request_, string_type const & content_type, string_type const & body_) {
             basic_request<Tag> request_copy = request_;
             request_copy << body(body_)
                 << header("Content-Type", content_type)
@@ -261,19 +268,19 @@ namespace boost { namespace network { namespace http {
             return post(request_copy);
         };
 
-        response const post (basic_request<Tag> const & request_, string_type const & body_) {
+        basic_response<Tag> const post (basic_request<Tag> const & request_, string_type const & body_) {
             return post(request_, "x-application/octet-stream", body_);
         };
 
-        response const put (basic_request<Tag> const & request_) {
+        basic_response<Tag> const put (basic_request<Tag> const & request_) {
             return sync_request_skeleton(request_, "PUT", true);
         };
 
-        response const put (basic_request<Tag> const & request_, string_type const & body_) {
+        basic_response<Tag> const put (basic_request<Tag> const & request_, string_type const & body_) {
             return put(request_, "x-application/octet-stream", body_);
         };
 
-        response const put (basic_request<Tag> const & request_, string_type const & content_type, string_type const & body_) {
+        basic_response<Tag> const put (basic_request<Tag> const & request_, string_type const & content_type, string_type const & body_) {
             basic_request<Tag> request_copy = request_;
             request_copy << body(body_)
                 << header("Content-Type", content_type)
@@ -281,7 +288,7 @@ namespace boost { namespace network { namespace http {
             return put(request_copy);
         };
 
-        response const delete_ (basic_request<Tag> const & request_) {
+        basic_response<Tag> const delete_ (basic_request<Tag> const & request_) {
             return sync_request_skeleton(request_, "DELETE", true);
         };
 

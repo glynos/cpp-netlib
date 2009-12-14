@@ -35,6 +35,11 @@ namespace boost { namespace network {
         typedef std::ostringstream type;
     };
 
+    template <>
+    struct ostringstream<tags::http_default_8bit_udp_resolve> {
+        typedef std::ostringstream type;
+    };
+
 } // namespace network
 
 } // namespace boost
