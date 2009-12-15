@@ -1,14 +1,15 @@
 #ifndef BOOST_NETWORK_URL_HTTP_DETAIL_PARSE_SPECIFIC_HPP_
 #define BOOST_NETWORK_URL_HTTP_DETAIL_PARSE_SPECIFIC_HPP_
 
-// Copyright 2009 Dean Michael Berris.
+// Copyright 2009 Dean Michael Berris, Jeroen Habraken.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/algorithm/string/case_conv.hpp>
+
 #include <boost/network/uri/http/detail/uri_parts.hpp>
 #include <boost/network/uri/detail/parse_uri.hpp>
-#include <boost/network/uri/detail/constants.hpp>
 #include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace uri { 
@@ -51,6 +52,12 @@ namespace boost { namespace network { namespace uri {
                             uri_parts<tags::http> & parts
                      ) 
             {
+                namespace qi = spirit::qi;
+
+                // For resiliency, programs interpreting URI should treat upper
+                // case letters as equivalent to lower case in scheme names
+                boost::to_lower(parts.scheme);
+
                 // Require that parts.scheme is either http or https
                 if (parts.scheme.size() < 4)
                     return false;
@@ -62,17 +69,6 @@ namespace boost { namespace network { namespace uri {
                 } else if (parts.scheme.size() > 5)
                     return false;
                 
-                using spirit::qi::parse;
-                using spirit::qi::lit;
-                using spirit::ascii::char_;
-                using spirit::ascii::space;
-                using spirit::ascii::alnum;
-                using spirit::ascii::punct;
-                using spirit::qi::lexeme;
-                using spirit::qi::uint_;
-                using spirit::qi::digit;
-                using spirit::qi::rule;
-                
                 typedef string<tags::http>::type string_type;
                 typedef range_iterator<string_type>::type iterator;
 
@@ -81,7 +77,7 @@ namespace boost { namespace network { namespace uri {
                 fusion::tuple<
                     optional<string_type> &,
                     string_type &,
-                    optional<uint32_t> &,
+                    optional<uint16_t> &,
                     optional<string_type> &,
                     optional<string_type> &,
                     optional<string_type> &
@@ -95,20 +91,24 @@ namespace boost { namespace network { namespace uri {
                                 parts.fragment
                            );
 
+                qi::rule<iterator, string_type::value_type()> reserved = qi::char_(";/?:@&=+$,");
+                qi::rule<iterator, string_type::value_type()> unreserved = qi::alnum | qi::char_("-_.!~*'()");
+                qi::rule<iterator, string_type()> escaped = qi::char_("%") > qi::repeat(2)[qi::xdigit];
+
                 hostname<tags::http>::parser<iterator> hostname;
-                bool ok = parse(
+                bool ok = qi::parse(
                         start_, end_,
                         (
-                         lit("//")
-                         >> -lexeme[
-                            *((alnum|punct) - '@')
+                         qi::lit("//")
+                         >> -qi::lexeme[
+                            *((qi::alnum | qi::punct) - '@')
                             >> '@'
                             ]
                          >> hostname
-                         >> -lexeme[':' >> uint_]
-                         >> -lexeme['/' >> *((alnum|punct) - '?')]
-                         >> -lexeme['?' >> *((alnum|punct) - '#')]
-                         >> -lexeme['#' >> *(alnum|punct)]
+                         >> -qi::lexeme[':' >> qi::ushort_]
+                         >> -qi::lexeme['/' >> *((qi::alnum | qi::punct) - '?')]
+                         >> -qi::lexeme['?' >> qi::raw[*(reserved | unreserved | escaped)]]
+                         >> -qi::lexeme['#' >> qi::raw[*(reserved | unreserved | escaped)]]
                         ),
                         result
                         );

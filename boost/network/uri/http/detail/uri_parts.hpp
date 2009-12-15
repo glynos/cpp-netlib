@@ -1,7 +1,7 @@
 #ifndef BOOST_NETWORK_URL_HTTP_DETAIL_URL_PARTS_HPP_
 #define BOOST_NETWORK_URL_HTTP_DETAIL_URL_PARTS_HPP_
 
-// Copyright 2009 Dean Michael Berris.
+// Copyright 2009 Dean Michael Berris, Jeroen Habraken.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -19,7 +19,7 @@ namespace boost { namespace network { namespace uri {
             string_type scheme_specific_part;
             optional<string_type> user_info;
             string_type host;
-            optional<uint32_t> port;
+            optional<uint16_t> port;
             optional<string_type> path;
             optional<string_type> query;
             optional<string_type> fragment;
