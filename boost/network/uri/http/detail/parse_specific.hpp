@@ -6,8 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/algorithm/string/case_conv.hpp>
-
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/uri/http/detail/uri_parts.hpp>
 #include <boost/network/uri/detail/parse_uri.hpp>
 #include <boost/network/traits/string.hpp>
@@ -54,20 +53,16 @@ namespace boost { namespace network { namespace uri {
             {
                 namespace qi = spirit::qi;
 
-                // For resiliency, programs interpreting URI should treat upper
-                // case letters as equivalent to lower case in scheme names
-                boost::to_lower(parts.scheme);
-
-                // Require that parts.scheme is either http or https
-                if (parts.scheme.size() < 4)
+                // Require that parts.scheme is either http or https, case insensitive
+                if (parts.scheme.size() < 4 or parts.scheme.size() > 5)
                     return false;
-                if (parts.scheme.substr(0, 4) != "http")
-                    return false;
-                if (parts.scheme.size() == 5) {
-                    if (parts.scheme[4] != 's')
+                if (parts.scheme.size() == 4) {
+                    if (not boost::iequals(parts.scheme.substr(0, 4), "http"))
                         return false;
-                } else if (parts.scheme.size() > 5)
-                    return false;
+                } else {  // size is 5
+                    if (not boost::iequals(parts.scheme.substr(0, 5), "https"))
+                        return false;
+                }
                 
                 typedef string<tags::http>::type string_type;
                 typedef range_iterator<string_type>::type iterator;
