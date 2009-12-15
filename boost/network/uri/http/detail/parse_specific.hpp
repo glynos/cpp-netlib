@@ -86,10 +86,15 @@ namespace boost { namespace network { namespace uri {
                                 parts.fragment
                            );
 
-                qi::rule<iterator, string_type::value_type()> reserved = qi::char_(";/?:@&=+$,");
-                qi::rule<iterator, string_type::value_type()> unreserved = qi::alnum | qi::char_("-_.!~*'()");
-                qi::rule<iterator, string_type()> escaped = qi::char_("%") > qi::repeat(2)[qi::xdigit];
+                qi::rule<iterator, string_type::value_type()> gen_delims = qi::char_(":/?#[]@");
+                qi::rule<iterator, string_type::value_type()> sub_delims = qi::char_("!$&'()*+,;=");
 
+                qi::rule<iterator, string_type::value_type()> reserved = gen_delims | sub_delims;
+                qi::rule<iterator, string_type::value_type()> unreserved = qi::alnum | qi::char_("-._~");
+                qi::rule<iterator, string_type()> pct_encoded = qi::char_("%") > qi::repeat(2)[qi::xdigit];
+
+                qi::rule<iterator, string_type()> pchar = qi::raw[unreserved | pct_encoded | sub_delims | qi::char_(":@")];
+                
                 hostname<tags::http>::parser<iterator> hostname;
                 bool ok = qi::parse(
                         start_, end_,
@@ -101,9 +106,9 @@ namespace boost { namespace network { namespace uri {
                             ]
                          >> hostname
                          >> -qi::lexeme[':' >> qi::ushort_]
-                         >> -qi::lexeme['/' >> *((qi::alnum | qi::punct) - '?')]
-                         >> -qi::lexeme['?' >> qi::raw[*(reserved | unreserved | escaped)]]
-                         >> -qi::lexeme['#' >> qi::raw[*(reserved | unreserved | escaped)]]
+                         >> qi::lexeme[qi::raw[*(qi::char_("/") > *pchar)]]
+                         >> -qi::lexeme['?' >> qi::raw[*(pchar | qi::char_("/?"))]]
+                         >> -qi::lexeme['#' >> qi::raw[*(pchar | qi::char_("/?"))]]
                         ),
                         result
                         );
