@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
+#include <cstdlib>
 #include <boost/network/protocol/http/server.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/lexical_cast.hpp>
