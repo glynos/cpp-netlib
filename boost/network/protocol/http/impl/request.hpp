@@ -84,6 +84,11 @@ namespace boost { namespace network { namespace http {
         string_type const anchor() const {
             return uri_.fragment();
         }
+
+        string_type const protocol() const {
+            return uri_.protocol();
+        }
+
     };
 
     template <class Tag>

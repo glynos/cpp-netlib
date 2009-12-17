@@ -13,6 +13,7 @@ project network_test :
         <source>/boost//thread
         <source>/boost//program_options
         <toolset>gcc:<linkflags>-lpthread
+        <toolset>gcc:<linkflags>-lssl
         <toolset>msvc:<define>BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
         <link>static

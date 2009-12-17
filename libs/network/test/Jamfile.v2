@@ -22,6 +22,7 @@ project network_test :
         <source>/boost//thread
         <source>/boost//filesystem
         <toolset>gcc:<linkflags>-lpthread
+        <toolset>gcc:<linkflags>-lssl
         <os>cygwin,<toolset>gcc:<define>_WIN32_WINNT=0x0501
         <os>cygwin,<toolset>gcc:<define>__USE_W32_SOCKETS
         <os>cygwin,<toolset>gcc:<library>ws2_32
@@ -46,6 +47,8 @@ unit-test http_message_test : http_message_test.cpp ;
 unit-test url_test : url_test.cpp ;
 
 exe hello_world : hello_world.cpp ;
+
+exe spike : spike.cpp ;
 
 make htpplib_acceptance.passed : httplib_acceptance.py hello_world : @python_runner ;
 actions python_runner {
