@@ -9,6 +9,7 @@
 
 #define BOOST_TEST_MODULE http 1.0 localhost tests
 
+#include <boost/config/warning_disable.hpp>
 #include <boost/config.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network.hpp>

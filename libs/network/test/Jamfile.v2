@@ -48,9 +48,7 @@ unit-test url_test : url_test.cpp ;
 
 exe hello_world : hello_world.cpp ;
 
-exe spike : spike.cpp ;
-
-make htpplib_acceptance.passed : httplib_acceptance.py hello_world : @python_runner ;
+make httplib_acceptance.passed : httplib_acceptance.py hello_world : @python_runner ;
 actions python_runner {
     python $(>) $(<)
 }
