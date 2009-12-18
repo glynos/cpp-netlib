@@ -56,14 +56,16 @@ int main(int argc, char * argv[]) {
     //try {
         using namespace boost::network;
 
-        http::client::request request(source);
-        http::client client;
-        http::client::response response;
+        http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::request request(source);
+        http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1> client(
+            http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::follow_redirects
+            );
+        http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::response response;
         response = client.get(request);
 
         if (show_headers) {
-            headers_range<http::client::response>::type headers_ = headers(response);
-            boost::range_iterator<headers_range<http::client::response>::type>::type header, past_end;
+            headers_range<http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::response>::type headers_ = headers(response);
+            boost::range_iterator<headers_range<http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::response>::type>::type header, past_end;
             header = begin(headers_);
             past_end = end(headers_);
             while (header != past_end) {

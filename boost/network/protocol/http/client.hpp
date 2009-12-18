@@ -71,6 +71,10 @@ namespace boost { namespace network { namespace http {
         //
         // =================================================================
 
+        ~basic_client() {
+            connection_base::cleanup();
+        }
+
         void clear_resolved_cache() {
             connection_base::endpoint_cache_.clear();
         }

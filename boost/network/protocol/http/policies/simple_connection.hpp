@@ -92,6 +92,8 @@ namespace boost { namespace network { namespace http {
             return connection_;
         }
 
+        void cleanup() { }
+
         simple_connection_policy(bool cache_resolved, bool follow_redirect) 
         : resolver_base(cache_resolved), follow_redirect_(follow_redirect) {}
 

@@ -29,6 +29,16 @@ namespace boost { namespace network { namespace http {
         typedef policies::sync_resolver<tags::http_default_8bit_udp_resolve> type;
     };
 
+    template <>
+    struct resolver_policy<tags::http_keepalive_8bit_udp_resolve> {
+        typedef policies::sync_resolver<tags::http_keepalive_8bit_udp_resolve> type;
+    };
+
+    template <>
+    struct resolver_policy<tags::http_keepalive_8bit_tcp_resolve> {
+        typedef policies::sync_resolver<tags::http_keepalive_8bit_tcp_resolve> type;
+    };
+
 } // namespace http
 
 } // namespace network

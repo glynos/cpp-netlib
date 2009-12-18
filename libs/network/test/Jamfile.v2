@@ -42,6 +42,8 @@ unit-test message_transform_test : message_transform_test.cpp ;
 
 unit-test http_1_0_test : http_1_0_test.cpp ;
 
+unit-test http_1_1_test : http_1_1_test.cpp ;
+
 unit-test http_message_test : http_message_test.cpp ;
 
 unit-test url_test : url_test.cpp ;

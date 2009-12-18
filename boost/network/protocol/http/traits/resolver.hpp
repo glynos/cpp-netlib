@@ -28,6 +28,16 @@ namespace boost { namespace network { namespace http {
         typedef boost::asio::ip::udp::resolver type;
     };
 
+    template <>
+    struct resolver<tags::http_keepalive_8bit_tcp_resolve> {
+        typedef boost::asio::ip::tcp::resolver type;
+    };
+
+    template <>
+    struct resolver<tags::http_keepalive_8bit_udp_resolve> {
+        typedef boost::asio::ip::udp::resolver type;
+    };
+
 } // namespace http
 
 } // namespace network

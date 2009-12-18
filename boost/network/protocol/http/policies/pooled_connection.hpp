@@ -10,8 +10,12 @@
 
 #include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
+#include <utility>
 #include <boost/network/protocol/http/detail/connection_helper.hpp>
 #include <boost/network/protocol/http/impl/sync_connection_base.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+
+#include <iostream>
 
 #ifndef BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
 #define BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT 5
@@ -29,12 +33,20 @@ namespace boost { namespace network { namespace http {
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
 
         struct connection_impl {
+            typedef function<shared_ptr<connection_impl>(resolver_type &,basic_request<Tag> const &)> get_connection_function;
 
-            connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & host, string_type const & port, resolver_function_type resolve, pooled_connection_policy & source)
-            : pimpl(impl::sync_connection_base<Tag,version_major,version_minor>::new_connection(resolver, resolve)), source_(source) {}
+            connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & host, string_type const & port, resolver_function_type resolve, get_connection_function get_connection, bool https)
+            : pimpl(impl::sync_connection_base<Tag,version_major,version_minor>::new_connection(resolver, resolve, https))
+            , resolver_(resolver)
+            , connection_follow_redirect_(follow_redirect)
+            , get_connection_(get_connection) {}
 
             basic_response<Tag> send_request(string_type const & method, basic_request<Tag> request_, bool get_body) {
                 return send_request_recursive(method, request_, get_body, 0);
+            }
+
+            ~connection_impl () {
+                pimpl.reset();
             }
 
             private:
@@ -45,19 +57,29 @@ namespace boost { namespace network { namespace http {
 
                 basic_response<Tag> response_;
                 // check if the socket is open first
-                if (!pimpl->socket_.is_open()) {
+                if (!pimpl->is_open()) {
                     pimpl->init_socket(request_.host(), lexical_cast<string_type>(request_.port()));
                 }
+                std::cerr << "Sending request to " << request_.host() << "...\n";
                 pimpl->send_request_impl(method, request_);
                 response_ = basic_response<Tag>();
                 response_ << source(request_.host());
 
                 boost::asio::streambuf response_buffer;
+                std::cerr << "Reading status from " << request_.host() << "...\n";
                 pimpl->read_status(response_, response_buffer);
+                std::cerr << "Reading headers from " << request_.host() << "...\n";
                 pimpl->read_headers(response_, response_buffer);
-                if (get_body) pimpl->read_body(response_, response_buffer);
+                if (
+                    get_body && response_.status() != 304 
+                    && (response_.status() != 204)
+                    && not (response_.status() >= 100 && response_.status() <= 199)
+                   ) {
+                    std::cerr << "Reading body from " << request_.host() << "...\n";
+                    pimpl->read_body(response_, response_buffer);
+                }
 
-                if (follow_redirect_) {
+                if (connection_follow_redirect_) {
                     boost::uint16_t status = response_.status();
                     if (status >= 300 && status <= 307) {
                         typename headers_range<basic_response<Tag> >::type location_range = headers(response_)["Location"];
@@ -65,28 +87,33 @@ namespace boost { namespace network { namespace http {
                         if (location_header != end(location_range)) {
                             request_.uri(location_header->second);
                             connection_ptr connection_;
-                            connection_ = source_.get_connection(pimpl->resolver_, request_);
+                            connection_ = get_connection_(resolver_, request_);
                             return connection_->send_request_recursive(method, request_, get_body, ++count);
                         } else throw std::runtime_error("Location header not defined in redirect response.");
                     }
                 }
 
+                typename headers_range<basic_response<Tag> >::type connection_range = headers(response_)["Connection"];
+                if (!empty(connection_range) && begin(connection_range)->second == string_type("close")) {
+                    std::cerr << "Before closing socket for " << request_.host() << ":" << request_.port() << "...\n";
+                    pimpl->close_socket();
+                    std::cerr << "After closing socket for " << request_.host() << ":" << request_.port() << "...\n";
+                }
+
                 return response_;
             }
+
             shared_ptr<http::impl::sync_connection_base<Tag,version_major,version_minor> > pimpl;
-            pooled_connection_policy & source_;
-            template <class T, unsigned vma, unsigned vmi> friend struct pooled_connection;
+            resolver_type & resolver_;
+            bool connection_follow_redirect_;
+            get_connection_function get_connection_;
         };
 
         typedef shared_ptr<connection_impl> connection_ptr;
         
-        private:
-
         typedef unordered_map<string_type, connection_ptr> host_connection_map;
         host_connection_map host_connections;
         bool follow_redirect_;
-
-        protected:
 
         connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_) {
             string_type index = (request_.host() + ':') + lexical_cast<string_type>(request_.port());
@@ -104,13 +131,22 @@ namespace boost { namespace network { namespace http {
                         this,
                         _1, _2, _3
                         )
-                    , *this
+                    , bind(
+                        &pooled_connection_policy<Tag,version_major,version_minor>::get_connection,
+                        this,
+                        _1, _2
+                        )
+                    , boost::iequals(request_.protocol(), string_type("https"))
                     )
                 );
-                host_connections.insert(index, connection_);
+                host_connections.insert(std::make_pair(index, connection_));
                 return connection_;
             }
             return it->second;
+        }
+
+        void cleanup() {
+            host_connection_map().swap(host_connections);
         }
 
         pooled_connection_policy(bool cache_resolved, bool follow_redirect)

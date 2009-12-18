@@ -30,6 +30,8 @@ namespace boost { namespace network { namespace http { namespace impl {
         void read_status(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {}
         void read_headers(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {}
         void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {}
+        bool is_open() { return socket_.lowest_layer().is_open(); }
+        void close_socket() { if (is_open()) { socket_.lowest_layer().close(); } }
         ~https_sync_connection() {}
         private:
         resolver_type & resolver_;
@@ -129,14 +131,37 @@ namespace boost { namespace network { namespace http { namespace impl {
                 body_stream << &response_buffer;
 
             boost::system::error_code error;
-            while (boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error))
-                body_stream << &response_buffer;
+            if (!connection_keepalive<Tag>::value) {
+                while (boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error)) {
+                    body_stream << &response_buffer;
+                }
+            } else {
+                // look for the content-length header
+                typename headers_range<basic_response<Tag> >::type content_length_range =
+                    headers(response_)["Content-Length"];
+                if (empty(content_length_range))
+                    throw std::runtime_error("Unsupported response, missing 'Content-Length' header.");
+                size_t length = lexical_cast<size_t>(begin(content_length_range)->second);
+                std::cerr << "Before reading body of size " << length << "...\n";
+                size_t bytes_read = 0;
+                while ((bytes_read = boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error))) {
+                    body_stream << &response_buffer;
+                    length -= bytes_read;
+                    if ((length <= 0) or error)
+                        break;
+                }
+                std::cerr << "After reading body of size " << length << "...\n";
+            }
 
             if (error != boost::asio::error::eof)
                 throw boost::system::system_error(error);
 
             response_ << body(body_stream.str());
         }
+
+        bool is_open() { return socket_.is_open(); }
+
+        void close_socket() { if (is_open()) { socket_.close(); } }
 
         private:
 
@@ -165,6 +190,8 @@ namespace boost { namespace network { namespace http { namespace impl {
         virtual void read_status(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) = 0;
         virtual void read_headers(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) = 0;
         virtual void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) = 0;
+        virtual bool is_open() = 0;
+        virtual void close_socket() = 0;
         virtual ~sync_connection_base() {}
         protected:
         sync_connection_base() {}

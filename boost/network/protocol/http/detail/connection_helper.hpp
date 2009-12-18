@@ -8,6 +8,7 @@
 
 #include <boost/network/version.hpp>
 #include <boost/foreach.hpp>
+#include <boost/network/protocol/http/traits/connection_keepalive.hpp>
 
 namespace boost { namespace network { namespace http { namespace detail {
 
@@ -47,6 +48,10 @@ namespace boost { namespace network { namespace http { namespace detail {
                 << "Host: " << request_.host() << "\r\n"
                 << "Accept: */*\r\n";
 
+            if (version_major == 1 && version_minor == 1)
+                request_stream 
+                    << "Accept-Encoding: identity;q=1.0, *;q=0\r\n"; // only accept identity encoding
+
             typename headers_range<http::basic_request<Tag> >::type range = headers(request_);
             BOOST_FOREACH(typename headers_range<http::basic_request<Tag> >::type::value_type const & header, range) {
                 request_stream << header.first << ": " << header.second << "\r\n";
@@ -55,8 +60,12 @@ namespace boost { namespace network { namespace http { namespace detail {
             range = headers(request_)["user-agent"];
             if (empty(range)) request_stream << "User-Agent: cpp-netlib/" << BOOST_NETLIB_VERSION << "\r\n";
 
+            if (!connection_keepalive<Tag>::value) {
+                request_stream
+                    << "Connection: close\r\n";
+            }
             request_stream
-                << "Connection: close\r\n\r\n";
+                << "\r\n";
 
             string_type body_ = body(request_);
             if (!body_.empty())
