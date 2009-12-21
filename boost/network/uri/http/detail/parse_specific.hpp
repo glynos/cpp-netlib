@@ -100,13 +100,10 @@ namespace boost { namespace network { namespace uri {
                         start_, end_,
                         (
                          qi::lit("//")
-                         >> -qi::lexeme[
-                            *((qi::alnum | qi::punct) - '@')
-                            >> '@'
-                            ]
+                         >> -qi::lexeme[qi::raw[*(unreserved | pct_encoded | sub_delims | qi::char_(":"))] >> '@']
                          >> hostname
                          >> -qi::lexeme[':' >> qi::ushort_]
-                         >> qi::lexeme[qi::raw[*(qi::char_("/") > *pchar)]]
+                         >> -qi::lexeme['/' >> qi::raw[*pchar > *('/' >> *pchar)]]
                          >> -qi::lexeme['?' >> qi::raw[*(pchar | qi::char_("/?"))]]
                          >> -qi::lexeme['#' >> qi::raw[*(pchar | qi::char_("/?"))]]
                         ),
