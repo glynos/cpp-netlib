@@ -103,7 +103,7 @@ namespace boost { namespace network { namespace uri {
                          >> -qi::lexeme[qi::raw[*(unreserved | pct_encoded | sub_delims | qi::char_(":"))] >> '@']
                          >> hostname
                          >> -qi::lexeme[':' >> qi::ushort_]
-                         >> -qi::lexeme['/' >> qi::raw[*pchar > *('/' >> *pchar)]]
+                         >> -qi::lexeme['/' > qi::raw[*pchar >> *('/' > *pchar)]]
                          >> -qi::lexeme['?' >> qi::raw[*(pchar | qi::char_("/?"))]]
                          >> -qi::lexeme['#' >> qi::raw[*(pchar | qi::char_("/?"))]]
                         ),
