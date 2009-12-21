@@ -34,7 +34,9 @@ project network_test :
         <link>static
     ;
 
-unit-test localhost_tests : localhost_tests.cpp ;
+unit-test http_localhost_tests : http_localhost_tests.cpp ;
+
+unit-test https_localhost_tests : https_localhost_tests.cpp ;
 
 unit-test message_test : message_test.cpp ;
 

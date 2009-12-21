@@ -59,7 +59,13 @@ private:
     boost::filesystem::path get_server_path(const boost::filesystem::path& base_path) {
         using namespace boost::filesystem;
 
-        const path script_name = "http_test_server.py";
+        const path script_name = 
+#if defined(HTTPS_SERVER_TEST)
+            "https_test_server.py"
+#else
+            "http_test_server.py"
+#endif
+            ;
 
         // if executed from $CPP_NETLIB_HOME
         path server_path = base_path / "libs/network/test/server" / script_name;

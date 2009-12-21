@@ -13,47 +13,15 @@
 
 namespace boost { namespace network { namespace http { namespace impl {
     template <class Tag, unsigned version_major, unsigned version_minor>
-    struct sync_connection_base;
-
-    template <class Tag, unsigned version_major, unsigned version_minor>
-    struct https_sync_connection : public virtual sync_connection_base<Tag,version_major,version_minor>, detail::connection_helper<Tag, version_major, version_minor> {
-        typedef typename resolver_policy<Tag>::type resolver_base;
-        typedef typename resolver_base::resolver_type resolver_type;
-        typedef typename string<Tag>::type string_type;
-        typedef function<typename resolver_base::resolver_iterator_pair(resolver_type&, string_type const &, string_type const &)> resolver_function_type;
-        
-        https_sync_connection(resolver_type & resolver, resolver_function_type resolve)
-        : resolver_(resolver), resolve_(resolve), context_(resolver.io_service(), boost::asio::ssl::context::sslv23_client), socket_(resolver.io_service(), context_) { }
-
-        void init_socket(string_type const & hostname, string_type const & port) {}
-        void send_request_impl(string_type const & method, basic_request<Tag> const & request_) {}
-        void read_status(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {}
-        void read_headers(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {}
-        void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {}
-        bool is_open() { return socket_.lowest_layer().is_open(); }
-        void close_socket() { if (is_open()) { socket_.lowest_layer().close(); } }
-        ~https_sync_connection() {}
-        private:
-        resolver_type & resolver_;
-        resolver_function_type resolve_;
-        boost::asio::ssl::context context_;
-        boost::asio::ssl::stream<boost::asio::ip::tcp::socket> socket_;
-        
-    };
-
-    template <class Tag, unsigned version_major, unsigned version_minor>
-    struct http_sync_connection : public virtual sync_connection_base<Tag, version_major, version_minor>, detail::connection_helper<Tag, version_major, version_minor> {
+    struct connection_base_impl {
+        protected:
         typedef typename resolver_policy<Tag>::type resolver_base;
         typedef typename resolver_base::resolver_type resolver_type;
         typedef typename string<Tag>::type string_type;
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type&, string_type const &, string_type const &)> resolver_function_type;
 
-        http_sync_connection(resolver_type & resolver, resolver_function_type resolve)
-        : resolver_(resolver), resolve_(resolve), socket_(resolver.io_service()) { }
-
-        ~http_sync_connection() {}
-
-        void init_socket(string_type const & hostname, string_type const & port) {
+        template <class Socket>
+        void init_socket(Socket & socket_, resolver_type & resolver_, string_type const & hostname, string_type const & port, resolver_function_type resolve_) {
             using boost::asio::ip::tcp;
             boost::system::error_code error = boost::asio::error::host_not_found;
             typename resolver_type::iterator endpoint_iterator, end;
@@ -74,13 +42,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                 throw boost::system::system_error(error);
         }
 
-        void send_request_impl(string_type const & method, basic_request<Tag> const & request_) {
-            boost::asio::streambuf request_buffer;
-            create_request(request_buffer, method, request_);
-            write(socket_, request_buffer);
-        }
-
-        void read_status(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+        template <class Socket>
+        void read_status(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
             boost::asio::read_until(socket_, response_buffer, "\r\n");
             std::istream response_stream(&response_buffer);
             string_type http_version;
@@ -100,7 +63,8 @@ namespace boost { namespace network { namespace http { namespace impl {
             response_.status_message() = status_message;
         }
 
-        void read_headers(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+        template <class Socket>
+        void read_headers(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
             boost::asio::read_until(socket_, response_buffer, "\r\n\r\n");
             std::istream response_stream(&response_buffer);
             string_type header_line, name;
@@ -124,7 +88,13 @@ namespace boost { namespace network { namespace http { namespace impl {
             };
         }
 
-        void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+        template <class Socket>
+        void send_request_impl(Socket & socket_, string_type const & method, boost::asio::streambuf & request_buffer) {
+            write(socket_, request_buffer);
+        }
+
+        template <class Socket>
+        void read_body(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
             typename ostringstream<Tag>::type body_stream;
 
             if (response_buffer.size() > 0)
@@ -157,6 +127,108 @@ namespace boost { namespace network { namespace http { namespace impl {
                 throw boost::system::system_error(error);
 
             response_ << body(body_stream.str());
+        }
+
+
+    };
+
+    template <class Tag, unsigned version_major, unsigned version_minor>
+    struct sync_connection_base;
+
+    template <class Tag, unsigned version_major, unsigned version_minor>
+    struct https_sync_connection : public virtual sync_connection_base<Tag,version_major,version_minor>, detail::connection_helper<Tag, version_major, version_minor>, connection_base_impl<Tag, version_major, version_minor> {
+        typedef typename resolver_policy<Tag>::type resolver_base;
+        typedef typename resolver_base::resolver_type resolver_type;
+        typedef typename string<Tag>::type string_type;
+        typedef function<typename resolver_base::resolver_iterator_pair(resolver_type&, string_type const &, string_type const &)> resolver_function_type;
+        typedef connection_base_impl<Tag,version_major,version_minor> connection_base;
+        
+        https_sync_connection(resolver_type & resolver, resolver_function_type resolve, optional<string_type> const & certificate_filename = optional<string_type>())
+        : connection_base(), resolver_(resolver), resolve_(resolve), context_(resolver.io_service(), boost::asio::ssl::context::sslv23_client), socket_(resolver.io_service(), context_) {
+            if (certificate_filename) {
+                context_.set_verify_mode(boost::asio::ssl::context::verify_peer);
+                context_.load_verify_file(*certificate_filename);
+            } else {
+                context_.set_verify_mode(boost::asio::ssl::context::verify_none);
+            }
+        }
+
+        void init_socket(string_type const & hostname, string_type const & port) {
+            connection_base::init_socket(socket_.lowest_layer(), resolver_, hostname, port, resolve_);
+            socket_.handshake(boost::asio::ssl::stream_base::client);
+        }
+
+        void send_request_impl(string_type const & method, basic_request<Tag> const & request_) {
+            boost::asio::streambuf request_buffer;
+            create_request(request_buffer, method, request_);
+            connection_base::send_request_impl(socket_, method, request_buffer);
+        }
+
+        void read_status(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+            connection_base::read_status(socket_, response_, response_buffer);
+        }
+
+        void read_headers(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+            connection_base::read_headers(socket_, response_, response_buffer);
+        }
+
+        void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+            connection_base::read_body(socket_, response_, response_buffer);    
+        }
+
+        bool is_open() { 
+            return socket_.lowest_layer().is_open(); 
+        }
+
+        void close_socket() { 
+            if (is_open()) {
+                socket_.lowest_layer().close();
+            } 
+        }
+
+        ~https_sync_connection() {}
+
+        private:
+        resolver_type & resolver_;
+        resolver_function_type resolve_;
+        boost::asio::ssl::context context_;
+        boost::asio::ssl::stream<boost::asio::ip::tcp::socket> socket_;
+        
+    };
+
+    template <class Tag, unsigned version_major, unsigned version_minor>
+    struct http_sync_connection : public virtual sync_connection_base<Tag, version_major, version_minor>, detail::connection_helper<Tag, version_major, version_minor>, connection_base_impl<Tag, version_major, version_minor> {
+        typedef typename resolver_policy<Tag>::type resolver_base;
+        typedef typename resolver_base::resolver_type resolver_type;
+        typedef typename string<Tag>::type string_type;
+        typedef function<typename resolver_base::resolver_iterator_pair(resolver_type&, string_type const &, string_type const &)> resolver_function_type;
+        typedef connection_base_impl<Tag,version_major,version_minor> connection_base;
+
+        http_sync_connection(resolver_type & resolver, resolver_function_type resolve)
+        : connection_base(), resolver_(resolver), resolve_(resolve), socket_(resolver.io_service()) { }
+
+        ~http_sync_connection() {}
+
+        void init_socket(string_type const & hostname, string_type const & port) {
+            connection_base::init_socket(socket_, resolver_, hostname, port, resolve_);
+        }
+
+        void send_request_impl(string_type const & method, basic_request<Tag> const & request_) {
+            boost::asio::streambuf request_buffer;
+            create_request(request_buffer, method, request_);
+            connection_base::send_request_impl(socket_, method, request_buffer);
+        }
+
+        void read_status(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+            connection_base::read_status(socket_, response_, response_buffer);
+        }
+
+        void read_headers(basic_response<Tag> & response, boost::asio::streambuf & response_buffer) {
+            connection_base::read_headers(socket_, response, response_buffer);
+        }
+
+        void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+            connection_base::read_body(socket_, response_, response_buffer);
         }
 
         bool is_open() { return socket_.is_open(); }

@@ -14,6 +14,7 @@
 #include <boost/network/uri/http/detail/parse_specific.hpp>
 #include <boost/network/uri/http/detail/uri_parts.hpp>
 #include <boost/network/uri/http/uri_concept.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 namespace boost { namespace network { namespace uri {
 
@@ -31,8 +32,8 @@ namespace boost { namespace network { namespace uri {
             }
 
             uint32_t port() const {
-                return parts_.port ? *parts_.port : 
-                    (parts_.scheme == "https" ? 443u : 80u);
+                return parts_.port ? *(parts_.port) : 
+                    (boost::iequals(parts_.scheme, string_type("https")) ? 443u : 80u);
             }
 
             string_type path() const {
