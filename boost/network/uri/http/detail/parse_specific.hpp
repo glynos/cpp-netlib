@@ -1,14 +1,14 @@
 #ifndef BOOST_NETWORK_URL_HTTP_DETAIL_PARSE_SPECIFIC_HPP_
 #define BOOST_NETWORK_URL_HTTP_DETAIL_PARSE_SPECIFIC_HPP_
 
-// Copyright 2009 Dean Michael Berris.
+// Copyright 2009 Dean Michael Berris, Jeroen Habraken.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/uri/http/detail/uri_parts.hpp>
 #include <boost/network/uri/detail/parse_uri.hpp>
-#include <boost/network/uri/detail/constants.hpp>
 #include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace uri { 
@@ -51,27 +51,18 @@ namespace boost { namespace network { namespace uri {
                             uri_parts<tags::http> & parts
                      ) 
             {
-                // Require that parts.scheme is either http or https
-                if (parts.scheme.size() < 4)
+                namespace qi = spirit::qi;
+
+                // Require that parts.scheme is either http or https, case insensitive
+                if (parts.scheme.size() < 4 or parts.scheme.size() > 5)
                     return false;
-                if (parts.scheme.substr(0, 4) != "http")
-                    return false;
-                if (parts.scheme.size() == 5) {
-                    if (parts.scheme[4] != 's')
+                if (parts.scheme.size() == 4) {
+                    if (not boost::iequals(parts.scheme.substr(0, 4), "http"))
                         return false;
-                } else if (parts.scheme.size() > 5)
-                    return false;
-                
-                using spirit::qi::parse;
-                using spirit::qi::lit;
-                using spirit::ascii::char_;
-                using spirit::ascii::space;
-                using spirit::ascii::alnum;
-                using spirit::ascii::punct;
-                using spirit::qi::lexeme;
-                using spirit::qi::uint_;
-                using spirit::qi::digit;
-                using spirit::qi::rule;
+                } else {  // size is 5
+                    if (not boost::iequals(parts.scheme.substr(0, 5), "https"))
+                        return false;
+                }
                 
                 typedef string<tags::http>::type string_type;
                 typedef range_iterator<string_type>::type iterator;
@@ -81,7 +72,7 @@ namespace boost { namespace network { namespace uri {
                 fusion::tuple<
                     optional<string_type> &,
                     string_type &,
-                    optional<uint32_t> &,
+                    optional<uint16_t> &,
                     optional<string_type> &,
                     optional<string_type> &,
                     optional<string_type> &
@@ -95,20 +86,26 @@ namespace boost { namespace network { namespace uri {
                                 parts.fragment
                            );
 
+                qi::rule<iterator, string_type::value_type()> gen_delims = qi::char_(":/?#[]@");
+                qi::rule<iterator, string_type::value_type()> sub_delims = qi::char_("!$&'()*+,;=");
+
+                qi::rule<iterator, string_type::value_type()> reserved = gen_delims | sub_delims;
+                qi::rule<iterator, string_type::value_type()> unreserved = qi::alnum | qi::char_("-._~");
+                qi::rule<iterator, string_type()> pct_encoded = qi::char_("%") > qi::repeat(2)[qi::xdigit];
+
+                qi::rule<iterator, string_type()> pchar = qi::raw[unreserved | pct_encoded | sub_delims | qi::char_(":@")];
+                
                 hostname<tags::http>::parser<iterator> hostname;
-                bool ok = parse(
+                bool ok = qi::parse(
                         start_, end_,
                         (
-                         lit("//")
-                         >> -lexeme[
-                            *((alnum|punct) - '@')
-                            >> '@'
-                            ]
+                         qi::lit("//")
+                         >> -qi::lexeme[qi::raw[*(unreserved | pct_encoded | sub_delims | qi::char_(":"))] >> '@']
                          >> hostname
-                         >> -lexeme[':' >> uint_]
-                         >> -lexeme['/' >> *((alnum|punct) - '?')]
-                         >> -lexeme['?' >> *((alnum|punct) - '#')]
-                         >> -lexeme['#' >> *(alnum|punct)]
+                         >> -qi::lexeme[':' >> qi::ushort_]
+                         >> -qi::lexeme['/' > qi::raw[*pchar >> *('/' > *pchar)]]
+                         >> -qi::lexeme['?' >> qi::raw[*(pchar | qi::char_("/?"))]]
+                         >> -qi::lexeme['#' >> qi::raw[*(pchar | qi::char_("/?"))]]
                         ),
                         result
                         );

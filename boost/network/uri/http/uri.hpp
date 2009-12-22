@@ -1,7 +1,7 @@
 #ifndef BOOST_NETWORK_URL_HTTP_URL_HPP_
 #define BOOST_NETWORK_URL_HTTP_URL_HPP_
 
-// Copyright 2009 Dean Michael Berris.
+// Copyright 2009 Dean Michael Berris, Jeroen Habraken.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -30,7 +30,7 @@ namespace boost { namespace network { namespace uri {
                 return parts_.host;
             }
 
-            uint32_t port() const {
+            uint16_t port() const {
                 return parts_.port ? *parts_.port : 
                     (parts_.scheme == "https" ? 443u : 80u);
             }
@@ -60,7 +60,7 @@ namespace boost { namespace network { namespace uri {
         }
 
     inline
-        uint32_t
+        uint16_t
         port(basic_uri<tags::http> const & uri) {
             return uri.port();
         }

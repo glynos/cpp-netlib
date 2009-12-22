@@ -1,7 +1,7 @@
 #ifndef BOOST_NETWORK_URL_DETAIL_PARSE_URL_HPP_
 #define BOOST_NETWORK_URL_DETAIL_PARSE_URL_HPP_
 
-// Copyright 2009 Dean Michael Berris.
+// Copyright 2009 Dean Michael Berris, Jeroen Habraken.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -20,14 +20,7 @@ namespace boost { namespace network { namespace uri {
 
         template <class Range, class Tag>
             inline bool parse_uri(Range & range, uri_parts<Tag> & parts) {
-                using spirit::qi::parse;
-                using spirit::qi::lexeme;
-                using spirit::ascii::char_;
-                using spirit::ascii::cntrl;
-                using spirit::ascii::alnum;
-                using spirit::ascii::space;
-                using namespace spirit::qi::labels;
-                using fusion::tie;
+                namespace qi = boost::spirit::qi;                
 
                 typedef typename range_iterator<Range>::type iterator;
                 typedef typename string<Tag>::type string_type;
@@ -35,15 +28,15 @@ namespace boost { namespace network { namespace uri {
                 iterator start_ = begin(range);
                 iterator end_ = end(range);
                 fusion::tuple<string_type&,string_type&> result =
-                    tie(parts.scheme,parts.scheme_specific_part);
+                    fusion::tie(parts.scheme,parts.scheme_specific_part);
 
-                bool ok = parse(
+                bool ok = qi::parse(
                         start_, end_, 
                         (
-                            +((alnum|char_("+.-")) - ':')
+                            (qi::alpha > *(qi::alnum | qi::char_("+.-")))
                          >> ':'
                          >> 
-                            +(char_ - (cntrl|space))
+                            +(qi::char_ - (qi::cntrl | qi::space))
                         ),
                         result
                         );
