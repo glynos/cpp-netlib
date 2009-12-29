@@ -200,34 +200,34 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
     BOOST_CHECK_EQUAL(boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()), size);
 }
 
-BOOST_AUTO_TEST_CASE(cgi_query) {
-    // Get a dynamic request with no Content-Length header
-    // Ensure that we have a body
-    using namespace boost::network;
-
-    http::client::request req(cgi_url + "?query=1");
-    http::client c;
-    http::client::response r;
-    BOOST_REQUIRE_NO_THROW(r = c.get(req));
-    BOOST_CHECK(body(r).length() != 0);
-    BOOST_CHECK(headers(r)["Content-Type"].begin() != headers(r)["Content-Type"].end());
-}
-
-BOOST_AUTO_TEST_CASE(cgi_multi_line_headers) {
-    using namespace boost::network;
-
-    http::client::request req(base_url + "/cgi-bin/multiline-header.py?query=1");
-    http::client c;
-    http::client::response r;
-    BOOST_REQUIRE_NO_THROW(r = c.get(req));
-    BOOST_CHECK(body(r).length() != 0);
-    BOOST_CHECK(headers(r)["Content-Type"].begin() != headers(r)["Content-Type"].end());
-    headers_range<http::client::response>::type range=headers(r)["X-CppNetlib-Test"];
-    BOOST_REQUIRE(begin(range) != end(range));
-    BOOST_REQUIRE(distance(range) == 2);
-    BOOST_CHECK_EQUAL(begin(range)->second, std::string("multi-line-header"));
-    BOOST_CHECK_EQUAL((++begin(range))->second, std::string("that-should-concatenate"));
-}
+//BOOST_AUTO_TEST_CASE(cgi_query) {
+//    // Get a dynamic request with no Content-Length header
+//    // Ensure that we have a body
+//    using namespace boost::network;
+//
+//    http::client::request req(cgi_url + "?query=1");
+//    http::client c;
+//    http::client::response r;
+//    BOOST_REQUIRE_NO_THROW(r = c.get(req));
+//    BOOST_CHECK(body(r).length() != 0);
+//    BOOST_CHECK(headers(r)["Content-Type"].begin() != headers(r)["Content-Type"].end());
+//}
+//
+//BOOST_AUTO_TEST_CASE(cgi_multi_line_headers) {
+//    using namespace boost::network;
+//
+//    http::client::request req(base_url + "/cgi-bin/multiline-header.py?query=1");
+//    http::client c;
+//    http::client::response r;
+//    BOOST_REQUIRE_NO_THROW(r = c.get(req));
+//    BOOST_CHECK(body(r).length() != 0);
+//    BOOST_CHECK(headers(r)["Content-Type"].begin() != headers(r)["Content-Type"].end());
+//    headers_range<http::client::response>::type range=headers(r)["X-CppNetlib-Test"];
+//    BOOST_REQUIRE(begin(range) != end(range));
+//    BOOST_REQUIRE(distance(range) == 2);
+//    BOOST_CHECK_EQUAL(begin(range)->second, std::string("multi-line-header"));
+//    BOOST_CHECK_EQUAL((++begin(range))->second, std::string("that-should-concatenate"));
+//}
 
 BOOST_AUTO_TEST_CASE(file_not_found) {
     // Request for a non existing file.
@@ -253,94 +253,94 @@ BOOST_AUTO_TEST_CASE(head_test) {
     BOOST_CHECK(body(response_).length() == 0);
 }
 
-BOOST_AUTO_TEST_CASE(post_with_explicit_headers) {
-    // This test checks that the headers echoed through echo_headers.py
-    // are in fact the same as what are sent through the POST request
-    using namespace boost::network;
-
-    const std::string postdata = "empty";
-    const std::string content_length = get_content_length(postdata);
-    const std::string content_type = "application/x-www-form-urlencoded";
-
-    http::client::request req(base_url + "/cgi-bin/echo_headers.py");
-    req << header("Content-Length", content_length);
-    req << header("Content-Type", content_type);
-    req << body(postdata);
-
-    http::client c;
-    http::client::response r;
-    BOOST_REQUIRE_NO_THROW(r = c.post(req));
-    
-    std::map<std::string, std::string> headers = parse_headers(body(r));
-    BOOST_CHECK_EQUAL(headers["content-length"], content_length);
-    BOOST_CHECK_EQUAL(headers["content-type"], content_type);
-}
-
-BOOST_AUTO_TEST_CASE(post_with_implicit_headers) {
-    // This test checks that post(request, body) derives Content-Length
-    // and Content-Type
-    using namespace boost::network;
-
-    const std::string postdata = "empty";
-
-    http::client::request req(base_url + "/cgi-bin/echo_headers.py");
-
-    http::client c;
-    http::client::response r;
-    BOOST_REQUIRE_NO_THROW(r = c.post(req, postdata));
-    
-    std::map<std::string, std::string> headers = parse_headers(body(r));
-    BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
-    BOOST_CHECK_EQUAL(headers["content-type"], "x-application/octet-stream");
-}
-
-BOOST_AUTO_TEST_CASE(post_with_explicit_content_type) {
-    // This test checks that post(request, content_type, body) derives Content-Length,
-    // and keeps Content-Type
-    using namespace boost::network;
-
-    const std::string postdata = "empty";
-    const std::string content_type = "application/x-my-content-type";
-
-    http::client::request req(base_url + "/cgi-bin/echo_headers.py");
-
-    http::client c;
-    http::client::response r;
-    BOOST_REQUIRE_NO_THROW(r = c.post(req, content_type, postdata));
-    
-    std::map<std::string, std::string> headers = parse_headers(body(r));
-    BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
-    BOOST_CHECK_EQUAL(headers["content-type"], content_type);
-}
-
-BOOST_AUTO_TEST_CASE(post_body_default_content_type) {
-    // This test checks that post(request, body) gets the post data
-    // through to the server
-    using namespace boost::network;
-
-    const std::string postdata = "firstname=bill&lastname=badger";
-
-    http::client::request req(base_url + "/cgi-bin/echo_body.py");
-
-    http::client c;
-    http::client::response r;
-    BOOST_REQUIRE_NO_THROW(r = c.post(req, postdata));
-    
-    BOOST_CHECK_EQUAL(postdata, body(r));
-}
-
-BOOST_AUTO_TEST_CASE(post_with_custom_headers) {
-    // This test checks that custom headers pass through to the server
-    // when posting
-    using namespace boost::network;
-
-    http::client::request req(base_url + "/cgi-bin/echo_headers.py");
-    req << header("X-Cpp-Netlib", "rocks!");
-    
-    http::client c;
-    http::client::response r;
-    BOOST_REQUIRE_NO_THROW(r = c.post(req, std::string()));
-    
-    std::map<std::string, std::string> headers = parse_headers(body(r));
-    BOOST_CHECK_EQUAL(headers["x-cpp-netlib"], "rocks!");
-}
+//BOOST_AUTO_TEST_CASE(post_with_explicit_headers) {
+//    // This test checks that the headers echoed through echo_headers.py
+//    // are in fact the same as what are sent through the POST request
+//    using namespace boost::network;
+//
+//    const std::string postdata = "empty";
+//    const std::string content_length = get_content_length(postdata);
+//    const std::string content_type = "application/x-www-form-urlencoded";
+//
+//    http::client::request req(base_url + "/cgi-bin/echo_headers.py");
+//    req << header("Content-Length", content_length);
+//    req << header("Content-Type", content_type);
+//    req << body(postdata);
+//
+//    http::client c;
+//    http::client::response r;
+//    BOOST_REQUIRE_NO_THROW(r = c.post(req));
+//    
+//    std::map<std::string, std::string> headers = parse_headers(body(r));
+//    BOOST_CHECK_EQUAL(headers["content-length"], content_length);
+//    BOOST_CHECK_EQUAL(headers["content-type"], content_type);
+//}
+//
+//BOOST_AUTO_TEST_CASE(post_with_implicit_headers) {
+//    // This test checks that post(request, body) derives Content-Length
+//    // and Content-Type
+//    using namespace boost::network;
+//
+//    const std::string postdata = "empty";
+//
+//    http::client::request req(base_url + "/cgi-bin/echo_headers.py");
+//
+//    http::client c;
+//    http::client::response r;
+//    BOOST_REQUIRE_NO_THROW(r = c.post(req, postdata));
+//    
+//    std::map<std::string, std::string> headers = parse_headers(body(r));
+//    BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
+//    BOOST_CHECK_EQUAL(headers["content-type"], "x-application/octet-stream");
+//}
+//
+//BOOST_AUTO_TEST_CASE(post_with_explicit_content_type) {
+//    // This test checks that post(request, content_type, body) derives Content-Length,
+//    // and keeps Content-Type
+//    using namespace boost::network;
+//
+//    const std::string postdata = "empty";
+//    const std::string content_type = "application/x-my-content-type";
+//
+//    http::client::request req(base_url + "/cgi-bin/echo_headers.py");
+//
+//    http::client c;
+//    http::client::response r;
+//    BOOST_REQUIRE_NO_THROW(r = c.post(req, content_type, postdata));
+//    
+//    std::map<std::string, std::string> headers = parse_headers(body(r));
+//    BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
+//    BOOST_CHECK_EQUAL(headers["content-type"], content_type);
+//}
+//
+//BOOST_AUTO_TEST_CASE(post_body_default_content_type) {
+//    // This test checks that post(request, body) gets the post data
+//    // through to the server
+//    using namespace boost::network;
+//
+//    const std::string postdata = "firstname=bill&lastname=badger";
+//
+//    http::client::request req(base_url + "/cgi-bin/echo_body.py");
+//
+//    http::client c;
+//    http::client::response r;
+//    BOOST_REQUIRE_NO_THROW(r = c.post(req, postdata));
+//    
+//    BOOST_CHECK_EQUAL(postdata, body(r));
+//}
+//
+//BOOST_AUTO_TEST_CASE(post_with_custom_headers) {
+//    // This test checks that custom headers pass through to the server
+//    // when posting
+//    using namespace boost::network;
+//
+//    http::client::request req(base_url + "/cgi-bin/echo_headers.py");
+//    req << header("X-Cpp-Netlib", "rocks!");
+//    
+//    http::client c;
+//    http::client::response r;
+//    BOOST_REQUIRE_NO_THROW(r = c.post(req, std::string()));
+//    
+//    std::map<std::string, std::string> headers = parse_headers(body(r));
+//    BOOST_CHECK_EQUAL(headers["x-cpp-netlib"], "rocks!");
+//}
