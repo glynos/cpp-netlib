@@ -21,11 +21,7 @@ typedef http::server<hello_world> server;
 
 struct hello_world {
     void operator()(server::request const & request, server::response & response) {
-        response.content = "Hello, World!";
-        http::request_header content_length = { "Content-Length", lexical_cast<string>(response.content.size()) };
-        http::request_header content_type = { "Content-Type", "text/plain" };
-        response.headers = list_of(content_length)(content_type);
-        response.status = server::response::ok;
+        response = server::response::stock_reply(server::response::ok, "Hello, World!");
         assert(response.status == server::response::ok);
         assert(response.headers.size() == 2);
         assert(response.content == "Hello, World!");
