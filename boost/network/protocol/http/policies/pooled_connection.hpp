@@ -10,12 +10,10 @@
 
 #include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
-#include <utility>
 #include <boost/network/protocol/http/detail/connection_helper.hpp>
 #include <boost/network/protocol/http/impl/sync_connection_base.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-
-#include <iostream>
+#include <utility>
 
 #ifndef BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
 #define BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT 5
@@ -60,22 +58,18 @@ namespace boost { namespace network { namespace http {
                 if (!pimpl->is_open()) {
                     pimpl->init_socket(request_.host(), lexical_cast<string_type>(request_.port()));
                 }
-                std::cerr << "Sending request to " << request_.host() << "...\n";
                 pimpl->send_request_impl(method, request_);
                 response_ = basic_response<Tag>();
                 response_ << source(request_.host());
 
                 boost::asio::streambuf response_buffer;
-                std::cerr << "Reading status from " << request_.host() << "...\n";
                 pimpl->read_status(response_, response_buffer);
-                std::cerr << "Reading headers from " << request_.host() << "...\n";
                 pimpl->read_headers(response_, response_buffer);
                 if (
                     get_body && response_.status() != 304 
                     && (response_.status() != 204)
                     && not (response_.status() >= 100 && response_.status() <= 199)
                    ) {
-                    std::cerr << "Reading body from " << request_.host() << "...\n";
                     pimpl->read_body(response_, response_buffer);
                 }
 
@@ -95,9 +89,7 @@ namespace boost { namespace network { namespace http {
 
                 typename headers_range<basic_response<Tag> >::type connection_range = headers(response_)["Connection"];
                 if (!empty(connection_range) && begin(connection_range)->second == string_type("close")) {
-                    std::cerr << "Before closing socket for " << request_.host() << ":" << request_.port() << "...\n";
                     pimpl->close_socket();
-                    std::cerr << "After closing socket for " << request_.host() << ":" << request_.port() << "...\n";
                 }
 
                 return response_;

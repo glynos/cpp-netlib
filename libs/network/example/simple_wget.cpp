@@ -47,8 +47,8 @@ main(int argc, char *argv[]) {
     try {
         http::client client;
         const char *uri = argv[1];
-        http::request request(uri);
-        http::response response = client.get(request);
+        http::client::request request(uri);
+        http::client::response response = client.get(request);
 
         std::string filename = get_filename(uri);
         std::cout << "Saving to: " << filename << std::endl;

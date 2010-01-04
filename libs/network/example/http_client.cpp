@@ -57,6 +57,7 @@ int main(int argc, char * argv[]) {
         using namespace boost::network;
 
         http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::request request(source);
+        request << header("Connection", "close");
         http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1> client(
             http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::follow_redirects
             );
