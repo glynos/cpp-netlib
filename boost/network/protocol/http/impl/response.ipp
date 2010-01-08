@@ -14,25 +14,21 @@
 // to reduce the dependence on building an external library.
 //
 
-#ifndef BOOST_NETWORK_HTTP_REPLY_HPP_
-#define BOOST_NETWORK_HTTP_REPLY_HPP_
+#ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
+#define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 
-#include <string>
-#include <vector>
 #include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp>
-#include "header.hpp"
+#include <boost/network/traits/string.hpp>
+#include <boost/network/traits/vector.hpp>
+#include <boost/network/protocol/http/header.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    namespace tag {
-        struct default_;
-    }
-
     /// A reply to be sent to a client.
-    template <class Tag>
-    struct basic_reply
-    {
+    template <>
+    struct basic_response<tags::http_server> {
+
       /// The status of the reply.
       enum status_type
       {
@@ -57,10 +53,12 @@ namespace boost { namespace network { namespace http {
       } status;
 
       /// The headers to be included in the reply.
-      std::vector<request_header> headers;
+      typedef vector<tags::http_server>::apply<request_header>::type headers_vector;
+      headers_vector headers;
 
       /// The content to be sent in the reply.
-      std::string content;
+      typedef string<tags::http_server>::type string_type;
+      string_type content;
 
       /// Convert the reply into a vector of buffers. The buffers do not own the
       /// underlying memory blocks, therefore the reply object must remain valid and
@@ -86,14 +84,19 @@ namespace boost { namespace network { namespace http {
       }
 
       /// Get a stock reply.
-      static basic_reply stock_reply(status_type status) {
+      static basic_response<tags::http_server> stock_reply(status_type status) {
+          return stock_reply(status, to_string(status));
+      }
+
+      /// Get a stock reply with custom plain text data.
+      static basic_response<tags::http_server> stock_reply(status_type status, string_type content) {
           using boost::lexical_cast;
-          basic_reply rep;
+          basic_response<tags::http_server> rep;
           rep.status = status;
-          rep.content = to_string(status);
+          rep.content = content;
           rep.headers.resize(2);
           rep.headers[0].name = "Content-Length";
-          rep.headers[0].value = lexical_cast<std::string>(rep.content.size());
+          rep.headers[0].value = lexical_cast<string_type>(rep.content.size());
           rep.headers[1].name = "Content-Type";
           rep.headers[1].value = "text/html";
           return rep;
@@ -101,7 +104,7 @@ namespace boost { namespace network { namespace http {
 
       private:
 
-        static std::string to_string(status_type status) {
+        static string_type to_string(status_type status) {
             static const char ok[] = "";
             static const char created[] =
               "<html>"
@@ -191,41 +194,41 @@ namespace boost { namespace network { namespace http {
 
              switch (status)
               {
-              case basic_reply::ok:
+              case basic_response<tags::http_server>::ok:
                 return ok;
-              case basic_reply::created:
+              case basic_response<tags::http_server>::created:
                 return created;
-              case basic_reply::accepted:
+              case basic_response<tags::http_server>::accepted:
                 return accepted;
-              case basic_reply::no_content:
+              case basic_response<tags::http_server>::no_content:
                 return no_content;
-              case basic_reply::multiple_choices:
+              case basic_response<tags::http_server>::multiple_choices:
                 return multiple_choices;
-              case basic_reply::moved_permanently:
+              case basic_response<tags::http_server>::moved_permanently:
                 return moved_permanently;
-              case basic_reply::moved_temporarily:
+              case basic_response<tags::http_server>::moved_temporarily:
                 return moved_temporarily;
-              case basic_reply::not_modified:
+              case basic_response<tags::http_server>::not_modified:
                 return not_modified;
-              case basic_reply::bad_request:
+              case basic_response<tags::http_server>::bad_request:
                 return bad_request;
-              case basic_reply::unauthorized:
+              case basic_response<tags::http_server>::unauthorized:
                 return unauthorized;
-              case basic_reply::forbidden:
+              case basic_response<tags::http_server>::forbidden:
                 return forbidden;
-              case basic_reply::not_found:
+              case basic_response<tags::http_server>::not_found:
                 return not_found;
-              case basic_reply::not_supported:
+              case basic_response<tags::http_server>::not_supported:
                 return not_supported;
-              case basic_reply::not_acceptable:
+              case basic_response<tags::http_server>::not_acceptable:
                 return not_acceptable;
-              case basic_reply::internal_server_error:
+              case basic_response<tags::http_server>::internal_server_error:
                 return internal_server_error;
-              case basic_reply::not_implemented:
+              case basic_response<tags::http_server>::not_implemented:
                 return not_implemented;
-              case basic_reply::bad_gateway:
+              case basic_response<tags::http_server>::bad_gateway:
                 return bad_gateway;
-              case basic_reply::service_unavailable:
+              case basic_response<tags::http_server>::service_unavailable:
                 return service_unavailable;
               default:
                 return internal_server_error;
@@ -234,89 +237,93 @@ namespace boost { namespace network { namespace http {
 
         boost::asio::const_buffer to_buffer(status_type status) {
             using boost::asio::buffer;
-            static const std::string ok =
+            static const string_type ok =
               "HTTP/1.0 200 OK\r\n";
-            static const std::string created =
+            static const string_type created =
               "HTTP/1.0 201 Created\r\n";
-            static const std::string accepted =
+            static const string_type accepted =
               "HTTP/1.0 202 Accepted\r\n";
-            static const std::string no_content =
+            static const string_type no_content =
               "HTTP/1.0 204 No Content\r\n";
-            static const std::string multiple_choices =
+            static const string_type multiple_choices =
               "HTTP/1.0 300 Multiple Choices\r\n";
-            static const std::string moved_permanently =
+            static const string_type moved_permanently =
               "HTTP/1.0 301 Moved Permanently\r\n";
-            static const std::string moved_temporarily =
+            static const string_type moved_temporarily =
               "HTTP/1.0 302 Moved Temporarily\r\n";
-            static const std::string not_modified =
+            static const string_type not_modified =
               "HTTP/1.0 304 Not Modified\r\n";
-            static const std::string bad_request =
+            static const string_type bad_request =
               "HTTP/1.0 400 Bad Request\r\n";
-            static const std::string unauthorized =
+            static const string_type unauthorized =
               "HTTP/1.0 401 Unauthorized\r\n";
-            static const std::string forbidden =
+            static const string_type forbidden =
               "HTTP/1.0 403 Forbidden\r\n";
-            static const std::string not_found =
+            static const string_type not_found =
               "HTTP/1.0 404 Not Found\r\n";
-            static const std::string not_supported =
+            static const string_type not_supported =
               "HTTP/1.0 405 Method Not Supported\r\n";
-            static const std::string not_acceptable =
+            static const string_type not_acceptable =
               "HTTP/1.0 406 Method Not Acceptable\r\n";
-            static const std::string internal_server_error =
+            static const string_type internal_server_error =
               "HTTP/1.0 500 Internal Server Error\r\n";
-            static const std::string not_implemented =
+            static const string_type not_implemented =
               "HTTP/1.0 501 Not Implemented\r\n";
-            static const std::string bad_gateway =
+            static const string_type bad_gateway =
               "HTTP/1.0 502 Bad Gateway\r\n";
-            static const std::string service_unavailable =
+            static const string_type service_unavailable =
               "HTTP/1.0 503 Service Unavailable\r\n";
 
             switch (status) {
-                case basic_reply::ok:
+                case basic_response<tags::http_server>::ok:
                     return buffer(ok);
-                case basic_reply::created:
+                case basic_response<tags::http_server>::created:
                     return buffer(created);
-                case basic_reply::accepted:
+                case basic_response<tags::http_server>::accepted:
                     return buffer(accepted);
-                case basic_reply::no_content:
+                case basic_response<tags::http_server>::no_content:
                     return buffer(no_content);
-                case basic_reply::multiple_choices:
+                case basic_response<tags::http_server>::multiple_choices:
                     return buffer(multiple_choices);
-                case basic_reply::moved_permanently:
+                case basic_response<tags::http_server>::moved_permanently:
                     return buffer(moved_permanently);
-                case basic_reply::moved_temporarily:
+                case basic_response<tags::http_server>::moved_temporarily:
                     return buffer(moved_temporarily);
-                case basic_reply::not_modified:
+                case basic_response<tags::http_server>::not_modified:
                     return buffer(not_modified);
-                case basic_reply::bad_request:
+                case basic_response<tags::http_server>::bad_request:
                     return buffer(bad_request);
-                case basic_reply::unauthorized:
+                case basic_response<tags::http_server>::unauthorized:
                     return buffer(unauthorized);
-                case basic_reply::forbidden:
+                case basic_response<tags::http_server>::forbidden:
                     return buffer(forbidden);
-                case basic_reply::not_found:
+                case basic_response<tags::http_server>::not_found:
                     return buffer(not_found);
-                case basic_reply::not_supported:
+                case basic_response<tags::http_server>::not_supported:
                     return buffer(not_supported);
-                case basic_reply::not_acceptable:
+                case basic_response<tags::http_server>::not_acceptable:
                     return buffer(not_acceptable);
-                case basic_reply::internal_server_error:
+                case basic_response<tags::http_server>::internal_server_error:
                     return buffer(internal_server_error);
-                case basic_reply::not_implemented:
+                case basic_response<tags::http_server>::not_implemented:
                     return buffer(not_implemented);
-                case basic_reply::bad_gateway:
+                case basic_response<tags::http_server>::bad_gateway:
                     return buffer(bad_gateway);
-                case basic_reply::service_unavailable:
+                case basic_response<tags::http_server>::service_unavailable:
                     return buffer(service_unavailable);
                 default:
                     return buffer(internal_server_error);
             }
         }
 
-
     };
 
-    typedef basic_reply<tag::default_> reply;
+    template <>
+    void swap(basic_response<tags::http_server> &l, basic_response<tags::http_server> &r) {
+        using std::swap;
+        swap(l.headers, r.headers);
+        swap(l.content, r.content);
+    }
 
 } // namespace http
 
@@ -324,5 +331,5 @@ namespace boost { namespace network { namespace http {
 
 } // namespace boost
 
-#endif // BOOST_NETWORK_HTTP_REPLY_HPP_
+#endif // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 

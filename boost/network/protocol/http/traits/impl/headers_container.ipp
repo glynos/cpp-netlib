@@ -16,7 +16,7 @@
 namespace boost { namespace network {
 
     template <>
-        struct headers_container<tags::http> {
+        struct headers_container<tags::http_default_8bit_tcp_resolve> {
 
             // Moving implementation from original
             // message_traits implementation by
@@ -25,15 +25,15 @@ namespace boost { namespace network {
             // returns true if str1 < str2 (ignoring case)
             struct is_less_ignore_case {
                 inline bool operator() (
-                        string<tags::http>::type const & str1, 
-                        string<tags::http>::type const & str2) const {
+                        string<tags::http_default_8bit_tcp_resolve>::type const & str1, 
+                        string<tags::http_default_8bit_tcp_resolve>::type const & str2) const {
                     return to_lower_copy(str1) < to_lower_copy(str2);
                 };
             };
 
             typedef std::multimap<
-                string<tags::http>::type,
-                string<tags::http>::type,
+                string<tags::http_default_8bit_tcp_resolve>::type,
+                string<tags::http_default_8bit_tcp_resolve>::type,
                 is_less_ignore_case> type;
         };
 

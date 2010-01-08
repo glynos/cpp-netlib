@@ -65,12 +65,12 @@ namespace boost { namespace network { namespace http {
             lhs.swap(rhs);
         }
 
-    typedef basic_response<tags::http> response;
-
 } // namespace http
 
 } // namespace network
 
 } // namespace boost
+
+#include <boost/network/protocol/http/impl/response.ipp>
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP

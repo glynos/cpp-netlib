@@ -68,7 +68,7 @@ namespace boost { namespace network { namespace http {
             static bool const base64_encode(string_type const &input, string_type & output);
     };
 
-    typedef message_impl<tags::http> message;
+    typedef message_impl<tags::http_default_8bit_tcp_resolve> message;
 
 } // namespace http
 

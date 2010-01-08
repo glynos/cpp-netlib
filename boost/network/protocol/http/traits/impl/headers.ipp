@@ -12,7 +12,7 @@
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct headers_<tags::http> {
+        struct headers_<tags::http_default_8bit_tcp_resolve> {
             static char const * const host() {
                 static char const * const HOST = "Host";
                 return HOST;

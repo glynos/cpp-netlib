@@ -11,17 +11,20 @@
 namespace boost { namespace network {
 
     template <class Tag>
+    struct unsupported_tag;
+
+    template <class Tag>
     struct vector {
 
         template <class Type>
         struct apply {
-            typedef void type;
+            typedef unsupported_tag<Tag> type;
         };
 
     };
 
     template <>
-    struct vector<tags::pod> {
+    struct vector<tags::http_server> {
 
         template <class Type>
         struct apply {

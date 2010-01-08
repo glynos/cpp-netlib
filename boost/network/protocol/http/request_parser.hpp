@@ -41,7 +41,7 @@ public:
   /// data is required. The InputIterator return value indicates how much of the
   /// input has been consumed.
   template <typename InputIterator>
-  boost::tuple<boost::tribool, InputIterator> parse_headers(request_pod & req,
+  boost::tuple<boost::tribool, InputIterator> parse_headers(basic_request<Tag> & req,
       InputIterator begin, InputIterator end)
   {
     while (begin != end)
@@ -56,7 +56,7 @@ public:
 
 private:
   /// Handle the next character of input.
-  boost::tribool consume(request_pod & req, char input);
+  boost::tribool consume(basic_request<Tag> & req, char input);
 
   /// Check if a byte is an HTTP character.
   static bool is_char(int c);
@@ -97,7 +97,7 @@ private:
   } state_;
 };
 
-typedef basic_request_parser<tag::default_> request_parser;
+typedef basic_request_parser<tags::http_server> request_parser;
 
 } // namespace http
 

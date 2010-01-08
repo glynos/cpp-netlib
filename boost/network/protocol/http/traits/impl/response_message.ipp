@@ -12,7 +12,7 @@
 namespace boost { namespace network { namespace http {
 
     template <>
-        struct response_message<tags::http> {
+        struct response_message<tags::http_default_8bit_tcp_resolve> {
             static char const * const ok() {
                 static char const * const OK = "OK";
                 return OK;

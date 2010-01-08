@@ -12,7 +12,7 @@
 
 namespace boost { namespace network { namespace http {
 
-    /* This glob doesn't have a specialization on the tags::http
+    /* This glob doesn't have a specialization on the tags::http_default_8bit_tcp_resolve
      * yet because it doesn't need to define different behaviour/types 
      * on different message tags -- for example, it doesn't need to
      * determine the type or change the values of the data no matter

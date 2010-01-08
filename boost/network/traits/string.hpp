@@ -14,8 +14,11 @@
 namespace boost { namespace network {
 
     template <class Tag>
+    struct unsupported_tag;
+
+    template <class Tag>
     struct string { 
-        typedef void type;
+        typedef unsupported_tag<Tag> type;
     };
 
     template <>
@@ -29,12 +32,27 @@ namespace boost { namespace network {
     };
 
     template <>
-    struct string<tags::pod> {
+    struct string<tags::http_server> {
         typedef std::string type;
     };
 
     template <>
-    struct string<tags::http> {
+    struct string<tags::http_default_8bit_tcp_resolve> {
+        typedef std::string type;
+    };
+
+    template <>
+    struct string<tags::http_default_8bit_udp_resolve> {
+        typedef std::string type;
+    };
+
+    template <>
+    struct string<tags::http_keepalive_8bit_tcp_resolve> {
+        typedef std::string type;
+    };
+
+    template <>
+    struct string<tags::http_keepalive_8bit_udp_resolve> {
         typedef std::string type;
     };
 

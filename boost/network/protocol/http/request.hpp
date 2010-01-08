@@ -26,15 +26,4 @@ namespace boost { namespace network { namespace http {
 
 #include <boost/network/protocol/http/impl/request.hpp>
 
-namespace boost { namespace network { namespace http {
-
-    typedef basic_request<tags::http> request;
-    typedef basic_request<tags::pod> request_pod;
-
-} // namespace http
-
-} // namespace network
-
-} // namespace boost
-
 #endif // __NETWORK_PROTOCOL_HTTP_REQUEST_20070908-1_HPP__

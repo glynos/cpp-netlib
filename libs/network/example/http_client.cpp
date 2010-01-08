@@ -53,17 +53,20 @@ int main(int argc, char * argv[]) {
 
     show_headers = vm.count("headers") ? true : false ;
 
-    try {
+    //try {
         using namespace boost::network;
 
-        http::request request(source);
-        http::client client;
-        http::response response;
+        http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::request request(source);
+        request << header("Connection", "close");
+        http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1> client(
+            http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::follow_redirects
+            );
+        http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::response response;
         response = client.get(request);
 
         if (show_headers) {
-            headers_range<http::response>::type headers_ = headers(response);
-            boost::range_iterator<headers_range<http::response>::type>::type header, past_end;
+            headers_range<http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::response>::type headers_ = headers(response);
+            boost::range_iterator<headers_range<http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::response>::type>::type header, past_end;
             header = begin(headers_);
             past_end = end(headers_);
             while (header != past_end) {
@@ -75,10 +78,10 @@ int main(int argc, char * argv[]) {
 
         cout << body(response) << endl;
         
-    } catch (exception & e) {
-        cout << "Error: " << e.what() << endl;
-        return EXIT_FAILURE;
-    };
+    //} catch (exception & e) {
+    //    cout << "Error: " << e.what() << endl;
+    //    return EXIT_FAILURE;
+    //};
 
     return EXIT_SUCCESS;
 }

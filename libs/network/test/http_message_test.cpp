@@ -5,6 +5,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_TEST_MODULE HTTP message test
+#include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network/protocol/http.hpp>
 // #include <boost/network/protocol/http/traits.hpp>
@@ -18,18 +19,18 @@ struct fixtures {
 BOOST_FIXTURE_TEST_SUITE(http_message_test_suite, fixtures)
 
 BOOST_AUTO_TEST_CASE(request_constructor_test) {
-    http::request request("http://boost.org");
+    http::client::request request("http://boost.org");
     BOOST_CHECK_EQUAL ( request.host() , "boost.org" );
     BOOST_CHECK_EQUAL ( request.port() , 80u );
     BOOST_CHECK_EQUAL ( request.path() , "/" );
 }
 
 BOOST_AUTO_TEST_CASE(request_copy_constructor_test) {
-    http::request request("http://boost.org/handler.php");
+    http::client::request request("http://boost.org/handler.php");
     request << header("Content-Type", "text/plain")
             << body("Hello, World!")
         ;
-    http::request copy(request);
+    http::client::request copy(request);
     BOOST_CHECK_EQUAL ( copy.host(), request.host() );
     BOOST_CHECK_EQUAL ( copy.port(), request.port() );
     BOOST_CHECK_EQUAL ( request.path(), request.path() );
@@ -37,11 +38,11 @@ BOOST_AUTO_TEST_CASE(request_copy_constructor_test) {
 }
 
 BOOST_AUTO_TEST_CASE(request_assignment_test) {
-    http::request request("http://boost.org/handler.php");
+    http::client::request request("http://boost.org/handler.php");
     request << header("Content-Type", "text/plain")
             << body("Hello, World!")
         ;
-    http::request copy;
+    http::client::request copy;
     copy = request;
     BOOST_CHECK_EQUAL ( copy.host(), request.host() );
     BOOST_CHECK_EQUAL ( copy.port(), request.port() );
@@ -50,8 +51,8 @@ BOOST_AUTO_TEST_CASE(request_assignment_test) {
 }
 
 BOOST_AUTO_TEST_CASE(request_swap_test) {
-    boost::network::http::request request("http://boost.org/");
-    boost::network::http::request other;
+    boost::network::http::client::request request("http://boost.org/");
+    boost::network::http::client::request other;
     swap(other, request); // ADL
     BOOST_CHECK_EQUAL ( request.host(), "" );
     BOOST_CHECK_EQUAL ( request.port(), 80u );
@@ -62,17 +63,17 @@ BOOST_AUTO_TEST_CASE(request_swap_test) {
 }
 
 BOOST_AUTO_TEST_CASE(response_constructor_test) {
-    http::response response;
+    http::client::response response;
     BOOST_CHECK_EQUAL ( body(response), std::string() );
 }
 
 BOOST_AUTO_TEST_CASE(response_copy_construct_test) {
-    http::response response;
+    http::client::response response;
     response.version() = "HTTP/1.1";
     response.status() = 200;
     response.status_message() = "OK";
     response << body("The quick brown fox jumps over the lazy dog");
-    http::response copy(response);
+    http::client::response copy(response);
     BOOST_CHECK_EQUAL ( response.version(), copy.version() );
     BOOST_CHECK_EQUAL ( response.status(), copy.status() );
     BOOST_CHECK_EQUAL ( response.status_message(), copy.status_message() );
@@ -80,12 +81,12 @@ BOOST_AUTO_TEST_CASE(response_copy_construct_test) {
 }
 
 BOOST_AUTO_TEST_CASE(response_assignment_construct_test) {
-    http::response response;
+    http::client::response response;
     response.version() = "HTTP/1.1";
     response.status() = 200;
     response.status_message() = "OK";
     response << body("The quick brown fox jumps over the lazy dog");
-    http::response copy;
+    http::client::response copy;
     copy = response;
     BOOST_CHECK_EQUAL ( response.version(), copy.version() );
     BOOST_CHECK_EQUAL ( response.status(), copy.status() );
@@ -94,12 +95,12 @@ BOOST_AUTO_TEST_CASE(response_assignment_construct_test) {
 }
 
 BOOST_AUTO_TEST_CASE(response_swap_test) {
-    http::response response;
+    http::client::response response;
     response.version() = "HTTP/1.1";
     response.status() = 200;
     response.status_message() = "OK";
     response << boost::network::body("RESPONSE");
-    boost::network::http::response swapped;
+    boost::network::http::client::response swapped;
     BOOST_REQUIRE_NO_THROW(swap(response, swapped));
     BOOST_CHECK_EQUAL ( response.version(), std::string() );
     BOOST_CHECK_EQUAL ( response.status(), 0u );

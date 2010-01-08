@@ -1,4 +1,5 @@
 //            Copyright (c) Glyn Matthews 2009.
+//         Copyright (c) Dean Michael Berris 2009.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -11,13 +12,13 @@
 
 namespace boost { namespace network {
 
-    template <
-        class Tag
-        >
-    struct ostringstream {
-        typedef void type;
-    };
+    template <class Tag>
+    struct unsupported_tag;
 
+    template <class Tag>
+    struct ostringstream {
+        typedef unsupported_tag<Tag> type;
+    };
 
     template <>
     struct ostringstream<tags::default_string> {
@@ -31,7 +32,22 @@ namespace boost { namespace network {
     };
 
     template <>
-    struct ostringstream<tags::http> {
+    struct ostringstream<tags::http_default_8bit_tcp_resolve> {
+        typedef std::ostringstream type;
+    };
+
+    template <>
+    struct ostringstream<tags::http_default_8bit_udp_resolve> {
+        typedef std::ostringstream type;
+    };
+
+    template <>
+    struct ostringstream<tags::http_keepalive_8bit_tcp_resolve> {
+        typedef std::ostringstream type;
+    };
+
+    template <>
+    struct ostringstream<tags::http_keepalive_8bit_udp_resolve> {
         typedef std::ostringstream type;
     };
 

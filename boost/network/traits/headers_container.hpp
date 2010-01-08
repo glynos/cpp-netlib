@@ -7,7 +7,6 @@
 #ifndef __BOOST_NETWORK_TRAITS_HEADERS_CONTAINER_INC__
 # define __BOOST_NETWORK_TRAITS_HEADERS_CONTAINER_INC__
 
-
 # include <map>
 # include <boost/network/tags.hpp>
 # include <boost/network/traits/string.hpp>
@@ -25,23 +24,6 @@ struct headers_container {
         > type;
 };
 
-
-// template <>
-// struct headers_container<tags::default_string> {
-//     typedef std::multimap<
-//         string<tags::default_string>::type,
-//         string<tags::default_string>::type
-//         > type;
-// };
-// 
-// 
-// template <>
-// struct headers_container<tags::default_wstring> {
-//     typedef std::multimap<
-//         string<tags::default_wstring>::type,
-//         string<tags::default_wstring>::type
-//         > type;
-// };
 } // namespace network
 } // namespace boost
 

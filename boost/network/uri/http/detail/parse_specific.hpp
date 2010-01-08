@@ -44,11 +44,11 @@ namespace boost { namespace network { namespace uri {
 
         template <>
             inline bool parse_specific<
-                string<tags::http>::type,
-                tags::http
+                string<tags::http_default_8bit_tcp_resolve>::type,
+                tags::http_default_8bit_tcp_resolve
                     >(
-                            string<tags::http>::type & range,
-                            uri_parts<tags::http> & parts
+                            string<tags::http_default_8bit_tcp_resolve>::type & range,
+                            uri_parts<tags::http_default_8bit_tcp_resolve> & parts
                      ) 
             {
                 namespace qi = spirit::qi;
@@ -64,7 +64,7 @@ namespace boost { namespace network { namespace uri {
                         return false;
                 }
                 
-                typedef string<tags::http>::type string_type;
+                typedef string<tags::http_default_8bit_tcp_resolve>::type string_type;
                 typedef range_iterator<string_type>::type iterator;
 
                 iterator start_ = begin(range);
@@ -86,6 +86,7 @@ namespace boost { namespace network { namespace uri {
                                 parts.fragment
                            );
 
+<<<<<<< HEAD:boost/network/uri/http/detail/parse_specific.hpp
                 qi::rule<iterator, string_type::value_type()> gen_delims = qi::char_(":/?#[]@");
                 qi::rule<iterator, string_type::value_type()> sub_delims = qi::char_("!$&'()*+,;=");
 
@@ -97,6 +98,10 @@ namespace boost { namespace network { namespace uri {
                 
                 hostname<tags::http>::parser<iterator> hostname;
                 bool ok = qi::parse(
+=======
+                hostname<tags::http_default_8bit_tcp_resolve>::parser<iterator> hostname;
+                bool ok = parse(
+>>>>>>> 01140d24f86ceffddabc6f42077ca08d5e4f9e3f:boost/network/uri/http/detail/parse_specific.hpp
                         start_, end_,
                         (
                          qi::lit("//")

@@ -17,7 +17,7 @@ namespace boost { namespace network { namespace uri {
     typedef basic_uri<boost::network::tags::default_wstring> wuri;
 
     namespace http {
-        typedef basic_uri<tags::http> uri;
+        typedef basic_uri<tags::http_default_8bit_tcp_resolve> uri;
     }
 
 } // namespace uri

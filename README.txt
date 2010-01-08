@@ -4,14 +4,14 @@ This is a collection of network related routines/implementations
 geared towards providing a robust cross-platform networking library.
 This offers the following implementations:
 
-  o  Common Message Type -- A generic message type which can be used
+  *  Common Message Type -- A generic message type which can be used
      to encapsulate and store message related information, used by all
      network implementations as the primary means of data exchange.
-  o  Network protocol message parsers -- A collection of parsers which
+  *  Network protocol message parsers -- A collection of parsers which
      generate message objects from strings.
-  o  Adapters and Wrappers -- A collection of Adapters and wrappers aimed
+  *  Adapters and Wrappers -- A collection of Adapters and wrappers aimed
      towards making the message type STL friendly.
-  o  Network protocol client and server implementations -- A collection 
+  *  Network protocol client and server implementations -- A collection 
      of network protocol implementations that include embeddable client 
      and server types.
 
