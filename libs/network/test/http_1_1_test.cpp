@@ -58,7 +58,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_cached_resolve, T, tag_types) {
 	http::basic_client<T, 1, 1> client_(http::basic_client<T, 1, 1>::cache_resolved);
 	http::basic_response<T> response_;
 	BOOST_CHECK_NO_THROW ( response_ = client_.get(request) );
-	BOOST_CHECK_NO_THROW ( response_ = client_.get(other_request) );
+	//BOOST_CHECK_NO_THROW ( response_ = client_.get(other_request) );
+	response_ = client_.get(other_request);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_redirection_test, T, tag_types) {

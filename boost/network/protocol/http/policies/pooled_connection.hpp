@@ -40,7 +40,7 @@ namespace boost { namespace network { namespace http {
             , get_connection_(get_connection) {}
 
             basic_response<Tag> send_request(string_type const & method, basic_request<Tag> request_, bool get_body) {
-                return send_request_recursive(method, request_, get_body, 0);
+                return send_request_impl(method, request_, get_body);
             }
 
             ~connection_impl () {
@@ -49,50 +49,67 @@ namespace boost { namespace network { namespace http {
 
             private:
 
-            basic_response<Tag> send_request_recursive(string_type const & method, basic_request<Tag> request_, bool get_body, int count) {
-                if (count >= BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT)
-                    throw std::runtime_error("Redirection exceeds maximum redirect count.");
+            basic_response<Tag> send_request_impl(string_type const & method, basic_request<Tag> request_, bool get_body) {
+                boost::uint8_t count = 0;
+                bool retry = false;
+                do {
+                    if (count >= BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT)
+                        throw std::runtime_error("Redirection exceeds maximum redirect count.");
 
-                basic_response<Tag> response_;
-                // check if the socket is open first
-                if (!pimpl->is_open()) {
-                    pimpl->init_socket(request_.host(), lexical_cast<string_type>(request_.port()));
-                }
-                pimpl->send_request_impl(method, request_);
-                response_ = basic_response<Tag>();
-                response_ << source(request_.host());
-
-                boost::asio::streambuf response_buffer;
-                pimpl->read_status(response_, response_buffer);
-                pimpl->read_headers(response_, response_buffer);
-                if (
-                    get_body && response_.status() != 304 
-                    && (response_.status() != 204)
-                    && not (response_.status() >= 100 && response_.status() <= 199)
-                   ) {
-                    pimpl->read_body(response_, response_buffer);
-                }
-
-                if (connection_follow_redirect_) {
-                    boost::uint16_t status = response_.status();
-                    if (status >= 300 && status <= 307) {
-                        typename headers_range<basic_response<Tag> >::type location_range = headers(response_)["Location"];
-                        typename range_iterator<typename headers_range<basic_request<Tag> >::type>::type location_header = begin(location_range);
-                        if (location_header != end(location_range)) {
-                            request_.uri(location_header->second);
-                            connection_ptr connection_;
-                            connection_ = get_connection_(resolver_, request_);
-                            return connection_->send_request_recursive(method, request_, get_body, ++count);
-                        } else throw std::runtime_error("Location header not defined in redirect response.");
+                    basic_response<Tag> response_;
+                    // check if the socket is open first
+                    if (!pimpl->is_open()) {
+                        pimpl->init_socket(request_.host(), lexical_cast<string_type>(request_.port()));
                     }
-                }
+                    response_ = basic_response<Tag>();
+                    response_ << source(request_.host());
 
-                typename headers_range<basic_response<Tag> >::type connection_range = headers(response_)["Connection"];
-                if (!empty(connection_range) && begin(connection_range)->second == string_type("close")) {
-                    pimpl->close_socket();
-                }
+                    pimpl->send_request_impl(method, request_);
+                    boost::asio::streambuf response_buffer;
 
-                return response_;
+                    try {
+                        pimpl->read_status(response_, response_buffer);
+                    } catch (boost::system::system_error & e) {
+                        if (!retry && e.code() == boost::asio::error::eof) {
+                            retry = true;
+                            pimpl->init_socket(request_.host(), lexical_cast<string_type>(request_.port()));
+                            continue;
+                        }
+                        throw; // it's a retry, and there's something wrong.
+                    }
+
+                    pimpl->read_headers(response_, response_buffer);
+
+                    if (
+                        get_body && response_.status() != 304 
+                        && (response_.status() != 204)
+                        && not (response_.status() >= 100 && response_.status() <= 199)
+                       ) {
+                        pimpl->read_body(response_, response_buffer);
+                    }
+
+                    if (connection_follow_redirect_) {
+                        boost::uint16_t status = response_.status();
+                        if (status >= 300 && status <= 307) {
+                            typename headers_range<basic_response<Tag> >::type location_range = headers(response_)["Location"];
+                            typename range_iterator<typename headers_range<basic_request<Tag> >::type>::type location_header = begin(location_range);
+                            if (location_header != end(location_range)) {
+                                request_.uri(location_header->second);
+                                connection_ptr connection_;
+                                connection_ = get_connection_(resolver_, request_);
+                                ++count;
+                                continue;
+                            } else throw std::runtime_error("Location header not defined in redirect response.");
+                        }
+                    }
+
+                    typename headers_range<basic_response<Tag> >::type connection_range = headers(response_)["Connection"];
+                    if (!empty(connection_range) && begin(connection_range)->second == string_type("close")) {
+                        pimpl->close_socket();
+                    }
+
+                    return response_;
+                } while(true);
             }
 
             shared_ptr<http::impl::sync_connection_base<Tag,version_major,version_minor> > pimpl;

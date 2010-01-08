@@ -224,6 +224,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void close_socket() { 
             if (is_open()) {
+                socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both);
                 socket_.lowest_layer().close();
             } 
         }
@@ -275,7 +276,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         bool is_open() { return socket_.is_open(); }
 
-        void close_socket() { if (is_open()) { socket_.close(); } }
+        void close_socket() { if (is_open()) { socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both); socket_.close(); } }
 
         private:
 
