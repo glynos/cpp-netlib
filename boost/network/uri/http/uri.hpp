@@ -31,15 +31,9 @@ namespace boost { namespace network { namespace uri {
                 return parts_.host;
             }
 
-<<<<<<< HEAD:boost/network/uri/http/uri.hpp
-            uint16_t port() const {
-                return parts_.port ? *parts_.port : 
-                    (parts_.scheme == "https" ? 443u : 80u);
-=======
             uint32_t port() const {
                 return parts_.port ? *(parts_.port) : 
                     (boost::iequals(parts_.scheme, string_type("https")) ? 443u : 80u);
->>>>>>> 01140d24f86ceffddabc6f42077ca08d5e4f9e3f:boost/network/uri/http/uri.hpp
             }
 
             string_type path() const {
@@ -67,13 +61,8 @@ namespace boost { namespace network { namespace uri {
         }
 
     inline
-<<<<<<< HEAD:boost/network/uri/http/uri.hpp
-        uint16_t
-        port(basic_uri<tags::http> const & uri) {
-=======
         uint32_t
         port(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
->>>>>>> 01140d24f86ceffddabc6f42077ca08d5e4f9e3f:boost/network/uri/http/uri.hpp
             return uri.port();
         }
 

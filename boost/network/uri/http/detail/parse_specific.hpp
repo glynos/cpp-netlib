@@ -86,7 +86,6 @@ namespace boost { namespace network { namespace uri {
                                 parts.fragment
                            );
 
-<<<<<<< HEAD:boost/network/uri/http/detail/parse_specific.hpp
                 qi::rule<iterator, string_type::value_type()> gen_delims = qi::char_(":/?#[]@");
                 qi::rule<iterator, string_type::value_type()> sub_delims = qi::char_("!$&'()*+,;=");
 
@@ -96,12 +95,8 @@ namespace boost { namespace network { namespace uri {
 
                 qi::rule<iterator, string_type()> pchar = qi::raw[unreserved | pct_encoded | sub_delims | qi::char_(":@")];
                 
-                hostname<tags::http>::parser<iterator> hostname;
-                bool ok = qi::parse(
-=======
                 hostname<tags::http_default_8bit_tcp_resolve>::parser<iterator> hostname;
                 bool ok = parse(
->>>>>>> 01140d24f86ceffddabc6f42077ca08d5e4f9e3f:boost/network/uri/http/detail/parse_specific.hpp
                         start_, end_,
                         (
                          qi::lit("//")
