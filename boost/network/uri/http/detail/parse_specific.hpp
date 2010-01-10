@@ -91,7 +91,7 @@ namespace boost { namespace network { namespace uri {
 
                 qi::rule<iterator, string_type::value_type()> reserved = gen_delims | sub_delims;
                 qi::rule<iterator, string_type::value_type()> unreserved = qi::alnum | qi::char_("-._~");
-                qi::rule<iterator, string_type()> pct_encoded = qi::char_("%") >> qi::repeat(2)[qi::xdigit];
+                qi::rule<iterator, string_type()> pct_encoded = qi::char_("%") > qi::repeat(2)[qi::xdigit];
 
                 qi::rule<iterator, string_type()> pchar = qi::raw[unreserved | pct_encoded | sub_delims | qi::char_(":@")];
                 
@@ -103,7 +103,7 @@ namespace boost { namespace network { namespace uri {
                          >> -qi::lexeme[qi::raw[*(unreserved | pct_encoded | sub_delims | qi::char_(":"))] >> '@']
                          >> hostname
                          >> -qi::lexeme[':' >> qi::ushort_]
-                         >> -qi::lexeme['/' >> qi::raw[*pchar >> *('/' >> *pchar)]]
+                         >> -qi::lexeme['/' > qi::raw[*pchar >> *('/' > *pchar)]]
                          >> -qi::lexeme['?' >> qi::raw[*(pchar | qi::char_("/?"))]]
                          >> -qi::lexeme['#' >> qi::raw[*(pchar | qi::char_("/?"))]]
                         ),
