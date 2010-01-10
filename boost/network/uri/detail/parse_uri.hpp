@@ -9,6 +9,12 @@
 #include <boost/fusion/tuple.hpp>
 #include <boost/network/uri/detail/uri_parts.hpp>
 
+#include <boost/spirit/include/qi_core.hpp>
+#include <boost/spirit/include/qi_sequence.hpp>
+#include <boost/spirit/include/qi_parse.hpp>
+#include <boost/spirit/include/qi_char_.hpp>
+#include <boost/spirit/include/qi_lexeme.hpp>
+
 namespace boost { namespace network { namespace uri {
 
     namespace detail {
@@ -33,7 +39,7 @@ namespace boost { namespace network { namespace uri {
                 bool ok = qi::parse(
                         start_, end_, 
                         (
-                            (qi::alpha > *(qi::alnum | qi::char_("+.-")))
+                            qi::lexeme[(qi::alpha >> *(qi::alnum | qi::char_("+.-")))]
                          >> ':'
                          >> 
                             +(qi::char_ - (qi::cntrl | qi::space))

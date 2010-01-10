@@ -7,7 +7,7 @@
 #define BOOST_TEST_MODULE http 1.0 test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network.hpp>
+#include <boost/network/include/http/client.hpp>
 #include <iostream>
 #include <boost/mpl/list.hpp>
 

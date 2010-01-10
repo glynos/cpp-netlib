@@ -11,6 +11,20 @@
 #include <boost/network/uri/detail/parse_uri.hpp>
 #include <boost/network/traits/string.hpp>
 
+#include <boost/spirit/include/qi_core.hpp>
+#include <boost/spirit/include/qi_sequence.hpp>
+#include <boost/spirit/include/qi_raw.hpp>
+#include <boost/spirit/include/qi_plus.hpp>
+#include <boost/spirit/include/qi_parse.hpp>
+#include <boost/spirit/include/qi_char_.hpp>
+#include <boost/spirit/include/qi_uint.hpp>
+#include <boost/spirit/include/qi_lexeme.hpp>
+#include <boost/spirit/include/qi_eps.hpp>
+#include <boost/spirit/include/qi_optional.hpp>
+#include <boost/spirit/include/phoenix_operator.hpp>
+#include <boost/spirit/include/support_ascii.hpp>
+#include <boost/spirit/include/support_argument.hpp>
+
 namespace boost { namespace network { namespace uri { 
 
     namespace detail {
@@ -101,7 +115,7 @@ namespace boost { namespace network { namespace uri {
                          >> -qi::lexeme[qi::raw[*(unreserved | pct_encoded | sub_delims | qi::char_(":"))] >> '@']
                          >> hostname
                          >> -qi::lexeme[':' >> qi::ushort_]
-                         >> -qi::lexeme['/' > qi::raw[*pchar >> *('/' > *pchar)]]
+                         >> -qi::lexeme['/' >> qi::raw[*pchar >> *('/' > *pchar)]]
                          >> -qi::lexeme['?' >> qi::raw[*(pchar | qi::char_("/?"))]]
                          >> -qi::lexeme['#' >> qi::raw[*(pchar | qi::char_("/?"))]]
                         ),

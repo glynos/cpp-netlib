@@ -7,7 +7,7 @@
 #define BOOST_TEST_MODULE message test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network.hpp>
+#include <boost/network/include/message.hpp>
 #include <algorithm>
 
 BOOST_AUTO_TEST_CASE ( message_transform_toupper ) {
