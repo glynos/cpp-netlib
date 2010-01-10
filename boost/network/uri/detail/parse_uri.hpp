@@ -33,7 +33,7 @@ namespace boost { namespace network { namespace uri {
                 bool ok = qi::parse(
                         start_, end_, 
                         (
-                            (qi::alpha >> *(qi::alnum | qi::char_("+.-")))
+                            (qi::alpha > *(qi::alnum | qi::char_("+.-")))
                          >> ':'
                          >> 
                             +(qi::char_ - (qi::cntrl | qi::space))
