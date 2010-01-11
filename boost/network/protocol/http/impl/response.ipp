@@ -24,86 +24,90 @@
 #include <boost/network/protocol/http/header.hpp>
 
 namespace boost { namespace network { namespace http {
-
+    
     /// A reply to be sent to a client.
     template <>
     struct basic_response<tags::http_server> {
+        /// The status of the reply.
+        enum status_type {
+            ok = 200,
+            created = 201,
+            accepted = 202,
+            no_content = 204,
+            multiple_choices = 300,
+            moved_permanently = 301,
+            moved_temporarily = 302,
+            not_modified = 304,
+            bad_request = 400,
+            unauthorized = 401,
+            forbidden = 403,
+            not_found = 404,
+            not_supported = 405,
+            not_acceptable = 406,
+            internal_server_error = 500,
+            not_implemented = 501,
+            bad_gateway = 502,
+            service_unavailable = 503
+        } status;
+        
+        /// The headers to be included in the reply.
+        typedef vector<tags::http_server>::apply<request_header>::type headers_vector;
+        headers_vector headers;
 
-      /// The status of the reply.
-      enum status_type
-      {
-        ok = 200,
-        created = 201,
-        accepted = 202,
-        no_content = 204,
-        multiple_choices = 300,
-        moved_permanently = 301,
-        moved_temporarily = 302,
-        not_modified = 304,
-        bad_request = 400,
-        unauthorized = 401,
-        forbidden = 403,
-        not_found = 404,
-        not_supported = 405,
-        not_acceptable = 406,
-        internal_server_error = 500,
-        not_implemented = 501,
-        bad_gateway = 502,
-        service_unavailable = 503
-      } status;
+        /// The content to be sent in the reply.
+        typedef string<tags::http_server>::type string_type;
+        string_type content;
 
-      /// The headers to be included in the reply.
-      typedef vector<tags::http_server>::apply<request_header>::type headers_vector;
-      headers_vector headers;
-
-      /// The content to be sent in the reply.
-      typedef string<tags::http_server>::type string_type;
-      string_type content;
-
-      /// Convert the reply into a vector of buffers. The buffers do not own the
-      /// underlying memory blocks, therefore the reply object must remain valid and
-      /// not be changed until the write operation has completed.
-      std::vector<boost::asio::const_buffer> to_buffers() {
-          using boost::asio::const_buffer;
-          using boost::asio::buffer;
-          static const char name_value_separator[] = { ':', ' ' };
-          static const char crlf[] = { '\r', '\n' };
-          std::vector<const_buffer> buffers;
-          buffers.push_back(to_buffer(status));
-          for (std::size_t i = 0; i < headers.size(); ++i)
-          {
-            request_header& h = headers[i];
-            buffers.push_back(buffer(h.name));
-            buffers.push_back(buffer(name_value_separator));
-            buffers.push_back(buffer(h.value));
+        /// Convert the reply into a vector of buffers. The buffers do not own the
+        /// underlying memory blocks, therefore the reply object must remain valid and
+        /// not be changed until the write operation has completed.
+        std::vector<boost::asio::const_buffer> to_buffers() {
+            using boost::asio::const_buffer;
+            using boost::asio::buffer;
+            static const char name_value_separator[] = { ':', ' ' };
+            static const char crlf[] = { '\r', '\n' };
+            std::vector<const_buffer> buffers;
+            buffers.push_back(to_buffer(status));
+            for (std::size_t i = 0; i < headers.size(); ++i) {
+                request_header& h = headers[i];
+                buffers.push_back(buffer(h.name));
+                buffers.push_back(buffer(name_value_separator));
+                buffers.push_back(buffer(h.value));
+                buffers.push_back(buffer(crlf));
+            }
             buffers.push_back(buffer(crlf));
-          }
-          buffers.push_back(buffer(crlf));
-          buffers.push_back(buffer(content));
-          return buffers;
-      }
+            buffers.push_back(buffer(content));
+            return buffers;
+        }
 
-      /// Get a stock reply.
-      static basic_response<tags::http_server> stock_reply(status_type status) {
-          return stock_reply(status, to_string(status));
-      }
+        /// Get a stock reply.
+        static basic_response<tags::http_server> stock_reply(status_type status) {
+            return stock_reply(status, to_string(status));
+        }
 
-      /// Get a stock reply with custom plain text data.
-      static basic_response<tags::http_server> stock_reply(status_type status, string_type content) {
-          using boost::lexical_cast;
-          basic_response<tags::http_server> rep;
-          rep.status = status;
-          rep.content = content;
-          rep.headers.resize(2);
-          rep.headers[0].name = "Content-Length";
-          rep.headers[0].value = lexical_cast<string_type>(rep.content.size());
-          rep.headers[1].name = "Content-Type";
-          rep.headers[1].value = "text/html";
-          return rep;
-      }
+        /// Get a stock reply with custom plain text data.
+        static basic_response<tags::http_server> stock_reply(status_type status, string_type content) {
+            using boost::lexical_cast;
+            basic_response<tags::http_server> rep;
+            rep.status = status;
+            rep.content = content;
+            rep.headers.resize(2);
+            rep.headers[0].name = "Content-Length";
+            rep.headers[0].value = lexical_cast<string_type>(rep.content.size());
+            rep.headers[1].name = "Content-Type";
+            rep.headers[1].value = "text/html";
+            return rep;
+        }
 
-      private:
+        /// Swap response objects
+        void swap(basic_response<tags::http_server> &r) {
+            using std::swap;
+            swap(headers, r.headers);
+            swap(content, r.content);
+        }
 
+        private:
+        
         static string_type to_string(status_type status) {
             static const char ok[] = "";
             static const char created[] =
@@ -191,7 +195,7 @@ namespace boost { namespace network { namespace http {
               "<head><title>Service Unavailable</title></head>"
               "<body><h1>503 Service Unavailable</h1></body>"
               "</html>";
-
+    
              switch (status)
               {
               case basic_response<tags::http_server>::ok:
@@ -234,7 +238,7 @@ namespace boost { namespace network { namespace http {
                 return internal_server_error;
               }
         }
-
+    
         boost::asio::const_buffer to_buffer(status_type status) {
             using boost::asio::buffer;
             static const string_type ok =
@@ -273,7 +277,7 @@ namespace boost { namespace network { namespace http {
               "HTTP/1.0 502 Bad Gateway\r\n";
             static const string_type service_unavailable =
               "HTTP/1.0 503 Service Unavailable\r\n";
-
+    
             switch (status) {
                 case basic_response<tags::http_server>::ok:
                     return buffer(ok);
@@ -315,15 +319,9 @@ namespace boost { namespace network { namespace http {
                     return buffer(internal_server_error);
             }
         }
-
+        
     };
 
-    template <>
-    void swap(basic_response<tags::http_server> &l, basic_response<tags::http_server> &r) {
-        using std::swap;
-        swap(l.headers, r.headers);
-        swap(l.content, r.content);
-    }
 
 } // namespace http
 
