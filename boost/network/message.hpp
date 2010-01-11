@@ -93,7 +93,7 @@ namespace boost { namespace network {
     };
 
     template <class Tag>
-    void swap(basic_message<Tag> & left, basic_message<Tag> & right) {
+    inline void swap(basic_message<Tag> & left, basic_message<Tag> & right) {
         // swap for ADL
         left.swap(right);
     }
