@@ -68,7 +68,7 @@ namespace boost { namespace network { namespace uri {
                 namespace qi = spirit::qi;
 
                 // Require that parts.scheme is either http or https, case insensitive
-                if (parts.scheme.size() < 4 or parts.scheme.size() > 5)
+                if ((parts.scheme.size() < 4) || (parts.scheme.size() > 5))
                     return false;
                 if (parts.scheme.size() == 4) {
                     if (not boost::iequals(parts.scheme.substr(0, 4), "http"))
