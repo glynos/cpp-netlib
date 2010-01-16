@@ -7,9 +7,9 @@
 
 [article C++ Network Library
     [quickbook 1.4]
-    [version 0.4]
+    [version 0.5]
     [authors [Matthews, Glyn], [Berris, Dean Michael]]
-    [copyright 2008, 2009 Glyn Matthews, Dean Michael Berris]
+    [copyright 2008, 2009, 2010 Glyn Matthews, Dean Michael Berris]
     [purpose C++ library for general network programming]
     [category text]
     [license
@@ -35,7 +35,6 @@
 
 
 [def __quick_start__ quick start]
-
 
 
 [include quick_start.qbk]

@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008, 2009 Glyn Matthews.
+  (C) Copyright 2008, 2009, 2010 Glyn Matthews.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -33,13 +33,16 @@ The __cnl__ uses tag dispatching to specialize the message interface at compile 
 
  namespace boost {
  namespace network {
- typedef void tag_specialization_is_not_provided;
+ template <
+     class Tag
+     >
+ class unsupported_tag;
 
  template <
      class Tag
      >
  struct string {
-     typedef tag_specialization_is_not_provided type;
+     typedef unsupported_tag<Tag> type;
  };
 
  namespace tags {
@@ -61,24 +64,56 @@ This technique is extended to two more metafunctions that are used by __message_
      class Tag
      >
  struct ostringstream {
-     typedef tag_specialization_is_not_provided type;
+     typedef unsupported_tag<Tag> type;
  };
 
  template <
      class Tag
      >
  struct headers_container {
-     typedef tag_specialization_is_not_provided type;
+     typedef unsupported_tag<Tag> type;
  };
  } // namespace network
  } // namespace boost
 
-[endsect]
+[endsect] [/tag_dispatching]
 
 [section:message_concepts Concepts]
 __message__ is [@http://www.boost.org/doc/html/DefaultConstructible.html DefaultConstructible], [@http://www.boost.org/doc/html/CopyConstructible.html CopyConstructible] and [@http://www.boost.org/doc/html/Assignable.html Assignable].
 
-[endsect]
+[section:message_concept Message]
+
+[heading Description]
+
+A type models the URI Concept if the type adheres to the following
+usage semantics, and is DefaultConstructible and EqualityComparable.
+
+[variablelist Notation
+    [[`M`] [A Message Type.]]
+    [[`m`, `m_`] [A Message Type instance.]]
+    [[`S`] [A String Type.]]
+    [[`s`] [A String Type instance.]]
+    [[`O`] [An Ostringstream Type.]]
+    [[`o`] [An Ostringstream Type instance.]]
+    [[`C`] [A Header Container Type.]]
+    [[`c`] [A Header Container Type instance.]]
+]
+
+[heading Valid Expressions]
+
+[table
+    [[Expression]         [Return Type]   [Description]]
+    [[`M m_(m);`]         []              [M must be Copy constructible.]]
+    [[`M m_; m_ = m;`]    []              [M must be Assignable.]]
+    [[`swap(m, m_);`]     [void]          [Swap should be availabe via ADL.]]
+    [[`M::string_type`]   [S]             [M should have a nested type `string_type` of type `S`.]]
+    [[`M::headers_container_type`] [C]    [M should have a nested type `headers_container_type` of type `C`.]]
+]
+
+
+[endsect] [/message_concept]
+
+[endsect] [/message_concepts]
 
 [section:transformation_layer Transformation layer]
 The transformation layer defines the algorithms that can be applied on messages to transform parts or whole messages into different forms or representations. Transformations should apply to any type that models the Message concept.  Functions in the transform layer take the form:
@@ -88,7 +123,7 @@ The transformation layer defines the algorithms that can be applied on messages 
      >
  basic_message<Tag> &transform(basic_message<Tag> &, ...);
 
-[endsect]
+[endsect] [/transformation_layer]
 
 [section:rendering_layer Rendering layer]
 The rendering layer defines the algorithms used to render a message into different formats or types. Rendering functions should apply to any type that models the Message Concept.  Functions in the rendering layer take the form:
@@ -98,6 +133,6 @@ The rendering layer defines the algorithms used to render a message into differe
      >
  unspecified &render(const basic_message<Tag> &, ...);
 
-[endsect]
+[endsect] [/rendering_layer]
 
-[endsect]
+[endsect] [/message]

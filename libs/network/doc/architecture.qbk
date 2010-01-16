@@ -9,9 +9,9 @@
 [section:architecture Architecture]
 __cnl__ is built upon __boost_asio__, a high-quality, portable asynchronous I/O library that provides a solid interface for C++ network programming.
 
-The architecture is driven by the requirement to separate requests from the transport mechanism.  Additionally, it's possible to utilise templates and static mechanisms to make decisions at compile-time, resulting in more efficient and stable client code.
+The architecture is driven by the requirement to separate requests and responses from the transport mechanism.  Additionally, it utilises generic programming techniques to make decisions at compile-time, resulting in more efficient and stable client code.
 
-There are two main features of the architecture which use modern C++ techniques to allow extensibility without comprimising efficiency: tags and directives.  These underly the design of the message.
+There are two main features of the architecture which use modern C++ techniques to allow extensibility without comprimising efficiency: tags and directives.  It is these techniques that underpin the design of the message.
 
 [include message.qbk]
 [include uri.qbk]

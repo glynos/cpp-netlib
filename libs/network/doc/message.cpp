@@ -11,11 +11,11 @@ template <
     >
 class basic_message {
 public:
-    /*<< Defines a container for message headers >>*/
-    typedef typename headers_container<Tag>::type headers_container_type;
     /*<< Defines the underlying string type, so that the message can
          be specialized for different text encodings >>*/
     typedef typename string<Tag>::type string_type;
+    /*<< Defines a container for message headers >>*/
+    typedef typename headers_container<Tag>::type headers_container_type;
 
     /*<< Copy constructor >>*/
     basic_message(const basic_message &);
