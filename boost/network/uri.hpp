@@ -9,16 +9,16 @@
 #include <boost/network/tags.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/uri/basic_uri.hpp>
-#include <boost/network/uri/http/uri.hpp>
+// TODO, #include <boost/network/uri/http/uri.hpp>
 
 namespace boost { namespace network { namespace uri {
 
     typedef basic_uri<boost::network::tags::default_string> uri;
     typedef basic_uri<boost::network::tags::default_wstring> wuri;
 
-    namespace http {
+    /* TODO, namespace http {
         typedef basic_uri<tags::http_default_8bit_tcp_resolve> uri;
-    }
+    } */
 
 } // namespace uri
 } // namespace network
