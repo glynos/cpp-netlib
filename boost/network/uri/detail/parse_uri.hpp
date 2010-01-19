@@ -23,8 +23,8 @@ namespace boost { namespace network { namespace uri {
 
     namespace detail {
 
-        template <class Range, class Tag>
-            inline bool parse_specific(Range & range, uri_parts<Tag> & parts) {
+        template <class Tag>
+            inline bool parse_specific(uri_parts<Tag> & parts) {
                 return true;
             }
 
@@ -143,12 +143,11 @@ namespace boost { namespace network { namespace uri {
                         result
                     );
 
-                /* TODO, if (ok) {
+                if (ok) {
                     ok = parse_specific(
-                            parts.scheme_specific_part,
                             parts
                             );
-                } */
+                }
 
                 return ok && start_ == end_;
             }
