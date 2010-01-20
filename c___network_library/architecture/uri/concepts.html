@@ -1,0 +1,412 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>URI Concepts</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
+<link rel="home" href="../../../index.html" title="C++ Network Library 0.5">
+<link rel="up" href="../uri.html" title="The URI">
+<link rel="prev" href="../uri.html" title="The URI">
+<link rel="next" href="../../protocol.html" title="Application Layer Protocols">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="http://www.boost.org/boost.png"></td>
+<td align="center"><a href="http://www.boost.org/index.html">Home</a></td>
+<td align="center"><a href="http://www.boost.org/libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../uri.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../uri.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../protocol.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="URI Concepts">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="c___network_library.architecture.uri.concepts"></a><a class="link" href="concepts.html" title="URI Concepts"> URI
+        Concepts</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#c___network_library.architecture.uri.concepts.uri_concept">
+          URI</a></span></dt>
+<dt><span class="section"><a href="concepts.html#c___network_library.architecture.uri.concepts.http_uri">
+          HTTP URI</a></span></dt>
+</dl></div>
+<p>
+          This page describes the URI Concepts implemented within cpp-netlib. The
+          following concepts are also implemented as Boost.Concept_check types enforced
+          by the URI library.
+        </p>
+<p>
+          URI Concepts are organized into a hierarchy of conepts.
+        </p>
+<div class="section" title="URI">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="c___network_library.architecture.uri.concepts.uri_concept"></a><a class="link" href="concepts.html#c___network_library.architecture.uri.concepts.uri_concept" title="URI">
+          URI</a>
+</h5></div></div></div>
+<a name="c___network_library.architecture.uri.concepts.uri_concept.description"></a><h6>
+<a name="id2869370"></a>
+            <a class="link" href="concepts.html#c___network_library.architecture.uri.concepts.uri_concept.description">Description</a>
+          </h6>
+<p>
+            A type models the URI Concept if the type adheres to the following usage
+            semantics, and is DefaultConstructible and EqualityComparable.
+          </p>
+<div class="variablelist" title="Notation">
+<p class="title"><b>Notation</b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">U</span></code></span></dt>
+<dd><p>
+                A URI Type.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">u</span></code>,<code class="computeroutput"><span class="identifier">u_</span></code></span></dt>
+<dd><p>
+                A URI Type instance.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">S</span></code></span></dt>
+<dd><p>
+                A String Type.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">s</span></code></span></dt>
+<dd><p>
+                A String Type instance.
+              </p></dd>
+</dl>
+</div>
+<a name="c___network_library.architecture.uri.concepts.uri_concept.valid_expressions"></a><h6>
+<a name="id2869491"></a>
+            <a class="link" href="concepts.html#c___network_library.architecture.uri.concepts.uri_concept.valid_expressions">Valid
+            Expressions</a>
+          </h6>
+<p>
+            For any URI, the following expressions must be valid:
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Return Type
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">U</span> <span class="identifier">u_</span><span class="special">(</span><span class="identifier">u</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    U must be Copy constructible.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">U</span> <span class="identifier">u_</span><span class="special">(</span><span class="identifier">s</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    U can be constructed from a string <code class="computeroutput"><span class="identifier">s</span></code>.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">swap</span><span class="special">(</span><span class="identifier">u</span><span class="special">,</span><span class="identifier">u_</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    void
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Swap should be availabe via ADL.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">protocol</span><span class="special">(</span><span class="identifier">u</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    S
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Return the protocol part of the URI.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">rest</span><span class="special">(</span><span class="identifier">u</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    S
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Return the rest of the URI, excluding the protocol part.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">valid</span><span class="special">(</span><span class="identifier">u</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    bool
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Return true whether the URI is a valid URI.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">U</span><span class="special">::</span><span class="identifier">string_type</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    S
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    U should have a nested type <code class="computeroutput"><span class="identifier">string_type</span></code>
+                    of type <code class="computeroutput"><span class="identifier">S</span></code>.
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="section" title="HTTP URI">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="c___network_library.architecture.uri.concepts.http_uri"></a><a class="link" href="concepts.html#c___network_library.architecture.uri.concepts.http_uri" title="HTTP URI">
+          HTTP URI</a>
+</h5></div></div></div>
+<p>
+            A type models the HTTP URI Concept if the type adheres to the following
+            usage semantics, and if the type also models the URI Concept.
+          </p>
+<div class="variablelist" title="Notation">
+<p class="title"><b>Notation</b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">H</span></code></span></dt>
+<dd><p>
+                An HTTP URI Type.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">h</span></code>,<code class="computeroutput"><span class="identifier">h_</span></code></span></dt>
+<dd><p>
+                An HTTP URI Type instance.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">S</span></code></span></dt>
+<dd><p>
+                A String Type.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">s</span></code></span></dt>
+<dd><p>
+                A String Type instance.
+              </p></dd>
+</dl>
+</div>
+<a name="c___network_library.architecture.uri.concepts.http_uri.valid_expressions"></a><h6>
+<a name="id2870019"></a>
+            <a class="link" href="concepts.html#c___network_library.architecture.uri.concepts.http_uri.valid_expressions">Valid
+            Expressions</a>
+          </h6>
+<p>
+            For any HTTP URI, the following expressions must be valid:
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Expression
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Return Type
+                  </p>
+                  </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">user_info</span><span class="special">(</span><span class="identifier">h</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    S
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Retrieve the user-info part of the HTTP URI.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">host</span><span class="special">(</span><span class="identifier">h</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    S
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Retrieve the host part of the HTTP URI.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">port</span><span class="special">(</span><span class="identifier">h</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    uint32_t
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Retrieve the port part of the HTTP URI.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">path</span><span class="special">(</span><span class="identifier">h</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    S
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Retrieve the path part of the HTTP URI.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">query</span><span class="special">(</span><span class="identifier">h</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    S
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Retrieve the query part of the HTTP URI.
+                  </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">fragment</span><span class="special">(</span><span class="identifier">h</span><span class="special">)</span></code>
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    S
+                  </p>
+                  </td>
+<td>
+                  <p>
+                    Retrieve the fragment part of the HTTP URI.
+                  </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 , 2009, 2010 Glyn Matthews, Dean Michael Berris<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../uri.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../uri.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../../protocol.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
