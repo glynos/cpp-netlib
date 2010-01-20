@@ -7,21 +7,31 @@
 
 
 [section:message The Message]
-The initial concept behind the __cnl__ is the __message__ template. The advantage of this is that __message__ can be specialized for different protocol implementations.
+The initial concept behind the __cnl__ is the __message__
+template. The advantage of this is that __message__ can be specialized
+for different protocol implementations.
 
 __message__ is presented below:
 [import message.cpp]
 [boost_network_message]
 
-__message__ is the bare minimum for a class to model the Message concept.  It is intended to be extended and customized according to the requirements of different protocols.  
+__message__ is the bare minimum for a class to model the Message
+concept.  It is intended to be extended and customized according to
+the requirements of different protocols.
 
 [section:tag_dispatching Tag Dispatching]
-The __message__ template has a single argument (Tag).  Tags are useful because:
+The __message__ template has a single argument (Tag).  Tags are useful
+because:
 
-# It's possible to specialize the message for different storage requirements;
-# It's possible to extend the message to support different network protocols.
+# It's possible to specialize the message for different storage
+  requirements;
+# It's possible to extend the message to support different network
+  protocols.
 
-The storage requirements for each of these can differ depending on factors such as the string encoding type or memory usage.  For different reasons, its possible to assume a string implementation might be:
+The storage requirements for each of these can differ depending on
+factors such as the string encoding type or memory usage.  For
+different reasons, its possible to assume a string implementation
+might be:
 
 # [^std::string]
 # [^std::wstring]
@@ -29,7 +39,8 @@ The storage requirements for each of these can differ depending on factors such 
 # [@http://msdn.microsoft.com/en-us/library/ms174288.aspx [^CString]]
 # [@http://doc.trolltech.com/qstring.html [^QString]]
 
-The __cnl__ uses tag dispatching to specialize the message interface at compile time.
+The __cnl__ uses tag dispatching to specialize the message interface
+at compile time.
 
  namespace boost {
  namespace network {
@@ -56,7 +67,8 @@ The __cnl__ uses tag dispatching to specialize the message interface at compile 
  } // namespace network
  } // namespace boost
 
-This technique is extended to two more metafunctions that are used by __message__:
+This technique is extended to two more metafunctions that are used by
+__message__:
 
  namespace boost {
  namespace network {
@@ -79,7 +91,12 @@ This technique is extended to two more metafunctions that are used by __message_
 [endsect] [/tag_dispatching]
 
 [section:message_concepts Concepts]
-__message__ is [@http://www.boost.org/doc/html/DefaultConstructible.html DefaultConstructible], [@http://www.boost.org/doc/html/CopyConstructible.html CopyConstructible] and [@http://www.boost.org/doc/html/Assignable.html Assignable].
+__message__ is
+[@http://www.boost.org/doc/html/DefaultConstructible.html
+DefaultConstructible],
+[@http://www.boost.org/doc/html/CopyConstructible.html
+CopyConstructible] and [@http://www.boost.org/doc/html/Assignable.html
+Assignable].
 
 [section:message_concept Message]
 
@@ -116,7 +133,10 @@ usage semantics, and is DefaultConstructible and EqualityComparable.
 [endsect] [/message_concepts]
 
 [section:transformation_layer Transformation layer]
-The transformation layer defines the algorithms that can be applied on messages to transform parts or whole messages into different forms or representations. Transformations should apply to any type that models the Message concept.  Functions in the transform layer take the form:
+The transformation layer defines the algorithms that can be applied on
+messages to transform parts or whole messages into different forms or
+representations. Transformations should apply to any type that models
+the Message concept.  Functions in the transform layer take the form:
 
  template <
      class Tag
@@ -126,7 +146,10 @@ The transformation layer defines the algorithms that can be applied on messages 
 [endsect] [/transformation_layer]
 
 [section:rendering_layer Rendering layer]
-The rendering layer defines the algorithms used to render a message into different formats or types. Rendering functions should apply to any type that models the Message Concept.  Functions in the rendering layer take the form:
+The rendering layer defines the algorithms used to render a message
+into different formats or types. Rendering functions should apply to
+any type that models the Message Concept.  Functions in the rendering
+layer take the form:
 
  template <
      class Tag

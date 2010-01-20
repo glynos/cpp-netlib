@@ -7,7 +7,8 @@
 
 
 [section:http HTTP]
-The __cnl__ provides direct support for HTTP.   As a motivating example, here is the code again from the __quick_start__.
+The __cnl__ provides direct support for HTTP.   As a motivating
+example, here is the code again from the __quick_start__.
 
  #include <boost/network/protocol/http.hpp>
  #include <iostream>
@@ -33,7 +34,8 @@ The __cnl__ provides direct support for HTTP.   As a motivating example, here is
      return 0;
  }
 
-Before walking through exactly what is happening in this example, the principle components are described below:
+Before walking through exactly what is happening in this example, the
+principle components are described below:
 
 [heading HTTP Request]
 
@@ -42,7 +44,8 @@ Before walking through exactly what is happening in this example, the principle 
      typedef basic_request<tags::default_> request;
  }}}
 
-The [^request] encapsulates information about the request and the resource.  It models the Message concept.
+The [^request] encapsulates information about the request and the
+resource.  It models the Message concept.
 
 [heading HTTP Client]
 
@@ -51,7 +54,9 @@ The [^request] encapsulates information about the request and the resource.  It 
      typedef basic_client<tags::default_> client;
  }}}
 
-The [^client] encapsulates the connection-mapping logic between the domain and the underlying socket.  Access to a resource is managed through the [^client] object.
+The [^client] encapsulates the connection-mapping logic between the
+domain and the underlying socket.  Access to a resource is managed
+through the [^client] object.
 
 [heading HTTP Response]
 
@@ -60,7 +65,8 @@ The [^client] encapsulates the connection-mapping logic between the domain and t
      typedef basic_response<tags::default_> response;
  }}}
 
-The [^response] encapsulates the data received from the server.  It also models the Message concept.
+The [^response] encapsulates the data received from the server.  It
+also models the Message concept.
 
 [heading Walkthrough]
 
@@ -70,17 +76,24 @@ This line frames the request for the resource __boost_org__.
 
  http::client client;
 
-Then a client object is created that handles all HTTP requests and responses.
+Then a client object is created that handles all HTTP requests and
+responses.
 
  http::response response = client.get(request);
 
-The client simply performs the requests.  The interface is trivially easy.  All HTTP methods are supported (HEAD, GET, POST, PUT, DELETE).
+The client simply performs the requests.  The interface is trivially
+easy.  All HTTP methods are supported (HEAD, GET, POST, PUT, DELETE).
 
 There are several advantages to this design:
 
-# A [^client] object manages the connection, unencumbering the developer with this task;
-# A [^request] can be used with any instance of the [^client] without binding the [^client] to any destination;
-# By decoupling the method from the [^request] object it allows developers to create requests that may be re-used (e.g. perform a HEAD first; if the the headers don't fulfil a certain criteria, perform a GET using the same resource).
+# A [^client] object manages the connection, unencumbering the
+  developer with this task;
+# A [^request] can be used with any instance of the [^client] without
+  binding the [^client] to any destination;
+# By decoupling the method from the [^request] object it allows
+  developers to create requests that may be re-used (e.g. perform a
+  HEAD first; if the the headers don't fulfil a certain criteria,
+  perform a GET using the same resource).
 
  // print response headers
  headers_range<http::response>::type hdrs = headers(response);
@@ -93,8 +106,9 @@ There are several advantages to this design:
  // print response body
  std::cout << body(response) << std::endl;
 
-Once the request has been made, and the [^client] returns a [^response] object, the rest is simple.  This example outputs all the response headers and body, in this case just the Boost homepage.
-
+Once the request has been made, and the [^client] returns a
+[^response] object, the rest is simple.  This example outputs all the
+response headers and body, in this case just the Boost homepage.
 
 [heading Using [^http::client]]
 
@@ -112,9 +126,14 @@ HTTP features can be enabled by using constructor arguments:
 * [^http::client(http::client::follow_redirect)]
 
 [h5 [^http::client::cache_resolved]]
-This argument enables the caching of resolved endpoints and prevents the client from resolving IP addresses of previously resolved hostnames.
+This argument enables the caching of resolved endpoints and prevents
+the client from resolving IP addresses of previously resolved
+hostnames.
 
 [h5 [^http::client::follow_redirect(s)]]
-[^http::client::follow_redirects] / [^http::client::follow_redirect] follow HTTP redirect(s) (300..307) by looking at the "Location" header provided by the response(s); headers present in the original request are preserved in the subsequent request(s).
+[^http::client::follow_redirects] / [^http::client::follow_redirect]
+follow HTTP redirect(s) (300..307) by looking at the "Location" header
+provided by the response(s); headers present in the original request
+are preserved in the subsequent request(s).
 
 [endsect] [/http]
