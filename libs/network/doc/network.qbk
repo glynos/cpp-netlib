@@ -32,6 +32,8 @@
 [def __python__ [@http://www.python.org Python]]
 [def __libcurl__ [@http://curl.haxx.se/ libcurl]]
 [def __mozilla_netlib__ [@http://www.mozilla.org/projects/netlib/ mozilla-netlib]]
+[def __sf_cpp_netlib__ [@http://sourceforge.net/projects/cpp-netlib/ sourceforge]]
+[def __github__ [@http://github.com/mikhailberis/cpp-netlib][github]]
 
 
 [def __quick_start__ quick start]
