@@ -20,7 +20,7 @@ namespace boost { namespace network { namespace uri {
 
     template <>
         struct basic_uri<tags::http_default_8bit_tcp_resolve> : uri_base<tags::http_default_8bit_tcp_resolve> {
-            using uri_base<tags::http_default_8bit_tcp_resolve>::string_type;
+            typedef uri_base<tags::http_default_8bit_tcp_resolve>::string_type string_type;
             using uri_base<tags::http_default_8bit_tcp_resolve>::operator=;
             using uri_base<tags::http_default_8bit_tcp_resolve>::swap;
 
