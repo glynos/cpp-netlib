@@ -78,7 +78,7 @@ For any HTTP URI, the following expressions must be valid:
     [[Expression]   [Return Type]   [Description]]
     [[`user_info(h)`] [S]           [Retrieve the user-info part of the HTTP URI.]]
     [[`host(h)`]    [S]             [Retrieve the host part of the HTTP URI.]]
-    [[`port(h)`]    [uint32_t]      [Retrieve the port part of the HTTP URI.]]
+    [[`port(h)`]    [uint16_t]      [Retrieve the port part of the HTTP URI.]]
     [[`path(h)`]    [S]             [Retrieve the path part of the HTTP URI.]]
     [[`query(h)`]   [S]             [Retrieve the query part of the HTTP URI.]]
     [[`fragment(h)`][S]             [Retrieve the fragment part of the HTTP URI.]]

@@ -50,7 +50,7 @@ void http_full_uri_test(Uri instance,
                         const typename Uri::string_type &rest_,
                         const typename Uri::string_type &user_info_,
                         const typename Uri::string_type &host_,
-                        boost::uint32_t port_,
+                        boost::uint16_t port_,
                         const typename Uri::string_type &path_,
                         const typename Uri::string_type &query_,
                         const typename Uri::string_type &fragment_) {
@@ -75,7 +75,7 @@ void http_simple_uri_test(Uri instance,
                           const typename Uri::string_type &rest_,
                           const typename Uri::string_type &user_info_,
                           const typename Uri::string_type &host_,
-                          boost::uint32_t port_,
+                          boost::uint16_t port_,
                           const typename Uri::string_type &path_,
                           const typename Uri::string_type &query_,
                           const typename Uri::string_type &fragment_) {
@@ -95,7 +95,7 @@ template <
     >
 void https_simple_uri_test(Uri instance,
                            const typename Uri::string_type &protocol_,
-                           boost::uint32_t port_) {
+                           boost::uint16_t port_) {
     using namespace boost::network::uri;
     
     BOOST_CHECK(protocol(instance) == protocol_);
@@ -107,7 +107,7 @@ template <
     >
 void http_with_port_test(Uri instance,
                          const typename Uri::string_type &host_,
-                         boost::uint32_t port_) {
+                         boost::uint16_t port_) {
     using namespace boost::network::uri;
 
     BOOST_CHECK(host(instance) == host_);

@@ -20,7 +20,7 @@ namespace boost { namespace network { namespace uri {
 
     template <>
         struct basic_uri<tags::http_default_8bit_tcp_resolve> : uri_base<tags::http_default_8bit_tcp_resolve> {
-            using uri_base<tags::http_default_8bit_tcp_resolve>::string_type;
+            typedef uri_base<tags::http_default_8bit_tcp_resolve>::string_type string_type;
             using uri_base<tags::http_default_8bit_tcp_resolve>::operator=;
             using uri_base<tags::http_default_8bit_tcp_resolve>::swap;
 
@@ -31,7 +31,7 @@ namespace boost { namespace network { namespace uri {
                 return parts_.host;
             }
 
-            uint32_t port() const {
+            uint16_t port() const {
                 return parts_.port ? *(parts_.port) : 
                     (boost::iequals(parts_.scheme, string_type("https")) ? 443u : 80u);
             }
@@ -61,7 +61,7 @@ namespace boost { namespace network { namespace uri {
         }
 
     inline
-        uint32_t
+        uint16_t
         port(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
             return uri.port();
         }

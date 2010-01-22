@@ -23,6 +23,7 @@ project network_test :
         <source>/boost//filesystem
         <toolset>gcc:<linkflags>-lpthread
         <toolset>gcc:<linkflags>-lssl
+        <toolset>gcc:<linkflags>-lcrypto
         <os>cygwin,<toolset>gcc:<define>_WIN32_WINNT=0x0501
         <os>cygwin,<toolset>gcc:<define>__USE_W32_SOCKETS
         <os>cygwin,<toolset>gcc:<library>ws2_32
@@ -35,21 +36,13 @@ project network_test :
     ;
 
 unit-test http_localhost_tests : http_localhost_tests.cpp ;
-
 unit-test https_localhost_tests : https_localhost_tests.cpp ;
-
 unit-test message_test : message_test.cpp ;
-
 unit-test message_transform_test : message_transform_test.cpp ;
-
 unit-test http_1_0_test : http_1_0_test.cpp ;
-
 unit-test http_1_1_test : http_1_1_test.cpp ;
-
 unit-test http_message_test : http_message_test.cpp ;
-
 unit-test url_test : url_test.cpp ;
-
 exe hello_world : hello_world.cpp ;
 
 make httplib_acceptance.passed : httplib_acceptance.py hello_world : @python_runner ;
