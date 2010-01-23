@@ -8,10 +8,10 @@
 
 [section:hello_world Hello World]
 
-[import ../../example/hello_world_server.cpp]
+[import ../../example/http/hello_world_server.cpp]
 [hello_world_server_main]
 
-[import ../../example/hello_world_client.cpp]
+[import ../../example/http/hello_world_client.cpp]
 [hello_world_client_main]
 
 [endsect] [/hello_world]
