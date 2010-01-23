@@ -2,11 +2,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>The Message</title>
-<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
-<link rel="home" href="../../index.html" title="C++ Network Library 0.5">
-<link rel="up" href="../architecture.html" title="Architecture">
-<link rel="prev" href="../architecture.html" title="Architecture">
+<link rel="home" href="../index.html" title="C++ Network Library 0.5">
+<link rel="up" href="../index.html" title="C++ Network Library 0.5">
+<link rel="prev" href="using.html" title="Using The C++ Network Library">
 <link rel="next" href="message/tag_dispatching.html" title="Tag Dispatching">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,36 +20,31 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../architecture.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../architecture.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="message/tag_dispatching.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="using.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="message/tag_dispatching.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" title="The Message">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="c___network_library.architecture.message"></a><a class="link" href="message.html" title="The Message"> The Message</a>
-</h3></div></div></div>
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="c___network_library.message"></a><a class="link" href="message.html" title="The Message"> The Message</a>
+</h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="message/tag_dispatching.html">
-        Tag Dispatching</a></span></dt>
-<dt><span class="section"><a href="message/message_concepts.html">
-        Concepts</a></span></dt>
-<dd><dl><dt><span class="section"><a href="message/message_concepts.html#c___network_library.architecture.message.message_concepts.message_concept">
-          Message</a></span></dt></dl></dd>
-<dt><span class="section"><a href="message/transformation_layer.html">
-        Transformation layer</a></span></dt>
-<dt><span class="section"><a href="message/rendering_layer.html">
-        Rendering layer</a></span></dt>
+<dt><span class="section"><a href="message/tag_dispatching.html"> Tag Dispatching</a></span></dt>
+<dt><span class="section"><a href="message/transformation_layer.html"> Transformation
+      layer</a></span></dt>
+<dt><span class="section"><a href="message/rendering_layer.html"> Rendering
+      layer</a></span></dt>
 </dl></div>
 <p>
-        The initial concept behind the C++ Network Library is the <code class="literal">basic_message</code>
-        template. The advantage of this is that <code class="literal">basic_message</code>
-        can be specialized for different protocol implementations.
+      The initial concept behind the C++ Network Library is the <code class="literal">basic_message</code>
+      template. The advantage of this is that <code class="literal">basic_message</code> can
+      be specialized for different protocol implementations.
+    </p>
+<p>
+      <code class="literal">basic_message</code> is presented below:
+    </p>
+<p>
       </p>
 <p>
-        <code class="literal">basic_message</code> is presented below:
-      </p>
-<p>
-        </p>
-<p>
-          
+        
 </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">network</span> <span class="special">{</span>
 <span class="keyword">template</span> <span class="special">&lt;</span>
@@ -74,51 +69,51 @@
 <span class="special">}}</span>
 </pre>
 <p>
-        </p>
+      </p>
+<p>
+      </p>
 <p>
         </p>
-<p>
-          </p>
 <div class="calloutlist"><table border="0" summary="Callout list">
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library5"></a><a href="#c___network_library5co"><img src="http://www.boost.org/doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
 <td valign="top" align="left"><p> Defines the underlying string type, so that the message can be specialized
-          for different text encodings </p></td>
+        for different text encodings. </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library6"></a><a href="#c___network_library6co"><img src="http://www.boost.org/doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
-<td valign="top" align="left"><p> Defines a container for message headers </p></td>
+<td valign="top" align="left"><p> Defines a container for message headers. </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library7"></a><a href="#c___network_library7co"><img src="http://www.boost.org/doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
 <td valign="top" align="left"><p> Copy
-          constructor </p></td>
+        constructor. </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library8"></a><a href="#c___network_library8co"><img src="http://www.boost.org/doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
-<td valign="top" align="left"><p> Assignment operator </p></td>
+<td valign="top" align="left"><p> Assignment operator. </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library9"></a><a href="#c___network_library9co"><img src="http://www.boost.org/doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
-<td valign="top" align="left"><p> Swap function </p></td>
+<td valign="top" align="left"><p> Swap function. </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library10"></a><a href="#c___network_library10co"><img src="http://www.boost.org/doc/src/images/callouts/6.png" alt="6" border="0"></a> </p></td>
-<td valign="top" align="left"><p> Accesses the message headers
-          </p></td>
+<td valign="top" align="left"><p> Accesses the message headers.
+        </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library11"></a><a href="#c___network_library11co"><img src="http://www.boost.org/doc/src/images/callouts/7.png" alt="7" border="0"></a> </p></td>
-<td valign="top" align="left"><p> Accesses the message body </p></td>
+<td valign="top" align="left"><p> Accesses the message body. </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library12"></a><a href="#c___network_library12co"><img src="http://www.boost.org/doc/src/images/callouts/8.png" alt="8" border="0"></a> </p></td>
-<td valign="top" align="left"><p> Accesses the source of the message </p></td>
+<td valign="top" align="left"><p> Accesses the source of the message. </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library13"></a><a href="#c___network_library13co"><img src="http://www.boost.org/doc/src/images/callouts/9.png" alt="9" border="0"></a> </p></td>
 <td valign="top" align="left"><p> Accesses the
-          destination of the message </p></td>
+        destination of the message. </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="c___network_library14"></a><a href="#c___network_library14co"><img src="http://www.boost.org/doc/src/images/callouts/10.png" alt="10" border="0"></a> </p></td>
@@ -126,14 +121,14 @@
 </tr>
 </table></div>
 <p>
-        </p>
-<p>
       </p>
 <p>
-        <code class="literal">basic_message</code> is the bare minimum for a class to model
-        the Message concept. It is intended to be extended and customized according
-        to the requirements of different protocols.
-      </p>
+    </p>
+<p>
+      <code class="literal">basic_message</code> is the bare minimum for a class to model the
+      Message concept. It is intended to be extended and customized according to
+      the requirements of different protocols.
+    </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
@@ -145,7 +140,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../architecture.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../architecture.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="message/tag_dispatching.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="using.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="message/tag_dispatching.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

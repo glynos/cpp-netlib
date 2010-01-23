@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
 <link rel="home" href="../../index.html" title="C++ Network Library 0.5">
 <link rel="up" href="../examples.html" title="Examples">
-<link rel="prev" href="../examples.html" title="Examples">
+<link rel="prev" href="hello_world.html" title="Hello World">
 <link rel="next" href="simple_wget.html" title="Simple 'wget' Clone">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../examples.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="simple_wget.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="hello_world.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="simple_wget.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" title="HTTP Client">
 <div class="titlepage"><div><div><h3 class="title">
@@ -29,15 +29,13 @@
 <p>
         </p>
 <p>
-          This application takes a URL as a command line argument and prints the
-          resource to the console.
-        </p>
-<p>
-        </p>
-<p>
           
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">program_options</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="comment">/*
+  This application takes a URL as a command line argument and prints
+  the resource to the console.
+*/</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">program_options</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">network</span><span class="special">/</span><span class="identifier">protocol</span><span class="special">/</span><span class="identifier">http</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
@@ -81,36 +79,31 @@
 
     <span class="identifier">show_headers</span> <span class="special">=</span> <span class="identifier">vm</span><span class="special">.</span><span class="identifier">count</span><span class="special">(</span><span class="string">"headers"</span><span class="special">)</span> <span class="special">?</span> <span class="keyword">true</span> <span class="special">:</span> <span class="keyword">false</span> <span class="special">;</span>
 
-    <span class="comment">//try {
-</span>        <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">network</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">network</span><span class="special">;</span>
 
-        <span class="identifier">http</span><span class="special">::</span><span class="identifier">basic_client</span><span class="special">&lt;</span><span class="identifier">tags</span><span class="special">::</span><span class="identifier">http_keepalive_8bit_udp_resolve</span><span class="special">,</span><span class="number">1</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;::</span><span class="identifier">request</span> <span class="identifier">request</span><span class="special">(</span><span class="identifier">source</span><span class="special">);</span>
-        <span class="identifier">request</span> <span class="special">&lt;&lt;</span> <span class="identifier">header</span><span class="special">(</span><span class="string">"Connection"</span><span class="special">,</span> <span class="string">"close"</span><span class="special">);</span>
-        <span class="identifier">http</span><span class="special">::</span><span class="identifier">basic_client</span><span class="special">&lt;</span><span class="identifier">tags</span><span class="special">::</span><span class="identifier">http_keepalive_8bit_udp_resolve</span><span class="special">,</span><span class="number">1</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;</span> <span class="identifier">client</span><span class="special">(</span>
-            <span class="identifier">http</span><span class="special">::</span><span class="identifier">basic_client</span><span class="special">&lt;</span><span class="identifier">tags</span><span class="special">::</span><span class="identifier">http_keepalive_8bit_udp_resolve</span><span class="special">,</span><span class="number">1</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;::</span><span class="identifier">follow_redirects</span>
-            <span class="special">);</span>
-        <span class="identifier">http</span><span class="special">::</span><span class="identifier">basic_client</span><span class="special">&lt;</span><span class="identifier">tags</span><span class="special">::</span><span class="identifier">http_keepalive_8bit_udp_resolve</span><span class="special">,</span><span class="number">1</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;::</span><span class="identifier">response</span> <span class="identifier">response</span><span class="special">;</span>
-        <span class="identifier">response</span> <span class="special">=</span> <span class="identifier">client</span><span class="special">.</span><span class="identifier">get</span><span class="special">(</span><span class="identifier">request</span><span class="special">);</span>
+    <span class="keyword">typedef</span> <span class="identifier">http</span><span class="special">::</span><span class="identifier">basic_client</span><span class="special">&lt;</span><span class="identifier">tags</span><span class="special">::</span><span class="identifier">http_keepalive_8bit_udp_resolve</span><span class="special">,</span> <span class="number">1</span><span class="special">,</span> <span class="number">1</span><span class="special">&gt;</span>
+        <span class="identifier">http_client</span><span class="special">;</span>
+    
 
-        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">show_headers</span><span class="special">)</span> <span class="special">{</span>
-            <span class="identifier">headers_range</span><span class="special">&lt;</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">basic_client</span><span class="special">&lt;</span><span class="identifier">tags</span><span class="special">::</span><span class="identifier">http_keepalive_8bit_udp_resolve</span><span class="special">,</span><span class="number">1</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;::</span><span class="identifier">response</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">headers_</span> <span class="special">=</span> <span class="identifier">headers</span><span class="special">(</span><span class="identifier">response</span><span class="special">);</span>
-            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span><span class="identifier">headers_range</span><span class="special">&lt;</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">basic_client</span><span class="special">&lt;</span><span class="identifier">tags</span><span class="special">::</span><span class="identifier">http_keepalive_8bit_udp_resolve</span><span class="special">,</span><span class="number">1</span><span class="special">,</span><span class="number">1</span><span class="special">&gt;::</span><span class="identifier">response</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">header</span><span class="special">,</span> <span class="identifier">past_end</span><span class="special">;</span>
-            <span class="identifier">header</span> <span class="special">=</span> <span class="identifier">begin</span><span class="special">(</span><span class="identifier">headers_</span><span class="special">);</span>
-            <span class="identifier">past_end</span> <span class="special">=</span> <span class="identifier">end</span><span class="special">(</span><span class="identifier">headers_</span><span class="special">);</span>
-            <span class="keyword">while</span> <span class="special">(</span><span class="identifier">header</span> <span class="special">!=</span> <span class="identifier">past_end</span><span class="special">)</span> <span class="special">{</span>
-                <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">header</span><span class="special">-&gt;</span><span class="identifier">first</span> <span class="special">&lt;&lt;</span> <span class="string">": "</span> <span class="special">&lt;&lt;</span> <span class="identifier">header</span><span class="special">-&gt;</span><span class="identifier">second</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
-                <span class="special">++</span><span class="identifier">header</span><span class="special">;</span>
-            <span class="special">};</span>
-            <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">http_client</span><span class="special">::</span><span class="identifier">request</span> <span class="identifier">request</span><span class="special">(</span><span class="identifier">source</span><span class="special">);</span>
+    <span class="identifier">request</span> <span class="special">&lt;&lt;</span> <span class="identifier">header</span><span class="special">(</span><span class="string">"Connection"</span><span class="special">,</span> <span class="string">"close"</span><span class="special">);</span>
+    <span class="identifier">http_client</span> <span class="identifier">client</span><span class="special">(</span><span class="identifier">http_client</span><span class="special">::</span><span class="identifier">follow_redirects</span><span class="special">);</span>
+    <span class="identifier">http_client</span><span class="special">::</span><span class="identifier">response</span> <span class="identifier">response</span> <span class="special">=</span> <span class="identifier">client</span><span class="special">.</span><span class="identifier">get</span><span class="special">(</span><span class="identifier">request</span><span class="special">);</span>
+    
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">show_headers</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">headers_range</span><span class="special">&lt;</span><span class="identifier">http_client</span><span class="special">::</span><span class="identifier">response</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">headers_</span> <span class="special">=</span> <span class="identifier">headers</span><span class="special">(</span><span class="identifier">response</span><span class="special">);</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">range_iterator</span><span class="special">&lt;</span><span class="identifier">headers_range</span><span class="special">&lt;</span><span class="identifier">http_client</span><span class="special">::</span><span class="identifier">response</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">header</span><span class="special">,</span> <span class="identifier">past_end</span><span class="special">;</span>
+        <span class="identifier">header</span> <span class="special">=</span> <span class="identifier">begin</span><span class="special">(</span><span class="identifier">headers_</span><span class="special">);</span>
+        <span class="identifier">past_end</span> <span class="special">=</span> <span class="identifier">end</span><span class="special">(</span><span class="identifier">headers_</span><span class="special">);</span>
+        <span class="keyword">while</span> <span class="special">(</span><span class="identifier">header</span> <span class="special">!=</span> <span class="identifier">past_end</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">header</span><span class="special">-&gt;</span><span class="identifier">first</span> <span class="special">&lt;&lt;</span> <span class="string">": "</span> <span class="special">&lt;&lt;</span> <span class="identifier">header</span><span class="special">-&gt;</span><span class="identifier">second</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+            <span class="special">++</span><span class="identifier">header</span><span class="special">;</span>
         <span class="special">};</span>
-
-        <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">body</span><span class="special">(</span><span class="identifier">response</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
-        
-    <span class="comment">//} catch (exception &amp; e) {
-</span>    <span class="comment">//    cout &lt;&lt; "Error: " &lt;&lt; e.what() &lt;&lt; endl;
-</span>    <span class="comment">//    return EXIT_FAILURE;
-</span>    <span class="comment">//};
-</span>
+        <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">};</span>
+    
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">body</span><span class="special">(</span><span class="identifier">response</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+    
     <span class="keyword">return</span> <span class="identifier">EXIT_SUCCESS</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
@@ -129,7 +122,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../examples.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="simple_wget.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="hello_world.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="simple_wget.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
