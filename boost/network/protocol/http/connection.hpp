@@ -45,11 +45,6 @@ namespace boost { namespace network { namespace http {
         , socket_(service_)
         , wrapper_(service_)
         {
-            try {
-                socket_.set_option(tcp::no_delay(true)); // Don't delay writing
-            } catch (system::system_error & e) {
-                handler_.log(e.what());
-            }
         }
 
         tcp::socket & socket() {
@@ -62,6 +57,9 @@ namespace boost { namespace network { namespace http {
             // and then pass that request object to the
             // handler_ instance.
             //
+            boost::system::error_code option_error;
+            socket_.set_option(tcp::no_delay(true), option_error);
+            if (option_error) handler_.log(system::system_error(option_error).what());
             socket_.async_read_some(
                 boost::asio::buffer(buffer_),
                 wrapper_.wrap(

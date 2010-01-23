@@ -16,20 +16,26 @@ namespace http = boost::network::http;
 using boost::assign::list_of;
 using boost::lexical_cast;
 using std::string;
+using std::cerr;
+using std::endl;
 
 struct hello_world;
 typedef http::server<hello_world> server;
 
 struct hello_world {
+
     void operator()(server::request const & request, server::response & response) {
         response = server::response::stock_reply(server::response::ok, "Hello, World!");
         assert(response.status == server::response::ok);
         assert(response.headers.size() == 2);
         assert(response.content == "Hello, World!");
     }
-    void log(...) {
-        // do nothing
+
+    void log(string const & data) {
+        cerr << data << endl;
+        abort();
     }
+
 };
 
 int main(int argc, char * argv[]) {
@@ -38,3 +44,4 @@ int main(int argc, char * argv[]) {
     server_.run();
     return EXIT_SUCCESS;
 }
+
