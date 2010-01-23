@@ -5,7 +5,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 //[ http_client_main
-/*`
+/*
   This application takes a URL as a command line argument and prints
   the resource to the console.
 */
@@ -53,36 +53,31 @@ int main(int argc, char * argv[]) {
 
     show_headers = vm.count("headers") ? true : false ;
 
-    //try {
-        using namespace boost::network;
+    using namespace boost::network;
 
-        http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::request request(source);
-        request << header("Connection", "close");
-        http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1> client(
-            http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::follow_redirects
-            );
-        http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::response response;
-        response = client.get(request);
+    typedef http::basic_client<tags::http_keepalive_8bit_udp_resolve, 1, 1>
+        http_client;
+    
 
-        if (show_headers) {
-            headers_range<http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::response>::type headers_ = headers(response);
-            boost::range_iterator<headers_range<http::basic_client<tags::http_keepalive_8bit_udp_resolve,1,1>::response>::type>::type header, past_end;
-            header = begin(headers_);
-            past_end = end(headers_);
-            while (header != past_end) {
-                cout << header->first << ": " << header->second << endl;
-                ++header;
-            };
-            cout << endl;
+    http_client::request request(source);
+    request << header("Connection", "close");
+    http_client client(http_client::follow_redirects);
+    http_client::response response = client.get(request);
+    
+    if (show_headers) {
+        headers_range<http_client::response>::type headers_ = headers(response);
+        boost::range_iterator<headers_range<http_client::response>::type>::type header, past_end;
+        header = begin(headers_);
+        past_end = end(headers_);
+        while (header != past_end) {
+            cout << header->first << ": " << header->second << endl;
+            ++header;
         };
-
-        cout << body(response) << endl;
-        
-    //} catch (exception & e) {
-    //    cout << "Error: " << e.what() << endl;
-    //    return EXIT_FAILURE;
-    //};
-
+        cout << endl;
+    };
+    
+    cout << body(response) << endl;
+    
     return EXIT_SUCCESS;
 }
 //]

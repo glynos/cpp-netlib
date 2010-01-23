@@ -10,5 +10,5 @@
 [section:simple_wget Simple 'wget' Clone]
 [import ../../example/simple_wget.cpp]
 [simple_wget_main]
-[endsect]
+[endsect] [/simple_wget]
 

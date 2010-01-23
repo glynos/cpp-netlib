@@ -9,5 +9,5 @@
 [section:http_client HTTP Client]
 [import ../../example/http_client.cpp]
 [http_client_main]
-[endsect]
+[endsect] [/http_client]
 

@@ -11,15 +11,21 @@
 [section:motivation Motivation]
 Modern applications that communicate over the internet have never been
 more prevalent, ranging through diverse areas such as high performance
-servers to embedded systems for smart phones or navigation systems.
+servers to embedded systems for smart phones and navigation systems.
 
 Currently, there are no open source network libraries available that
-use modern object-oriented techniques in C++.  With the introduction
-of __boost_asio__, developing portable network C++ applications has
-become a very much easier task.  What is still lacking is a set of
-libraries that utilise __boost_asio__ in order to provide application
-level support so that C++ developers are able to develop internet and
-distributed applications more effectively.
+use modern object-oriented techniques in C++.  Any developer will
+understand the familiar problem of searching for a protocol library
+for their project, failing to find anything suitable and too often
+having to hand-roll their own.
+
+By leveraging __boost__, and in particular __boost_asio__, developers
+can create portable network C++ applications much more easily.  What
+is still lacking is a set of libraries that utilise __boost_asio__ in
+order to provide application level support so that C++ developers are
+able to develop internet and distributed applications more
+effectively.  This is the niche that the developers of the __cnl__ see
+their project filling.
 
 [endsect] [/motivation]
 
@@ -28,25 +34,23 @@ The objectives of the __cnl__ are to:
 
 * develop a high quality, portable, easy to use C++ networking library
 * enable developers to easily extend the library
-* lower the barrier to entry for cross-platform network-aware C++
+* lower the barrier to entry for cross-platform, network-aware C++
    applications
 
-The goal of __cnl__ has never been to build a fully-featured web
-server - there are plenty of excellent options already available.  The
-niche that this library targets is for light-weight networking
-functionality for C++ applications that have demanding performance
-requirements or memory constraints, but that also need to be portable.
-This type of application is becoming increasingly common as software
-becomes more distributed, and applications need to communicate with
-services. 
+The goal of the __cnl__ has never been to build a fully-featured web
+server - there are plenty of excellent options already available.
+This project targets light-weight networking functionality for C++
+applications that have demanding performance requirements or memory
+constraints, but that also need to be portable.  This type of
+application is becoming increasingly common as software becomes more
+distributed, and applications need to run on a wide range of devices.
 
 While many languages provide direct library support for high level
-network programming, this feature is missing in C++.  Therefore, this
-library has been developed with the intention of eventually being
-submitted to __boost__, a collection of general, high quality
-libraries for C++ developers.
+network programming, this feature is missing in standard  C++.
+Therefore, this library has been developed with the intention of
+eventually being submitted to __boost__.
 
-Eventually, __cnl__ will be extended to support many of the
+Eventually, the __cnl__ will be extended to support many of the
 application layer protocols such as SMTP, FTP, SOAP, XMPP etc.
 
 [endsect] [/objectives]
