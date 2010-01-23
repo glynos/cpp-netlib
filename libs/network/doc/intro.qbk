@@ -54,8 +54,8 @@ application layer protocols such as SMTP, FTP, SOAP, XMPP etc.
 [section:history History]
 The __cnl__ was founded by Dean Michael Berris in 2007.  Initially it
 consisted of a message template and an HTTP client.  It found a home
-on __sf_cpp_netlib__ but was recently migrated to __github__ where
-development is actively continued by a committed community.
+on __sf_cpp_netlib__ but was migrated at the end of 2009 to __github__
+where development is actively continued by a committed community.
 
 [endsect] [/history]
 
