@@ -13,6 +13,10 @@ The library includes a URI object and parser implementation that
 allows users of the library to easily interact with different
 kinds of valid URI formats.
 
+__uri__ is presented below:
+[import uri.cpp]
+[boost_network_uri]
+
 Currently the library supports a bare URI implementation that
 only parsers the scheme and leaves the scheme specific part as is,
 as well as a very liberal HTTP URI parser. The HTTP URI object only
