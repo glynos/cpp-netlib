@@ -1,0 +1,94 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>HTTP Server</title>
+<link rel="stylesheet" href="../../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
+<link rel="home" href="../../../index.html" title="C++ Network Library 0.5">
+<link rel="up" href="../http.html" title="HTTP">
+<link rel="prev" href="../http.html" title="HTTP">
+<link rel="next" href="http_client.html" title="">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="http://www.boost.org/boost.png"></td>
+<td align="center"><a href="http://www.boost.org/index.html">Home</a></td>
+<td align="center"><a href="http://www.boost.org/libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../http.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../http.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="http_client.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="HTTP Server">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="c___network_library.protocol.http.http_server"></a><a class="link" href="http_server.html" title="HTTP Server"> HTTP
+        Server</a>
+</h4></div></div></div>
+<p>
+          Here is the server code again from the quick start.
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">network</span><span class="special">/</span><span class="identifier">protocol</span><span class="special">/</span><span class="identifier">http</span><span class="special">/</span><span class="identifier">server</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+
+<span class="keyword">namespace</span> <span class="identifier">http</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">network</span><span class="special">::</span><span class="identifier">http</span><span class="special">;</span>
+
+
+<span class="keyword">struct</span> <span class="identifier">hello_world</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">http</span><span class="special">::</span><span class="identifier">server</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;</span> <span class="identifier">server</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">hello_world</span> <span class="special">{</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()</span> <span class="special">(</span><span class="identifier">server</span><span class="special">::</span><span class="identifier">request</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">request</span><span class="special">,</span>
+                     <span class="identifier">server</span><span class="special">::</span><span class="identifier">response</span> <span class="special">&amp;</span><span class="identifier">response</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">response</span> <span class="special">=</span> <span class="identifier">server</span><span class="special">::</span><span class="identifier">response</span><span class="special">::</span><span class="identifier">stock_reply</span><span class="special">(</span>
+            <span class="identifier">server</span><span class="special">::</span><span class="identifier">response</span><span class="special">::</span><span class="identifier">ok</span><span class="special">,</span> <span class="string">"Hello, World!"</span><span class="special">);</span>
+    <span class="special">}</span>
+    <span class="keyword">void</span> <span class="identifier">log</span><span class="special">(...)</span> <span class="special">{</span>
+        <span class="comment">// do nothing
+</span>    <span class="special">}</span>
+<span class="special">};</span>
+
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">argv</span><span class="special">[])</span> <span class="special">{</span>
+    
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">argc</span> <span class="special">!=</span> <span class="number">3</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"Usage: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">argv</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">" address port"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="identifier">hello_world</span> <span class="identifier">handler</span><span class="special">;</span>
+        <span class="identifier">server</span> <span class="identifier">server_</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">],</span> <span class="identifier">handler</span><span class="special">);</span>
+        <span class="identifier">server_</span><span class="special">.</span><span class="identifier">run</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span> <span class="special">&amp;</span><span class="identifier">e</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="identifier">e</span><span class="special">.</span><span class="identifier">what</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+    <span class="special">}</span>
+    
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2008 , 2009, 2010 Glyn Matthews, Dean Michael Berris<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../http.html"><img src="http://www.boost.org/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../http.html"><img src="http://www.boost.org/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="http://www.boost.org/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="http_client.html"><img src="http://www.boost.org/doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
