@@ -15,10 +15,12 @@ The __cnl__ is tested on GCC 4.3 on Linux; MSVC 9.0 on Windows Vista.
 
 The __cnl__ works with Boost 1.35.0 and greater.
 
-Boost is mostly header only but its necessary to build and link to __boost_system__ in order to use the __cnl__.
+Boost is mostly header only but its necessary to build and link to
+__boost_system__ in order to use the __cnl__.
 
-Running the tests for the library also requires __python__ to be available in a directory that is present in the system path. 
-The tests work with __python__ 2.5.
+Running the tests for the library also requires __python__ to be
+available in a directory that is present in the system path.  The
+tests work with __python__ 2.5.
 
 [endsect]
 

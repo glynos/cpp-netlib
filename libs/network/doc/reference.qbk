@@ -26,7 +26,7 @@
    ]
    [
       [
-         [@http://www.ietf.org/rfc/rfc2396.txt URI Generic Syntax RFC 2396)]
+         [@http://www.ietf.org/rfc/rfc3986.txt URI Generic Syntax RFC 3986)]
       ]
       [
 	 Generic URI syntax specification.

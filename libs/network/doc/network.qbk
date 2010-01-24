@@ -7,9 +7,9 @@
 
 [article C++ Network Library
     [quickbook 1.4]
-    [version 0.4]
+    [version 0.5]
     [authors [Matthews, Glyn], [Berris, Dean Michael]]
-    [copyright 2008, 2009 Glyn Matthews, Dean Michael Berris]
+    [copyright 2008, 2009, 2010 Glyn Matthews, Dean Michael Berris]
     [purpose C++ library for general network programming]
     [category text]
     [license
@@ -29,20 +29,26 @@
 [def __pion__ [@http://www.pion.org/projects/pion-network-library the Pion Network Library]]
 [def __cnl__ C++ Network Library]
 [def __message__ [^basic_message]]
+[def __uri__ [^basic_uri]]
 [def __python__ [@http://www.python.org Python]]
 [def __libcurl__ [@http://curl.haxx.se/ libcurl]]
 [def __mozilla_netlib__ [@http://www.mozilla.org/projects/netlib/ mozilla-netlib]]
+[def __sf_cpp_netlib__ [@http://sourceforge.net/projects/cpp-netlib/ sourceforge]]
+[def __github__ [@http://github.com/mikhailberis/cpp-netlib github]]
 
 
 [def __quick_start__ quick start]
 
 
-
 [include quick_start.qbk]
 [include intro.qbk]
 [include using.qbk]
-[include architecture.qbk]
+[/include architecture.qbk]
+[include message.qbk]
+[include uri.qbk]
 [include protocol.qbk]
 [include examples.qbk]
 [include reference.qbk]
 [include acknowledgements.qbk]
+[include appendices.qbk]
+[include contributors.qbk]

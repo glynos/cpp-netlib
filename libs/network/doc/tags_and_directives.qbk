@@ -9,7 +9,12 @@
 [section:tags_and_directives Tags and Directives]
 
 [heading Directives]
-Attributes can be specialized in this way, but not class member functions.  To able to do this, the __cnl__ uses directives.  Directives are already familiar in the C++ world as part of the I/O streams in the standard library ([^std::endl], [^std::flush] etc.).  For the __cnl__, directives are used to manipulate the message class.  A tag aware directive might be implemented as such:
+Attributes can be specialized in this way, but not class member
+functions.  To able to do this, the __cnl__ uses directives.
+Directives are already familiar in the C++ world as part of the I/O
+streams in the standard library ([^std::endl], [^std::flush] etc.).
+For the __cnl__, directives are used to manipulate the message class.
+A tag aware directive might be implemented as such:
 
  namespace boost {
  namespace network {
@@ -19,7 +24,8 @@ Attributes can be specialized in this way, but not class member functions.  To a
      >
      class basic_source {
          // Constructor.
-         basic_source(const typename Tag::string_type &source) : source_(source) {
+         basic_source(const typename Tag::string_type &source)
+             : source_(source) {
 
          }
 
@@ -44,7 +50,8 @@ Attributes can be specialized in this way, but not class member functions.  To a
  }
  }
 
-To use directives with messages, different overloads of the free [^operator <<] are provided:
+To use directives with messages, different overloads of the free
+[^operator <<] are provided:
 
  template <
      class Tag,
@@ -52,7 +59,8 @@ To use directives with messages, different overloads of the free [^operator <<] 
  >
  inline
  basic_message<Tag> &
- operator << (basic_message<Tag> &message, const Directive &directive) {
+ operator << (basic_message<Tag> &message, 
+              const Directive &directive) {
      directive(message);
      return message;
  }
@@ -65,7 +73,11 @@ Client code looks like this:
    << body("Hello there chaps!")
    ;
 
-This approach allows the developers of the __cnl__ to write network code, and the library users to be able to specialize the message to suit their own requirements.  Run-time efficiency is good, because compilers will be able to provide optimizations.  An extra advantage is the expressiveness of the code.
+This approach allows the developers of the __cnl__ to write network
+code, and the library users to be able to specialize the message to
+suit their own requirements.  Run-time efficiency is good, because
+compilers will be able to provide optimizations.  An extra advantage
+is the expressiveness of the code.
 
 [heading Customizing __message__]
 
@@ -75,9 +87,12 @@ __message__ can be specialized based on three traits:
 * [^boost::network::ostringstream<Tag>]
 * [^boost::network::headers_container<Tag>]
 
-This means that __message__ is not bound to a particular string type.  Moreover, this mechanism allows developers to provide custom conversion handlers for data compression or encryption.
+This means that __message__ is not bound to a particular string type.
+Moreover, this mechanism allows developers to provide custom
+conversion handlers for data compression or encryption.
 
-The fine-grained design of the tags/traits mechanism is strongly influenced by __boost_type_traits__.
+The fine-grained design of the tags/traits mechanism is strongly
+influenced by __boost_type_traits__.
 
 [endsect]
 
