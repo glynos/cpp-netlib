@@ -34,6 +34,7 @@ namespace boost { namespace network { namespace http {
         boost::network::uri::http::uri uri_;
 
     public:
+        typedef Tag tag;
         typedef typename string<Tag>::type string_type;
 
         explicit basic_request(string_type const & uri_)
@@ -100,6 +101,7 @@ namespace boost { namespace network { namespace http {
      */
     template <>
     struct basic_request<tags::http_server> {
+        typedef tags::http_server tag;
         typedef string<tags::http_server>::type string_type;
         typedef vector<tags::http_server>::apply<request_header>::type vector_type;
         string_type method;

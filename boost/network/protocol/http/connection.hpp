@@ -210,7 +210,10 @@ namespace boost { namespace network { namespace http {
         void handle_read_body_contents(boost::system::error_code const & ec, size_t bytes_to_read, size_t bytes_transferred) {
             if (!ec) {
                 size_t difference = bytes_to_read - bytes_transferred;
-                request_.body.append(buffer_.begin(), buffer_.end());
+                array<char,BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator start = buffer_.begin(),
+                    past_end = start;
+                std::advance(past_end, bytes_to_read);
+                request_.body.append(buffer_.begin(), past_end);
                 if (difference == 0) {
                     handler_(request_, response_);
                     boost::asio::async_write(
@@ -246,6 +249,7 @@ namespace boost { namespace network { namespace http {
             if (!ec) {
                 boost::system::error_code ignored_ec;
                 socket_.shutdown(tcp::socket::shutdown_both, ignored_ec);
+                socket_.close(ignored_ec);
             }
         }
 
