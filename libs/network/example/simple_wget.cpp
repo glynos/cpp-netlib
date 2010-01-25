@@ -5,7 +5,7 @@
 
 
 //[ simple_wget_main
-/*
+/*`
   This is a very basic clone of wget.  It's missing a lot of
   features, such as content-type detection, but it does the
   fundamental things the same.

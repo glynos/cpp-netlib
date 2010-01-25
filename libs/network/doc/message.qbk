@@ -33,11 +33,11 @@ factors such as the string encoding type or memory usage.  For
 different reasons, its possible to assume a string implementation
 might be:
 
-# [^std::string]
-# [^std::wstring]
-# [^std::vector<boost::uint32_t>]
-# [@http://msdn.microsoft.com/en-us/library/ms174288.aspx [^CString]]
-# [@http://doc.trolltech.com/qstring.html [^QString]]
+# `std::string`
+# `std::wstring`
+# `std::vector<boost::uint32_t>`
+# [@http://msdn.microsoft.com/en-us/library/ms174288.aspx `CString`]
+# [@http://doc.trolltech.com/qstring.html `QString`]
 
 The __cnl__ uses tag dispatching to specialize the message interface
 at compile time.

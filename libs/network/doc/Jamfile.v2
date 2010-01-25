@@ -25,7 +25,7 @@ boostbook standalone
         # How far down we go with TOC's
         <xsl:param>generate.section.toc.level=10
         # Path for links to Boost:
-        <xsl:param>boost.root=http://www.boost.org
+        <xsl:param>boost.root=http://glynos.github.com/cpp-netlib
         # Path for libraries index:
         <xsl:param>boost.libraries=http://www.boost.org/libs/libraries.htm
         # Use the main Boost stylesheet:

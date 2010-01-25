@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2009 Glyn Matthews.
+  (C) Copyright 2009, 2010 Glyn Matthews.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -8,7 +8,22 @@
 
 [section:quick_start Quick Start]
 
-[import quick_start.cpp]
-[quick_start_main]
+[/ section:hello_world_server Hello World Server]
 
-[endsect]
+[heading Hello World Server]
+
+[import ../example/http/hello_world_server.cpp]
+[hello_world_server_main]
+
+[/ endsect] [/ hello_world_server]
+
+[/ section:hello_world_client Hello World Client]
+
+[heading Hello World Client]
+
+[import ../example/http/hello_world_client.cpp]
+[hello_world_client_main]
+
+[/ endsect] [/ hello_world_client]
+
+[endsect] [/ quick_start]

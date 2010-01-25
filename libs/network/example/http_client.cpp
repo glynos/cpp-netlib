@@ -5,7 +5,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 //[ http_client_main
-/*
+/*`
   This application takes a URL as a command line argument and prints
   the resource to the console.
 */

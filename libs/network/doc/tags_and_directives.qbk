@@ -12,7 +12,7 @@
 Attributes can be specialized in this way, but not class member
 functions.  To able to do this, the __cnl__ uses directives.
 Directives are already familiar in the C++ world as part of the I/O
-streams in the standard library ([^std::endl], [^std::flush] etc.).
+streams in the standard library (`std::endl`, `std::flush` etc.).
 For the __cnl__, directives are used to manipulate the message class.
 A tag aware directive might be implemented as such:
 
@@ -51,7 +51,7 @@ A tag aware directive might be implemented as such:
  }
 
 To use directives with messages, different overloads of the free
-[^operator <<] are provided:
+`operator <<` are provided:
 
  template <
      class Tag,
@@ -83,9 +83,9 @@ is the expressiveness of the code.
 
 __message__ can be specialized based on three traits:
 
-* [^boost::network::string<Tag>]
-* [^boost::network::ostringstream<Tag>]
-* [^boost::network::headers_container<Tag>]
+* `boost::network::string<Tag>`
+* `boost::network::ostringstream<Tag>`
+* `boost::network::headers_container<Tag>`
 
 This means that __message__ is not bound to a particular string type.
 Moreover, this mechanism allows developers to provide custom
