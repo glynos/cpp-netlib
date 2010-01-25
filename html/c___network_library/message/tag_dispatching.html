@@ -27,8 +27,8 @@
 <a name="c___network_library.message.tag_dispatching"></a><a class="link" href="tag_dispatching.html" title="Tag Dispatching"> Tag Dispatching</a>
 </h3></div></div></div>
 <p>
-        The <code class="literal">basic_message</code> template has a single argument (Tag).
-        Tags are useful because:
+        The <code class="computeroutput"><span class="identifier">basic_message</span></code> template
+        has a single argument (Tag). Tags are useful because:
       </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
@@ -44,11 +44,11 @@
         its possible to assume a string implementation might be:
       </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><code class="literal">std::string</code></li>
-<li class="listitem"><code class="literal">std::wstring</code></li>
-<li class="listitem"><code class="literal">std::vector&lt;boost::uint32_t&gt;</code></li>
-<li class="listitem"><a href="http://msdn.microsoft.com/en-us/library/ms174288.aspx" target="_top"><code class="literal">CString</code></a></li>
-<li class="listitem"><a href="http://doc.trolltech.com/qstring.html" target="_top"><code class="literal">QString</code></a></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">wstring</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">uint32_t</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><a href="http://msdn.microsoft.com/en-us/library/ms174288.aspx" target="_top"><code class="computeroutput"><span class="identifier">CString</span></code></a></li>
+<li class="listitem"><a href="http://doc.trolltech.com/qstring.html" target="_top"><code class="computeroutput"><span class="identifier">QString</span></code></a></li>
 </ol></div>
 <p>
         The C++ Network Library uses tag dispatching to specialize the message interface
@@ -80,7 +80,7 @@
 </span><span class="special">}</span> <span class="comment">// namespace boost
 </span></pre>
 <p>
-        This technique is extended to two more metafunctions that are used by <code class="literal">basic_message</code>:
+        This technique is extended to two more metafunctions that are used by <code class="computeroutput"><span class="identifier">basic_message</span></code>:
       </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
 <span class="keyword">namespace</span> <span class="identifier">network</span> <span class="special">{</span>

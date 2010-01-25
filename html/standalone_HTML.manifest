@@ -1,7 +1,5 @@
 index.html
 c___network_library/quick_start.html
-c___network_library/quick_start/hello_world_server.html
-c___network_library/quick_start/hello_world_client.html
 c___network_library/intro.html
 c___network_library/intro/motivation.html
 c___network_library/intro/objectives.html
@@ -17,7 +15,6 @@ c___network_library/protocol/http.html
 c___network_library/protocol/http/http_server_example.html
 c___network_library/protocol/http/http_client_example.html
 c___network_library/examples.html
-c___network_library/examples/http_client.html
 c___network_library/examples/simple_wget.html
 c___network_library/reference.html
 c___network_library/acknowledgements.html

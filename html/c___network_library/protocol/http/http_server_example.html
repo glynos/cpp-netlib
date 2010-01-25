@@ -64,7 +64,7 @@
 
     <span class="keyword">try</span> <span class="special">{</span>
         <span class="identifier">hello_world</span> <span class="identifier">handler</span><span class="special">;</span>
-        <span class="identifier">server</span> <span class="identifier">server_</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">],</span> <span class="identifier">handler</span><span class="special">);</span>
+ <span class="identifier">http</span><span class="special">::</span><span class="identifier">server</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;</span> <span class="identifier">server_</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">],</span> <span class="identifier">handler</span><span class="special">);</span>
         <span class="identifier">server_</span><span class="special">.</span><span class="identifier">run</span><span class="special">();</span>
     <span class="special">}</span>
     <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">exception</span> <span class="special">&amp;</span><span class="identifier">e</span><span class="special">)</span> <span class="special">{</span>
@@ -77,8 +77,22 @@
 </pre>
 <p>
         </p>
+<a name="c___network_library.protocol.http.http_server_example.http_server"></a><h6>
+<a name="id2725751"></a>
+          <a class="link" href="http_server_example.html#c___network_library.protocol.http.http_server_example.http_server">HTTP
+          Server</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">network</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">http</span> <span class="special">{</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Tag</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Handler</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">basic_server</span><span class="special">;</span>
+<span class="special">}}}</span>
+</pre>
+<p>
+          The <code class="computeroutput"><span class="identifier">server</span></code> encapsulates
+          the server side connections, manages the incoming data and can be configured
+          to handle incoming requests.
+        </p>
 <a name="c___network_library.protocol.http.http_server_example.http_request_handler"></a><h6>
-<a name="id2879462"></a>
+<a name="id2725895"></a>
           <a class="link" href="http_server_example.html#c___network_library.protocol.http.http_server_example.http_request_handler">HTTP
           Request Handler</a>
         </h6>
@@ -93,14 +107,27 @@
 </span>    <span class="special">}</span>
 <span class="special">};</span>
 </pre>
-<a name="c___network_library.protocol.http.http_server_example.http_server"></a><h6>
-<a name="id2879699"></a>
-          <a class="link" href="http_server_example.html#c___network_library.protocol.http.http_server_example.http_server">HTTP
-          Server</a>
+<p>
+          The request handler is a functor class that accepts as an argument an incoming
+          request and an outgoing response. An additional <code class="computeroutput"><span class="identifier">log</span></code>
+          member function is also required to be defined.
+        </p>
+<a name="c___network_library.protocol.http.http_server_example.running_the_server"></a><h6>
+<a name="id2726146"></a>
+          <a class="link" href="http_server_example.html#c___network_library.protocol.http.http_server_example.running_the_server">Running
+          the Server</a>
         </h6>
-<pre class="programlisting"><span class="identifier">server</span> <span class="identifier">server_</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">],</span> <span class="identifier">handler</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">hello_world</span> <span class="identifier">handler</span><span class="special">;</span>
+<span class="identifier">http</span><span class="special">::</span><span class="identifier">server</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;</span> <span class="identifier">server_</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">argv</span><span class="special">[</span><span class="number">2</span><span class="special">],</span> <span class="identifier">handler</span><span class="special">);</span>
 <span class="identifier">server_</span><span class="special">.</span><span class="identifier">run</span><span class="special">();</span>
 </pre>
+<p>
+          The <code class="computeroutput"><span class="identifier">hello_world</span></code> request
+          handler is given as a template argument to <code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">server</span></code>.
+          The first two constructor arguments are the address and port, and the
+          <code class="computeroutput"><span class="identifier">hello_world</span></code> handler object
+          is passed as the third argument.
+        </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

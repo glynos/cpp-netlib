@@ -64,11 +64,11 @@
 <p>
         </p>
 <p>
-          Before walking through exactly what is happening in this example, the principle
+          Before walking through exactly what is happening in this example, the principal
           components are described below:
         </p>
 <a name="c___network_library.protocol.http.http_client_example.http_request"></a><h6>
-<a name="id2880498"></a>
+<a name="id2727026"></a>
           <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example.http_request">HTTP
           Request</a>
         </h6>
@@ -78,11 +78,11 @@
 <span class="special">}}}</span>
 </pre>
 <p>
-          The <code class="literal">request</code> encapsulates information about the request
-          and the resource. It models the Message concept.
+          The <code class="computeroutput"><span class="identifier">request</span></code> encapsulates
+          information about the request and the resource. It models the Message concept.
         </p>
 <a name="c___network_library.protocol.http.http_client_example.http_client"></a><h6>
-<a name="id2880664"></a>
+<a name="id2727195"></a>
           <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example.http_client">HTTP
           Client</a>
         </h6>
@@ -92,12 +92,13 @@
 <span class="special">}}}</span>
 </pre>
 <p>
-          The <code class="literal">client</code> encapsulates the connection-mapping logic
-          between the domain and the underlying socket. Access to a resource is managed
-          through the <code class="literal">client</code> object.
+          The <code class="computeroutput"><span class="identifier">client</span></code> encapsulates
+          the connection-mapping logic between the domain and the underlying socket.
+          Access to a resource is managed through the <code class="computeroutput"><span class="identifier">client</span></code>
+          object.
         </p>
 <a name="c___network_library.protocol.http.http_client_example.http_response"></a><h6>
-<a name="id2880835"></a>
+<a name="id2727373"></a>
           <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example.http_response">HTTP
           Response</a>
         </h6>
@@ -107,11 +108,11 @@
 <span class="special">}}}</span>
 </pre>
 <p>
-          The <code class="literal">response</code> encapsulates the data received from the
-          server. It also models the Message concept.
+          The <code class="computeroutput"><span class="identifier">response</span></code> encapsulates
+          the data received from the server. It also models the Message concept.
         </p>
 <a name="c___network_library.protocol.http.http_client_example.http_client_walkthrough"></a><h6>
-<a name="id2881001"></a>
+<a name="id2727543"></a>
           <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example.http_client_walkthrough">HTTP
           Client Walkthrough</a>
         </h6>
@@ -136,63 +137,65 @@
         </p>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-            A <code class="literal">client</code> object manages the connection, unencumbering
-            the developer with this task;
+            A <code class="computeroutput"><span class="identifier">client</span></code> object manages
+            the connection, unencumbering the developer with this task;
           </li>
 <li class="listitem">
-            A <code class="literal">request</code> can be used with any instance of the <code class="literal">client</code>
-            without binding the <code class="literal">client</code> to any destination;
+            A <code class="computeroutput"><span class="identifier">request</span></code> can be used
+            with any instance of the <code class="computeroutput"><span class="identifier">client</span></code>
+            without binding the <code class="computeroutput"><span class="identifier">client</span></code>
+            to any destination;
           </li>
 <li class="listitem">
-            By decoupling the method from the <code class="literal">request</code> object it
-            allows developers to create requests that may be re-used (e.g. perform
-            a HEAD first; if the the headers don't fulfil a certain criteria, perform
-            a GET using the same resource).
+            By decoupling the method from the <code class="computeroutput"><span class="identifier">request</span></code>
+            object it allows developers to create requests that may be re-used (e.g.
+            perform a HEAD first; if the the headers don't fulfil a certain criteria,
+            perform a GET using the same resource).
           </li>
 </ol></div>
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">body</span><span class="special">(</span><span class="identifier">response</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 </pre>
 <p>
-          Once the request has been made, and the <code class="literal">client</code> returns
-          a <code class="literal">response</code> object, the rest is simple. This example
-          outputs the response body.
+          Once the request has been made, and the <code class="computeroutput"><span class="identifier">client</span></code>
+          returns a <code class="computeroutput"><span class="identifier">response</span></code> object,
+          the rest is simple. This example outputs the response body.
         </p>
-<a name="c___network_library.protocol.http.http_client_example.using__literal_http__client__literal_"></a><h6>
-<a name="id2881300"></a>
-          <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example.using__literal_http__client__literal_">Using
-          <code class="literal">http::client</code></a>
+<a name="c___network_library.protocol.http.http_client_example.using__code__phrase_role__identifier__http__phrase__phrase_role__special______phrase__phrase_role__identifier__client__phrase___code_"></a><h6>
+<a name="id2727868"></a>
+          <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example.using__code__phrase_role__identifier__http__phrase__phrase_role__special______phrase__phrase_role__identifier__client__phrase___code_">Using
+          <code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span></code></a>
         </h6>
 <p>
-          The <code class="literal">http::client</code> supports the following operations:
+          The <code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span></code> supports the following operations:
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem"><code class="literal">http::client::head</code></li>
-<li class="listitem"><code class="literal">http::client::get</code></li>
-<li class="listitem"><code class="literal">http::client::post</code></li>
-<li class="listitem"><code class="literal">http::client::put</code></li>
-<li class="listitem"><code class="literal">http::client::delete_</code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">head</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">get</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">post</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">put</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">delete_</span></code></li>
 </ul></div>
 <p>
           HTTP features can be enabled by using constructor arguments:
         </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
-<li class="listitem"><code class="literal">http::client(http::client::cache_resolved)</code></li>
-<li class="listitem"><code class="literal">http::client(http::client::follow_redirect)</code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">(</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">cache_resolved</span><span class="special">)</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">(</span><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">follow_redirect</span><span class="special">)</span></code></li>
 </ul></div>
-<a name="c___network_library.protocol.http.http_client_example._literal_http__client__cache_resolved__literal_"></a><h6>
-<a name="id2881407"></a>
-          <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example._literal_http__client__cache_resolved__literal_"><code class="literal">http::client::cache_resolved</code></a>
+<a name="c___network_library.protocol.http.http_client_example._code__phrase_role__identifier__http__phrase__phrase_role__special______phrase__phrase_role__identifier__client__phrase__phrase_role__special______phrase__phrase_role__identifier__cache_resolved__phrase___code_"></a><h6>
+<a name="id2728189"></a>
+          <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example._code__phrase_role__identifier__http__phrase__phrase_role__special______phrase__phrase_role__identifier__client__phrase__phrase_role__special______phrase__phrase_role__identifier__cache_resolved__phrase___code_"><code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">cache_resolved</span></code></a>
         </h6>
 <p>
           This argument enables the caching of resolved endpoints and prevents the
           client from resolving IP addresses of previously resolved hostnames.
         </p>
-<a name="c___network_library.protocol.http.http_client_example._literal_http__client__follow_redirect_s___literal_"></a><h6>
-<a name="id2881440"></a>
-          <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example._literal_http__client__follow_redirect_s___literal_"><code class="literal">http::client::follow_redirect(s)</code></a>
+<a name="c___network_library.protocol.http.http_client_example._code__phrase_role__identifier__http__phrase__phrase_role__special______phrase__phrase_role__identifier__client__phrase__phrase_role__special______phrase__phrase_role__identifier__follow_redirect__phrase__phrase_role__special_____phrase__phrase_role__identifier__s__phrase__phrase_role__special_____phrase___code_"></a><h6>
+<a name="id2728254"></a>
+          <a class="link" href="http_client_example.html#c___network_library.protocol.http.http_client_example._code__phrase_role__identifier__http__phrase__phrase_role__special______phrase__phrase_role__identifier__client__phrase__phrase_role__special______phrase__phrase_role__identifier__follow_redirect__phrase__phrase_role__special_____phrase__phrase_role__identifier__s__phrase__phrase_role__special_____phrase___code_"><code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">follow_redirect</span><span class="special">(</span><span class="identifier">s</span><span class="special">)</span></code></a>
         </h6>
 <p>
-          <code class="literal">http::client::follow_redirects</code> / <code class="literal">http::client::follow_redirect</code>
+          <code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">follow_redirects</span></code> / <code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">client</span><span class="special">::</span><span class="identifier">follow_redirect</span></code>
           follow HTTP redirect(s) (300..307) by looking at the "Location"
           header provided by the response(s); headers present in the original request
           are preserved in the subsequent request(s).
