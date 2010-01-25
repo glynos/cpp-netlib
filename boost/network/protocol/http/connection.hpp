@@ -85,7 +85,8 @@ namespace boost { namespace network { namespace http {
         void handle_read_headers(system::error_code const &ec, size_t bytes_transferred) {
             if (!ec) {
                 tribool done;
-                tie(done,tuples::ignore) = parser_.parse_headers(request_, buffer_.data(), buffer_.data() + bytes_transferred);
+                array<char, BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator new_start;
+                tie(done,new_start) = parser_.parse_headers(request_, buffer_.data(), buffer_.data() + bytes_transferred);
                 if (done) {
                     if (request_.method[0] == 'P') {
                         // look for the content-length header
@@ -132,19 +133,25 @@ namespace boost { namespace network { namespace http {
                         }
 
                         if (content_length != 0) {
-                            socket_.async_read_some(
-                                boost::asio::buffer(buffer_),
-                                wrapper_.wrap(
-                                    bind(
-                                        &connection<Tag,Handler>::handle_read_body_contents,
-                                        connection<Tag,Handler>::shared_from_this(),
-                                        boost::asio::placeholders::error,
-                                        content_length,
-                                        boost::asio::placeholders::bytes_transferred
+                            if (new_start != (buffer_.begin() + bytes_transferred)) {
+                                request_.body.append(new_start, buffer_.begin() + bytes_transferred);
+                                content_length -= std::distance(new_start, buffer_.begin() + bytes_transferred);
+                            }
+                            if (content_length > 0) {
+                                socket_.async_read_some(
+                                    boost::asio::buffer(buffer_),
+                                    wrapper_.wrap(
+                                        bind(
+                                            &connection<Tag,Handler>::handle_read_body_contents,
+                                            connection<Tag,Handler>::shared_from_this(),
+                                            boost::asio::placeholders::error,
+                                            content_length,
+                                            boost::asio::placeholders::bytes_transferred
+                                            )
                                         )
-                                    )
-                                );
-                            return;
+                                    );
+                                return;
+                            }
                         }
 
                         handler_(request_, response_);
