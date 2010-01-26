@@ -5,18 +5,17 @@
 
 
 //[ hello_world_client_main
-/*
-  This is a part of the 'Hello World' example.
-
-  See also `hello_world_server.cpp`.
+/*`
+  This is a part of the 'Hello World' example.  We create a client
+  object and make a single HTTP request.  If we use make this request
+  to the `hello_world_server`, then the output is simply "Hello,
+  World!".
  */
-#include <boost/network.hpp>
-#include <boost/network/uri/http/uri.hpp>
+#include <boost/network/protocol/http/client.hpp>
 #include <iostream>
 
 
 namespace http = boost::network::http;
-namespace uri = boost::network::uri;
 
 
 int
@@ -28,10 +27,14 @@ main(int argc, char *argv[]) {
     }
 
     try {
+        /*<< Creates the client. >>*/
         http::client client;
-        const char *uri = argv[1];
-        http::client::request request(uri);
+        /*<< Creates a request using a URI supplied on the command
+             line. >>*/
+        http::client::request request(argv[1]);
+        /*<< Gets a response from the HTTP server. >>*/
         http::client::response response = client.get(request);
+        /*<< Prints the response body to the console. >>*/
         std::cout << boost::network::body(response) << std::endl;
     }
     catch (std::exception &e) {
@@ -42,4 +45,3 @@ main(int argc, char *argv[]) {
     return 0;
 }
 //]
- 

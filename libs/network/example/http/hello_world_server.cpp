@@ -6,30 +6,33 @@
 //
 
 //[ hello_world_server_main
-/*
+/*`
   This is a part of the 'Hello World' example. It's used to
-  demonstrate how easy it is to set up an HTTP server.
-
-  See also `hello_world_client.cpp`.
+  demonstrate how easy it is to set up an HTTP server.  All we do in
+  this example is create a request handler and run the server.
  */
-#include <cstdlib>
-#include <boost/config/warning_disable.hpp>
 #include <boost/network/protocol/http/server.hpp>
-#include <boost/assign/list_of.hpp>
-#include <string>
+#include <iostream>
+f
 
 namespace http = boost::network::http;
 
 
+/*<< Defines the server. >>*/
 struct hello_world;
 typedef http::server<hello_world> server;
 
-
+/*<< Defines the request handler.  It's a class that defines two
+     functions, `operator()` and `log()` >>*/
 struct hello_world {
+    /*<< This is the function that handles the incoming request. >>*/
     void operator() (server::request const &request,
                      server::response &response) {
-        response = server::response::stock_reply(server::response::ok, "Hello, World!");
+        response = server::response::stock_reply(
+            server::response::ok, "Hello, World!");
     }
+    /*<< It's necessary to define a log function, but it's ignored in
+         this example. >>*/
     void log(...) {
         // do nothing
     }
@@ -44,8 +47,11 @@ int main(int argc, char * argv[]) {
     }
 
     try {
+        /*<< Creates the request handler. >>*/
         hello_world handler;
+        /*<< Creates the server. >>*/
         server server_(argv[1], argv[2], handler);
+        /*<< Runs the server. >>*/
         server_.run();
     }
     catch (std::exception &e) {

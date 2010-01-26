@@ -7,35 +7,130 @@
 
 
 [section:http HTTP]
-The __cnl__ provides direct support for HTTP.   As a motivating
-example, here is the code again from the __quick_start__.
 
- #include <boost/network/protocol/http.hpp>
+[section:http_server_example HTTP Server]
+
+Here is the server code again from the __quick_start__.
+
+``
+ #include <boost/network/protocol/http/server.hpp>
  #include <iostream>
-
- int
- main(int argc, char *argv[]) {
-     using boost::network;
-
-     http::request request("http://www.boost.org/");
-     http::client client;
-     http::response response = client.get(request);
-
-     // print response headers
-     headers_range<http::response>::type hdrs = headers(response);
-     boost::range_iterator<headers_range<http::response>::type>::type
-         it = boost::begin(hdrs), end = boost::end(hdrs);
-     for (; it != end; ++it) {
-         std::cout << it->first << ": " << it->second << std::endl;
+ 
+ 
+ namespace http = boost::network::http;
+ 
+ 
+ struct hello_world;
+ typedef http::server<hello_world> server;
+ 
+ struct hello_world {
+     void operator() (server::request const &request,
+                      server::response &response) {
+         response = server::response::stock_reply(
+             server::response::ok, "Hello, World!");
      }
-
-     // print response body
-     std::cout << body(response) << std::endl;
+     void log(...) {
+         // do nothing
+     }
+ };
+ 
+ 
+ int main(int argc, char * argv[]) {
+     
+     if (argc != 3) {
+         std::cerr << "Usage: " << argv[0] << " address port" << std::endl;
+         return 1;
+     }
+ 
+     try {
+         hello_world handler;
+	 http::server<hello_world> server_(argv[1], argv[2], handler);
+         server_.run();
+     }
+     catch (std::exception &e) {
+         std::cerr << e.what() << std::endl;
+         return 1;
+     }
+     
      return 0;
  }
+``
+
+[heading HTTP Server]
+
+ namespace boost { namespace network { namespace http {
+ template <class Tag, class Handler> class basic_server;
+ }}}
+
+The `server` encapsulates the server side connections, manages the
+incoming data and can be configured to handle incoming requests.
+
+[heading HTTP Request Handler]
+
+ struct hello_world {
+     void operator() (server::request const &request,
+                      server::response &response) {
+         response = server::response::stock_reply(
+             server::response::ok, "Hello, World!");
+     }
+     void log(...) {
+         // do nothing
+     }
+ };
+
+The request handler is a functor class that accepts as an argument an
+incoming request and an outgoing response.  An additional `log` member
+function is also required to be defined.
+
+[heading Running the Server]
+
+ hello_world handler;
+ http::server<hello_world> server_(argv[1], argv[2], handler);
+ server_.run();
+
+The `hello_world` request handler is given as a template argument to
+`http::server`.  The first two constructor arguments are the address
+and port, and the `hello_world` handler object is passed as the third
+argument.
+
+[endsect] [/ http_server_example]
+
+[section:http_client_example HTTP Client]
+
+Here is the client code again from the __quick_start__.
+
+``
+ #include <boost/network/protocol/http/client.hpp>
+ #include <iostream>
+ 
+ 
+ namespace http = boost::network::http;
+ 
+ 
+ int
+ main(int argc, char *argv[]) {
+     if (argc != 2) {
+         std::cerr << "Usage: " << argv[0] << " url" << std::endl;
+         return 1;
+     }
+ 
+     try {
+         http::client client;
+         http::client::request request(argv[1]);
+         http::client::response response = client.get(request);
+         std::cout << boost::network::body(response) << std::endl;
+     }
+     catch (std::exception &e) {
+         std::cerr << e.what() << std::endl;
+         return 1;
+     }
+     
+     return 0;
+ }
+``
 
 Before walking through exactly what is happening in this example, the
-principle components are described below:
+principal components are described below:
 
 [heading HTTP Request]
 
@@ -44,7 +139,7 @@ principle components are described below:
      typedef basic_request<tags::default_> request;
  }}}
 
-The [^request] encapsulates information about the request and the
+The `request` encapsulates information about the request and the
 resource.  It models the Message concept.
 
 [heading HTTP Client]
@@ -54,9 +149,9 @@ resource.  It models the Message concept.
      typedef basic_client<tags::default_> client;
  }}}
 
-The [^client] encapsulates the connection-mapping logic between the
+The `client` encapsulates the connection-mapping logic between the
 domain and the underlying socket.  Access to a resource is managed
-through the [^client] object.
+through the `client` object.
 
 [heading HTTP Response]
 
@@ -65,19 +160,20 @@ through the [^client] object.
      typedef basic_response<tags::default_> response;
  }}}
 
-The [^response] encapsulates the data received from the server.  It
+The `response` encapsulates the data received from the server.  It
 also models the Message concept.
 
-[heading Walkthrough]
-
- http::request request("http://www.boost.org/");
-
-This line frames the request for the resource __boost_org__.
+[heading HTTP Client Walkthrough]
 
  http::client client;
 
 Then a client object is created that handles all HTTP requests and
 responses.
+
+ http::request request(argv[1]);
+
+This line frames the request for the resource given as a command line
+argument.
 
  http::response response = client.get(request);
 
@@ -86,54 +182,47 @@ easy.  All HTTP methods are supported (HEAD, GET, POST, PUT, DELETE).
 
 There are several advantages to this design:
 
-# A [^client] object manages the connection, unencumbering the
+# A `client` object manages the connection, unencumbering the
   developer with this task;
-# A [^request] can be used with any instance of the [^client] without
-  binding the [^client] to any destination;
-# By decoupling the method from the [^request] object it allows
+# A `request` can be used with any instance of the `client` without
+  binding the `client` to any destination;
+# By decoupling the method from the `request` object it allows
   developers to create requests that may be re-used (e.g. perform a
   HEAD first; if the the headers don't fulfil a certain criteria,
   perform a GET using the same resource).
 
- // print response headers
- headers_range<http::response>::type hdrs = headers(response);
- boost::range_iterator<headers_range<http::response>::type>::type
-     it = boost::begin(hdrs), end = boost::end(hdrs);
- for (; it != end; ++it) 
-    std::cout << it->first << ": " << it->second << std::endl;
- }
-
- // print response body
  std::cout << body(response) << std::endl;
 
-Once the request has been made, and the [^client] returns a
-[^response] object, the rest is simple.  This example outputs all the
-response headers and body, in this case just the Boost homepage.
+Once the request has been made, and the `client` returns a
+`response` object, the rest is simple.  This example outputs the
+response body.
 
-[heading Using [^http::client]]
+[heading Using `http::client`]
 
-The [^http::client] supports the following operations:
+The `http::client` supports the following operations:
 
-* [^http::client::head]
-* [^http::client::get]
-* [^http::client::post]
-* [^http::client::put]
-* [^http::client::delete_]
+* `http::client::head`
+* `http::client::get`
+* `http::client::post`
+* `http::client::put`
+* `http::client::delete_`
 
 HTTP features can be enabled by using constructor arguments:
 
-* [^http::client(http::client::cache_resolved)]
-* [^http::client(http::client::follow_redirect)]
+* `http::client(http::client::cache_resolved)`
+* `http::client(http::client::follow_redirect)`
 
-[h5 [^http::client::cache_resolved]]
+[h5 `http::client::cache_resolved`]
 This argument enables the caching of resolved endpoints and prevents
 the client from resolving IP addresses of previously resolved
 hostnames.
 
-[h5 [^http::client::follow_redirect(s)]]
-[^http::client::follow_redirects] / [^http::client::follow_redirect]
+[h5 `http::client::follow_redirect(s)`]
+`http::client::follow_redirects` / `http::client::follow_redirect`
 follow HTTP redirect(s) (300..307) by looking at the "Location" header
 provided by the response(s); headers present in the original request
 are preserved in the subsequent request(s).
 
-[endsect] [/http]
+[endsect] [/ http_client_example]
+
+[endsect] [/ http]
