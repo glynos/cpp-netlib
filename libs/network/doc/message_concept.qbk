@@ -1,0 +1,46 @@
+[/
+  (C) Copyright 2010 Glyn Matthews.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[section:message_concept Message Concept]
+
+__message__ is
+[@http://www.boost.org/doc/html/DefaultConstructible.html
+DefaultConstructible],
+[@http://www.boost.org/doc/html/CopyConstructible.html
+CopyConstructible] and [@http://www.boost.org/doc/html/Assignable.html
+Assignable].
+
+[heading Description]
+
+A type models the Message Concept if the type adheres to the following
+usage semantics, and is DefaultConstructible and EqualityComparable.
+
+[variablelist Notation
+    [[`M`] [A Message Type.]]
+    [[`m`, `m_`] [A Message Type instance.]]
+    [[`S`] [A String Type.]]
+    [[`s`] [A String Type instance.]]
+    [[`O`] [An Ostringstream Type.]]
+    [[`o`] [An Ostringstream Type instance.]]
+    [[`C`] [A Header Container Type.]]
+    [[`c`] [A Header Container Type instance.]]
+]
+
+[heading Valid Expressions]
+
+[table
+    [[Expression]         [Return Type]   [Description]]
+    [[`M m_(m);`]         []              [M must be Copy constructible.]]
+    [[`M m_; m_ = m;`]    []              [M must be Assignable.]]
+    [[`swap(m, m_);`]     [void]          [Swap should be availabe via ADL.]]
+    [[`M::string_type`]   [S]             [M should have a nested type `string_type` of type `S`.]]
+    [[`M::headers_container_type`] [C]    [M should have a nested type `headers_container_type` of type `C`.]]
+]
+
+
+[endsect] [/ message_concept]

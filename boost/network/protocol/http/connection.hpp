@@ -45,11 +45,6 @@ namespace boost { namespace network { namespace http {
         , socket_(service_)
         , wrapper_(service_)
         {
-            try {
-                socket_.set_option(tcp::no_delay(true)); // Don't delay writing
-            } catch (system::system_error & e) {
-                handler_.log(e.what());
-            }
         }
 
         tcp::socket & socket() {
@@ -62,6 +57,9 @@ namespace boost { namespace network { namespace http {
             // and then pass that request object to the
             // handler_ instance.
             //
+            boost::system::error_code option_error;
+            socket_.set_option(tcp::no_delay(true), option_error);
+            if (option_error) handler_.log(system::system_error(option_error).what());
             socket_.async_read_some(
                 boost::asio::buffer(buffer_),
                 wrapper_.wrap(
@@ -87,7 +85,8 @@ namespace boost { namespace network { namespace http {
         void handle_read_headers(system::error_code const &ec, size_t bytes_transferred) {
             if (!ec) {
                 tribool done;
-                tie(done,tuples::ignore) = parser_.parse_headers(request_, buffer_.data(), buffer_.data() + bytes_transferred);
+                array<char, BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator new_start;
+                tie(done,new_start) = parser_.parse_headers(request_, buffer_.data(), buffer_.data() + bytes_transferred);
                 if (done) {
                     if (request_.method[0] == 'P') {
                         // look for the content-length header
@@ -134,21 +133,25 @@ namespace boost { namespace network { namespace http {
                         }
 
                         if (content_length != 0) {
-                            async_read(
-                                socket_,
-                                boost::asio::buffer(buffer_),
-                                boost::asio::transfer_at_least(content_length),
-                                wrapper_.wrap(
-                                    bind(
-                                        &connection<Tag,Handler>::handle_read_body_contents,
-                                        connection<Tag,Handler>::shared_from_this(),
-                                        boost::asio::placeholders::error,
-                                        content_length,
-                                        boost::asio::placeholders::bytes_transferred
+                            if (new_start != (buffer_.begin() + bytes_transferred)) {
+                                request_.body.append(new_start, buffer_.begin() + bytes_transferred);
+                                content_length -= std::distance(new_start, buffer_.begin() + bytes_transferred);
+                            }
+                            if (content_length > 0) {
+                                socket_.async_read_some(
+                                    boost::asio::buffer(buffer_),
+                                    wrapper_.wrap(
+                                        bind(
+                                            &connection<Tag,Handler>::handle_read_body_contents,
+                                            connection<Tag,Handler>::shared_from_this(),
+                                            boost::asio::placeholders::error,
+                                            content_length,
+                                            boost::asio::placeholders::bytes_transferred
+                                            )
                                         )
-                                    )
-                                );
-                            return;
+                                    );
+                                return;
+                            }
                         }
 
                         handler_(request_, response_);
@@ -210,7 +213,10 @@ namespace boost { namespace network { namespace http {
         void handle_read_body_contents(boost::system::error_code const & ec, size_t bytes_to_read, size_t bytes_transferred) {
             if (!ec) {
                 size_t difference = bytes_to_read - bytes_transferred;
-                request_.body.append(buffer_.begin(), buffer_.end());
+                array<char,BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator start = buffer_.begin(),
+                    past_end = start;
+                std::advance(past_end, std::min(bytes_to_read,bytes_transferred));
+                request_.body.append(buffer_.begin(), past_end);
                 if (difference == 0) {
                     handler_(request_, response_);
                     boost::asio::async_write(
@@ -246,6 +252,7 @@ namespace boost { namespace network { namespace http {
             if (!ec) {
                 boost::system::error_code ignored_ec;
                 socket_.shutdown(tcp::socket::shutdown_both, ignored_ec);
+                socket_.close(ignored_ec);
             }
         }
 

@@ -224,12 +224,14 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void close_socket() { 
             if (is_open()) {
-                socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both);
-                socket_.lowest_layer().close();
+                boost::system::error_code ignored;
+                socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
             } 
         }
 
-        ~https_sync_connection() {}
+        ~https_sync_connection() {
+            close_socket();
+        }
 
         private:
         resolver_type & resolver_;
@@ -249,8 +251,6 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         http_sync_connection(resolver_type & resolver, resolver_function_type resolve)
         : connection_base(), resolver_(resolver), resolve_(resolve), socket_(resolver.io_service()) { }
-
-        ~http_sync_connection() {}
 
         void init_socket(string_type const & hostname, string_type const & port) {
             connection_base::init_socket(socket_, resolver_, hostname, port, resolve_);
@@ -276,7 +276,16 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         bool is_open() { return socket_.is_open(); }
 
-        void close_socket() { if (is_open()) { socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both); socket_.close(); } }
+        void close_socket() {
+            if (is_open()) {
+                boost::system::error_code ignored;
+                socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
+            }
+        }
+
+        ~http_sync_connection() {
+            close_socket();
+        }
 
         private:
 

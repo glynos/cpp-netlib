@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2009 Glyn Matthews.
+  (C) Copyright 2009, 2010 Glyn Matthews.
                 2009 Dean Michael Berris.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
@@ -13,79 +13,14 @@ The library includes a URI object and parser implementation that
 allows users of the library to easily interact with different
 kinds of valid URI formats.
 
+__uri__ is presented below:
+[import uri.cpp]
+[boost_network_uri]
+
 Currently the library supports a bare URI implementation that
 only parsers the scheme and leaves the scheme specific part as is,
 as well as a very liberal HTTP URI parser. The HTTP URI object only
 supports absolute URIs that start with either 'http' or 'https'.
-
-[section:concepts URI Concepts]
-
-This page describes the URI Concepts implemented within cpp-netlib.
-The following concepts are also implemented as Boost.Concept_check
-types enforced by the URI library.
-
-URI Concepts are organized into a hierarchy of conepts.
-
-[section:uri_concept URI]
-
-[heading Description]
-
-A type models the URI Concept if the type adheres to the following
-usage semantics, and is DefaultConstructible and EqualityComparable.
-
-[variablelist Notation
-    [[`U`] [A URI Type.]]
-    [[`u`,`u_`] [A URI Type instance.]]
-    [[`S`] [A String Type.]]
-    [[`s`] [A String Type instance.]]
-]
-
-[heading Valid Expressions]
-
-For any URI, the following expressions must be valid:
-
-[table
-    [[Expression]   [Return Type]   [Description]]
-    [[`U u_(u)`]      []              [U must be Copy constructible.]]
-    [[`U u_(s)`]      []              [U can be constructed from a string `s`.]]
-    [[`swap(u,u_)`]   [void]          [Swap should be availabe via ADL.]]
-    [[`protocol(u)`]  [S]             [Return the protocol part of the URI.]]
-    [[`rest(u)`]      [S]             [Return the rest of the URI, excluding the protocol part.]]
-    [[`valid(u)`]     [bool]          [Return true whether the URI is a valid URI.]]
-    [[`U::string_type`] [S]           [U should have a nested type `string_type` of type `S`.]]
-]
-
-[endsect] [/uri_concept]
-
-[section:http_uri HTTP URI]
-
-A type models the HTTP URI Concept if the type adheres to the following
-usage semantics, and if the type also models the URI Concept.
-
-[variablelist Notation
-    [[`H`] [An HTTP URI Type.]]
-    [[`h`,`h_`] [An HTTP URI Type instance.]]
-    [[`S`] [A String Type.]]
-    [[`s`] [A String Type instance.]]
-]
-
-[heading Valid Expressions]
-
-For any HTTP URI, the following expressions must be valid:
-
-[table
-    [[Expression]   [Return Type]   [Description]]
-    [[`user_info(h)`] [S]           [Retrieve the user-info part of the HTTP URI.]]
-    [[`host(h)`]    [S]             [Retrieve the host part of the HTTP URI.]]
-    [[`port(h)`]    [uint32_t]      [Retrieve the port part of the HTTP URI.]]
-    [[`path(h)`]    [S]             [Retrieve the path part of the HTTP URI.]]
-    [[`query(h)`]   [S]             [Retrieve the query part of the HTTP URI.]]
-    [[`fragment(h)`][S]             [Retrieve the fragment part of the HTTP URI.]]
-]
-
-[endsect] [/http_uri]
-
-[endsect] [/concepts]
 
 [endsect] [/uri]
 

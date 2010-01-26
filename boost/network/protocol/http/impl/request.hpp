@@ -34,6 +34,7 @@ namespace boost { namespace network { namespace http {
         boost::network::uri::http::uri uri_;
 
     public:
+        typedef Tag tag;
         typedef typename string<Tag>::type string_type;
 
         explicit basic_request(string_type const & uri_)
@@ -91,11 +92,6 @@ namespace boost { namespace network { namespace http {
 
     };
 
-    template <class Tag>
-    inline void swap(basic_request<Tag> & lhs, basic_request<Tag> & rhs) {
-        lhs.swap(rhs);
-    }
-
     /** This is the implementation of a POD request type
      *  that is specificially used by the HTTP server
      *  implementation. This fully specializes the
@@ -104,8 +100,8 @@ namespace boost { namespace network { namespace http {
      *  reasons.
      */
     template <>
-    class basic_request<tags::http_server> {
-        public:
+    struct basic_request<tags::http_server> {
+        typedef tags::http_server tag;
         typedef string<tags::http_server>::type string_type;
         typedef vector<tags::http_server>::apply<request_header>::type vector_type;
         string_type method;
@@ -114,18 +110,22 @@ namespace boost { namespace network { namespace http {
         boost::uint8_t http_version_minor;
         vector_type headers;
         string_type body;
+
+        void swap(basic_request & r) {
+            using std::swap;
+            swap(method, r.method);
+            swap(uri, r.uri);
+            swap(http_version_major, r.http_version_major);
+            swap(http_version_minor, r.http_version_minor);
+            swap(headers, r.headers);
+            swap(body, r.body);
+        }
     };
 
-    template <>
-    inline void swap<tags::http_server>(basic_request<tags::http_server> & l, basic_request<tags::http_server> & r) {
-        using std::swap;
-        swap(l.method, r.method);
-        swap(l.uri, r.uri);
-        swap(l.http_version_major, r.http_version_major);
-        swap(l.http_version_minor, r.http_version_minor);
-        swap(l.headers, r.headers);
-        swap(l.body, r.body);
-    };
+    template <class Tag>
+    inline void swap(basic_request<Tag> & lhs, basic_request<Tag> & rhs) {
+        lhs.swap(rhs);
+    }
 
 } // namespace http
 
@@ -134,3 +134,4 @@ namespace boost { namespace network { namespace http {
 } // namespace boost
 
 #endif // __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
+
