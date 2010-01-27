@@ -78,7 +78,7 @@
 <p>
         </p>
 <a name="c___network_library.protocol.http.http_server_example.http_server"></a><h6>
-<a name="id2725751"></a>
+<a name="id3111862"></a>
           <a class="link" href="http_server_example.html#c___network_library.protocol.http.http_server_example.http_server">HTTP
           Server</a>
         </h6>
@@ -92,7 +92,7 @@
           to handle incoming requests.
         </p>
 <a name="c___network_library.protocol.http.http_server_example.http_request_handler"></a><h6>
-<a name="id2725895"></a>
+<a name="id3112007"></a>
           <a class="link" href="http_server_example.html#c___network_library.protocol.http.http_server_example.http_request_handler">HTTP
           Request Handler</a>
         </h6>
@@ -113,7 +113,7 @@
           member function is also required to be defined.
         </p>
 <a name="c___network_library.protocol.http.http_server_example.running_the_server"></a><h6>
-<a name="id2726146"></a>
+<a name="id3112258"></a>
           <a class="link" href="http_server_example.html#c___network_library.protocol.http.http_server_example.running_the_server">Running
           the Server</a>
         </h6>
@@ -127,6 +127,39 @@
           The first two constructor arguments are the address and port, and the
           <code class="computeroutput"><span class="identifier">hello_world</span></code> handler object
           is passed as the third argument.
+        </p>
+<a name="c___network_library.protocol.http.http_server_example.using__code__phrase_role__identifier__http__phrase__phrase_role__special______phrase__phrase_role__identifier__server__phrase___code_"></a><h6>
+<a name="id3112437"></a>
+          <a class="link" href="http_server_example.html#c___network_library.protocol.http.http_server_example.using__code__phrase_role__identifier__http__phrase__phrase_role__special______phrase__phrase_role__identifier__server__phrase___code_">Using
+          <code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">server</span></code></a>
+        </h6>
+<p>
+          While this example shows how easy it is to create and use a single server
+          instance, typically we want to do a lot more. An embedder might store several
+          <code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">server</span></code> instances and call their <code class="computeroutput"><span class="identifier">run</span></code> functions in a thread pool.
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">http</span><span class="special">::</span><span class="identifier">basic_server</span></code> can be further extended
+          according to the supplied tag, so that it may implement specific functionality
+          including, but not limited to:
+        </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            HTTP 1.0 only or HTTP 1.1 only
+          </li>
+<li class="listitem">
+            WebDAV support
+          </li>
+<li class="listitem">
+            Static files
+          </li>
+<li class="listitem">
+            Request pipelining
+          </li>
+</ul></div>
+<p>
+          As the project continues to develop, more of this functionality will be
+          implemented.
         </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
