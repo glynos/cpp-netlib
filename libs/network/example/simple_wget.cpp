@@ -1,4 +1,4 @@
-//            Copyright (c) Glyn Matthews 2009.
+//            Copyright (c) Glyn Matthews 2009, 2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -10,11 +10,11 @@
   features, such as content-type detection, but it does the
   fundamental things the same.
   
-  It demonstrates the use the http::uri and the http::client.
+  It demonstrates the use the `http::uri` and the `http::client`.
 */
 
 
-#include <boost/network.hpp>
+#include <boost/network/protocol/http/client.hpp>
 #include <boost/network/uri/http/uri.hpp>
 #include <string>
 #include <fstream>

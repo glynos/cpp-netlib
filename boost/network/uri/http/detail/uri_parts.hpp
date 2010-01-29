@@ -8,6 +8,8 @@
 
 #include <boost/network/uri/detail/uri_parts.hpp>
 #include <boost/network/traits/string.hpp>
+#include <boost/optional.hpp>
+#include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace uri { 
 

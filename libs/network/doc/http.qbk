@@ -93,6 +93,25 @@ The `hello_world` request handler is given as a template argument to
 and port, and the `hello_world` handler object is passed as the third
 argument.
 
+[heading Using `http::server`]
+
+While this example shows how easy it is to create and use a single
+server instance, typically we want to do a lot more.  An embedder
+might store several `http::server` instances and call their `run`
+functions in a thread pool.
+
+`http::basic_server` can be further extended according to the supplied
+tag, so that it may implement specific functionality including, but
+not limited to:
+
+* HTTP 1.0 only or HTTP 1.1 only
+* WebDAV support
+* Static files
+* Request pipelining
+
+As the project continues to develop, more of this functionality will
+be implemented.
+
 [endsect] [/ http_server_example]
 
 [section:http_client_example HTTP Client]
@@ -222,6 +241,9 @@ hostnames.
 follow HTTP redirect(s) (300..307) by looking at the "Location" header
 provided by the response(s); headers present in the original request
 are preserved in the subsequent request(s).
+
+As with the `http::server`, the client can be extended to support
+different characteristics.
 
 [endsect] [/ http_client_example]
 
