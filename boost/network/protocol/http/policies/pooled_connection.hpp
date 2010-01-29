@@ -88,6 +88,13 @@ namespace boost { namespace network { namespace http {
                         pimpl->read_body(response_, response_buffer);
                     }
 
+                    typename headers_range<basic_response<Tag> >::type connection_range = headers(response_)["Connection"];
+                    if (version_major == 1 && version_minor == 1 && !empty(connection_range) && begin(connection_range)->second == string_type("close")) {
+                        pimpl->close_socket();
+                    } else if (version_major == 1 && version_minor == 0) {
+                        pimpl->close_socket();
+                    }
+
                     if (connection_follow_redirect_) {
                         boost::uint16_t status = response_.status();
                         if (status >= 300 && status <= 307) {
@@ -101,11 +108,6 @@ namespace boost { namespace network { namespace http {
                                 continue;
                             } else throw std::runtime_error("Location header not defined in redirect response.");
                         }
-                    }
-
-                    typename headers_range<basic_response<Tag> >::type connection_range = headers(response_)["Connection"];
-                    if (!empty(connection_range) && begin(connection_range)->second == string_type("close")) {
-                        pimpl->close_socket();
                     }
 
                     return response_;

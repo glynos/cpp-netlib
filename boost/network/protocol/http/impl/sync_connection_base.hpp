@@ -216,6 +216,13 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
             connection_base::read_body(socket_, response_, response_buffer);    
+            typename headers_range<basic_response<Tag> >::type connection_range =
+                headers(response_)["Connection"];
+            if (version_major == 1 && version_minor == 1 && !empty(connection_range) && boost::iequals(begin(connection_range)->second, "close")) {
+                close_socket();
+            } else if (version_major == 1 && version_minor == 0) {
+                close_socket();
+            }
         }
 
         bool is_open() { 
@@ -223,10 +230,9 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         void close_socket() { 
-            if (is_open()) {
-                boost::system::error_code ignored;
-                socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
-            } 
+            boost::system::error_code ignored;
+            socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
+            socket_.lowest_layer().close(ignored);
         }
 
         ~https_sync_connection() {
@@ -272,15 +278,21 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
             connection_base::read_body(socket_, response_, response_buffer);
+            typename headers_range<basic_response<Tag> >::type connection_range =
+                headers(response_)["Connection"];
+            if (version_major == 1 && version_minor == 1 && !empty(connection_range) && boost::iequals(begin(connection_range)->second, "close")) {
+                close_socket();
+            } else if (version_major == 1 && version_minor == 0) {
+                close_socket();
+            }
         }
 
         bool is_open() { return socket_.is_open(); }
 
         void close_socket() {
-            if (is_open()) {
-                boost::system::error_code ignored;
-                socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
-            }
+            boost::system::error_code ignored;
+            socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
+            socket_.close(ignored);
         }
 
         ~http_sync_connection() {
