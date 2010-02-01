@@ -10,5 +10,6 @@
 [include message_concept.qbk]
 [include uri_concept.qbk]
 [include http_uri_concept.qbk]
+[include tags.qbk]
 
 [endsect] [/ appendices]
