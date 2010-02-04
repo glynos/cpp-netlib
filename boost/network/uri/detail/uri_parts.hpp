@@ -7,6 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/cstdint.hpp>
+#include <boost/fusion/tuple.hpp>
 #include <boost/optional.hpp>
 
 #include <boost/network/traits/string.hpp>
@@ -20,12 +21,29 @@ namespace boost { namespace network { namespace uri {
                 typedef typename string<Tag>::type string_type;
 
                 string_type scheme;
-                boost::optional<string_type> user_info;
-                boost::optional<string_type> host;
-                boost::optional<boost::uint16_t> port;
+                optional<string_type> user_info;
+                optional<string_type> host;
+                optional<boost::uint16_t> port;
                 string_type path;
-                boost::optional<string_type> query;
-                boost::optional<string_type> fragment;
+                optional<string_type> query;
+                optional<string_type> fragment;
+            };
+
+        template <class Tag>
+            struct uri_parts_tuple {
+                typedef typename string<Tag>::type string_type;
+
+                typedef typename boost::fusion::tuple<
+                    string_type &,
+                    boost::fusion::tuple<
+                        optional<string_type> &,
+                        optional<string_type> &,
+                        optional<boost::uint16_t> &,
+                        string_type &
+                            >,
+                    optional<string_type> &,
+                    optional<string_type> &
+                        > type;
             };
 
         template <class Tag>

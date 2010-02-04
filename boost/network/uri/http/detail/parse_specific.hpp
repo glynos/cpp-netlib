@@ -19,7 +19,7 @@ namespace boost { namespace network { namespace uri {
             inline bool parse_specific<
                 tags::http_default_8bit_tcp_resolve
                     >(
-                            uri_parts<tags::http_default_8bit_tcp_resolve> & parts
+                        uri_parts<tags::http_default_8bit_tcp_resolve> & parts
                      ) 
             {
                 if ((parts.scheme.size() < 4) || (parts.scheme.size() > 5))

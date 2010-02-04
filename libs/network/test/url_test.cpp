@@ -153,6 +153,12 @@ BOOST_AUTO_TEST_CASE(constructor_test) {
     test_suite::constructor_test(
         boost::network::uri::wuri(L"http://www.boost.org/"),
         L"http", L"//www.boost.org/");
+    test_suite::constructor_test(
+        boost::network::uri::uri("http://129.79.245.252/"),
+        "http", "//www.boost.org/");
+    test_suite::constructor_test(
+        boost::network::uri::uri("news:comp.infosystems.www.servers.unix"),
+        "news", "comp.infosystems.www.servers.unix");
 }
 
 BOOST_AUTO_TEST_CASE(copy_constructor_test) {
