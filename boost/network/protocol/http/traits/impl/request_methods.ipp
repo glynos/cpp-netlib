@@ -34,8 +34,8 @@ namespace boost { namespace network { namespace http {
             };
 
             static char const * const delete_() {
-                static char const * const DELETE = "DELETE";
-                return DELETE;
+                static char const * const DELETE_ = "DELETE";
+                return DELETE_;
             };
         };
 

@@ -24,6 +24,7 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/support_ascii.hpp>
 #include <boost/spirit/include/support_argument.hpp>
+#include <ciso646>
 
 namespace boost { namespace network { namespace uri { 
 
