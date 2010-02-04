@@ -8,18 +8,9 @@
 
 [section:uri_concept URI Concepts]
 
-This page describes the URI Concepts implemented within cpp-netlib.
-The following concepts are also implemented as Boost.Concept_check
-types enforced by the URI library.
-
-URI Concepts are organized into a hierarchy of conepts.
-
-[heading Description]
-
 A type models the URI Concept if the type adheres to the following
-usage semantics, and is [@http://www.boost.org/doc/html/DefaultConstructible.html
-DefaultConstructible] and [@http://www.boost.org/doc/html/EqualityComparable.html
-EqualityComparable].
+usage semantics, and is __default_constructible__ and
+__equality_comparable__.
 
 [variablelist Notation
     [[`U`] [A URI Type.]]

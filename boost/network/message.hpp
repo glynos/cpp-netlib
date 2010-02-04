@@ -24,6 +24,8 @@
 // include wrappers base
 #include <boost/network/detail/wrapper_base.hpp>
 
+#include <boost/network/message/message_concept.hpp>
+
 /** message.hpp
  *
  * This header file implements the common message type which
@@ -98,8 +100,10 @@ namespace boost { namespace network {
         left.swap(right);
     }
 
-} // namespace network
+BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_string> >));
+BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_wstring> >));
 
+} // namespace network
 } // namespace boost
 
 #include <boost/network/message/directives.hpp>
