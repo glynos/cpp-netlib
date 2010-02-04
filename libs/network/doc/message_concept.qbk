@@ -8,17 +8,9 @@
 
 [section:message_concept Message Concept]
 
-__message__ is
-[@http://www.boost.org/doc/html/DefaultConstructible.html
-DefaultConstructible],
-[@http://www.boost.org/doc/html/CopyConstructible.html
-CopyConstructible] and [@http://www.boost.org/doc/html/Assignable.html
-Assignable].
-
-[heading Description]
-
 A type models the Message Concept if the type adheres to the following
-usage semantics, and is DefaultConstructible and EqualityComparable.
+usage semantics, and is __default_constructible__,
+__copy_constructible__ and __assignable__.
 
 [variablelist Notation
     [[`M`] [A Message Type.]]

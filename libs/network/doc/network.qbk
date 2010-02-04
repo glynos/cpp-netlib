@@ -35,6 +35,10 @@
 [def __mozilla_netlib__ [@http://www.mozilla.org/projects/netlib/ mozilla-netlib]]
 [def __sf_cpp_netlib__ [@http://sourceforge.net/projects/cpp-netlib/ sourceforge]]
 [def __github__ [@http://github.com/mikhailberis/cpp-netlib github]]
+[def __default_constructible__ [@http://www.boost.org/doc/html/DefaultConstructible.html DefaultConstructible]]
+[def __copy_constructible__ [@http://www.boost.org/doc/html/CopyConstructible.html CopyConstructible]]
+[def __assignable__ [@http://www.boost.org/doc/html/Assignable.html Assignable]]
+[def __equality_comparable__ [@http://www.boost.org/doc/html/Assignable.html Assignable]]
 
 
 [def __quick_start__ quick start]
