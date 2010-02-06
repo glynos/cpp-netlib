@@ -1,12 +1,11 @@
 #ifndef BOOST_NETWORK_URL_BASIC_URL_
 #define BOOST_NETWORK_URL_BASIC_URL_
 
-// Copyright 2009 Dean Michael Berris.
+// Copyright 2009 Dean Michael Berris, Jeroen Habraken.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/range.hpp>
 
 #include <boost/network/tags.hpp>
@@ -45,17 +44,38 @@ namespace boost { namespace network { namespace uri {
 
             void swap(uri_base & other) {
                 using std::swap;
+
                 swap(other.raw_, raw_);
                 swap(other.parts_, parts_);
                 swap(other.valid_, valid_);
             }
 
-            string_type protocol() const {
+            string_type scheme() const {
                 return parts_.scheme;
             }
 
-            string_type rest() const {
-                return parts_.scheme_specific_part;
+            string_type user_info() const {
+                return parts_.user_info ? *parts_.user_info : string_type();
+            }
+
+            string_type host() const {
+                return parts_.host ? *parts_.host : string_type();
+            }
+
+            uint16_t port() const {
+                return parts_.port ? *parts_.port : 0;
+            }
+
+            string_type path() const {
+                return parts_.path;
+            }
+
+            string_type query() const {
+                return parts_.query ? *parts_.query : string_type();
+            }
+
+            string_type fragment() const {
+                return parts_.fragment ? *parts_.fragment : string_type();
             }
 
             bool valid() const {
@@ -97,15 +117,50 @@ namespace boost { namespace network { namespace uri {
     template <class Tag>
         inline 
         typename string<Tag>::type 
-        protocol(basic_uri<Tag> const & uri) {
-            return uri.protocol();
+        scheme(basic_uri<Tag> const & uri) {
+            return uri.scheme();
         }
 
     template <class Tag>
-        inline 
-        typename string<Tag>::type 
-        rest(basic_uri<Tag> const & uri) {
-            return uri.rest();
+        inline
+        typename string<Tag>::type
+        user_info(basic_uri<Tag> const & uri) {
+            return uri.user_info();
+        }
+
+    template <class Tag>
+        inline
+        typename string<Tag>::type
+        host(basic_uri<Tag> const & uri) {
+            return uri.host();
+        }
+
+    template <class Tag>
+        inline
+        uint16_t
+        port(basic_uri<Tag> const & uri) {
+            return uri.port();
+        }
+
+    template <class Tag>
+        inline
+        typename string<Tag>::type
+        path(basic_uri<Tag> const & uri) {
+            return uri.path();
+        }
+
+    template <class Tag>
+        inline
+        typename string<Tag>::type
+        query(basic_uri<Tag> const & uri) {
+            return uri.query();
+        }
+
+    template <class Tag>
+        inline
+        typename string<Tag>::type
+        fragment(basic_uri<Tag> const & uri) {
+            return uri.fragment();
         }
 
     template <class Tag>
