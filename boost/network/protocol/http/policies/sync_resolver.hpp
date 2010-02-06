@@ -9,6 +9,7 @@
 #include <utility>
 #include <boost/asio.hpp>
 #include <boost/network/protocol/http/traits/resolver.hpp>
+#include <boost/fusion/adapted/std_pair.hpp>
 
 namespace boost { namespace network { namespace http { namespace policies {
 
