@@ -87,7 +87,7 @@ namespace boost { namespace network { namespace http {
         }
 
         string_type const protocol() const {
-            return uri_.protocol();
+            return uri_.scheme();
         }
 
     };

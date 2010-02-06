@@ -6,15 +6,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/fusion/tuple.hpp>
+#include <boost/cstdint.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include <boost/network/tags.hpp>
-#include <boost/network/uri/basic_uri_fwd.hpp>
 #include <boost/network/traits/string.hpp>
+#include <boost/network/uri/basic_uri_fwd.hpp>
 #include <boost/network/uri/http/detail/parse_specific.hpp>
-#include <boost/network/uri/http/detail/uri_parts.hpp>
-#include <boost/network/uri/http/uri_concept.hpp>
-#include <boost/algorithm/string/predicate.hpp>
 
 namespace boost { namespace network { namespace uri {
 
@@ -27,70 +25,21 @@ namespace boost { namespace network { namespace uri {
             basic_uri() : uri_base<tags::http_default_8bit_tcp_resolve>() {}
             basic_uri(uri_base<tags::http_default_8bit_tcp_resolve>::string_type const & uri) : uri_base<tags::http_default_8bit_tcp_resolve>(uri) {}
 
-            string_type host() const {
-                return parts_.host;
-            }
-
-            uint16_t port() const {
+            boost::uint32_t port() const {
                 return parts_.port ? *(parts_.port) : 
                     (boost::iequals(parts_.scheme, string_type("https")) ? 443u : 80u);
             }
 
             string_type path() const {
-                return string_type("/") + (parts_.path ? *parts_.path : string_type());
+                return (parts_.path == "") ? string_type("/") : parts_.path;
             }
-
-            string_type query() const {
-                return parts_.query ? *parts_.query : string_type();
-            }
-
-            string_type fragment() const {
-                return parts_.fragment ? *parts_.fragment : string_type();
-            }
-
-            string_type user_info() const {
-                return parts_.user_info ? *parts_.user_info : string_type();
-            }
-
         };
 
-    inline 
-        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type 
-        host(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
-            return uri.host();
-        }
-
     inline
-        uint16_t
+        boost::uint32_t
         port(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
             return uri.port();
         }
-
-    inline
-        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type
-        path(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
-            return uri.path();
-        }
-
-    inline 
-        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type
-        query(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
-            return uri.query();
-        }
-
-    inline 
-        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type
-        fragment(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
-            return uri.fragment();
-        }
-
-    inline
-        basic_uri<tags::http_default_8bit_tcp_resolve>::string_type
-        user_info(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
-            return uri.user_info();
-        }
-
-    BOOST_CONCEPT_ASSERT((HttpURI<basic_uri<tags::http_default_8bit_tcp_resolve> >));
 
 } // namespace uri
 
