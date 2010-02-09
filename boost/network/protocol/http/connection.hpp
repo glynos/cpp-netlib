@@ -17,7 +17,12 @@
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/header.hpp>
 #include <boost/network/protocol/http/response.hpp>
-#include <boost/asio.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/buffer.hpp>
+#include <boost/asio/write.hpp>
+#include <boost/asio/read.hpp>
+#include <boost/asio/strand.hpp>
+#include <boost/asio/placeholders.hpp>
 #include <boost/array.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>

@@ -9,6 +9,7 @@
 #include <boost/network/version.hpp>
 #include <boost/foreach.hpp>
 #include <boost/network/protocol/http/traits/connection_keepalive.hpp>
+#include <boost/asio/streambuf.hpp>
 
 namespace boost { namespace network { namespace http { namespace detail {
 

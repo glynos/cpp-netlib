@@ -7,7 +7,6 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <utility>
-#include <boost/asio.hpp>
 #include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
 

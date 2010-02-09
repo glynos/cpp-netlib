@@ -23,4 +23,3 @@ as well as a very liberal HTTP URI parser. The HTTP URI object only
 supports absolute URIs that start with either 'http' or 'https'.
 
 [endsect] [/uri]
-

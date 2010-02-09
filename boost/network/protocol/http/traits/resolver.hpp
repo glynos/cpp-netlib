@@ -7,6 +7,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/ip/udp.hpp>
 
 namespace boost { namespace network { namespace http {
 
