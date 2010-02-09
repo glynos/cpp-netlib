@@ -11,6 +11,9 @@
 #include <boost/network/traits/ostringstream.hpp>
 #include <boost/network/traits/istringstream.hpp>
 #include <boost/asio/ssl.hpp>
+#include <boost/asio/streambuf.hpp>
+#include <boost/asio/read.hpp>
+#include <boost/asio/read_until.hpp>
 #include <boost/tuple/tuple.hpp>
 
 namespace boost { namespace network { namespace http { namespace impl {

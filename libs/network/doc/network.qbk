@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008, 2009 Glyn Matthews.
+  (C) Copyright 2008, 2009, 2010 Glyn Matthews.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -7,7 +7,7 @@
 
 [article C++ Network Library
     [quickbook 1.4]
-    [version 0.5]
+    [version 0.6]
     [authors [Matthews, Glyn], [Berris, Dean Michael]]
     [copyright 2008, 2009, 2010 Glyn Matthews, Dean Michael Berris]
     [purpose C++ library for general network programming]
@@ -34,7 +34,7 @@
 [def __libcurl__ [@http://curl.haxx.se/ libcurl]]
 [def __mozilla_netlib__ [@http://www.mozilla.org/projects/netlib/ mozilla-netlib]]
 [def __sf_cpp_netlib__ [@http://sourceforge.net/projects/cpp-netlib/ sourceforge]]
-[def __github__ [@http://github.com/mikhailberis/cpp-netlib github]]
+[def __github__ [@http://github.com/cpp-netlib/cpp-netlib github]]
 [def __default_constructible__ [@http://www.boost.org/doc/html/DefaultConstructible.html DefaultConstructible]]
 [def __copy_constructible__ [@http://www.boost.org/doc/html/CopyConstructible.html CopyConstructible]]
 [def __assignable__ [@http://www.boost.org/doc/html/Assignable.html Assignable]]

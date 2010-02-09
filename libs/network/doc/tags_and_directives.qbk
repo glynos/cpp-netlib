@@ -14,7 +14,7 @@ functions.  To able to do this, the __cnl__ uses directives.
 Directives are already familiar in the C++ world as part of the I/O
 streams in the standard library (`std::endl`, `std::flush` etc.).
 For the __cnl__, directives are used to manipulate the message class.
-A tag aware directive might be implemented as such:
+A tag aware directive might be implemented like this:
 
  namespace boost {
  namespace network {

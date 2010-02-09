@@ -12,7 +12,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <string>
-#include <boost/asio.hpp>
+#include <boost/asio/ip/tcp.hpp>
 #include <boost/network/protocol/http/connection.hpp>
 
 namespace boost { namespace network { namespace http {

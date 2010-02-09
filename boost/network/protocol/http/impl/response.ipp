@@ -17,7 +17,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 
-#include <boost/asio.hpp>
+#include <boost/asio/buffer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/traits/vector.hpp>
