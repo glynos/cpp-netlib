@@ -9,6 +9,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/uri/detail/parse_uri.hpp>
+#include <ciso646>
 
 namespace boost { namespace network { namespace uri { 
 
