@@ -10,6 +10,7 @@
 #include <boost/foreach.hpp>
 #include <boost/network/protocol/http/traits/connection_keepalive.hpp>
 #include <boost/asio/streambuf.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace http { namespace detail {
 
