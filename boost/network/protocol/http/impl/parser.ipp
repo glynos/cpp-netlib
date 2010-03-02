@@ -33,7 +33,7 @@ namespace boost { namespace network { namespace http {
             switch (m_headers_parse_state) {
             case PARSE_METHOD_START:
                 // we have not yet started parsing the HTTP method string
-                if (*m_read_ptr != ' ' && *m_read_ptr!='\r' && *m_read_ptr!='\n') {	// ignore leading whitespace
+                if (*m_read_ptr != ' ' && *m_read_ptr!='\r' && *m_read_ptr!='\n') {    // ignore leading whitespace
                     if (!is_char(*m_read_ptr) || is_control(*m_read_ptr) || is_special(*m_read_ptr))
                         return false;
                     m_headers_parse_state = PARSE_METHOD;
@@ -523,7 +523,7 @@ namespace boost { namespace network { namespace http {
         if (bytes_available() == 0) {
             m_bytes_last_read = 0;
         } else {
-            std::vector<char>	next_chunk;
+            std::vector<char>    next_chunk;
             while (m_read_ptr < m_read_end_ptr) {
                 next_chunk.push_back(*m_read_ptr);
                 ++m_read_ptr;
@@ -700,7 +700,7 @@ namespace boost { namespace network { namespace http {
                             params.insert( std::make_pair(cookie_name, cookie_value) );
                         cookie_name.erase();
                     }
-                } else if (*string_iterator != ' ') {	// ignore whitespace
+                } else if (*string_iterator != ' ') {    // ignore whitespace
                     // check if control character detected, or max sized exceeded
                     if (is_control(*string_iterator) || cookie_name.size() >= ParserTraits::COOKIE_NAME_MAX)
                         return false;
@@ -732,7 +732,7 @@ namespace boost { namespace network { namespace http {
                             // assume character is part of the (unquoted) value
                             cookie_value.push_back(*string_iterator);
                         }
-                    } else if (*string_iterator != ' ') {	// ignore unquoted whitespace
+                    } else if (*string_iterator != ' ') {    // ignore unquoted whitespace
                         // check if control character detected, or max sized exceeded
                         if (is_control(*string_iterator) || cookie_value.size() >= ParserTraits::COOKIE_VALUE_MAX)
                             return false;

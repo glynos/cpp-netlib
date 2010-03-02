@@ -14,41 +14,41 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag>
     struct basic_response : public message_impl<Tag> {
-	private:
-		typedef message_impl<Tag> base_type;
-		typedef typename string<Tag>::type string_type;
+    private:
+        typedef message_impl<Tag> base_type;
+        typedef typename string<Tag>::type string_type;
 
-		string_type version_;
-		unsigned int status_;
-		string_type status_message_;
-	public:
+        string_type version_;
+        unsigned int status_;
+        string_type status_message_;
+    public:
 
-		typedef Tag tag;
+        typedef Tag tag;
 
-		basic_response()
-		: base_type(), version_(), status_(0u), status_message_()
-		{ };
+        basic_response()
+        : base_type(), version_(), status_(0u), status_message_()
+        { };
 
-		basic_response(basic_response const & other)
-		: base_type(other), version_(other.version_), status_(other.status_), status_message_(other.status_message_)
-		{ };
+        basic_response(basic_response const & other)
+        : base_type(other), version_(other.version_), status_(other.status_), status_message_(other.status_message_)
+        { };
 
-		string_type & version() {
-			return version_;
-		};
+        string_type & version() {
+            return version_;
+        };
 
-		unsigned int & status() {
-			return status_;
-		};
+        unsigned int & status() {
+            return status_;
+        };
 
-		string_type & status_message() {
-			return status_message_;
-		};
+        string_type & status_message() {
+            return status_message_;
+        };
 
-		basic_response & operator=(basic_response rhs) {
-			rhs.swap(*this);
-			return *this;
-		};
+        basic_response & operator=(basic_response rhs) {
+            rhs.swap(*this);
+            return *this;
+        };
 
         void swap(basic_response & other) {
             message_impl<Tag> & base_ref(other);

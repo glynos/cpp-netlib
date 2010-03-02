@@ -23,29 +23,29 @@ qstring_dict = {}
 print "Headers: ",form.headers
 
 if os.environ.has_key("QUERY_STRING"):
-	qstring = os.environ["QUERY_STRING"]
-	try:
-		qstring_dict = cgi.parse_qs(qstring,1,1) # parse_qs(query_string,keep_blanks,strict_parsing)
-	except ValueError:
-		print "Error parsing query string."
+    qstring = os.environ["QUERY_STRING"]
+    try:
+        qstring_dict = cgi.parse_qs(qstring,1,1) # parse_qs(query_string,keep_blanks,strict_parsing)
+    except ValueError:
+        print "Error parsing query string."
 
-	
+    
 print "Query string:", qstring
 
 print "GET parameters:",
 for i in qstring_dict.keys():
-	print i,"-",qstring_dict[i],";",
+    print i,"-",qstring_dict[i],";",
 print
 
 # Remove GET params and print only the POST ones
 print "POST parameters:",
 try:
-	for i in form.keys():
-		if i not in qstring_dict.keys():
-			print i,"-",form.getfirst(i, ""),";",
-	print
+    for i in form.keys():
+        if i not in qstring_dict.keys():
+            print i,"-",form.getfirst(i, ""),";",
+    print
 except TypeError: # In case of empty POST bodies.
-	pass
+    pass
 
 print 'HTTP HEADERS-------------------'
 print 'Content-Type:', os.environ.get('CONTENT_TYPE')

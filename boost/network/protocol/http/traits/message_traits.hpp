@@ -41,7 +41,7 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag>
         struct chunk_cache;
-	
+
 } // namespace http
 
 } // namespace network

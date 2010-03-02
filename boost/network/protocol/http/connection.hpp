@@ -220,7 +220,7 @@ namespace boost { namespace network { namespace http {
                 size_t difference = bytes_to_read - bytes_transferred;
                 array<char,BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator start = buffer_.begin(),
                     past_end = start;
-                std::advance(past_end, std::min(bytes_to_read,bytes_transferred));
+                std::advance(past_end, (std::min)(bytes_to_read,bytes_transferred));
                 request_.body.append(buffer_.begin(), past_end);
                 if (difference == 0) {
                     handler_(request_, response_);

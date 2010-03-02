@@ -86,7 +86,7 @@ namespace boost { namespace network { namespace http {
         };
         
         return result;
-    }	
+    }    
     
     template <typename Tag>
     typename message_impl<Tag>::string_type const message_impl<Tag>::make_query_string(typename query_container<Tag>::type const & query_params)
@@ -168,12 +168,12 @@ namespace boost { namespace network { namespace http {
             char base64code3;
     
             base64code0 = decoding_data[static_cast<int>(input_ptr[i])];
-            if(base64code0==nop)			// non base64 character
+            if(base64code0==nop)            // non base64 character
                 return false;
             if(!(++i<input_length)) // we need at least two input bytes for first byte output
                 return false;
             base64code1 = decoding_data[static_cast<int>(input_ptr[i])];
-            if(base64code1==nop)			// non base64 character
+            if(base64code1==nop)            // non base64 character
                 return false;
     
             output += ((base64code0 << 2) | ((base64code1 >> 4) & 0x3));
@@ -185,7 +185,7 @@ namespace boost { namespace network { namespace http {
                     return true;
                 }
                 base64code2 = decoding_data[static_cast<int>(input_ptr[i])];
-                if(base64code2==nop)			// non base64 character
+                if(base64code2==nop)            // non base64 character
                     return false;
     
                 output += ((base64code1 << 4) & 0xf0) | ((base64code2 >> 2) & 0x0f);
@@ -198,7 +198,7 @@ namespace boost { namespace network { namespace http {
                     return true;
                 }
                 base64code3 = decoding_data[static_cast<int>(input_ptr[i])];
-                if(base64code3==nop)			// non base64 character
+                if(base64code3==nop)            // non base64 character
                     return false;
     
                 output += (((base64code2 << 6) & 0xc0) | base64code3 );
@@ -231,9 +231,9 @@ namespace boost { namespace network { namespace http {
             int base64code2=0;
             int base64code3=0;
     
-            base64code0 = (input_ptr[i] >> 2)  & 0x3f;	// 1-byte 6 bits
+            base64code0 = (input_ptr[i] >> 2)  & 0x3f;    // 1-byte 6 bits
             output += encoding_data[base64code0];
-            base64code1 = (input_ptr[i] << 4 ) & 0x3f;	// 1-byte 2 bits +
+            base64code1 = (input_ptr[i] << 4 ) & 0x3f;    // 1-byte 2 bits +
     
             if (++i < input_length) {
                 base64code1 |= (input_ptr[i] >> 4) & 0x0f; // 2-byte 4 bits
@@ -242,7 +242,7 @@ namespace boost { namespace network { namespace http {
     
                 if (++i < input_length) {
                     base64code2 |= (input_ptr[i] >> 6) & 0x03; // 3-byte 2 bits
-                    base64code3  = input_ptr[i] & 0x3f;		  // 3-byte 6 bits
+                    base64code3  = input_ptr[i] & 0x3f;          // 3-byte 6 bits
                     output += encoding_data[base64code2];
                     output += encoding_data[base64code3];
                 } else {

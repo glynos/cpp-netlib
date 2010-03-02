@@ -21,19 +21,19 @@ namespace boost { namespace network {
     namespace impl {
         template <class Algorithm, class Selector>
             struct get_real_algorithm {
-				typedef typename boost::function_traits<
-					typename boost::remove_pointer<
-						Algorithm
-					>::type
-				>
-				::result_type::
-				template type<
-					typename boost::function_traits<
-						typename boost::remove_pointer<
-							Selector
-						>::type
-					>::result_type
-				> type;
+                typedef typename boost::function_traits<
+                    typename boost::remove_pointer<
+                        Algorithm
+                    >::type
+                >
+                ::result_type::
+                template type<
+                    typename boost::function_traits<
+                        typename boost::remove_pointer<
+                            Selector
+                        >::type
+                    >::result_type
+                > type;
             };
 
         template <class Algorithm, class Selector>

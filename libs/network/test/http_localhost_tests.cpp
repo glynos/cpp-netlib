@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(content_length_header_test) {
     headers_range<http::client::response>::type range = headers(response_)["Content-Length"];
     BOOST_CHECK_EQUAL(begin(range)->first, "Content-Length");
     BOOST_CHECK_EQUAL(begin(range)->second, "113");
-	BOOST_CHECK(body(response_).length() != 0);
+    BOOST_CHECK(body(response_).length() != 0);
 }
 
 BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {

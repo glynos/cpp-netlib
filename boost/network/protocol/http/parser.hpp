@@ -35,8 +35,8 @@ namespace boost { namespace network { namespace http {
     {
     public:
         
-		// import types from ParserTraits template
-		typedef ParserTraits    traits_type;
+        // import types from ParserTraits template
+        typedef ParserTraits    traits_type;
         typedef typename string<Tag>::type string_type;
 
         // default destructor
@@ -183,13 +183,13 @@ namespace boost { namespace network { namespace http {
 
 
         /// true if the message is an HTTP request; false if it is an HTTP response
-        const bool							m_is_request;
+        const bool                            m_is_request;
         
         /// points to the next character to be consumed in the read_buffer
-        const char *						m_read_ptr;
+        const char *                        m_read_ptr;
         
         /// points to the end of the read_buffer (last byte + 1)
-        const char *						m_read_end_ptr;
+        const char *                        m_read_end_ptr;
 
 
     private:
@@ -254,49 +254,49 @@ namespace boost { namespace network { namespace http {
 
 
         /// the current state of parsing HTTP headers
-        headers_parse_state_t				m_headers_parse_state;
+        headers_parse_state_t                m_headers_parse_state;
     
         /// the current state of parsing chunked content
-        chunked_content_parse_state_t		m_chunked_content_parse_state;
+        chunked_content_parse_state_t        m_chunked_content_parse_state;
     
         /// Used for parsing the HTTP response status code
-        boost::uint16_t						m_status_code;
+        boost::uint16_t                        m_status_code;
         
         /// Used for parsing the HTTP response status message
-        string_type							m_status_message;
+        string_type                            m_status_message;
         
         /// Used for parsing the request method
-        string_type							m_method;
+        string_type                            m_method;
         
         /// Used for parsing the name of resource requested
-        string_type							m_resource;
+        string_type                            m_resource;
         
         /// Used for parsing the query string portion of a URI
-        string_type							m_query_string;
+        string_type                            m_query_string;
         
         /// Used for parsing the name of HTTP headers
-        string_type							m_header_name;
+        string_type                            m_header_name;
     
         /// Used for parsing the value of HTTP headers
-        string_type							m_header_value;
+        string_type                            m_header_value;
     
         /// Used for parsing the chunk size
-        string_type							m_chunk_size_str;
+        string_type                            m_chunk_size_str;
     
         /// Used for parsing the current chunk
-        std::vector<char>					m_current_chunk;
+        std::vector<char>                    m_current_chunk;
     
         /// number of bytes in the chunk currently being parsed
-        std::size_t 						m_size_of_current_chunk;
+        std::size_t                         m_size_of_current_chunk;
     
         /// number of bytes read so far in the chunk currently being parsed
-        std::size_t 						m_bytes_read_in_current_chunk;
+        std::size_t                         m_bytes_read_in_current_chunk;
     
         /// number of bytes read during last parse operation
-        std::size_t 						m_bytes_last_read;
+        std::size_t                         m_bytes_last_read;
         
         /// total number of bytes read while parsing the HTTP message
-        std::size_t 						m_bytes_total_read;
+        std::size_t                         m_bytes_total_read;
     };
 
     /// typedef for the default HTTP protocol parser implementation

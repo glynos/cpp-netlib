@@ -18,10 +18,10 @@ stop_serving = Event()
 server_thread = None
 
 def run(server_class=BaseHTTPServer.HTTPServer, handler_class=CGIHTTPServer.CGIHTTPRequestHandler):
-	server_address = ('',8000)
-	httpd = server_class(server_address, handler_class)
-	while not stop_serving.isSet():
-		httpd.handle_request()
+    server_address = ('',8000)
+    httpd = server_class(server_address, handler_class)
+    while not stop_serving.isSet():
+        httpd.handle_request()
 
 
 def start_server():

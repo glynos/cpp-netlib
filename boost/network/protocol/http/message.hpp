@@ -49,7 +49,7 @@ namespace boost { namespace network { namespace http {
                                                       string_type const & value,
                                                       string_type const & path,
                                                       bool const has_max_age = false,
-                                                      unsigned long const max_age = 0);	
+                                                      unsigned long const max_age = 0);
 
             /** decodes base64-encoded strings
              *

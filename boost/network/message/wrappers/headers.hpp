@@ -14,10 +14,10 @@
 
 namespace boost { namespace network {
 
-	/// Template metaprogram to get the range type for a message
+    /// Template metaprogram to get the range type for a message
     template <class Message>
         struct headers_range {
-			typedef typename headers_container<typename Message::tag>::type headers_container_type;
+            typedef typename headers_container<typename Message::tag>::type headers_container_type;
             typedef typename 
                 boost::iterator_range<typename headers_container_type::const_iterator>
                 type;
@@ -29,11 +29,11 @@ namespace boost { namespace network {
      * using operator[] taking a string as the index and returns
      * a range of iterators (std::pair<iterator, iterator>)
      * whose keys are all equal to the index string.
-	 *
-	 * This type is also convertible to a 
-	 *  headers_range<basic_message<tag> >::type
-	 * Which allows for full range support.
-	 *
+     *
+     * This type is also convertible to a 
+     *  headers_range<basic_message<tag> >::type
+     * Which allows for full range support.
+     *
      */
     namespace impl {
         template <class Tag>
@@ -43,8 +43,8 @@ namespace boost { namespace network {
                 typedef typename string<Tag>::type string_type;
                 typedef typename headers_range<message_type>::type range_type;
                 typedef typename headers_container<Tag>::type headers_container_type;
-				typedef typename headers_container_type::const_iterator const_iterator;
-				typedef typename headers_container_type::iterator iterator;
+                typedef typename headers_container_type::const_iterator const_iterator;
+                typedef typename headers_container_type::iterator iterator;
 
                 explicit headers_wrapper(basic_message<tag> & message_)
                     : detail::wrapper_base<tag>(message_)
@@ -66,9 +66,9 @@ namespace boost { namespace network {
                     return headers_wrapper<Tag>::_message.headers().end();
                 };
 
-				operator range_type () {
-					return make_iterator_range(headers_wrapper<Tag>::_message.headers().begin(), headers_wrapper<Tag>::_message.headers().end());
-				};
+                operator range_type () {
+                    return make_iterator_range(headers_wrapper<Tag>::_message.headers().begin(), headers_wrapper<Tag>::_message.headers().end());
+                };
 
             };
     } // namespace impl
