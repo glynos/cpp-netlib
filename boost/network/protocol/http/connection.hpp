@@ -30,21 +30,10 @@
 
 namespace boost { namespace network { namespace http {
 
-    using boost::asio::io_service;
-    namespace system = boost::system;
-    using boost::asio::ip::tcp;
-    using boost::array;
-    using boost::tribool;
-    using boost::tuple;
-    namespace tuples = boost::tuples;
-    using boost::tuples::tie;
-    using boost::bind;
-    using boost::to_lower_copy;
-
     template <class Tag, class Handler>
     struct connection : boost::enable_shared_from_this<connection<Tag,Handler> > {
 
-        connection(io_service & service, Handler & handler)
+        connection(boost::asio::io_service & service, Handler & handler)
         : service_(service)
         , handler_(handler)
         , socket_(service_)
@@ -52,7 +41,7 @@ namespace boost { namespace network { namespace http {
         {
         }
 
-        tcp::socket & socket() {
+        boost::asio::ip::tcp::socket & socket() {
             return socket_;
         }
 
@@ -62,13 +51,14 @@ namespace boost { namespace network { namespace http {
             // and then pass that request object to the
             // handler_ instance.
             //
+            using boost::asio::ip::tcp;
             boost::system::error_code option_error;
             socket_.set_option(tcp::no_delay(true), option_error);
-            if (option_error) handler_.log(system::system_error(option_error).what());
+            if (option_error) handler_.log(boost::system::system_error(option_error).what());
             socket_.async_read_some(
                 boost::asio::buffer(buffer_),
                 wrapper_.wrap(
-                    bind(
+                    boost::bind(
                         &connection<Tag,Handler>::handle_read_headers,
                         connection<Tag,Handler>::shared_from_this(),
                         boost::asio::placeholders::error,
@@ -83,14 +73,14 @@ namespace boost { namespace network { namespace http {
         struct is_content_length {
             template <class Header>
             bool operator()(Header const & header) {
-                return to_lower_copy(header.name) == "content-length";
+                return boost::to_lower_copy(header.name) == "content-length";
             }
         };
 
-        void handle_read_headers(system::error_code const &ec, size_t bytes_transferred) {
+        void handle_read_headers(boost::system::error_code const &ec, size_t bytes_transferred) {
             if (!ec) {
-                tribool done;
-                array<char, BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator new_start;
+                boost::tribool done;
+                boost::array<char, BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator new_start;
                 tie(done,new_start) = parser_.parse_headers(request_, buffer_.data(), buffer_.data() + bytes_transferred);
                 if (done) {
                     if (request_.method[0] == 'P') {
@@ -107,7 +97,7 @@ namespace boost { namespace network { namespace http {
                                 socket_,
                                 response_.to_buffers(),
                                 wrapper_.wrap(
-                                    bind(
+                                    boost::bind(
                                         &connection<Tag,Handler>::handle_write,
                                         connection<Tag,Handler>::shared_from_this(),
                                         boost::asio::placeholders::error
@@ -127,7 +117,7 @@ namespace boost { namespace network { namespace http {
                                 socket_,
                                 response_.to_buffers(),
                                 wrapper_.wrap(
-                                    bind(
+                                    boost::bind(
                                         &connection<Tag,Handler>::handle_write,
                                         connection<Tag,Handler>::shared_from_this(),
                                         boost::asio::placeholders::error
@@ -146,7 +136,7 @@ namespace boost { namespace network { namespace http {
                                 socket_.async_read_some(
                                     boost::asio::buffer(buffer_),
                                     wrapper_.wrap(
-                                        bind(
+                                        boost::bind(
                                             &connection<Tag,Handler>::handle_read_body_contents,
                                             connection<Tag,Handler>::shared_from_this(),
                                             boost::asio::placeholders::error,
@@ -164,7 +154,7 @@ namespace boost { namespace network { namespace http {
                             socket_,
                             response_.to_buffers(),
                             wrapper_.wrap(
-                                bind(
+                                boost::bind(
                                     &connection<Tag,Handler>::handle_write,
                                     connection<Tag,Handler>::shared_from_this(),
                                     boost::asio::placeholders::error
@@ -177,7 +167,7 @@ namespace boost { namespace network { namespace http {
                             socket_,
                             response_.to_buffers(),
                             wrapper_.wrap(
-                                bind(
+                                boost::bind(
                                     &connection<Tag,Handler>::handle_write,
                                     connection<Tag,Handler>::shared_from_this(),
                                     boost::asio::placeholders::error
@@ -191,7 +181,7 @@ namespace boost { namespace network { namespace http {
                         socket_,
                         response_.to_buffers(),
                         wrapper_.wrap(
-                            bind(
+                            boost::bind(
                                 &connection<Tag,Handler>::handle_write,
                                 connection<Tag,Handler>::shared_from_this(),
                                 boost::asio::placeholders::error
@@ -202,7 +192,7 @@ namespace boost { namespace network { namespace http {
                     socket_.async_read_some(
                         boost::asio::buffer(buffer_),
                         wrapper_.wrap(
-                            bind(
+                            boost::bind(
                                 &connection<Tag,Handler>::handle_read_headers,
                                 connection<Tag,Handler>::shared_from_this(),
                                 boost::asio::placeholders::error,
@@ -218,7 +208,7 @@ namespace boost { namespace network { namespace http {
         void handle_read_body_contents(boost::system::error_code const & ec, size_t bytes_to_read, size_t bytes_transferred) {
             if (!ec) {
                 size_t difference = bytes_to_read - bytes_transferred;
-                array<char,BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator start = buffer_.begin(),
+                boost::array<char,BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator start = buffer_.begin(),
                     past_end = start;
                 std::advance(past_end, (std::min)(bytes_to_read,bytes_transferred));
                 request_.body.append(buffer_.begin(), past_end);
@@ -228,7 +218,7 @@ namespace boost { namespace network { namespace http {
                         socket_,
                         response_.to_buffers(),
                         wrapper_.wrap(
-                            bind(
+                            boost::bind(
                                 &connection<Tag,Handler>::handle_write,
                                 connection<Tag,Handler>::shared_from_this(),
                                 boost::asio::placeholders::error
@@ -239,7 +229,7 @@ namespace boost { namespace network { namespace http {
                     socket_.async_read_some(
                         boost::asio::buffer(buffer_),
                         wrapper_.wrap(
-                            bind(
+                            boost::bind(
                                 &connection<Tag,Handler>::handle_read_body_contents,
                                 connection<Tag,Handler>::shared_from_this(),
                                 boost::asio::placeholders::error,
@@ -255,17 +245,18 @@ namespace boost { namespace network { namespace http {
 
         void handle_write(boost::system::error_code const & ec) {
             if (!ec) {
+                using boost::asio::ip::tcp;
                 boost::system::error_code ignored_ec;
                 socket_.shutdown(tcp::socket::shutdown_both, ignored_ec);
                 socket_.close(ignored_ec);
             }
         }
 
-        io_service & service_;
+        boost::asio::io_service & service_;
         Handler & handler_;
-        tcp::socket socket_;
-        io_service::strand wrapper_;
-        array<char,BOOST_HTTP_SERVER_BUFFER_SIZE> buffer_;
+        boost::asio::ip::tcp::socket socket_;
+        boost::asio::io_service::strand wrapper_;
+        boost::array<char,BOOST_HTTP_SERVER_BUFFER_SIZE> buffer_;
         request_parser parser_;
         basic_request<Tag> request_;
         basic_response<Tag> response_;

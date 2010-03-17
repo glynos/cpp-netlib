@@ -7,34 +7,34 @@
 
 //[ uri_main
 /*`
-  
+  This is a simple program that validates a URI.
  */
 #include <boost/network/uri.hpp>
+#include <boost/network/uri/http/uri.hpp>
 #include <string>
 #include <iostream>
 
-using namespace std;
-using namespace boost::network::uri;
-
 
 int main(int argc, char * argv[]) {
-    string input;
-    cout << "Please enter a URI to parse: ";
-    cin >> input;
+    std::string input;
+    std::cout << "Please enter a URI to parse: ";
+    std::cin >> input;
 
-    /*<< Create >>*/
-    uri uri_(input);
-    /*<< Create >>*/
-    cout << "You've entered " 
-        << (valid(uri_)? string("a valid") : string("an invalid"))
-        << " URI!" << endl;
+    /*<< Create a `boost::network::uri::uri` object from the input.  >>*/
+    boost::network::uri::uri uri_(input);
+    /*<< Check if it's a valid URI. >>*/
+    std::cout << "You've entered " 
+              << (boost::network::uri::valid(uri_)?
+                  std::string("a valid") : std::string("an invalid"))
+              << " URI!" << std::endl;
 
-    /*<< Create >>*/
-    http::uri http_uri_(input);
-    /*<< Create >>*/
-    cout << "It's also "
-        << (valid(http_uri_)? string("a valid HTTP URI") : string("an invalid HTTP URI."))
-        << "!" << endl;
+    /*<< Create a `boost::network::http::uri` object from the input. >>*/
+    boost::network::uri::http::uri http_uri_(input);
+    /*<< Check if it's a valid HTTP URI. >>*/
+    std::cout << "It's also "
+              << (boost::network::uri::valid(http_uri_)?
+                  std::string("a valid HTTP URI") : std::string("an invalid HTTP URI."))
+              << "!" << std::endl;
 
     return EXIT_SUCCESS;
 }
