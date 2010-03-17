@@ -43,6 +43,7 @@ unit-test http_1_0_test : http_1_0_test.cpp ;
 unit-test http_1_1_test : http_1_1_test.cpp ;
 unit-test http_message_test : http_message_test.cpp ;
 unit-test url_test : url_test.cpp ;
+unit-test client_server_include_failure : client_server_include_failure.cpp ;
 exe hello_world : hello_world.cpp ;
 
 make httplib_acceptance.passed : httplib_acceptance.py hello_world : @python_runner ;
