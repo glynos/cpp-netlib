@@ -27,10 +27,15 @@ struct Message
         M message_;
         swap(message, message_);
         
-        headers_container_type &headers_ = message.headers();
-        string_type &body_ = message.body();
-        string_type &source_ = message.source();
-        string_type &destination_ = message.destination();
+        headers_container_type headers_ = headers(message);
+        string_type body_ = body(message);
+        string_type source_ = source(message);
+        string_type destination_ = destination(message);
+
+        message << source(string_type())
+            << destination(string_type())
+            << header(string_type(), string_type())
+            << body(string_type());
 
         (void)headers_;
         (void)body_;
