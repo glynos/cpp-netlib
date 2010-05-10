@@ -16,24 +16,44 @@ namespace boost { namespace network {
     namespace impl {
         template <class Tag>
             struct body_wrapper : public detail::wrapper_base<Tag> {
-                typedef Tag tag;
-                typedef basic_message<tag> message_type;
+                typedef basic_message<Tag> message_type;
                 typedef typename string<Tag>::type string_type;
                 
-                explicit body_wrapper(basic_message<tag> & message_)
-                    : detail::wrapper_base<tag>(message_)
+                explicit body_wrapper(basic_message<Tag> & message_)
+                    : detail::wrapper_base<Tag>(message_)
                 { };
 
                 operator string_type () const {
                     return string_type(detail::wrapper_base<Tag>::_message.body());
                 };
             };
+
+        template <class Tag>
+            struct body_wrapper_const : public detail::wrapper_base_const<Tag> {
+                typedef basic_message<Tag> message_type;
+                typedef typename string<Tag>::type string_type;
+
+                explicit body_wrapper_const(basic_message<Tag> const & message_)
+                    : detail::wrapper_base_const<Tag>(message_)
+                {};
+
+                operator string_type () const {
+                    return string_type(detail::wrapper_base_const<Tag>::_message.body());
+                }
+            };
+
     } // namespace impl
 
     template <class Tag>
         inline typename string<Tag>::type
         body(basic_message<Tag> & message_) {
             return impl::body_wrapper<Tag>(message_);
+        }
+
+    template <class Tag>
+        inline typename string<Tag>::type
+        body(basic_message<Tag> const & message_) {
+            return impl::body_wrapper_const<Tag>(message_);
         }
 
 } // namespace network
