@@ -13,3 +13,5 @@ use-project /boost : $(BOOST_ROOT) ;
 using testing ;
 
 build-project libs/network/test ;
+build-project libs/mime/test ;
+

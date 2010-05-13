@@ -99,74 +99,87 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         template <class Socket>
+        void read_body_normal(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer, typename ostringstream<Tag>::type & body_stream) {
+            boost::system::error_code error;
+            if (response_buffer.size() > 0)
+                body_stream << &response_buffer;
+
+            while (boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error)) {
+                body_stream << &response_buffer;
+            }
+        }
+
+        template <class Socket>
+        void read_body_transfer_chunk_encoding(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer, typename ostringstream<Tag>::type & body_stream) {
+            boost::system::error_code error;
+            // look for the content-length header
+            typename headers_range<basic_response<Tag> >::type content_length_range =
+                headers(response_)["Content-Length"];
+            if (empty(content_length_range)) {
+                typename headers_range<basic_response<Tag> >::type transfer_encoding_range =
+                    headers(response_)["Transfer-Encoding"];
+                if (empty(transfer_encoding_range)) throw std::runtime_error("Missing Transfer-Encoding Header from response.");
+                if (boost::iequals(begin(transfer_encoding_range)->second, "chunked")) {
+                    bool stopping = false;
+                    do { 
+                        std::size_t chunk_size_line = read_until(socket_, response_buffer, "\r\n", error);
+                        if ((chunk_size_line == 0) && (error != boost::asio::error::eof)) throw boost::system::system_error(error);
+                        std::size_t chunk_size = 0;
+                        string_type data;
+                        {
+                            std::istream chunk_stream(&response_buffer);
+                            std::getline(chunk_stream, data);
+                            typename istringstream<Tag>::type chunk_size_stream(data);
+                            chunk_size_stream >> std::hex >> chunk_size;
+                        }
+                        if (chunk_size == 0) {
+                            stopping = true;
+                            if (!read_until(socket_, response_buffer, "\r\n", error) && (error != boost::asio::error::eof))
+                                throw boost::system::system_error(error);
+                        } else {
+                            bool stopping_inner = false;
+                            do {
+                                std::size_t chunk_bytes_read = read(socket_, response_buffer, boost::asio::transfer_at_least(chunk_size + 2), error);
+                                if (chunk_bytes_read == 0) {
+                                    if (error != boost::asio::error::eof) throw boost::system::system_error(error);
+                                    stopping_inner = true;
+                                }
+
+                                std::istreambuf_iterator<char> eos;
+                                std::istreambuf_iterator<char> stream_iterator(&response_buffer);
+                                for (; chunk_size > 0 && stream_iterator != eos; --chunk_size)
+                                    body_stream << *stream_iterator++;
+                                response_buffer.consume(2);
+                            } while (!stopping_inner && chunk_size != 0);
+
+                            if (chunk_size != 0)
+                                throw std::runtime_error("Size mismatch between tranfer encoding chunk data size and declared chunk size.");
+                        } 
+                    } while (!stopping);
+                } else throw std::runtime_error("Unsupported Transfer-Encoding.");
+            } else {
+                size_t length = lexical_cast<size_t>(begin(content_length_range)->second);
+                size_t bytes_read = 0;
+                while ((bytes_read = boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error))) {
+                    body_stream << &response_buffer;
+                    length -= bytes_read;
+                    if ((length <= 0) or error)
+                        break;
+                }
+            }
+        }
+
+        template <class Socket>
         void read_body(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
             typename ostringstream<Tag>::type body_stream;
-
-            boost::system::error_code error;
             // TODO tag dispatch based on whether it's HTTP 1.0 or HTTP 1.1
             if (version_major == 1 && version_minor == 0) {
-                if (response_buffer.size() > 0)
-                    body_stream << &response_buffer;
-
-                while (boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error)) {
-                    body_stream << &response_buffer;
-                }
+                read_body_normal(socket_, response_, response_buffer, body_stream);
             } else if (version_major == 1 && version_minor == 1) {
-                // look for the content-length header
-                typename headers_range<basic_response<Tag> >::type content_length_range =
-                    headers(response_)["Content-Length"];
-                if (empty(content_length_range)) {
-                    typename headers_range<basic_response<Tag> >::type transfer_encoding_range =
-                        headers(response_)["Transfer-Encoding"];
-                    if (empty(transfer_encoding_range)) throw std::runtime_error("Missing Transfer-Encoding Header from response.");
-                    if (boost::iequals(begin(transfer_encoding_range)->second, "chunked")) {
-                        bool stopping = false;
-                        do { 
-                            std::size_t chunk_size_line = read_until(socket_, response_buffer, "\r\n", error);
-                            if ((chunk_size_line == 0) && (error != boost::asio::error::eof)) throw boost::system::system_error(error);
-                            std::size_t chunk_size = 0;
-                            string_type data;
-                            {
-                                std::istream chunk_stream(&response_buffer);
-                                std::getline(chunk_stream, data);
-                                typename istringstream<Tag>::type chunk_size_stream(data);
-                                chunk_size_stream >> std::hex >> chunk_size;
-                            }
-                            if (chunk_size == 0) {
-                                stopping = true;
-                                if (!read_until(socket_, response_buffer, "\r\n", error) && (error != boost::asio::error::eof))
-                                    throw boost::system::system_error(error);
-                            } else {
-                                bool stopping_inner = false;
-                                do {
-                                    std::size_t chunk_bytes_read = read(socket_, response_buffer, boost::asio::transfer_at_least(chunk_size + 2), error);
-                                    if (chunk_bytes_read == 0) {
-                                        if (error != boost::asio::error::eof) throw boost::system::system_error(error);
-                                        stopping_inner = true;
-                                    }
-
-                                    std::istreambuf_iterator<char> eos;
-                                    std::istreambuf_iterator<char> stream_iterator(&response_buffer);
-                                    for (; chunk_size > 0 && stream_iterator != eos; --chunk_size)
-                                        body_stream << *stream_iterator++;
-                                    response_buffer.consume(2);
-                                } while (!stopping_inner && chunk_size != 0);
-
-                                if (chunk_size != 0)
-                                    throw std::runtime_error("Size mismatch between tranfer encoding chunk data size and declared chunk size.");
-                            } 
-                        } while (!stopping);
-                    } else throw std::runtime_error("Unsupported Transfer-Encoding.");
-                } else {
-                    size_t length = lexical_cast<size_t>(begin(content_length_range)->second);
-                    size_t bytes_read = 0;
-                    while ((bytes_read = boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error))) {
-                        body_stream << &response_buffer;
-                        length -= bytes_read;
-                        if ((length <= 0) or error)
-                            break;
-                    }
-                }
+                if (response_.version() == "HTTP/1.0")
+                    read_body_normal(socket_, response_, response_buffer, body_stream);
+                else
+                    read_body_transfer_chunk_encoding(socket_, response_, response_buffer, body_stream);
             } else {
                 throw std::runtime_error("Unsupported HTTP version number.");
             }

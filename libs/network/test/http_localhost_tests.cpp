@@ -13,6 +13,7 @@
 #include <boost/config.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network/include/http/client.hpp>
+#include <boost/range.hpp>
 #include <boost/cast.hpp>
 #include <string>
 #include <fstream>
@@ -209,7 +210,7 @@ BOOST_AUTO_TEST_CASE(cgi_query) {
     http::client::response r;
     BOOST_REQUIRE_NO_THROW(r = c.get(req));
     BOOST_CHECK(body(r).length() != 0);
-    BOOST_CHECK(headers(r)["Content-Type"].begin() != headers(r)["Content-Type"].end());
+    BOOST_CHECK(boost::empty(headers(r)["Content-Length"]));
 }
 
 BOOST_AUTO_TEST_CASE(cgi_multi_line_headers) {
@@ -220,7 +221,7 @@ BOOST_AUTO_TEST_CASE(cgi_multi_line_headers) {
     http::client::response r;
     BOOST_REQUIRE_NO_THROW(r = c.get(req));
     BOOST_CHECK(body(r).length() != 0);
-    BOOST_CHECK(headers(r)["Content-Type"].begin() != headers(r)["Content-Type"].end());
+    BOOST_CHECK(boost::empty(headers(r)["Content-Type"]));
     headers_range<http::client::response>::type range=headers(r)["X-CppNetlib-Test"];
     BOOST_REQUIRE(begin(range) != end(range));
     BOOST_REQUIRE(distance(range) == 2);

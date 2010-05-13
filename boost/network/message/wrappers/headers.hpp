@@ -34,6 +34,10 @@ namespace boost { namespace network {
      *  headers_range<basic_message<tag> >::type
      * Which allows for full range support.
      *
+     * The type is also convertible to a
+     *  headers_container<Tag>::type
+     * Which copies the headers from the wrapped message.
+     *
      */
     namespace impl {
         template <class Tag>
@@ -69,6 +73,10 @@ namespace boost { namespace network {
                 operator range_type () {
                     return make_iterator_range(headers_wrapper<Tag>::_message.headers().begin(), headers_wrapper<Tag>::_message.headers().end());
                 };
+
+                operator headers_container_type () {
+                    return headers_wrapper<Tag>::_message.headers();
+                }
 
             };
     } // namespace impl

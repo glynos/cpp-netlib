@@ -91,12 +91,11 @@ namespace boost { namespace network { namespace http {
             return sync_request_skeleton(request_, "POST", true);
         };
 
-        response const post (request const & request_, string_type const & content_type, string_type const & body_) {
-            request request_copy = request_;
-            request_copy << body(body_)
+        response const post (request request_, string_type const & content_type, string_type const & body_) {
+            request_ << body(body_)
                 << header("Content-Type", content_type)
                 << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
-            return post(request_copy);
+            return post(request_);
         };
 
         response const post (request const & request_, string_type const & body_) {
@@ -111,12 +110,11 @@ namespace boost { namespace network { namespace http {
             return put(request_, "x-application/octet-stream", body_);
         };
 
-        response const put (request const & request_, string_type const & content_type, string_type const & body_) {
-            request request_copy = request_;
-            request_copy << body(body_)
+        response const put (request request_, string_type const & content_type, string_type const & body_) {
+            request_ << body(body_)
                 << header("Content-Type", content_type)
                 << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
-            return put(request_copy);
+            return put(request_);
         };
 
         response const delete_ (request const & request_) {
@@ -137,7 +135,7 @@ namespace boost { namespace network { namespace http {
 
     };
 
-    typedef basic_client<tags::http_default_8bit_tcp_resolve, 1, 0> client;
+    typedef basic_client<tags::http_default_8bit_udp_resolve, 1, 0> client;
 
 } // namespace http
 

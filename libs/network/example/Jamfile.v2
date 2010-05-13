@@ -31,3 +31,5 @@ exe simple_wget : simple_wget.cpp ;
 exe hello_world_server : http/hello_world_server.cpp ;
 
 exe hello_world_client : http/hello_world_client.cpp ;
+
+exe one_liner : http/one_liner.cpp ;

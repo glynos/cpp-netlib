@@ -19,7 +19,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test, T, tag_types) {
     http::basic_request<T> request("http://www.boost.org/");
     http::basic_client<T, 1, 1> client_;
     http::basic_response<T> response_;
-    response_ = client_.get(request);
+    BOOST_CHECK_NO_THROW ( response_ = client_.get(request) );
     typename headers_range<typename http::basic_response<T> >::type range = headers(response_)["Content-Type"];
     BOOST_CHECK ( begin(range) != end(range) );
     BOOST_CHECK ( body(response_).size() != 0 );
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_different_port, T, tag_types) {
     http::basic_request<T> request("http://www.boost.org:80/");
     http::basic_client<T, 1, 1> client_;
     http::basic_response<T> response_;
-    response_ = client_.get(request);
+    BOOST_CHECK_NO_THROW ( response_ = client_.get(request) );
     typename headers_range<typename http::basic_response<T> >::type range = headers(response_)["Content-Type"];
     BOOST_CHECK ( begin(range) != end(range) );
     BOOST_CHECK ( body(response_).size() != 0 );

@@ -11,17 +11,28 @@ namespace boost { namespace network { namespace detail {
 
     template <class Tag>
         struct wrapper_base {
-            typedef Tag tag;
-            explicit wrapper_base(basic_message<tag> & message_)
+            explicit wrapper_base(basic_message<Tag> & message_)
                 : _message(message_)
-            { };
+            {};
 
             protected:
-                virtual ~wrapper_base() 
-                { }; // for extending only
+                ~wrapper_base() {}; // for extending only
 
-                mutable basic_message<tag> & _message;
+                basic_message<Tag> & _message;
         };
+
+    template <class Tag>
+        struct wrapper_base_const {
+            explicit wrapper_base_const(basic_message<Tag> const & message_)
+                : _message(message_)
+            {}
+
+            protected:
+                ~wrapper_base_const() {}; // for extending only
+
+                basic_message<Tag> const & _message;
+        };
+
 
 } // namespace detail
 

@@ -44,49 +44,65 @@ namespace boost { namespace network {
 
         typedef Tag tag;
 
-        typedef typename headers_container<tag>::type headers_container_type;
-        typedef typename string<tag>::type string_type;
+        typedef typename headers_container<Tag>::type headers_container_type;
+        typedef typename string<Tag>::type string_type;
 
         basic_message()
             : _headers(), _body(), _source(), _destination()
-        { };
+        { }
 
         basic_message(const basic_message & other)
             : _headers(other._headers), _body(other._body), _source(other._source), _destination(other._destination)
-        { };
+        { }
 
-        basic_message & operator=(basic_message<tag> rhs) {
+        basic_message & operator=(basic_message<Tag> rhs) {
             rhs.swap(*this);
             return *this;
-        };
+        }
 
-        void swap(basic_message<tag> & other) {
+        void swap(basic_message<Tag> & other) {
             other._headers.swap(_headers);
             other._body.swap(_body);
             other._source.swap(_source);
             other._destination.swap(_destination);
-        };
+        }
 
         headers_container_type & headers() {
             return _headers;
-        };
+        }
+
+        headers_container_type headers() const {
+            return _headers;
+        }
 
         string_type & body() {
             return _body;
-        };
+        }
+
+        string_type body() const {
+            return _body;
+        }
         
         string_type & source() {
             return _source;
-        };
+        }
+
+        string_type source() const {
+            return _source;
+        }
 
         string_type & destination() {
             return _destination;
-        };
+        }
+
+        string_type destination() const {
+            return _destination;
+        }
 
         private:
         
-        friend struct detail::directive_base<tag> ;
-        friend struct detail::wrapper_base<tag> ;
+        friend struct detail::directive_base<Tag> ;
+        friend struct detail::wrapper_base<Tag> ;
 
         headers_container_type _headers;
         string_type _body;
