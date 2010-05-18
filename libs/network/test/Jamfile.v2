@@ -15,6 +15,7 @@ if [ os.name ] = CYGWIN
 project network_test :
     requirements
         <include>../../../
+        <include>.
         <source>/boost//unit_test_framework
         <source>/boost//system
         <source>/boost//date_time

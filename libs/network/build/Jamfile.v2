@@ -1,0 +1,21 @@
+
+#          Copyright Dean Michael Berris 2007.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+
+project cpp-netlib :
+    requirements
+        <include>../../../
+        <include>$BOOST_ROOT
+    : source-location ../../../
+;
+
+cpp-pch client : boost/network/include/http/client.hpp ;
+cpp-pch server : boost/network/include/http/server.hpp ;
+
+install headers : client server
+   : <location>../../../boost/network/include/http ;
+
+alias all : headers ; 
+
