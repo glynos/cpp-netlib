@@ -24,7 +24,8 @@ namespace boost { namespace spirit { namespace traits {
     template <class Tag>
         struct transform_attribute<
             boost::network::uri::detail::uri_parts<Tag>,
-            typename boost::network::uri::detail::uri_parts_tuple<Tag>::type
+            typename boost::network::uri::detail::uri_parts_tuple<Tag>::type,
+            boost::spirit::qi::domain
                 > 
         {
             typedef typename boost::network::uri::detail::uri_parts_tuple<Tag>::type type;
