@@ -188,12 +188,13 @@ namespace boost { namespace network { namespace uri {
                                 )
                             );
 
-                    start %= uri;
                     uri %= 
                             scheme >> ':'
                         >>  hier_part
                         >>  -('?' >> query)
                         >>  -('#' >> fragment);
+
+                    start %= uri.alias();
                 }
 
                 typedef typename string<Tag>::type string_type;
