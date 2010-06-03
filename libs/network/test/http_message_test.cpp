@@ -7,13 +7,20 @@
 #define BOOST_TEST_MODULE HTTP message test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/protocol/http.hpp>
+#include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/response.hpp>
+#include <boost/mpl/list.hpp>
 // #include <boost/network/protocol/http/traits.hpp>
 #include <algorithm>
 
 using namespace boost::network;
 
-typedef boost::mpl::list<tags::http_default_8bit_tcp_resolve, tags::http_default_8bit_udp_resolve, tags::http_keepalive_8bit_tcp_resolve, tags::http_keepalive_8bit_udp_resolve> tag_types;
+typedef boost::mpl::list<
+    tags::http_default_8bit_tcp_resolve
+    , tags::http_default_8bit_udp_resolve
+    , tags::http_keepalive_8bit_tcp_resolve
+    , tags::http_keepalive_8bit_udp_resolve
+> tag_types;
 
 struct fixtures {
 };
@@ -70,29 +77,47 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (response_constructor_test, T, tag_types) {
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (response_copy_construct_test, T, tag_types) {
+    using namespace http;
     http::basic_response<T> response;
-    response.version() = "HTTP/1.1";
-    response.status() = 200;
-    response.status_message() = "OK";
-    response << body("The quick brown fox jumps over the lazy dog");
+    response << http::version("HTTP/1.1")
+        << http::status(200u)
+        << body("The quick brown fox jumps over the lazy dog")
+        << http::status_message("OK")
+        ;
     http::basic_response<T> copy(response);
-    BOOST_CHECK_EQUAL ( response.version(), copy.version() );
-    BOOST_CHECK_EQUAL ( response.status(), copy.status() );
-    BOOST_CHECK_EQUAL ( response.status_message(), copy.status_message() );
+
+    typename http::basic_response<T>::string_type 
+        version_orig = version(response)
+        , version_copy = version(copy);
+    BOOST_CHECK_EQUAL ( version_orig, version_copy );
+    boost::uint16_t status_orig = status(response)
+        , status_copy = status(copy);
+    BOOST_CHECK_EQUAL ( status_orig, status_copy );
+    typename http::basic_response<T>::string_type
+        status_message_orig = status_message(response)
+        , status_message_copy = status_message(copy);
+    BOOST_CHECK_EQUAL ( status_message_orig, status_message_copy );
     BOOST_CHECK_EQUAL ( body(response), body(copy) );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (response_assignment_construct_test, T, tag_types) {
     http::basic_response<T> response;
-    response.version() = "HTTP/1.1";
-    response.status() = 200;
-    response.status_message() = "OK";
-    response << body("The quick brown fox jumps over the lazy dog");
+    response << http::version("HTTP/1.1")
+        << http::status(200)
+        << http::status_message("OK")
+        << body("The quick brown fox jumps over the lazy dog");
     http::basic_response<T> copy;
     copy = response;
-    BOOST_CHECK_EQUAL ( response.version(), copy.version() );
-    BOOST_CHECK_EQUAL ( response.status(), copy.status() );
-    BOOST_CHECK_EQUAL ( response.status_message(), copy.status_message() );
+    typedef http::basic_response<T>::string_type string_type;
+    string_type version_orig = version(response)
+        , version_copy = version(copy);
+    BOOST_CHECK_EQUAL ( version_orig, version_copy );
+    boost::uint16_t status_orig = status(response)
+        , status_copy = status(copy);
+    BOOST_CHECK_EQUAL ( status_orig, status_copy );
+    string_type status_message_orig = status_message(response)
+        , status_message_copy = status_message(copy);
+    BOOST_CHECK_EQUAL ( status_message_orig, status_message_copy );
     BOOST_CHECK_EQUAL ( body(response), body(copy) );
 }
 
