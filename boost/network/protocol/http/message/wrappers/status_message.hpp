@@ -7,6 +7,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/concept/requires.hpp>
+
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
@@ -36,7 +38,11 @@ namespace boost { namespace network { namespace http {
     } // namespace impl
 
     template <class Tag>
-    inline impl::status_message_wrapper<Tag> status_message(basic_response<Tag> const & response) {
+    inline 
+    BOOST_CONCEPT_REQUIRES(
+        ((Response<basic_response<Tag> >)),
+        (impl::status_message_wrapper<Tag>))
+    status_message(basic_response<Tag> const & response) {
         return impl::status_message_wrapper<Tag>(response);
     }
 

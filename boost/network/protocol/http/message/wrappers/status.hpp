@@ -9,6 +9,9 @@
 
 #include <boost/cstdint.hpp>
 
+#include <boost/network/protocol/http/response_concept.hpp>
+#include <boost/concept/requires.hpp>
+
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
@@ -36,7 +39,10 @@ namespace boost { namespace network { namespace http {
     } // namespace impl
 
     template <class Tag>
-    inline impl::status_wrapper<Tag> status(basic_response<Tag> const & response) {
+    inline
+    BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
+        (impl::status_wrapper<Tag>))
+    status(basic_response<Tag> const & response) {
         return impl::status_wrapper<Tag>(response);
     }
 
