@@ -16,7 +16,7 @@ namespace boost { namespace network { namespace http { namespace impl {
     struct sync_connection_base;
 
     template <class Tag, unsigned version_major, unsigned version_minor>
-    struct http_sync_connection : public virtual sync_connection_base<Tag, version_major, version_minor>, detail::connection_helper<Tag, version_major, version_minor>, connection_base_impl<Tag, version_major, version_minor> {
+    struct http_sync_connection : public virtual sync_connection_base<Tag, version_major, version_minor>, detail::connection_helper<Tag, version_major, version_minor>, sync_connection_base_impl<Tag, version_major, version_minor> {
         typedef typename resolver_policy<Tag>::type resolver_base;
         typedef typename resolver_base::resolver_type resolver_type;
         typedef typename string<Tag>::type string_type;
