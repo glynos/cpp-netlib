@@ -12,11 +12,12 @@
 #include <boost/network/traits/istringstream.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <boost/asio/read.hpp>
+#include <boost/asio/write.hpp>
 #include <boost/asio/read_until.hpp>
 #include <boost/tuple/tuple.hpp>
 
 #include <boost/network/protocol/http/impl/http_sync_connection.hpp>
-#ifndef BOOST_NETWORK_NO_HTTPS
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
 #include <boost/network/protocol/http/impl/https_sync_connection.hpp>
 #endif
 
@@ -204,7 +205,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         static sync_connection_base<Tag,version_major,version_minor> * new_connection(resolver_type & resolver, resolver_function_type resolve, bool https) {
             if (https) {
-#ifndef BOOST_NETWORK_NO_HTTPS
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
                 return dynamic_cast<sync_connection_base<Tag,version_major,version_minor>*>(new https_sync_connection<Tag,version_major,version_minor>(resolver, resolve));
 #else
                 throw std::runtime_error("HTTPS not supported.");
