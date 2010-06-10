@@ -15,7 +15,7 @@
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
-        struct status_message;
+        struct status_message_text;
 
     template <class Tag>
         struct method;
