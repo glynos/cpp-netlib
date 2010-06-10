@@ -28,6 +28,10 @@ namespace boost { namespace network { namespace http {
                 << status_message("OK") // status_message directive
                 ;
 
+            version(response, "HTTP/1.0");
+            status(response, 200u);
+            status_message(response, "OK");
+
             string_type version_ = version(response);
             boost::uint16_t status_ = status(response);
             string_type status_message_ = status_message(response);

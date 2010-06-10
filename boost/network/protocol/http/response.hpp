@@ -13,20 +13,25 @@
 #include <boost/cstdint.hpp>
 #include <boost/network/protocol/http/response_concept.hpp>
 
+#include <boost/network/protocol/http/message/message_base.hpp>
+
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
-    struct basic_response : public message_impl<Tag> {
+    struct basic_response : public message_base<Tag>::type {
+
+        typedef typename string<Tag>::type string_type;
+
     private:
-        typedef message_impl<Tag> base_type;
+        typedef typename message_base<Tag>::type base_type;
 
         mutable string_type version_;
         mutable boost::uint16_t status_;
         mutable string_type status_message_;
+
     public:
 
         typedef Tag tag;
-        typedef typename string<Tag>::type string_type;
 
         basic_response()
         : base_type(), version_(), status_(0u), status_message_()
@@ -103,5 +108,9 @@ namespace boost { namespace network { namespace http {
 #include <boost/network/protocol/http/message/wrappers/version.hpp>
 #include <boost/network/protocol/http/message/wrappers/status.hpp>
 #include <boost/network/protocol/http/message/wrappers/status_message.hpp>
+
+#include <boost/network/protocol/http/message/modifiers/version.hpp>
+#include <boost/network/protocol/http/message/modifiers/status.hpp>
+#include <boost/network/protocol/http/message/modifiers/status_message.hpp>
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
