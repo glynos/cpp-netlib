@@ -10,6 +10,8 @@
 
 namespace boost { namespace network { namespace tags {
 
+    struct async {};
+
 struct default_string {};
 struct default_wstring {};
 struct http_default_8bit_tcp_resolve {};
@@ -17,6 +19,7 @@ struct http_default_8bit_udp_resolve {};
 struct http_keepalive_8bit_tcp_resolve {};
 struct http_keepalive_8bit_udp_resolve {};
 struct http_server {};
+struct http_async_8bit_udp_resolve : async {};
 
 typedef default_string default_;
 
