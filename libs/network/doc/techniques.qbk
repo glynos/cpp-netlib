@@ -1,0 +1,17 @@
+[/
+  (C) Copyright 2010 Dean Michael Berris, Glyn Matthews.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:techniques Techniques]
+Throughout the __cnl__ implementation there are some recurring techniques
+used to achieve the generic approach to implementing specific ideas. This
+section covers these recurring techniques -- where appropriate the inspiration
+for the technique is also cited.
+
+[include techniques/tag-metafunctions.qbk]
+[include techniques/directives.qbk]
+[include techniques/static-dynamic.qbk]
+[endsect] [/ techniques]
