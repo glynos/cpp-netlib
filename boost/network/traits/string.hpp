@@ -55,6 +55,11 @@ namespace boost { namespace network {
     struct string<tags::http_keepalive_8bit_udp_resolve> {
         typedef std::string type;
     };
+    
+    template <>
+    struct string<tags::http_async_8bit_udp_resolve> {
+        typedef std::string type;
+    };
 
 } // namespace network
 

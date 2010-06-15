@@ -1,8 +1,8 @@
 
-//          Copyright Dean Michael Berris 2008.
+// Copyright 2010 (c) Dean Michael Berris.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_TEST_MODULE HTTP message test
 #include <boost/config/warning_disable.hpp>
@@ -29,9 +29,13 @@ BOOST_FIXTURE_TEST_SUITE(http_message_test_suite, fixtures)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (request_constructor_test, T, tag_types) {
     http::basic_request<T> request("http://boost.org");
-    BOOST_CHECK_EQUAL ( request.host() , "boost.org" );
-    BOOST_CHECK_EQUAL ( request.port() , 80u );
-    BOOST_CHECK_EQUAL ( request.path() , "/" );
+    typedef http::basic_request<T>::type string_type;
+    string_type host = host(request);
+    boost::uint16_t port = port(request);
+    string_type path = path(request);
+    BOOST_CHECK_EQUAL ( host , "boost.org" );
+    BOOST_CHECK_EQUAL ( port , 80u );
+    BOOST_CHECK_EQUAL ( path, "/" );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (request_copy_constructor_test, T, tag_types) {
