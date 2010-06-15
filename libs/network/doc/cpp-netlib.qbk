@@ -45,8 +45,8 @@
 [def __quick_start__ quick start]
 
 
-[include miscellanea.qbk]
 [include quick_start.qbk]
+[include miscellanea.qbk]
 [include intro.qbk]
 [include using.qbk]
 [include techniques.qbk]

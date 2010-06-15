@@ -6,6 +6,13 @@
 ]
 
 [section:techniques Techniques]
+
+[/ initial concepts]
+
+[/ advanced concepts]
+
+[/ developing using cpp-netlib]
+
 Throughout the __cnl__ implementation there are some recurring techniques
 used to achieve the generic approach to implementing specific ideas. This
 section covers these recurring techniques -- where appropriate the inspiration
