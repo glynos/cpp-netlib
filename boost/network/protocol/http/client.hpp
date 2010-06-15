@@ -80,15 +80,15 @@ namespace boost { namespace network { namespace http {
         }
 
         response const head (request const & request_) {
-            return sync_request_skeleton(request_, "HEAD", false);
+            return request_skeleton(request_, "HEAD", false);
         };
 
         response const get (request const & request_) {
-            return sync_request_skeleton(request_, "GET", true);
+            return request_skeleton(request_, "GET", true);
         };
 
         response const post (request const & request_) {
-            return sync_request_skeleton(request_, "POST", true);
+            return request_skeleton(request_, "POST", true);
         };
 
         response const post (request request_, string_type const & content_type, string_type const & body_) {
@@ -103,7 +103,7 @@ namespace boost { namespace network { namespace http {
         };
 
         response const put (request const & request_) {
-            return sync_request_skeleton(request_, "PUT", true);
+            return request_skeleton(request_, "PUT", true);
         };
 
         response const put (request const & request_, string_type const & body_) {
@@ -118,7 +118,7 @@ namespace boost { namespace network { namespace http {
         };
 
         response const delete_ (request const & request_) {
-            return sync_request_skeleton(request_, "DELETE", true);
+            return request_skeleton(request_, "DELETE", true);
         };
 
         private:
@@ -127,7 +127,7 @@ namespace boost { namespace network { namespace http {
         boost::asio::io_service service_;
         typename connection_base::resolver_type resolver_;
 
-        basic_response<Tag> const sync_request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
+        basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
             typename connection_base::connection_ptr connection_;
             connection_ = connection_base::get_connection(resolver_, request_);
             return connection_->send_request(method, request_, get_body);
