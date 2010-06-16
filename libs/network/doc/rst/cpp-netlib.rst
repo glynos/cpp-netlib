@@ -6,13 +6,17 @@
 	  Dean Michael Berris <mikhailberis@gmail.com>
 :Date: Jun 16, 2010
 :Version: 2.0
-:Description: Complete documentation, with examples, for using the cpp-netlib.
+:Description: Complete user documentation, with examples, for the cpp-netlib.
+:Copyright:     Copyright Glyn Matthews, Dean Mikhail Beris
+                2008-2010. Distributed under the Boost Software License,
+                Version 1.0. (See accompanying file LICENSE_1_0.txt
+                or copy at http://www.boost.org/LICENSE_1_0.txt)
 
--------------
- Quick Start
--------------
+-----------------
+ Getting Started
+-----------------
 
-.. include:: quick_start.rst
+.. include:: getting_started.rst
 
 ------
  HTTP

@@ -1,3 +1,2 @@
 .. include:: http/hello_world_client.rst
-
 .. include:: http/hello_world_server.rst
