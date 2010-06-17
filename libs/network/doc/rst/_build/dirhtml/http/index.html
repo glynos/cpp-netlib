@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HTTP client &mdash; cpp-netlib v0.7 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.7',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.7 documentation" href="../" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../">cpp-netlib v0.7 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="http-client">
+<h1>HTTP client<a class="headerlink" href="#http-client" title="Permalink to this headline">¶</a></h1>
+<p>The first code example is the simplest thing you can do with the
+<tt class="docutils literal"><span class="pre">cpp-netlib</span></tt>.  The application is a simple HTTP client.  All we are
+doing is creating and sending an HTTP request to a server and printing
+the response body.  Without further ado, the code to do this as
+follows:</p>
+<div class="highlight-python"><pre>#include &lt;boost/network/protocol/http/client.hpp&gt;
+#include &lt;iostream&gt;
+
+int
+main(int argc, char *argv[]) {
+    using namespace boost::network;
+
+    if (argc != 2) {
+        std::cout &lt;&lt; "Usage: " &lt;&lt; argv[0] &lt;&lt; " [url]" &lt;&lt; std::endl;
+        return 1;
+    }
+
+    http::client client;
+    http::client::request request(argv[1]);
+    request &lt;&lt; header("Connection", "close");
+    http::client::response response = client.get(request);
+    std::cout &lt;&lt; body(response) &lt;&lt; std::endl;
+
+    return 0;
+}</pre>
+</div>
+<p>Since this is the first example, each line will be presented and
+explained in detail.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
+</pre></div>
+</div>
+<p>All the code needed for the HTTP client resides in this header.</p>
+<div class="highlight-python"><pre>http::client client;</pre>
+</div>
+<p>First we create a <tt class="docutils literal"><span class="pre">client</span></tt> object.  The <tt class="docutils literal"><span class="pre">client</span></tt> contains all the
+connection and protocol logic.  The default HTTP client is version
+1.1, as specified in <a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC 2616</a>.</p>
+<div class="highlight-python"><pre>http::client::request request(argv[1]);</pre>
+</div>
+<p>Next, we create a <tt class="docutils literal"><span class="pre">request</span></tt> object, with a URI string passed as a
+constructor argument.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">header</span><span class="p">(</span><span class="s">&quot;Connection&quot;</span><span class="p">,</span> <span class="s">&quot;close&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> makes use of stream syntax and <em>directives</em> to allow
+developers to build complex message structures with greater
+flexibility and clarity.  Here, we add the HTTP header &#8220;Connection:
+close&#8221; to the request in order to signal that the connection will be
+closed after the request has completed.</p>
+<div class="highlight-python"><pre>http::client::response response = client.get(request);</pre>
+</div>
+<p>Once we&#8217;ve built the request, we then make an HTTP GET request
+throught the <tt class="docutils literal"><span class="pre">http::client</span></tt> from which an <tt class="docutils literal"><span class="pre">http::response</span></tt> is
+returned.  <tt class="docutils literal"><span class="pre">http::client</span></tt> supports all common HTTP methods.</p>
+<div class="highlight-python"><pre>std::cout &lt;&lt; body(response) &lt;&lt; std::endl;</pre>
+</div>
+<p>Finally, though we don&#8217;t check any error checking, the response body
+is printed to the console using the <tt class="docutils literal"><span class="pre">body</span></tt> directive.</p>
+</div>
+<div class="section" id="hello-world-server">
+<h1>&#8220;Hello world&#8221; server<a class="headerlink" href="#hello-world-server" title="Permalink to this headline">¶</a></h1>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="../">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">HTTP client</a></li>
+<li><a class="reference external" href="#hello-world-server">&#8220;Hello world&#8221; server</a></li>
+</ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/http.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search/" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li><a href="../">cpp-netlib v0.7 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Glyn Matthews.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

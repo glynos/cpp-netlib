@@ -1,18 +1,17 @@
-Quick installation guide
-========================
+Getting started
+===============
 
 Installing an official release
 ------------------------------
 
 All stable versions of ``cpp-netlib`` can be downloaded from Github:
-`http://github.com/cpp-netlib/cpp-netlib/downloads`.  Each release is
-available as gzipped (Using the command ``tar xzf cpp-netlib.tar.gz``)
-or bzipped (Using ``tar xjf cpp-netlib.tar.bz2``) tarball, or as a
-zipfile (``unzip cpp-netlib.zip``, or on Windows using a tool such as
-7zip_).
+``http://github.com/cpp-netlib/cpp-netlib/downloads``.  Each release
+is available as gzipped (Using the command ``tar xzf
+cpp-netlib.tar.gz``) or bzipped (Using ``tar xjf cpp-netlib.tar.bz2``)
+tarball, or as a zipfile (``unzip cpp-netlib.zip``, or on Windows
+using a tool such as 7zip_).
 
 .. _7zip: http://www.7-zip.org/
-
 
 Installing a development version
 --------------------------------
@@ -60,9 +59,6 @@ The ``cpp-netlib`` uses CMake_.
 
 .. _CMake: http://www.cmake.org/
 
-Configuring ``cpp-netlib``
-==========================
-
 Instructions for Windows Users
 ------------------------------
 
@@ -71,7 +67,3 @@ Instructions for Linux Users
 
 Building and Running the Examples
 ---------------------------------
-
-Troubleshooting
-===============
-

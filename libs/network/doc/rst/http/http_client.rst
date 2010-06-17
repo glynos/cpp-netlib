@@ -1,5 +1,5 @@
 HTTP client
-===========
+-----------
 
 The first code example is the simplest thing you can do with the
 ``cpp-netlib``.  The application is a simple HTTP client.  All we are
@@ -8,9 +8,10 @@ the response body.  Without further ado, the code to do this as
 follows:
 
 ::
+
     #include <boost/network/protocol/http/client.hpp>
     #include <iostream>
-
+    
     int
     main(int argc, char *argv[]) {
         using namespace boost::network;
@@ -33,11 +34,13 @@ Since this is the first example, each line will be presented and
 explained in detail.
 
 ::
+
     #include <boost/network/protocol/http/client.hpp>
 
 All the code needed for the HTTP client resides in this header.
 
 ::
+
     http::client client;
 
 First we create a ``client`` object.  The ``client`` contains all the
@@ -45,12 +48,14 @@ connection and protocol logic.  The default HTTP client is version
 1.1, as specified in `RFC 2616`_.
 
 ::
+
     http::client::request request(argv[1]);
 
 Next, we create a ``request`` object, with a URI string passed as a
 constructor argument.
 
 ::
+
     request << header("Connection", "close");
 
 ``cpp-netlib`` makes use of stream syntax and *directives* to allow
@@ -60,6 +65,7 @@ close" to the request in order to signal that the connection will be
 closed after the request has completed.
 
 ::
+
     http::client::response response = client.get(request);
 
 Once we've built the request, we then make an HTTP GET request
@@ -67,6 +73,7 @@ throught the ``http::client`` from which an ``http::response`` is
 returned.  ``http::client`` supports all common HTTP methods.
 
 ::
+
     std::cout << body(response) << std::endl;
 
 Finally, though we don't check any error checking, the response body
