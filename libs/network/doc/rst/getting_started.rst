@@ -4,7 +4,7 @@ Getting started
 Installing an official release
 ------------------------------
 
-All stable versions of ``cpp-netlib`` can be downloaded from Github:
+All stable versions of :mod:`cpp-netlib` can be downloaded from Github:
 ``http://github.com/cpp-netlib/cpp-netlib/downloads``.  Each release
 is available as gzipped (Using the command ``tar xzf
 cpp-netlib.tar.gz``) or bzipped (Using ``tar xjf cpp-netlib.tar.bz2``)
@@ -16,7 +16,7 @@ using a tool such as 7zip_).
 Installing a development version
 --------------------------------
 
-The ``cpp-netlib`` uses Git_ for source control, so to use any
+The :mod:`cpp-netlib` uses Git_ for source control, so to use any
 development versions Git must be installed on your system.
 
 Using the command line, the command to get the latest code is:
@@ -42,11 +42,11 @@ For fans of Subversion_, the same code can be checked out from
 Getting Boost
 -------------
 
-``cpp-netlib`` depends on Boost_.  It should work for Boost 1.41.0 and
+:mod:`cpp-netlib` depends on Boost_.  It should work for Boost 1.41.0 and
 above.  If Boost is not installed on your system, the environment
 variable ``BOOST_ROOT`` must be defined, which must be the full path
 name of the top directory of the Boost distribution. Although Boost is
-mostly header only, applications built using ``cpp-netlib`` still
+mostly header only, applications built using :mod:`cpp-netlib` still
 requires linking with `Boost.System`_.
 
 .. _Boost: http://www.boost.org/doc/libs/release/more/getting_started/index.html
@@ -55,7 +55,7 @@ requires linking with `Boost.System`_.
 Getting CMake
 -------------
 
-The ``cpp-netlib`` uses CMake_.
+The :mod:`cpp-netlib` uses CMake_.
 
 .. _CMake: http://www.cmake.org/
 

@@ -1,2 +1,2 @@
-XMPP Client
+XMPP client
 ===========
