@@ -1,11 +1,15 @@
-HTTP client
-===========
+.. _http_client:
+
+*************
+ HTTP client
+*************
 
 The first code example is the simplest thing you can do with the
-``cpp-netlib``.  The application is a simple HTTP client.  All we are
-doing is creating and sending an HTTP request to a server and printing
-the response body.  Without further ado, the code to do this as
-follows:
+:mod:`cpp-netlib`.  The application is a simple HTTP client, which can
+be found in the subdirectory ``libs/network/example/http_client.cpp``.
+All we are doing is creating and sending an HTTP request to a server
+and printing the response body.  Without further ado, the code to do
+this as follows:
 
 .. code-block:: c++
 
@@ -58,7 +62,7 @@ constructor argument.
 
     request << header("Connection", "close");
 
-``cpp-netlib`` makes use of stream syntax and *directives* to allow
+:mod:`cpp-netlib` makes use of stream syntax and *directives* to allow
 developers to build complex message structures with greater
 flexibility and clarity.  Here, we add the HTTP header "Connection:
 close" to the request in order to signal that the connection will be

@@ -24,18 +24,19 @@ Contents
    :maxdepth: 2
 
    getting_started.rst
-   introduction.rst
-   http.rst
-   xmpp.rst
-   uri.rst
-   techniques.rst
-   install.rst
-   motivation.rst
-   objectives.rst
-   history.rst
-   pitfalls.rst
-   portability.rst
-   reference.rst
+   http_client.rst
+   hello_world_server.rst
+   hello_world_client.rst
+   xmpp_client.rst
+..   uri.rst
+..   techniques.rst
+..   install.rst
+..   motivation.rst
+..   objectives.rst
+..   history.rst
+..   pitfalls.rst
+..   portability.rst
+..   reference.rst
 
 Indices and tables
 ==================
