@@ -84,15 +84,15 @@ available in cpp-netlib. This default implementation is named ``basic_message``
 which supports a ``Tag`` template parameter. The definition of ``basic_message`` 
 looks like this:
 
-::
+.. code-block:: c++
 
     template <class Tag>
-    struct basic_message;
+    class basic_message;
 
 The ``basic_message`` template requires that the following tag-dispatched
 metafunctions are defined for the type ``Tag``:
 
-::
+.. code-block:: c++
 
     template <class Tag>
     struct string;

@@ -6,4 +6,4 @@ An in-depth look at the :mod:`cpp-netlib`
 
    message.rst
    uri.rst
-   protocol.rst
+   http.rst

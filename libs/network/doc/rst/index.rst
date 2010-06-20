@@ -27,14 +27,9 @@ Contents
    tutorials.rst
    in_depth.rst
    techniques.rst
-..   uri.rst
-..   install.rst
-..   motivation.rst
-..   objectives.rst
-..   history.rst
-..   pitfalls.rst
-..   portability.rst
-..   reference.rst
+   history.rst
+   install.rst
+   references.rst
 
 Indices and tables
 ==================
