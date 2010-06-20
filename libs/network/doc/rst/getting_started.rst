@@ -25,6 +25,7 @@ development versions Git must be installed on your system.
 Using the command line, the command to get the latest code is:
 
 ::
+
     shell$ git clone git://github.com/mikhailberis/cpp-netlib.git
 
 This should be enough information get to started.  To do more complex

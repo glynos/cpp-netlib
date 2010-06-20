@@ -11,7 +11,7 @@
 	  Dean Michael Berris <mikhailberis@gmail.com>
 :Date: Jun 16, 2010
 :Version: 0.7
-:Description: Complete user documentation, with examples, for the cpp-netlib.
+:Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2010.
             Distributed under the Boost Software License, Version
             1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -24,12 +24,10 @@ Contents
    :maxdepth: 2
 
    getting_started.rst
-   http_client.rst
-   hello_world_server.rst
-   hello_world_client.rst
-   xmpp_client.rst
+   tutorials.rst
+   in_depth.rst
+   techniques.rst
 ..   uri.rst
-..   techniques.rst
 ..   install.rst
 ..   motivation.rst
 ..   objectives.rst
