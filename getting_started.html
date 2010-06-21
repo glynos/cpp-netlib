@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting started &mdash; cpp-netlib v0.7 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.7',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.7 documentation" href="index.html" />
+    <link rel="next" title="Tutorials" href="tutorials.html" />
+    <link rel="prev" title="C++ Network Library" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorials.html" title="Tutorials"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="C++ Network Library"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started">
+<span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing-an-official-release">
+<h2>Installing an official release<a class="headerlink" href="#installing-an-official-release" title="Permalink to this headline">¶</a></h2>
+<p>All stable versions of <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> can be downloaded from Github:
+<tt class="docutils literal"><span class="pre">http://github.com/cpp-netlib/cpp-netlib/downloads</span></tt>.  Each release
+is available as gzipped (Using the command <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xzf</span>
+<span class="pre">cpp-netlib.tar.gz</span></tt>) or bzipped (Using <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xjf</span> <span class="pre">cpp-netlib.tar.bz2</span></tt>)
+tarball, or as a zipfile (<tt class="docutils literal"><span class="pre">unzip</span> <span class="pre">cpp-netlib.zip</span></tt>, or on Windows
+using a tool such as <a class="reference external" href="http://www.7-zip.org/">7zip</a>).</p>
+</div>
+<div class="section" id="installing-a-development-version">
+<h2>Installing a development version<a class="headerlink" href="#installing-a-development-version" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://git-scm.com/">Git</a> for source control, so to use any
+development versions Git must be installed on your system.</p>
+<p>Using the command line, the command to get the latest code is:</p>
+<div class="highlight-python"><pre>shell$ git clone git://github.com/mikhailberis/cpp-netlib.git</pre>
+</div>
+<p>This should be enough information get to started.  To do more complex
+things with Git, such as pulling changes or checking out a new branch,
+refer to the <a class="reference external" href="http://git-scm.com/documentation">Git documentation</a>.</p>
+<p>Windows users need to use <a class="reference external" href="http://code.google.com/p/msysgit/downloads/list">msysGit</a>, and to invoke the command above
+from a shell.</p>
+<p>For fans of <a class="reference external" href="http://subversion.tigris.org/">Subversion</a>, the same code can be checked out from
+<cite>http://svn.github.com/mikhailberis/cpp-netlib.git</cite>.</p>
+</div>
+<div class="section" id="getting-boost">
+<h2>Getting Boost<a class="headerlink" href="#getting-boost" title="Permalink to this headline">¶</a></h2>
+<p><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> depends on <a class="reference external" href="http://www.boost.org/doc/libs/release/more/getting_started/index.html">Boost</a>.  It should work for Boost 1.41.0 and
+above.  If Boost is not installed on your system, the environment
+variable <tt class="docutils literal"><span class="pre">BOOST_ROOT</span></tt> must be defined, which must be the full path
+name of the top directory of the Boost distribution. Although Boost is
+mostly header only, applications built using <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> still
+requires linking with <a class="reference external" href="http://www.boost.org/libs/system/index.html">Boost.System</a>.</p>
+</div>
+<div class="section" id="getting-cmake">
+<h2>Getting CMake<a class="headerlink" href="#getting-cmake" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://www.cmake.org/">CMake</a>.</p>
+</div>
+<div class="section" id="instructions-for-windows-users">
+<h2>Instructions for Windows Users<a class="headerlink" href="#instructions-for-windows-users" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="instructions-for-linux-users">
+<h2>Instructions for Linux Users<a class="headerlink" href="#instructions-for-linux-users" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="building-and-running-the-examples">
+<h2>Building and Running the Examples<a class="headerlink" href="#building-and-running-the-examples" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Getting started</a><ul>
+<li><a class="reference external" href="#installing-an-official-release">Installing an official release</a></li>
+<li><a class="reference external" href="#installing-a-development-version">Installing a development version</a></li>
+<li><a class="reference external" href="#getting-boost">Getting Boost</a></li>
+<li><a class="reference external" href="#getting-cmake">Getting CMake</a></li>
+<li><a class="reference external" href="#instructions-for-windows-users">Instructions for Windows Users</a></li>
+<li><a class="reference external" href="#instructions-for-linux-users">Instructions for Linux Users</a></li>
+<li><a class="reference external" href="#building-and-running-the-examples">Building and Running the Examples</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="index.html"
+                                  title="previous chapter">C++ Network Library</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="tutorials.html"
+                                  title="next chapter">Tutorials</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/getting_started.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorials.html" title="Tutorials"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="C++ Network Library"
+             >previous</a> |</li>
+        <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Glyn Matthews.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HTTP client &mdash; cpp-netlib v0.7 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.7',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.7 documentation" href="index.html" />
+    <link rel="up" title="HTTP tutorials" href="tutorials_http.html" />
+    <link rel="next" title="“Hello world” HTTP server" href="hello_world_server.html" />
+    <link rel="prev" title="HTTP tutorials" href="tutorials_http.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="hello_world_server.html" title="“Hello world” HTTP server"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorials_http.html" title="HTTP tutorials"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li>
+          <li><a href="tutorials.html" >Tutorials</a> &raquo;</li>
+          <li><a href="tutorials_http.html" accesskey="U">HTTP tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="http-client">
+<span id="id1"></span><h1>HTTP client<a class="headerlink" href="#http-client" title="Permalink to this headline">¶</a></h1>
+<p>The first code example is the simplest thing you can do with the
+<tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt>.  The application is a simple HTTP client, which can
+be found in the subdirectory <tt class="docutils literal"><span class="pre">libs/network/example/http_client.cpp</span></tt>.
+All we are doing is creating and sending an HTTP request to a server
+and printing the response body.  Without further ado, the code to do
+this as follows:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+
+<span class="kt">int</span>
+<span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Usage: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; [url]&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
+    <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">header</span><span class="p">(</span><span class="s">&quot;Connection&quot;</span><span class="p">,</span> <span class="s">&quot;close&quot;</span><span class="p">);</span>
+    <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">body</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Since this is the first example, each line will be presented and
+explained in detail.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
+</pre></div>
+</div>
+<p>All the code needed for the HTTP client resides in this header.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>First we create a <tt class="docutils literal"><span class="pre">client</span></tt> object.  The <tt class="docutils literal"><span class="pre">client</span></tt> contains all the
+connection and protocol logic.  The default HTTP client is version
+1.1, as specified in <a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC 2616</a>.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>Next, we create a <tt class="docutils literal"><span class="pre">request</span></tt> object, with a URI string passed as a
+constructor argument.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">header</span><span class="p">(</span><span class="s">&quot;Connection&quot;</span><span class="p">,</span> <span class="s">&quot;close&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> makes use of stream syntax and <em>directives</em> to allow
+developers to build complex message structures with greater
+flexibility and clarity.  Here, we add the HTTP header &#8220;Connection:
+close&#8221; to the request in order to signal that the connection will be
+closed after the request has completed.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Once we&#8217;ve built the request, we then make an HTTP GET request
+throught the <tt class="docutils literal"><span class="pre">http::client</span></tt> from which an <tt class="docutils literal"><span class="pre">http::response</span></tt> is
+returned.  <tt class="docutils literal"><span class="pre">http::client</span></tt> supports all common HTTP methods.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">body</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Finally, though we don&#8217;t do any error checking, the response body is
+printed to the console using the <tt class="docutils literal"><span class="pre">body</span></tt> directive.</p>
+<p>That&#8217;s all there is to the HTTP client</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="tutorials_http.html"
+                                  title="previous chapter">HTTP tutorials</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="hello_world_server.html"
+                                  title="next chapter">&#8220;Hello world&#8221; HTTP server</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/http_client.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="hello_world_server.html" title="“Hello world” HTTP server"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorials_http.html" title="HTTP tutorials"
+             >previous</a> |</li>
+        <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li>
+          <li><a href="tutorials.html" >Tutorials</a> &raquo;</li>
+          <li><a href="tutorials_http.html" >HTTP tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Glyn Matthews.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

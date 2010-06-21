@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HTTP implementation &mdash; cpp-netlib v0.7 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.7',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.7 documentation" href="index.html" />
+    <link rel="up" title="An in-depth look at the cpp-netlib" href="in_depth.html" />
+    <link rel="next" title="Techniques" href="techniques.html" />
+    <link rel="prev" title="The URI template" href="uri.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="techniques.html" title="Techniques"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="uri.html" title="The URI template"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li>
+          <li><a href="in_depth.html" accesskey="U">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="http-implementation">
+<h1>HTTP implementation<a class="headerlink" href="#http-implementation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="http-client">
+<h2>HTTP client<a class="headerlink" href="#http-client" title="Permalink to this headline">¶</a></h2>
+<p>The cpp-netlib HTTP client is composed of three template classes:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">namespace</span> <span class="n">http</span> <span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span> <span class="n">basic_request</span><span class="p">;</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span> <span class="n">basic_response</span><span class="p">;</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span> <span class="n">basic_client</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">basic_request</span><span class="o">&lt;</span><span class="n">default_</span><span class="o">&gt;</span> <span class="n">request</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">basic_response</span><span class="o">&lt;</span><span class="n">default_</span><span class="o">&gt;</span> <span class="n">response</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">basic_client</span><span class="o">&lt;</span><span class="n">default_</span><span class="o">&gt;</span> <span class="n">client</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Each of these use again the tag-based static polymorphism that was described in
+previous sections.  A default, human-readable typedef is provided for each one
+of the <tt class="docutils literal"><span class="pre">basic_request</span></tt>,  <tt class="docutils literal"><span class="pre">basic_response</span></tt> and  <tt class="docutils literal"><span class="pre">basic_client</span></tt>.
+<tt class="docutils literal"><span class="pre">basic_request</span></tt> and <tt class="docutils literal"><span class="pre">basic_response</span></tt> each model the message concept. They
+make use of directives to set and get HTTP headers, body etc. The code snippet
+below shows how to set the HTTP header field &#8220;Connection&#8221; with the option
+&#8220;close&#8221; using the DSEL described in the directives section:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+<span class="n">http</span><span class="o">::</span><span class="n">request</span> <span class="n">request</span><span class="p">(</span><span class="s">&quot;http://www.boost.org/&quot;</span><span class="p">);</span>
+<span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">header</span><span class="p">(</span><span class="s">&quot;Connection&quot;</span><span class="p">,</span> <span class="s">&quot;close&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">basic_client</span></tt> implements all HTTP methods as member functions (HEAD,
+GET, POST, PUT, DELETE).  Therefore, the code to make an HTTP request looks
+trivially simple:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+<span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
+<span class="n">http</span><span class="o">::</span><span class="n">request</span> <span class="n">request</span><span class="p">(</span><span class="s">&quot;http://www.boost.org/&quot;</span><span class="p">);</span>
+<span class="n">http</span><span class="o">::</span><span class="n">response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Accessing data from <tt class="docutils literal"><span class="pre">http::response</span></tt> is also done using directives.  To
+get the response headers, we use the <tt class="docutils literal"><span class="pre">headers</span></tt> directive which returns,
+in the default case, a map of strings to strings:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">headers_range</span><span class="o">&lt;</span><span class="n">http_client</span><span class="o">::</span><span class="n">response</span><span class="o">&gt;::</span><span class="n">type</span> <span class="n">response_headers</span><span class="p">;</span>
+<span class="n">boost</span><span class="o">::</span><span class="n">range_iterator</span><span class="o">&lt;</span><span class="n">response_headers</span><span class="o">&gt;::</span><span class="n">type</span> <span class="n">iterator</span><span class="p">;</span>
+
+<span class="n">response_headers</span> <span class="n">headers_</span> <span class="o">=</span> <span class="n">headers</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">headers_</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">headers_</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="http-server">
+<h2>HTTP server<a class="headerlink" href="#http-server" title="Permalink to this headline">¶</a></h2>
+<p>As with the HTTP client, the HTTP server that is provided with cpp-netlib is
+extensible through the tag mechanism and is embeddable.  The template class
+declaration of <tt class="docutils literal"><span class="pre">basic_server</span></tt> is given below:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">namespace</span> <span class="n">http</span> <span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="p">,</span> <span class="k">class</span> <span class="nc">RequestHandler</span><span class="o">&gt;</span> <span class="n">basic_server</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The second template argument is used to specify the request handler type. The
+request handler type is a functor type which should overload the function call
+operator (<tt class="docutils literal"><span class="pre">RequestHandler::operator()</span></tt> should be overloaded) that takes two
+parameters: the first one being a reference to a <tt class="docutils literal"><span class="pre">const</span> <span class="pre">basic_request&lt;Tag&gt;</span></tt>
+and the second being a reference to a <tt class="docutils literal"><span class="pre">basic_response&lt;Tag&gt;</span></tt> instance.</p>
+<p>All the logic for parsing the HTTP request and building the <tt class="docutils literal"><span class="pre">const</span>
+<span class="pre">basic_request&lt;Tag&gt;</span></tt> object resides internally in the <tt class="docutils literal"><span class="pre">basic_server</span></tt> template.
+Processing the request is delegated to the <tt class="docutils literal"><span class="pre">RequestHandler</span></tt> type, and the
+assumption of which would be that the response is formed inside the
+<tt class="docutils literal"><span class="pre">RequestHandler</span></tt> function call operator overload.</p>
+<p>The <tt class="docutils literal"><span class="pre">basic_server</span></tt> template however is only an underlying implementation while
+the user-visible implementation is the <tt class="docutils literal"><span class="pre">http::server</span></tt> template. This simply
+specializes the <tt class="docutils literal"><span class="pre">basic_server</span></tt> template to use the <tt class="docutils literal"><span class="pre">default_</span></tt> tag and
+forwards the <tt class="docutils literal"><span class="pre">RequestHandler</span></tt> parameter:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">namespace</span> <span class="n">http</span> <span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">RequestHandler</span><span class="o">&gt;</span> <span class="n">server</span>
+    <span class="o">:</span> <span class="k">public</span> <span class="n">basic_server</span><span class="o">&lt;</span><span class="n">default_</span><span class="p">,</span> <span class="n">RequestHandler</span><span class="o">&gt;</span>
+    <span class="p">{};</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To use the forwarding server type you just supply the request handler
+implementation as the parameter. For example, an &#8220;echo&#8221; server example might
+look something like this:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+<span class="k">struct</span> <span class="n">echo</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">http</span><span class="o">::</span><span class="n">server</span><span class="o">&lt;</span><span class="n">echo</span><span class="o">&gt;</span> <span class="n">echo_server</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">echo</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="k">operator</span> <span class="p">()</span> <span class="p">(</span><span class="k">const</span> <span class="n">echo_server</span><span class="o">::</span><span class="n">request</span> <span class="o">&amp;</span><span class="n">request</span><span class="p">,</span>
+                      <span class="n">echo_server</span><span class="o">::</span><span class="n">response</span> <span class="o">&amp;</span><span class="n">response</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">echo_server</span><span class="o">::</span><span class="n">response</span><span class="o">::</span><span class="n">stock_reply</span><span class="p">(</span>
+            <span class="n">echo_server</span><span class="o">::</span><span class="n">response</span><span class="o">::</span><span class="n">ok</span><span class="p">,</span>
+            <span class="n">body</span><span class="p">(</span><span class="n">request</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Here, all we&#8217;re doing is returning the original request body with an HTTP OK
+response (200).</p>
+</div>
+<div class="section" id="http-uri">
+<h2>HTTP URI<a class="headerlink" href="#http-uri" title="Permalink to this headline">¶</a></h2>
+<p>Firstly, cpp-netlib provides a specialization and <tt class="docutils literal"><span class="pre">typedef</span></tt> for an HTTP URI:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">namespace</span> <span class="n">http</span> <span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">basic_uri</span><span class="p">;</span>
+    <span class="k">typedef</span> <span class="n">basic_uri</span><span class="o">&lt;</span><span class="n">default_</span><span class="o">&gt;</span> <span class="n">uri</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">basic_uri</span></tt> provides a parser which breaks down a URI string passed to it&#8217;s
+constructor into different parts.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">uri</span><span class="p">;</span>
+<span class="n">http</span><span class="o">::</span><span class="n">uri</span> <span class="n">uri_</span><span class="p">(</span><span class="s">&quot;http://www.boost.org/&quot;</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">valid</span><span class="p">(</span><span class="n">uri_</span><span class="p">));</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">scheme</span><span class="p">(</span><span class="n">uri_</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;http&quot;</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">host</span><span class="p">(</span><span class="n">uri_</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;www.boost.org&quot;</span><span class="p">)</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">port</span><span class="p">(</span><span class="n">uri_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">80</span><span class="p">)</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">path</span><span class="p">(</span><span class="n">uri_</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;/&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The syntax of the HTTP URI are defined in RFC 1738 section 3.3 <a class="footnote-reference" href="#id2" id="id1">[1]</a> and the
+default URI provided with cpp-netlib conforms to this.  In such a way,
+specializations that conform to any URI scheme can be provided.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="http://tools.ietf.org/html/rfc1738">http://tools.ietf.org/html/rfc1738</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">HTTP implementation</a><ul>
+<li><a class="reference external" href="#http-client">HTTP client</a></li>
+<li><a class="reference external" href="#http-server">HTTP server</a></li>
+<li><a class="reference external" href="#http-uri">HTTP URI</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="uri.html"
+                                  title="previous chapter">The URI template</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="techniques.html"
+                                  title="next chapter">Techniques</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/http.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="techniques.html" title="Techniques"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="uri.html" title="The URI template"
+             >previous</a> |</li>
+        <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li>
+          <li><a href="in_depth.html" >An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Glyn Matthews.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>
