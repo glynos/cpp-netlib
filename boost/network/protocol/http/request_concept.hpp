@@ -20,22 +20,28 @@ namespace boost { namespace network { namespace http {
         typedef typename R::string_type string_type;
         typedef typename R::port_type port_type;
         
-        BOOST_CONECEPT_USAGE(Request) {
-            R request_(string_type());
-            swap(request_, request_); // swappable via ADL
+        BOOST_CONCEPT_USAGE(Request) {
+            string_type tmp;
+            R request_(tmp);
+            swap(request, request_); // swappable via ADL
 
             string_type host_ = host(request);
-            port_type port = port(request);
-            string_type path = path(request);
+            port_type port_ = port(request);
+            string_type path_ = path(request);
+            string_type query_ = query(request);
+            string_type anchor_ = anchor(request);
+            string_type protocol_ = protocol(request);
 
-            request << host(string_type())
-                << port(port_type())
-                << path(string_type())
-                ;
+            request << uri(string_type());
 
-            host(request, string_type());
-            port(request, port_type());
-            path(request, string_type());
+            uri(request, string_type());
+
+            (void)host_;
+            (void)port_;
+            (void)path_;
+            (void)query_;
+            (void)anchor_;
+            (void)protocol_;
         }
 
     private:
