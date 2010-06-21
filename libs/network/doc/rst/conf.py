@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # cpp-netlib documentation build configuration file, created by
-# sphinx-quickstart on Wed Jun 16 23:53:37 2010.
+# sphinx-quickstart on Mon Jun 21 19:31:22 2010.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -64,7 +64,7 @@ release = '0.7'
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
-exclude_trees = ['_build', 'http', 'reference', 'techniques', 'xmpp']
+exclude_trees = ['_build']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
