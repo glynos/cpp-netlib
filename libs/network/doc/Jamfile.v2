@@ -5,11 +5,11 @@
 
 path-constant boost-images : doc/src/images ;
 
-xml network : network.qbk ;
+xml cpp-netlib : cpp-netlib.qbk ;
 
 boostbook standalone
     :
-        network
+        cpp-netlib
     :
         # HTML options first:
         # Use graphics not text for navigation:

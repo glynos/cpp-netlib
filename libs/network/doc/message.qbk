@@ -88,7 +88,7 @@ __message__:
  } // namespace network
  } // namespace boost
 
-[endsect] [/tag_dispatching]
+[endsect] [/ tag_dispatching]
 
 [section:transformation_layer Transformation layer]
 The transformation layer defines the algorithms that can be applied on
@@ -101,7 +101,7 @@ the Message concept.  Functions in the transform layer take the form:
      >
  basic_message<Tag> &transform(basic_message<Tag> &, ...);
 
-[endsect] [/transformation_layer]
+[endsect] [/ transformation_layer]
 
 [section:rendering_layer Rendering layer]
 The rendering layer defines the algorithms used to render a message
@@ -114,6 +114,6 @@ layer take the form:
      >
  unspecified &render(const basic_message<Tag> &, ...);
 
-[endsect] [/rendering_layer]
+[endsect] [/ rendering_layer]
 
-[endsect] [/message]
+[endsect] [/ message]
