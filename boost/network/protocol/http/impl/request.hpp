@@ -1,5 +1,5 @@
 
-//          Copyright Dean Michael Berris 2007,2009.
+//          Copyright Dean Michael Berris 2007,2009,2010.
 //          Copyright Michael Dickey 2008.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
@@ -18,6 +18,8 @@
 #include <boost/network/protocol/http/header.hpp>
 #include <boost/network/traits/vector.hpp>
 
+#include <boost/cstdint.hpp>
+
 namespace boost { namespace network { namespace http {
 
     /** request.hpp
@@ -31,11 +33,12 @@ namespace boost { namespace network { namespace http {
     class basic_request : public basic_message<Tag>
     {
 
-        boost::network::uri::http::uri uri_;
+        mutable boost::network::uri::http::uri uri_;
 
     public:
         typedef Tag tag;
         typedef typename string<Tag>::type string_type;
+        typedef boost::uint16_t port_type;
 
         explicit basic_request(string_type const & uri_)
         : uri_(uri_) 
@@ -70,7 +73,7 @@ namespace boost { namespace network { namespace http {
             return uri_.host();
         }
 
-        unsigned int port() const {
+        port_type port() const {
             return uri_.port();
         }
 
@@ -90,6 +93,10 @@ namespace boost { namespace network { namespace http {
             return uri_.scheme();
         }
 
+        void uri(string_type const & new_uri) const {
+            uri_ = new_uri;
+        }
+
     };
 
     /** This is the implementation of a POD request type
@@ -104,6 +111,7 @@ namespace boost { namespace network { namespace http {
         typedef tags::http_server tag;
         typedef string<tags::http_server>::type string_type;
         typedef vector<tags::http_server>::apply<request_header>::type vector_type;
+        typedef boost::uint16_t port_type;
         string_type method;
         string_type uri;
         boost::uint8_t http_version_major;

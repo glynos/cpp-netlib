@@ -29,13 +29,19 @@ BOOST_FIXTURE_TEST_SUITE(http_message_test_suite, fixtures)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (request_constructor_test, T, tag_types) {
     http::basic_request<T> request("http://boost.org");
-    typedef http::basic_request<T>::type string_type;
-    string_type host = host(request);
-    boost::uint16_t port = port(request);
-    string_type path = path(request);
+    typedef http::basic_request<T>::string_type string_type;
+    string_type host = http::host(request);
+    boost::uint16_t port = http::port(request);
+    string_type path = http::path(request);
+    string_type query = http::query(request);
+    string_type anchor = http::anchor(request);
+    string_type protocol = http::protocol(request);
     BOOST_CHECK_EQUAL ( host , "boost.org" );
     BOOST_CHECK_EQUAL ( port , 80u );
     BOOST_CHECK_EQUAL ( path, "/" );
+    BOOST_CHECK_EQUAL ( query, "" );
+    BOOST_CHECK_EQUAL ( anchor, "" );
+    BOOST_CHECK_EQUAL ( protocol, "http");
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (request_copy_constructor_test, T, tag_types) {
