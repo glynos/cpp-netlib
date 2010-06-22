@@ -55,8 +55,8 @@ namespace boost { namespace network { namespace http {
                 new connection_impl(
                     resolver
                     , follow_redirect_
-                    , host(request)
-                    , lexical_cast<string_type>(port(request))
+                    , host(request_)
+                    , lexical_cast<string_type>(port(request_))
                     , boost::bind(
                         &async_connection_policy<Tag, version_major, version_minor>::resolve,
                         this,
