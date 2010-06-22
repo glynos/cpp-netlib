@@ -23,7 +23,7 @@ namespace boost { namespace network { namespace http {
                 : message_(message) {}
             typedef typename basic_request<Tag>::string_type string_type;
             operator string_type() {
-                return message_.uri();
+                return message_.uri().raw();
             }
         };
     }

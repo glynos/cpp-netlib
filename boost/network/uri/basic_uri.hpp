@@ -78,6 +78,10 @@ namespace boost { namespace network { namespace uri {
                 return parts_.fragment ? *parts_.fragment : string_type();
             }
 
+            string_type raw() const {
+                return raw_;
+            }
+
             bool valid() const {
                 return valid_;
             }
