@@ -28,7 +28,7 @@ namespace boost { namespace network { namespace http {
             : version_(other.version_) {}
 
         template <class T> basic_response<T> const & operator() (basic_response<T> const & response) const {
-            response.version() = version_;
+            response.version(version_);
             return response;
         }
     

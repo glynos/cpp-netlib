@@ -15,6 +15,7 @@
 #include <boost/asio/write.hpp>
 #include <boost/asio/read_until.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/network/protocol/http/response.hpp>
 
 #include <boost/network/protocol/http/impl/http_sync_connection.hpp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
@@ -69,9 +70,9 @@ namespace boost { namespace network { namespace http { namespace impl {
             if (!response_stream || http_version.substr(0, 5) != "HTTP/")
                 throw std::runtime_error("Invalid response");
 
-            response_.version() = http_version;
-            response_.status() = status_code;
-            response_.status_message() = status_message;
+            response_ << http::version(http_version)
+                << http::status(status_code)
+                << http::status_message(status_message);
         }
 
         template <class Socket>
@@ -190,7 +191,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 throw std::runtime_error("Unsupported HTTP version number.");
             }
 
-            response_ << body(body_stream.str());
+            response_ << network::body(body_stream.str());
         }
 
 

@@ -44,7 +44,7 @@ namespace boost { namespace network { namespace http {
                     pimpl->send_request_impl(method, request_);
 
                     response_ = basic_response<Tag>();
-                    response_ << source(request_.host());
+                    response_ << network::source(request_.host());
 
                     boost::asio::streambuf response_buffer;
                     pimpl->read_status(response_, response_buffer);

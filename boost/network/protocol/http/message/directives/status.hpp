@@ -29,7 +29,7 @@ namespace boost { namespace network { namespace http {
             : status_(other.status_) {}
 
         template <class T> basic_response<T> const & operator() (basic_response<T> const & response) const {
-            response.status() = status_;
+            response.status(status_);
             return response;
         }
 

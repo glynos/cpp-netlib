@@ -16,7 +16,7 @@ using namespace boost::network;
 typedef boost::mpl::list<
     tags::http_default_8bit_tcp_resolve
     , tags::http_default_8bit_udp_resolve
-//    , tags::http_async_8bit_udp_resolve
+    , tags::http_async_8bit_udp_resolve
 > tag_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test, T, tag_types) {

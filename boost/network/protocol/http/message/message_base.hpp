@@ -14,11 +14,9 @@
 
 namespace boost { namespace network { namespace http {
 
-    namespace impl {
-        template <class Tag>
-        struct async_message_base {};
-    };
-
+    template <class Tag>
+    struct async_message;
+    
     template <class Tag>
     struct message_base
         : mpl::if_<
@@ -26,7 +24,7 @@ namespace boost { namespace network { namespace http {
                 tags::async,
                 Tag
             >,
-            impl::async_message_base<Tag>,
+            async_message<Tag>,
             message_impl<Tag>
         >
     {};

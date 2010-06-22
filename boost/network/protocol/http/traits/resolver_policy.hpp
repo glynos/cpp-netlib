@@ -8,6 +8,11 @@
 
 #include <boost/network/tags.hpp>
 #include <boost/network/protocol/http/policies/sync_resolver.hpp>
+#include <boost/network/protocol/http/policies/async_resolver.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_http.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -15,29 +20,16 @@ namespace boost { namespace network { namespace http {
     struct unsupported_tag;
 
     template <class Tag>
-    struct resolver_policy {
-        typedef unsupported_tag<Tag> type;
-    };
-
-    template <>
-    struct resolver_policy<tags::http_default_8bit_tcp_resolve> {
-        typedef policies::sync_resolver<tags::http_default_8bit_tcp_resolve> type;
-    };
-
-    template <>
-    struct resolver_policy<tags::http_default_8bit_udp_resolve> {
-        typedef policies::sync_resolver<tags::http_default_8bit_udp_resolve> type;
-    };
-
-    template <>
-    struct resolver_policy<tags::http_keepalive_8bit_udp_resolve> {
-        typedef policies::sync_resolver<tags::http_keepalive_8bit_udp_resolve> type;
-    };
-
-    template <>
-    struct resolver_policy<tags::http_keepalive_8bit_tcp_resolve> {
-        typedef policies::sync_resolver<tags::http_keepalive_8bit_tcp_resolve> type;
-    };
+    struct resolver_policy :
+        mpl::if_<
+            mpl::and_< is_async<Tag>,is_http<Tag> >,
+            policies::async_resolver<Tag>,
+            typename mpl::if_<is_http<Tag>,
+                policies::sync_resolver<Tag>,
+                unsupported_tag<Tag>
+            >::type
+            >
+    {};
 
 } // namespace http
 

@@ -66,7 +66,69 @@ namespace boost { namespace network { namespace http {
              * @return true if successful
              */
             static bool const base64_encode(string_type const &input, string_type & output);
+
+    protected:
+        mutable string_type version_;
+        mutable boost::uint16_t status_;
+        mutable string_type status_message_;
+
+    private:
+        typedef basic_message<Tag> base_type;
+
+    public:
+
+        message_impl()
+            : version_(), status_(0u), status_message_()
+        {}
+
+        message_impl(message_impl const & other) 
+            : version_(other.version_), status_(other.status_), status_message_(other.status_message_)
+        {}
+
+        void version(string_type const & version) const {
+            version_ = version;
+        }
+
+        string_type const version() const {
+            return version_;
+        }
+
+        void status(boost::uint16_t status) const {
+            status_ = status;
+        }
+
+        boost::uint16_t const status() const {
+            return status_;
+        }
+
+        void status_message(string_type const & status_message) const {
+            status_message_ = status_message;
+        }
+
+        string_type const status_message() const {
+            return status_message_;
+        }
+
+        message_impl & operator=(message_impl rhs) {
+            rhs.swap(*this);
+            return *this;
+        }
+
+        void swap(message_impl & other) {
+            basic_message<Tag> & base_ref(other),
+                this_ref(*this);
+            std::swap(this_ref, base_ref);
+            std::swap(status_, other.status_);
+            std::swap(status_message_, other.status_message_);
+            std::swap(version_, other.version_);
+        }
+
     };
+
+    template <class Tag>
+    inline void swap(message_impl<Tag> & lhs, message_impl<Tag> & rhs) {
+        lhs.swap(rhs);
+    }
 
     typedef message_impl<tags::http_default_8bit_tcp_resolve> message;
 

@@ -12,7 +12,7 @@
 
 #include <boost/cstdint.hpp>
 #include <boost/network/protocol/http/response_concept.hpp>
-
+#include <boost/network/protocol/http/message/async_message.hpp>
 #include <boost/network/protocol/http/message/message_base.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -25,33 +25,17 @@ namespace boost { namespace network { namespace http {
     private:
         typedef typename message_base<Tag>::type base_type;
 
-        mutable string_type version_;
-        mutable boost::uint16_t status_;
-        mutable string_type status_message_;
-
     public:
 
         typedef Tag tag;
 
         basic_response()
-        : base_type(), version_(), status_(0u), status_message_()
-        { };
+        : base_type()
+        {}
 
         basic_response(basic_response const & other)
-        : base_type(other), version_(other.version_), status_(other.status_), status_message_(other.status_message_)
-        { };
-
-        string_type & version() const {
-            return version_;
-        };
-
-        boost::uint16_t & status() const {
-            return status_;
-        };
-
-        string_type & status_message() const {
-            return status_message_;
-        };
+        : base_type(other)
+        {}
 
         basic_response & operator=(basic_response rhs) {
             rhs.swap(*this);
@@ -59,12 +43,9 @@ namespace boost { namespace network { namespace http {
         };
 
         void swap(basic_response & other) {
-            message_impl<Tag> & base_ref(other);
-            message_impl<Tag> & this_ref(*this);
-            this_ref.swap(base_ref);
-            std::swap(other.version_, version_);
-            std::swap(other.status_, status_);
-            std::swap(other.status_message_, status_message_);
+            base_type & base_ref(other),
+                & this_ref(*this);
+            std::swap(this_ref, base_ref);
         };
     };
 
