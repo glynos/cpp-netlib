@@ -97,6 +97,10 @@ namespace boost { namespace network { namespace http {
             uri_ = new_uri;
         }
 
+        boost::network::uri::http::uri const uri() const {
+            return uri_;
+        }
+
     };
 
     /** This is the implementation of a POD request type

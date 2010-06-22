@@ -50,9 +50,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (request_copy_constructor_test, T, tag_types) {
             << body("Hello, World!")
         ;
     http::basic_request<T> copy(request);
-    BOOST_CHECK_EQUAL ( copy.host(), request.host() );
-    BOOST_CHECK_EQUAL ( copy.port(), request.port() );
-    BOOST_CHECK_EQUAL ( request.path(), request.path() );
+    typedef http::basic_request<T>::string_type string_type;
+    string_type orig_host = http::host(request),
+        copy_host = http::host(copy);
+    boost::uint16_t orig_port = http::port(request),
+        copy_port = http::port(copy);
+    string_type orig_path = http::path(request),
+        copy_path = http::path(copy);
+    BOOST_CHECK_EQUAL ( orig_host, copy_host );
+    BOOST_CHECK_EQUAL ( orig_port, copy_port );
+    BOOST_CHECK_EQUAL ( orig_path, copy_path );
     BOOST_CHECK_EQUAL ( body(request), body(copy) );
 }
 
@@ -63,9 +70,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (request_assignment_test, T, tag_types) {
         ;
     http::basic_request<T> copy;
     copy = request;
-    BOOST_CHECK_EQUAL ( copy.host(), request.host() );
-    BOOST_CHECK_EQUAL ( copy.port(), request.port() );
-    BOOST_CHECK_EQUAL ( request.path(), request.path() );
+    typedef http::basic_request<T>::string_type string_type;
+    string_type orig_host = http::host(request),
+        copy_host = http::host(copy);
+    boost::uint16_t orig_port = http::port(request),
+        copy_port = http::port(copy);
+    string_type orig_path = http::path(request),
+        copy_path = http::path(copy);
+    BOOST_CHECK_EQUAL ( orig_host, copy_host );
+    BOOST_CHECK_EQUAL ( orig_port, copy_port );
+    BOOST_CHECK_EQUAL ( orig_path, copy_path );
     BOOST_CHECK_EQUAL ( body(request), body(copy) );
 }
 
@@ -73,12 +87,26 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (request_swap_test, T, tag_types) {
     boost::network::http::basic_request<T> request("http://boost.org/");
     boost::network::http::basic_request<T> other;
     swap(other, request); // ADL
-    BOOST_CHECK_EQUAL ( request.host(), "" );
-    BOOST_CHECK_EQUAL ( request.port(), 80u );
-    BOOST_CHECK_EQUAL ( request.path(), "/" );
-    BOOST_CHECK_EQUAL ( other.host(), "boost.org" );
-    BOOST_CHECK_EQUAL ( other.port(), 80u );
-    BOOST_CHECK_EQUAL ( other.path(), "/" );
+    typedef http::basic_request<T>::string_type string_type;
+    string_type orig_host = http::host(request),
+        orig_path = http::path(request),
+        copy_host = http::host(other),
+        copy_path = http::path(other);
+    boost::uint16_t orig_port = http::port(request),
+        copy_port = http::port(request);
+    BOOST_CHECK_EQUAL ( orig_host, "" );
+    BOOST_CHECK_EQUAL ( orig_port, 80u );
+    BOOST_CHECK_EQUAL ( orig_path, "/" );
+    BOOST_CHECK_EQUAL ( copy_host, "boost.org" );
+    BOOST_CHECK_EQUAL ( copy_port, 80u );
+    BOOST_CHECK_EQUAL ( copy_path, "/" );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE (request_uri_directive_test, T, tag_types) {
+    http::basic_request<T> request;
+    request << http::uri("http://boost.org/");
+    typename http::basic_request<T>::string_type uri_ = http::uri(request);
+    BOOST_CHECK_EQUAL(uri_, "http://boost.org/");
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (response_constructor_test, T, tag_types) {
