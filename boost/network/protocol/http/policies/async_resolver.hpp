@@ -7,6 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/asio/placeholders.hpp>
 
 namespace boost { namespace network { namespace http { namespace policies {
 
@@ -41,7 +42,7 @@ namespace boost { namespace network { namespace http { namespace policies {
             if (cache_resolved_) {
                 endpoint_cache::iterator iter = 
                     endpoint_cache_.find(boost::to_lower_copy(host));
-                if (iter != resolved_map_.end()) {
+                if (iter != endpoint_cache_.end()) {
                     boost::system::error_code ignored;
                     once_resolved(ignored, iter->second);
                     return;
