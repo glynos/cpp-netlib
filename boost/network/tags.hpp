@@ -14,13 +14,14 @@ namespace boost { namespace network { namespace tags {
     struct http {};
     struct tcp {};
     struct udp {};
+    struct sync {};
 
 struct default_string {};
 struct default_wstring {};
-struct http_default_8bit_tcp_resolve : http,tcp {};
-struct http_default_8bit_udp_resolve : http,udp {};
-struct http_keepalive_8bit_tcp_resolve : http,tcp {};
-struct http_keepalive_8bit_udp_resolve : http,udp {};
+struct http_default_8bit_tcp_resolve : http,sync,tcp {};
+struct http_default_8bit_udp_resolve : http,sync,udp {};
+struct http_keepalive_8bit_tcp_resolve : http,sync,tcp {};
+struct http_keepalive_8bit_udp_resolve : http,sync,udp {};
 struct http_server : http {};
 struct http_async_8bit_udp_resolve : http,async,udp {};
 

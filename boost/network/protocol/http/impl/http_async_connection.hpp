@@ -20,14 +20,21 @@ namespace boost { namespace network { namespace http { namespace impl {
         : async_connection_base<Tag,version_major,version_minor> {
             typedef async_connection_base<Tag,version_major,version_minor> base;
             typedef typename base::resolver_type resolver_type;
+            typedef typename base::resolver_base::resolver_iterator_pair resolver_iterator_pair;
             typedef typename base::response response;
             typedef typename base::string_type string_type;
             typedef typename base::request request;
 
-            http_async_connection(resolver_type & resolver)
-                : resolver_(resolver) {}
+            http_async_connection(
+                boost::shared_ptr<resolver_type> resolver,
+                resolver_function resolve, 
+                bool follow_redirect, )
+                : resolver_(resolver),
+                resolve_(resolve),
+                follow_redirect_(follow_redirect)
+            {}
 
-            virtual response start(string_type const & hostname, string_type const & port, request const & request) {
+            virtual response start(request const & request, string_type const & method, bool get_body) {
                 response temp;
                 source(temp, source_promise.get_future());
                 destination(temp, destination_promise.get_future());
@@ -36,12 +43,22 @@ namespace boost { namespace network { namespace http { namespace impl {
                 version(temp, version_promise.get_future());
                 status(temp, status_promise.get_future());
                 status_message(temp, status_message_promise.get_future());
-                resolver_.async_resolve(); //FIXME -- wire the correct parameters
+
+                if (!get_body) body_promise.set_value(string_type());
+
+                // start things off by resolving the host.
+                resolve_(resolver_, host(request),
+                    request_strand->wrap(
+                        boost::bind(
+                        &http_async_connection<Tag,version_major,version_minor>::handle_resolved,
+                        http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                        _1, _2)));
+                
                 return temp;
             }
 
     private:
-        void handle_resolved(boost::system::error_code & ec) {
+        void handle_resolved(boost::system::error_code & ec, resolver_iterator_pair endpoint_range) {
             if (!ec) {
                 async_connect(); //FIXME -- wire the correct parameters
             }
@@ -77,7 +94,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        resolver_type & resolver_;
+        resolve_function resolve;
         boost::promise<string_type> version_promise;
         boost::promise<boost::uint16_t> status_promise;
         boost::promise<string_type> status_message_promise;

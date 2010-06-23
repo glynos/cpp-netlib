@@ -31,32 +31,31 @@ namespace boost { namespace network { namespace http {
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
         
         struct connection_impl {
-            connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & hostname, string_type const & port, resolver_function_type resolve, bool https)
-                : pimpl()
-                , follow_redirect_(follow_redirect)
-            {
-                pimpl.reset(impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolver, resolve, https));
-            }
+            connection_impl(
+                bool follow_redirect, 
+                resolver_function_type resolve, 
+                bool https
+                )
+                : pimpl(
+                    impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolve, follow_redirect, https)
+                )
+            {}
 
             basic_response<Tag> send_request(string_type const & method, basic_request<Tag> const & request_, bool get_body) {
-                return pimpl->start(host(request_), lexical_cast<string_type>(port(request_)), follow_redirect_);
+                return pimpl->start(request_, method, get_body);
             }
 
         private:
 
             shared_ptr<http::impl::async_connection_base<Tag, version_major, version_minor> > pimpl;
-            bool follow_redirect_;
 
         };
 
         typedef boost::shared_ptr<connection_impl> connection_ptr;
-        connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_) {
+        connection_ptr get_connection(boost::shared_ptr<resolver_type> resolver, basic_request<Tag> const & request_) {
             connection_ptr connection_(
                 new connection_impl(
-                    resolver
-                    , follow_redirect_
-                    , host(request_)
-                    , lexical_cast<string_type>(port(request_))
+                    follow_redirect_
                     , boost::bind(
                         &async_connection_policy<Tag, version_major, version_minor>::resolve,
                         this,
