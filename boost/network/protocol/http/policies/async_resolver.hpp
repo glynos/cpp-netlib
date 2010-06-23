@@ -6,6 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/enable_shared_from_this.hpp>
+
 namespace boost { namespace network { namespace http { namespace policies {
 
     template <class Tag>
@@ -24,12 +26,10 @@ namespace boost { namespace network { namespace http { namespace policies {
         boost::shared_ptr<boost::asio::io_service> service_;
         boost::shared_ptr<boost::asio::io_service::strand> resolver_strand_;
 
-        explicit async_resolver(bool cache_resolved, boost::shared_ptr<boost::asio::io_service> service)
+        explicit async_resolver(bool cache_resolved)
             : cache_resolved_(cache_resolved), endpoint_cache_()
         {
-            service_ = service;
-            resolver_strand_.reset(new
-                boost::asio::io_service::strand(*service_));
+            
         }
 
         void resolve(
@@ -38,8 +38,9 @@ namespace boost { namespace network { namespace http { namespace policies {
             boost::function<void(boost::system::error_code const &,resolver_iterator_pair)> once_resolved
             ) 
         {
-            if (cache_resolved) {
-                endpoint_cache::iterator iter = resolved_map_.find(boost::to_lower_copy(host));
+            if (cache_resolved_) {
+                endpoint_cache::iterator iter = 
+                    endpoint_cache_.find(boost::to_lower_copy(host));
                 if (iter != resolved_map_.end()) {
                     boost::system::error_code ignored;
                     once_resolved(ignored, iter->second);
@@ -79,7 +80,7 @@ namespace boost { namespace network { namespace http { namespace policies {
             bool inserted = false;
             if (!ec && cache_resolved) {
                 boost::fusion::tie(iter, inserted) =
-                    resolved_map_.insert(
+                    endpoint_cache_.insert(
                         std::make_pair(
                             host,
                             std::make_pair(

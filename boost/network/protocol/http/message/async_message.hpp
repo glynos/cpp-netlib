@@ -34,7 +34,7 @@ namespace boost { namespace network { namespace http {
             version_(other.version_),
             source_(other.source_),
             destination_(other.destination_),
-            headers_(other.destination_),
+            headers_(other.headers_),
             body_(other.body_)
         {}
 

@@ -14,11 +14,15 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     struct basic_response;
 
-    template <class Derived>
+    template <class Tag, class Derived>
     struct basic_client_facade {
-        typedef basic_request<typename Derived::tag> request;
-        typedef basic_response<typename Derived::tag> response;
-        typedef typename string<typename Derived::tag>::type string_type;
+
+        typedef typename string<Tag>::type string_type;
+        typedef basic_request<Tag> request;
+        typedef basic_response<Tag> response;
+
+        basic_client_facade()
+        {}
 
         response const head (request const & request_) {
             return static_cast<Derived*>(this)->request_skeleton(request_, "HEAD", false);

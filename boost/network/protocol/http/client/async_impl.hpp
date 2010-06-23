@@ -7,6 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/asio/io_service.hpp>
+#include <boost/asio/strand.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
 
@@ -27,6 +28,9 @@ namespace boost { namespace network { namespace http {
             typedef
                 typename resolver<Tag>::type
                 resolver_type;
+            typedef
+                typename string<Tag>::type
+                string_type;
 
             async_client(bool cache_resolved, bool follow_redirect)
                 : connection_base(cache_resolved, follow_redirect),
@@ -34,6 +38,9 @@ namespace boost { namespace network { namespace http {
                 resolver_(new resolver_type(*service_)),
                 sentinel_(new boost::asio::io_service::work(*service_))
             {
+                connection_base::service_ = service_;
+                connection_base::resolver_strand_.reset(new
+                    boost::asio::io_service::strand(*service_));
                 lifetime_thread_.reset(new boost::thread(
                     boost::bind(
                         &boost::asio::io_service::run,
@@ -50,9 +57,14 @@ namespace boost { namespace network { namespace http {
 
             friend struct basic_client_impl<Tag,version_major,version_minor>;
 
-            basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
+            basic_response<Tag> const request_skeleton(
+                basic_request<Tag> const & request_, 
+                string_type const & method, 
+                bool get_body
+                ) 
+            {
                 typename connection_base::connection_ptr connection_;
-                connection_ = connection_base::get_connection(service_, resolver_, request_);
+                connection_ = connection_base::get_connection(resolver_, request_);
                 return connection_->send_request(method, request_, get_body);
             }
 

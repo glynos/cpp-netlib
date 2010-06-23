@@ -30,14 +30,15 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag, unsigned version_major, unsigned version_minor>
     struct basic_client
-        : basic_client_facade<basic_client<Tag,version_major,version_minor> >
+        : basic_client_facade<Tag, basic_client<Tag,version_major,version_minor> >
     {
     private:
         typedef typename basic_client_impl<Tag,version_major,version_minor> pimpl_type;
-
+        typedef basic_client_facade<Tag, basic_client<Tag,version_major,version_minor> > base_facade_type;
     public:
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
+        typedef Tag tag_type;
 
         struct cache_resolved_type { };
 
@@ -58,19 +59,19 @@ namespace boost { namespace network { namespace http {
         // Constructors
         // =================================================================
         basic_client()
-        : pimpl(new pimpl_type(false, false))
+        : base_facade_type(), pimpl(new pimpl_type(false, false))
         {}
 
         explicit basic_client(cache_resolved_type (*)())
-        : pimpl(new pimmpl_type(true, false))
+        : base_facade_type(), pimpl(new pimpl_type(true, false))
         {}
 
         explicit basic_client(follow_redirect_type (*)())
-        : pimpl(new pimpl_type(false, true))
+        : base_facade_type(), pimpl(new pimpl_type(false, true))
         {}
 
         basic_client(cache_resolved_type (*)(), follow_redirect_type (*)())
-        : pimpl(new pimpl_type(true, true))
+        : base_facade_type(), pimpl(new pimpl_type(true, true))
         {}
 
         //
@@ -82,6 +83,8 @@ namespace boost { namespace network { namespace http {
     private:
         
         boost::shared_ptr<pimpl_type> pimpl;
+
+        friend struct basic_client_facade<Tag,basic_client<Tag,version_major,version_minor> > ;
 
         basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
             return pimpl->request_skeleton(request_, method, get_body);

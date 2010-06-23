@@ -89,6 +89,8 @@ namespace boost { namespace network { namespace http {
 #include <boost/network/protocol/http/message/wrappers/version.hpp>
 #include <boost/network/protocol/http/message/wrappers/status.hpp>
 #include <boost/network/protocol/http/message/wrappers/status_message.hpp>
+#include <boost/network/protocol/http/message/wrappers/destination.hpp>
+#include <boost/network/protocol/http/message/wrappers/source.hpp>
 
 #include <boost/network/protocol/http/message/modifiers/version.hpp>
 #include <boost/network/protocol/http/message/modifiers/status.hpp>

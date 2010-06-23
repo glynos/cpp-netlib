@@ -34,7 +34,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             return dynamic_cast<async_connection_base<Tag,version_major,version_minor>*>(new http_async_connection<Tag,version_major,version_minor>(resolver));
         }
 
-        virtual response start(string_type const & hostname, string_type const & port, request const & request) = 0;
+        virtual response start(request const & request, string_type const & method, bool get_body) = 0;
 
     };
 

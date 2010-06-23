@@ -24,12 +24,13 @@ namespace boost { namespace network { namespace http { namespace impl {
             typedef typename base::response response;
             typedef typename base::string_type string_type;
             typedef typename base::request request;
+            typedef typename base::resolver_base::resolve_function resolve_function;
 
             http_async_connection(
                 boost::shared_ptr<resolver_type> resolver,
-                resolver_function resolve, 
-                bool follow_redirect, )
-                : resolver_(resolver),
+                resolve_function resolve, 
+                bool follow_redirect 
+                ) : resolver_(resolver),
                 resolve_(resolve),
                 follow_redirect_(follow_redirect)
             {}
