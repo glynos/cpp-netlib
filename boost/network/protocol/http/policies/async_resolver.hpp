@@ -21,6 +21,8 @@ namespace boost { namespace network { namespace http { namespace policies {
         typedef std::pair<resolver_iterator, resolver_iterator> resolver_iterator_pair;
         typedef typename string<Tag>::type string_type;
         typedef boost::unordered_map<string_type, resolver_iterator_pair> endpoint_cache;
+        typedef boost::function<void(boost::system::error_code const &,resolver_iterator_pair)> resolve_completion_function;
+        typedef boost::function<void(boost::shared_ptr<resolver_type>,string_type,resolve_completion_function)> resolve_function;
     protected:
         bool cache_resolved_;
         endpoint_cache endpoint_cache_;
@@ -36,7 +38,7 @@ namespace boost { namespace network { namespace http { namespace policies {
         void resolve(
             boost::shared_ptr<resolver_type> resolver_, 
             string_type const & host, 
-            boost::function<void(boost::system::error_code const &,resolver_iterator_pair)> once_resolved
+            resolve_completion_function once_resolved
             ) 
         {
             if (cache_resolved_) {
@@ -67,7 +69,7 @@ namespace boost { namespace network { namespace http { namespace policies {
 
         void handle_resolve(
             string_type const & host,
-            boost::function<void(boost::system::error_code const &,resolver_iterator)> once_resolved, 
+            resolve_completion_function once_resolved, 
             boost::system::error_code const & ec,
             resolver_iterator endpoint_iterator
             )
@@ -79,7 +81,7 @@ namespace boost { namespace network { namespace http { namespace policies {
 
             endpoint_cache::iterator iter;
             bool inserted = false;
-            if (!ec && cache_resolved) {
+            if (!ec && cache_resolved_) {
                 boost::fusion::tie(iter, inserted) =
                     endpoint_cache_.insert(
                         std::make_pair(

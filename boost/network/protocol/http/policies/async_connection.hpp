@@ -34,10 +34,11 @@ namespace boost { namespace network { namespace http {
             connection_impl(
                 bool follow_redirect, 
                 resolver_function_type resolve, 
+                boost::shared_ptr<resolver_type> resolver,
                 bool https
                 )
                 : pimpl(
-                    impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolve, follow_redirect, https)
+                    impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolve, resolver, follow_redirect, https)
                 )
             {}
 
@@ -61,6 +62,7 @@ namespace boost { namespace network { namespace http {
                         this,
                         _1, _2, _3
                         )
+                    , resolver                    
                     , boost::iequals(protocol(request_), string_type("https"))
                     )
                     );

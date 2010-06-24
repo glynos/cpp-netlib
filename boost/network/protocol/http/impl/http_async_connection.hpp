@@ -17,7 +17,9 @@ namespace boost { namespace network { namespace http { namespace impl {
 
     template <class Tag, unsigned version_major, unsigned version_minor>
     struct http_async_connection
-        : async_connection_base<Tag,version_major,version_minor> {
+        : async_connection_base<Tag,version_major,version_minor>,
+        boost::enable_shared_from_this<http_async_connection<Tag,version_major,version_minor> >
+    {
             typedef async_connection_base<Tag,version_major,version_minor> base;
             typedef typename base::resolver_type resolver_type;
             typedef typename base::resolver_base::resolver_iterator_pair resolver_iterator_pair;
@@ -32,7 +34,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                 bool follow_redirect 
                 ) : resolver_(resolver),
                 resolve_(resolve),
-                follow_redirect_(follow_redirect)
+                follow_redirect_(follow_redirect),
+                request_strand_(new boost::asio::io_service::strand(resolver->get_io_service()))
             {}
 
             virtual response start(request const & request, string_type const & method, bool get_body) {
@@ -49,7 +52,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
                 // start things off by resolving the host.
                 resolve_(resolver_, host(request),
-                    request_strand->wrap(
+                    request_strand_->wrap(
                         boost::bind(
                         &http_async_connection<Tag,version_major,version_minor>::handle_resolved,
                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -95,7 +98,10 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        resolve_function resolve;
+        boost::shared_ptr<resolver_type> resolver_;
+        resolve_function resolve_;
+        bool follow_redirect_;
+        boost::shared_ptr<boost::asio::io_service::strand> request_strand_;
         boost::promise<string_type> version_promise;
         boost::promise<boost::uint16_t> status_promise;
         boost::promise<string_type> status_message_promise;

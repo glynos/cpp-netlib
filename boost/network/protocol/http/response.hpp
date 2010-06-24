@@ -95,5 +95,9 @@ namespace boost { namespace network { namespace http {
 #include <boost/network/protocol/http/message/modifiers/version.hpp>
 #include <boost/network/protocol/http/message/modifiers/status.hpp>
 #include <boost/network/protocol/http/message/modifiers/status_message.hpp>
+#include <boost/network/protocol/http/message/modifiers/source.hpp>
+#include <boost/network/protocol/http/message/modifiers/destination.hpp>
+#include <boost/network/protocol/http/message/modifiers/headers.hpp>
+#include <boost/network/protocol/http/message/modifiers/body.hpp>
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
