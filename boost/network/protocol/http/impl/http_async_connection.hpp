@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/thread/future.hpp>
+#include <boost/throw_exception.hpp>
 #include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace http { namespace impl {
@@ -22,6 +23,7 @@ namespace boost { namespace network { namespace http { namespace impl {
     {
             typedef async_connection_base<Tag,version_major,version_minor> base;
             typedef typename base::resolver_type resolver_type;
+            typedef typename base::resolver_base::resolver_iterator resolver_iterator;
             typedef typename base::resolver_base::resolver_iterator_pair resolver_iterator_pair;
             typedef typename base::response response;
             typedef typename base::string_type string_type;
@@ -56,19 +58,46 @@ namespace boost { namespace network { namespace http { namespace impl {
                         boost::bind(
                         &http_async_connection<Tag,version_major,version_minor>::handle_resolved,
                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                        port(request),
                         _1, _2)));
                 
                 return temp;
             }
 
     private:
-        void handle_resolved(boost::system::error_code & ec, resolver_iterator_pair endpoint_range) {
-            if (!ec) {
-                async_connect(); //FIXME -- wire the correct parameters
+        void handle_resolved(boost::uint16_t port, boost::system::error_code const & ec, resolver_iterator_pair endpoint_range) {
+            resolver_iterator iter = boost::begin(endpoint_range);
+            if (!ec && !boost::empty(endpoint_range)) {
+                boost::asio::ip::tcp::endpoint endpoint(
+                    iter->endpoint().address(),
+                    port
+                    );
+                socket_.reset(new boost::asio::ip::tcp::socket(
+                    resolver_->get_io_service()));
+                socket_->async_connect(
+                    endpoint,
+                    request_strand_->wrap(
+                        boost::bind(
+                            &http_async_connection<Tag,version_major,version_minor>::handle_connected,
+                            http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                            std::make_pair(++iter, resolver_iterator()),
+                            boost::asio::placeholders::error
+                            )));
+            } else {
+                boost::system::system_error error(
+                        ec ? ec : boost::asio::error::host_not_found
+                        );
+                version_promise.set_exception(boost::copy_exception(error));
+                status_promise.set_exception(boost::copy_exception(error));
+                status_message_promise.set_exception(boost::copy_exception(error));
+                headers_promise.set_exception(boost::copy_exception(error));
+                source_promise.set_exception(boost::copy_exception(error));
+                destination_promise.set_exception(boost::copy_exception(error));
+                body_promise.set_exception(boost::copy_exception(error));
             }
         }
 
-        void handle_connected() {
+        void handle_connected(resolver_iterator_pair endpoint_range, boost::system::error_code const & ec) {
             if (!ec) {
                 async_send(); //FIXME -- wire the correct parameters
             }
@@ -102,6 +131,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         resolve_function resolve_;
         bool follow_redirect_;
         boost::shared_ptr<boost::asio::io_service::strand> request_strand_;
+        boost::shared_ptr<boost::asio::ip::tcp::socket> socket_;
         boost::promise<string_type> version_promise;
         boost::promise<boost::uint16_t> status_promise;
         boost::promise<string_type> status_message_promise;
