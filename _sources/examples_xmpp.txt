@@ -1,5 +1,5 @@
-XMPP tutorials
-==============
+XMPP examples
+=============
 
 .. toctree::
    :maxdepth: 2

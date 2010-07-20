@@ -9,7 +9,7 @@ The first code example is the simplest thing you can do with the
 be found in the subdirectory ``libs/network/example/http_client.cpp``.
 All we are doing is creating and sending an HTTP request to a server
 and printing the response body.  Without further ado, the code to do
-this as follows:
+this is as follows:
 
 .. code-block:: c++
 
@@ -74,7 +74,8 @@ closed after the request has completed.
 
 Once we've built the request, we then make an HTTP GET request
 throught the ``http::client`` from which an ``http::response`` is
-returned.  ``http::client`` supports all common HTTP methods.
+returned.  ``http::client`` supports all common HTTP methods: GET,
+POST, HEAD, DELETE.
 
 .. code-block:: c++
 
@@ -83,6 +84,14 @@ returned.  ``http::client`` supports all common HTTP methods.
 Finally, though we don't do any error checking, the response body is
 printed to the console using the ``body`` directive.
 
-That's all there is to the HTTP client
+That's all there is to the HTTP client.  In fact, it's possible to
+compress this to a single line:
+
+.. code-block:: c++
+
+   std::cout << body(http::client().get(http::request("http://www.boost.org/")));
+
+Next we'll develop a simple client/server application using
+``http::server`` and ``http::client``.
 
 .. _`RFC 2616`: http://www.w3.org/Protocols/rfc2616/rfc2616.html

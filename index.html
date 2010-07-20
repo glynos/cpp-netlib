@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>C++ Network Library &mdash; cpp-netlib v0.7 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -34,7 +34,43 @@
              accesskey="N">next</a> |</li>
         <li><a href="#">cpp-netlib v0.7 documentation</a> &raquo;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="#">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">C++ Network Library</a><ul>
+<li><a class="reference external" href="#contents">Contents</a><ul>
+</ul>
+</li>
+<li><a class="reference external" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Next topic</h4>
+            <p class="topless"><a href="getting_started.html"
+                                  title="next chapter">Getting started</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/index.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -63,22 +99,26 @@ Distributed under the Boost Software License, Version
 </tr>
 </tbody>
 </table>
+<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> is a library that is intended to provide
+application layer protocol support (HTTP, XMPP etc.) using modern C++
+techniques.</p>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="getting_started.html">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference external" href="getting_started.html#installing-an-official-release">Installing an official release</a></li>
-<li class="toctree-l2"><a class="reference external" href="getting_started.html#installing-a-development-version">Installing a development version</a></li>
+<li class="toctree-l2"><a class="reference external" href="getting_started.html#downloading-an-official-release">Downloading an official release</a></li>
+<li class="toctree-l2"><a class="reference external" href="getting_started.html#downloading-a-development-version">Downloading a development version</a></li>
 <li class="toctree-l2"><a class="reference external" href="getting_started.html#getting-boost">Getting Boost</a></li>
 <li class="toctree-l2"><a class="reference external" href="getting_started.html#getting-cmake">Getting CMake</a></li>
 <li class="toctree-l2"><a class="reference external" href="getting_started.html#instructions-for-windows-users">Instructions for Windows Users</a></li>
 <li class="toctree-l2"><a class="reference external" href="getting_started.html#instructions-for-linux-users">Instructions for Linux Users</a></li>
+<li class="toctree-l2"><a class="reference external" href="getting_started.html#running-the-unit-tests">Running the Unit Tests</a></li>
 <li class="toctree-l2"><a class="reference external" href="getting_started.html#building-and-running-the-examples">Building and Running the Examples</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference external" href="tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference external" href="tutorials_http.html">HTTP tutorials</a></li>
-<li class="toctree-l2"><a class="reference external" href="tutorials_xmpp.html">XMPP tutorials</a></li>
+<li class="toctree-l1"><a class="reference external" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference external" href="examples_http.html">HTTP examples</a></li>
+<li class="toctree-l2"><a class="reference external" href="examples_xmpp.html">XMPP examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference external" href="in_depth.html">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a><ul>
@@ -115,42 +155,6 @@ Distributed under the Boost Software License, Version
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-            <h3><a href="#">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">C++ Network Library</a><ul>
-<li><a class="reference external" href="#contents">Contents</a><ul>
-</ul>
-</li>
-<li><a class="reference external" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-</li>
-</ul>
-
-            <h4>Next topic</h4>
-            <p class="topless"><a href="getting_started.html"
-                                  title="next chapter">Getting started</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="_sources/index.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>

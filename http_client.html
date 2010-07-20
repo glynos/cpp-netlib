@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>HTTP client &mdash; cpp-netlib v0.7 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -20,9 +20,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="cpp-netlib v0.7 documentation" href="index.html" />
-    <link rel="up" title="HTTP tutorials" href="tutorials_http.html" />
+    <link rel="up" title="HTTP examples" href="examples_http.html" />
     <link rel="next" title="“Hello world” HTTP server" href="hello_world_server.html" />
-    <link rel="prev" title="HTTP tutorials" href="tutorials_http.html" /> 
+    <link rel="prev" title="HTTP examples" href="examples_http.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,13 +35,41 @@
           <a href="hello_world_server.html" title="“Hello world” HTTP server"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="tutorials_http.html" title="HTTP tutorials"
+          <a href="examples_http.html" title="HTTP examples"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li>
-          <li><a href="tutorials.html" >Tutorials</a> &raquo;</li>
-          <li><a href="tutorials_http.html" accesskey="U">HTTP tutorials</a> &raquo;</li> 
+          <li><a href="examples.html" >Examples</a> &raquo;</li>
+          <li><a href="examples_http.html" accesskey="U">HTTP examples</a> &raquo;</li> 
       </ul>
-    </div>  
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="examples_http.html"
+                                  title="previous chapter">HTTP examples</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="hello_world_server.html"
+                                  title="next chapter">&#8220;Hello world&#8221; HTTP server</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/http_client.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
 
     <div class="document">
       <div class="documentwrapper">
@@ -55,7 +83,7 @@
 be found in the subdirectory <tt class="docutils literal"><span class="pre">libs/network/example/http_client.cpp</span></tt>.
 All we are doing is creating and sending an HTTP request to a server
 and printing the response body.  Without further ado, the code to do
-this as follows:</p>
+this is as follows:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
 <span class="cp">#include &lt;iostream&gt;</span>
 
@@ -108,45 +136,24 @@ closed after the request has completed.</p>
 </div>
 <p>Once we&#8217;ve built the request, we then make an HTTP GET request
 throught the <tt class="docutils literal"><span class="pre">http::client</span></tt> from which an <tt class="docutils literal"><span class="pre">http::response</span></tt> is
-returned.  <tt class="docutils literal"><span class="pre">http::client</span></tt> supports all common HTTP methods.</p>
+returned.  <tt class="docutils literal"><span class="pre">http::client</span></tt> supports all common HTTP methods: GET,
+POST, HEAD, DELETE.</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">body</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>Finally, though we don&#8217;t do any error checking, the response body is
 printed to the console using the <tt class="docutils literal"><span class="pre">body</span></tt> directive.</p>
-<p>That&#8217;s all there is to the HTTP client</p>
+<p>That&#8217;s all there is to the HTTP client.  In fact, it&#8217;s possible to
+compress this to a single line:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">body</span><span class="p">(</span><span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="p">().</span><span class="n">get</span><span class="p">(</span><span class="n">http</span><span class="o">::</span><span class="n">request</span><span class="p">(</span><span class="s">&quot;http://www.boost.org/&quot;</span><span class="p">)));</span>
+</pre></div>
+</div>
+<p>Next we&#8217;ll develop a simple client/server application using
+<tt class="docutils literal"><span class="pre">http::server</span></tt> and <tt class="docutils literal"><span class="pre">http::client</span></tt>.</p>
 </div>
 
 
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="tutorials_http.html"
-                                  title="previous chapter">HTTP tutorials</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="hello_world_server.html"
-                                  title="next chapter">&#8220;Hello world&#8221; HTTP server</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="_sources/http_client.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -161,11 +168,11 @@ printed to the console using the <tt class="docutils literal"><span class="pre">
           <a href="hello_world_server.html" title="“Hello world” HTTP server"
              >next</a> |</li>
         <li class="right" >
-          <a href="tutorials_http.html" title="HTTP tutorials"
+          <a href="examples_http.html" title="HTTP examples"
              >previous</a> |</li>
         <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li>
-          <li><a href="tutorials.html" >Tutorials</a> &raquo;</li>
-          <li><a href="tutorials_http.html" >HTTP tutorials</a> &raquo;</li> 
+          <li><a href="examples.html" >Examples</a> &raquo;</li>
+          <li><a href="examples_http.html" >HTTP examples</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

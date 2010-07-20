@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Getting started &mdash; cpp-netlib v0.7 documentation</title>
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="cpp-netlib v0.7 documentation" href="index.html" />
-    <link rel="next" title="Tutorials" href="tutorials.html" />
+    <link rel="next" title="Examples" href="examples.html" />
     <link rel="prev" title="C++ Network Library" href="index.html" /> 
   </head>
   <body>
@@ -31,85 +31,26 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="tutorials.html" title="Tutorials"
+          <a href="examples.html" title="Examples"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="C++ Network Library"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li> 
       </ul>
-    </div>  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
-            
-  <div class="section" id="getting-started">
-<span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installing-an-official-release">
-<h2>Installing an official release<a class="headerlink" href="#installing-an-official-release" title="Permalink to this headline">¶</a></h2>
-<p>All stable versions of <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> can be downloaded from Github:
-<tt class="docutils literal"><span class="pre">http://github.com/cpp-netlib/cpp-netlib/downloads</span></tt>.  Each release
-is available as gzipped (Using the command <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xzf</span>
-<span class="pre">cpp-netlib.tar.gz</span></tt>) or bzipped (Using <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xjf</span> <span class="pre">cpp-netlib.tar.bz2</span></tt>)
-tarball, or as a zipfile (<tt class="docutils literal"><span class="pre">unzip</span> <span class="pre">cpp-netlib.zip</span></tt>, or on Windows
-using a tool such as <a class="reference external" href="http://www.7-zip.org/">7zip</a>).</p>
-</div>
-<div class="section" id="installing-a-development-version">
-<h2>Installing a development version<a class="headerlink" href="#installing-a-development-version" title="Permalink to this headline">¶</a></h2>
-<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://git-scm.com/">Git</a> for source control, so to use any
-development versions Git must be installed on your system.</p>
-<p>Using the command line, the command to get the latest code is:</p>
-<div class="highlight-python"><pre>shell$ git clone git://github.com/mikhailberis/cpp-netlib.git</pre>
-</div>
-<p>This should be enough information get to started.  To do more complex
-things with Git, such as pulling changes or checking out a new branch,
-refer to the <a class="reference external" href="http://git-scm.com/documentation">Git documentation</a>.</p>
-<p>Windows users need to use <a class="reference external" href="http://code.google.com/p/msysgit/downloads/list">msysGit</a>, and to invoke the command above
-from a shell.</p>
-<p>For fans of <a class="reference external" href="http://subversion.tigris.org/">Subversion</a>, the same code can be checked out from
-<cite>http://svn.github.com/mikhailberis/cpp-netlib.git</cite>.</p>
-</div>
-<div class="section" id="getting-boost">
-<h2>Getting Boost<a class="headerlink" href="#getting-boost" title="Permalink to this headline">¶</a></h2>
-<p><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> depends on <a class="reference external" href="http://www.boost.org/doc/libs/release/more/getting_started/index.html">Boost</a>.  It should work for Boost 1.41.0 and
-above.  If Boost is not installed on your system, the environment
-variable <tt class="docutils literal"><span class="pre">BOOST_ROOT</span></tt> must be defined, which must be the full path
-name of the top directory of the Boost distribution. Although Boost is
-mostly header only, applications built using <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> still
-requires linking with <a class="reference external" href="http://www.boost.org/libs/system/index.html">Boost.System</a>.</p>
-</div>
-<div class="section" id="getting-cmake">
-<h2>Getting CMake<a class="headerlink" href="#getting-cmake" title="Permalink to this headline">¶</a></h2>
-<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://www.cmake.org/">CMake</a>.</p>
-</div>
-<div class="section" id="instructions-for-windows-users">
-<h2>Instructions for Windows Users<a class="headerlink" href="#instructions-for-windows-users" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="instructions-for-linux-users">
-<h2>Instructions for Linux Users<a class="headerlink" href="#instructions-for-linux-users" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="building-and-running-the-examples">
-<h2>Building and Running the Examples<a class="headerlink" href="#building-and-running-the-examples" title="Permalink to this headline">¶</a></h2>
-</div>
-</div>
-
-
-          </div>
-        </div>
-      </div>
+    </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
 <li><a class="reference external" href="#">Getting started</a><ul>
-<li><a class="reference external" href="#installing-an-official-release">Installing an official release</a></li>
-<li><a class="reference external" href="#installing-a-development-version">Installing a development version</a></li>
+<li><a class="reference external" href="#downloading-an-official-release">Downloading an official release</a></li>
+<li><a class="reference external" href="#downloading-a-development-version">Downloading a development version</a></li>
 <li><a class="reference external" href="#getting-boost">Getting Boost</a></li>
 <li><a class="reference external" href="#getting-cmake">Getting CMake</a></li>
 <li><a class="reference external" href="#instructions-for-windows-users">Instructions for Windows Users</a></li>
 <li><a class="reference external" href="#instructions-for-linux-users">Instructions for Linux Users</a></li>
+<li><a class="reference external" href="#running-the-unit-tests">Running the Unit Tests</a></li>
 <li><a class="reference external" href="#building-and-running-the-examples">Building and Running the Examples</a></li>
 </ul>
 </li>
@@ -119,8 +60,8 @@ requires linking with <a class="reference external" href="http://www.boost.org/l
             <p class="topless"><a href="index.html"
                                   title="previous chapter">C++ Network Library</a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="tutorials.html"
-                                  title="next chapter">Tutorials</a></p>
+            <p class="topless"><a href="examples.html"
+                                  title="next chapter">Examples</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="_sources/getting_started.txt"
@@ -141,6 +82,83 @@ requires linking with <a class="reference external" href="http://www.boost.org/l
           <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started">
+<span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="downloading-an-official-release">
+<h2>Downloading an official release<a class="headerlink" href="#downloading-an-official-release" title="Permalink to this headline">¶</a></h2>
+<p>All stable versions of <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> can be downloaded from Github:
+<a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">http://github.com/cpp-netlib/cpp-netlib/downloads</a>.  Each release
+is available as gzipped (Using the command <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xzf</span>
+<span class="pre">cpp-netlib.tar.gz</span></tt>) or bzipped (Using <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xjf</span> <span class="pre">cpp-netlib.tar.bz2</span></tt>)
+tarball, or as a zipfile (<tt class="docutils literal"><span class="pre">unzip</span> <span class="pre">cpp-netlib.zip</span></tt>, or on Windows
+using a tool such as <a class="reference external" href="http://www.7-zip.org/">7zip</a>).</p>
+</div>
+<div class="section" id="downloading-a-development-version">
+<h2>Downloading a development version<a class="headerlink" href="#downloading-a-development-version" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://git-scm.com/">Git</a> for source control, so to use any
+development versions Git must be installed on your system.</p>
+<p>Using the command line, the command to get the latest code is:</p>
+<div class="highlight-python"><pre>shell$ git clone git://github.com/mikhailberis/cpp-netlib.git</pre>
+</div>
+<p>This should be enough information get to started.  To do more complex
+things with Git, such as pulling changes or checking out a new branch,
+refer to the <a class="reference external" href="http://git-scm.com/documentation">Git documentation</a>.</p>
+<p>Windows users need to use <a class="reference external" href="http://code.google.com/p/msysgit/downloads/list">msysGit</a>, and to invoke the command above
+from a shell.</p>
+<p>For fans of <a class="reference external" href="http://subversion.tigris.org/">Subversion</a>, the same code can be checked out from
+<a class="reference external" href="http://svn.github.com/mikhailberis/cpp-netlib.git">http://svn.github.com/mikhailberis/cpp-netlib.git</a>.</p>
+</div>
+<div class="section" id="getting-boost">
+<h2>Getting Boost<a class="headerlink" href="#getting-boost" title="Permalink to this headline">¶</a></h2>
+<p><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> depends on <a class="reference external" href="http://www.boost.org/doc/libs/release/more/getting_started/index.html">Boost</a>.  It should work for any version
+of Boost above 1.41.0.  If Boost is not installed on your system, the
+latest package can be found on the <a class="reference external" href="http://www.boost.org/users/download/">Boost web-site</a>.  The environment
+variable <tt class="docutils literal"><span class="pre">BOOST_ROOT</span></tt> must be defined, which must be the full path
+name of the top directory of the Boost distribution.  Although Boost
+is mostly header only, applications built using <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt>
+still requires linking with <a class="reference external" href="http://www.boost.org/libs/system/index.html">Boost.System</a>.</p>
+</div>
+<div class="section" id="getting-cmake">
+<h2>Getting CMake<a class="headerlink" href="#getting-cmake" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://www.cmake.org/">CMake</a>.</p>
+<p>Open a command line in the <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> home directory.
+<tt class="docutils literal"><span class="pre">cmake</span></tt> requires the code to be built out of source, so you need to
+create a separate directory.</p>
+</div>
+<div class="section" id="instructions-for-windows-users">
+<h2>Instructions for Windows Users<a class="headerlink" href="#instructions-for-windows-users" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="instructions-for-linux-users">
+<h2>Instructions for Linux Users<a class="headerlink" href="#instructions-for-linux-users" title="Permalink to this headline">¶</a></h2>
+<p>Invoke <tt class="docutils literal"><span class="pre">cmake</span></tt> in the build directory, this generates a Makefile.
+Then, invoke <tt class="docutils literal"><span class="pre">make</span></tt> to build everything (unit tests and examples).
+To run the tests, invoke <tt class="docutils literal"><span class="pre">make</span> <span class="pre">test</span></tt>.</p>
+<div class="highlight-python"><pre>shell$ make
+shell$ make test</pre>
+</div>
+</div>
+<div class="section" id="running-the-unit-tests">
+<h2>Running the Unit Tests<a class="headerlink" href="#running-the-unit-tests" title="Permalink to this headline">¶</a></h2>
+<p>All unit tests are located in the <tt class="docutils literal"><span class="pre">libs/network/test</span></tt> directory.  To
+run the full suite of unit tests, invoke <tt class="docutils literal"><span class="pre">ctest</span></tt> from the build
+directory.</p>
+</div>
+<div class="section" id="building-and-running-the-examples">
+<h2>Building and Running the Examples<a class="headerlink" href="#building-and-running-the-examples" title="Permalink to this headline">¶</a></h2>
+<p>Examples are located in the <tt class="docutils literal"><span class="pre">libs/network/examples</span></tt> subdirectory.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -150,7 +168,7 @@ requires linking with <a class="reference external" href="http://www.boost.org/l
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="tutorials.html" title="Tutorials"
+          <a href="examples.html" title="Examples"
              >next</a> |</li>
         <li class="right" >
           <a href="index.html" title="C++ Network Library"

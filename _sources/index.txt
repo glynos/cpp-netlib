@@ -17,6 +17,10 @@
             1.0. (See accompanying file LICENSE_1_0.txt or copy at
             http://www.boost.org/LICENSE_1_0.txt)
 
+The :mod:`cpp-netlib` is a library that is intended to provide
+application layer protocol support (HTTP, XMPP etc.) using modern C++
+techniques.
+
 Contents
 ========
 
@@ -24,7 +28,7 @@ Contents
    :maxdepth: 2
 
    getting_started.rst
-   tutorials.rst
+   examples.rst
    in_depth.rst
    techniques.rst
    history.rst
