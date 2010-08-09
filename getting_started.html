@@ -6,8 +6,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Getting started &mdash; cpp-netlib v0.7 documentation</title>
-    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '#',
@@ -17,8 +17,8 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="cpp-netlib v0.7 documentation" href="index.html" />
     <link rel="next" title="Examples" href="examples.html" />
     <link rel="prev" title="C++ Network Library" href="index.html" /> 
@@ -38,50 +38,7 @@
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">cpp-netlib v0.7 documentation</a> &raquo;</li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Getting started</a><ul>
-<li><a class="reference external" href="#downloading-an-official-release">Downloading an official release</a></li>
-<li><a class="reference external" href="#downloading-a-development-version">Downloading a development version</a></li>
-<li><a class="reference external" href="#getting-boost">Getting Boost</a></li>
-<li><a class="reference external" href="#getting-cmake">Getting CMake</a></li>
-<li><a class="reference external" href="#instructions-for-windows-users">Instructions for Windows Users</a></li>
-<li><a class="reference external" href="#instructions-for-linux-users">Instructions for Linux Users</a></li>
-<li><a class="reference external" href="#running-the-unit-tests">Running the Unit Tests</a></li>
-<li><a class="reference external" href="#building-and-running-the-examples">Building and Running the Examples</a></li>
-</ul>
-</li>
-</ul>
-
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="index.html"
-                                  title="previous chapter">C++ Network Library</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="examples.html"
-                                  title="next chapter">Examples</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="_sources/getting_started.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -92,12 +49,11 @@
 <span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="downloading-an-official-release">
 <h2>Downloading an official release<a class="headerlink" href="#downloading-an-official-release" title="Permalink to this headline">¶</a></h2>
-<p>All stable versions of <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> can be downloaded from Github:
-<a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">http://github.com/cpp-netlib/cpp-netlib/downloads</a>.  Each release
-is available as gzipped (Using the command <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xzf</span>
-<span class="pre">cpp-netlib.tar.gz</span></tt>) or bzipped (Using <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xjf</span> <span class="pre">cpp-netlib.tar.bz2</span></tt>)
-tarball, or as a zipfile (<tt class="docutils literal"><span class="pre">unzip</span> <span class="pre">cpp-netlib.zip</span></tt>, or on Windows
-using a tool such as <a class="reference external" href="http://www.7-zip.org/">7zip</a>).</p>
+<p>All stable versions of <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> can be downloaded from
+<a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">Github</a>.  Each release is available as gzipped (Using the command
+<tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xzf</span> <span class="pre">cpp-netlib.tar.gz</span></tt>) or bzipped (Using <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xjf</span>
+<span class="pre">cpp-netlib.tar.bz2</span></tt>) tarball, or as a zipfile (<tt class="docutils literal"><span class="pre">unzip</span>
+<span class="pre">cpp-netlib.zip</span></tt>, or on Windows using a tool such as <a class="reference external" href="http://www.7-zip.org/">7zip</a>).</p>
 </div>
 <div class="section" id="downloading-a-development-version">
 <h2>Downloading a development version<a class="headerlink" href="#downloading-a-development-version" title="Permalink to this headline">¶</a></h2>
@@ -143,12 +99,6 @@ To run the tests, invoke <tt class="docutils literal"><span class="pre">make</sp
 shell$ make test</pre>
 </div>
 </div>
-<div class="section" id="running-the-unit-tests">
-<h2>Running the Unit Tests<a class="headerlink" href="#running-the-unit-tests" title="Permalink to this headline">¶</a></h2>
-<p>All unit tests are located in the <tt class="docutils literal"><span class="pre">libs/network/test</span></tt> directory.  To
-run the full suite of unit tests, invoke <tt class="docutils literal"><span class="pre">ctest</span></tt> from the build
-directory.</p>
-</div>
 <div class="section" id="building-and-running-the-examples">
 <h2>Building and Running the Examples<a class="headerlink" href="#building-and-running-the-examples" title="Permalink to this headline">¶</a></h2>
 <p>Examples are located in the <tt class="docutils literal"><span class="pre">libs/network/examples</span></tt> subdirectory.</p>
@@ -157,6 +107,48 @@ directory.</p>
 
 
           </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Getting started</a><ul>
+<li><a class="reference external" href="#downloading-an-official-release">Downloading an official release</a></li>
+<li><a class="reference external" href="#downloading-a-development-version">Downloading a development version</a></li>
+<li><a class="reference external" href="#getting-boost">Getting Boost</a></li>
+<li><a class="reference external" href="#getting-cmake">Getting CMake</a></li>
+<li><a class="reference external" href="#instructions-for-windows-users">Instructions for Windows Users</a></li>
+<li><a class="reference external" href="#instructions-for-linux-users">Instructions for Linux Users</a></li>
+<li><a class="reference external" href="#building-and-running-the-examples">Building and Running the Examples</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="index.html"
+                                  title="previous chapter">C++ Network Library</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="examples.html"
+                                  title="next chapter">Examples</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="sources/getting_started.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>

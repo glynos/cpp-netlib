@@ -9,7 +9,7 @@
 
 :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 	  Dean Michael Berris <mikhailberis@gmail.com>
-:Date: Jun 16, 2010
+:Date: Jul 21, 2010
 :Version: 0.7
 :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2010.
