@@ -7,15 +7,21 @@
  C++ Network Library
 =====================
 
+.. image:: static/boost.png
+   :align: right
+
 :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 	  Dean Michael Berris <mikhailberis@gmail.com>
-:Date: Jul 21, 2010
+:Date: Aug 24, 2010
 :Version: 0.7
 :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
-:Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2010.
+:Copyright: Copyright 2008-2010, Glyn Matthews, Dean Michael Berris.
             Distributed under the Boost Software License, Version
             1.0. (See accompanying file LICENSE_1_0.txt or copy at
             http://www.boost.org/LICENSE_1_0.txt)
+
+Overview
+========
 
 The :mod:`cpp-netlib` is a library that is intended to provide
 application layer protocol support (HTTP, XMPP etc.) using modern C++

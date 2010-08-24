@@ -1,9 +1,0 @@
-.. _hello_world_http_client:
-
-***************************
- "Hello world" HTTP client
-***************************
-
-::
-
-    ./hello_world_client http://127.0.0.1/
