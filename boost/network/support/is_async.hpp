@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace network {

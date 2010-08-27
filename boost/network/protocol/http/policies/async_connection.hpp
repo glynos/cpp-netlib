@@ -28,12 +28,12 @@ namespace boost { namespace network { namespace http {
         typedef typename string<Tag>::type string_type;
         typedef typename resolver_policy<Tag>::type resolver_base;
         typedef typename resolver_base::resolver_type resolver_type;
-        typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
+        typedef typename resolver_base::resolve_function resolve_function;
         
         struct connection_impl {
             connection_impl(
                 bool follow_redirect, 
-                resolver_function_type resolve, 
+                resolve_function resolve, 
                 boost::shared_ptr<resolver_type> resolver,
                 bool https
                 )
@@ -54,6 +54,7 @@ namespace boost { namespace network { namespace http {
 
         typedef boost::shared_ptr<connection_impl> connection_ptr;
         connection_ptr get_connection(boost::shared_ptr<resolver_type> resolver, basic_request<Tag> const & request_) {
+            string_type protocol_ = protocol(request_);
             connection_ptr connection_(
                 new connection_impl(
                     follow_redirect_
@@ -63,7 +64,7 @@ namespace boost { namespace network { namespace http {
                         _1, _2, _3
                         )
                     , resolver                    
-                    , boost::iequals(protocol(request_), string_type("https"))
+                    , boost::iequals(protocol_, string_type("https"))
                     )
                     );
             return connection_;

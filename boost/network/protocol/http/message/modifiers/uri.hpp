@@ -23,8 +23,8 @@ namespace boost { namespace network { namespace http {
         }
 
         template <class Tag, class T>
-        void uri(basic_request<Tag> & response, boost::shared_future<T> future, mpl::true_ const &) {
-            response.uri() = future;
+        void uri(basic_request<Tag> & response, T const & future, mpl::true_ const &) {
+            response.uri(future);
         }
 
     } // namespace impl

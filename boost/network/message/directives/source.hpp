@@ -7,53 +7,121 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_SOURCE_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_SOURCE_HPP__
 
-
 #include <boost/network/traits/string.hpp>
-
+#include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_sync.hpp>
+#include <boost/variant/variant.hpp>
+#include <boost/variant/apply_visitor.hpp>
+#include <boost/variant/static_visitor.hpp>
+#include <boost/thread/future.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/or.hpp>
 
 /** source.hpp
- *
- * Defines the types involved and the semantics of adding
- * source information into message objects.
- *
- * WARNING: DO NOT INCLUDE THIS HEADER DIRECTLY. THIS REQUIRES
- * TYPES TO BE DEFINED FROM EARLIER FILES THAT INCLUDE THIS
- * HEADER.
- */
+*
+* Defines the types involved and the semantics of adding
+* source information into message objects.
+*
+* WARNING: DO NOT INCLUDE THIS HEADER DIRECTLY. THIS REQUIRES
+* TYPES TO BE DEFINED FROM EARLIER FILES THAT INCLUDE THIS
+* HEADER.
+*/
 namespace boost { namespace network {
-    
-namespace impl {
-template <
-    class T
-    >
-struct source_directive {
 
-    explicit source_directive (T source)
-        : _source(source)
-    { };
+    namespace traits {
 
-    template <class MessageTag>
-    void operator() (basic_message<MessageTag> & msg) const {
-        msg.source() = _source;
+        template <class Tag>
+        struct unsupported_tag;
+
+        template <class Message>
+        struct source :
+            mpl::if_<
+            is_async<typename Message::tag>,
+            boost::shared_future<typename string<typename Message::tag>::type>,
+            typename mpl::if_<
+            mpl::or_<
+            is_same<typename Message::tag, tags::default_string>,
+            is_same<typename Message::tag, tags::default_wstring>,
+            is_sync<typename Message::tag>
+            >,
+            typename string<typename Message::tag>::type,
+            unsupported_tag<typename Message::tag>
+            >::type
+            >
+        {};
+
+    } // namespace traits
+
+    namespace impl {
+
+        struct source_directive {
+
+            explicit source_directive (string<tags::default_string>::type const & source)
+                : source_(source)
+            { };
+
+            explicit source_directive (string<tags::default_wstring>::type const & source)
+                : source_(source)
+            { };
+
+            explicit source_directive (boost::shared_future<typename string<tags::default_string>::type> const & source)
+                : source_(source)
+            { };
+
+            explicit source_directive (boost::shared_future<typename string<tags::default_wstring>::type> const & source)
+                : source_(source)
+            { };
+
+            template <class Tag>
+            struct value :
+                mpl::if_<
+                is_async<Tag>,
+                boost::shared_future<typename string<Tag>::type>,
+                typename mpl::if_<
+                is_sync<Tag>,
+                typename string<Tag>::type,
+                unsupported_tag<Tag>
+                >::type
+                >
+            {};
+
+            template <class Message>
+            struct source_visitor : boost::static_visitor<> {
+                Message const & message_;
+                typedef typename Message::tag Tag;
+                source_visitor(Message const & message)
+                    : message_(message) {}
+                void operator()(typename value<Tag>::type const & source) const {
+                    message_.source(source);
+                }
+                template <class T> void operator()(T const &) const {
+                    // FIXME -- fail here!
+                }
+            };
+
+            template <class Tag, template <class> class Message>
+            void operator() (Message<Tag> const & msg) const {
+                apply_visitor(source_visitor<Message<Tag> >(msg), source_);
+            }
+
+        private:
+
+            boost::variant<
+                typename string<tags::default_string>::type,
+                typename string<tags::default_wstring>::type,
+                boost::shared_future<string<tags::default_string>::type>,
+                boost::shared_future<string<tags::default_wstring>::type>
+            > source_;
+        };
+
+    } // namespace impl
+
+    template <class Input>
+    inline impl::source_directive const source(Input const & input) {
+        return impl::source_directive(input);
     }
-            
-private:
-    
-    mutable T _source;
-};
-} // namespace impl
 
-inline
-impl::source_directive<std::string>
-source(std::string source_) {
-    return impl::source_directive<std::string>(source_);
-}
-
-inline
-impl::source_directive<std::wstring>
-source(std::wstring source_) {
-    return impl::source_directive<std::wstring>(source_);
-}
 } // namespace network
 } // namespace boost
 

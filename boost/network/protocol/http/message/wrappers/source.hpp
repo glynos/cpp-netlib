@@ -7,6 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/response_concept.hpp>
+#include <boost/network/protocol/http/request_concept.hpp>
 #include <boost/concept/requires.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -14,13 +15,16 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     struct basic_response;
 
+    template <class Tag>
+    class basic_request;
+
     namespace impl {
 
-        template <class Tag>
+        template <class Message>
         struct source_wrapper {
-            typedef typename string<Tag>::type string_type;
-            basic_response<Tag> const & message_;
-            source_wrapper(basic_response<Tag> const & message)
+            typedef typename string<typename Message::tag>::type string_type;
+            Message const & message_;
+            source_wrapper(Message const & message)
                 : message_(message) {}
             source_wrapper(source_wrapper const & other)
                 : message_(other.message_) {}
@@ -34,9 +38,16 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     inline
     BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
-        (impl::source_wrapper<Tag> const))
+        (impl::source_wrapper<basic_response<Tag> > const))
     source(basic_response<Tag> const & message) {
-        return impl::source_wrapper<Tag>(message);
+        return impl::source_wrapper<basic_response<Tag> >(message);
+    }
+
+    template <class Tag>
+    inline BOOST_CONCEPT_REQUIRES(((Request<basic_request<Tag> >)),
+        (impl::source_wrapper<basic_request<Tag> > const))
+    source(basic_request<Tag> const & message) {
+        return impl::source_wrapper<basic_request<Tag> >(message);
     }
 
 } // namespace http

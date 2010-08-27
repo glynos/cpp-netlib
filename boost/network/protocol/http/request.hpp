@@ -51,6 +51,7 @@ namespace boost { namespace network { namespace http {
 #include <boost/network/protocol/http/message/modifiers/uri.hpp>
 
 #include <boost/network/protocol/http/message/wrappers/host.hpp>
+#include <boost/network/protocol/http/message/wrappers/headers.hpp>
 #include <boost/network/protocol/http/message/wrappers/path.hpp>
 #include <boost/network/protocol/http/message/wrappers/port.hpp>
 #include <boost/network/protocol/http/message/wrappers/query.hpp>

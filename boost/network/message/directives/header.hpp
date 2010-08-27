@@ -7,8 +7,12 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__
 
-
 #include <boost/network/traits/string.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_sync.hpp>
+#include <boost/thread/future.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/or.hpp>
 
 /** header.hpp
  *
@@ -21,6 +25,47 @@
  */
 namespace boost { namespace network {
 
+    namespace traits {
+
+        template <class Tag>
+        struct unsupported_tag;
+
+        template <class Message>
+        struct header_key :
+            mpl::if_<
+                is_async<typename Message::tag>,
+                boost::shared_future<typename string<typename Message::tag>::type>,
+                typename mpl::if_<
+                    mpl::or_<
+                        is_sync<typename Message::tag>,
+                        is_same<typename Message::tag, tags::default_string>,
+                        is_same<typename Message::tag, tags::default_wstring>
+                    >,
+                    typename string<typename Message::tag>::type,
+                    unsupported_tag<typename Message::tag>
+                >::type
+            >
+        {};
+
+        template <class Message>
+        struct header_value :
+            mpl::if_<
+                is_async<typename Message::tag>,
+                boost::shared_future<typename string<typename Message::tag>::type>,
+                typename mpl::if_<
+                    mpl::or_<
+                        is_sync<typename Message::tag>,
+                        is_same<typename Message::tag, tags::default_string>,
+                        is_same<typename Message::tag, tags::default_wstring>
+                    >,
+                    typename string<typename Message::tag>::type,
+                    unsupported_tag<typename Message::tag>
+                >::type
+            >
+        {};
+
+    } // namespace traits
+
 namespace impl {
    
 template <class T1, class T2>
@@ -32,23 +77,23 @@ struct header_directive {
         _header_value(header_value)
     { };
 
-    template <class MessageTag>
-    void operator() (basic_message<MessageTag> & msg) const {
-        typedef typename basic_message<MessageTag>::headers_container_type::value_type value_type;
-        msg.headers().insert(value_type(_header_name, _header_value));
+    template <template <class> class Message>
+    void operator() (Message const & msg) const {
+        typedef typename Message::headers_container_type::value_type value_type;
+        msg.add_header(value_type(_header_name, _header_value));
     }
 
 private:
 
-    mutable T1 _header_name;
-    mutable T2 _header_value;
+    T1 const & _header_name;
+    T2 const & _header_value;
 };
 } // namespace impl
 
 template <class T1, class T2>
 inline impl::header_directive<T1, T2>
-header(T1 header_name,
-       T2 header_value) {
+header(T1 const & header_name,
+       T2 const & header_value) {
     return impl::header_directive<T1, T2>(header_name,
                                           header_value);
 }

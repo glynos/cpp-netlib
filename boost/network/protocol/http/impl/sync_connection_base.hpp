@@ -125,7 +125,10 @@ namespace boost { namespace network { namespace http { namespace impl {
             if (empty(content_length_range)) {
                 typename headers_range<basic_response<Tag> >::type transfer_encoding_range =
                     headers(response_)["Transfer-Encoding"];
-                if (empty(transfer_encoding_range)) throw std::runtime_error("Missing Transfer-Encoding Header from response.");
+                if (empty(transfer_encoding_range)) {
+                    read_body_normal(socket_, response_, response_buffer, body_stream);
+                    return;
+                }
                 if (boost::iequals(boost::begin(transfer_encoding_range)->second, "chunked")) {
                     bool stopping = false;
                     do { 

@@ -8,54 +8,110 @@
 #define __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__
 
 #include <boost/network/traits/string.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_sync.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/variant/variant.hpp>
+#include <boost/variant/apply_visitor.hpp>
+#include <boost/variant/static_visitor.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/or.hpp>
 
-
-/** destination.hpp
- *
- * Defines the types involved and the semantics of adding
- * destination information into message objects.
- *
- * WARNING: DO NOT INCLUDE THIS HEADER DIRECTLY. THIS REQUIRES
- * TYPES TO BE DEFINED FROM EARLIER FILES THAT INCLUDE THIS
- * HEADER.
- */
 namespace boost { namespace network {
-    
-namespace impl {
-template <class T>
-struct destination_directive {
 
-    explicit destination_directive (T destination)
-        : _destination(destination)
-    { };
+    namespace traits {
 
-    template <
-        class MessageTag
-        >
-    void operator() (basic_message<MessageTag> & msg) const {
-        msg.destination() = _destination;
-    };
+        template <class Tag>
+        struct unsupported_tag;
 
-private:
-    
-    T _destination;
-};
-} // namespace impl
+        template <class Message>
+        struct destination
+            : mpl::if_<
+                is_async<typename Message::tag>,
+                boost::shared_future<typename string<typename Message::tag>::type>,
+                typename mpl::if_<
+                    mpl::or_<
+                        is_sync<typename Message::tag>,
+                        is_same<typename Message::tag, tags::default_string>,
+                        is_same<typename Message::tag, tags::default_wstring>
+                    >,
+                    typename string<typename Message::tag>::type,
+                    unsupported_tag<typename Message::tag>
+                >::type
+            >
+        {};
 
+    } // namespace traits
 
-inline
-impl::destination_directive<std::string>
-destination(std::string destination_) {
-    return impl::destination_directive<std::string>(destination_);
-}
+    namespace impl {
 
-inline
-impl::destination_directive<std::wstring>
-destination(std::wstring destination_) {
-    return impl::destination_directive<std::wstring>(destination_);
-}
+        struct destination_directive {
+            boost::variant<
+                string<tags::default_string>::type,
+                string<tags::default_wstring>::type,
+                boost::shared_future<string<tags::default_string>::type>,
+                boost::shared_future<string<tags::default_wstring>::type>
+            > destination_;
+
+            destination_directive(string<tags::default_string>::type const & destination)
+                : destination_(destination) {}
+            destination_directive(string<tags::default_wstring>::type const & destination)
+                : destination_(destination) {}
+            destination_directive(boost::shared_future<string<tags::default_string>::type> const & destination)
+                : destination_(destination) {}
+            destination_directive(boost::shared_future<string<tags::default_wstring>::type> const & destination)
+                : destination_(destination) {}
+
+            destination_directive(destination_directive const & other)
+                : destination_(other.destination_) {}
+
+            template <class Tag>
+            struct value :
+                mpl::if_<
+                    is_async<Tag>,
+                    boost::shared_future<typename string<Tag>::type>,
+                    typename mpl::if_<
+                        mpl::or_<
+                            is_sync<Tag>,
+                            is_same<Tag, tags::default_string>,
+                            is_same<Tag, tags::default_wstring>
+                        >,
+                        typename string<Tag>::type,
+                        unsupported_tag<Tag>
+                    >::type
+                >
+            {};
+
+            template <class Message>
+            struct destination_visitor : boost::static_visitor<> {
+                Message const & message_;
+                destination_visitor(Message const & message)
+                    : message_(message) {}
+                void operator()(typename value<typename Message::tag>::type const & destination) const {
+                    message_.destination(destination);
+                }
+                template <class T> void operator() (T const &) const {
+                    // FIXME -- fail here!
+                }
+            };
+
+            template <class Tag, template <class> class Message>
+            void operator()(Message<Tag> const & message) const {
+                apply_visitor(destination_visitor<Message<Tag> >(message), destination_);
+            }
+        };
+
+    } // namespace impl
+
+    template <class T>
+    inline impl::destination_directive const
+    destination(T const & destination_) {
+        return impl::destination_directive(destination_);
+    }
+
 } // namespace network
-} // namespace boost
 
+} // namespace boost
+ 
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__

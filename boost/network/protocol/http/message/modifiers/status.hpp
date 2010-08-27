@@ -23,8 +23,8 @@ namespace boost { namespace network { namespace http {
         }
 
         template <class Tag, class T>
-        void status(basic_response<Tag> & response, boost::shared_future<T> future, mpl::true_ const &) {
-            response.status() = future;
+        void status(basic_response<Tag> & response, T const & future, mpl::true_ const &) {
+            response.status(future);
         }
 
     } // namespace impl

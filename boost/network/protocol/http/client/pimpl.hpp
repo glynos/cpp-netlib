@@ -56,7 +56,7 @@ namespace boost { namespace network { namespace http {
         template <class Tag, unsigned version_major, unsigned version_minor>
         struct client_base
             : mpl::if_<
-                is_async<Tag>,
+                typename is_async<Tag>::type,
                 async_client<Tag,version_major,version_minor>,
                 sync_client<Tag,version_major,version_minor>
             >
@@ -82,6 +82,7 @@ namespace boost { namespace network { namespace http {
         
     private:
         friend struct basic_client<Tag,version_major,version_minor>;
+        template <class T> friend inline void boost::checked_delete<T>(T*);
         typedef typename impl::client_base<Tag,version_major,version_minor>::type base_type;
         basic_client_impl(bool cache_resolved, bool follow_redirect)
             : base_type(cache_resolved, follow_redirect)

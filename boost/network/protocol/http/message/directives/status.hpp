@@ -8,35 +8,90 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/thread/future.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/variant/variant.hpp>
+#include <boost/variant/static_visitor.hpp>
+#include <boost/variant/apply_visitor.hpp>
 #include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
     struct basic_response;
+    
+    namespace traits {
 
-    template <class Tag>
-    struct status_directive {
+        template <class Message>
+        struct status : mpl::if_<
+            is_async<typename Message::tag>,
+            boost::shared_future<boost::uint16_t>,
+            typename mpl::if_<
+                is_sync<typename Message::tag>,
+                boost::uint16_t,
+                unsupported_tag<typename Message::tag>
+            >::type
+        >
+        {};
 
-        typedef typename string<Tag>::type string_type;
+    } // namespace traits
 
-        mutable boost::uint16_t status_;
+    namespace impl {
 
-        status_directive(boost::uint16_t status)
-            : status_(status) {}
+        struct status_directive {
 
-        status_directive(status_directive const & other)
-            : status_(other.status_) {}
+            boost::variant<
+                boost::uint16_t,
+                boost::shared_future<boost::uint16_t>
+            > status_;
 
-        template <class T> basic_response<T> const & operator() (basic_response<T> const & response) const {
-            response.status(status_);
-            return response;
-        }
+            status_directive(boost::uint16_t status)
+                : status_(status) {}
 
-    };
+            status_directive(boost::shared_future<boost::uint16_t> const & status)
+                : status_(status) {}
 
-    inline status_directive<tags::default_> const status(boost::uint16_t status_) {
-        return status_directive<tags::default_>(status_);
+            status_directive(status_directive const & other)
+                : status_(other.status_) {}
+
+            template <class Tag>
+            struct value
+                : mpl::if_<
+                    is_async<Tag>,
+                    boost::shared_future<boost::uint16_t>,
+                    boost::uint16_t
+                >
+            {};
+
+            template <class Tag>
+            struct status_visitor : boost::static_visitor<> {
+                basic_response<Tag> const & response;
+                status_visitor(basic_response<Tag> const & response)
+                    : response(response) {}
+
+                void operator()(typename value<Tag>::type const & status_) const {
+                    response.status(status_);
+                }
+
+                template <class T>
+                void operator()(T const &) const {
+                    // FIXME fail here!
+                }
+            };
+
+            template <class Tag> basic_response<Tag> const & operator() (basic_response<Tag> const & response) const {
+                apply_visitor(status_visitor<Tag>(response), status_);
+                return response;
+            }
+
+        };
+
+    } // namespace impl
+
+    template <class T>
+    inline impl::status_directive const status(T const & status_) {
+        return impl::status_directive(status_);
     }
 
 } // namespace http

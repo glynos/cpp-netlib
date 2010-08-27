@@ -23,14 +23,18 @@ namespace boost { namespace network { namespace http {
             R response_;
             swap(response, response_); // swappable via ADL
 
-            response << version("HTTP/1.0") // version directive
-                << status(200u) // status directive
-                << status_message("OK") // status_message directive
+            typedef typename traits::version<R>::type version_type;
+            typedef typename traits::status<R>::type status_type;
+            typedef typename traits::status_message<R>::type status_message_type;
+
+            response << version(version_type()) // version directive
+                << status(status_type()) // status directive
+                << status_message(status_message_type()) // status_message directive
                 ;
 
-            version(response, "HTTP/1.0");
-            status(response, 200u);
-            status_message(response, "OK");
+            version(response, version_type());
+            status(response, status_type());
+            status_message(response, status_message_type());
 
             string_type version_ = version(response);
             boost::uint16_t status_ = status(response);

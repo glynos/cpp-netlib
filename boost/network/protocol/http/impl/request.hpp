@@ -18,6 +18,9 @@
 #include <boost/network/protocol/http/header.hpp>
 #include <boost/network/traits/vector.hpp>
 
+#include <boost/network/protocol/http/message/async_message.hpp>
+#include <boost/network/support/is_async.hpp>
+
 #include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -30,10 +33,20 @@ namespace boost { namespace network { namespace http {
       */
 
     template <class Tag>
-    class basic_request : public basic_message<Tag>
+    struct request_base 
+        : mpl::if_<
+            is_async<Tag>,
+            async_message<Tag>,
+            basic_message<Tag>
+        >
+    {};
+
+    template <class Tag>
+    class basic_request : public request_base<Tag>::type
     {
 
         mutable boost::network::uri::http::uri uri_;
+        typedef typename request_base<Tag>::type base_type;
 
     public:
         typedef Tag tag;
@@ -49,11 +62,11 @@ namespace boost { namespace network { namespace http {
         }
 
         basic_request() 
-        : basic_message<Tag>()
+        : base_type()
         { }
 
         basic_request(basic_request const & other) 
-        : basic_message<Tag>(other), uri_(other.uri_)
+        : base_type(other), uri_(other.uri_)
         { }
 
         basic_request & operator=(basic_request rhs) {
@@ -63,8 +76,8 @@ namespace boost { namespace network { namespace http {
 
         void swap(basic_request & other) {
             using boost::network::uri::swap;
-            basic_message<Tag> & base_ref(other);
-            basic_message<Tag> & this_ref(*this);
+            base_type & base_ref(other);
+            basic_request<Tag> & this_ref(*this);
             base_ref.swap(this_ref);
             swap(other.uri_, this->uri_);
         }

@@ -28,6 +28,8 @@ namespace boost { namespace network { namespace http {
     /// A reply to be sent to a client.
     template <>
     struct basic_response<tags::http_server> {
+        typedef tags::http_server tag;
+
         /// The status of the reply.
         enum status_type {
             ok = 200,

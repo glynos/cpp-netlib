@@ -8,34 +8,102 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_sync.hpp>
+#include <boost/variant/variant.hpp>
+#include <boost/variant/static_visitor.hpp>
+#include <boost/variant/apply_visitor.hpp>
 
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
     struct basic_response;
 
-    template <class Tag>
-    struct status_message_directive {
+    namespace traits {
 
-        typedef typename string<Tag>::type string_type;
+        template <class Message>
+        struct status_message : mpl::if_<
+            is_async<typename Message::tag>,
+            boost::shared_future<typename string<typename Message::tag>::type>,
+            typename mpl::if_<
+                is_sync<typename Message::tag>,
+                typename string<typename Message::tag>::type,
+                unsupported_tag<typename Message::tag>
+            >::type
+        >
+        {};
 
-        mutable string_type status_message_;
+    } // namespace traits
 
-        status_message_directive(string_type const & status_message)
-            : status_message_(status_message) {}
+    namespace impl {
 
-        status_message_directive(status_message_directive const & other)
-            : status_message(other.status_message_) {}
+        struct status_message_directive {
+            
+            boost::variant<
+                string<tags::default_string>::type,
+                string<tags::default_wstring>::type,
+                boost::shared_future<string<tags::default_string>::type>,
+                boost::shared_future<string<tags::default_wstring>::type>
+            > status_message_;
 
-        template <class T> basic_response<T> const & operator() (basic_response<T> const & response) const {
-            response.status_message(status_message_);
-            return response;
-        }
+            status_message_directive(string<tags::default_string>::type const & status_message)
+                : status_message_(status_message) {}
 
-    };
+            status_message_directive(string<tags::default_wstring>::type const & status_message)
+                : status_message_(status_message) {}
 
-    inline status_message_directive<tags::default_> const status_message(string<tags::default_>::type const & status_message_) {
-        return status_message_directive<tags::default_>(status_message_);
+            status_message_directive(boost::shared_future<string<tags::default_string>::type> const & status_message)
+                : status_message_(status_message) {}
+
+            status_message_directive(boost::shared_future<string<tags::default_wstring>::type> const & status_message)
+                : status_message_(status_message) {}
+
+            status_message_directive(status_message_directive const & other)
+                : status_message_(other.status_message_) {}
+            
+            template <class Tag>
+            struct unsupported_tag;
+
+            template <class Tag>
+            struct value :
+                mpl::if_<
+                    is_async<Tag>,
+                    boost::shared_future<typename string<Tag>::type>,
+                    typename mpl::if_<
+                        is_sync<Tag>,
+                        typename string<Tag>::type,
+                        unsupported_tag<Tag>
+                    >::type
+                >
+            {};
+
+            template <class Tag>
+            struct status_message_visitor : boost::static_visitor<> {
+                basic_response<Tag> const & response;
+                status_message_visitor(basic_response<Tag> const & response)
+                    : response(response) {}
+                void operator() (typename value<Tag>::type const & status_message) const {
+                    response.status_message(status_message);
+                }
+                template <class T>
+                void operator() (T const &) const {
+                    // FIXME fail here!
+                }
+            };
+
+            template <class Tag> 
+            basic_response<Tag> const & operator() (basic_response<Tag> const & response) const {
+                apply_visitor(status_message_visitor<Tag>(response), status_message_);
+                return response;
+            }
+
+        };
+
+    } // namespace impl
+
+    template <class T>
+    inline impl::status_message_directive const status_message(T const & status_message_) {
+        return impl::status_message_directive(status_message_);
     }
 
 } // namespace http

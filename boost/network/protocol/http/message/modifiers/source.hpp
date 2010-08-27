@@ -9,6 +9,7 @@
 #include <boost/network/support/is_async.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/concept/requires.hpp>
+#include <boost/network/message/directives/source.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -19,11 +20,11 @@ namespace boost { namespace network { namespace http {
 
         template <class Tag, class T>
         void source(basic_response<Tag> & response, T const & value, mpl::false_ const &) {
-            response << source(value);
+            response << ::boost::network::source(value);
         }
 
         template <class Tag, class T>
-        void source(basic_response<Tag> & response, boost::shared_future<T> future, mpl::true_ const &) {
+        void source(basic_response<Tag> & response, T const & future, mpl::true_ const &) {
             response.source(future);
         }
 

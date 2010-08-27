@@ -7,9 +7,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/version.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/range/algorithm/transform.hpp>
+#include <boost/network/constants.hpp>
+#include <boost/network/traits/ostream_iterator.hpp>
+#include <iterator>
 
 namespace boost { namespace network { namespace http { namespace impl {
 
@@ -40,32 +45,92 @@ namespace boost { namespace network { namespace http { namespace impl {
                 request_strand_(new boost::asio::io_service::strand(resolver->get_io_service()))
             {}
 
+            struct to_http_headers {
+                typedef typename string<Tag>::type string_type;
+                template <class U>
+                string_type const operator() (U const & pair) const {
+                    typedef typename ostringstream<Tag>::type ostringstream_type;
+                    ostringstream_type header_line;
+                    header_line << pair.first
+                        << constants<Tag>::colon()
+                        << pair.second
+                        << constants<Tag>::crlf();
+                    return header_line.str();
+                }
+            };
+
             virtual response start(request const & request, string_type const & method, bool get_body) {
                 response temp;
-                source(temp, source_promise.get_future());
-                destination(temp, destination_promise.get_future());
-                headers(temp, headers_promise.get_future());
-                body(temp, body_promise.get_future());
-                version(temp, version_promise.get_future());
-                status(temp, status_promise.get_future());
-                status_message(temp, status_message_promise.get_future());
+                boost::shared_future<string_type> source_future = source_promise.get_future();
+                source(temp, source_future);
+                boost::shared_future<string_type> destination_future = destination_promise.get_future();
+                destination(temp, destination_future);
+                boost::shared_future<typename headers_container<Tag>::type> headers_future = headers_promise.get_future();
+                headers(temp, headers_future);
+                boost::shared_future<string_type> body_future = body_promise.get_future();
+                body(temp, body_future);
+                boost::shared_future<string_type> version_future = version_promise.get_future();
+                version(temp, version_future);
+                boost::shared_future<uint16_t> status_future = status_promise.get_future();
+                status(temp, status_future);
+                boost::shared_future<string_type> status_message_future = status_message_promise.get_future();
+                status_message(temp, status_message_future);
 
                 if (!get_body) body_promise.set_value(string_type());
 
-                // start things off by resolving the host.
+                typename ostringstream<Tag>::type command_stream;
+                string_type uri_str = uri(request);
+                typedef constants<Tag> constants;
+                command_stream 
+                    << method << constants::space()
+                    << uri_str << constants::space()
+                    << constants::http_slash() << version_major
+                    << constants::dot() << version_minor
+                    << constants::crlf();
+                
+                typedef typename headers_range<typename base::request>::type headers_range_type;
+                headers_range_type headers_ = headers(request);
+                boost::range::transform(
+                    headers_,
+                    typename ostream_iterator<Tag, string_type>::type (command_stream),
+                    to_http_headers());
+
+                if (boost::empty(headers(request)[constants::host()])) {
+                    string_type host_str = host(request);
+                    command_stream
+                        << constants::host() << constants::colon() << constants::space() << host_str << constants::crlf();
+                }
+
+                if (boost::empty(headers(request)[constants::accept()])) {
+                    command_stream
+                        << constants::accept() << constants::colon() << constants::space() << constants::default_accept_mime() << constants::crlf();
+                }
+
+                if (version_major == 1u && version_minor == 1u && boost::empty(headers(request)[constants::accept_encoding()])) {
+                    command_stream
+                        << constants::accept_encoding() << constants::colon() << constants::space() << constants::default_accept_encoding() << constants::crlf();
+                }
+
+                if (boost::empty(headers(request)[constants::user_agent()])) {
+                    command_stream
+                        << constants::user_agent() << constants::colon() << constants::space() << constants::cpp_netlib_slash() << BOOST_NETLIB_VERSION << constants::crlf();
+                }
+
+                command_string_ = command_stream.str();
+                
                 resolve_(resolver_, host(request),
                     request_strand_->wrap(
                         boost::bind(
                         &http_async_connection<Tag,version_major,version_minor>::handle_resolved,
                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                        port(request),
+                        method, port(request),
                         _1, _2)));
                 
                 return temp;
             }
 
     private:
-        void handle_resolved(boost::uint16_t port, boost::system::error_code const & ec, resolver_iterator_pair endpoint_range) {
+        void handle_resolved(string_type method, boost::uint16_t port, boost::system::error_code const & ec, resolver_iterator_pair endpoint_range) {
             resolver_iterator iter = boost::begin(endpoint_range);
             if (!ec && !boost::empty(endpoint_range)) {
                 boost::asio::ip::tcp::endpoint endpoint(
@@ -80,7 +145,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_connected,
                             http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                            std::make_pair(++iter, resolver_iterator()),
+                            method, std::make_pair(++iter, resolver_iterator()),
                             boost::asio::placeholders::error
                             )));
             } else {
@@ -97,9 +162,9 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        void handle_connected(resolver_iterator_pair endpoint_range, boost::system::error_code const & ec) {
+        void handle_connected(string_type method, resolver_iterator_pair endpoint_range, boost::system::error_code const & ec) {
             if (!ec) {
-                async_send(); //FIXME -- wire the correct parameters
+                
             }
         }
 
@@ -139,6 +204,8 @@ namespace boost { namespace network { namespace http { namespace impl {
         boost::promise<string_type> source_promise;
         boost::promise<string_type> destination_promise;
         boost::promise<string_type> body_promise;
+        string_type command_string_;
+
     };
 
 } // namespace impl

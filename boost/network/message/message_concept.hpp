@@ -28,16 +28,30 @@ struct Message
     BOOST_CONCEPT_USAGE(Message) {
         M message_;
         swap(message, message_);
-        
+
+        typedef typename traits::body<M>::type body_type;
+        typedef typename traits::source<M>::type source_type;
+        typedef typename traits::destination<M>::type destination_type;
+
+        typedef typename traits::header_key<M>::type header_key_type;
+        typedef typename traits::header_value<M>::type header_value_type;
+
         headers_container_type headers_ = headers(message);
         string_type body_ = body(message);
         string_type source_ = source(message);
         string_type destination_ = destination(message);
 
-        message << source(string_type())
-            << destination(string_type())
+        message << source(source_type())
+            << destination(destination_type())
             << header(string_type(), string_type())
-            << body(string_type());
+            << body(body_type());
+
+        add_header(message, string_type(), string_type());
+        remove_header(message, string_type());
+        clear_headers(message);
+        source(message, source_type());
+        destination(message, destination_type());
+        body(message, body_type());
 
         (void)headers_;
         (void)body_;

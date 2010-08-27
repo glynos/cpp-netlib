@@ -10,6 +10,10 @@
 #include <boost/thread/future.hpp>
 #include <boost/cstdint.hpp>
 
+//FIXME move this out to a trait
+#include <set>
+#include <boost/foreach.hpp>
+
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
@@ -58,7 +62,7 @@ namespace boost { namespace network { namespace http {
             return status_.get();
         }
 
-        void status(boost::shared_future<string_type> const & future) const {
+        void status(boost::shared_future<uint16_t> const & future) const {
             status_ = future;
         }
 
@@ -79,11 +83,24 @@ namespace boost { namespace network { namespace http {
         }
 
         headers_container_type const headers() const {
-            return headers_.get();
+            headers_container_type raw_headers = headers_.get();
+            raw_headers.insert(added_headers.begin(), added_headers.end());
+            BOOST_FOREACH(string_type const & key, removed_headers) {
+                raw_headers.erase(key);
+            }
+            return raw_headers;
         }
 
         void headers(boost::shared_future<headers_container_type> const & future) const {
             headers_ = future;
+        }
+
+        void add_header(typename headers_container_type::value_type const & pair_) const {
+            added_headers.insert(pair_);
+        }
+
+        void remove_header(typename headers_container_type::key_type const & key_) const {
+            removed_headers.insert(key_);
         }
 
         string_type const body() const {
@@ -115,7 +132,8 @@ namespace boost { namespace network { namespace http {
             version_, source_, destination_, body_;
         mutable boost::shared_future<boost::uint16_t> status_;
         mutable boost::shared_future<headers_container_type> headers_;
-
+        mutable headers_container_type added_headers;
+        mutable std::set<string_type> removed_headers;
     };
 
     template <class Tag>
