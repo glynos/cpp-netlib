@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, tag_types) {
     basic_message<T> copy(instance);
     BOOST_CHECK_EQUAL(headers(copy).count(header_name<T>::string), static_cast<std::size_t>(1));
     typename headers_range<basic_message<T> >::type range = headers(copy)[header_name<T>::string];
-    BOOST_CHECK (begin(range) != end(range));
+    BOOST_CHECK (boost::begin(range) != boost::end(range));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(swap_test, T, tag_types) {
@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(headers_directive_test, T, tag_types) {
     instance << header(header_name<T>::string, header_value<T>::string);
     BOOST_CHECK_EQUAL ( headers(instance).count(header_name<T>::string), static_cast<std::size_t>(1) );
     typename headers_range<basic_message<T> >::type range = headers(instance)[header_name<T>::string];
-    BOOST_CHECK (begin(range) != end(range));
+    BOOST_CHECK (boost::begin(range) != boost::end(range));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(body_directive_test, T, tag_types) {
@@ -160,7 +160,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(remove_header_directive_test, T, tag_types) {
     instance << header(header_name<T>::string, header_value<T>::string)
         << remove_header(header_name<T>::string);
     typename headers_range<basic_message<T> >::type range = headers(instance);
-    BOOST_CHECK ( begin(range) == end(range) );
+    BOOST_CHECK ( boost::begin(range) == boost::end(range) );
 }
 
 

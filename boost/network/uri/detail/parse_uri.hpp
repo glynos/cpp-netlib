@@ -25,6 +25,9 @@ namespace boost { namespace spirit { namespace traits {
         struct transform_attribute<
             boost::network::uri::detail::uri_parts<Tag>,
             typename boost::network::uri::detail::uri_parts_tuple<Tag>::type
+#if SPIRIT_VERSION > 0x2030
+			, boost::spirit::qi::domain
+#endif
                 > 
         {
             typedef typename boost::network::uri::detail::uri_parts_tuple<Tag>::type type;
@@ -96,76 +99,76 @@ namespace boost { namespace network { namespace uri {
             struct uri_grammar : qi::grammar<Iterator, uri_parts<Tag>()> {
                 uri_grammar() : uri_grammar::base_type(start, "uri") {
                     // gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-                    gen_delims = qi::char_(":/?#[]@");
+                    gen_delims %= qi::char_(":/?#[]@");
                     // sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-                    sub_delims = qi::char_("!$&'()*+,;=");
+                    sub_delims %= qi::char_("!$&'()*+,;=");
                     // reserved = gen-delims / sub-delims
-                    reserved = gen_delims | sub_delims;
+                    reserved %= gen_delims | sub_delims;
                     // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-                    unreserved = qi::alnum | qi::char_("-._~");
+                    unreserved %= qi::alnum | qi::char_("-._~");
                     // pct-encoded = "%" HEXDIG HEXDIG
-                    pct_encoded = qi::char_("%") >> qi::repeat(2)[qi::xdigit];
+                    pct_encoded %= qi::char_("%") >> qi::repeat(2)[qi::xdigit];
 
                     // pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
-                    pchar = qi::raw[
+                    pchar %= qi::raw[
                         unreserved | pct_encoded | sub_delims | qi::char_(":@")
                     ];
 
                     // segment = *pchar
-                    segment = qi::raw[*pchar];
+                    segment %= qi::raw[*pchar];
                     // segment-nz = 1*pchar
-                    segment_nz = qi::raw[+pchar];
+                    segment_nz %= qi::raw[+pchar];
                     // segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
-                    segment_nz_nc = qi::raw[
+                    segment_nz_nc %= qi::raw[
                         +(unreserved | pct_encoded | sub_delims | qi::char_("@"))
                     ];
                     // path-abempty  = *( "/" segment )
-                    path_abempty = qi::raw[*(qi::char_("/") >> segment)];
+                    path_abempty %= qi::raw[*(qi::char_("/") >> segment)];
                     // path-absolute = "/" [ segment-nz *( "/" segment ) ]
-                    path_absolute = qi::raw[
+                    path_absolute %= qi::raw[
                             qi::char_("/")
                         >>  -(segment_nz >> *(qi::char_("/") >> segment))
                     ];
                     // path-rootless = segment-nz *( "/" segment )
-                    path_rootless = qi::raw[
+                    path_rootless %= qi::raw[
                         segment_nz >> *(qi::char_("/") >> segment)
                     ];
                     // path-empty = 0<pchar>
-                    path_empty = qi::eps;
+                    path_empty %= qi::eps;
 
                     // scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
-                    scheme = qi::alpha >> *(qi::alnum | qi::char_("+.-"));
+                    scheme %= qi::alpha >> *(qi::alnum | qi::char_("+.-"));
  
                     // user_info = *( unreserved / pct-encoded / sub-delims / ":" )
-                    user_info = qi::raw[
+                    user_info %= qi::raw[
                         *(unreserved | pct_encoded | sub_delims | qi::char_(":"))
                     ];
 
                     // dec-octet = DIGIT / %x31-39 DIGIT / "1" 2DIGIT / "2" %x30-34 DIGIT / "25" %x30-35
-                    dec_octet =
+                    dec_octet %=
                             !(qi::lit('0') >> qi::digit)
                         >>  qi::raw[
                                 qi::uint_parser<boost::uint8_t, 10, 1, 3>()
                             ];
                     // IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
-                    ipv4address = qi::raw[
+                    ipv4address %= qi::raw[
                         dec_octet >> qi::repeat(3)[qi::lit('.') >> dec_octet]
                     ];                    
                     // reg-name = *( unreserved / pct-encoded / sub-delims )
-                    reg_name = qi::raw[
+                    reg_name %= qi::raw[
                         *(unreserved | pct_encoded | sub_delims)
                     ];
                     // TODO, host = IP-literal / IPv4address / reg-name
-                    host = ipv4address | reg_name;
+                    host %= ipv4address | reg_name;
  
                     // query = *( pchar / "/" / "?" )
-                    query = qi::raw[*(pchar | qi::char_("/?"))];
+                    query %= qi::raw[*(pchar | qi::char_("/?"))];
                     // fragment = *( pchar / "/" / "?" )
-                    fragment = qi::raw[*(pchar | qi::char_("/?"))];
+                    fragment %= qi::raw[*(pchar | qi::char_("/?"))];
 
                     // hier-part = "//" authority path-abempty / path-absolute / path-rootless / path-empty
                     // authority = [ userinfo "@" ] host [ ":" port ]
-                    hier_part =
+                    hier_part %=
                             (
                                 "//"
                             >>  -(user_info >> '@')
@@ -185,12 +188,13 @@ namespace boost { namespace network { namespace uri {
                                 )
                             );
 
-                    start = uri;
-                    uri = 
+                    uri %= 
                             scheme >> ':'
                         >>  hier_part
                         >>  -('?' >> query)
                         >>  -('#' >> fragment);
+
+                    start %= uri.alias();
                 }
 
                 typedef typename string<Tag>::type string_type;
@@ -234,8 +238,10 @@ namespace boost { namespace network { namespace uri {
             inline bool parse_uri(Range & range, uri_parts<Tag> & parts) {
                 typedef typename range_iterator<Range>::type iterator;
 
-                iterator start_ = begin(range);
-                iterator end_ = end(range);
+				// Qualified boost::begin and boost::end because MSVC complains
+				// of ambiguity on call to begin(range) and end(rand).
+                iterator start_ = boost::begin(range);
+                iterator end_ = boost::end(range);
 
                 uri_grammar<iterator, Tag> grammar;
 

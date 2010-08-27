@@ -7,7 +7,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_NETLIB_VERSION
-# define BOOST_NETLIB_VERSION "0.5"
+# define BOOST_NETLIB_VERSION "0.6"
 #endif
 
 #endif // BOOST_NETWORK_VERSION_HPP_20091214

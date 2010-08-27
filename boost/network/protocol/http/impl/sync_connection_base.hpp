@@ -119,7 +119,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 typename headers_range<basic_response<Tag> >::type transfer_encoding_range =
                     headers(response_)["Transfer-Encoding"];
                 if (empty(transfer_encoding_range)) throw std::runtime_error("Missing Transfer-Encoding Header from response.");
-                if (boost::iequals(begin(transfer_encoding_range)->second, "chunked")) {
+                if (boost::iequals(boost::begin(transfer_encoding_range)->second, "chunked")) {
                     bool stopping = false;
                     do { 
                         std::size_t chunk_size_line = read_until(socket_, response_buffer, "\r\n", error);
@@ -158,7 +158,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     } while (!stopping);
                 } else throw std::runtime_error("Unsupported Transfer-Encoding.");
             } else {
-                size_t length = lexical_cast<size_t>(begin(content_length_range)->second);
+                size_t length = lexical_cast<size_t>(boost::begin(content_length_range)->second);
                 size_t bytes_read = 0;
                 while ((bytes_read = boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error))) {
                     body_stream << &response_buffer;
@@ -234,7 +234,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             connection_base::read_body(socket_, response_, response_buffer);    
             typename headers_range<basic_response<Tag> >::type connection_range =
                 headers(response_)["Connection"];
-            if (version_major == 1 && version_minor == 1 && !empty(connection_range) && boost::iequals(begin(connection_range)->second, "close")) {
+            if (version_major == 1 && version_minor == 1 && !empty(connection_range) && boost::iequals(boost::begin(connection_range)->second, "close")) {
                 close_socket();
             } else if (version_major == 1 && version_minor == 0) {
                 close_socket();
@@ -296,7 +296,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             connection_base::read_body(socket_, response_, response_buffer);
             typename headers_range<basic_response<Tag> >::type connection_range =
                 headers(response_)["Connection"];
-            if (version_major == 1 && version_minor == 1 && !empty(connection_range) && boost::iequals(begin(connection_range)->second, "close")) {
+            if (version_major == 1 && version_minor == 1 && !empty(connection_range) && boost::iequals(boost::begin(connection_range)->second, "close")) {
                 close_socket();
             } else if (version_major == 1 && version_minor == 0) {
                 close_socket();

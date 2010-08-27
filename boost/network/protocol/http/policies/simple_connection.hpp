@@ -55,8 +55,8 @@ namespace boost { namespace network { namespace http {
                         boost::uint16_t status = response_.status();
                         if (status >= 300 && status <= 307) {
                             typename headers_range<http::basic_response<Tag> >::type location_range = headers(response_)["Location"];
-                            typename range_iterator<typename headers_range<http::basic_request<Tag> >::type>::type location_header = begin(location_range);
-                            if (location_header != end(location_range)) {
+                            typename range_iterator<typename headers_range<http::basic_request<Tag> >::type>::type location_header = boost::begin(location_range);
+                            if (location_header != boost::end(location_range)) {
                                 request_.uri(location_header->second);
                             } else throw std::runtime_error("Location header not defined in redirect response.");
                         } else break;
@@ -81,7 +81,7 @@ namespace boost { namespace network { namespace http {
                     , follow_redirect_
                     , request_.host()
                     , lexical_cast<string_type>(request_.port())
-                    , bind(
+                    , boost::bind(
                         &simple_connection_policy<Tag,version_major,version_minor>::resolve,
                         this,
                         _1, _2, _3

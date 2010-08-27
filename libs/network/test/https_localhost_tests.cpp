@@ -110,8 +110,8 @@ BOOST_AUTO_TEST_CASE(text_content_type_test) {
     http::client::response response_ = client_.get(request_);
     BOOST_REQUIRE(headers(response_).count("Content-type") != 0);
     headers_range<http::client::response>::type range = headers(response_)["Content-type"];
-    BOOST_CHECK(begin(range)->first == "Content-type");
-    BOOST_CHECK(begin(range)->second == "text/html");
+    BOOST_CHECK(boost::begin(range)->first == "Content-type");
+    BOOST_CHECK(boost::begin(range)->second == "text/html");
 }
 
 BOOST_AUTO_TEST_CASE(binary_content_type_test) {
@@ -122,8 +122,8 @@ BOOST_AUTO_TEST_CASE(binary_content_type_test) {
     http::client::response response_ = client_.get(request_);
     BOOST_REQUIRE(headers(response_).count("Content-type") != 0);
     headers_range<http::client::response>::type range = headers(response_)["Content-type"];
-    BOOST_CHECK(begin(range)->first == "Content-type");
-    BOOST_CHECK(begin(range)->second == "image/jpeg");
+    BOOST_CHECK(boost::begin(range)->first == "Content-type");
+    BOOST_CHECK(boost::begin(range)->second == "image/jpeg");
 }
 
 BOOST_AUTO_TEST_CASE(content_length_header_test) {
@@ -134,8 +134,8 @@ BOOST_AUTO_TEST_CASE(content_length_header_test) {
     http::client::response response_ = client_.get(request_);
     BOOST_REQUIRE(headers(response_).count("Content-Length") != 0);
     headers_range<http::client::response>::type range = headers(response_)["Content-Length"];
-    BOOST_CHECK_EQUAL(begin(range)->first, "Content-Length");
-    BOOST_CHECK_EQUAL(begin(range)->second, "113");
+    BOOST_CHECK_EQUAL(boost::begin(range)->first, "Content-Length");
+    BOOST_CHECK_EQUAL(boost::begin(range)->second, "113");
     BOOST_CHECK(body(response_).length() != 0);
 }
 
@@ -223,10 +223,10 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
 //    BOOST_CHECK(body(r).length() != 0);
 //    BOOST_CHECK(headers(r)["Content-Type"].begin() != headers(r)["Content-Type"].end());
 //    headers_range<http::client::response>::type range=headers(r)["X-CppNetlib-Test"];
-//    BOOST_REQUIRE(begin(range) != end(range));
+//    BOOST_REQUIRE(boost::begin(range) != boost::end(range));
 //    BOOST_REQUIRE(distance(range) == 2);
-//    BOOST_CHECK_EQUAL(begin(range)->second, std::string("multi-line-header"));
-//    BOOST_CHECK_EQUAL((++begin(range))->second, std::string("that-should-concatenate"));
+//    BOOST_CHECK_EQUAL(boost::begin(range)->second, std::string("multi-line-header"));
+//    BOOST_CHECK_EQUAL((++boost::begin(range))->second, std::string("that-should-concatenate"));
 //}
 
 BOOST_AUTO_TEST_CASE(file_not_found) {
@@ -248,8 +248,8 @@ BOOST_AUTO_TEST_CASE(head_test) {
     http::client::response response_ = client_.head(request_);
     BOOST_REQUIRE(headers(response_).count("Content-Length") != 0);
     headers_range<http::client::response>::type range = headers(response_)["Content-Length"];
-    BOOST_CHECK_EQUAL(begin(range)->first, "Content-Length");
-    BOOST_CHECK_EQUAL(begin(range)->second, "113");
+    BOOST_CHECK_EQUAL(boost::begin(range)->first, "Content-Length");
+    BOOST_CHECK_EQUAL(boost::begin(range)->second, "113");
     BOOST_CHECK(body(response_).length() == 0);
 }
 
