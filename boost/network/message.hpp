@@ -68,10 +68,10 @@ namespace boost { namespace network {
         }
 
         void swap(basic_message<Tag> & other) {
-            other._headers.swap(_headers);
-            other._body.swap(_body);
-            other._source.swap(_source);
-            other._destination.swap(_destination);
+            std::swap(other._headers, _headers);
+            std::swap(other._body, _body);
+            std::swap(other._source, _source);
+            std::swap(other._destination, _destination);
         }
 
         headers_container_type & headers() {

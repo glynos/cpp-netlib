@@ -57,42 +57,54 @@ namespace boost { namespace network {
 
         struct source_directive {
 
+            boost::variant<
+                typename string<tags::default_string>::type,
+                typename string<tags::default_wstring>::type,
+                boost::shared_future<string<tags::default_string>::type>,
+                boost::shared_future<string<tags::default_wstring>::type>
+            > source_;
+
             explicit source_directive (string<tags::default_string>::type const & source)
                 : source_(source)
             { };
-
             explicit source_directive (string<tags::default_wstring>::type const & source)
                 : source_(source)
             { };
-
             explicit source_directive (boost::shared_future<typename string<tags::default_string>::type> const & source)
                 : source_(source)
             { };
-
             explicit source_directive (boost::shared_future<typename string<tags::default_wstring>::type> const & source)
                 : source_(source)
             { };
 
+            source_directive(source_directive const & other)
+                : source_(other.source_) {}
+
             template <class Tag>
             struct value :
                 mpl::if_<
-                is_async<Tag>,
-                boost::shared_future<typename string<Tag>::type>,
-                typename mpl::if_<
-                is_sync<Tag>,
-                typename string<Tag>::type,
-                unsupported_tag<Tag>
-                >::type
+                    is_async<Tag>,
+                    boost::shared_future<typename string<Tag>::type>,
+                    typename mpl::if_<
+                        mpl::or_<
+                            is_sync<Tag>,
+                            is_same<Tag, tags::default_string>,
+                            is_same<Tag, tags::default_wstring>
+                        >,
+                        typename string<Tag>::type,
+                        unsupported_tag<Tag>
+                    >::type
                 >
             {};
 
             template <class Message>
             struct source_visitor : boost::static_visitor<> {
                 Message const & message_;
-                typedef typename Message::tag Tag;
                 source_visitor(Message const & message)
                     : message_(message) {}
-                void operator()(typename value<Tag>::type & source) const {
+                source_visitor(source_visitor const & other)
+                    : message_(other.message_) {}
+                void operator()(typename value<typename Message::tag>::type const & source) const {
                     message_.source(source);
                 }
                 template <class T> void operator()(T const &) const {
@@ -104,15 +116,7 @@ namespace boost { namespace network {
             void operator() (Message<Tag> const & msg) const {
                 apply_visitor(source_visitor<Message<Tag> >(msg), source_);
             }
-
-        private:
-
-            boost::variant<
-                typename string<tags::default_string>::type,
-                typename string<tags::default_wstring>::type,
-                boost::shared_future<string<tags::default_string>::type>,
-                boost::shared_future<string<tags::default_wstring>::type>
-            > source_;
+            
         };
 
     } // namespace impl

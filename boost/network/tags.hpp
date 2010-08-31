@@ -22,7 +22,7 @@ struct http_default_8bit_tcp_resolve : http,sync,tcp,default_string {};
 struct http_default_8bit_udp_resolve : http,sync,udp,default_string {};
 struct http_keepalive_8bit_tcp_resolve : http,sync,tcp,default_string {};
 struct http_keepalive_8bit_udp_resolve : http,sync,udp,default_string {};
-struct http_server : http,default_string {};
+struct http_server : http,default_string,sync {};
 struct http_async_8bit_udp_resolve : http,async,udp,default_string {};
 
 typedef default_string default_;
