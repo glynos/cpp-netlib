@@ -14,4 +14,4 @@ endif()
 enable_testing()
 add_subdirectory(libs/network/test)
 add_subdirectory(libs/mime/test)
-
+add_subdirectory(libs/network/example)
