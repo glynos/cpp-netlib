@@ -92,7 +92,7 @@ namespace boost { namespace network {
                 typedef typename Message::tag Tag;
                 source_visitor(Message const & message)
                     : message_(message) {}
-                void operator()(typename value<Tag>::type const & source) const {
+                void operator()(typename value<Tag>::type & source) const {
                     message_.source(source);
                 }
                 template <class T> void operator()(T const &) const {

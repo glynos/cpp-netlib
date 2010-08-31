@@ -78,11 +78,11 @@ namespace boost { namespace network { namespace http {
     public:
 
         message_impl()
-            : version_(), status_(0u), status_message_()
+            : base_type(), version_(), status_(0u), status_message_()
         {}
 
         message_impl(message_impl const & other) 
-            : version_(other.version_), status_(other.status_), status_message_(other.status_message_)
+            : base_type(other), version_(other.version_), status_(other.status_), status_message_(other.status_message_)
         {}
 
         void version(string_type const & version) const {
@@ -115,8 +115,8 @@ namespace boost { namespace network { namespace http {
         }
 
         void swap(message_impl & other) {
-            basic_message<Tag> & base_ref(other),
-                this_ref(*this);
+            base_type & base_ref(other),
+                & this_ref(*this);
             std::swap(this_ref, base_ref);
             std::swap(status_, other.status_);
             std::swap(status_message_, other.status_message_);

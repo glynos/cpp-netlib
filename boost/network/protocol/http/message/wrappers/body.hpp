@@ -28,7 +28,7 @@ namespace boost { namespace network { namespace http {
                 : message_(message) {}
             body_wrapper(body_wrapper const & other)
                 : message_(other.message_) {}
-            operator string_type const () {
+            operator string_type () {
                 return message_.body();
             }
         };

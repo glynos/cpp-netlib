@@ -58,17 +58,18 @@ int main(int argc, char * argv[]) {
     typedef http::basic_client<tags::http_keepalive_8bit_udp_resolve, 1, 1>
         http_client;
     
-
     http_client::request request(source);
-    request << header("Connection", "close");
+    http_client::string_type destination_ = host(request);
+    
+    request << ::boost::network::header("Connection", "close");
     http_client client(http_client::follow_redirects);
     http_client::response response = client.get(request);
-    
+
     if (show_headers) {
         headers_range<http_client::response>::type headers_ = headers(response);
         boost::range_iterator<headers_range<http_client::response>::type>::type header, past_end;
-        header = begin(headers_);
-        past_end = end(headers_);
+        header = boost::begin(headers_);
+        past_end = boost::end(headers_);
         while (header != past_end) {
             cout << header->first << ": " << header->second << endl;
             ++header;

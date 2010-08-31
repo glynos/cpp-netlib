@@ -13,16 +13,10 @@
 #include <boost/thread/future.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/variant/variant.hpp>
+#include <boost/variant/apply_visitor.hpp>
+#include <boost/variant/static_visitor.hpp>
 
-/** header.hpp
- *
- * Defines the types involved and the semantics of adding
- * header information into message objects.
- *
- * WARNING: DO NOT INCLUDE THIS HEADER DIRECTLY. THIS REQUIRES
- * TYPES TO BE DEFINED FROM EARLIER FILES THAT INCLUDE THIS
- * HEADER.
- */
 namespace boost { namespace network {
 
     namespace traits {
@@ -67,12 +61,12 @@ namespace boost { namespace network {
     } // namespace traits
 
 namespace impl {
-   
-template <class T1, class T2>
+
+template <class KeyType, class ValueType>
 struct header_directive {
 
-    explicit header_directive(T1 header_name, 
-                              T2 header_value) :
+    explicit header_directive(KeyType const & header_name, 
+                              ValueType const & header_value) :
         _header_name(header_name),
         _header_value(header_value)
     { };
@@ -85,8 +79,8 @@ struct header_directive {
 
 private:
 
-    T1 const & _header_name;
-    T2 const & _header_value;
+    KeyType const & _header_name;
+    ValueType const & _header_value;
 };
 } // namespace impl
 

@@ -160,21 +160,22 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (response_assignment_construct_test, T, tag_types)
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (response_swap_test, T, tag_types) {
+    using namespace boost::network::http;
     http::basic_response<T> response;
-    response.version() = "HTTP/1.1";
-    response.status() = 200;
-    response.status_message() = "OK";
-    response << boost::network::body("RESPONSE");
+    response << version("HTTP/1.1")
+        << status(200)
+        << status_message("OK")
+        << body("RESPONSE");
     boost::network::http::basic_response<T> swapped;
     BOOST_REQUIRE_NO_THROW(swap(response, swapped));
     BOOST_CHECK_EQUAL ( response.version(), std::string() );
     BOOST_CHECK_EQUAL ( response.status(), 0u );
     BOOST_CHECK_EQUAL ( response.status_message(), std::string() );
-    BOOST_CHECK_EQUAL ( boost::network::body(response), std::string() );
+    BOOST_CHECK_EQUAL ( body(response), std::string() );
     BOOST_CHECK_EQUAL ( swapped.version(), std::string("HTTP/1.1") );
     BOOST_CHECK_EQUAL ( swapped.status(), 200u );
     BOOST_CHECK_EQUAL ( swapped.status_message(), std::string("OK") );
-    BOOST_CHECK_EQUAL ( boost::network::body(swapped), std::string("RESPONSE") );
+    BOOST_CHECK_EQUAL ( body(swapped), std::string("RESPONSE") );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

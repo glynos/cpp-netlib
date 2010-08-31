@@ -13,6 +13,7 @@
 #include <boost/network/protocol/http/detail/connection_helper.hpp>
 #include <boost/network/protocol/http/impl/sync_connection_base.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/network/protocol/http/response.hpp>
 #include <utility>
 
 #ifndef BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
@@ -62,7 +63,7 @@ namespace boost { namespace network { namespace http {
                         pimpl->init_socket(request_.host(), lexical_cast<string_type>(request_.port()));
                     }
                     response_ = basic_response<Tag>();
-                    response_ << source(request_.host());
+                    response_ << ::boost::network::source(request_.host());
 
                     pimpl->send_request_impl(method, request_);
                     boost::asio::streambuf response_buffer;
@@ -109,7 +110,6 @@ namespace boost { namespace network { namespace http {
                             } else throw std::runtime_error("Location header not defined in redirect response.");
                         }
                     }
-
                     return response_;
                 } while(true);
             }

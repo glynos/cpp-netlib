@@ -87,7 +87,7 @@ namespace boost { namespace network {
                 Message const & message_;
                 destination_visitor(Message const & message)
                     : message_(message) {}
-                void operator()(typename value<typename Message::tag>::type const & destination) const {
+                void operator()(typename value<typename Message::tag>::type & destination) const {
                     message_.destination(destination);
                 }
                 template <class T> void operator() (T const &) const {

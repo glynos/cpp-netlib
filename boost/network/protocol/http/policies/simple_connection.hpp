@@ -62,7 +62,6 @@ namespace boost { namespace network { namespace http {
                         } else break;
                     } else break;
                 } while(true);
-
                 return response_;
             }
 

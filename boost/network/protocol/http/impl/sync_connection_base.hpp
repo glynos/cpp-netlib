@@ -96,8 +96,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                     name = header_line.substr(0, colon_offset);
                     response_
                         << header(name, header_line.substr(colon_offset+2));
-                };
-            };
+                }
+            }
         }
 
         template <class Socket>
