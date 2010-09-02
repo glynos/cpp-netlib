@@ -14,6 +14,7 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/network/traits/ostream_iterator.hpp>
+#include <boost/regex.hpp>
 #include <iterator>
 
 namespace boost { namespace network { namespace http { namespace impl {
@@ -71,7 +72,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 body(temp, body_future);
                 boost::shared_future<string_type> version_future = version_promise.get_future();
                 version(temp, version_future);
-                boost::shared_future<uint16_t> status_future = status_promise.get_future();
+                boost::shared_future<boost::uint16_t> status_future = status_promise.get_future();
                 status(temp, status_future);
                 boost::shared_future<string_type> status_message_future = status_message_promise.get_future();
                 status_message(temp, status_message_future);
@@ -145,7 +146,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_connected,
                             http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                            method, std::make_pair(++iter, resolver_iterator()),
+                            method, port, std::make_pair(++iter, resolver_iterator()),
                             boost::asio::placeholders::error
                             )));
             } else {
@@ -162,21 +163,79 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        void handle_connected(string_type method, resolver_iterator_pair endpoint_range, boost::system::error_code const & ec) {
+        void handle_connected(string_type method, boost::uint16_t port, resolver_iterator_pair endpoint_range, boost::system::error_code const & ec) {
+            if (!ec) {
+                boost::asio::async_write(*socket_, boost::asio::buffer(command_string_.data(), command_string_.size()),
+                    request_strand_->wrap(
+                        boost::bind(
+                            &http_async_connection<Tag,version_major,version_minor>::handle_sent_request,
+                            http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                            method,
+                            boost::asio::placeholders::error,
+                            boost::asio::placeholders::bytes_transferred
+                            )));
+            } else {
+                if (!boost::empty(endpoint_range)) {
+                    resolver_iterator iter = boost::begin(endpoint_range);
+                    boost::asio::ip::tcp::endpoint endpoint(
+                        iter->endpoint().address(),
+                        port
+                        );
+                    socket_.reset(new boost::asio::ip::tcp::socket(
+                        resolver_->get_io_service()));
+                    socket_->async_connect(
+                        endpoint,
+                        request_strand_->wrap(
+                            boost::bind(
+                                &http_async_connection<Tag,version_major,version_minor>::handle_connected,
+                                http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                                method, port, std::make_pair(++iter, resolver_iterator()),
+                                boost::asio::placeholders::error
+                                )));
+                } else {
+                    boost::system::system_error error(
+                        ec ? ec : boost::asio::error::host_not_found
+                        );
+                    version_promise.set_exception(boost::copy_exception(error));
+                    status_promise.set_exception(boost::copy_exception(error));
+                    status_message_promise.set_exception(boost::copy_exception(error));
+                    headers_promise.set_exception(boost::copy_exception(error));
+                    source_promise.set_exception(boost::copy_exception(error));
+                    destination_promise.set_exception(boost::copy_exception(error));
+                    body_promise.set_exception(boost::copy_exception(error));
+                }
+            }
+        }
+
+        void handle_sent_request(string_type method, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+            if (!ec) {
+                static boost::regex const version_pattern("HTTP/\\d+\\.\\d+\\s\\d{3}\\s[\\w\\s\\d]+\\r\\n");
+                boost::asio::async_read_until(
+                    *socket_,
+                    response_buffer_,
+                    version_pattern,
+                    request_strand_->wrap(
+                        boost::bind(
+                            &http_async_connection<Tag,version_major,version_minor>::handle_received_status,
+                            http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                            method, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)));
+            } else {
+                boost::system::system_error error(
+                    ec ? ec : boost::asio::error::host_not_found
+                    );
+                version_promise.set_exception(boost::copy_exception(error));
+                status_promise.set_exception(boost::copy_exception(error));
+                status_message_promise.set_exception(boost::copy_exception(error));
+                headers_promise.set_exception(boost::copy_exception(error));
+                source_promise.set_exception(boost::copy_exception(error));
+                destination_promise.set_exception(boost::copy_exception(error));
+                body_promise.set_exception(boost::copy_exception(error));
+            }
+        }
+
+        void handle_received_status(string_type method, boost::system::error_code const & ec, std::size_t bytes_transferred) {
             if (!ec) {
                 
-            }
-        }
-
-        void handle_sent_request() {
-            if (!ec) {
-                async_read(); //FIXME -- wire the correct parameters
-            }
-        }
-
-        void handle_received_status() {
-            if (!ec) {
-                async_read(); //FIXME -- wire the correct parameters
             }
         }
 
@@ -205,7 +264,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         boost::promise<string_type> destination_promise;
         boost::promise<string_type> body_promise;
         string_type command_string_;
-
+        boost::asio::streambuf response_buffer_;
     };
 
 } // namespace impl
