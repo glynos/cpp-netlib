@@ -6,23 +6,15 @@
 #ifndef __NETWORK_MESSAGE_HPP__
 #define __NETWORK_MESSAGE_HPP__
 
-#include <map>
-#include <string>
-
-
-// include message declaration
 #include "boost/network/message_fwd.hpp"
-
-// include traits implementation
 #include <boost/network/traits/string.hpp>
 #include <boost/network/traits/ostringstream.hpp>
 #include <boost/network/traits/headers_container.hpp>
-
-// include directives base
 #include <boost/network/detail/directive_base.hpp>
-
-// include wrappers base
 #include <boost/network/detail/wrapper_base.hpp>
+#include <boost/network/message/directives.hpp>
+#include <boost/network/message/wrappers.hpp>
+#include <boost/network/message/transformers.hpp>
 
 #include <boost/network/message/message_concept.hpp>
 
@@ -121,15 +113,6 @@ BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_wstrin
 
 } // namespace network
 } // namespace boost
-
-#include <boost/network/message/directives.hpp>
-    // pull in directives header file
-
-#include <boost/network/message/wrappers.hpp>
-    // pull in wrappers header file
-
-#include <boost/network/message/transformers.hpp>
-    // pull in transformer header file
 
 #endif // __NETWORK_MESSAGE_HPP__
 
