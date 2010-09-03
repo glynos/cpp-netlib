@@ -197,7 +197,6 @@ namespace boost { namespace network { namespace http { namespace impl {
             response_ << network::body(body_stream.str());
         }
 
-
     };
 
     template <class Tag, unsigned version_major, unsigned version_minor>

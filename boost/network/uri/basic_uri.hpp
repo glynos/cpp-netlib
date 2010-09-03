@@ -104,7 +104,7 @@ namespace boost { namespace network { namespace uri {
     template <class Tag> 
         struct basic_uri : uri_base<Tag> {
             using uri_base<Tag>::operator=;
-            using uri_base<Tag>::string_type;
+            using typename uri_base<Tag>::string_type;
             using uri_base<Tag>::operator==;
             using uri_base<Tag>::operator!=;
             basic_uri() : uri_base<Tag>() {}
