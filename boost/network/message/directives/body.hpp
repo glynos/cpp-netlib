@@ -19,28 +19,6 @@
 
 namespace boost { namespace network {
 
-    namespace traits {
-        template <class Tag>
-        struct unsupported_tag;
-
-        template <class Message>
-        struct body :
-            mpl::if_<
-                is_async<typename Message::tag>,
-                boost::shared_future<typename string<typename Message::tag>::type>,
-                typename mpl::if_<
-                    mpl::or_<
-                        is_sync<typename Message::tag>,
-                        is_same<typename Message::tag, tags::default_string>,
-                        is_same<typename Message::tag, tags::default_wstring>
-                    >,
-                    typename string<typename Message::tag>::type,
-                    unsupported_tag<typename Message::tag>
-                >::type
-            >
-        {};
-    } // namespace traits
-
     namespace impl {
 
         struct body_directive {
@@ -103,8 +81,16 @@ namespace boost { namespace network {
     } // namespace impl
 
 
-    template <class Input>
-    inline impl::body_directive const body(Input const & input) {
+    inline impl::body_directive const body(string<tags::default_string>::type const & input) {
+        return impl::body_directive(input);
+    }
+
+    inline impl::body_directive const body(string<tags::default_wstring>::type const & input) {
+        return impl::body_directive(input);
+    }
+
+    template <class InputType>
+    inline impl::body_directive const body(boost::shared_future<InputType> const & input) {
         return impl::body_directive(input);
     }
 

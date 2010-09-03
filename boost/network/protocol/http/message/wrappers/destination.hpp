@@ -15,6 +15,9 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     struct basic_response;
 
+    template <class Tag>
+    class basic_request;
+
     namespace impl {
 
         template <class Message>

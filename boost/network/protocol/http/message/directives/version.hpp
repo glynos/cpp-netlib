@@ -58,10 +58,10 @@ namespace boost { namespace network { namespace http {
             };
             
             boost::variant<
-                typename string<tags::default_string>::type, 
-                typename string<tags::default_wstring>::type, 
-                boost::shared_future<typename string<tags::default_string>::type>,
-                boost::shared_future<typename string<tags::default_wstring>::type>
+                string<tags::default_string>::type, 
+                string<tags::default_wstring>::type, 
+                boost::shared_future<string<tags::default_string>::type>,
+                boost::shared_future<string<tags::default_wstring>::type>
             > version_;
 
             version_directive(string<tags::default_string>::type const & version)
@@ -70,10 +70,10 @@ namespace boost { namespace network { namespace http {
             version_directive(string<tags::default_wstring>::type const & version)
                 : version_(version) {}
 
-            version_directive(boost::shared_future<typename string<tags::default_string>::type> const & version)
+            version_directive(boost::shared_future<string<tags::default_string>::type> const & version)
                 : version_(version) {}
 
-            version_directive(boost::shared_future<typename string<tags::default_wstring>::type> const & version)
+            version_directive(boost::shared_future<string<tags::default_wstring>::type> const & version)
                 : version_(version) {}
 
             version_directive(version_directive const & other)

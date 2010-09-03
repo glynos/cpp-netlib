@@ -18,48 +18,15 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
 
-/** source.hpp
-*
-* Defines the types involved and the semantics of adding
-* source information into message objects.
-*
-* WARNING: DO NOT INCLUDE THIS HEADER DIRECTLY. THIS REQUIRES
-* TYPES TO BE DEFINED FROM EARLIER FILES THAT INCLUDE THIS
-* HEADER.
-*/
 namespace boost { namespace network {
-
-    namespace traits {
-
-        template <class Tag>
-        struct unsupported_tag;
-
-        template <class Message>
-        struct source :
-            mpl::if_<
-            is_async<typename Message::tag>,
-            boost::shared_future<typename string<typename Message::tag>::type>,
-            typename mpl::if_<
-            mpl::or_<
-            is_same<typename Message::tag, tags::default_string>,
-            is_same<typename Message::tag, tags::default_wstring>,
-            is_sync<typename Message::tag>
-            >,
-            typename string<typename Message::tag>::type,
-            unsupported_tag<typename Message::tag>
-            >::type
-            >
-        {};
-
-    } // namespace traits
 
     namespace impl {
 
         struct source_directive {
 
             boost::variant<
-                typename string<tags::default_string>::type,
-                typename string<tags::default_wstring>::type,
+                string<tags::default_string>::type,
+                string<tags::default_wstring>::type,
                 boost::shared_future<string<tags::default_string>::type>,
                 boost::shared_future<string<tags::default_wstring>::type>
             > source_;
@@ -70,10 +37,10 @@ namespace boost { namespace network {
             explicit source_directive (string<tags::default_wstring>::type const & source)
                 : source_(source)
             { };
-            explicit source_directive (boost::shared_future<typename string<tags::default_string>::type> const & source)
+            explicit source_directive (boost::shared_future<string<tags::default_string>::type> const & source)
                 : source_(source)
             { };
-            explicit source_directive (boost::shared_future<typename string<tags::default_wstring>::type> const & source)
+            explicit source_directive (boost::shared_future<string<tags::default_wstring>::type> const & source)
                 : source_(source)
             { };
 

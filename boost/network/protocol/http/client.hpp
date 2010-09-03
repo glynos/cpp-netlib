@@ -1,7 +1,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_20091215
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_20091215
 
-//          Copyright Dean Michael Berris 2007-2009.
+//          Copyright Dean Michael Berris 2007-2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -33,11 +33,12 @@ namespace boost { namespace network { namespace http {
         : basic_client_facade<Tag, basic_client<Tag,version_major,version_minor> >
     {
     private:
-        typedef typename basic_client_impl<Tag,version_major,version_minor> pimpl_type;
+        typedef basic_client_impl<Tag,version_major,version_minor> pimpl_type;
         typedef basic_client_facade<Tag, basic_client<Tag,version_major,version_minor> > base_facade_type;
     public:
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
+        typedef typename string<Tag>::type string_type;
         typedef Tag tag_type;
 
         struct cache_resolved_type { };

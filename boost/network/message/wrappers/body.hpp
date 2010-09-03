@@ -7,9 +7,7 @@
 #ifndef __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
 #define __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
 
-
 #include <boost/network/traits/string.hpp>
-
 
 namespace boost { namespace network {
 
@@ -26,6 +24,10 @@ namespace boost { namespace network {
                 operator string_type () const {
                     return string_type(detail::wrapper_base<Tag>::_message.body());
                 };
+
+                std::size_t size() const {
+                    return string_type(detail::wrapper_base<Tag>::_message.body()).size();
+                }
             };
 
         template <class Tag>
@@ -40,18 +42,22 @@ namespace boost { namespace network {
                 operator string_type () const {
                     return string_type(detail::wrapper_base_const<Tag>::_message.body());
                 }
+
+                std::size_t size() const {
+                    return string_type(detail::wrapper_base<Tag>::_message.body()).size();
+                }
             };
 
     } // namespace impl
 
     template <class Tag>
-        inline typename string<Tag>::type
+        inline impl::body_wrapper<Tag> const
         body(basic_message<Tag> & message_) {
             return impl::body_wrapper<Tag>(message_);
         }
 
     template <class Tag>
-        inline typename string<Tag>::type
+        inline impl::body_wrapper_const<Tag> const
         body(basic_message<Tag> const & message_) {
             return impl::body_wrapper_const<Tag>(message_);
         }

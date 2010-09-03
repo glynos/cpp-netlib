@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -25,7 +26,7 @@ namespace boost { namespace network { namespace http {
             : uri_(uri) {}
 
         uri_directive(uri_directive const & other)
-            : uri(other.uri_) {}
+            : uri_(other.uri_) {}
 
         template <class T> basic_request<T> const & operator() (basic_request<T> const & request) const {
             request.uri(uri_);

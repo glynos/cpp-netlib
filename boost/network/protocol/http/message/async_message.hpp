@@ -147,7 +147,4 @@ namespace boost { namespace network { namespace http {
 
 } // namespace boost
 
-#include <boost/network/protocol/http/message/wrappers/source.hpp>
-#include <boost/network/protocol/http/message/wrappers/body.hpp>
-
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_ASYNC_MESSAGE_HPP_20100622

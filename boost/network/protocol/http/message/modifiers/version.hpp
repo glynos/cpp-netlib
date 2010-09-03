@@ -17,20 +17,6 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     struct basic_response;
 
-    namespace traits {
-        template <class Message>
-        struct version : mpl::if_<
-            is_async<typename Message::tag>,
-            boost::shared_future<typename string<typename Message::tag>::type>,
-            typename mpl::if_<
-                is_sync<typename Message::tag>,
-                typename string<typename Message::tag>::type,
-                unsupported_tag<typename Message::tag>
-            >::type
-        >
-        {};
-    }
-
     namespace impl {
 
         template <class Tag, class T>

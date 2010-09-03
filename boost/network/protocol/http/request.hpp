@@ -9,8 +9,21 @@
 
 // Implement the HTTP Request Object
 
-#include <boost/network/message.hpp>
 #include <boost/network/tags.hpp>
+#include <boost/network/message_fwd.hpp>
+#include <boost/network/message/wrappers.hpp>
+#include <boost/network/protocol/http/message/directives/uri.hpp>
+#include <boost/network/protocol/http/message/modifiers/uri.hpp>
+#include <boost/network/protocol/http/message/wrappers/host.hpp>
+#include <boost/network/protocol/http/message/wrappers/headers.hpp>
+#include <boost/network/protocol/http/message/wrappers/path.hpp>
+#include <boost/network/protocol/http/message/wrappers/port.hpp>
+#include <boost/network/protocol/http/message/wrappers/query.hpp>
+#include <boost/network/protocol/http/message/wrappers/anchor.hpp>
+#include <boost/network/protocol/http/message/wrappers/protocol.hpp>
+#include <boost/network/protocol/http/message/wrappers/uri.hpp>
+#include <boost/network/message/directives.hpp>
+#include <boost/network/message/transformers.hpp>
 
 #include <boost/network/protocol/http/request_concept.hpp>
 
@@ -45,18 +58,5 @@ namespace boost { namespace network { namespace http {
 } // namespace network
 
 } // namespace boost
-
-#include <boost/network/protocol/http/message/directives/uri.hpp>
-
-#include <boost/network/protocol/http/message/modifiers/uri.hpp>
-
-#include <boost/network/protocol/http/message/wrappers/host.hpp>
-#include <boost/network/protocol/http/message/wrappers/headers.hpp>
-#include <boost/network/protocol/http/message/wrappers/path.hpp>
-#include <boost/network/protocol/http/message/wrappers/port.hpp>
-#include <boost/network/protocol/http/message/wrappers/query.hpp>
-#include <boost/network/protocol/http/message/wrappers/anchor.hpp>
-#include <boost/network/protocol/http/message/wrappers/protocol.hpp>
-#include <boost/network/protocol/http/message/wrappers/uri.hpp>
 
 #endif // __NETWORK_PROTOCOL_HTTP_REQUEST_20070908-1_HPP__

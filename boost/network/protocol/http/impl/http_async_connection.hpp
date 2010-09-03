@@ -235,20 +235,16 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void handle_received_status(string_type method, boost::system::error_code const & ec, std::size_t bytes_transferred) {
             if (!ec) {
-                
+                //FIXME -- make it happen
             }
         }
 
         void handle_received_headers() {
-            if (!ec) {
-                async_read(); //FIXME -- wire the correct parameters
-            }
+            //FIXME -- wire the correct parameters
         }
 
         void handle_recieved_body() {
-            if (!ec) {
-                async_read(); //FIXME -- wire the correct parameters
-            }
+            //FIXME -- wire the correct parameters
         }
 
         boost::shared_ptr<resolver_type> resolver_;

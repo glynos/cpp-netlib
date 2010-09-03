@@ -8,6 +8,7 @@
 
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/placeholders.hpp>
+#include <boost/asio/strand.hpp>
 
 namespace boost { namespace network { namespace http { namespace policies {
 
@@ -42,7 +43,7 @@ namespace boost { namespace network { namespace http { namespace policies {
             ) 
         {
             if (cache_resolved_) {
-                endpoint_cache::iterator iter = 
+                typename endpoint_cache::iterator iter = 
                     endpoint_cache_.find(boost::to_lower_copy(host));
                 if (iter != endpoint_cache_.end()) {
                     boost::system::error_code ignored;
@@ -51,7 +52,7 @@ namespace boost { namespace network { namespace http { namespace policies {
                 }
             }
             
-            resolver_type::query q(host);
+            typename resolver_type::query q(host);
             resolver_->async_resolve(
                 q,
                 resolver_strand_->wrap(
@@ -79,7 +80,7 @@ namespace boost { namespace network { namespace http { namespace policies {
                 return;
             }
 
-            endpoint_cache::iterator iter;
+            typename endpoint_cache::iterator iter;
             bool inserted = false;
             if (!ec && cache_resolved_) {
                 boost::fusion::tie(iter, inserted) =

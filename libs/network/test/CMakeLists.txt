@@ -8,6 +8,7 @@ find_package( Boost 1.41.0 COMPONENTS unit_test_framework system regex date_time
 find_package( OpenSSL )
 if (OPENSSL_FOUND)
     include_directories(${OPENSSL_INCLUDE_DIR}})
+    add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
 endif()
 find_package( Threads )
 set(Boost_USE_STATIC_LIBS ON)

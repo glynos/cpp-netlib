@@ -12,6 +12,7 @@
 # include <boost/network/tags.hpp>
 # include <boost/network/support/is_default_string.hpp>
 # include <boost/network/support/is_default_wstring.hpp>
+# include <boost/mpl/if.hpp>
 
 #ifndef BOOST_NETWORK_DEFAULT_STRING
 #define BOOST_NETWORK_DEFAULT_STRING std::string

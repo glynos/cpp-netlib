@@ -19,47 +19,6 @@
 
 namespace boost { namespace network {
 
-    namespace traits {
-
-        template <class Tag>
-        struct unsupported_tag;
-
-        template <class Message>
-        struct header_key :
-            mpl::if_<
-                is_async<typename Message::tag>,
-                boost::shared_future<typename string<typename Message::tag>::type>,
-                typename mpl::if_<
-                    mpl::or_<
-                        is_sync<typename Message::tag>,
-                        is_same<typename Message::tag, tags::default_string>,
-                        is_same<typename Message::tag, tags::default_wstring>
-                    >,
-                    typename string<typename Message::tag>::type,
-                    unsupported_tag<typename Message::tag>
-                >::type
-            >
-        {};
-
-        template <class Message>
-        struct header_value :
-            mpl::if_<
-                is_async<typename Message::tag>,
-                boost::shared_future<typename string<typename Message::tag>::type>,
-                typename mpl::if_<
-                    mpl::or_<
-                        is_sync<typename Message::tag>,
-                        is_same<typename Message::tag, tags::default_string>,
-                        is_same<typename Message::tag, tags::default_wstring>
-                    >,
-                    typename string<typename Message::tag>::type,
-                    unsupported_tag<typename Message::tag>
-                >::type
-            >
-        {};
-
-    } // namespace traits
-
 namespace impl {
 
 template <class KeyType, class ValueType>
@@ -71,7 +30,7 @@ struct header_directive {
         _header_value(header_value)
     { };
 
-    template <template <class> class Message>
+    template <class Message>
     void operator() (Message const & msg) const {
         typedef typename Message::headers_container_type::value_type value_type;
         msg.add_header(value_type(_header_name, _header_value));
