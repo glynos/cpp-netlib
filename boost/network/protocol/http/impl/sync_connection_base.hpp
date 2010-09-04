@@ -158,8 +158,13 @@ namespace boost { namespace network { namespace http { namespace impl {
                     } while (!stopping);
                 } else throw std::runtime_error("Unsupported Transfer-Encoding.");
             } else {
-                size_t length = lexical_cast<size_t>(boost::begin(content_length_range)->second);
-                size_t bytes_read = 0;
+                size_t already_read = response_buffer.size( );
+				if ( already_read )
+					body_stream << &response_buffer;
+				size_t length = lexical_cast<size_t>(boost::begin(content_length_range)->second) - already_read;
+				if ( length == 0 )
+					return;
+				size_t bytes_read = 0;
                 while ((bytes_read = boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error))) {
                     body_stream << &response_buffer;
                     length -= bytes_read;
