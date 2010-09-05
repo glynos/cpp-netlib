@@ -22,6 +22,8 @@
 #include <boost/network/protocol/http/message/wrappers/anchor.hpp>
 #include <boost/network/protocol/http/message/wrappers/protocol.hpp>
 #include <boost/network/protocol/http/message/wrappers/uri.hpp>
+#include <boost/network/protocol/http/message/wrappers/body.hpp>
+#include <boost/network/protocol/http/message/wrappers/version.hpp>
 #include <boost/network/message/directives.hpp>
 #include <boost/network/message/transformers.hpp>
 
