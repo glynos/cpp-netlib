@@ -6,6 +6,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/response.hpp>
+
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
@@ -37,7 +40,7 @@ namespace boost { namespace network { namespace http {
         }
 
         response const post (request request_, string_type const & content_type, string_type const & body_) {
-            request_ << body(body_)
+            request_ << ::boost::network::body(body_)
                 << header("Content-Type", content_type)
                 << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
             return post(request_);
@@ -56,7 +59,7 @@ namespace boost { namespace network { namespace http {
         }
 
         response const put (request request_, string_type const & content_type, string_type const & body_) {
-            request_ << body(body_)
+            request_ << ::boost::network::body(body_)
                 << header("Content-Type", content_type)
                 << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
             return put(request_);

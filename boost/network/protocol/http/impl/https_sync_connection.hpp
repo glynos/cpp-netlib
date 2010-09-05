@@ -42,7 +42,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void send_request_impl(string_type const & method, basic_request<Tag> const & request_) {
             boost::asio::streambuf request_buffer;
-            create_request(request_buffer, method, request_);
+            this->create_request(request_buffer, method, request_);
             connection_base::send_request_impl(socket_, method, request_buffer);
         }
 

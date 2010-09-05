@@ -7,10 +7,9 @@
 #define BOOST_TEST_MODULE HTTP message test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
+#include <boost/network/protocol/http/request.hpp>
 #include <boost/mpl/list.hpp>
-// #include <boost/network/protocol/http/traits.hpp>
 #include <algorithm>
 
 using namespace boost::network;
@@ -29,7 +28,7 @@ BOOST_FIXTURE_TEST_SUITE(http_message_test_suite, fixtures)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (request_constructor_test, T, tag_types) {
     http::basic_request<T> request("http://boost.org");
-    typedef http::basic_request<T>::string_type string_type;
+    typedef typename http::basic_request<T>::string_type string_type;
     string_type host = http::host(request);
     boost::uint16_t port = http::port(request);
     string_type path = http::path(request);
@@ -50,7 +49,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (request_copy_constructor_test, T, tag_types) {
             << body("Hello, World!")
         ;
     http::basic_request<T> copy(request);
-    typedef http::basic_request<T>::string_type string_type;
+    typedef typename http::basic_request<T>::string_type string_type;
     string_type orig_host = http::host(request),
         copy_host = http::host(copy);
     boost::uint16_t orig_port = http::port(request),
@@ -70,7 +69,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (request_assignment_test, T, tag_types) {
         ;
     http::basic_request<T> copy;
     copy = request;
-    typedef http::basic_request<T>::string_type string_type;
+    typedef typename http::basic_request<T>::string_type string_type;
     string_type orig_host = http::host(request),
         copy_host = http::host(copy);
     boost::uint16_t orig_port = http::port(request),
@@ -87,7 +86,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (request_swap_test, T, tag_types) {
     boost::network::http::basic_request<T> request("http://boost.org/");
     boost::network::http::basic_request<T> other;
     swap(other, request); // ADL
-    typedef http::basic_request<T>::string_type string_type;
+    typedef typename http::basic_request<T>::string_type string_type;
     string_type orig_host = http::host(request),
         orig_path = http::path(request),
         copy_host = http::host(other),
@@ -146,7 +145,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (response_assignment_construct_test, T, tag_types)
         << body("The quick brown fox jumps over the lazy dog");
     http::basic_response<T> copy;
     copy = response;
-    typedef http::basic_response<T>::string_type string_type;
+    typedef typename http::basic_response<T>::string_type string_type;
     string_type version_orig = version(response)
         , version_copy = version(copy);
     BOOST_CHECK_EQUAL ( version_orig, version_copy );

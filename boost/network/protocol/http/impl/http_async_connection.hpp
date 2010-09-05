@@ -62,19 +62,19 @@ namespace boost { namespace network { namespace http { namespace impl {
 
             virtual response start(request const & request, string_type const & method, bool get_body) {
                 response temp;
-                boost::shared_future<string_type> source_future = source_promise.get_future();
+                boost::shared_future<string_type> source_future(source_promise.get_future());
                 source(temp, source_future);
-                boost::shared_future<string_type> destination_future = destination_promise.get_future();
+                boost::shared_future<string_type> destination_future(destination_promise.get_future());
                 destination(temp, destination_future);
-                boost::shared_future<typename headers_container<Tag>::type> headers_future = headers_promise.get_future();
+                boost::shared_future<typename headers_container<Tag>::type> headers_future(headers_promise.get_future());
                 headers(temp, headers_future);
-                boost::shared_future<string_type> body_future = body_promise.get_future();
+                boost::shared_future<string_type> body_future(body_promise.get_future());
                 body(temp, body_future);
-                boost::shared_future<string_type> version_future = version_promise.get_future();
+                boost::shared_future<string_type> version_future(version_promise.get_future());
                 version(temp, version_future);
-                boost::shared_future<boost::uint16_t> status_future = status_promise.get_future();
+                boost::shared_future<boost::uint16_t> status_future(status_promise.get_future());
                 status(temp, status_future);
-                boost::shared_future<string_type> status_message_future = status_message_promise.get_future();
+                boost::shared_future<string_type> status_message_future(status_message_promise.get_future());
                 status_message(temp, status_message_future);
 
                 if (!get_body) body_promise.set_value(string_type());

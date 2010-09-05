@@ -20,7 +20,7 @@ namespace boost { namespace network {
         template <class Message>
         inline void clear_headers(Message const & message, mpl::true_ const &) {
             boost::promise<typename Message::headers_container_type> header_promise;
-            boost::shared_future<typename Message::headers_container_type> headers_future = header_promise.get_future();
+            boost::shared_future<typename Message::headers_container_type> headers_future(header_promise.get_future());
             message.headers(headers_future);
             header_promise.set_value(typename Message::headers_container_type());
         }
