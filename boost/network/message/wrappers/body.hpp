@@ -26,7 +26,7 @@ namespace boost { namespace network {
                 };
 
                 std::size_t size() const {
-                    return string_type(detail::wrapper_base<Tag>::_message.body()).size();
+                    return detail::wrapper_base<Tag>::_message.body().size();
                 }
             };
 
@@ -44,7 +44,7 @@ namespace boost { namespace network {
                 }
 
                 std::size_t size() const {
-                    return string_type(detail::wrapper_base<Tag>::_message.body()).size();
+                    return detail::wrapper_base<Tag>::_message.body().size();
                 }
             };
 
