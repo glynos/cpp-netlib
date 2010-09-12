@@ -9,6 +9,7 @@
 #include <boost/network/tags.hpp>
 #include <boost/network/protocol/http/policies/simple_connection.hpp>
 #include <boost/network/protocol/http/policies/pooled_connection.hpp>
+#include <boost/network/protocol/http/policies/async_connection.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -38,6 +39,11 @@ namespace boost { namespace network { namespace http {
     template <unsigned version_major, unsigned version_minor>
     struct connection_policy<tags::http_keepalive_8bit_tcp_resolve, version_major, version_minor> {
         typedef pooled_connection_policy<tags::http_keepalive_8bit_tcp_resolve, version_major, version_minor> type;
+    };
+
+    template <unsigned version_major, unsigned version_minor>
+    struct connection_policy<tags::http_async_8bit_udp_resolve, version_major, version_minor> {
+        typedef async_connection_policy<tags::http_async_8bit_udp_resolve, version_major, version_minor> type;
     };
 
 } // namespace http

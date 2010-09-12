@@ -362,7 +362,7 @@ namespace detail {
 
 
 	template<typename Iterator, typename traits>
-	boost::shared_ptr< basic_mime<traits> > parse_mime ( Iterator &begin, Iterator end, const char *default_content_type = "text/plain" );
+	static boost::shared_ptr< basic_mime<traits> > parse_mime ( Iterator &begin, Iterator end, const char *default_content_type = "text/plain" );
 	}
 
 

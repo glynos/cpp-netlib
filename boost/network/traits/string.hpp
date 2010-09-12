@@ -10,6 +10,17 @@
 
 # include <string>
 # include <boost/network/tags.hpp>
+# include <boost/network/support/is_default_string.hpp>
+# include <boost/network/support/is_default_wstring.hpp>
+# include <boost/mpl/if.hpp>
+
+#ifndef BOOST_NETWORK_DEFAULT_STRING
+#define BOOST_NETWORK_DEFAULT_STRING std::string
+#endif
+
+#ifndef BOOST_NETWORK_DEFAULT_WSTRING
+#define BOOST_NETWORK_DEFAULT_WSTRING std::wstring
+#endif
 
 namespace boost { namespace network {
 
@@ -17,44 +28,17 @@ namespace boost { namespace network {
     struct unsupported_tag;
 
     template <class Tag>
-    struct string { 
-        typedef unsupported_tag<Tag> type;
-    };
-
-    template <>
-    struct string<tags::default_string> {
-        typedef std::string type;
-    };
-
-    template <>
-    struct string<tags::default_wstring> {
-        typedef std::wstring type;
-    };
-
-    template <>
-    struct string<tags::http_server> {
-        typedef std::string type;
-    };
-
-    template <>
-    struct string<tags::http_default_8bit_tcp_resolve> {
-        typedef std::string type;
-    };
-
-    template <>
-    struct string<tags::http_default_8bit_udp_resolve> {
-        typedef std::string type;
-    };
-
-    template <>
-    struct string<tags::http_keepalive_8bit_tcp_resolve> {
-        typedef std::string type;
-    };
-
-    template <>
-    struct string<tags::http_keepalive_8bit_udp_resolve> {
-        typedef std::string type;
-    };
+    struct string
+        : mpl::if_<
+            is_default_string<Tag>,
+            BOOST_NETWORK_DEFAULT_STRING,
+            typename mpl::if_<
+                is_default_wstring<Tag>,
+                BOOST_NETWORK_DEFAULT_WSTRING,
+                unsupported_tag<Tag>
+            >::type
+        >
+    {};
 
 } // namespace network
 

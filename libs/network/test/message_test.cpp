@@ -13,7 +13,15 @@
 
 using namespace boost::network;
 
-typedef boost::mpl::list<tags::http_default_8bit_tcp_resolve, tags::http_default_8bit_udp_resolve, tags::http_keepalive_8bit_tcp_resolve, tags::http_keepalive_8bit_udp_resolve, tags::http_server, tags::default_string, tags::default_wstring> tag_types;
+typedef boost::mpl::list<
+    tags::http_default_8bit_tcp_resolve, 
+    tags::http_default_8bit_udp_resolve, 
+    tags::http_keepalive_8bit_tcp_resolve, 
+    tags::http_keepalive_8bit_udp_resolve, 
+    tags::http_server, 
+    tags::default_string, 
+    tags::default_wstring
+> tag_types;
 
 struct string_header_name {
     static std::string string;
@@ -139,14 +147,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(headers_directive_test, T, tag_types) {
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(body_directive_test, T, tag_types) {
     basic_message<T> instance;
-    instance << body(body_data<T>::string);
-    BOOST_CHECK ( body(instance) == body_data<T>::string );
+    instance << ::boost::network::body(body_data<T>::string);
+    typename string<T>::type body_string = body(instance);
+    BOOST_CHECK ( body_string == body_data<T>::string );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(source_directive_test, T, tag_types) {
     basic_message<T> instance;
-    instance << source(source_data<T>::string);
-    BOOST_CHECK ( source(instance) == source_data<T>::string );
+    instance << ::boost::network::source(source_data<T>::string);
+    typename string<T>::type source_string = source(instance);
+    BOOST_CHECK ( source_string == source_data<T>::string );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(destination_directive_test, T, tag_types) {

@@ -11,6 +11,7 @@
 #include <boost/network/traits/headers_container.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/functions.hpp>
+#include <boost/network/detail/wrapper_base.hpp>
 
 namespace boost { namespace network {
 
@@ -22,6 +23,9 @@ namespace boost { namespace network {
                 boost::iterator_range<typename headers_container_type::const_iterator>
                 type;
         };
+
+    template <class Tag>
+    class basic_message;
 
     /** headers wrapper for messages.
      *
@@ -41,7 +45,7 @@ namespace boost { namespace network {
      */
     namespace impl {
         template <class Tag>
-            struct headers_wrapper : public detail::wrapper_base<Tag> {
+            struct headers_wrapper : public detail::wrapper_base_const<Tag> {
                 typedef Tag tag;
                 typedef basic_message<Tag> message_type;
                 typedef typename string<Tag>::type string_type;
@@ -50,8 +54,8 @@ namespace boost { namespace network {
                 typedef typename headers_container_type::const_iterator const_iterator;
                 typedef typename headers_container_type::iterator iterator;
 
-                explicit headers_wrapper(basic_message<tag> & message_)
-                    : detail::wrapper_base<tag>(message_)
+                explicit headers_wrapper(basic_message<Tag> const & message_)
+                    : detail::wrapper_base_const<Tag>(message_)
                 { };
 
                 range_type operator[] (string_type const & key) const {
@@ -82,9 +86,9 @@ namespace boost { namespace network {
     } // namespace impl
 
     /// Factory method to create the right wrapper object
-    template <class Tag, template <class> class Message>
+    template <class Tag>
         inline impl::headers_wrapper<Tag> 
-        headers(Message<Tag> & message_) {
+        headers(basic_message<Tag> const & message_) {
             return impl::headers_wrapper<Tag>(message_);
         }
 

@@ -53,7 +53,7 @@ main(int argc, char *argv[]) {
         std::string filename = get_filename(uri);
         std::cout << "Saving to: " << filename << std::endl;
         std::ofstream ofs(filename.c_str());
-        ofs << boost::network::body(response) << std::endl;
+        ofs << static_cast<std::string>(boost::network::body(response)) << std::endl;
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

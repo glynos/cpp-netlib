@@ -10,6 +10,14 @@
 [variablelist
    [
       [
+	 [@http://www.boostpro.com/mplbook/ Template Metaprogramming]
+      ]
+      [
+	 The best guide to C++ template metaprogramming
+      ]
+   ]
+   [
+      [
          [@http://www.w3.org/Protocols/HTTP/1.0/spec.html HTTP 1.0]
       ]
       [

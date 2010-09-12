@@ -1,5 +1,5 @@
 
-//          Copyright Dean Michael Berris 2007-2009.
+//          Copyright Dean Michael Berris 2007-2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -13,7 +13,11 @@
 
 using namespace boost::network;
 
-typedef boost::mpl::list<tags::http_default_8bit_tcp_resolve, tags::http_default_8bit_udp_resolve> tag_types;
+typedef boost::mpl::list<
+    tags::http_default_8bit_tcp_resolve
+    , tags::http_default_8bit_udp_resolve
+    , tags::http_async_8bit_udp_resolve
+> tag_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test, T, tag_types) {
     http::basic_request<T> request("http://www.boost.org/");

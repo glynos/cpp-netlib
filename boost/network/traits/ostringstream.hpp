@@ -1,5 +1,5 @@
 //            Copyright (c) Glyn Matthews 2009.
-//         Copyright (c) Dean Michael Berris 2009.
+//         Copyright (c) Dean Michael Berris 2009, 2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,9 @@
 
 # include <sstream>
 # include <boost/network/tags.hpp>
+# include <boost/mpl/if.hpp>
+# include <boost/network/support/is_default_string.hpp>
+# include <boost/network/support/is_default_wstring.hpp>
 
 namespace boost { namespace network {
 
@@ -16,40 +19,17 @@ namespace boost { namespace network {
     struct unsupported_tag;
 
     template <class Tag>
-    struct ostringstream {
-        typedef unsupported_tag<Tag> type;
-    };
-
-    template <>
-    struct ostringstream<tags::default_string> {
-        typedef std::ostringstream type;
-    };
-
-
-    template <>
-    struct ostringstream<tags::default_wstring> {
-        typedef std::wostringstream type;
-    };
-
-    template <>
-    struct ostringstream<tags::http_default_8bit_tcp_resolve> {
-        typedef std::ostringstream type;
-    };
-
-    template <>
-    struct ostringstream<tags::http_default_8bit_udp_resolve> {
-        typedef std::ostringstream type;
-    };
-
-    template <>
-    struct ostringstream<tags::http_keepalive_8bit_tcp_resolve> {
-        typedef std::ostringstream type;
-    };
-
-    template <>
-    struct ostringstream<tags::http_keepalive_8bit_udp_resolve> {
-        typedef std::ostringstream type;
-    };
+    struct ostringstream :
+        mpl::if_<
+            is_default_string<Tag>,
+            std::ostringstream,
+            typename mpl::if_<
+                is_default_wstring<Tag>,
+                std::wostringstream,
+                unsupported_tag<Tag>
+            >::type
+        >
+    {};
 
 } // namespace network
 

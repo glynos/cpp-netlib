@@ -10,4 +10,4 @@
 [/ include examples/hello_world.qbk]
 [/ include examples/http_client.qbk]
 [include examples/simple_wget.qbk]
-[endsect]
+[endsect] [/ examples]
