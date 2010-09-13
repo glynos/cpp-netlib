@@ -33,8 +33,11 @@
  *
  * The basic interface that we're looking for is a means of providing:
  *   - a range of input
- *   - a completion function once a certain state is reached
  *   - a means of resetting the parser's state
+ *   - a means of initializing the parser to a given state
+ *   - a parse_until function that takes a state as parameter and
+ *     a range from which the parser will operate on, returns
+ *     a tuple of a boost::logic::tribool and a resulting range
  *   
  * One of the possible implementations can use the Boost.MSM library
  * to create the state machine. The test however does not specify what
