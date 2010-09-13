@@ -11,6 +11,7 @@
 #include <boost/fusion/tuple.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/logic/tribool.hpp>
+#include <boost/algorithm/string/classification.hpp>
 #include <utility>
 
 namespace boost { namespace network { namespace http {
@@ -28,7 +29,9 @@ namespace boost { namespace network { namespace http {
             http_version_major,
             http_version_dot,
             http_version_minor,
-            http_version_done
+            http_version_done,
+            http_status_digit,
+            http_status_done
         };
 
         typedef typename string<Tag>::type::const_iterator iterator_type;
@@ -136,6 +139,26 @@ namespace boost { namespace network { namespace http {
                     case http_version_minor:
                         if (*current == ' ') {
                             state_ = http_version_done;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_version_done:
+                        // FIXME find a better way to use is_digit
+                        if (algorithm::is_digit()(*current)) {
+                            state_ = http_status_digit;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_digit:
+                        // FIXME find a better way to use is_digit
+                        if (algorithm::is_digit()(*current)) {
+                            ++current;
+                        } else if (*current == ' ') {
+                            state_ = http_status_done;
                             ++current;
                         } else {
                             parsed_ok = false;

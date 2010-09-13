@@ -116,6 +116,15 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_status) {
         response_parser_type::http_status_done,
         valid_status);
     BOOST_CHECK_EQUAL(parsed_ok, true);
+    std::string parsed = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
+
+    p.reset(response_parser_type::http_version_done);
+    std::string invalid_status = "200x ";
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_status_done,
+        invalid_status);
+    BOOST_CHECK_EQUAL(parsed_ok, false);
     parsed = std::string(boost::begin(result_range), boost::end(result_range));
     std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
