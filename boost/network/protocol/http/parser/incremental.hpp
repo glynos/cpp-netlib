@@ -113,7 +113,8 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_version_slash:
-                        if (*current == '1') {
+                        // FIXME find a better way to use is_digit
+                        if (algorithm::is_digit()(*current)) {
                             state_ = http_version_major;
                             ++current;
                         } else {
@@ -129,7 +130,8 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_version_dot:
-                        if (*current == '1' || *current == '0') {
+                        // FIXME find a better way to use is_digit
+                        if (algorithm::is_digit()(*current)) {
                             state_ = http_version_minor;
                             ++current;
                         } else {
