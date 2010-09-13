@@ -63,12 +63,13 @@ BOOST_AUTO_TEST_CASE(incremental_parser_constructor) {
 BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
     response_parser<tags::default_string> p; // default constructible
     logic::tribool parsed_ok = false;
-    typedef response_parser<tags::default_string>::range_type range_type;
+    typedef response_parser<tags::default_string> response_parser_type;
+    typedef response_parser_type::range_type range_type;
     range_type result_range;
 
     std::string valid_http_version = "HTTP/1.0 ";
     fusion::tie(parsed_ok, result_range) = p.parse_until(
-        response_parser<tags::default_string>::http_version_done,
+        response_parser_type::http_version_done,
         valid_http_version);
     BOOST_CHECK_EQUAL(parsed_ok, true);
     BOOST_CHECK(!boost::empty(result_range));
@@ -77,10 +78,20 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
     p.reset();
     valid_http_version = "HTTP/1.1 ";
     fusion::tie(parsed_ok, result_range) = p.parse_until(
-        response_parser<tags::default_string>::http_version_done,
+        response_parser_type::http_version_done,
         valid_http_version);
     BOOST_CHECK_EQUAL(parsed_ok, true);
     BOOST_CHECK(!boost::empty(result_range));
+    parsed = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
+
+    p.reset();
+    std::string invalid_http_version = "HTTP 1.0";
+    parsed_ok = logic::indeterminate;
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_version_done,
+        invalid_http_version);
+    BOOST_CHECK_EQUAL(parsed_ok, false);
     parsed = std::string(boost::begin(result_range), boost::end(result_range));
     std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }

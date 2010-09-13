@@ -147,6 +147,7 @@ namespace boost { namespace network { namespace http {
                 local_range = boost::make_iterator_range(current, end);
             }
             if (state_ == stop_state) parsed_ok = true;
+            else parsed_ok = false;
             return fusion::make_tuple(parsed_ok,boost::make_iterator_range(start, current));
         }
 
