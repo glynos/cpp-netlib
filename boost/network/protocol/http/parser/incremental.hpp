@@ -34,10 +34,12 @@ namespace boost { namespace network { namespace http {
         typedef typename string<Tag>::type::const_iterator iterator_type;
         typedef iterator_range<iterator_type>  range_type;
 
-        response_parser ()
-            : state_(http_response_begin) {}
+        explicit response_parser (state_t state=http_response_begin)
+            : state_(state) {}
+
         response_parser (response_parser const & other) 
             : state_(other.state_) {}
+
         ~response_parser () {}
     
         void swap(response_parser & other) {

@@ -95,3 +95,18 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
     parsed = std::string(boost::begin(result_range), boost::end(result_range));
     std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
+
+/** In this test we then want to check that we can parse a status
+ *  string right after the version string. We should expect that
+ *  the parser doesn't do any conversions from string to integer
+ *  and outsource that part to the user of the parser.
+ */
+BOOST_AUTO_TEST_CASE(incremental_parser_parse_status) {
+    typedef response_parser<tags::default_string> response_parser_type;
+    // We want to create a parser that has been initialized to a specific
+    // state. In this case we assume that the parser has already parsed
+    // the version part of the HTTP Response.
+    response_parser_type p(response_parser_type::http_version_done);
+
+}
+
