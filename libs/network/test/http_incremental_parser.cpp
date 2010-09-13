@@ -103,10 +103,20 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
  */
 BOOST_AUTO_TEST_CASE(incremental_parser_parse_status) {
     typedef response_parser<tags::default_string> response_parser_type;
+    typedef response_parser_type::range_type range_type;
     // We want to create a parser that has been initialized to a specific
     // state. In this case we assume that the parser has already parsed
     // the version part of the HTTP Response.
     response_parser_type p(response_parser_type::http_version_done);
 
+    std::string valid_status = "200 ";
+    logic::tribool parsed_ok;
+    range_type result_range;
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_status_done,
+        valid_status);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    parsed = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
 
