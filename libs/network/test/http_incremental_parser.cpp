@@ -132,3 +132,22 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_status) {
     std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
 
+/** In this test then we get the rest of the first line of the HTTP
+ *  Response, and treat it as the status message.
+ */
+BOOST_AUTO_TEST_CASE(incremental_parser_parse_status_message) {
+    typedef response_parser<tags::default_string> response_parser_type;
+    typedef response_parser_type::range_type range_type;
+    response_parser_type p(response_parser_type::http_status_done);
+    
+    std::string valid_status_message = "OK\r\nServer: Foo";
+    logic::tribool parsed_ok;
+    range_type result_range;
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_status_message_done,
+        valid_status_message);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    std::string parsed = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
+}
+

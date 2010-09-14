@@ -31,7 +31,10 @@ namespace boost { namespace network { namespace http {
             http_version_minor,
             http_version_done,
             http_status_digit,
-            http_status_done
+            http_status_done,
+            http_status_message_char,
+            http_status_message_cr,
+            http_status_message_done
         };
 
         typedef typename string<Tag>::type::const_iterator iterator_type;
@@ -161,6 +164,34 @@ namespace boost { namespace network { namespace http {
                             ++current;
                         } else if (*current == ' ') {
                             state_ = http_status_done;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_done:
+                        // FIXME find a better way to use is_alnum, is_space
+                        if (algorithm::is_alnum()(*current)) {
+                            state_ = http_status_message_char;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_message_char:
+                        // FIXME find a better way to use is_alnum, is_space
+                        if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current) || (*current == ' ')) {
+                            ++current;
+                        } else if (*current == '\r') {
+                            state_ = http_status_message_cr;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_message_cr:
+                        if (*current == '\n') {
+                            state_ = http_status_message_done;
                             ++current;
                         } else {
                             parsed_ok = false;
