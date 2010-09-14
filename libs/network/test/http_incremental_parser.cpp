@@ -85,7 +85,7 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
         valid_http_version);
     BOOST_CHECK_EQUAL(parsed_ok, true);
     BOOST_CHECK(!boost::empty(result_range));
-    parsed = std::string(boost::begin(result_range), boost::end(result_range));
+    parsed.assign(boost::begin(result_range), boost::end(result_range));
     std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
     p.reset();
@@ -95,7 +95,17 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
         response_parser_type::http_version_done,
         invalid_http_version);
     BOOST_CHECK_EQUAL(parsed_ok, false);
-    parsed = std::string(boost::begin(result_range), boost::end(result_range));
+    parsed.assign(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
+
+    p.reset();
+    valid_http_version = "HTTP/0.9 ";
+    parsed_ok = logic::indeterminate;
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_version_done,
+        valid_http_version);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    parsed.assign(boost::begin(result_range), boost::end(result_range));
     std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
 
@@ -182,6 +192,7 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_header_lines) {
         valid_headers);
     BOOST_CHECK_EQUAL(parsed_ok, true);
     std::string parsed1 = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed1 << " state=" << p.state() << std::endl;
     p.reset(response_parser_type::http_status_message_done);
     std::string::const_iterator end = valid_headers.end();
     valid_headers.assign(boost::end(result_range), end);
@@ -190,6 +201,7 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_header_lines) {
         valid_headers);
     BOOST_CHECK_EQUAL(parsed_ok, true);
     std::string parsed2 = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
     valid_headers.assign(boost::end(result_range), end);
     p.reset(response_parser_type::http_status_message_done);
     fusion::tie(parsed_ok, result_range) = p.parse_until(

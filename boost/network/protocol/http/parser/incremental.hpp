@@ -66,6 +66,7 @@ namespace boost { namespace network { namespace http {
 
         template <class Range>
         fusion::tuple<logic::tribool,range_type> parse_until(state_t stop_state, Range & range_) {
+            //FIXME -- find a way to make better use of the Boost.String_algorithm classifiers
             logic::tribool parsed_ok(logic::indeterminate);
             iterator_type start = boost::begin(range_),
                 current = start,
@@ -123,7 +124,6 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_version_slash:
-                        // FIXME find a better way to use is_digit
                         if (algorithm::is_digit()(*current)) {
                             state_ = http_version_major;
                             ++current;
@@ -140,7 +140,6 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_version_dot:
-                        // FIXME find a better way to use is_digit
                         if (algorithm::is_digit()(*current)) {
                             state_ = http_version_minor;
                             ++current;
@@ -157,7 +156,6 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_version_done:
-                        // FIXME find a better way to use is_digit
                         if (algorithm::is_digit()(*current)) {
                             state_ = http_status_digit;
                             ++current;
@@ -166,7 +164,6 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_status_digit:
-                        // FIXME find a better way to use is_digit
                         if (algorithm::is_digit()(*current)) {
                             ++current;
                         } else if (*current == ' ') {
@@ -177,7 +174,6 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_status_done:
-                        // FIXME find a better way to use is_alnum, is_space
                         if (algorithm::is_alnum()(*current)) {
                             state_ = http_status_message_char;
                             ++current;
@@ -186,7 +182,6 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_status_message_char:
-                        // FIXME find a better way to use is_alnum, is_space
                         if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current) || (*current == ' ')) {
                             ++current;
                         } else if (*current == '\r') {
