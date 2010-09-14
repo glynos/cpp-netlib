@@ -34,7 +34,14 @@ namespace boost { namespace network { namespace http {
             http_status_done,
             http_status_message_char,
             http_status_message_cr,
-            http_status_message_done
+            http_status_message_done,
+            http_header_name_char,
+            http_header_colon,
+            http_header_value_char,
+            http_header_line_cr,
+            http_header_line_done,
+            http_headers_end_cr,
+            http_headers_done
         };
 
         typedef typename string<Tag>::type::const_iterator iterator_type;
@@ -192,6 +199,64 @@ namespace boost { namespace network { namespace http {
                     case http_status_message_cr:
                         if (*current == '\n') {
                             state_ = http_status_message_done;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_message_done:
+                    case http_header_line_done:
+                        if (algorithm::is_alnum()(*current)) {
+                            state_ = http_header_name_char;
+                            ++current;
+                        } else if (*current == '\r') {
+                            state_ = http_headers_end_cr;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_header_name_char:
+                        if (*current == ':') {
+                            state_ = http_header_colon;
+                            ++current;
+                        } else if (algorithm::is_alnum()(*current) || algorithm::is_space()(*current) || algorithm::is_punct()(*current)) {
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_header_colon:
+                        if (algorithm::is_space()(*current)) {
+                            ++current;
+                        } else if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current)) {
+                            state_ = http_header_value_char;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_header_value_char:
+                        if (*current == '\r') {
+                            state_ = http_header_line_cr;
+                            ++current;
+                        } else if (algorithm::is_cntrl()(*current)) {
+                            parsed_ok = false;
+                        } else {
+                            ++current;
+                        }
+                        break;
+                    case http_header_line_cr:
+                        if (*current == '\n') {
+                            state_ = http_header_line_done;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_headers_end_cr:
+                        if (*current == '\n') {
+                            state_ = http_headers_done;
                             ++current;
                         } else {
                             parsed_ok = false;
