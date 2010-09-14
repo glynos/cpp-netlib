@@ -149,5 +149,23 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_status_message) {
     BOOST_CHECK_EQUAL(parsed_ok, true);
     std::string parsed = std::string(boost::begin(result_range), boost::end(result_range));
     std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
+
+    p.reset(response_parser_type::http_status_done);
+    valid_status_message = "OK\r\n";
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_status_message_done,
+        valid_status_message);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    parsed = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
+
+    p.reset(response_parser_type::http_status_done);
+    valid_status_message = "Internal Server Error\r\n";
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_status_message_done,
+        valid_status_message);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    parsed = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
 
