@@ -1,5 +1,5 @@
 
-//          Copyright Dean Michael Berris 2007.
+//          Copyright Dean Michael Berris 2007-2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,63 +7,21 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_BODY_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_BODY_HPP__
 
-#include <boost/network/traits/string.hpp>
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_sync.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/variant/variant.hpp>
-#include <boost/variant/apply_visitor.hpp>
-#include <boost/variant/static_visitor.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/or.hpp>
+#include <boost/network/message/directives/detail/string_directive.hpp>
+#include <boost/network/message/directives/detail/string_value.hpp>
 
 namespace boost { namespace network {
 
     namespace impl {
 
-        struct body_directive {
-            boost::variant<
-                string<tags::default_string>::type,
-                string<tags::default_wstring>::type,
-                boost::shared_future<string<tags::default_string>::type>,
-                boost::shared_future<string<tags::default_wstring>::type>
-            > body_;
-
-            body_directive(string<tags::default_string>::type const & body)
-                : body_(body) {}
-            body_directive(string<tags::default_wstring>::type const & body)
-                : body_(body) {}
-            body_directive(boost::shared_future<string<tags::default_string>::type> const & body)
-                : body_(body) {}
-            body_directive(boost::shared_future<string<tags::default_wstring>::type> const & body)
-                : body_(body) {}
-
-            body_directive(body_directive const & other)
-                : body_(other.body_) {}
-
-            template <class Tag>
-            struct value :
-                mpl::if_<
-                    is_async<Tag>,
-                    boost::shared_future<typename string<Tag>::type>,
-                    typename mpl::if_<
-                        mpl::or_<
-                            is_sync<Tag>,
-                            is_same<Tag, tags::default_string>,
-                            is_same<Tag, tags::default_wstring>
-                        >,
-                        typename string<Tag>::type,
-                        unsupported_tag<Tag>
-                    >::type
-                >
-            {};
+        struct body_directive_base {
 
             template <class Message>
-            struct body_visitor : boost::static_visitor<> {
+            struct string_visitor : boost::static_visitor<> {
                 Message const & message_;
-                body_visitor(Message const & message)
+                string_visitor(Message const & message)
                     : message_(message) {}
-                void operator()(typename value<typename Message::tag>::type const & body) const {
+                void operator()(typename detail::string_value<typename Message::tag>::type const & body) const {
                     message_.body(body);
                 }
                 template <class T> void operator()(T const &) const {
@@ -71,12 +29,9 @@ namespace boost { namespace network {
                 }
             };
 
-            template <class Tag, template <class> class Message>
-            void operator()(Message<Tag> const & message) const {
-                apply_visitor(body_visitor<Message<Tag> >(message), body_);
-            }
-
         };
+
+        typedef detail::string_directive<body_directive_base> body_directive;
 
     } // namespace impl
 

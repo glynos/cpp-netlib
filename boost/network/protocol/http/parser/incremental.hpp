@@ -11,6 +11,7 @@
 #include <boost/fusion/tuple.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/logic/tribool.hpp>
+#include <boost/algorithm/string/classification.hpp>
 #include <utility>
 
 namespace boost { namespace network { namespace http {
@@ -28,16 +29,30 @@ namespace boost { namespace network { namespace http {
             http_version_major,
             http_version_dot,
             http_version_minor,
-            http_version_done
+            http_version_done,
+            http_status_digit,
+            http_status_done,
+            http_status_message_char,
+            http_status_message_cr,
+            http_status_message_done,
+            http_header_name_char,
+            http_header_colon,
+            http_header_value_char,
+            http_header_line_cr,
+            http_header_line_done,
+            http_headers_end_cr,
+            http_headers_done
         };
 
         typedef typename string<Tag>::type::const_iterator iterator_type;
         typedef iterator_range<iterator_type>  range_type;
 
-        response_parser ()
-            : state_(http_response_begin) {}
+        explicit response_parser (state_t state=http_response_begin)
+            : state_(state) {}
+
         response_parser (response_parser const & other) 
             : state_(other.state_) {}
+
         ~response_parser () {}
     
         void swap(response_parser & other) {
@@ -51,6 +66,7 @@ namespace boost { namespace network { namespace http {
 
         template <class Range>
         fusion::tuple<logic::tribool,range_type> parse_until(state_t stop_state, Range & range_) {
+            //FIXME -- find a way to make better use of the Boost.String_algorithm classifiers
             logic::tribool parsed_ok(logic::indeterminate);
             iterator_type start = boost::begin(range_),
                 current = start,
@@ -108,7 +124,7 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_version_slash:
-                        if (*current == '1') {
+                        if (algorithm::is_digit()(*current)) {
                             state_ = http_version_major;
                             ++current;
                         } else {
@@ -124,7 +140,7 @@ namespace boost { namespace network { namespace http {
                         }
                         break;
                     case http_version_dot:
-                        if (*current == '1' || *current == '0') {
+                        if (algorithm::is_digit()(*current)) {
                             state_ = http_version_minor;
                             ++current;
                         } else {
@@ -139,6 +155,108 @@ namespace boost { namespace network { namespace http {
                             parsed_ok = false;
                         }
                         break;
+                    case http_version_done:
+                        if (algorithm::is_digit()(*current)) {
+                            state_ = http_status_digit;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_digit:
+                        if (algorithm::is_digit()(*current)) {
+                            ++current;
+                        } else if (*current == ' ') {
+                            state_ = http_status_done;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_done:
+                        if (algorithm::is_alnum()(*current)) {
+                            state_ = http_status_message_char;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_message_char:
+                        if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current) || (*current == ' ')) {
+                            ++current;
+                        } else if (*current == '\r') {
+                            state_ = http_status_message_cr;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_message_cr:
+                        if (*current == '\n') {
+                            state_ = http_status_message_done;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_status_message_done:
+                    case http_header_line_done:
+                        if (algorithm::is_alnum()(*current)) {
+                            state_ = http_header_name_char;
+                            ++current;
+                        } else if (*current == '\r') {
+                            state_ = http_headers_end_cr;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_header_name_char:
+                        if (*current == ':') {
+                            state_ = http_header_colon;
+                            ++current;
+                        } else if (algorithm::is_alnum()(*current) || algorithm::is_space()(*current) || algorithm::is_punct()(*current)) {
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_header_colon:
+                        if (algorithm::is_space()(*current)) {
+                            ++current;
+                        } else if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current)) {
+                            state_ = http_header_value_char;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_header_value_char:
+                        if (*current == '\r') {
+                            state_ = http_header_line_cr;
+                            ++current;
+                        } else if (algorithm::is_cntrl()(*current)) {
+                            parsed_ok = false;
+                        } else {
+                            ++current;
+                        }
+                        break;
+                    case http_header_line_cr:
+                        if (*current == '\n') {
+                            state_ = http_header_line_done;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
+                    case http_headers_end_cr:
+                        if (*current == '\n') {
+                            state_ = http_headers_done;
+                            ++current;
+                        } else {
+                            parsed_ok = false;
+                        }
+                        break;
                     default:
                         parsed_ok = false;
                     }
@@ -147,6 +265,7 @@ namespace boost { namespace network { namespace http {
                 local_range = boost::make_iterator_range(current, end);
             }
             if (state_ == stop_state) parsed_ok = true;
+            else parsed_ok = false;
             return fusion::make_tuple(parsed_ok,boost::make_iterator_range(start, current));
         }
 
