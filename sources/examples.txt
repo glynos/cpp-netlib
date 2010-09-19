@@ -15,4 +15,4 @@ kinds of application.
    :maxdepth: 2
 
    examples_http.rst
-   examples_xmpp.rst
+..   examples_xmpp.rst

@@ -20,7 +20,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="The C++ Network Library v0.7 documentation" href="#" />
-    <link rel="next" title="Getting started" href="getting_started.html" /> 
+    <link rel="next" title="What’s New" href="whats_new.html" /> 
   </head>
   <body>
     <div class="related">
@@ -30,7 +30,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="getting_started.html" title="Getting started"
+          <a href="whats_new.html" title="What’s New"
              accesskey="N">next</a> |</li>
         <li><a href="#">The C++ Network Library v0.7 documentation</a> &raquo;</li> 
       </ul>
@@ -40,17 +40,17 @@
             <h3><a href="#">Table Of Contents</a></h3>
             <ul>
 <li><a class="reference external" href="#">C++ Network Library</a><ul>
+<li><a class="reference external" href="#welcome">Welcome</a></li>
 <li><a class="reference external" href="#contents">Contents</a><ul>
 </ul>
 </li>
-<li><a class="reference external" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 </li>
 </ul>
 
             <h4>Next topic</h4>
-            <p class="topless"><a href="getting_started.html"
-                                  title="next chapter">Getting started</a></p>
+            <p class="topless"><a href="whats_new.html"
+                                  title="next chapter">What&#8217;s New</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="sources/index.txt"
@@ -80,73 +80,28 @@
   <div class="section" id="c-network-library">
 <h1>C++ Network Library<a class="headerlink" href="#c-network-library" title="Permalink to this headline">¶</a></h1>
 <img align="right" alt="images/boost.png" class="align-right" src="images/boost.png" />
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Authors:</th><td class="field-body">Glyn Matthews &lt;<a class="reference external" href="mailto:glyn&#46;matthews&#37;&#52;&#48;gmail&#46;com">glyn<span>&#46;</span>matthews<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;
-Dean Michael Berris &lt;<a class="reference external" href="mailto:mikhailberis&#37;&#52;&#48;gmail&#46;com">mikhailberis<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</td>
-</tr>
-<tr class="field"><th class="field-name">Date:</th><td class="field-body">Aug 27, 2010</td>
-</tr>
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.7</td>
-</tr>
-<tr class="field"><th class="field-name">Description:</th><td class="field-body">Complete user documentation, with examples, for the <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt>.</td>
-</tr>
-<tr class="field"><th class="field-name">Copyright:</th><td class="field-body">Copyright Glyn Matthews, Dean Michael Berris 2008-2010.
-Distributed under the Boost Software License, Version
-1.0. (See accompanying file LICENSE_1_0.txt or copy at
-<a class="reference external" href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>)</td>
-</tr>
-</tbody>
-</table>
-<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> is a library that is intended to provide
-application layer protocol support (HTTP, XMPP etc.) using modern C++
-techniques.</p>
+<div class="section" id="welcome">
+<h2>Welcome<a class="headerlink" href="#welcome" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> is a library that provides application layer
+protocol support (HTTP, XMPP etc.) using modern C++ techniques.  It is
+light-weight, fast, cross-platform and is intended to be as easy to
+configure as possible.</p>
+<p>It is developed by people linked to the <a class="reference external" href="http://www.boost.org/">Boost</a> community and will at
+some point in the future be submitted for review into Boost.  A
+presentation about <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> was given at <a class="reference external" href="http://www.boostcon.com/">BoostCon 2010</a>,
+for which the <a class="reference external" href="http://www.filetolink.com/b0e89d06">slides</a> and the <a class="reference external" href="http://github.com/downloads/mikhailberis/cpp-netlib-boostcon-paper/cpp-netlib.pdf">paper</a> can be found on-line.</p>
+</div>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="getting_started.html">Getting started</a><ul>
-<li class="toctree-l2"><a class="reference external" href="getting_started.html#downloading-an-official-release">Downloading an official release</a></li>
-<li class="toctree-l2"><a class="reference external" href="getting_started.html#downloading-a-development-version">Downloading a development version</a></li>
-<li class="toctree-l2"><a class="reference external" href="getting_started.html#getting-boost">Getting Boost</a></li>
-<li class="toctree-l2"><a class="reference external" href="getting_started.html#getting-cmake">Getting CMake</a></li>
-<li class="toctree-l2"><a class="reference external" href="getting_started.html#build-instructions">Build Instructions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference external" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference external" href="examples_http.html">HTTP examples</a></li>
-<li class="toctree-l2"><a class="reference external" href="examples_xmpp.html">XMPP examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference external" href="in_depth.html">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a><ul>
-<li class="toctree-l2"><a class="reference external" href="message.html">The message template</a></li>
-<li class="toctree-l2"><a class="reference external" href="uri.html">The URI template</a></li>
-<li class="toctree-l2"><a class="reference external" href="http.html">HTTP implementation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference external" href="techniques.html">Techniques</a><ul>
-<li class="toctree-l2"><a class="reference external" href="generic_message.html">Generic message</a></li>
-<li class="toctree-l2"><a class="reference external" href="tag_metafunctions.html">Tag metafunctions</a></li>
-<li class="toctree-l2"><a class="reference external" href="directives.html">Directives</a></li>
-<li class="toctree-l2"><a class="reference external" href="polymorphism.html">Static and dynamic polymorphism</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference external" href="history.html">Project history</a><ul>
-<li class="toctree-l2"><a class="reference external" href="motivation.html">Motivation</a></li>
-<li class="toctree-l2"><a class="reference external" href="objectives.html">Objectives</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference external" href="whats_new.html">What&#8217;s New</a></li>
+<li class="toctree-l1"><a class="reference external" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference external" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference external" href="in_depth.html">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="techniques.html">Techniques</a></li>
+<li class="toctree-l1"><a class="reference external" href="history.html">Project history</a></li>
 <li class="toctree-l1"><a class="reference external" href="install.html">Full installation guide</a></li>
 <li class="toctree-l1"><a class="reference external" href="references.html">References</a></li>
-</ul>
-</div>
-<div class="section" id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><a class="reference external" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference external" href="modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference external" href="search.html"><em>Search Page</em></a></li>
 </ul>
 </div>
 </div>
@@ -164,7 +119,7 @@ techniques.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="getting_started.html" title="Getting started"
+          <a href="whats_new.html" title="What’s New"
              >next</a> |</li>
         <li><a href="#">The C++ Network Library v0.7 documentation</a> &raquo;</li> 
       </ul>

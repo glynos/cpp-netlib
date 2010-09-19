@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Objectives &mdash; The C++ Network Library v0.7 documentation</title>
+    <title>What’s New &mdash; The C++ Network Library v0.7 documentation</title>
     <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -20,9 +20,8 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="The C++ Network Library v0.7 documentation" href="index.html" />
-    <link rel="up" title="Project history" href="history.html" />
-    <link rel="next" title="Full installation guide" href="install.html" />
-    <link rel="prev" title="Motivation" href="motivation.html" /> 
+    <link rel="next" title="Getting started" href="getting_started.html" />
+    <link rel="prev" title="C++ Network Library" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -32,26 +31,35 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="install.html" title="Full installation guide"
+          <a href="getting_started.html" title="Getting started"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="motivation.html" title="Motivation"
+          <a href="index.html" title="C++ Network Library"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">The C++ Network Library v0.7 documentation</a> &raquo;</li>
-          <li><a href="history.html" accesskey="U">Project history</a> &raquo;</li> 
+        <li><a href="index.html">The C++ Network Library v0.7 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">What&#8217;s New</a><ul>
+<li><a class="reference external" href="#cpp-netlib-0-7"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7</a></li>
+<li><a class="reference external" href="#cpp-netlib-0-6"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6</a></li>
+<li><a class="reference external" href="#cpp-netlib-0-5"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.5</a></li>
+</ul>
+</li>
+</ul>
+
             <h4>Previous topic</h4>
-            <p class="topless"><a href="motivation.html"
-                                  title="previous chapter">Motivation</a></p>
+            <p class="topless"><a href="index.html"
+                                  title="previous chapter">C++ Network Library</a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="install.html"
-                                  title="next chapter">Full installation guide</a></p>
+            <p class="topless"><a href="getting_started.html"
+                                  title="next chapter">Getting started</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
-              <li><a href="sources/objectives.txt"
+              <li><a href="sources/whats_new.txt"
                      rel="nofollow">Show Source</a></li>
             </ul>
           <div id="searchbox" style="display: none">
@@ -75,30 +83,31 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="objectives">
-<h1>Objectives<a class="headerlink" href="#objectives" title="Permalink to this headline">¶</a></h1>
-<p>The objectives of the <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> are to:</p>
+  <div class="section" id="what-s-new">
+<span id="whats-new"></span><h1>What&#8217;s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cpp-netlib-0-7">
+<h2><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7<a class="headerlink" href="#cpp-netlib-0-7" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>develop a high quality, portable, easy to use C++ networking library</li>
-<li>enable developers to easily extend the library</li>
-<li>lower the barrier to entry for cross-platform network-aware C++
-applications</li>
+<li>Radical documentation overhaul</li>
+<li>Asynchronous HTPP client</li>
 </ul>
-<p>The goal the of <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> has never been to build a
-fully-featured web server - there are plenty of excellent options
-already available.  The niche that this library targets is for
-light-weight networking functionality for C++ applications that have
-demanding performance requirements or memory constraints, but that
-also need to be portable.  This type of application is becoming
-increasingly common as software becomes more distributed, and
-applications need to communicate with services.</p>
-<p>While many languages provide direct library support for high level
-network programming, this feature is missing in C++.  Therefore, this
-library has been developed with the intention of eventually being
-submitted to <a class="reference external" href="http://www.boost.org/">Boost</a>, a collection of general, high quality
-libraries for C++ developers.</p>
-<p>Eventually, the <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> will be extended to support many of
-the application layer protocols such as SMTP, FTP, SOAP, XMPP etc.</p>
+</div>
+<div class="section" id="cpp-netlib-0-6">
+<h2><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6<a class="headerlink" href="#cpp-netlib-0-6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Many fixes for MSVC compiler</li>
+</ul>
+</div>
+<div class="section" id="cpp-netlib-0-5">
+<h2><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> 0.5<a class="headerlink" href="#cpp-netlib-0-5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>An embeddable HTTP 1.1 server</li>
+<li>An HTTP 1.1 client upgraded to support HTTPS</li>
+<li>An updated URI parser implementation</li>
+<li>An asynchronous HTTP 1.1 client</li>
+<li>An HTTP 1.1 client that supports streaming function handlers</li>
+</ul>
+</div>
 </div>
 
 
@@ -114,13 +123,12 @@ the application layer protocols such as SMTP, FTP, SOAP, XMPP etc.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="install.html" title="Full installation guide"
+          <a href="getting_started.html" title="Getting started"
              >next</a> |</li>
         <li class="right" >
-          <a href="motivation.html" title="Motivation"
+          <a href="index.html" title="C++ Network Library"
              >previous</a> |</li>
-        <li><a href="index.html">The C++ Network Library v0.7 documentation</a> &raquo;</li>
-          <li><a href="history.html" >Project history</a> &raquo;</li> 
+        <li><a href="index.html">The C++ Network Library v0.7 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

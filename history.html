@@ -20,7 +20,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="The C++ Network Library v0.7 documentation" href="index.html" />
-    <link rel="next" title="Motivation" href="motivation.html" />
+    <link rel="next" title="Full installation guide" href="install.html" />
     <link rel="prev" title="Static and dynamic polymorphism" href="polymorphism.html" /> 
   </head>
   <body>
@@ -31,7 +31,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="motivation.html" title="Motivation"
+          <a href="install.html" title="Full installation guide"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="polymorphism.html" title="Static and dynamic polymorphism"
@@ -41,12 +41,21 @@
     </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Project history</a><ul>
+<li><a class="reference external" href="#motivation">Motivation</a></li>
+<li><a class="reference external" href="#objectives">Objectives</a></li>
+</ul>
+</li>
+</ul>
+
             <h4>Previous topic</h4>
             <p class="topless"><a href="polymorphism.html"
                                   title="previous chapter">Static and dynamic polymorphism</a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="motivation.html"
-                                  title="next chapter">Motivation</a></p>
+            <p class="topless"><a href="install.html"
+                                  title="next chapter">Full installation guide</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="sources/history.txt"
@@ -80,10 +89,41 @@ Initially it consisted of a message template and an HTTP client.  It
 found a home on <a class="reference external" href="http://sourceforge.net/projects/cpp-netlib/">Sourceforge</a> but was migrated at the end of 2009 to
 <a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib">Github</a> where development is actively continued by a committed
 community.</p>
-<ul>
-<li class="toctree-l1"><a class="reference external" href="motivation.html">Motivation</a></li>
-<li class="toctree-l1"><a class="reference external" href="objectives.html">Objectives</a></li>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>We&#8217;re a group of C++ developers and we kept becoming annoyed that we
+had to repeatedly write the same code when building applications that
+needed to be network-aware.</p>
+<p>We found that there was a lack of accessible networking libraries,
+either standard or open source, that fulfilled our needs.  Such
+libraries exist for every other major language.  So, building on top
+of <a class="reference external" href="http://www.boost.org/libs/asio/">Boost.Asio</a>, we decided to get together and build our own.</p>
+</div>
+<div class="section" id="objectives">
+<h2>Objectives<a class="headerlink" href="#objectives" title="Permalink to this headline">¶</a></h2>
+<p>The objectives of the <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> are to:</p>
+<ul class="simple">
+<li>develop a high quality, portable, easy to use C++ networking library</li>
+<li>enable developers to easily extend the library</li>
+<li>lower the barrier to entry for cross-platform network-aware C++
+applications</li>
 </ul>
+<p>The goal the of <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> has never been to build a
+fully-featured web server - there are plenty of excellent options
+already available.  The niche that this library targets is for
+light-weight networking functionality for C++ applications that have
+demanding performance requirements or memory constraints, but that
+also need to be portable.  This type of application is becoming
+increasingly common as software becomes more distributed, and
+applications need to communicate with services.</p>
+<p>While many languages provide direct library support for high level
+network programming, this feature is missing in C++.  Therefore, this
+library has been developed with the intention of eventually being
+submitted to <a class="reference external" href="http://www.boost.org/">Boost</a>, a collection of general, high quality
+libraries for C++ developers.</p>
+<p>Eventually, the <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> will be extended to support many of
+the application layer protocols such as SMTP, FTP, SOAP, XMPP etc.</p>
+</div>
 </div>
 
 
@@ -99,7 +139,7 @@ community.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="motivation.html" title="Motivation"
+          <a href="install.html" title="Full installation guide"
              >next</a> |</li>
         <li class="right" >
           <a href="polymorphism.html" title="Static and dynamic polymorphism"
