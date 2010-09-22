@@ -179,6 +179,8 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_status_message) {
     std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
 
+/** This test specifices how one-line-per-header parsing happens incrementally.
+ */
 BOOST_AUTO_TEST_CASE(incremental_parser_parse_header_lines) {
     typedef response_parser<tags::default_string> response_parser_type;
     typedef response_parser_type::range_type range_type;
@@ -210,3 +212,4 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_header_lines) {
     BOOST_CHECK_EQUAL(parsed_ok, true);
     BOOST_CHECK(parsed1 != parsed2);
 }
+
