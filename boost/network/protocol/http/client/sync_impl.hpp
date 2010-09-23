@@ -16,7 +16,6 @@ namespace boost { namespace network { namespace http {
         struct sync_client :
             connection_policy<Tag,version_major,version_minor>::type
         {
-        protected:
             typedef 
                 typename connection_policy<Tag,version_major,version_minor>::type
                 connection_base;
@@ -30,8 +29,6 @@ namespace boost { namespace network { namespace http {
                 connection_base::cleanup();
             }
             
-            friend struct basic_client_impl<Tag,version_major,version_minor>;
-
             basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
                 typename connection_base::connection_ptr connection_;
                 connection_ = connection_base::get_connection(resolver_, request_);

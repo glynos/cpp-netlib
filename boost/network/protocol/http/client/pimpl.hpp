@@ -30,7 +30,6 @@ namespace boost { namespace network { namespace http {
         struct sync_client :
             connection_policy<Tag, version_major, version_minor>::type
         {
-        protected:
             typedef typename string<Tag>::type string_type;
             typedef typename connection_policy<Tag,version_major,version_minor>::type connection_base;
             typedef typename resolver<Tag>::type resolver_type;
@@ -44,6 +43,8 @@ namespace boost { namespace network { namespace http {
                 service_(),
                 resolver_(service_)
             {}
+
+            ~sync_client() {}
 
             basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
                 typename connection_base::connection_ptr connection_;
@@ -80,9 +81,6 @@ namespace boost { namespace network { namespace http {
             >::value
             ));
         
-    private:
-        friend struct basic_client<Tag,version_major,version_minor>;
-        template <class T> friend inline void boost::checked_delete<T>(T*);
         typedef typename impl::client_base<Tag,version_major,version_minor>::type base_type;
         basic_client_impl(bool cache_resolved, bool follow_redirect)
             : base_type(cache_resolved, follow_redirect)

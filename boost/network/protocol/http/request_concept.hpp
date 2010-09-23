@@ -34,7 +34,7 @@ namespace boost { namespace network { namespace http {
 
             request << uri(string_type());
 
-            uri(request, string_type());
+            boost::network::http::uri(request, string_type());
 
             (void)host_;
             (void)port_;

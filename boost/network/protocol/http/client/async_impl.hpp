@@ -21,7 +21,6 @@ namespace boost { namespace network { namespace http {
         struct async_client : 
             connection_policy<Tag,version_major,version_minor>::type
         {
-        protected:
             typedef
                 typename connection_policy<Tag,version_major,version_minor>::type
                 connection_base;
@@ -54,8 +53,6 @@ namespace boost { namespace network { namespace http {
                 lifetime_thread_->join();
                 lifetime_thread_.reset();
             }
-
-            friend struct basic_client_impl<Tag,version_major,version_minor>;
 
             basic_response<Tag> const request_skeleton(
                 basic_request<Tag> const & request_, 

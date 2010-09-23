@@ -15,23 +15,9 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     class basic_request;
 
-    namespace impl {
-
-        template <class Tag, class T>
-        void uri(basic_request<Tag> & response, T const & value, mpl::false_ const &) {
-            response << boost::network::http::uri(value);
-        }
-
-        template <class Tag, class T>
-        void uri(basic_request<Tag> & response, T const & future, mpl::true_ const &) {
-            response.uri(future);
-        }
-
-    } // namespace impl
-
     template <class Tag, class T>
-    void uri(basic_request<Tag> & response, T const & value) {
-        impl::uri(response, value, is_async<Tag>());
+    void uri(basic_request<Tag> & request, T const & value) {
+        request.uri(value);
     }
 
 } // namespace http

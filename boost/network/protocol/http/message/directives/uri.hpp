@@ -15,28 +15,32 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     class basic_request;
 
-    template <class Tag>
-    struct uri_directive {
+    namespace impl {
 
-        typedef typename string<Tag>::type string_type;
+        template <class Tag>
+        struct uri_directive {
 
-        mutable string_type uri_;
+            typedef typename string<Tag>::type string_type;
 
-        uri_directive(string_type const & uri)
-            : uri_(uri) {}
+            string_type uri_;
 
-        uri_directive(uri_directive const & other)
-            : uri_(other.uri_) {}
+            explicit uri_directive(string_type const & uri)
+                : uri_(uri) {}
 
-        template <class T> basic_request<T> const & operator() (basic_request<T> const & request) const {
-            request.uri(uri_);
-            return request;
-        }
+            uri_directive(uri_directive const & other)
+                : uri_(other.uri_) {}
 
-    };
+            template <class T> basic_request<T> const & operator() (basic_request<T> const & request) const {
+                request.uri(uri_);
+                return request;
+            }
 
-    inline uri_directive<tags::default_> const uri(string<tags::default_>::type const & uri_) {
-        return uri_directive<tags::default_>(uri_);
+        };
+
+    } // namespace impl
+
+    inline impl::uri_directive<tags::default_> const uri(string<tags::default_>::type const & uri_) {
+        return impl::uri_directive<tags::default_>(uri_);
     }
 
 } // namespace http

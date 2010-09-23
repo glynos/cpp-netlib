@@ -19,6 +19,7 @@
 #include <boost/network/protocol/http/message/directives/status.hpp>
 #include <boost/network/protocol/http/message/directives/uri.hpp>
 
+#include <boost/network/protocol/http/message/modifiers/uri.hpp>
 #include <boost/network/protocol/http/message/modifiers/version.hpp>
 #include <boost/network/protocol/http/message/modifiers/status.hpp>
 #include <boost/network/protocol/http/message/modifiers/status_message.hpp>
