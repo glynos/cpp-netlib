@@ -14,6 +14,8 @@
 #include <boost/network/message/wrappers.hpp>
 #include <boost/network/protocol/http/message/directives/uri.hpp>
 #include <boost/network/protocol/http/message/modifiers/uri.hpp>
+#include <boost/network/protocol/http/message/wrappers/uri.hpp>
+
 #include <boost/network/protocol/http/message/wrappers/host.hpp>
 #include <boost/network/protocol/http/message/wrappers/headers.hpp>
 #include <boost/network/protocol/http/message/wrappers/path.hpp>
@@ -21,7 +23,6 @@
 #include <boost/network/protocol/http/message/wrappers/query.hpp>
 #include <boost/network/protocol/http/message/wrappers/anchor.hpp>
 #include <boost/network/protocol/http/message/wrappers/protocol.hpp>
-#include <boost/network/protocol/http/message/wrappers/uri.hpp>
 #include <boost/network/protocol/http/message/wrappers/body.hpp>
 #include <boost/network/protocol/http/message/wrappers/version.hpp>
 #include <boost/network/message/directives.hpp>
