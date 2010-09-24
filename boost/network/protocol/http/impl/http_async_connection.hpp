@@ -12,9 +12,12 @@
 #include <boost/throw_exception.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/range/algorithm/transform.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/network/traits/ostream_iterator.hpp>
-#include <boost/regex.hpp>
+#include <boost/network/traits/istream.hpp>
+#include <boost/logic/tribool.hpp>
+#include <boost/network/protocol/http/parser/incremental.hpp>
 #include <iterator>
 
 namespace boost { namespace network { namespace http { namespace impl {
@@ -209,14 +212,12 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void handle_sent_request(string_type method, boost::system::error_code const & ec, std::size_t bytes_transferred) {
             if (!ec) {
-                static boost::regex const version_pattern("HTTP/\\d+\\.\\d+\\s\\d{3}\\s[\\w\\s\\d]+\\r\\n");
-                boost::asio::async_read_until(
+                boost::asio::async_read(
                     *socket_,
                     response_buffer_,
-                    version_pattern,
                     request_strand_->wrap(
                         boost::bind(
-                            &http_async_connection<Tag,version_major,version_minor>::handle_received_status,
+                            &http_async_connection<Tag,version_major,version_minor>::handle_received_version,
                             http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
                             method, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)));
             } else {
@@ -233,9 +234,44 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        void handle_received_status(string_type method, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+        void handle_received_version(string_type method, boost::system::error_code const & ec, std::size_t bytes_transferred) {
             if (!ec) {
-                //FIXME -- make it happen
+                logic::tribool parsed_ok;
+                typename response_parser_type::range_type result_range;
+                typename istream<Tag>::type input_stream(&response_buffer_);
+                part.append(
+                    std::istream_iterator<typename char_<Tag>::type>(input_stream)
+                    , std::istream_iterator<typename char_<Tag>::type>()
+                    );
+                fusion::tie(parsed_ok, result_range) = response_parser.parse_until(
+                    response_parser_type::http_version_done,
+                    part);
+                if (parsed_ok == true) {
+                    string_type version(boost::begin(result_range), boost::end(result_range));
+                    algorithm::trim(version);
+                    version_promise.set_value(version);
+                    typename string_type::const_iterator end = part.end();
+                    part.assign(boost::end(result_range), end);
+                } else if (parsed_ok == false) {
+                    // FIXME create proper errors, use Boost.System errors and categories
+                    std::runtime_error error("Invalid Version Part.");
+                    version_promise.set_exception(boost::copy_exception(error));
+                    status_promise.set_exception(boost::copy_exception(error));
+                    status_message_promise.set_exception(boost::copy_exception(error));
+                    headers_promise.set_exception(boost::copy_exception(error));
+                    source_promise.set_exception(boost::copy_exception(error));
+                    destination_promise.set_exception(boost::copy_exception(error));
+                    body_promise.set_exception(boost::copy_exception(error));
+                } else {
+                    boost::asio::async_read(
+                        *socket_,
+                        response_buffer_,
+                        request_strand_->wrap(
+                            boost::bind(
+                                &http_async_connection<Tag,version_major,version_minor>::handle_received_version,
+                                http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                                method, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)));
+                }
             }
         }
 
@@ -246,6 +282,8 @@ namespace boost { namespace network { namespace http { namespace impl {
         void handle_recieved_body() {
             //FIXME -- wire the correct parameters
         }
+
+        typedef response_parser<Tag> response_parser_type;
 
         boost::shared_ptr<resolver_type> resolver_;
         resolve_function resolve_;
@@ -261,6 +299,8 @@ namespace boost { namespace network { namespace http { namespace impl {
         boost::promise<string_type> body_promise;
         string_type command_string_;
         boost::asio::streambuf response_buffer_;
+        response_parser_type response_parser;
+        string_type part;
     };
 
 } // namespace impl
