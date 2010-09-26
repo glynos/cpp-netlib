@@ -9,6 +9,9 @@
 
 # include <sstream>
 # include <boost/network/tags.hpp>
+#include <boost/network/support/is_default_string.hpp>
+#include <boost/network/support/is_default_wstring.hpp>
+#include <boost/mpl/if.hpp>
 
 namespace boost { namespace network {
 
@@ -16,40 +19,17 @@ namespace boost { namespace network {
     struct unsupported_tag;
 
     template <class Tag>
-    struct istringstream {
-        typedef unsupported_tag<Tag> type;
-    };
-
-    template <>
-    struct istringstream<tags::default_string> {
-        typedef std::istringstream type;
-    };
-
-
-    template <>
-    struct istringstream<tags::default_wstring> {
-        typedef std::wistringstream type;
-    };
-
-    template <>
-    struct istringstream<tags::http_default_8bit_tcp_resolve> {
-        typedef std::istringstream type;
-    };
-
-    template <>
-    struct istringstream<tags::http_default_8bit_udp_resolve> {
-        typedef std::istringstream type;
-    };
-
-    template <>
-    struct istringstream<tags::http_keepalive_8bit_tcp_resolve> {
-        typedef std::istringstream type;
-    };
-
-    template <>
-    struct istringstream<tags::http_keepalive_8bit_udp_resolve> {
-        typedef std::istringstream type;
-    };
+    struct istringstream :
+        mpl::if_<
+            is_default_string<Tag>,
+            std::istringstream,
+            typename mpl::if_<
+                is_default_wstring<Tag>,
+                std::basic_istringstream<wchar_t>,
+                unsupported_tag<Tag>
+            >::type
+        >
+    {};
 
 } // namespace network
 
