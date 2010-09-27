@@ -1,5 +1,5 @@
-#ifndef BOOST_NETWORK_SUPPORT_IS_HTTP_HPP_20100622
-#define BOOST_NETWORK_SUPPORT_IS_HTTP_HPP_20100622
+#ifndef BOOST_NETWORK_SUPPORT_IS_SIMPLE_HPP_20100927
+#define BOOST_NETWORK_SUPPORT_IS_SIMPLE_HPP_20100927
 
 // Copyright 2010 (c) Dean Michael Berris
 // Distributed under the Boost Software License, Version 1.0.
@@ -10,17 +10,20 @@
 #include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace network {
+    
+    template <class Tag>
+    struct unsupported_tag;
 
     template <class Tag>
-    struct is_http :
+    struct is_simple :
         is_base_of<
-            tags::http,
-            Tag
+            tags::simple
+            , Tag
         >
     {};
 
-} // namespace network
+} /* network */
+    
+} /* boost */
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_SUPPORT_IS_HTTP_HPP_20100622
+#endif /* BOOST_NETWORK_SUPPORT_IS_SIMPLE_HPP_20100927 */

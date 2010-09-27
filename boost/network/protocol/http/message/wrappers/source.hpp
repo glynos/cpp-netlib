@@ -36,8 +36,7 @@ namespace boost { namespace network { namespace http {
     } // namespace impl
 
     template <class Tag>
-    inline
-    BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
+    inline BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
         (impl::source_wrapper<basic_response<Tag> > const))
     source(basic_response<Tag> const & message) {
         return impl::source_wrapper<basic_response<Tag> >(message);

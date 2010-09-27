@@ -10,6 +10,7 @@
 #include <boost/asio/strand.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
+#include <boost/network/support/sync_only.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -55,7 +56,7 @@ namespace boost { namespace network { namespace http {
             }
 
             basic_response<Tag> const request_skeleton(
-                basic_request<Tag> const & request_, 
+                basic_request<typename sync_only<Tag>::type> const & request_, 
                 string_type const & method, 
                 bool get_body
                 ) 

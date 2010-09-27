@@ -8,9 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
-
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/network/support/is_async.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -20,10 +18,7 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     struct message_base
         : mpl::if_<
-            is_base_of<
-                tags::async,
-                Tag
-            >,
+            is_async<Tag>,
             async_message<Tag>,
             message_impl<Tag>
         >
