@@ -19,6 +19,7 @@
 #include <boost/logic/tribool.hpp>
 #include <boost/network/protocol/http/parser/incremental.hpp>
 #include <boost/network/protocol/http/message/wrappers/uri.hpp>
+#include <boost/array.hpp>
 #include <iterator>
 
 namespace boost { namespace network { namespace http { namespace impl {
@@ -55,11 +56,13 @@ namespace boost { namespace network { namespace http { namespace impl {
                 template <class U>
                 string_type const operator() (U const & pair) const {
                     typedef typename ostringstream<Tag>::type ostringstream_type;
+                    typedef constants<Tag> constants;
                     ostringstream_type header_line;
                     header_line << pair.first
-                        << constants<Tag>::colon()
+                        << constants::colon()
+                        << constants::space()
                         << pair.second
-                        << constants<Tag>::crlf();
+                        << constants::crlf();
                     return header_line.str();
                 }
             };
@@ -84,12 +87,12 @@ namespace boost { namespace network { namespace http { namespace impl {
                 if (!get_body) body_promise.set_value(string_type());
 
                 typename ostringstream<Tag>::type command_stream;
-                string_type uri_str;
-                uri_str = boost::network::http::uri(request);
+                string_type path_str;
+                path_str = path(request);
                 typedef constants<Tag> constants;
                 command_stream 
                     << method << constants::space()
-                    << uri_str << constants::space()
+                    << path_str << constants::space()
                     << constants::http_slash() << version_major
                     << constants::dot() << version_minor
                     << constants::crlf();
@@ -122,18 +125,19 @@ namespace boost { namespace network { namespace http { namespace impl {
                         << constants::user_agent() << constants::colon() << constants::space() << constants::cpp_netlib_slash() << BOOST_NETLIB_VERSION << constants::crlf();
                 }
 
+                command_stream << constants::crlf();
+
                 command_string_ = command_stream.str();
 
                 this->method = method;
-                
-                resolve_(resolver_, host(request),
+
+                resolve_(resolver_, host(request), port(request),
                     request_strand_->wrap(
                         boost::bind(
                         &http_async_connection<Tag,version_major,version_minor>::handle_resolved,
                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
                         port(request),
                         _1, _2)));
-                
                 return temp;
             }
 
@@ -217,7 +221,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             if (!ec) {
                 boost::asio::async_read(
                     *socket_,
-                    response_buffer_,
+                    boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     request_strand_->wrap(
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_received_version,
@@ -238,8 +242,10 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         void parse_version() {
+            std::cerr << '\n';
+
             logic::tribool parsed_ok;
-            typename response_parser_type::range_type result_range;
+            typename boost::iterator_range<typename buffer_type::const_iterator> result_range;
             fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
                 response_parser_type::http_version_done,
                 part);
@@ -249,8 +255,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                 version.append(boost::begin(result_range), boost::end(result_range));
                 algorithm::trim(version);
                 version_promise.set_value(version);
-                typename string_type::const_iterator end = part.end();
-                part.assign(boost::end(result_range), end);
+                typename buffer_type::const_iterator end = part.end();
+                std::copy(boost::end(result_range), end, part.begin());
                 this->parse_status();
             } else if (parsed_ok == false) {
                 std::runtime_error error("Invalid Version Part.");
@@ -266,10 +272,9 @@ namespace boost { namespace network { namespace http { namespace impl {
                     part.begin(),
                     part.end()
                     );
-                string_type().swap(part);
                 boost::asio::async_read(
                     *socket_,
-                    response_buffer_,
+                    boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     request_strand_->wrap(
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_received_version,
@@ -279,12 +284,8 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         void handle_received_version(boost::system::error_code const & ec, std::size_t bytes_transferred) {
-            if (!ec) {
-                typename istream<Tag>::type input_stream(&response_buffer_);
-                part.append(
-                    std::istream_iterator<typename char_<Tag>::type>(input_stream)
-                    , std::istream_iterator<typename char_<Tag>::type>()
-                    );
+            if (!ec || ec == boost::asio::error::eof) {
+                this->parse_version();
             } else {
                 boost::system::system_error error(ec);
                 version_promise.set_exception(boost::copy_exception(error));
@@ -299,7 +300,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void parse_status() {
             logic::tribool parsed_ok;
-            typename response_parser_type::range_type result_range;
+            typename boost::iterator_range<typename buffer_type::const_iterator> result_range;
             fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
                 response_parser_type::http_status_done,
                 part);
@@ -310,8 +311,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                 trim(status);
                 boost::uint16_t status_int = lexical_cast<boost::uint16_t>(status);
                 status_promise.set_value(status_int);
-                typename string_type::iterator end = part.end();
-                part.assign(boost::end(result_range), end);
+                typename buffer_type::const_iterator end = part.end();
+                std::copy(boost::end(result_range), end, part.begin());
                 this->parse_status_message();
             } else if (parsed_ok == false) {
                 std::runtime_error error("Invalid status part.");
@@ -323,8 +324,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                 body_promise.set_exception(boost::copy_exception(error));
             } else {
                 partial_parsed.append(part.begin(), part.end());
-                string_type().swap(part);
-                boost::asio::async_read(*socket_, response_buffer_,
+                boost::asio::async_read(*socket_, 
+                    boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     request_strand_->wrap(
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_received_status,
@@ -335,11 +336,6 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void handle_received_status(boost::system::error_code const & ec, size_t bytes_transferred) {
             if (!ec) {
-                typename istream<Tag>::type input_stream(&response_buffer_);
-                part.append(
-                    std::istream_iterator<typename char_<Tag>::type>(input_stream)
-                    , std::istream_iterator<typename char_<Tag>::type>()
-                    );
                 this->parse_status();
             } else {
                 boost::system::system_error error(ec);
@@ -354,7 +350,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void parse_status_message() {
             logic::tribool parsed_ok;
-            typename response_parser_type::range_type result_range;
+            typename boost::iterator_range<typename buffer_type::const_iterator> result_range;
             fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
                 response_parser_type::http_status_message_done,
                 part);
@@ -364,8 +360,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                 status_message.append(boost::begin(result_range), boost::end(result_range));
                 algorithm::trim(status_message);
                 status_message_promise.set_value(status_message);
-                typename string_type::iterator end = part.end();
-                part.assign(boost::end(result_range), end);
+                typename buffer_type::const_iterator end = part.end();
+                std::copy(boost::end(result_range), end, part.c_array());
                 this->parse_headers();
             } else if (parsed_ok == false) {
                 std::runtime_error error("Invalid status message part.");
@@ -376,10 +372,9 @@ namespace boost { namespace network { namespace http { namespace impl {
                 body_promise.set_exception(boost::copy_exception(error));
             } else {
                 partial_parsed.append(part.begin(), part.end());
-                string_type().swap(part);
                 boost::asio::async_read(
                     *socket_,
-                    response_buffer_,
+                    boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     request_strand_->wrap(
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_received_status_message,
@@ -390,11 +385,6 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void handle_received_status_message(boost::system::error_code const & ec, size_t bytes_transferred) {
             if (!ec) {
-                typename istream<Tag>::type input_stream(&response_buffer_);
-                part.append(
-                    std::istream_iterator<typename char_<Tag>::type>(input_stream)
-                    , std::istream_iterator<typename char_<Tag>::type>()
-                    );
                 this->parse_status_message();
             } else {
                 boost::system::system_error error(ec);
@@ -408,7 +398,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void parse_headers() {
             logic::tribool parsed_ok;
-            typename response_parser_type::range_type result_range;
+            typename boost::iterator_range<typename buffer_type::const_iterator> result_range;
             fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
                 response_parser_type::http_headers_done,
                 part);
@@ -416,18 +406,16 @@ namespace boost { namespace network { namespace http { namespace impl {
                 string_type headers_string;
                 std::swap(headers_string, partial_parsed);
                 headers_string.append(boost::begin(result_range), boost::end(result_range));
-                typename string_type::const_iterator end = part.end();
-                part.assign(boost::end(result_range), end);
-                // TODO implement the header line parsing here.
-                this->parse_body();
+                typename buffer_type::const_iterator end = part.end();
+                std::copy(boost::end(result_range), end, part.begin());
+                this->parse_body(std::distance(boost::end(result_range), end));
             } else if (parsed_ok == false) {
                 std::runtime_error error("Invalid header part.");
             } else {
                 partial_parsed.append(part.begin(), part.end());
-                string_type().swap(part);
                 boost::asio::async_read(
                     *socket_,
-                    response_buffer_,
+                    boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     request_strand_->wrap(
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_received_headers,
@@ -438,11 +426,6 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void handle_received_headers(boost::system::error_code const & ec, size_t bytes_transferred) {
             if (!ec) {
-                typename istream<Tag>::type input_stream(&response_buffer_);
-                part.append(
-                    std::istream_iterator<typename char_<Tag>::type>(input_stream)
-                    , std::istream_iterator<typename char_<Tag>::type>()
-                    );
                 this->parse_headers();
             } else {
                 boost::system::system_error error(ec);
@@ -453,13 +436,12 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        void parse_body() {
-            partial_parsed.append(part.begin(), part.end());
-            string_type().swap(part);
-            boost::asio::async_read(*socket_, response_buffer_,
+        void parse_body(size_t bytes) {
+            partial_parsed.append(part.begin(), bytes);
+            boost::asio::async_read(*socket_, boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                 request_strand_->wrap(
                     boost::bind(
-                        &http_async_connection<Tag,version_major,version_minor>::handle_received_body,
+                        &http_async_connection<Tag,version_major,version_minor>::handle_recieved_body,
                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
                         boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)));
         }
@@ -468,17 +450,18 @@ namespace boost { namespace network { namespace http { namespace impl {
             if (ec == boost::asio::error::eof) {
                 string_type body;
                 std::swap(body, partial_parsed);
-                typename istream<Tag>::type input_stream(&response_buffer_);
                 body.append(
-                    std::istream_iterator<typename char_<Tag>::type>(input_stream)
-                    , std::istream_iterator<typename char_<Tag>::type>()
+                    part.begin()
+                    , bytes_transferred
                     );
                 body_promise.set_value(body);
                 // TODO set the destination value somewhere!
                 destination_promise.set_value("");
                 source_promise.set_value("");
-                string_type().swap(part);
+                part.assign('\0');
                 response_parser_.reset();
+            } else if (!ec) {
+                this->parse_body(bytes_transferred);
             } else {
                 boost::system::system_error error(ec);
                 source_promise.set_exception(boost::copy_exception(error));
@@ -488,6 +471,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         typedef response_parser<Tag> response_parser_type;
+        typedef boost::array<typename char_<Tag>::type, 1024> buffer_type;
 
         boost::shared_ptr<resolver_type> resolver_;
         resolve_function resolve_;
@@ -502,9 +486,8 @@ namespace boost { namespace network { namespace http { namespace impl {
         boost::promise<string_type> destination_promise;
         boost::promise<string_type> body_promise;
         string_type command_string_;
-        boost::asio::streambuf response_buffer_;
         response_parser_type response_parser_;
-        string_type part;
+        buffer_type part;
         string_type partial_parsed;
         string_type method;
     };

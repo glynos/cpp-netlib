@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
     response_parser<tags::default_string> p; // default constructible
     logic::tribool parsed_ok = false;
     typedef response_parser<tags::default_string> response_parser_type;
-    typedef response_parser_type::range_type range_type;
+    typedef boost::iterator_range<std::string::const_iterator> range_type;
     range_type result_range;
 
     std::string valid_http_version = "HTTP/1.0 ";
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
  */
 BOOST_AUTO_TEST_CASE(incremental_parser_parse_status) {
     typedef response_parser<tags::default_string> response_parser_type;
-    typedef response_parser_type::range_type range_type;
+    typedef boost::iterator_range<std::string::const_iterator> range_type;
     // We want to create a parser that has been initialized to a specific
     // state. In this case we assume that the parser has already parsed
     // the version part of the HTTP Response.
@@ -147,7 +147,7 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_status) {
  */
 BOOST_AUTO_TEST_CASE(incremental_parser_parse_status_message) {
     typedef response_parser<tags::default_string> response_parser_type;
-    typedef response_parser_type::range_type range_type;
+    typedef boost::iterator_range<std::string::const_iterator> range_type;
     response_parser_type p(response_parser_type::http_status_done);
     
     std::string valid_status_message = "OK\r\nServer: Foo";
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_status_message) {
  */
 BOOST_AUTO_TEST_CASE(incremental_parser_parse_header_lines) {
     typedef response_parser<tags::default_string> response_parser_type;
-    typedef response_parser_type::range_type range_type;
+    typedef boost::iterator_range<std::string::const_iterator> range_type;
     response_parser_type p(response_parser_type::http_status_message_done);
 
     std::string valid_headers = "Server: Foo\r\nContent-Type: application/json\r\n\r\n";

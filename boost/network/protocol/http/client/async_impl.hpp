@@ -48,7 +48,7 @@ namespace boost { namespace network { namespace http {
                         )));
             }
 
-            ~async_client()
+            ~async_client() throw ()
             {
                 sentinel_.reset();
                 lifetime_thread_->join();
