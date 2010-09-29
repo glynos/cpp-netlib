@@ -163,9 +163,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                             boost::asio::placeholders::error
                             )));
             } else {
-                boost::system::system_error error(
-                        ec ? ec : boost::asio::error::host_not_found
-                        );
+                boost::system::system_error error(ec ? ec : boost::asio::error::host_not_found);
                 version_promise.set_exception(boost::copy_exception(error));
                 status_promise.set_exception(boost::copy_exception(error));
                 status_message_promise.set_exception(boost::copy_exception(error));
@@ -244,8 +242,6 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         void parse_version() {
-            std::cerr << '\n';
-
             logic::tribool parsed_ok;
             typename boost::iterator_range<typename buffer_type::const_iterator> result_range;
             fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(

@@ -79,11 +79,6 @@ namespace boost { namespace network { namespace http { namespace policies {
             resolver_iterator endpoint_iterator
             )
         {
-            if (ec) {
-                once_resolved(ec, std::make_pair(endpoint_iterator,resolver_iterator()));
-                return;
-            }
-
             typename endpoint_cache::iterator iter;
             bool inserted = false;
             if (!ec && cache_resolved_) {

@@ -44,6 +44,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout, T, tag_types) {
     typename client::request request("http://localhost:12121/");
     client client_;
     typename client::response response_;
+    boost::uint16_t port_ = port(request);
+    BOOST_CHECK_EQUAL ( 12121, port_ );
     BOOST_CHECK_THROW ( response_ = client_.get(request), boost::system::system_error );
 }
 
