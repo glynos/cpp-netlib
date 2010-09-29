@@ -131,12 +131,14 @@ namespace boost { namespace network { namespace http { namespace impl {
 
                 this->method = method;
 
-                resolve_(resolver_, host(request), port(request),
+                boost::uint16_t port_ = port(request);
+
+                resolve_(resolver_, host(request), port_,
                     request_strand_->wrap(
                         boost::bind(
                         &http_async_connection<Tag,version_major,version_minor>::handle_resolved,
                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                        port(request),
+                        port_,
                         _1, _2)));
                 return temp;
             }
@@ -335,7 +337,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         void handle_received_status(boost::system::error_code const & ec, size_t bytes_transferred) {
-            if (!ec) {
+            if (!ec || ec == boost::asio::error::eof) {
                 this->parse_status();
             } else {
                 boost::system::system_error error(ec);
@@ -384,7 +386,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         void handle_received_status_message(boost::system::error_code const & ec, size_t bytes_transferred) {
-            if (!ec) {
+            if (!ec || ec == boost::asio::error::eof) {
                 this->parse_status_message();
             } else {
                 boost::system::system_error error(ec);
@@ -394,6 +396,43 @@ namespace boost { namespace network { namespace http { namespace impl {
                 destination_promise.set_exception(boost::copy_exception(error));
                 body_promise.set_exception(boost::copy_exception(error));
             }
+        }
+
+        void parse_headers_real(string_type & headers_part) {
+            typename boost::iterator_range<typename string_type::const_iterator> 
+                input_range = boost::make_iterator_range(headers_part)
+                , result_range;
+            logic::tribool parsed_ok;
+            response_parser_type headers_parser(response_parser_type::http_header_line_done);
+            typename headers_container<Tag>::type headers;
+            std::pair<string_type,string_type> header_pair;
+            while (!boost::empty(input_range)) {
+                fusion::tie(parsed_ok, result_range) = headers_parser.parse_until(
+                    response_parser_type::http_header_colon
+                    , input_range);
+                if (headers_parser.state() != response_parser_type::http_header_colon) break;
+                header_pair.first = string_type(
+                    boost::begin(result_range), 
+                    boost::end(result_range));
+                input_range.advance_begin(boost::distance(result_range));
+                fusion::tie(parsed_ok, result_range) = headers_parser.parse_until(
+                    response_parser_type::http_header_line_done
+                    , input_range);
+                header_pair.second = string_type(
+                    boost::begin(result_range), 
+                    boost::end(result_range));
+                input_range.advance_begin(boost::distance(result_range));
+
+                trim(header_pair.first);
+                if (header_pair.first.size() > 1) {
+                    header_pair.first.erase(
+                        header_pair.first.size() - 1
+                    );
+                }
+                trim(header_pair.second);
+                headers.insert(header_pair);
+            }
+            headers_promise.set_value(headers);
         }
 
         void parse_headers() {
@@ -408,6 +447,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 headers_string.append(boost::begin(result_range), boost::end(result_range));
                 typename buffer_type::const_iterator end = part.end();
                 std::copy(boost::end(result_range), end, part.begin());
+                this->parse_headers_real(headers_string);
                 this->parse_body(std::distance(boost::end(result_range), end));
             } else if (parsed_ok == false) {
                 std::runtime_error error("Invalid header part.");
@@ -425,7 +465,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         void handle_received_headers(boost::system::error_code const & ec, size_t bytes_transferred) {
-            if (!ec) {
+            if (!ec || ec == boost::asio::error::eof) {
                 this->parse_headers();
             } else {
                 boost::system::system_error error(ec);
