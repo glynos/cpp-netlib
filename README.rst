@@ -41,9 +41,8 @@ where cpp-netlib is installed as part of the include paths.
 
 .. [#] http://www.boost.org/
 
-The recommended installation procedure would be to follow the steps below:
+The recommended installation procedure would be to follow the steps below::
 
-::
     # On Linux/Mac, consider the `$` character as the shell prompt
     $ sudo mkdir -p /usr/local/include/cpp-netlib
     $ sudo cp -r cpp-netlib/boost /usr/local/include/cpp-netlib
@@ -100,10 +99,10 @@ you can now build the tests and run them::
     $ make test
 
 If for some reason some of the tests fail, you can send the files in
-``Testing/Temporary/`` as attachments to the cpp-netlib developers mailing list
-[#]_.
+``Testing/Temporary/`` as attachments to the cpp-netlib `developers mailing
+list`_.
 
-.. [#] https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
+.. _`developers mailing list`: https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
 
 Building with Boost.Build
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -129,24 +128,30 @@ please do the following::
     $ bjam 2>&1 >build-test.log
 
 And then attach the ``build-test.log`` file to the email you will send to the
-cpp-netlib developers mailing list [#]_.
+cpp-netlib `developers mailing list`_.
 
-.. [#] https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
+.. _`developers mailing list`: https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
 
 Hacking on cpp-netlib
 ---------------------
 
-cpp-netlib is being developed with the git [#]_ distributed SCM system.
-cpp-netlib is hosted on GitHub [#]_ following the GitHub recommended practice of
+cpp-netlib is being developed with the git_ distributed SCM system.
+cpp-netlib is hosted on GitHub_ following the GitHub recommended practice of
 forking the repository and submitting pull requests to the source repository.
-You can read more about `the forking process<http://help.github.com/forking/>`
-and `submitting pull requests<http://help.github.com/pull-requests/>` if
+You can read more about the forking_ process and submitting `pull requests`_ if
 you're not familiar with either process yet.
 
-Because cpp-netlib is released under the Boost Software License [#]_ it is
+.. _git: http://git-scm.com/
+.. _GitHub: http://github.com/
+.. _forking: http://help.github.com/forking/
+.. _`pull requests`: http://help.github.com/pull-requests/
+
+Because cpp-netlib is released under the `Boost Software License`_ it is
 recommended that any file you make changes to bear your copyright notice
 alongside the original authors' copyright notices on the file. Typically the
 copyright notices are at the top of each file in the project.
+
+.. _`Boost Software License`: http://www.boost.org/LICENSE_1_0.txt
 
 At the time of writing, there are no coding conventions being followed but if
 you write in the general style that is already existing in the project that
@@ -166,8 +171,11 @@ Contact and Commercial Support
 ------------------------------
 
 In case you have any questions or would like to make feature requests, you can
-contact the development team through the `developers mailing list<https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel>`
+contact the development team through the `developers mailing list`_
 or by filing issues at http://github.com/mikhailberis/cpp-netlib/issues.
+
+.. _`developers mailing list`:
+   https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
 
 You can reach the maintainers of the project through::
 
