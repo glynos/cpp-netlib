@@ -253,8 +253,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 version.append(boost::begin(result_range), boost::end(result_range));
                 algorithm::trim(version);
                 version_promise.set_value(version);
-                typename buffer_type::const_iterator end = part.end();
-                std::copy(boost::end(result_range), end, part.begin());
+                part_begin = boost::end(result_range);
                 this->parse_status();
             } else if (parsed_ok == false) {
                 std::runtime_error error("Invalid Version Part.");
@@ -267,9 +266,10 @@ namespace boost { namespace network { namespace http { namespace impl {
                 body_promise.set_exception(boost::copy_exception(error));
             } else {
                 partial_parsed.append(
-                    part.begin(),
-                    part.end()
+                    boost::begin(result_range),
+                    boost::end(result_range)
                     );
+                part_begin = part.begin();
                 boost::asio::async_read(
                     *socket_,
                     boost::asio::mutable_buffers_1(part.c_array(), part.size()),
@@ -298,10 +298,12 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void parse_status() {
             logic::tribool parsed_ok;
-            typename boost::iterator_range<typename buffer_type::const_iterator> result_range;
+            typename buffer_type::const_iterator part_end = part.end();
+            typename boost::iterator_range<typename buffer_type::const_iterator> result_range,
+                input_range = boost::make_iterator_range(part_begin, part_end);
             fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
                 response_parser_type::http_status_done,
-                part);
+                input_range);
             if (parsed_ok == true) {
                 string_type status;
                 std::swap(status, partial_parsed);
@@ -309,8 +311,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 trim(status);
                 boost::uint16_t status_int = lexical_cast<boost::uint16_t>(status);
                 status_promise.set_value(status_int);
-                typename buffer_type::const_iterator end = part.end();
-                std::copy(boost::end(result_range), end, part.begin());
+                part_begin = boost::end(result_range);
                 this->parse_status_message();
             } else if (parsed_ok == false) {
                 std::runtime_error error("Invalid status part.");
@@ -321,7 +322,11 @@ namespace boost { namespace network { namespace http { namespace impl {
                 destination_promise.set_exception(boost::copy_exception(error));
                 body_promise.set_exception(boost::copy_exception(error));
             } else {
-                partial_parsed.append(part.begin(), part.end());
+                partial_parsed.append(
+                    boost::begin(result_range), 
+                    boost::end(result_range)
+                    );
+                part_begin = part.begin();
                 boost::asio::async_read(*socket_, 
                     boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     request_strand_->wrap(
@@ -348,18 +353,19 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void parse_status_message() {
             logic::tribool parsed_ok;
-            typename boost::iterator_range<typename buffer_type::const_iterator> result_range;
+            typename buffer_type::const_iterator part_end = part.end();
+            typename boost::iterator_range<typename buffer_type::const_iterator> result_range,
+                input_range = boost::make_iterator_range(part_begin, part_end);
             fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
                 response_parser_type::http_status_message_done,
-                part);
+                input_range);
             if (parsed_ok == true) {
                 string_type status_message;
                 std::swap(status_message, partial_parsed);
                 status_message.append(boost::begin(result_range), boost::end(result_range));
                 algorithm::trim(status_message);
                 status_message_promise.set_value(status_message);
-                typename buffer_type::const_iterator end = part.end();
-                std::copy(boost::end(result_range), end, part.c_array());
+                part_begin = boost::end(result_range);
                 this->parse_headers();
             } else if (parsed_ok == false) {
                 std::runtime_error error("Invalid status message part.");
@@ -369,7 +375,10 @@ namespace boost { namespace network { namespace http { namespace impl {
                 destination_promise.set_exception(boost::copy_exception(error));
                 body_promise.set_exception(boost::copy_exception(error));
             } else {
-                partial_parsed.append(part.begin(), part.end());
+                partial_parsed.append(
+                    boost::begin(result_range), 
+                    boost::end(result_range));
+                part_begin = part.begin();
                 boost::asio::async_read(
                     *socket_,
                     boost::asio::mutable_buffers_1(part.c_array(), part.size()),
@@ -433,22 +442,24 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void parse_headers() {
             logic::tribool parsed_ok;
-            typename boost::iterator_range<typename buffer_type::const_iterator> result_range;
+            typename buffer_type::const_iterator part_end = part.end();
+            typename boost::iterator_range<typename buffer_type::const_iterator> result_range,
+                input_range = boost::make_iterator_range(part_begin, part_end);
             fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
                 response_parser_type::http_headers_done,
-                part);
+                input_range);
             if (parsed_ok == true) {
                 string_type headers_string;
                 std::swap(headers_string, partial_parsed);
                 headers_string.append(boost::begin(result_range), boost::end(result_range));
-                typename buffer_type::const_iterator end = part.end();
-                std::copy(boost::end(result_range), end, part.begin());
+                part_begin = boost::end(result_range);
                 this->parse_headers_real(headers_string);
-                this->parse_body(std::distance(boost::end(result_range), end));
+                this->parse_body(std::distance(boost::end(result_range), part_end));
             } else if (parsed_ok == false) {
                 std::runtime_error error("Invalid header part.");
             } else {
-                partial_parsed.append(part.begin(), part.end());
+                partial_parsed.append(boost::begin(result_range), boost::end(result_range));
+                part_begin = part.begin();
                 boost::asio::async_read(
                     *socket_,
                     boost::asio::mutable_buffers_1(part.c_array(), part.size()),
@@ -473,7 +484,8 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         void parse_body(size_t bytes) {
-            partial_parsed.append(part.begin(), bytes);
+            partial_parsed.append(part_begin, bytes);
+            part_begin = part.begin();
             boost::asio::async_read(*socket_, boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                 request_strand_->wrap(
                     boost::bind(
@@ -524,6 +536,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         string_type command_string_;
         response_parser_type response_parser_;
         buffer_type part;
+        typename buffer_type::const_iterator part_begin;
         string_type partial_parsed;
         string_type method;
     };
