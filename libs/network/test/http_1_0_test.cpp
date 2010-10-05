@@ -9,7 +9,10 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/network/include/http/client.hpp>
 #include <iostream>
+#include <boost/mpl/integral_c.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/list.hpp>
+#include <boost/network/support/is_async.hpp>
 
 using namespace boost::network;
 
@@ -46,7 +49,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout, T, tag_types) {
     typename client::response response_;
     boost::uint16_t port_ = port(request);
     BOOST_CHECK_EQUAL ( 12121, port_ );
-    BOOST_CHECK_THROW ( response_ = client_.get(request), boost::system::system_error );
+    BOOST_CHECK_THROW ( response_ = client_.get(request); body(response_); , boost::system::system_error );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_details, T, tag_types) {
@@ -70,12 +73,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_cached_resolve, T, tag_types) {
     BOOST_CHECK_NO_THROW ( response_ = client_.get(other_request) );
 }
 
+template <class Tag>
+struct status_ :
+    boost::mpl::if_<
+        boost::network::is_async<Tag>,
+        boost::mpl::integral_c<boost::uint16_t, 301u>,
+        boost::mpl::integral_c<boost::uint16_t, 200u>
+    >::type
+{};
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_redirection_test, T, tag_types) {
     typedef http::basic_client<T, 1, 0> client;
     typename client::request request("http://boost.org");
     client client_(client::follow_redirect);
     typename client::response response_;
     BOOST_CHECK_NO_THROW ( response_ = client_.get(request) );
-    BOOST_CHECK_EQUAL ( response_.status(), 200u );
+    BOOST_CHECK_EQUAL ( response_.status(), status_<T>::value );
 }
 
