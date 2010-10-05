@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Getting started &mdash; The C++ Network Library v0.7 documentation</title>
-    <link rel="stylesheet" href="static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -24,66 +24,29 @@
     <link rel="prev" title="What’s New" href="whats_new.html" /> 
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="examples.html" title="Examples"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="whats_new.html" title="What’s New"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">The C++ Network Library v0.7 documentation</a> &raquo;</li> 
-      </ul>
-    </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Getting started</a><ul>
-<li><a class="reference external" href="#downloading-an-official-release">Downloading an official release</a></li>
-<li><a class="reference external" href="#downloading-a-development-version">Downloading a development version</a></li>
-<li><a class="reference external" href="#getting-boost">Getting Boost</a></li>
-<li><a class="reference external" href="#getting-cmake">Getting CMake</a></li>
-<li><a class="reference external" href="#build-instructions">Build Instructions</a></li>
-</ul>
-</li>
-</ul>
-
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="whats_new.html"
-                                  title="previous chapter">What&#8217;s New</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="examples.html"
-                                  title="next chapter">Examples</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="sources/getting_started.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
 
     <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="index.html">The C++ Network Library v0.7 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="index.html">Home</a>  |
+        <a title="Table of contents" href="contents.html">Table of contents</a>  |
+        <a title="Global index" href="genindex.html">Index</a>  |
+        <a title="Module index" href="modindex.html">Modules</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="whats_new.html" title="What&amp;#8217;s New">previous</a>
+     |
+    <a title="The C++ Network Library v0.7 documentation" href="index.html" accesskey="U">up</a>
+   |
+    <a href="examples.html" title="Examples">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="getting_started">
             
   <div class="section" id="getting-started">
 <span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
@@ -119,7 +82,7 @@ variable <tt class="docutils literal"><span class="pre">BOOST_ROOT</span></tt> m
 name of the top directory of the Boost distribution.  Although Boost
 is mostly header only, applications built using <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt>
 still requires linking with <a class="reference external" href="http://www.boost.org/libs/system/index.html">Boost.System</a>.</p>
-<div class="admonition-todo admonition " id="todo-4">
+<div class="admonition-todo admonition " id="todo-3">
 <p class="first admonition-title">Todo</p>
 <p class="last">Make this a little more accessible, perhaps with CLI examples.</p>
 </div>
@@ -142,11 +105,11 @@ shell$ make test</pre>
 <p>This will build all unit tests and examples (located in the
 <tt class="docutils literal"><span class="pre">libs/network/tests</span></tt> and <tt class="docutils literal"><span class="pre">libs/network/examples</span></tt> subdirectory
 respectively). There is no library to build for <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt>.</p>
-<div class="admonition-todo admonition " id="todo-5">
+<div class="admonition-todo admonition " id="todo-4">
 <p class="first admonition-title">Todo</p>
 <p class="last">Platform-specific instructions.</p>
 </div>
-<div class="admonition-todo admonition " id="todo-6">
+<div class="admonition-todo admonition " id="todo-5">
 <p class="first admonition-title">Todo</p>
 <p class="last">Mailing list, issues, contacting developers etc.</p>
 </div>
@@ -157,26 +120,83 @@ respectively). There is no library to build for <tt class="xref docutils literal
           </div>
         </div>
       </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Getting started</a><ul>
+<li><a class="reference external" href="#downloading-an-official-release">Downloading an official release</a></li>
+<li><a class="reference external" href="#downloading-a-development-version">Downloading a development version</a></li>
+<li><a class="reference external" href="#getting-boost">Getting Boost</a></li>
+<li><a class="reference external" href="#getting-cmake">Getting CMake</a></li>
+<li><a class="reference external" href="#build-instructions">Build Instructions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+      <li>Prev: <a href="whats_new.html">What&#8217;s New</a></li>
+    
+    
+      <li>Next: <a href="examples.html">Examples</a></li>
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="index.html">The C++ Network Library v0.7 documentation</a>
+        
+        <ul><li>Getting started</li></ul>
+        
+      </li>
+  </ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="sources/getting_started.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="whats_new.html" title="What&amp;#8217;s New">previous</a>
+     |
+    <a title="The C++ Network Library v0.7 documentation" href="index.html" accesskey="U">up</a>
+   |
+    <a href="examples.html" title="Examples">next</a> &raquo;</div>
+    </div>
+  </div>
+
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="examples.html" title="Examples"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="whats_new.html" title="What’s New"
-             >previous</a> |</li>
-        <li><a href="index.html">The C++ Network Library v0.7 documentation</a> &raquo;</li> 
-      </ul>
-    </div>
-    <div class="footer">
-      &copy; Copyright 2008-2010, Glyn Matthews, Dean Michael Berris.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
-    </div>
+  <div class="footer">
+      documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+  </div>
+
   </body>
 </html>
