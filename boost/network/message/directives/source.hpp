@@ -10,6 +10,8 @@
 #include <boost/network/message/directives/detail/string_directive.hpp>
 #include <boost/network/message/directives/detail/string_value.hpp>
 
+#include <boost/network/support/is_default_string.hpp>
+
 namespace boost { namespace network {
 
     namespace impl {
@@ -26,8 +28,8 @@ namespace boost { namespace network {
                 void operator()(typename detail::string_value<typename Message::tag>::type const & source) const {
                     message_.source(source);
                 }
-                template <class T> void operator()(T const &) const {
-                    // FIXME -- fail here!
+                template <class T> void operator()(T const & source) const {
+                    // fail at compile time?
                 }
             };
 

@@ -23,7 +23,7 @@ namespace boost { namespace network { namespace http { namespace policies {
         typedef typename string<Tag>::type string_type;
         typedef boost::unordered_map<string_type, resolver_iterator_pair> endpoint_cache;
         typedef boost::function<void(boost::system::error_code const &,resolver_iterator_pair)> resolve_completion_function;
-        typedef boost::function<void(boost::shared_ptr<resolver_type>,string_type,resolve_completion_function)> resolve_function;
+        typedef boost::function<void(boost::shared_ptr<resolver_type>,string_type,boost::uint16_t,resolve_completion_function)> resolve_function;
     protected:
         bool cache_resolved_;
         endpoint_cache endpoint_cache_;
@@ -39,6 +39,7 @@ namespace boost { namespace network { namespace http { namespace policies {
         void resolve(
             boost::shared_ptr<resolver_type> resolver_, 
             string_type const & host, 
+            boost::uint16_t port,
             resolve_completion_function once_resolved
             ) 
         {
@@ -52,7 +53,10 @@ namespace boost { namespace network { namespace http { namespace policies {
                 }
             }
             
-            typename resolver_type::query q(host);
+            typename resolver_type::query q(
+                resolver_type::protocol_type::v4()
+                , host
+                , lexical_cast<string_type>(port));
             resolver_->async_resolve(
                 q,
                 resolver_strand_->wrap(
@@ -75,11 +79,6 @@ namespace boost { namespace network { namespace http { namespace policies {
             resolver_iterator endpoint_iterator
             )
         {
-            if (ec) {
-                once_resolved(ec, std::make_pair(endpoint_iterator,resolver_iterator()));
-                return;
-            }
-
             typename endpoint_cache::iterator iter;
             bool inserted = false;
             if (!ec && cache_resolved_) {
@@ -93,8 +92,10 @@ namespace boost { namespace network { namespace http { namespace policies {
                                 )
                                 )
                                 );
+                once_resolved(ec, iter->second);
+            } else {
+                once_resolved(ec, std::make_pair(endpoint_iterator,resolver_iterator()));
             }
-            once_resolved(ec, iter->second);
         }
 
     };

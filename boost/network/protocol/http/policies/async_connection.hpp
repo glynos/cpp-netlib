@@ -37,12 +37,11 @@ namespace boost { namespace network { namespace http {
                 boost::shared_ptr<resolver_type> resolver,
                 bool https
                 )
-                : pimpl(
-                    impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolve, resolver, follow_redirect, https)
-                )
-            {}
+            {
+                pimpl = impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolve, resolver, follow_redirect, https);
+            }
 
-            basic_response<Tag> send_request(string_type const & method, basic_request<Tag> const & request_, bool get_body) {
+            basic_response<Tag> send_request(string_type const & method, basic_request<typename sync_only<Tag>::type> const & request_, bool get_body) {
                 return pimpl->start(request_, method, get_body);
             }
 
@@ -53,15 +52,16 @@ namespace boost { namespace network { namespace http {
         };
 
         typedef boost::shared_ptr<connection_impl> connection_ptr;
-        connection_ptr get_connection(boost::shared_ptr<resolver_type> resolver, basic_request<Tag> const & request_) {
+        connection_ptr get_connection(boost::shared_ptr<resolver_type> resolver, basic_request<typename sync_only<Tag>::type> const & request_) {
             string_type protocol_ = protocol(request_);
+            boost::uint16_t port_ = port(request_);
             connection_ptr connection_(
                 new connection_impl(
                     follow_redirect_
                     , boost::bind(
                         &async_connection_policy<Tag, version_major, version_minor>::resolve,
                         this,
-                        _1, _2, _3
+                        _1, _2, _3, _4
                         )
                     , resolver                    
                     , boost::iequals(protocol_, string_type("https"))

@@ -15,6 +15,7 @@
 
 #include <boost/network/protocol/http/traits/connection_policy.hpp>
 #include <boost/network/protocol/http/client/async_impl.hpp>
+#include <boost/network/support/sync_only.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -46,7 +47,7 @@ namespace boost { namespace network { namespace http {
 
             ~sync_client() {}
 
-            basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
+            basic_response<Tag> const request_skeleton(basic_request<typename sync_only<Tag>::type> const & request_, string_type method, bool get_body) {
                 typename connection_base::connection_ptr connection_;
                 connection_ = connection_base::get_connection(resolver_, request_);
                 return connection_->send_request(method, request_, get_body);

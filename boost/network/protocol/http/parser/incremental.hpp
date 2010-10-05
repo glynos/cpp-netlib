@@ -44,9 +44,6 @@ namespace boost { namespace network { namespace http {
             http_headers_done
         };
 
-        typedef typename string<Tag>::type::const_iterator iterator_type;
-        typedef iterator_range<iterator_type>  range_type;
-
         explicit response_parser (state_t state=http_response_begin)
             : state_(state) {}
 
@@ -65,13 +62,14 @@ namespace boost { namespace network { namespace http {
         }
 
         template <class Range>
-        fusion::tuple<logic::tribool,range_type> parse_until(state_t stop_state, Range & range_) {
+        fusion::tuple<logic::tribool,iterator_range<typename Range::const_iterator> > parse_until(state_t stop_state, Range & range_) {
             //FIXME -- find a way to make better use of the Boost.String_algorithm classifiers
             logic::tribool parsed_ok(logic::indeterminate);
-            iterator_type start = boost::begin(range_),
+            typename Range::const_iterator start = boost::begin(range_),
                 current = start,
                 end = boost::end(range_);
-            range_type local_range = boost::make_iterator_range(start, end);
+            boost::iterator_range<typename Range::const_iterator>
+                local_range = boost::make_iterator_range(start, end);
             while (!boost::empty(local_range) && indeterminate(parsed_ok)) {
                 current = boost::begin(local_range);
                 if (state_ == stop_state) {

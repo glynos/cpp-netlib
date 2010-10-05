@@ -11,11 +11,21 @@
 */
 #include <boost/program_options.hpp>
 #include <boost/network/protocol/http.hpp>
+#include <boost/function_output_iterator.hpp>
 #include <string>
 #include <iostream>
 
 namespace po = boost::program_options;
 using namespace std;
+
+struct header_printer {
+    std::ostream & os;
+    header_printer(std::ostream & os_) : os(os_) {}
+    template <class Pair>
+    void operator()(Pair const & p) {
+        os << p.first << ": " << p.second << endl;
+    }
+};
 
 int main(int argc, char * argv[]) {
     po::options_description options("Allowed options");
@@ -55,7 +65,7 @@ int main(int argc, char * argv[]) {
 
     using namespace boost::network;
 
-    typedef http::basic_client<tags::http_keepalive_8bit_udp_resolve, 1, 1>
+    typedef http::basic_client<tags::http_async_8bit_tcp_resolve, 1, 0>
         http_client;
     
     http_client::request request(source);
@@ -66,14 +76,9 @@ int main(int argc, char * argv[]) {
     http_client::response response = client.get(request);
 
     if (show_headers) {
-        headers_range<http_client::response>::type headers_ = headers(response);
-        boost::range_iterator<headers_range<http_client::response>::type>::type header, past_end;
-        header = boost::begin(headers_);
-        past_end = boost::end(headers_);
-        while (header != past_end) {
-            cout << header->first << ": " << header->second << endl;
-            ++header;
-        };
+        headers_range<http_client::response>::type headers_ = response.headers();
+        std::copy(headers_.begin(), headers_.end(),
+            boost::make_function_output_iterator(header_printer(cout)));
         cout << endl;
     };
     
