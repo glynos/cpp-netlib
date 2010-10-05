@@ -24,9 +24,9 @@ Welcome
 =======
 
 The :mod:`cpp-netlib` is a library that provides application layer
-protocol support (HTTP, XMPP etc.) using modern C++ techniques.  It is
-light-weight, fast, cross-platform and is intended to be as easy to
-configure as possible.
+protocol support using modern C++ techniques.  It is light-weight,
+fast, cross-platform and is intended to be as easy to configure as
+possible.
 
 It is developed by people linked to the Boost_ community and will at
 some point in the future be submitted for review into Boost.  A
