@@ -7,10 +7,6 @@ common networking protocols.  The following set of examples describe a
 series of realistic examples that use the :mod:`cpp-netlib` for these
 kinds of application.
 
-.. todo::
-
-    Make the examples more accessible.
-
 .. toctree::
    :maxdepth: 2
 

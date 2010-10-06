@@ -4,24 +4,23 @@
  HTTP client
 *************
 
-.. todo::
-
-    Rewrite text, provide a CLI example.
-
 The first code example is the simplest thing you can do with the
 :mod:`cpp-netlib`.  The application is a simple HTTP client, which can
 be found in the subdirectory ``libs/network/example/http_client.cpp``.
 All we are doing is creating and sending an HTTP request to a server
-and printing the response body.  Without further ado, the code to do
-this is as follows:
+and printing the response body.  
+
+The Code
+========
+
+Without further ado, the code to do this is as follows:
 
 .. code-block:: c++
 
     #include <boost/network/protocol/http/client.hpp>
     #include <iostream>
     
-    int
-    main(int argc, char *argv[]) {
+    int main(int argc, char *argv[]) {
         using namespace boost::network;
 	
 	if (argc != 2) {
@@ -38,6 +37,29 @@ this is as follows:
   	return 0;
     }
 
+Building and Running The Code
+=============================
+
+To be build this example, you can follow the steps below without having to build
+the whole :mod:`cpp-netlib` distribution::
+
+    $ cd ~/cpp-netlib
+    $ g++ -o http_client1 libs/network/example/http_client1.cpp \
+    >     -I.                                                   \
+    >     -I$BOOST_ROOT                                         \
+    >     -L$BOOST_ROOT/stage/lib                               \
+    >     -lboost_system                                        \
+    >     -pthread
+
+You can then run this to get the Boost_ website::
+
+    $ ./http_client1 http://www.boost.org/
+
+.. _Boost: http://www.boost.org/
+
+Diving into the Code
+====================
+
 Since this is the first example, each line will be presented and
 explained in detail.
 
@@ -51,7 +73,7 @@ All the code needed for the HTTP client resides in this header.
 
     http::client client;
 
-First we create a ``client`` object.  The ``client`` contains all the
+First we create a ``client`` object.  The ``client`` abstracts all the
 connection and protocol logic.  The default HTTP client is version
 1.1, as specified in `RFC 2616`_.
 
