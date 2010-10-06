@@ -1,7 +1,7 @@
 .. _getting_started:
 
 *****************
- Getting started
+ Getting Started
 *****************
 
 Downloading an official release
@@ -43,6 +43,15 @@ http://svn.github.com/mikhailberis/cpp-netlib.git.
 .. _msysGit: http://code.google.com/p/msysgit/downloads/list
 .. _Subversion: http://subversion.tigris.org/
 
+.. note:: The :mod:`cpp-netlib` project is hosted on GitHub_ and follows the 
+   prescribed development model for GitHub_ based projects. This means in case
+   you want to submit patches, you will have to create a fork of the project
+   (read up on forking_) and then submit a pull request (read up on submitting
+   `pull requests`_).
+
+.. _forking: http://help.github.com/forking/
+.. _`pull requests`: http://help.github.com/pull-requests/
+
 Getting Boost
 =============
 
@@ -52,47 +61,105 @@ latest package can be found on the `Boost web-site`_.  The environment
 variable ``BOOST_ROOT`` must be defined, which must be the full path
 name of the top directory of the Boost distribution.  Although Boost
 is mostly header only, applications built using :mod:`cpp-netlib`
-still requires linking with `Boost.System`_.
+still requires linking with `Boost.System`_, `Boost.Date_time`_, and
+`Boost.Regex`_.
 
 .. _Boost: http://www.boost.org/doc/libs/release/more/getting_started/index.html
 .. _`Boost web-site`: http://www.boost.org/users/download/
 .. _`Boost.System`: http://www.boost.org/libs/system/index.html
+.. _`Boost.Date_time`: http://www.boost.org/libs/date_time/index.html
+.. _`Boost.Regex`: http://www.boost.org/libs/regex/index.html
 
-.. todo::
+.. note:: You can follow the steps in the `Boost Getting Started`_ guide to
+   install Boost into your development system.
 
-    Make this a little more accessible, perhaps with CLI examples.
+.. _`Boost Getting Started`:
+   http://www.boost.org/doc/libs/release/more/getting_started/index.html
 
 Getting CMake
 =============
 
-The :mod:`cpp-netlib` uses CMake_.
+The :mod:`cpp-netlib` uses CMake_ to generate platform-specific build files. If
+you intend to run the test suite, you can follow the instructions below.
+Otherwise, you don't need CMake to use :mod:`cpp-netlib` in your project. The
+:mod:`cpp-netlib` requires CMake version 2.8 or higher.
 
 .. _CMake: http://www.cmake.org/
 
-Open a command line in the :mod:`cpp-netlib` home directory.
-``cmake`` requires the code to be built out of source, so you need to
-create a separate directory.
+Let's assume that you have unpacked the :mod:`cpp-netlib` at the top of your
+HOME directory. On Unix-like systems you will typically be able to change into
+your HOME directory using the command ``cd ~``. This sample below assumes that
+the ``~/cpp-netlib`` directory exists, and is the top-level directory of the
+:mod:`cpp-netlib` release.
 
-Build Instructions
-==================
+Building with CMake
+===================
 
-Invoke ``cmake`` in the build directory, this generates a Makefile.
-Then, invoke ``make`` to build everything (unit tests and examples).
-To run the tests, invoke ``make test``.
+To build the tests that come with cpp-netlib, we first need to configure the
+build system to use our compiler of choice. This is done by running the
+``cmake`` command at the top-level directory of :mod:`cpp-netlib` with
+additional parameters::
 
-::
+    $ cd ~/cpp-netlib
+    $ cmake -DCMAKE_BUILD_TYPE=Debug \
+    >       -DCMAKE_C_COMPILER=gcc   \
+    >       -DCMAKE_CXX_COMPILER=g++ \
+    >       .
 
-    shell$ make
-    shell$ make test
+On Linux, this will generate the appropriate Makefiles that will enable you to
+build and run the tests and examples that come with :mod:`cpp-netlib`. To build
+the tests, you can run ``make`` in the same top-level directory of
+:mod:`cpp-netlib`::
 
-This will build all unit tests and examples (located in the
-``libs/network/tests`` and ``libs/network/examples`` subdirectory
-respectively). There is no library to build for :mod:`cpp-netlib`.
+    $ make
 
-.. todo::
+.. note:: Just like with traditional GNU Make, you can add the ``-j`` parameter
+   to specify how many parallel builds to run. In case you're in a sufficiently
+   powerful system and would like to parallelize the build into 4 jobs, you can
+   do this with::
 
-    Platform-specific instructions.
+       make -j4
 
-.. todo::
+   As a caveat, :mod:`cpp-netlib` is heavy on template metaprogramming and will
+   require a lot of computing and memory resources to build the individual
+   tests. Do this at the risk of thrashing_ your system.
 
-    Mailing list, issues, contacting developers etc.
+.. _thrashing: http://en.wikipedia.org/wiki/Thrashing_(computer_science)
+
+Once the build has completed, you can now run the test suite by issuing::
+
+    $ make test
+
+Building On Windows
+~~~~~~~~~~~~~~~~~~~
+
+If you're using the Microsoft Visual C++ compiler or the Microsoft Visual Studio
+IDE and you would like to build cpp-netlib from within Visual Studio, you can
+look for the solution and project files as the artifacts of the call to
+``cmake`` -- the file should be named ``cpp-netlib.sln`` (the solution) along
+with a number of project files for Visual Studio.
+
+Reporting Issues, Getting Support
+=================================
+
+In case you find yourself stuck or if you've found a bug (or you want to just
+join the discussion) you have a few options to choose from.
+
+For reporting bugs, feature requests, and asking questions about the
+implementation and/or the documentation, you can go to the GitHub issues page
+for the project at http://github.com/mikhailberis/cpp-netlib/issues.
+
+You can also opt to join the developers mailing list for a more personal
+interaction with the developers of the project. You can join the mailing list
+through https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel.
+
+You may also choose to get commercial support from the maintainers of the
+project, in which case you can reach them through:
+
+    Dean Michael Berris - <me@deanberris.com>
+    
+    Glyn Matthews
+    
+    Mike Dickey
+     
+
