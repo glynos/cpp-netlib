@@ -13,6 +13,9 @@ defining type traits. In the :mod:`cpp-netlib` however the type traits
 are defined on opaque tag types which serve to associate results to a
 family of metafunctions.
 
+Template Specialization
+-----------------------
+
 To illustrate this point, let's define a tag ``default_`` which we use
 to denote the default implementation of a certain type ``foo``. For
 instance we decide that the default string type we will use for
@@ -38,7 +41,78 @@ translate to:
         typedef std::string type;
     };
 
-Then in the definition of the type ``foo`` we use this type function
+Template Metaprogramming
+------------------------
+
+Starting with version 0.7, the tag dispatch mechanism changed slightly to use
+Boost.MPL_. The idea is still the same, although we can get a little smarter
+than just using template specializations. Instead of just defining an opaque
+type ``default_``, we use the Boost.MPL equivalent of a vector to define which
+root types of properties this ``default_`` tag supports. The idea is to make the
+opaque type ``default_`` inherit property tags which the library supports
+internally as definite extension points.
+
+.. _Boost.MPL: http://www.boost.org/libs/mpl/index.html
+
+Our definition of the ``default_`` tag will then look something like the
+following:
+
+.. code-block:: c++
+
+    typedef mpl::vector<default_string> default_tags;
+
+    template <class Tag>
+    struct components;
+
+    typedef mpl::inherit_linearly<
+        default_tags,
+        mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>
+        >::type default_;
+
+    template <class Tag>
+    struct components<default_> {
+        typedef default_tags type;
+    };
+
+In the above listing, ``default_string`` is what we call a "root" tag which is
+meant to be combined with other "root" tags to form composite tags. In this case
+our composite tag is the tag ``default_``. There are a number of these "root"
+tags that :mod:`cpp-netlib` provides. These are in the namespace
+``boost::network::tags`` and are defined in ``boost/network/tags.hpp``.
+
+Using this technique we change slightly our definition of the ``string``
+metafunction class into this:
+
+.. code-block:: c++
+
+    template <class Tag>
+    struct unsupported_tag;
+
+    template <class Tag>
+    struct string :
+        mpl::if_<
+            is_base_of<
+                Tag,
+                tags::default_string
+            >,
+            std::string,
+            unsupported_tag<Tag>
+        >
+    {};
+
+Notice that we don't have the typedef for ``type`` in the body of ``string``
+anymore, but we do inherit from ``mpl::if_``. Since ``mpl::if_`` is a template
+metafunction itself, it contains a definition of the resulting ``type`` which
+``string`` inherits.
+
+You can see the real definition of the ``string`` metafunction in
+``boost/network/traits/string.hpp``.
+
+Using Tags
+----------
+
+Once we have the defined tag, we can then use this in the definition of our
+types. In the definition of the type ``foo`` we use this type function
 ``string`` and pass the tag type parameter to determine what to use as
 the string type in the context of the type ``foo``. In code this would
 translate into:
@@ -55,10 +129,9 @@ translate into:
 Using this approach we can support different types of strings for
 different tags on the type ``foo``. In case we want to use a different
 type of string for the tag ``default_`` we only change the
-specialization of ``string<default_>``. In the other case that we want
-to use a different tag to define the functionality of ``foo``, all we
-have to do is implement specializations of the type functions like
-``string`` for that different tag.
+composition of the ``string_tags`` MPL vector. For example, in :mod:`cpp-netlib`
+there is a root tag ``default_wstring`` which causes the ``string`` metafunction 
+to define ``std::wstring`` as the resulting type.
 
 The approach also allows for the control of the structure and features
 of types like ``foo`` based on the specialization of the tag. Whole
@@ -97,16 +170,3 @@ definition of extension points that ensures type-safety and
 invariants. This keeps the whole extension mechanism static and yet
 flexible.
 
-One drawback with this approach is the verbosity at which extensions
-and specializations are to be done which introduces additional
-pressure on the compiler at compile-time computations. Because this
-technique relies heavily on the C++ template mechanism, compile times
-may be greatly increased.
-
-The potential for tag and implementation explosion is also high. If
-the implementor is not careful in controlling the number of tags and
-type functions that take the tag as an input, it can get out of hand
-quickly. The suggestion is to define acceptable defaults and leverage
-re-use of existing tags as much as possible. Using Boost.MPL data
-structures like map's and/or control structures like ``if_`` and
-``switch_`` can also help with heavily-used type functions.

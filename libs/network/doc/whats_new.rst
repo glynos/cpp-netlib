@@ -8,7 +8,10 @@
 ---------------------
 
 * Radical documentation overhaul
-* Asynchronous HTPP client
+* Asynchronous HTTP client
+* Tag dispatch overhaul, using Boost.MPL
+* HTTP Client Facade refactoring
+* Bug fixes for HTTP 1.1 response parsing
 
 :mod:`cpp-netlib` 0.6
 ---------------------
