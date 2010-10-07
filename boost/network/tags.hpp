@@ -38,6 +38,7 @@ namespace boost { namespace network { namespace tags {
     template <class Tag>
     struct components;
 
+    // FIXME make this a preprocessor macro!
     typedef mpl::inherit_linearly<
         http_default_8bit_tcp_resolve_tags,
         mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>
