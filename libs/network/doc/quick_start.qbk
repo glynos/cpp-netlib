@@ -8,6 +8,11 @@
 
 [section:quick_start Quick Start]
 
+[heading HTTP Client]
+
+[import ../example/http/one_liner.cpp]
+[http_one_liner_main]
+
 [/ section:hello_world_server Hello World Server]
 
 [heading Hello World Server]

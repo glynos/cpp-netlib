@@ -1,5 +1,5 @@
 
-//          Copyright Dean Michael Berris 2007.
+//          Copyright Dean Michael Berris 2007-2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,55 +7,43 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__
 
-#include <boost/network/traits/string.hpp>
+#include <boost/network/message/directives/detail/string_directive.hpp>
+#include <boost/network/message/directives/detail/string_value.hpp>
 
-
-/** destination.hpp
- *
- * Defines the types involved and the semantics of adding
- * destination information into message objects.
- *
- * WARNING: DO NOT INCLUDE THIS HEADER DIRECTLY. THIS REQUIRES
- * TYPES TO BE DEFINED FROM EARLIER FILES THAT INCLUDE THIS
- * HEADER.
- */
 namespace boost { namespace network {
-    
-namespace impl {
-template <class T>
-struct destination_directive {
 
-    explicit destination_directive (T destination)
-        : _destination(destination)
-    { };
+    namespace impl {
 
-    template <
-        class MessageTag
-        >
-    void operator() (basic_message<MessageTag> & msg) const {
-        msg.destination() = _destination;
-    };
+        struct destination_directive_base {
 
-private:
-    
-    T _destination;
-};
-} // namespace impl
+            template <class Message>
+            struct string_visitor : boost::static_visitor<> {
+                Message const & message_;
+                string_visitor(Message const & message)
+                    : message_(message) {}
+                void operator()(typename detail::string_value<typename Message::tag>::type const & destination) const {
+                    message_.destination(destination);
+                }
+                template <class T> void operator() (T const &) const {
+                    // FIXME -- fail here!
+                }
+            };
 
+        };
+        
+        typedef detail::string_directive<destination_directive_base> destination_directive;
 
-inline
-impl::destination_directive<std::string>
-destination(std::string destination_) {
-    return impl::destination_directive<std::string>(destination_);
-}
+    } // namespace impl
 
-inline
-impl::destination_directive<std::wstring>
-destination(std::wstring destination_) {
-    return impl::destination_directive<std::wstring>(destination_);
-}
+    template <class T>
+    inline impl::destination_directive const
+    destination(T const & destination_) {
+        return impl::destination_directive(destination_);
+    }
+
 } // namespace network
-} // namespace boost
 
+} // namespace boost
+ 
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_DESTINATION_HPP__

@@ -13,7 +13,15 @@
 
 using namespace boost::network;
 
-typedef boost::mpl::list<tags::http_default_8bit_tcp_resolve, tags::http_default_8bit_udp_resolve, tags::http_keepalive_8bit_tcp_resolve, tags::http_keepalive_8bit_udp_resolve, tags::http_server, tags::default_string, tags::default_wstring> tag_types;
+typedef boost::mpl::list<
+    tags::http_default_8bit_tcp_resolve, 
+    tags::http_default_8bit_udp_resolve, 
+    tags::http_keepalive_8bit_tcp_resolve, 
+    tags::http_keepalive_8bit_udp_resolve, 
+    tags::http_server, 
+    tags::default_string, 
+    tags::default_wstring
+> tag_types;
 
 struct string_header_name {
     static std::string string;
@@ -117,7 +125,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, tag_types) {
     basic_message<T> copy(instance);
     BOOST_CHECK_EQUAL(headers(copy).count(header_name<T>::string), static_cast<std::size_t>(1));
     typename headers_range<basic_message<T> >::type range = headers(copy)[header_name<T>::string];
-    BOOST_CHECK (begin(range) != end(range));
+    BOOST_CHECK (boost::begin(range) != boost::end(range));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(swap_test, T, tag_types) {
@@ -134,19 +142,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(headers_directive_test, T, tag_types) {
     instance << header(header_name<T>::string, header_value<T>::string);
     BOOST_CHECK_EQUAL ( headers(instance).count(header_name<T>::string), static_cast<std::size_t>(1) );
     typename headers_range<basic_message<T> >::type range = headers(instance)[header_name<T>::string];
-    BOOST_CHECK (begin(range) != end(range));
+    BOOST_CHECK (boost::begin(range) != boost::end(range));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(body_directive_test, T, tag_types) {
     basic_message<T> instance;
-    instance << body(body_data<T>::string);
-    BOOST_CHECK ( body(instance) == body_data<T>::string );
+    instance << ::boost::network::body(body_data<T>::string);
+    typename string<T>::type body_string = body(instance);
+    BOOST_CHECK ( body_string == body_data<T>::string );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(source_directive_test, T, tag_types) {
     basic_message<T> instance;
-    instance << source(source_data<T>::string);
-    BOOST_CHECK ( source(instance) == source_data<T>::string );
+    instance << ::boost::network::source(source_data<T>::string);
+    typename string<T>::type source_string = source(instance);
+    BOOST_CHECK ( source_string == source_data<T>::string );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(destination_directive_test, T, tag_types) {
@@ -160,7 +170,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(remove_header_directive_test, T, tag_types) {
     instance << header(header_name<T>::string, header_value<T>::string)
         << remove_header(header_name<T>::string);
     typename headers_range<basic_message<T> >::type range = headers(instance);
-    BOOST_CHECK ( begin(range) == end(range) );
+    BOOST_CHECK ( boost::begin(range) == boost::end(range) );
 }
 
 

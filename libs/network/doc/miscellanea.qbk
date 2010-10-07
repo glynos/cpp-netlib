@@ -1,0 +1,39 @@
+[/
+  (C) Copyright 2009, 2010 Glyn Matthews.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[section:miscellanea Miscellanea]
+
+[heading Where to find the __cnl__]
+
+Official releases of the __cnl__ can be found [@http://github.com/cpp-netlib/cpp-netlib/downloads on github].
+
+[heading How to get the source code]
+
+Since this project uses __git__, there's not any single place to download the source code.  However, pre-releases are prepared at =git://github.com/mikhailberis/cpp-netlib.git=.  This is where the most up-to-date code can be found.
+
+To clone this repository, run the following command in a shell:
+
+ shell$ git clone git://github.com/mikhailberis/cpp-netlib.git
+
+This is already enough to start looking at the source code.  __git__ is very powerful and it should be enough for now to refer to the [@http://git-scm.com/documentation documentation] to do more complex things.
+
+For users of Git on Windows, more information can be found in [@http://book.git-scm.com/6_git_on_windows.html this screencast].
+
+Finally, for non-users of Git, Github also offers the possibility to download the source as a zip file or tar archive.
+
+[heading How to build the __cnl__]
+
+Since the __cnl__ is a header-only library, it doesn't need to be built to be used (though it does need to link to [@http www.boost.org/doc/libs/release/libs/system/index.html Boost.System].  To build and run the unit tests and examples the preferred way is to use [@http://www.cmake.org/ CMake], although Jamfiles are also provided.
+
+ shell$ cd $CPP_NETLIB_DIR
+ shell$ mkdir -p build
+ shell$ cd build
+ shell$ cmake ..
+ shell$ make
+
+[endsect] [/ miscellanea]

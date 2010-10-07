@@ -9,6 +9,13 @@
 #include <boost/network/tags.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/ip/udp.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/network/support/is_tcp.hpp>
+#include <boost/network/support/is_udp.hpp>
+#include <boost/network/support/is_http.hpp>
+#include <boost/static_assert.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -16,28 +23,31 @@ namespace boost { namespace network { namespace http {
     struct unsupported_tag;
 
     template <class Tag>
-    struct resolver {
-        typedef unsupported_tag<Tag> type;
-    };
-
-    template <>
-    struct resolver<tags::http_default_8bit_tcp_resolve> {
-        typedef boost::asio::ip::tcp::resolver type;
-    };
-
-    template <>
-    struct resolver<tags::http_default_8bit_udp_resolve> {
-        typedef boost::asio::ip::udp::resolver type;
-    };
-
-    template <>
-    struct resolver<tags::http_keepalive_8bit_tcp_resolve> {
-        typedef boost::asio::ip::tcp::resolver type;
-    };
-
-    template <>
-    struct resolver<tags::http_keepalive_8bit_udp_resolve> {
-        typedef boost::asio::ip::udp::resolver type;
+    struct resolver :
+        mpl::if_<
+            mpl::and_<
+                is_tcp<Tag>,
+                is_http<Tag>
+            >,
+            boost::asio::ip::tcp::resolver,
+            typename mpl::if_<
+                mpl::and_<
+                    is_udp<Tag>,
+                    is_http<Tag>
+                >,
+                boost::asio::ip::udp::resolver,
+                unsupported_tag<Tag>
+            >::type
+        >
+    {
+        BOOST_STATIC_ASSERT((
+            mpl::not_<
+                mpl::and_<
+                    is_udp<Tag>,
+                    is_tcp<Tag>
+                >
+            >::value
+            ));
     };
 
 } // namespace http

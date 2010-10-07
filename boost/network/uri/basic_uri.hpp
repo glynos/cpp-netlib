@@ -78,6 +78,10 @@ namespace boost { namespace network { namespace uri {
                 return parts_.fragment ? *parts_.fragment : string_type();
             }
 
+            string_type raw() const {
+                return raw_;
+            }
+
             bool valid() const {
                 return valid_;
             }
@@ -100,7 +104,7 @@ namespace boost { namespace network { namespace uri {
     template <class Tag> 
         struct basic_uri : uri_base<Tag> {
             using uri_base<Tag>::operator=;
-            using uri_base<Tag>::string_type;
+            using typename uri_base<Tag>::string_type;
             using uri_base<Tag>::operator==;
             using uri_base<Tag>::operator!=;
             basic_uri() : uri_base<Tag>() {}

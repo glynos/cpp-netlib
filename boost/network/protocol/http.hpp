@@ -11,8 +11,8 @@
 // Author: Dean Michael Berris
 // Date Created: Oct. 08, 2007
 
-#include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
+#include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/client.hpp>
 #include <boost/network/protocol/http/errors.hpp>
 

@@ -13,6 +13,7 @@
 #include <boost/network/protocol/http/detail/connection_helper.hpp>
 #include <boost/network/protocol/http/impl/sync_connection_base.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/network/protocol/http/response.hpp>
 #include <utility>
 
 #ifndef BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
@@ -62,7 +63,7 @@ namespace boost { namespace network { namespace http {
                         pimpl->init_socket(request_.host(), lexical_cast<string_type>(request_.port()));
                     }
                     response_ = basic_response<Tag>();
-                    response_ << source(request_.host());
+                    response_ << ::boost::network::source(request_.host());
 
                     pimpl->send_request_impl(method, request_);
                     boost::asio::streambuf response_buffer;
@@ -89,7 +90,7 @@ namespace boost { namespace network { namespace http {
                     }
 
                     typename headers_range<basic_response<Tag> >::type connection_range = headers(response_)["Connection"];
-                    if (version_major == 1 && version_minor == 1 && !empty(connection_range) && begin(connection_range)->second == string_type("close")) {
+                    if (version_major == 1 && version_minor == 1 && !empty(connection_range) && boost::begin(connection_range)->second == string_type("close")) {
                         pimpl->close_socket();
                     } else if (version_major == 1 && version_minor == 0) {
                         pimpl->close_socket();
@@ -99,8 +100,8 @@ namespace boost { namespace network { namespace http {
                         boost::uint16_t status = response_.status();
                         if (status >= 300 && status <= 307) {
                             typename headers_range<basic_response<Tag> >::type location_range = headers(response_)["Location"];
-                            typename range_iterator<typename headers_range<basic_request<Tag> >::type>::type location_header = begin(location_range);
-                            if (location_header != end(location_range)) {
+                            typename range_iterator<typename headers_range<basic_request<Tag> >::type>::type location_header = boost::begin(location_range);
+                            if (location_header != boost::end(location_range)) {
                                 request_.uri(location_header->second);
                                 connection_ptr connection_;
                                 connection_ = get_connection_(resolver_, request_);
@@ -109,7 +110,6 @@ namespace boost { namespace network { namespace http {
                             } else throw std::runtime_error("Location header not defined in redirect response.");
                         }
                     }
-
                     return response_;
                 } while(true);
             }
@@ -137,12 +137,12 @@ namespace boost { namespace network { namespace http {
                     , follow_redirect_
                     , request_.host()
                     , lexical_cast<string_type>(request_.port())
-                    , bind(
+                    , boost::bind(
                         &pooled_connection_policy<Tag,version_major,version_minor>::resolve,
                         this,
                         _1, _2, _3
                         )
-                    , bind(
+                    , boost::bind(
                         &pooled_connection_policy<Tag,version_major,version_minor>::get_connection,
                         this,
                         _1, _2

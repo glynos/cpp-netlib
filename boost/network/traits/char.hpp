@@ -7,6 +7,9 @@
 #define BOOST_NETWORK_TRAITS_CHAR_HPP
 
 #include <boost/network/tags.hpp>
+#include <boost/network/support/is_default_string.hpp>
+#include <boost/network/support/is_default_wstring.hpp>
+#include <boost/mpl/if.hpp>
 
 namespace boost { namespace network {
 
@@ -14,19 +17,17 @@ namespace boost { namespace network {
     struct unsupported_tag;
 
     template <class Tag>
-    struct char_ {
-        typedef unsupported_tag<Tag> type;
-    };
-
-    template <>
-    struct char_<tags::http_default_8bit_tcp_resolve> {
-        typedef char type;
-    };
-
-    template <>
-    struct char_<tags::http_default_8bit_udp_resolve> {
-        typedef char type;
-    };
+    struct char_ :
+        mpl::if_<
+            is_default_string<Tag>,
+            char,
+            typename mpl::if_<
+                is_default_wstring<Tag>,
+                wchar_t,
+                unsupported_tag<Tag>
+            >::type
+        >
+    {};
 
 } // namespace network
 

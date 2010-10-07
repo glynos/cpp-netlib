@@ -10,40 +10,55 @@
 #include <boost/network/protocol/http/message.hpp>
 #include <boost/network/message.hpp>
 
+#include <boost/cstdint.hpp>
+
+#include <boost/network/protocol/http/message/traits/version.hpp>
+
+#include <boost/network/protocol/http/message/directives/status_message.hpp>
+#include <boost/network/protocol/http/message/directives/version.hpp>
+#include <boost/network/protocol/http/message/directives/status.hpp>
+#include <boost/network/protocol/http/message/directives/uri.hpp>
+
+#include <boost/network/protocol/http/message/modifiers/uri.hpp>
+#include <boost/network/protocol/http/message/modifiers/version.hpp>
+#include <boost/network/protocol/http/message/modifiers/status.hpp>
+#include <boost/network/protocol/http/message/modifiers/status_message.hpp>
+#include <boost/network/protocol/http/message/modifiers/source.hpp>
+#include <boost/network/protocol/http/message/modifiers/destination.hpp>
+#include <boost/network/protocol/http/message/modifiers/headers.hpp>
+#include <boost/network/protocol/http/message/modifiers/body.hpp>
+
+#include <boost/network/protocol/http/message/wrappers/version.hpp>
+#include <boost/network/protocol/http/message/wrappers/status.hpp>
+#include <boost/network/protocol/http/message/wrappers/status_message.hpp>
+#include <boost/network/protocol/http/message/wrappers/destination.hpp>
+#include <boost/network/protocol/http/message/wrappers/source.hpp>
+
+#include <boost/network/protocol/http/response_concept.hpp>
+#include <boost/network/protocol/http/message/async_message.hpp>
+#include <boost/network/protocol/http/message/message_base.hpp>
+
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
-    struct basic_response : public message_impl<Tag> {
-    private:
-        typedef message_impl<Tag> base_type;
+    struct basic_response : public message_base<Tag>::type {
+
         typedef typename string<Tag>::type string_type;
 
-        string_type version_;
-        unsigned int status_;
-        string_type status_message_;
+    private:
+        typedef typename message_base<Tag>::type base_type;
+
     public:
 
         typedef Tag tag;
 
         basic_response()
-        : base_type(), version_(), status_(0u), status_message_()
-        { };
+        : base_type()
+        {}
 
         basic_response(basic_response const & other)
-        : base_type(other), version_(other.version_), status_(other.status_), status_message_(other.status_message_)
-        { };
-
-        string_type & version() {
-            return version_;
-        };
-
-        unsigned int & status() {
-            return status_;
-        };
-
-        string_type & status_message() {
-            return status_message_;
-        };
+        : base_type(other)
+        {}
 
         basic_response & operator=(basic_response rhs) {
             rhs.swap(*this);
@@ -51,19 +66,18 @@ namespace boost { namespace network { namespace http {
         };
 
         void swap(basic_response & other) {
-            message_impl<Tag> & base_ref(other);
-            message_impl<Tag> & this_ref(*this);
-            this_ref.swap(base_ref);
-            std::swap(other.version_, version_);
-            std::swap(other.status_, status_);
-            std::swap(other.status_message_, status_message_);
+            base_type & base_ref(other),
+                & this_ref(*this);
+            std::swap(this_ref, base_ref);
         };
     };
 
     template <class Tag>
-        inline void swap(basic_response<Tag> & lhs, basic_response<Tag> & rhs) {
-            lhs.swap(rhs);
-        }
+    inline void swap(basic_response<Tag> & lhs, basic_response<Tag> & rhs) {
+        lhs.swap(rhs);
+    }
+
+    BOOST_CONCEPT_ASSERT((Response<basic_response<tags::http_default_8bit_udp_resolve> >));
 
 } // namespace http
 
@@ -72,5 +86,23 @@ namespace boost { namespace network { namespace http {
 } // namespace boost
 
 #include <boost/network/protocol/http/impl/response.ipp>
+
+namespace boost { namespace network { namespace http {
+
+    template <class Tag, class Directive>
+    basic_response<Tag> & operator<<(
+        basic_response<Tag> & message,
+        Directive const & directive
+        )
+    {
+        directive(message);
+        return message;
+    }
+
+} // namespace http
+
+} // namespace network
+
+} // namespace boost
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP

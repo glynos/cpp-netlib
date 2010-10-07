@@ -1,5 +1,5 @@
 
-//          Copyright Dean Michael Berris 2007,2009.
+//          Copyright Dean Michael Berris 2007,2009,2010.
 //          Copyright Michael Dickey 2008.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
@@ -18,6 +18,11 @@
 #include <boost/network/protocol/http/header.hpp>
 #include <boost/network/traits/vector.hpp>
 
+#include <boost/network/protocol/http/message/async_message.hpp>
+#include <boost/network/support/is_async.hpp>
+
+#include <boost/cstdint.hpp>
+
 namespace boost { namespace network { namespace http {
 
     /** request.hpp
@@ -28,14 +33,25 @@ namespace boost { namespace network { namespace http {
       */
 
     template <class Tag>
-    class basic_request : public basic_message<Tag>
+    struct request_base 
+        : mpl::if_<
+            is_async<Tag>,
+            async_message<Tag>,
+            basic_message<Tag>
+        >
+    {};
+
+    template <class Tag>
+    class basic_request : public request_base<Tag>::type
     {
 
-        boost::network::uri::http::uri uri_;
+        mutable boost::network::uri::http::uri uri_;
+        typedef typename request_base<Tag>::type base_type;
 
     public:
         typedef Tag tag;
         typedef typename string<Tag>::type string_type;
+        typedef boost::uint16_t port_type;
 
         explicit basic_request(string_type const & uri_)
         : uri_(uri_) 
@@ -46,11 +62,11 @@ namespace boost { namespace network { namespace http {
         }
 
         basic_request() 
-        : basic_message<Tag>()
+        : base_type()
         { }
 
         basic_request(basic_request const & other) 
-        : basic_message<Tag>(other), uri_(other.uri_)
+        : base_type(other), uri_(other.uri_)
         { }
 
         basic_request & operator=(basic_request rhs) {
@@ -60,8 +76,8 @@ namespace boost { namespace network { namespace http {
 
         void swap(basic_request & other) {
             using boost::network::uri::swap;
-            basic_message<Tag> & base_ref(other);
-            basic_message<Tag> & this_ref(*this);
+            base_type & base_ref(other);
+            basic_request<Tag> & this_ref(*this);
             base_ref.swap(this_ref);
             swap(other.uri_, this->uri_);
         }
@@ -70,7 +86,7 @@ namespace boost { namespace network { namespace http {
             return uri_.host();
         }
 
-        unsigned int port() const {
+        port_type port() const {
             return uri_.port();
         }
 
@@ -90,6 +106,14 @@ namespace boost { namespace network { namespace http {
             return uri_.scheme();
         }
 
+        void uri(string_type const & new_uri) const {
+            uri_ = new_uri;
+        }
+
+        boost::network::uri::http::uri const uri() const {
+            return uri_;
+        }
+
     };
 
     /** This is the implementation of a POD request type
@@ -104,6 +128,7 @@ namespace boost { namespace network { namespace http {
         typedef tags::http_server tag;
         typedef string<tags::http_server>::type string_type;
         typedef vector<tags::http_server>::apply<request_header>::type vector_type;
+        typedef boost::uint16_t port_type;
         string_type method;
         string_type uri;
         boost::uint8_t http_version_major;

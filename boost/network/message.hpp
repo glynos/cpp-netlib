@@ -6,23 +6,22 @@
 #ifndef __NETWORK_MESSAGE_HPP__
 #define __NETWORK_MESSAGE_HPP__
 
-#include <map>
-#include <string>
-
-
-// include message declaration
 #include "boost/network/message_fwd.hpp"
-
-// include traits implementation
 #include <boost/network/traits/string.hpp>
 #include <boost/network/traits/ostringstream.hpp>
 #include <boost/network/traits/headers_container.hpp>
-
-// include directives base
 #include <boost/network/detail/directive_base.hpp>
-
-// include wrappers base
 #include <boost/network/detail/wrapper_base.hpp>
+#include <boost/network/message/directives.hpp>
+#include <boost/network/message/wrappers.hpp>
+#include <boost/network/message/transformers.hpp>
+
+#include <boost/network/message/modifiers/add_header.hpp>
+#include <boost/network/message/modifiers/remove_header.hpp>
+#include <boost/network/message/modifiers/clear_headers.hpp>
+#include <boost/network/message/modifiers/source.hpp>
+#include <boost/network/message/modifiers/destination.hpp>
+#include <boost/network/message/modifiers/body.hpp>
 
 #include <boost/network/message/message_concept.hpp>
 
@@ -61,22 +60,38 @@ namespace boost { namespace network {
         }
 
         void swap(basic_message<Tag> & other) {
-            other._headers.swap(_headers);
-            other._body.swap(_body);
-            other._source.swap(_source);
-            other._destination.swap(_destination);
+            std::swap(other._headers, _headers);
+            std::swap(other._body, _body);
+            std::swap(other._source, _source);
+            std::swap(other._destination, _destination);
         }
 
         headers_container_type & headers() {
             return _headers;
         }
 
-        headers_container_type headers() const {
+        void headers(headers_container_type const & headers_) const {
+            _headers = headers_;
+        }
+
+        void add_header(typename headers_container_type::value_type const & pair_) const {
+            _headers.insert(pair_);
+        }
+
+        void remove_header(typename headers_container_type::key_type const & key) const {
+            _headers.erase(key);
+        }
+
+        headers_container_type & headers() const {
             return _headers;
         }
 
         string_type & body() {
             return _body;
+        }
+
+        void body(string_type const & body_) const {
+            _body = body_;
         }
 
         string_type body() const {
@@ -87,12 +102,20 @@ namespace boost { namespace network {
             return _source;
         }
 
+        void source(string_type const & source_) const {
+            _source = source_;
+        }
+
         string_type source() const {
             return _source;
         }
 
         string_type & destination() {
             return _destination;
+        }
+
+        void destination(string_type const & destination_) const {
+            _destination = destination_;
         }
 
         string_type destination() const {
@@ -104,10 +127,10 @@ namespace boost { namespace network {
         friend struct detail::directive_base<Tag> ;
         friend struct detail::wrapper_base<Tag> ;
 
-        headers_container_type _headers;
-        string_type _body;
-        string_type _source;
-        string_type _destination;
+        mutable headers_container_type _headers;
+        mutable string_type _body;
+        mutable string_type _source;
+        mutable string_type _destination;
     };
 
     template <class Tag>
@@ -121,15 +144,6 @@ BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_wstrin
 
 } // namespace network
 } // namespace boost
-
-#include <boost/network/message/directives.hpp>
-    // pull in directives header file
-
-#include <boost/network/message/wrappers.hpp>
-    // pull in wrappers header file
-
-#include <boost/network/message/transformers.hpp>
-    // pull in transformer header file
 
 #endif // __NETWORK_MESSAGE_HPP__
 

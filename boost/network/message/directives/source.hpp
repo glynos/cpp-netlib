@@ -1,5 +1,5 @@
 
-//          Copyright Dean Michael Berris 2007.
+//          Copyright Dean Michael Berris 2007-2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,53 +7,43 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_SOURCE_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_SOURCE_HPP__
 
+#include <boost/network/message/directives/detail/string_directive.hpp>
+#include <boost/network/message/directives/detail/string_value.hpp>
 
-#include <boost/network/traits/string.hpp>
+#include <boost/network/support/is_default_string.hpp>
 
-
-/** source.hpp
- *
- * Defines the types involved and the semantics of adding
- * source information into message objects.
- *
- * WARNING: DO NOT INCLUDE THIS HEADER DIRECTLY. THIS REQUIRES
- * TYPES TO BE DEFINED FROM EARLIER FILES THAT INCLUDE THIS
- * HEADER.
- */
 namespace boost { namespace network {
-    
-namespace impl {
-template <
-    class T
-    >
-struct source_directive {
 
-    explicit source_directive (T source)
-        : _source(source)
-    { };
+    namespace impl {
 
-    template <class MessageTag>
-    void operator() (basic_message<MessageTag> & msg) const {
-        msg.source() = _source;
+        struct source_directive_base {
+
+            template <class Message>
+            struct string_visitor : boost::static_visitor<> {
+                Message const & message_;
+                string_visitor(Message const & message)
+                    : message_(message) {}
+                string_visitor(string_visitor const & other)
+                    : message_(other.message_) {}
+                void operator()(typename detail::string_value<typename Message::tag>::type const & source) const {
+                    message_.source(source);
+                }
+                template <class T> void operator()(T const & source) const {
+                    // fail at compile time?
+                }
+            };
+
+        };
+
+        typedef detail::string_directive<source_directive_base> source_directive;
+
+    } // namespace impl
+
+    template <class Input>
+    inline impl::source_directive const source(Input const & input) {
+        return impl::source_directive(input);
     }
-            
-private:
-    
-    mutable T _source;
-};
-} // namespace impl
 
-inline
-impl::source_directive<std::string>
-source(std::string source_) {
-    return impl::source_directive<std::string>(source_);
-}
-
-inline
-impl::source_directive<std::wstring>
-source(std::wstring source_) {
-    return impl::source_directive<std::wstring>(source_);
-}
 } // namespace network
 } // namespace boost
 

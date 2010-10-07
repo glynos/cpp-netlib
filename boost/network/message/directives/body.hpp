@@ -1,5 +1,5 @@
 
-//          Copyright Dean Michael Berris 2007.
+//          Copyright Dean Michael Berris 2007-2010.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,63 +7,48 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_BODY_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_BODY_HPP__
 
-#include <boost/network/traits/string.hpp>
+#include <boost/network/message/directives/detail/string_directive.hpp>
+#include <boost/network/message/directives/detail/string_value.hpp>
 
-
-/** body.hpp
- *
- * Defines the types involved and the semantics of adding
- * body contents into message objects.
- *
- * WARNING: DO NOT INCLUDE THIS HEADER DIRECTLY. THIS REQUIRES
- * TYPES TO BE DEFINED FROM EARLIER FILES THAT INCLUDE THIS
- * HEADER.
- */
 namespace boost { namespace network {
-namespace impl {
-template <
-    class T
-    >
-struct body_directive {
 
-    explicit body_directive(T body) :
-        _body(body)
-    { };
+    namespace impl {
 
-    template <class MessageTag>
-    void operator() (basic_message<MessageTag> & msg) const {
-        msg.body() = _body;
+        struct body_directive_base {
+
+            template <class Message>
+            struct string_visitor : boost::static_visitor<> {
+                Message const & message_;
+                string_visitor(Message const & message)
+                    : message_(message) {}
+                void operator()(typename detail::string_value<typename Message::tag>::type const & body) const {
+                    message_.body(body);
+                }
+                template <class T> void operator()(T const &) const {
+                    // FIXME -- fail here
+                }
+            };
+
+        };
+
+        typedef detail::string_directive<body_directive_base> body_directive;
+
+    } // namespace impl
+
+
+    inline impl::body_directive const body(string<tags::default_string>::type const & input) {
+        return impl::body_directive(input);
     }
 
-private:
+    inline impl::body_directive const body(string<tags::default_wstring>::type const & input) {
+        return impl::body_directive(input);
+    }
 
-    T _body;
-};
-} // namespace impl
+    template <class InputType>
+    inline impl::body_directive const body(boost::shared_future<InputType> const & input) {
+        return impl::body_directive(input);
+    }
 
-
-// template <
-//     class T
-//     >
-// inline
-// impl::body_directive<T>
-// body(T body_, boost::disable_if<T::message>::type) {
-//     return impl::body_directive<T>(body_);
-// }
-
-
-inline
-impl::body_directive<std::string>
-body(std::string body_) {
-    return impl::body_directive<std::string>(body_);
-}
-
-
-inline
-impl::body_directive<std::wstring>
-body(std::wstring body_) {
-    return impl::body_directive<std::wstring>(body_);
-}
 } // namespace network
 } // namespace boost
 

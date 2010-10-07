@@ -9,6 +9,10 @@
 #include <boost/network/tags.hpp>
 #include <boost/network/protocol/http/policies/simple_connection.hpp>
 #include <boost/network/protocol/http/policies/pooled_connection.hpp>
+#include <boost/network/protocol/http/policies/async_connection.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_simple.hpp>
+#include <boost/network/support/is_keepalive.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -16,29 +20,21 @@ namespace boost { namespace network { namespace http {
     struct unsupported_tag;
 
     template <class Tag, unsigned version_major, unsigned version_minor>
-    struct connection_policy {
-        typedef unsupported_tag<Tag> type;
-    };
-
-    template <unsigned version_major, unsigned version_minor>
-    struct connection_policy<tags::http_default_8bit_udp_resolve, version_major, version_minor> {
-        typedef simple_connection_policy<tags::http_default_8bit_udp_resolve, version_major, version_minor> type;
-    };
-
-    template <unsigned version_major, unsigned version_minor>
-    struct connection_policy<tags::http_default_8bit_tcp_resolve, version_major, version_minor> {
-        typedef simple_connection_policy<tags::http_default_8bit_tcp_resolve, version_major, version_minor> type;
-    };
-
-    template <unsigned version_major, unsigned version_minor>
-    struct connection_policy<tags::http_keepalive_8bit_udp_resolve, version_major, version_minor> {
-        typedef pooled_connection_policy<tags::http_keepalive_8bit_udp_resolve, version_major, version_minor> type;
-    };
-
-    template <unsigned version_major, unsigned version_minor>
-    struct connection_policy<tags::http_keepalive_8bit_tcp_resolve, version_major, version_minor> {
-        typedef pooled_connection_policy<tags::http_keepalive_8bit_tcp_resolve, version_major, version_minor> type;
-    };
+    struct connection_policy :
+        mpl::if_<
+            is_async<Tag>,
+            async_connection_policy<Tag,version_major,version_minor>,
+            typename mpl::if_<
+                is_simple<Tag>,
+                simple_connection_policy<Tag,version_major,version_minor>,
+                typename mpl::if_<
+                    is_keepalive<Tag>,
+                    pooled_connection_policy<Tag,version_major,version_minor>,
+                    unsupported_tag<Tag>
+                >::type
+            >::type
+        >
+    {};
 
 } // namespace http
 

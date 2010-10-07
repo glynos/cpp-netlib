@@ -7,7 +7,7 @@
 
 [article C++ Network Library
     [quickbook 1.4]
-    [version 0.6]
+    [version 0.7]
     [authors [Matthews, Glyn], [Berris, Dean Michael]]
     [copyright 2008, 2009, 2010 Glyn Matthews, Dean Michael Berris]
     [purpose C++ library for general network programming]
@@ -34,24 +34,27 @@
 [def __libcurl__ [@http://curl.haxx.se/ libcurl]]
 [def __mozilla_netlib__ [@http://www.mozilla.org/projects/netlib/ mozilla-netlib]]
 [def __sf_cpp_netlib__ [@http://sourceforge.net/projects/cpp-netlib/ sourceforge]]
+[def __git__ [@http://www.git-scm.org/ Git]]
 [def __github__ [@http://github.com/cpp-netlib/cpp-netlib github]]
 [def __default_constructible__ [@http://www.boost.org/doc/html/DefaultConstructible.html DefaultConstructible]]
 [def __copy_constructible__ [@http://www.boost.org/doc/html/CopyConstructible.html CopyConstructible]]
 [def __assignable__ [@http://www.boost.org/doc/html/Assignable.html Assignable]]
-[def __equality_comparable__ [@http://www.boost.org/doc/html/Assignable.html Assignable]]
+[def __equality_comparable__ [@http://www.boost.org/doc/html/EqualityComparable.html EqualityComparable]]
 
 
 [def __quick_start__ quick start]
 
 
 [include quick_start.qbk]
+[include miscellanea.qbk]
 [include intro.qbk]
 [include using.qbk]
-[/include architecture.qbk]
+[include techniques.qbk]
 [include message.qbk]
 [include uri.qbk]
 [include protocol.qbk]
 [include examples.qbk]
+[include pitfalls.qbk]
 [include reference.qbk]
 [include acknowledgements.qbk]
 [include appendices.qbk]

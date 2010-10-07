@@ -1,0 +1,39 @@
+#ifndef BOOST_NETWORK_MESSAGE_MODIFIER_CLEAR_HEADERS_HPP_20100824
+#define BOOST_NETWORK_MESSAGE_MODIFIER_CLEAR_HEADERS_HPP_20100824
+
+// Copyright 2010 (c) Dean Michael Berris
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+#include <boost/network/support/is_async.hpp>
+#include <boost/thread/future.hpp>
+
+namespace boost { namespace network {
+
+    namespace impl {
+        template <class Message>
+        inline void clear_headers(Message const & message, mpl::false_ const &) {
+            (typename Message::headers_container_type()).swap(message.headers());
+        }
+
+        template <class Message>
+        inline void clear_headers(Message const & message, mpl::true_ const &) {
+            boost::promise<typename Message::headers_container_type> header_promise;
+            boost::shared_future<typename Message::headers_container_type> headers_future(header_promise.get_future());
+            message.headers(headers_future);
+            header_promise.set_value(typename Message::headers_container_type());
+        }
+
+    } // namespace impl
+
+    template <class Tag, template <class> class Message>
+    inline void clear_headers(Message<Tag> const & message) {
+        impl::clear_headers(message, is_async<Tag>());
+    }
+
+} // namespace network
+
+} // namespace boost
+
+#endif // BOOST_NETWORK_MESSAGE_MODIFIER_CLEAR_HEADERS_HPP_20100824
