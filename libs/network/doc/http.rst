@@ -41,8 +41,8 @@ request looks trivially simple:
 
     using namespace boost::network;
     http::client client;
-    http::request request("http://www.boost.org/");
-    http::response response = client.get(request);
+    http::client::request request("http://www.boost.org/");
+    http::client::response response = client.get(request);
 
 Accessing data from ``http::response`` is also done using directives.
 To get the response headers, we use the ``headers`` directive which
@@ -129,7 +129,7 @@ HTTP OK response (200).
 HTTP URI
 ````````
 
-Firstly, cpp-netlib provides a specialization and ``typedef`` for an
+:mod:`cpp-netlib` provides a specialization and ``typedef`` for an
 HTTP URI:
 
 .. code-block:: c++

@@ -4,11 +4,13 @@
  "Hello world" HTTP server
 ***************************
 
-.. todo::
+Now that we've seen how we can deal with request and response objects from the
+client side, we'll see how we can then use the same abstractions on the server
+side. In this example we're going to create a simple HTTP Server in C++ using
+:mod:`cpp-netlib`.
 
-    The text needs to show that we're building on knowledge gained
-    from the HTTP client (hello world) example.  Make sure there's
-    more description than code.
+The Code
+========
 
 The :mod:`cpp-netlib` provides the framework to develop embedded HTTP
 servers.  For this example, the server is configured to return a
@@ -55,11 +57,44 @@ simple response to any HTTP request.
 
 This is about a straightforward as server programming will get in C++.
 
+Building the Server
+===================
+
+Just like with the HTTP client, we can build this example by doing the following
+on the shell::
+
+    $ cd ~/cpp-netlib
+    $ g++ -o hello_world_server \
+    >     libs/network/example/http/hello_world_server.cpp \
+    >     -I$BOOST_ROOT                                    \
+    >     -I.                                              \
+    >     -L$BOOST_ROOT/stage/lib                          \
+    >     -lboost_system                                   \
+    >     -pthread
+
+The first two arguments to the ``server`` constructor are the host and
+the port on which the server will listen.  The third argument is the
+the handler object defined previously.  This example can be run from
+a command line as follows:
+
+::
+
+    shell$ ./hello_world_server 0.0.0.0 80
+
+.. note:: If you're going to run the server on port 80, you may have to run it
+   as an administrator.
+
+Diving into the Code
+====================
+
+Let's take a look at the code listing above in greater detail.
+
 .. code-block:: c++
 
     #include <boost/network/protocol/http/server.hpp>
 
-This header contains all the code needed to develop an HTTP server.
+This header contains all the code needed to develop an HTTP server with
+:mod:`cpp-netlib`.
 
 .. code-block:: c++
 
@@ -76,7 +111,11 @@ This header contains all the code needed to develop an HTTP server.
 
 ``hello_world`` is a functor class which handles HTTP requests.  All
 the operator does here is return an HTTP response with HTTP code 200
-and the body ``"Hello, World!"``.
+and the body ``"Hello, World!"``. There are a number of pre-defined stock
+replies differentiated by status code with configurable bodies.
+
+All the supported enumeration values for the response status codes can be found
+in ``boost/network/protocol/http/impl/response.ipp``.
 
 .. code-block:: c++
 
@@ -86,10 +125,13 @@ and the body ``"Hello, World!"``.
 
 The first two arguments to the ``server`` constructor are the host and
 the port on which the server will listen.  The third argument is the
-the handler object defined previously.  This example can be run from
-a command line as follows:
+the handler object defined previously.
 
-::
-
-    shell$ ./hello_world_server 0.0.0.0 80
+.. note:: In this example, the server is specifically made to be single-threaded.
+   In a multi-threaded server, you would invoke the ``hello_world::run`` member 
+   method in a set of threads. In a multi-threaded environment you would also 
+   make sure that the handler does all the necessary synchronization for shared 
+   resources across threads. The handler is passed by reference to the server 
+   constructor and you should ensure that any calls to the ``operator()`` overload 
+   are thread-safe.
 
