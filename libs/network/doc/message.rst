@@ -24,7 +24,7 @@ following common parts:
 
 This division is purely logical -- in the underlying implementation,
 the message type can choose to have different means of storing the
-data, dependinn on the type used to tag the message. This section
+data, depending on the type used to tag the message. This section
 covers the `Message Concept`_ as well as the `basic_message`_
 implementation.
 
@@ -39,6 +39,7 @@ properties of messages.
 **Legend**
 
 :M: The message type.
+:H: A headers container type.
 :m,n: An instance of **M**.
 :S: A string type.
 :s,k,v: An instance of **S**.
@@ -58,19 +59,30 @@ properties of messages.
 +----------------------------+----------------------+-----------------------------------------+
 | ``destination(m);``        | unspecified          | Retrieve the destination of ``m``.      |
 +----------------------------+----------------------+-----------------------------------------+
-| ``headers(m);``            | ``Range<Pair<S,S>>`` | Get the range of headers of ``m``.      |
+| ``headers(m);``            | unspecified          | Get the range of headers of ``m``. The  |
+|                            |                      | result should be convertible to ``H``   |
 +----------------------------+----------------------+-----------------------------------------+
 | ``body(m);``               | unspecified          | Retrieve the body of ``m``.             |
 +----------------------------+----------------------+-----------------------------------------+
 | ``m << source(s);``        | ``M &``              | Set the source of ``m``.                |
 +----------------------------+----------------------+-----------------------------------------+
+| ``source(m,s);``           | ``M &``              | Set the source of ``m``.                |
++----------------------------+----------------------+-----------------------------------------+
 | ``m << destination(s);``   | ``M &``              | Set the destination of ``m``.           |
++----------------------------+----------------------+-----------------------------------------+
+| ``destination(m,s);``      | ``M &``              | Set the destination of ``m``.           |
 +----------------------------+----------------------+-----------------------------------------+
 | ``m << header(k, v);``     | ``M &``              | Add a header to ``m``.                  |
 +----------------------------+----------------------+-----------------------------------------+
+| ``add_header(m, k, v);``   | ``M &``              | Add a header to ``m``.                  |
++----------------------------+----------------------+-----------------------------------------+
 | ``m << remove_header(k);`` | ``M &``              | Remove a header from ``m``.             |
 +----------------------------+----------------------+-----------------------------------------+
+| ``remove_header(m, k);``   | ``M &``              | Remove a header from ``m``.             |
++----------------------------+----------------------+-----------------------------------------+
 | ``m << body(s);``          | ``M &``              | Set the body of ``m``.                  |
++----------------------------+----------------------+-----------------------------------------+
+| ``body(m,s);``             | ``M &``              | Set the body of ``m``.                  |
 +----------------------------+----------------------+-----------------------------------------+
 
 Types that model the Message Concept are meant to encapsulate data
