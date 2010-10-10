@@ -1,15 +1,15 @@
 @import url(reset-fonts-grids.css);
 
-html, body {background: url(./background.jpg)}
-body {font:14px Helvetica, arial, sans-serif; color:black}
-#custom-doc { width:76.54em;*width:74.69em;min-width:995px; max-width:100em; margin:auto; text-align:left; padding-top:16px; margin-top:0}
+html, body {background-image: url(./background.jpg); background-repeat:no-repeat; background-position:right top; background-attachment:fixed}
+body {font:16px "Times New Roman", Lucida, serif; color:black}
+#custom-doc { width:76.54em;*width:74.69em; min-width:720; max-width:100em; margin:auto; text-align:left; padding-top:16px; margin-top:0}
 #hd { padding: 4px 0 12px 0}
 #bd { background:#C5D88A}
 #ft { color:#C5D88A; font-size:90%; padding-bottom: 2em}
 
 pre {
     font-family: Monaco, monospace;
-    font-size: 12px;
+    font-size: 14px;
     background:#333;
     background:-moz-linear-gradient(-90deg, #333, #222 60%);
     background: -webkit-gradient(linear, 0 top, 0 bottom, from(#333), to(#222), color-stop(60%, #222));
@@ -29,14 +29,14 @@ pre {
 /*** links ***/
 a {text-decoration: none}
 a img {border: none}
-a:link, a:visited { color:blue}
-#bd a:link, #bd a:visited { color:blue; text-decoration:underline}
+a:link, a:visited { color:#f60}
+#bd a:link, #bd a:visited { color:#f60; text-decoration:underline}
 #bd #sidebar a:link, #bd #sidebar a:visited { color:#333; text-decoration:none}
 a:hover { color:#000}
-#bd a:hover { background-color:#E0FFB8; color:#234f32; text-decoration:none}
-#bd #sidebar a:hover { color:#ffe761; background:none}
+#bd a:hover { background-color:#FF9955; color:black; text-decoration:none}
+#bd #sidebar a:hover { color:#FF9955; background:none}
 h2 a, h3 a, h4 a { text-decoration:none !important}
-a.reference em { color: blue;font-style:normal;font-weight:bold;}
+a.reference em { color: #FF9955;font-style:normal;font-weight:bold;}
 
 /*** sidebar ***/
 #sidebar div.sphinxsidebarwrapper { font-size:92%; margin-right: 14px}
@@ -72,8 +72,8 @@ background:none repeat scroll 0 0 #F0F7F0;
 /*** basic styles ***/
 dd { margin-left:15px}
 h1,h2,h3,h4 { margin-top:1em;  font-weight:normal}
-h1 { font-size:218%; margin-top:0.6em; margin-bottom:.4em; line-height:1.1em}
-h2 { font-size:175%; margin-bottom:.6em; line-height:1.2em; color:#092e20}
+h1 { font-size:218%; font-weight:bold; margin-top:0.6em; margin-bottom:.4em; line-height:1.1em}
+h2 { font-size:175%; font-weight:bold; margin-bottom:.6em; line-height:1.2em; color:#092e20}
 h3 { font-size:150%; font-weight:bold; margin-bottom:.2em; color:#487858}
 h4 { font-size:125%; font-weight:bold; margin-top:1.5em; margin-bottom:3px}
 div.figure { text-align: center}
@@ -82,7 +82,7 @@ hr { color:#ccc; background-color:#ccc; height:1px; border:0}
 p, ul, dl { margin-top:.6em; color: #333}
 #yui-main div.yui-b img { max-width: 50em; margin-left: auto; margin-right: auto; display: block; margin-top: 10px; margin-bottom: 10px}
 caption { font-size:1em; font-weight:bold; margin-top:0.5em; margin-bottom:0.5em; margin-left: 2px; text-align: center}
-blockquote { padding: 0 1em; margin: 1em 0; font:125%/1.2em "Trebuchet MS", sans-serif; color:#234f32}
+blockquote { padding: 0 1em; margin: 1em 0; font:"Times New Roman", serif; color:#234f32}
 strong { font-weight: bold}
 em { font-style: italic}
 ins { font-weight: bold; text-decoration: none}
