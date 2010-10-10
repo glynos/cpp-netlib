@@ -2,7 +2,7 @@
 
 html, body {background-image: url(./background.jpg); background-repeat:no-repeat; background-position:right top; background-attachment:fixed}
 body {font:16px "Times New Roman", Lucida, serif; color:black}
-#custom-doc { width:76.54em;*width:74.69em; min-width:720; max-width:100em; margin:auto; text-align:left; padding-top:16px; margin-top:0}
+#custom-doc { width:720px;*width:720px; min-width:720px; max-width:100em; margin:auto; text-align:left; padding-top:16px; margin-top:0}
 #hd { padding: 4px 0 12px 0}
 #bd { background:#C5D88A}
 #ft { color:#C5D88A; font-size:90%; padding-bottom: 2em}
@@ -16,7 +16,7 @@ pre {
     border-width:1px 0;
     margin: 1em 0;
     padding: .3em .4em;
-    overflow: hidden;
+    overflow: auto;
     line-height: 1.3em;
     color: #CCC;
     border-radius:3px;
