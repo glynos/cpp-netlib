@@ -46,7 +46,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'The C++ Network Library'
+project = u'cpp-netlib'
 copyright = u'2008-2010, Glyn Matthews, Dean Michael Berris'
 
 # The version info for the project you're documenting, acts as replacement for
