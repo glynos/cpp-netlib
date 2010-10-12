@@ -13,7 +13,7 @@
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
-    class basic_request;
+    struct basic_request;
 
     template <class Tag, class T>
     void uri(basic_request<Tag> & request, T const & value) {

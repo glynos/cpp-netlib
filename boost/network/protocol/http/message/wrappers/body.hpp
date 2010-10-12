@@ -16,7 +16,7 @@ namespace boost { namespace network { namespace http {
     struct basic_response;
 
     template <class Tag>
-    class basic_request;
+    struct basic_request;
 
     namespace impl {
 
@@ -24,7 +24,7 @@ namespace boost { namespace network { namespace http {
         struct body_wrapper {
             typedef typename string<typename Message::tag>::type string_type;
             Message const & message_;
-            body_wrapper(Message const & message)
+            explicit body_wrapper(Message const & message)
                 : message_(message) {}
             body_wrapper(body_wrapper const & other)
                 : message_(other.message_) {}

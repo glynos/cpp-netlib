@@ -15,6 +15,14 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 
 if (Boost_FOUND)
+    set_source_files_properties(
+        http_incremental_parser.cpp hello_world.cpp
+        http_1_0_test.cpp http_1_1_test.cpp
+        http_localhost_tests.cpp https_localhost_tests.cpp
+        message_test.cpp http_message_twst.cpp
+        message_transform_test.cpp url_test.cpp
+        PROPERTIES COMPILE_FLAGS "-Wall -Werror"
+        )
     add_executable(cpp-netlib-http_incremental_parser http_incremental_parser.cpp)
     add_executable(cpp-netlib-hello_world hello_world.cpp)
     add_executable(cpp-netlib-http_1_0_test http_1_0_test.cpp)

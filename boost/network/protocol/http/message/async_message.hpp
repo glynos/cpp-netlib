@@ -24,20 +24,20 @@ namespace boost { namespace network { namespace http {
 
         async_message()
             : status_message_(),
-            status_(),
             version_(),
             source_(),
             destination_(),
+            status_(),
             headers_(),
             body_()
         {}
 
         async_message(async_message const & other)
             : status_message_(other.status_message_),
-            status_(other.status_),
             version_(other.version_),
             source_(other.source_),
             destination_(other.destination_),
+            status_(other.status_),
             headers_(other.headers_),
             body_(other.body_)
         {}
@@ -129,11 +129,12 @@ namespace boost { namespace network { namespace http {
     private:
 
         mutable boost::shared_future<string_type> status_message_,
-            version_, source_, destination_, body_;
+            version_, source_, destination_;
         mutable boost::shared_future<boost::uint16_t> status_;
         mutable boost::shared_future<headers_container_type> headers_;
         mutable headers_container_type added_headers;
         mutable std::set<string_type> removed_headers;
+        mutable boost::shared_future<string_type> body_;
     };
 
     template <class Tag>

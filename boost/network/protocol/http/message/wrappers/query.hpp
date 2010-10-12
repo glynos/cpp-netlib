@@ -13,7 +13,7 @@
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
-    class basic_request;
+    struct basic_request;
 
     namespace impl {
 

@@ -54,7 +54,6 @@ namespace boost { namespace network { namespace http {
         typedef boost::shared_ptr<connection_impl> connection_ptr;
         connection_ptr get_connection(boost::shared_ptr<resolver_type> resolver, basic_request<typename sync_only<Tag>::type> const & request_) {
             string_type protocol_ = protocol(request_);
-            boost::uint16_t port_ = port(request_);
             connection_ptr connection_(
                 new connection_impl(
                     follow_redirect_

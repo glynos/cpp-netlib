@@ -42,7 +42,7 @@ namespace boost { namespace network { namespace http {
     {};
 
     template <class Tag>
-    class basic_request : public request_base<Tag>::type
+    struct basic_request : public request_base<Tag>::type
     {
 
         mutable boost::network::uri::http::uri uri_;
