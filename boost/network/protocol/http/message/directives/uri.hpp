@@ -8,40 +8,11 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
-#include <boost/network/traits/string.hpp>
+#include <boost/network/message/directives/detail/string_directive.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    class basic_request;
-
-    namespace impl {
-
-        template <class Tag>
-        struct uri_directive {
-
-            typedef typename string<Tag>::type string_type;
-
-            string_type uri_;
-
-            explicit uri_directive(string_type const & uri)
-                : uri_(uri) {}
-
-            uri_directive(uri_directive const & other)
-                : uri_(other.uri_) {}
-
-            template <class T> basic_request<T> const & operator() (basic_request<T> const & request) const {
-                request.uri(uri_);
-                return request;
-            }
-
-        };
-
-    } // namespace impl
-
-    inline impl::uri_directive<tags::default_> const uri(string<tags::default_>::type const & uri_) {
-        return impl::uri_directive<tags::default_>(uri_);
-    }
+    BOOST_NETWORK_STRING_DIRECTIVE(uri, uri_, message.uri(uri_));
 
 } // namespace http
 

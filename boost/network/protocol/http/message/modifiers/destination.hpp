@@ -9,7 +9,6 @@
 #include <boost/network/support/is_async.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/concept/requires.hpp>
-#include <boost/network/message/directives/destination.hpp>
 
 namespace boost { namespace network { namespace http {
 

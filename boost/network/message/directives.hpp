@@ -10,10 +10,8 @@
 /** Include all the various directive headers.
  */
 
+#include <boost/network/message/directives/detail/string_directive.hpp>
 #include <boost/network/message/directives/header.hpp>
-#include <boost/network/message/directives/body.hpp>
-#include <boost/network/message/directives/source.hpp>
-#include <boost/network/message/directives/destination.hpp>
 #include <boost/network/message/directives/remove_header.hpp>
 
 namespace boost { namespace network {
@@ -24,6 +22,10 @@ namespace boost { namespace network {
             directive(message_);
             return message_;
         }
+
+    BOOST_NETWORK_STRING_DIRECTIVE(source, source_, message.source(source_));
+    BOOST_NETWORK_STRING_DIRECTIVE(destination, destination_, message.destination(destination_));
+    BOOST_NETWORK_STRING_DIRECTIVE(body, body_, message.body(body_));
 
 } // namespace network
 

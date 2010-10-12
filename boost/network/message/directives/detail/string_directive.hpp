@@ -12,6 +12,7 @@
 #include <boost/variant/static_visitor.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/network/message/directives/detail/string_value.hpp>
 
 namespace boost { namespace network { namespace detail {
 
@@ -23,30 +24,17 @@ namespace boost { namespace network { namespace detail {
      *
      *  A typical directive implementation of the visitor will take a reference
      *  to a message as the constructor parameter and then performs operations
-     *  on that message. An example implementation of a directive base is given
-     *  below:
+     *  on that message. 
      *
-     *      struct foo_directive_base {
-     *          template <class Message>
-     *          struct string_visitor : boost::static_visitor<> {
-     *              Message const & message_;
-     *              string_visitor(Message const & message)
-     *                  : message_(message) {}
+     *  To create your own string directive, you can use the preprocessor macro
+     *  BOOST_NETWORK_STRING_DIRECTIVE which takes three parameters: the name of
+     *  the directive, a name for the variable to use in the directive visitor,
+     *  and the body to be implemented in the visitor. An example directive for
+     *  setting the source of a message would look something like this given the
+     *  BOOST_NETWORK_STRING_DIRECTIVE macro:
      *
-     *              void operator()(
-     *                  typename detail::string_value<typename Message::tag>::type
-     *                  const & foo)
-     *              const {
-     *                  // do something to message_ here.
-     *              }
+     *      BOOST_NETWORK_STRING_DIRECTIVE(source, source_, message.source(source_));
      *
-     *              template <class T> void operator()(T const &) const {
-     *                  // fail at runtime?
-     *              }
-     *          };
-     *      };
-     *
-     *  TODO -- distill this pattern into a preprocessor macro.
      */
     template <class Base>
     struct string_directive : public Base {
@@ -75,6 +63,31 @@ namespace boost { namespace network { namespace detail {
         }
     };
     
+#define BOOST_NETWORK_STRING_DIRECTIVE(name, value, body)                   \
+    struct name##_directive_base {                                          \
+        template <class Message>                                            \
+        struct string_visitor : boost::static_visitor<> {                   \
+            Message const & message;                                        \
+            explicit string_visitor(Message const & message) :              \
+                message(message) {}                                         \
+            void operator()(                                                \
+                typename boost::network::detail::string_value<              \
+                    typename Message::tag                                   \
+                >::type const & value                                       \
+            ) const {                                                       \
+                body;                                                       \
+            }                                                               \
+            template <class T> void operator()(T const &) const {           \
+            }                                                               \
+        };                                                                  \
+    };                                                                      \
+    typedef boost::network::detail::string_directive<name##_directive_base> \
+        name##_directive;                                                   \
+    template <class T> inline name##_directive const                        \
+    name (T const & input) {                                                \
+        return name##_directive(input);                                     \
+    }
+
 } /* detail */
     
 } /* network */

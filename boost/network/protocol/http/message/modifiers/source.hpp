@@ -10,7 +10,6 @@
 #include <boost/thread/future.hpp>
 #include <boost/concept/requires.hpp>
 #include <boost/network/protocol/http/response_concept.hpp>
-#include <boost/network/message/directives/source.hpp>
 
 namespace boost { namespace network { namespace http {
 
