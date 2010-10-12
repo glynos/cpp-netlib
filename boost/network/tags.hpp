@@ -15,15 +15,15 @@
 
 namespace boost { namespace network { namespace tags {
 
-    struct async { int unused; };
-    struct http { int unused; };
-    struct tcp { int unused; };
-    struct udp { int unused; };
-    struct sync { int unused; };
-    struct keepalive { int unused; };
-    struct simple { int unused; };
-    struct default_string { int unused; };
-    struct default_wstring { int unused; };
+    struct async {};
+    struct http {};
+    struct tcp {};
+    struct udp {};
+    struct sync {};
+    struct keepalive {};
+    struct simple {};
+    struct default_string {};
+    struct default_wstring {};
 
     // FIXME move out these HTTP-only tags into different files
 
@@ -38,78 +38,25 @@ namespace boost { namespace network { namespace tags {
     template <class Tag>
     struct components;
 
-    // FIXME make this a preprocessor macro!
-    typedef mpl::inherit_linearly<
-        http_default_8bit_tcp_resolve_tags,
-        mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>
-        >::type http_default_8bit_tcp_resolve;
+    // Tag Definition Macro Helper
+#define BOOST_NETWORK_DEFINE_TAG(name)                                      \
+    typedef mpl::inherit_linearly<                                          \
+                name##_tags,                                                \
+                mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>  \
+            >::type name;                                                   \
+    template <> struct components<name> { typedef name##_tags type; };     \
 
-    template <>
-    struct components<http_default_8bit_tcp_resolve> {
-        typedef http_default_8bit_tcp_resolve_tags type;
-    };
-
-    typedef mpl::inherit_linearly<
-        http_default_8bit_udp_resolve_tags,
-        mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>
-        >::type http_default_8bit_udp_resolve;
-
-    template <>
-    struct components<http_default_8bit_udp_resolve> {
-        typedef http_default_8bit_udp_resolve_tags type;
-    };
-
-    typedef mpl::inherit_linearly<
-        http_keepalive_8bit_tcp_resolve_tags,
-        mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>
-        >::type http_keepalive_8bit_tcp_resolve;
-
-    template <>
-    struct components<http_keepalive_8bit_tcp_resolve> {
-        typedef http_keepalive_8bit_tcp_resolve_tags type;
-    };
-
-    typedef mpl::inherit_linearly<
-        http_keepalive_8bit_udp_resolve_tags,
-        mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>
-        >::type http_keepalive_8bit_udp_resolve;
-
-    template <>
-    struct components<http_keepalive_8bit_udp_resolve> {
-        typedef http_keepalive_8bit_udp_resolve_tags type;
-    };
-
-    typedef mpl::inherit_linearly<
-        http_server_tags,
-        mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>
-        >::type http_server;
-
-    template <>
-    struct components<http_server> {
-        typedef http_server_tags type;
-    };
-
-    typedef mpl::inherit_linearly<
-        http_async_8bit_udp_resolve_tags,
-        mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>
-        >::type http_async_8bit_udp_resolve;
-
-    template <>
-    struct components<http_async_8bit_udp_resolve> {
-        typedef http_async_8bit_udp_resolve_tags type;
-    };
-
-    typedef mpl::inherit_linearly<
-        http_async_8bit_tcp_resolve_tags,
-        mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>
-        >::type http_async_8bit_tcp_resolve;
-
-    template <>
-    struct components<http_async_8bit_tcp_resolve> {
-        typedef http_async_8bit_tcp_resolve_tags type;
-    };
+    BOOST_NETWORK_DEFINE_TAG(http_default_8bit_tcp_resolve);
+    BOOST_NETWORK_DEFINE_TAG(http_default_8bit_udp_resolve);
+    BOOST_NETWORK_DEFINE_TAG(http_keepalive_8bit_tcp_resolve);
+    BOOST_NETWORK_DEFINE_TAG(http_keepalive_8bit_udp_resolve);
+    BOOST_NETWORK_DEFINE_TAG(http_async_8bit_udp_resolve);
+    BOOST_NETWORK_DEFINE_TAG(http_async_8bit_tcp_resolve);
+    BOOST_NETWORK_DEFINE_TAG(http_server);
 
     typedef default_string default_;
+
+#undef BOOST_NETWORK_DEFINE_TAG
 
 } // namespace tags
 
