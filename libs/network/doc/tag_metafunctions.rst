@@ -92,8 +92,8 @@ metafunction class into this:
     struct string :
         mpl::if_<
             is_base_of<
-                Tag,
-                tags::default_string
+                tags::default_string,
+                Tag
             >,
             std::string,
             unsupported_tag<Tag>
