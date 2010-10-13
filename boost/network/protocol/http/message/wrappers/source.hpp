@@ -8,6 +8,7 @@
 
 #include <boost/network/protocol/http/response_concept.hpp>
 #include <boost/network/protocol/http/request_concept.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/concept/requires.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -18,36 +19,64 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     struct basic_request;
 
-    namespace impl {
-
-        template <class Message>
-        struct source_wrapper {
-            typedef typename string<typename Message::tag>::type string_type;
-            Message const & message_;
-            source_wrapper(Message const & message)
-                : message_(message) {}
-            source_wrapper(source_wrapper const & other)
-                : message_(other.message_) {}
-            operator string_type const () {
-                return message_.source();
-            }
-        };
-
-    } // namespace impl
-
-    template <class Tag>
-    inline BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
-        (impl::source_wrapper<basic_response<Tag> > const))
-    source(basic_response<Tag> const & message) {
-        return impl::source_wrapper<basic_response<Tag> >(message);
+#define BOOST_NETWORK_DEFINE_HTTP_WRAPPER(name, accessor)               \
+    struct name##_pod_accessor {                                        \
+    protected:                                                          \
+        template <class Message>                                        \
+        typename Message::string_type const &                           \
+        get_value(Message const & message) const {                      \
+            return message.accessor;                                    \
+        }                                                               \
+    };                                                                  \
+                                                                        \
+    struct name##_member_accessor {                                     \
+    protected:                                                          \
+        template <class Message>                                        \
+        typename Message::string_type                                   \
+        get_value(Message const & message) const {                      \
+            return message.accessor();                                  \
+        }                                                               \
+    };                                                                  \
+                                                                        \
+    template <class Tag>                                                \
+    struct name##_wrapper_impl :                                        \
+        mpl::if_<                                                       \
+            is_base_of<tags::pod, Tag>,                                 \
+            name##_pod_accessor,                                        \
+            name##_member_accessor                                      \
+        >                                                               \
+    {};                                                                 \
+                                                                        \
+    template <class Message>                                            \
+    struct name##_wrapper :                                             \
+    name##_wrapper_impl<typename Message::tag>::type {                  \
+        typedef typename string<typename Message::tag>::type            \
+            string_type;                                                \
+        Message const & message_;                                       \
+        name##_wrapper(Message const & message)                         \
+            : message_(message) {}                                      \
+        name##_wrapper(name##_wrapper const & other)                    \
+            : message_(other.message_) {}                               \
+        operator string_type const () {                                 \
+            return this->get_value(message_);                                 \
+        }                                                               \
+    };                                                                  \
+                                                                        \
+    template <class Tag>                                                \
+    inline BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),   \
+        (name##_wrapper<basic_response<Tag> > const))                   \
+    name (basic_response<Tag> const & message) {                        \
+        return name##_wrapper<basic_response<Tag> >(message);           \
+    }                                                                   \
+                                                                        \
+    template <class Tag>                                                \
+    inline BOOST_CONCEPT_REQUIRES(((Request<basic_request<Tag> >)),     \
+        (name##_wrapper<basic_request<Tag> > const))                    \
+    name (basic_request<Tag> const & message) {                         \
+        return name##_wrapper<basic_request<Tag> >(message);            \
     }
 
-    template <class Tag>
-    inline BOOST_CONCEPT_REQUIRES(((Request<basic_request<Tag> >)),
-        (impl::source_wrapper<basic_request<Tag> > const))
-    source(basic_request<Tag> const & message) {
-        return impl::source_wrapper<basic_request<Tag> >(message);
-    }
+    BOOST_NETWORK_DEFINE_HTTP_WRAPPER(source, source);
 
 } // namespace http
 

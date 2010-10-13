@@ -15,6 +15,7 @@
 
 namespace boost { namespace network { namespace tags {
 
+    struct pod {};
     struct async {};
     struct http {};
     struct tcp {};
@@ -33,7 +34,7 @@ namespace boost { namespace network { namespace tags {
     typedef mpl::vector<http, keepalive, sync, udp, default_string> http_keepalive_8bit_udp_resolve_tags;
     typedef mpl::vector<http, simple, async, udp, default_string> http_async_8bit_udp_resolve_tags;
     typedef mpl::vector<http, simple, async, tcp, default_string> http_async_8bit_tcp_resolve_tags;
-    typedef mpl::vector<http, simple, sync, default_string> http_server_tags;
+    typedef mpl::vector<http, simple, sync, pod, default_string> http_server_tags;
 
     template <class Tag>
     struct components;
@@ -44,7 +45,7 @@ namespace boost { namespace network { namespace tags {
                 name##_tags,                                                \
                 mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>  \
             >::type name;                                                   \
-    template <> struct components<name> { typedef name##_tags type; };     \
+    template <> struct components<name> { typedef name##_tags type; };     
 
     BOOST_NETWORK_DEFINE_TAG(http_default_8bit_tcp_resolve);
     BOOST_NETWORK_DEFINE_TAG(http_default_8bit_udp_resolve);

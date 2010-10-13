@@ -129,6 +129,7 @@ namespace boost { namespace network { namespace http {
         typedef string<tags::http_server>::type string_type;
         typedef vector<tags::http_server>::apply<request_header>::type vector_type;
         typedef boost::uint16_t port_type;
+        string_type source;
         string_type method;
         string_type uri;
         boost::uint8_t http_version_major;

@@ -79,6 +79,7 @@ namespace boost { namespace network { namespace http {
 
         void handle_read_headers(boost::system::error_code const &ec, size_t bytes_transferred) {
             if (!ec) {
+                request_.source = socket_.remote_endpoint().address().to_string();
                 boost::tribool done;
                 boost::array<char, BOOST_HTTP_SERVER_BUFFER_SIZE>::iterator new_start;
                 tie(done,new_start) = parser_.parse_headers(request_, buffer_.data(), buffer_.data() + bytes_transferred);

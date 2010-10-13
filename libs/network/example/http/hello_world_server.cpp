@@ -28,8 +28,11 @@ struct hello_world {
     /*<< This is the function that handles the incoming request. >>*/
     void operator() (server::request const &request,
                      server::response &response) {
+        server::string_type ip = source(request);
+        std::ostringstream data;
+        data << "Hello, " << ip << "!";
         response = server::response::stock_reply(
-            server::response::ok, "Hello, World!");
+            server::response::ok, data.str());
     }
     /*<< It's necessary to define a log function, but it's ignored in
          this example. >>*/
