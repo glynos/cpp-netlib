@@ -19,6 +19,7 @@ simple response to any HTTP request.
 .. code-block:: c++
 
     #include <boost/network/protocol/http/server.hpp>
+    #include <string>
     #include <iostream>
 
     namespace http = boost::network::http;
@@ -29,8 +30,9 @@ simple response to any HTTP request.
     struct hello_world {
         void operator() (server::request const &request,
                          server::response &response) {
+            std::string ip = source(request);
             response = server::response::stock_reply(
-                server::response::ok, "Hello, World!");
+                server::response::ok, std::string("Hello, ") + ip + "!");
         }
     };
 
@@ -79,7 +81,7 @@ a command line as follows:
 
 ::
 
-    shell$ ./hello_world_server 0.0.0.0 80
+    shell$ ./hello_world_server 0.0.0.0 8000
 
 .. note:: If you're going to run the server on port 80, you may have to run it
    as an administrator.
@@ -104,15 +106,19 @@ This header contains all the code needed to develop an HTTP server with
     struct hello_world {
         void operator () (server::request const &request,
                           server::response &response) {
+            std::string ip = source(request);
             response = server::response::stock_reply(
-                server::response::ok, "Hello, World!");
+                server::response::ok, std::string("Hello, ") + ip + "!");
         }
     };
 
 ``hello_world`` is a functor class which handles HTTP requests.  All
 the operator does here is return an HTTP response with HTTP code 200
-and the body ``"Hello, World!"``. There are a number of pre-defined stock
-replies differentiated by status code with configurable bodies.
+and the body ``"Hello, <ip>!"``. The ``<ip>`` in this case would be
+the IP address of the client that made the request. 
+
+There are a number of pre-defined stock replies differentiated by 
+status code with configurable bodies.
 
 All the supported enumeration values for the response status codes can be found
 in ``boost/network/protocol/http/impl/response.ipp``.
