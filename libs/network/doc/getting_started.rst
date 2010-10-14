@@ -170,13 +170,7 @@ You can also opt to join the developers mailing list for a more personal
 interaction with the developers of the project. You can join the mailing list
 through https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel.
 
-You may also choose to get commercial support from the maintainers of the
-project, in which case you can reach them through:
+You may also choose to get commercial support from:
 
     Dean Michael Berris - <me@deanberris.com>
     
-    Glyn Matthews
-    
-    Mike Dickey
-     
-
