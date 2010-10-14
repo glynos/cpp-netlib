@@ -21,7 +21,7 @@
 ..             http://www.boost.org/LICENSE_1_0.txt)
 
 Welcome
-=======
+-------
 
 The :mod:`cpp-netlib` is a library that provides application layer
 protocol support using modern C++ techniques.  It is light-weight,
@@ -34,7 +34,7 @@ presentation about :mod:`cpp-netlib` was given at `BoostCon 2010`_,
 for which the `slides`_ and the `paper`_ can be found on-line.
 
 Sneak Peak
-==========
+----------
 
 The :mod:`cpp-netlib` allows you to write semantically consistent code for
 making different kinds of higher level network applications. 
@@ -57,7 +57,7 @@ For simple C++ HTTP client applications.
 The :mod:`cpp-netlib` is being developed for eventual submission to Boost_.
 
 Download
-========
+--------
 
 You can download the latest releases of the library at:
 
@@ -73,7 +73,7 @@ the GitHub_ project page at:
     http://github.com/mikhailberis/cpp-netlib
 
 Support
-=======
+-------
 
 You can ask questions, join the discussion, and report issues to the developers
 mailing list by joining via:
@@ -85,7 +85,7 @@ You may also file issues on the Github_ issue tracker at:
     http://github.com/mikhailberis/cpp-netlib/issues
 
 Contents
-========
+--------
 
 .. toctree::
    :maxdepth: 2
