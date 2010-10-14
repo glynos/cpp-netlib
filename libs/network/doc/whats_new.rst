@@ -12,6 +12,9 @@
 * Tag dispatch overhaul, using Boost.MPL
 * HTTP Client Facade refactoring
 * Bug fixes for HTTP 1.1 response parsing
+* Minimized code repetition with some header macro's
+* Configurable HTTPS support in the library with ``BOOST_NETWORK_ENABLE_HTTPS``
+
 
 :mod:`cpp-netlib` 0.6
 ---------------------
