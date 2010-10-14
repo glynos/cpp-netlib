@@ -39,7 +39,8 @@ Sneak Peak
 The :mod:`cpp-netlib` allows you to write semantically consistent code for
 making different kinds of higher level network applications. 
 
-The library allows for writing simple code like:
+The library allows for writing simple code for simple C++ HTTP client
+applications like:
 
 .. code-block:: c++
 
@@ -51,8 +52,6 @@ The library allows for writing simple code like:
     client client_;
     client::response response_ = client_.get(request);
     std::string body = body(response_);
-
-For simple C++ HTTP client applications.
 
 The :mod:`cpp-netlib` is being developed for eventual submission to Boost_.
 
