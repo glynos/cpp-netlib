@@ -180,3 +180,5 @@ img {
 tt.py-exc.literal {
     color: red;
 }
+
+tt.xref span.pre { color: green; }
