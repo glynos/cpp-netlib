@@ -8,7 +8,11 @@ Downloading an official release
 ===============================
 
 All stable versions of :mod:`cpp-netlib` can be downloaded from
-Github_.  Each release is available as gzipped (Using the command
+Github_ from this url:
+
+    http://github.com/cpp-netlib/cpp-netlib/downloads
+
+Each release is available as gzipped (Using the command
 ``tar xzf cpp-netlib.tar.gz``) or bzipped (Using ``tar xjf
 cpp-netlib.tar.bz2``) tarball, or as a zipfile (``unzip
 cpp-netlib.zip``, or on Windows using a tool such as 7zip_).
@@ -31,6 +35,16 @@ Using the command line, the command to get the latest code is:
 This should be enough information get to started.  To do more complex
 things with Git, such as pulling changes or checking out a new branch,
 refer to the `Git documentation`_.
+
+.. note:: If you look at the Git repository closely, this is the repository of
+   *mikhailberis* instead of *cpp-netlib*. The reason is that the main developer
+   and maintainer of the project is Dean Michael Berris, who goes by the alias
+   *mikhailberis* on the Internet.
+
+   Dean does the merging and maintenance of the whole library, similar to how
+   `Linus Torvalds`_ of the Linux project acts as the gatekeeper of the project.
+
+.. _`Linus Torvalds`: http://en.wikipedia.org/wiki/Linus_Torvalds
 
 Windows users need to use msysGit_, and to invoke the command above
 from a shell.
@@ -105,6 +119,9 @@ additional parameters::
     >       -DCMAKE_C_COMPILER=gcc   \
     >       -DCMAKE_CXX_COMPILER=g++ \
     >       .
+
+Building on Linux
+~~~~~~~~~~~~~~~~~
 
 On Linux, this will generate the appropriate Makefiles that will enable you to
 build and run the tests and examples that come with :mod:`cpp-netlib`. To build
