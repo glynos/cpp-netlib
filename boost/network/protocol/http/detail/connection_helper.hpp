@@ -21,7 +21,7 @@ namespace boost { namespace network { namespace http { namespace detail {
 
         typedef typename string<Tag>::type string_type;
 
-        void create_request(boost::asio::streambuf & request_buffer, string_type const & method, basic_request<typename sync_only<Tag>::type> request_) const {
+        void create_request(boost::asio::streambuf & request_buffer, string_type const & method, basic_request<typename sync_only<Tag>::type> const & request_) const {
             // TODO make this use Boost.Karma instead of an ad-hoc implementation
             std::ostream request_stream(&request_buffer);
 
