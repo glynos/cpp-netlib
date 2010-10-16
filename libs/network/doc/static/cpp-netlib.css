@@ -27,11 +27,11 @@ pre {
 
 
 /*** links ***/
-a {text-decoration: none}
+a {text-decoration: none; font-weight: bold}
 a img {border: none}
-a:link, a:visited { color:#f60}
-#bd a:link, #bd a:visited { color:#f60; text-decoration:underline}
-#bd #sidebar a:link, #bd #sidebar a:visited { color:#333; text-decoration:none}
+a:link, a:visited { color:#800000}
+#bd a:link, #bd a:visited { color:#800000; text-decoration:underline}
+#bd #sidebar a:link, #bd #sidebar a:visited { color:#8B4513; text-decoration:none}
 a:hover { color:#000}
 #bd a:hover { background-color:#FF9955; color:black; text-decoration:none}
 #bd #sidebar a:hover { color:#FF9955; background:none}
@@ -41,7 +41,7 @@ a.reference em { color: #FF9955;font-style:normal;font-weight:bold;}
 /*** sidebar ***/
 #sidebar div.sphinxsidebarwrapper { font-size:92%; margin-right: 14px}
 #sidebar h3, #sidebar h4 { color: #487858; font-size: 125%}
-#sidebar a { color: #487858}
+#sidebar a { color: #8B4513}
 #sidebar ul ul { margin-top:0; margin-bottom:0}
 #sidebar li { margin-top: 0.2em; margin-bottom: 0.2em}
 
