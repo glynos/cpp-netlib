@@ -23,6 +23,11 @@ namespace boost { namespace network {
             message.source(source_);
         }
 
+        template <class Message, class ValueType, class Async>
+        inline void source(Message const & message, ValueType const & source_, tags::http_server const &, Async const &) {
+            message.source = source_;
+        }
+
     } // namespace impl
 
     template <class Tag, template <class> class Message, class ValueType>

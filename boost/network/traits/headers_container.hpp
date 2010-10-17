@@ -11,18 +11,15 @@
 # include <boost/network/tags.hpp>
 # include <boost/network/traits/string.hpp>
 
+namespace boost { namespace network {
 
-namespace boost {
-namespace network {
-template <
-    class Tag
-    >
-struct headers_container {
-    typedef std::multimap<
-        typename string<Tag>::type,
-        typename string<Tag>::type
-        > type;
-};
+    template <class Tag>
+    struct headers_container {
+        typedef std::multimap<
+            typename string<Tag>::type,
+            typename string<Tag>::type
+            > type;
+    };
 
 } // namespace network
 } // namespace boost

@@ -33,7 +33,9 @@ namespace boost { namespace network { namespace detail {
      *  setting the source of a message would look something like this given the
      *  BOOST_NETWORK_STRING_DIRECTIVE macro:
      *
-     *      BOOST_NETWORK_STRING_DIRECTIVE(source, source_, message.source(source_));
+     *      BOOST_NETWORK_STRING_DIRECTIVE(source, source_, 
+     *          message.source(source_)
+     *          , message.source=source_);
      *
      */
     template <class Base>
@@ -63,12 +65,13 @@ namespace boost { namespace network { namespace detail {
         }
     };
     
-#define BOOST_NETWORK_STRING_DIRECTIVE(name, value, body)                   \
+#define BOOST_NETWORK_STRING_DIRECTIVE(name, value, body, pod_body)         \
     struct name##_directive_base {                                          \
+                                                                            \
         template <class Message>                                            \
-        struct string_visitor : boost::static_visitor<> {                   \
+        struct normal_visitor : boost::static_visitor<> {                   \
             Message const & message;                                        \
-            explicit string_visitor(Message const & message) :              \
+            explicit normal_visitor(Message const & message) :              \
                 message(message) {}                                         \
             void operator()(                                                \
                 typename boost::network::detail::string_value<              \
@@ -80,7 +83,50 @@ namespace boost { namespace network { namespace detail {
             template <class T> void operator()(T const &) const {           \
             }                                                               \
         };                                                                  \
+                                                                            \
+        template <class Message>                                            \
+        struct pod_visitor : boost::static_visitor<> {                      \
+            Message const & message;                                        \
+            explicit pod_visitor(Message const & message) :                 \
+                message(message) {}                                         \
+            void operator()(                                                \
+                typename boost::network::detail::string_value<              \
+                    typename Message::tag                                   \
+                >::type const & value                                       \
+            ) const {                                                       \
+                pod_body;                                                   \
+            }                                                               \
+            template <class T> void operator()(T const &) const {           \
+            }                                                               \
+        };                                                                  \
+                                                                            \
+        template <class Message>                                            \
+        struct string_visitor :                                             \
+            mpl::if_<                                                       \
+                is_base_of<                                                 \
+                    tags::pod,                                              \
+                    typename Message::tag                                   \
+                >,                                                          \
+                pod_visitor<Message>,                                       \
+                normal_visitor<Message>                                     \
+            >::type                                                         \
+        {                                                                   \
+            typedef typename mpl::if_<                                      \
+                is_base_of<                                                 \
+                    tags::pod,                                              \
+                    typename Message::tag                                   \
+                >,                                                          \
+                pod_visitor<Message>,                                       \
+                normal_visitor<Message>                                     \
+            >::type base;                                                   \
+            explicit string_visitor(Message const & message):               \
+                base(message) {}                                            \
+            string_visitor(string_visitor const & other):                   \
+                base(other) {}                                              \
+            using base::operator();                                         \
+        };                                                                  \
     };                                                                      \
+                                                                            \
     typedef boost::network::detail::string_directive<name##_directive_base> \
         name##_directive;                                                   \
     template <class T> inline name##_directive const                        \

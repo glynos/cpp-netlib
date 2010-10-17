@@ -128,19 +128,21 @@ namespace boost { namespace network { namespace http {
         typedef tags::http_server tag;
         typedef string<tags::http_server>::type string_type;
         typedef vector<tags::http_server>::apply<request_header>::type vector_type;
+        typedef vector_type headers_container_type;
         typedef boost::uint16_t port_type;
-        string_type source;
-        string_type method;
-        string_type uri;
-        boost::uint8_t http_version_major;
-        boost::uint8_t http_version_minor;
-        vector_type headers;
-        string_type body;
+        mutable string_type source;
+        mutable string_type method;
+        mutable string_type destination;
+        mutable boost::uint8_t http_version_major;
+        mutable boost::uint8_t http_version_minor;
+        mutable vector_type headers;
+        mutable string_type body;
 
-        void swap(basic_request & r) {
+        void swap(basic_request & r) const {
             using std::swap;
             swap(method, r.method);
-            swap(uri, r.uri);
+            swap(source, r.source);
+            swap(destination, r.destination);
             swap(http_version_major, r.http_version_major);
             swap(http_version_minor, r.http_version_minor);
             swap(headers, r.headers);
@@ -152,6 +154,40 @@ namespace boost { namespace network { namespace http {
     inline void swap(basic_request<Tag> & lhs, basic_request<Tag> & rhs) {
         lhs.swap(rhs);
     }
+
+} // namespace http
+
+    /** Specialize the traits for the http_server tag. */
+    template <>
+    struct headers_container<tags::http_server> :
+        vector<tags::http_server>::apply<http::request_header>
+    {};
+
+    namespace http { namespace impl {
+
+        template <>
+        struct request_headers_wrapper<tags::http_server> {
+            basic_request<tags::http_server> const & request_;
+            request_headers_wrapper(basic_request<tags::http_server> const & request_)
+            : request_(request_) {}
+            typedef headers_container<tags::http_server>::type headers_container_type;
+            operator headers_container_type () {
+                return request_.headers;
+            }
+        };
+
+        template <>
+        struct body_wrapper<basic_request<tags::http_server> > {
+            typedef string<tags::http_server>::type string_type;
+            basic_request<tags::http_server> const & request_;
+            body_wrapper(basic_request<tags::http_server> const & request_)
+            : request_(request_) {}
+            operator string_type () {
+                return request_.body;
+            }
+        };
+
+    } // namespace impl
 
 } // namespace http
 

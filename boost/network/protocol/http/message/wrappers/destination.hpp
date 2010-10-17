@@ -16,7 +16,7 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     struct basic_request;
 
-    BOOST_NETWORK_DEFINE_HTTP_WRAPPER(destination, destination);
+    BOOST_NETWORK_DEFINE_HTTP_WRAPPER(destination, destination, destination);
 
 } // namespace http
 

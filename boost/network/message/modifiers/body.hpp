@@ -23,6 +23,11 @@ namespace boost { namespace network {
             message.body(body_);
         }
 
+        template <class Message, class ValueType, class Async>
+        inline void body(Message const & message, ValueType const & body_, tags::http_server, Async) {
+            message.body = body_;
+        }
+
     } // namespace impl
 
     template <class Tag, template <class> class Message, class ValueType>

@@ -25,15 +25,15 @@ namespace boost { namespace network { namespace http { namespace impl {
         typedef basic_response<Tag> response;
         
         static boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > new_connection(resolve_function resolve, boost::shared_ptr<resolver_type> resolver, bool follow_redirect, bool https) {
+            boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > temp;
             if (https) {
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-                // FIXME fill this up with the HTTPS implementation.
-                // return dynamic_cast<async_connection_base<Tag,version_major,version_minor>*>(new https_async_connection<Tag,version_major,version_minor>(resolve, resolver, follow_redirect));
+                temp.reset(new https_async_connection<Tag,version_major,version_minor>(resolver, resolve, follow_redirect));
+                return temp;
 #else
                 throw std::runtime_error("HTTPS not supported.");
 #endif
             }
-            boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > temp;
             temp.reset(new http_async_connection<Tag,version_major,version_minor>(resolver, resolve, follow_redirect));
             assert(temp.get() != 0);
             return temp;

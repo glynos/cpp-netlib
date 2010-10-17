@@ -101,3 +101,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_redirection_test, T, tag_types) {
     BOOST_CHECK_EQUAL ( response_.status(), status_<T>::value );
 }
 
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(https_get_test, T, tag_types) {
+    typedef http::basic_client<T, 1, 0> client;
+    typename client::request request("https://www.google.com/");
+    client client_;
+    typename client::response response_ = client_.get(request);
+    typename headers_range<typename http::basic_response<T> >::type range = headers(response_)["Content-Type"];
+    BOOST_CHECK ( boost::begin(range) != boost::end(range) );
+    BOOST_CHECK ( body(response_).size() != 0 );
+}
+
+#endif

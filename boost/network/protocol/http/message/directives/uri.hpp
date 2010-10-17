@@ -12,7 +12,7 @@
 
 namespace boost { namespace network { namespace http {
 
-    BOOST_NETWORK_STRING_DIRECTIVE(uri, uri_, message.uri(uri_));
+    BOOST_NETWORK_STRING_DIRECTIVE(uri, uri_, message.uri(uri_), message.uri=uri_);
 
 } // namespace http
 

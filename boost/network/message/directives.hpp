@@ -23,9 +23,9 @@ namespace boost { namespace network {
             return message_;
         }
 
-    BOOST_NETWORK_STRING_DIRECTIVE(source, source_, message.source(source_));
-    BOOST_NETWORK_STRING_DIRECTIVE(destination, destination_, message.destination(destination_));
-    BOOST_NETWORK_STRING_DIRECTIVE(body, body_, message.body(body_));
+    BOOST_NETWORK_STRING_DIRECTIVE(source, source_, message.source(source_), message.source=source_);
+    BOOST_NETWORK_STRING_DIRECTIVE(destination, destination_, message.destination(destination_), message.destination=destination_);
+    BOOST_NETWORK_STRING_DIRECTIVE(body, body_, message.body(body_), message.body=body_);
 
 } // namespace network
 

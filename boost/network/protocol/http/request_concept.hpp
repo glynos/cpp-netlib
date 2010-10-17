@@ -10,17 +10,29 @@
 #include <boost/concept_check.hpp>
 #include <boost/network/message/message_concept.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace network { namespace http {
 
     template <class R>
-    struct Request
+    struct PodServerRequest 
+        : boost::network::Message<R>
+    {
+        typedef typename R::string_type string_type;
+        
+    private:
+        R request;
+    };
+
+    template <class R>
+    struct NormalClientRequest
         : boost::network::Message<R>
     {
         typedef typename R::string_type string_type;
         typedef typename R::port_type port_type;
         
-        BOOST_CONCEPT_USAGE(Request) {
+        BOOST_CONCEPT_USAGE(NormalClientRequest) {
             string_type tmp;
             R request_(tmp);
             swap(request, request_); // swappable via ADL
@@ -47,6 +59,18 @@ namespace boost { namespace network { namespace http {
     private:
         R request;
     };
+
+    template <class R>
+    struct Request :
+        mpl::if_<
+            is_base_of<
+                tags::pod,
+                typename R::tag
+            >,
+            boost::network::Message<R>,
+            NormalClientRequest<R>
+        >::type
+    {};
 
 } // namespace http
 

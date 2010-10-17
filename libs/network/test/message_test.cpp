@@ -18,7 +18,6 @@ typedef boost::mpl::list<
     tags::http_default_8bit_udp_resolve, 
     tags::http_keepalive_8bit_tcp_resolve, 
     tags::http_keepalive_8bit_udp_resolve, 
-    tags::http_server, 
     tags::default_string, 
     tags::default_wstring
 > tag_types;

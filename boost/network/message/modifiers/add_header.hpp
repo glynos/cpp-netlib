@@ -27,6 +27,13 @@ namespace boost { namespace network {
             message.add_header(std::make_pair(key, value));
         }
 
+        template <class Message, class KeyType, class ValueType, class Async>
+        inline void add_header(Message const & message, KeyType const & key, ValueType const & value, tags::http_server const &, Async const &) {
+            typedef typename Message::headers_container_type::value_type value_type;
+            value_type header_ = { key, value };
+            message.headers.insert(message.headers.end(), header_);
+        }
+
     }
 
     template <class Tag, template <class> class Message, class KeyType, class ValueType>

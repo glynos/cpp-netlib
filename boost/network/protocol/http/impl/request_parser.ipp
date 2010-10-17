@@ -58,7 +58,7 @@ boost::tribool basic_request_parser<Tag>::consume(basic_request<Tag> & req, char
     else
     {
       state_ = uri;
-      req.uri.push_back(input);
+      req.destination.push_back(input);
       return boost::indeterminate;
     }
   case uri:
@@ -73,7 +73,7 @@ boost::tribool basic_request_parser<Tag>::consume(basic_request<Tag> & req, char
     }
     else
     {
-      req.uri.push_back(input);
+      req.destination.push_back(input);
       return boost::indeterminate;
     }
   case http_version_h:

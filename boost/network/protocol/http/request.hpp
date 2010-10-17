@@ -28,8 +28,6 @@
 #include <boost/network/message/directives.hpp>
 #include <boost/network/message/transformers.hpp>
 
-#include <boost/network/protocol/http/request_concept.hpp>
-
 // forward declarations
 namespace boost { namespace network { namespace http {
 
@@ -61,5 +59,7 @@ namespace boost { namespace network { namespace http {
 } // namespace network
 
 } // namespace boost
+
+#include <boost/network/protocol/http/request_concept.hpp>
 
 #endif // __NETWORK_PROTOCOL_HTTP_REQUEST_20070908-1_HPP__

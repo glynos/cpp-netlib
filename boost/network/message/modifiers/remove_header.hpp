@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/support/is_async.hpp>
+#include <algorithm>
 
 namespace boost { namespace network {
 
@@ -26,6 +27,30 @@ namespace boost { namespace network {
         template <class Message, class KeyType, class Tag>
         inline void remove_header(Message const & message, KeyType const & key, Tag const &, mpl::true_ const &) {
             message.remove_header(key);
+        }
+
+        template <class KeyType>
+        struct equals {
+            explicit equals(KeyType const & key_)
+            : key(key_) {}
+            equals(equals const & other)
+            : key(other.key) {}
+            template <class RequestHeader>
+            bool operator()(RequestHeader const & header) {
+                return boost::iequals(header.name, key);
+            }
+            KeyType const & key;
+        };
+
+        template <class Message, class KeyType, class Async>
+        inline void remove_header(Message const & message, KeyType const & key, tags::http_server const &, Async const &) {
+            typedef typename Message::headers_container_type::iterator iterator;
+            iterator end = message.headers.end();
+            iterator new_end = std::remove_if(
+                message.headers.begin(),
+                message.headers.end(),
+                equals<KeyType>(key));
+            message.headers.erase(new_end, end);
         }
 
     } // namespace impl

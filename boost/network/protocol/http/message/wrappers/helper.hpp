@@ -12,13 +12,13 @@
 #include <boost/concept/requires.hpp>
 
 #ifndef BOOST_NETWORK_DEFINE_HTTP_WRAPPER
-#define BOOST_NETWORK_DEFINE_HTTP_WRAPPER(name, accessor)               \
+#define BOOST_NETWORK_DEFINE_HTTP_WRAPPER(name, accessor, pod_field)    \
     struct name##_pod_accessor {                                        \
     protected:                                                          \
         template <class Message>                                        \
         typename Message::string_type const &                           \
         get_value(Message const & message) const {                      \
-            return message.accessor;                                    \
+            return message.pod_field;                                   \
         }                                                               \
     };                                                                  \
                                                                         \
