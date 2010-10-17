@@ -1,0 +1,175 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>C++ Network Library &mdash; cpp-netlib v0.7 documentation</title>
+    <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.7 documentation" href="#" />
+    <link rel="next" title="What’s New" href="whats_new.html" /> 
+  </head>
+  <body>
+
+    <div class="document">
+  <div id="custom-doc" class="">
+    <div id="hd">
+      <h1><a href="#">cpp-netlib v0.7 documentation</a></h1>
+      <div class="nav">
+    <a title="cpp-netlib v0.7 documentation" href="#" accesskey="U">up</a>
+   |
+    <a href="whats_new.html" title="What&amp;#8217;s New">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="index">
+            
+  <div class="section" id="c-network-library">
+<h1>C++ Network Library<a class="headerlink" href="#c-network-library" title="Permalink to this headline">¶</a></h1>
+<img align="right" alt="_images/boost.png" class="align-right" src="_images/boost.png" />
+<div class="section" id="welcome">
+<h2>Welcome<a class="headerlink" href="#welcome" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is a library that provides application layer
+protocol support using modern C++ techniques.  It is light-weight,
+fast, cross-platform and is intended to be as easy to configure as
+possible.</p>
+<p>It is developed by people linked to the <a class="reference external" href="http://www.boost.org/">Boost</a> community and will at
+some point in the future be submitted for review into Boost.  A
+presentation about <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> was given at <a class="reference external" href="http://www.boostcon.com/">BoostCon 2010</a>,
+for which the <a class="reference external" href="http://www.filetolink.com/b0e89d06">slides</a> and the <a class="reference external" href="http://github.com/downloads/mikhailberis/cpp-netlib-boostcon-paper/cpp-netlib.pdf">paper</a> can be found on-line.</p>
+</div>
+<div class="section" id="sneak-peak">
+<h2>Sneak Peak<a class="headerlink" href="#sneak-peak" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> allows you to write semantically consistent code for
+making different kinds of higher level network applications.</p>
+<p>The library allows for writing simple code for simple C++ HTTP client
+applications like:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
+
+<span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request_</span><span class="p">(</span><span class="s">&quot;http://www.boost.org/&quot;</span><span class="p">);</span>
+<span class="n">request_</span> <span class="o">&lt;&lt;</span> <span class="n">header</span><span class="p">(</span><span class="s">&quot;Connection&quot;</span><span class="p">,</span> <span class="s">&quot;close&quot;</span><span class="p">);</span>
+<span class="n">client</span> <span class="n">client_</span><span class="p">;</span>
+<span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response_</span> <span class="o">=</span> <span class="n">client_</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">body</span> <span class="o">=</span> <span class="n">body</span><span class="p">(</span><span class="n">response_</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is being developed for eventual submission to <a class="reference external" href="http://www.boost.org/">Boost</a>.</p>
+</div>
+<div class="section" id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
+<p>You can download the latest releases of the library at:</p>
+<blockquote>
+<a class="reference external" href="http://github.com/mikhailberis/cpp-netlib/downloads">http://github.com/mikhailberis/cpp-netlib/downloads</a></blockquote>
+<p>You can also get the latest developments from the <a class="reference external" href="http://git-scm.com/">Git</a> repository at:</p>
+<blockquote>
+git://github.com/mikhailberis/cpp-netlib.git</blockquote>
+<p>You can find more information about the progress of the development by checking
+the <a class="reference external" href="http://github.com/">GitHub</a> project page at:</p>
+<blockquote>
+<a class="reference external" href="http://github.com/mikhailberis/cpp-netlib">http://github.com/mikhailberis/cpp-netlib</a></blockquote>
+</div>
+<div class="section" id="support">
+<h2>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h2>
+<p>You can ask questions, join the discussion, and report issues to the developers
+mailing list by joining via:</p>
+<blockquote>
+<a class="reference external" href="https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel">https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel</a></blockquote>
+<p>You may also file issues on the <a class="reference external" href="http://github.com/">Github</a> issue tracker at:</p>
+<blockquote>
+<a class="reference external" href="http://github.com/mikhailberis/cpp-netlib/issues">http://github.com/mikhailberis/cpp-netlib/issues</a></blockquote>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="whats_new.html">What&#8217;s New</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="whats_new.html#cpp-netlib-0-7"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="whats_new.html#cpp-netlib-0-6"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="whats_new.html#cpp-netlib-0-5"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.5</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#downloading-an-official-release">Downloading an official release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#downloading-a-development-version">Downloading a development version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#getting-boost">Getting Boost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#getting-cmake">Getting CMake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#building-with-cmake">Building with CMake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#reporting-issues-getting-support">Reporting Issues, Getting Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples_http.html">HTTP examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="in_depth.html">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="message.html">The message template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uri.html">The URI template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http.html">HTTP implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="techniques.html">Techniques</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tag_metafunctions.html">Tag metafunctions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html">Directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polymorphism.html">Static and dynamic polymorphism</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">Project history</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="history.html#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="history.html#objectives">Objectives</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Full installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="references.html#about-cpp-netlib">About <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="references.html#other-sources">Other sources</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    <a title="cpp-netlib v0.7 documentation" href="#" accesskey="U">up</a>
+   |
+    <a href="whats_new.html" title="What&amp;#8217;s New">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+      documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+  </div>
+
+  </body>
+</html>

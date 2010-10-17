@@ -1,0 +1,176 @@
+.. _getting_started:
+
+*****************
+ Getting Started
+*****************
+
+Downloading an official release
+===============================
+
+All stable versions of :mod:`cpp-netlib` can be downloaded from
+Github_ from this url:
+
+    http://github.com/cpp-netlib/cpp-netlib/downloads
+
+Each release is available as gzipped (Using the command
+``tar xzf cpp-netlib.tar.gz``) or bzipped (Using ``tar xjf
+cpp-netlib.tar.bz2``) tarball, or as a zipfile (``unzip
+cpp-netlib.zip``, or on Windows using a tool such as 7zip_).
+
+.. _Github: http://github.com/cpp-netlib/cpp-netlib/downloads
+.. _7zip: http://www.7-zip.org/
+
+Downloading a development version
+=================================
+
+The :mod:`cpp-netlib` uses Git_ for source control, so to use any
+development versions Git must be installed on your system.
+
+Using the command line, the command to get the latest code is:
+
+::
+
+    shell$ git clone git://github.com/mikhailberis/cpp-netlib.git
+
+This should be enough information get to started.  To do more complex
+things with Git, such as pulling changes or checking out a new branch,
+refer to the `Git documentation`_.
+
+.. note:: If you look at the Git repository closely, this is the repository of
+   *mikhailberis* instead of *cpp-netlib*. The reason is that the main developer
+   and maintainer of the project is Dean Michael Berris, who goes by the alias
+   *mikhailberis* on the Internet.
+
+   Dean does the merging and maintenance of the whole library, similar to how
+   `Linus Torvalds`_ of the Linux project acts as the gatekeeper of the project.
+
+.. _`Linus Torvalds`: http://en.wikipedia.org/wiki/Linus_Torvalds
+
+Windows users need to use msysGit_, and to invoke the command above
+from a shell.
+
+For fans of Subversion_, the same code can be checked out from
+http://svn.github.com/mikhailberis/cpp-netlib.git.
+
+.. _Git: http://git-scm.com/
+.. _`Git documentation`: http://git-scm.com/documentation
+.. _msysGit: http://code.google.com/p/msysgit/downloads/list
+.. _Subversion: http://subversion.tigris.org/
+
+.. note:: The :mod:`cpp-netlib` project is hosted on GitHub_ and follows the 
+   prescribed development model for GitHub_ based projects. This means in case
+   you want to submit patches, you will have to create a fork of the project
+   (read up on forking_) and then submit a pull request (read up on submitting
+   `pull requests`_).
+
+.. _forking: http://help.github.com/forking/
+.. _`pull requests`: http://help.github.com/pull-requests/
+
+Getting Boost
+=============
+
+:mod:`cpp-netlib` depends on Boost_.  It should work for any version
+of Boost above 1.41.0.  If Boost is not installed on your system, the
+latest package can be found on the `Boost web-site`_.  The environment
+variable ``BOOST_ROOT`` must be defined, which must be the full path
+name of the top directory of the Boost distribution.  Although Boost
+is mostly header only, applications built using :mod:`cpp-netlib`
+still requires linking with `Boost.System`_, `Boost.Date_time`_, and
+`Boost.Regex`_.
+
+.. _Boost: http://www.boost.org/doc/libs/release/more/getting_started/index.html
+.. _`Boost web-site`: http://www.boost.org/users/download/
+.. _`Boost.System`: http://www.boost.org/libs/system/index.html
+.. _`Boost.Date_time`: http://www.boost.org/libs/date_time/index.html
+.. _`Boost.Regex`: http://www.boost.org/libs/regex/index.html
+
+.. note:: You can follow the steps in the `Boost Getting Started`_ guide to
+   install Boost into your development system.
+
+.. _`Boost Getting Started`:
+   http://www.boost.org/doc/libs/release/more/getting_started/index.html
+
+Getting CMake
+=============
+
+The :mod:`cpp-netlib` uses CMake_ to generate platform-specific build files. If
+you intend to run the test suite, you can follow the instructions below.
+Otherwise, you don't need CMake to use :mod:`cpp-netlib` in your project. The
+:mod:`cpp-netlib` requires CMake version 2.8 or higher.
+
+.. _CMake: http://www.cmake.org/
+
+Let's assume that you have unpacked the :mod:`cpp-netlib` at the top of your
+HOME directory. On Unix-like systems you will typically be able to change into
+your HOME directory using the command ``cd ~``. This sample below assumes that
+the ``~/cpp-netlib`` directory exists, and is the top-level directory of the
+:mod:`cpp-netlib` release.
+
+Building with CMake
+===================
+
+To build the tests that come with cpp-netlib, we first need to configure the
+build system to use our compiler of choice. This is done by running the
+``cmake`` command at the top-level directory of :mod:`cpp-netlib` with
+additional parameters::
+
+    $ cd ~/cpp-netlib
+    $ cmake -DCMAKE_BUILD_TYPE=Debug \
+    >       -DCMAKE_C_COMPILER=gcc   \
+    >       -DCMAKE_CXX_COMPILER=g++ \
+    >       .
+
+Building on Linux
+~~~~~~~~~~~~~~~~~
+
+On Linux, this will generate the appropriate Makefiles that will enable you to
+build and run the tests and examples that come with :mod:`cpp-netlib`. To build
+the tests, you can run ``make`` in the same top-level directory of
+:mod:`cpp-netlib`::
+
+    $ make
+
+.. note:: Just like with traditional GNU Make, you can add the ``-j`` parameter
+   to specify how many parallel builds to run. In case you're in a sufficiently
+   powerful system and would like to parallelize the build into 4 jobs, you can
+   do this with::
+
+       make -j4
+
+   As a caveat, :mod:`cpp-netlib` is heavy on template metaprogramming and will
+   require a lot of computing and memory resources to build the individual
+   tests. Do this at the risk of thrashing_ your system.
+
+.. _thrashing: http://en.wikipedia.org/wiki/Thrashing_(computer_science)
+
+Once the build has completed, you can now run the test suite by issuing::
+
+    $ make test
+
+Building On Windows
+~~~~~~~~~~~~~~~~~~~
+
+If you're using the Microsoft Visual C++ compiler or the Microsoft Visual Studio
+IDE and you would like to build cpp-netlib from within Visual Studio, you can
+look for the solution and project files as the artifacts of the call to
+``cmake`` -- the file should be named ``cpp-netlib.sln`` (the solution) along
+with a number of project files for Visual Studio.
+
+Reporting Issues, Getting Support
+=================================
+
+In case you find yourself stuck or if you've found a bug (or you want to just
+join the discussion) you have a few options to choose from.
+
+For reporting bugs, feature requests, and asking questions about the
+implementation and/or the documentation, you can go to the GitHub issues page
+for the project at http://github.com/mikhailberis/cpp-netlib/issues.
+
+You can also opt to join the developers mailing list for a more personal
+interaction with the developers of the project. You can join the mailing list
+through https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel.
+
+You may also choose to get commercial support from:
+
+    Dean Michael Berris - <me@deanberris.com>
+    

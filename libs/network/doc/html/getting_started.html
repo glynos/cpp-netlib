@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; cpp-netlib v0.7 documentation</title>
+    <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.7 documentation" href="index.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="What’s New" href="whats_new.html" /> 
+  </head>
+  <body>
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t4">
+    <div id="hd">
+      <h1><a href="index.html">cpp-netlib v0.7 documentation</a></h1>
+      <div class="nav">
+    &laquo; <a href="whats_new.html" title="What&amp;#8217;s New">previous</a>
+     |
+    <a title="cpp-netlib v0.7 documentation" href="index.html" accesskey="U">up</a>
+   |
+    <a href="examples.html" title="Examples">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="getting_started">
+            
+  <div class="section" id="getting-started">
+<span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="downloading-an-official-release">
+<h2>Downloading an official release<a class="headerlink" href="#downloading-an-official-release" title="Permalink to this headline">¶</a></h2>
+<p>All stable versions of <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> can be downloaded from
+<a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">Github</a> from this url:</p>
+<blockquote>
+<a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">http://github.com/cpp-netlib/cpp-netlib/downloads</a></blockquote>
+<p>Each release is available as gzipped (Using the command
+<tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xzf</span> <span class="pre">cpp-netlib.tar.gz</span></tt>) or bzipped (Using <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">xjf</span>
+<span class="pre">cpp-netlib.tar.bz2</span></tt>) tarball, or as a zipfile (<tt class="docutils literal"><span class="pre">unzip</span>
+<span class="pre">cpp-netlib.zip</span></tt>, or on Windows using a tool such as <a class="reference external" href="http://www.7-zip.org/">7zip</a>).</p>
+</div>
+<div class="section" id="downloading-a-development-version">
+<h2>Downloading a development version<a class="headerlink" href="#downloading-a-development-version" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://git-scm.com/">Git</a> for source control, so to use any
+development versions Git must be installed on your system.</p>
+<p>Using the command line, the command to get the latest code is:</p>
+<div class="highlight-python"><pre>shell$ git clone git://github.com/mikhailberis/cpp-netlib.git</pre>
+</div>
+<p>This should be enough information get to started.  To do more complex
+things with Git, such as pulling changes or checking out a new branch,
+refer to the <a class="reference external" href="http://git-scm.com/documentation">Git documentation</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>If you look at the Git repository closely, this is the repository of
+<em>mikhailberis</em> instead of <em>cpp-netlib</em>. The reason is that the main developer
+and maintainer of the project is Dean Michael Berris, who goes by the alias
+<em>mikhailberis</em> on the Internet.</p>
+<p class="last">Dean does the merging and maintenance of the whole library, similar to how
+<a class="reference external" href="http://en.wikipedia.org/wiki/Linus_Torvalds">Linus Torvalds</a> of the Linux project acts as the gatekeeper of the project.</p>
+</div>
+<p>Windows users need to use <a class="reference external" href="http://code.google.com/p/msysgit/downloads/list">msysGit</a>, and to invoke the command above
+from a shell.</p>
+<p>For fans of <a class="reference external" href="http://subversion.tigris.org/">Subversion</a>, the same code can be checked out from
+<a class="reference external" href="http://svn.github.com/mikhailberis/cpp-netlib.git">http://svn.github.com/mikhailberis/cpp-netlib.git</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> project is hosted on <a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">GitHub</a> and follows the
+prescribed development model for <a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">GitHub</a> based projects. This means in case
+you want to submit patches, you will have to create a fork of the project
+(read up on <a class="reference external" href="http://help.github.com/forking/">forking</a>) and then submit a pull request (read up on submitting
+<a class="reference external" href="http://help.github.com/pull-requests/">pull requests</a>).</p>
+</div>
+</div>
+<div class="section" id="getting-boost">
+<h2>Getting Boost<a class="headerlink" href="#getting-boost" title="Permalink to this headline">¶</a></h2>
+<p><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> depends on <a class="reference external" href="http://www.boost.org/doc/libs/release/more/getting_started/index.html">Boost</a>.  It should work for any version
+of Boost above 1.41.0.  If Boost is not installed on your system, the
+latest package can be found on the <a class="reference external" href="http://www.boost.org/users/download/">Boost web-site</a>.  The environment
+variable <tt class="docutils literal"><span class="pre">BOOST_ROOT</span></tt> must be defined, which must be the full path
+name of the top directory of the Boost distribution.  Although Boost
+is mostly header only, applications built using <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>
+still requires linking with <a class="reference external" href="http://www.boost.org/libs/system/index.html">Boost.System</a>, <a class="reference external" href="http://www.boost.org/libs/date_time/index.html">Boost.Date_time</a>, and
+<a class="reference external" href="http://www.boost.org/libs/regex/index.html">Boost.Regex</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can follow the steps in the <a class="reference external" href="http://www.boost.org/doc/libs/release/more/getting_started/index.html">Boost Getting Started</a> guide to
+install Boost into your development system.</p>
+</div>
+</div>
+<div class="section" id="getting-cmake">
+<h2>Getting CMake<a class="headerlink" href="#getting-cmake" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://www.cmake.org/">CMake</a> to generate platform-specific build files. If
+you intend to run the test suite, you can follow the instructions below.
+Otherwise, you don&#8217;t need CMake to use <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> in your project. The
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> requires CMake version 2.8 or higher.</p>
+<p>Let&#8217;s assume that you have unpacked the <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> at the top of your
+HOME directory. On Unix-like systems you will typically be able to change into
+your HOME directory using the command <tt class="docutils literal"><span class="pre">cd</span> <span class="pre">~</span></tt>. This sample below assumes that
+the <tt class="docutils literal"><span class="pre">~/cpp-netlib</span></tt> directory exists, and is the top-level directory of the
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> release.</p>
+</div>
+<div class="section" id="building-with-cmake">
+<h2>Building with CMake<a class="headerlink" href="#building-with-cmake" title="Permalink to this headline">¶</a></h2>
+<p>To build the tests that come with cpp-netlib, we first need to configure the
+build system to use our compiler of choice. This is done by running the
+<tt class="docutils literal"><span class="pre">cmake</span></tt> command at the top-level directory of <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> with
+additional parameters:</p>
+<div class="highlight-python"><pre>$ cd ~/cpp-netlib
+$ cmake -DCMAKE_BUILD_TYPE=Debug \
+&gt;       -DCMAKE_C_COMPILER=gcc   \
+&gt;       -DCMAKE_CXX_COMPILER=g++ \
+&gt;       .</pre>
+</div>
+<div class="section" id="building-on-linux">
+<h3>Building on Linux<a class="headerlink" href="#building-on-linux" title="Permalink to this headline">¶</a></h3>
+<p>On Linux, this will generate the appropriate Makefiles that will enable you to
+build and run the tests and examples that come with <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>. To build
+the tests, you can run <tt class="docutils literal"><span class="pre">make</span></tt> in the same top-level directory of
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>:</p>
+<div class="highlight-python"><pre>$ make</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Just like with traditional GNU Make, you can add the <tt class="docutils literal"><span class="pre">-j</span></tt> parameter
+to specify how many parallel builds to run. In case you&#8217;re in a sufficiently
+powerful system and would like to parallelize the build into 4 jobs, you can
+do this with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">make</span> <span class="o">-</span><span class="n">j4</span>
+</pre></div>
+</div>
+<p class="last">As a caveat, <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is heavy on template metaprogramming and will
+require a lot of computing and memory resources to build the individual
+tests. Do this at the risk of <a class="reference external" href="http://en.wikipedia.org/wiki/Thrashing_(computer_science)">thrashing</a> your system.</p>
+</div>
+<p>Once the build has completed, you can now run the test suite by issuing:</p>
+<div class="highlight-python"><pre>$ make test</pre>
+</div>
+</div>
+<div class="section" id="building-on-windows">
+<h3>Building On Windows<a class="headerlink" href="#building-on-windows" title="Permalink to this headline">¶</a></h3>
+<p>If you&#8217;re using the Microsoft Visual C++ compiler or the Microsoft Visual Studio
+IDE and you would like to build cpp-netlib from within Visual Studio, you can
+look for the solution and project files as the artifacts of the call to
+<tt class="docutils literal"><span class="pre">cmake</span></tt> &#8211; the file should be named <tt class="docutils literal"><span class="pre">cpp-netlib.sln</span></tt> (the solution) along
+with a number of project files for Visual Studio.</p>
+</div>
+</div>
+<div class="section" id="reporting-issues-getting-support">
+<h2>Reporting Issues, Getting Support<a class="headerlink" href="#reporting-issues-getting-support" title="Permalink to this headline">¶</a></h2>
+<p>In case you find yourself stuck or if you&#8217;ve found a bug (or you want to just
+join the discussion) you have a few options to choose from.</p>
+<p>For reporting bugs, feature requests, and asking questions about the
+implementation and/or the documentation, you can go to the GitHub issues page
+for the project at <a class="reference external" href="http://github.com/mikhailberis/cpp-netlib/issues">http://github.com/mikhailberis/cpp-netlib/issues</a>.</p>
+<p>You can also opt to join the developers mailing list for a more personal
+interaction with the developers of the project. You can join the mailing list
+through <a class="reference external" href="https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel">https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel</a>.</p>
+<p>You may also choose to get commercial support from:</p>
+<blockquote>
+Dean Michael Berris - &lt;<a class="reference external" href="mailto:me&#37;&#52;&#48;deanberris&#46;com">me<span>&#64;</span>deanberris<span>&#46;</span>com</a>&gt;</blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#downloading-an-official-release">Downloading an official release</a></li>
+<li><a class="reference internal" href="#downloading-a-development-version">Downloading a development version</a></li>
+<li><a class="reference internal" href="#getting-boost">Getting Boost</a></li>
+<li><a class="reference internal" href="#getting-cmake">Getting CMake</a></li>
+<li><a class="reference internal" href="#building-with-cmake">Building with CMake</a><ul>
+<li><a class="reference internal" href="#building-on-linux">Building on Linux</a></li>
+<li><a class="reference internal" href="#building-on-windows">Building On Windows</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reporting-issues-getting-support">Reporting Issues, Getting Support</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+      <li>Prev: <a href="whats_new.html">What&#8217;s New</a></li>
+    
+    
+      <li>Next: <a href="examples.html">Examples</a></li>
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="index.html">cpp-netlib v0.7 documentation</a>
+        
+        <ul><li>Getting Started</li></ul>
+        
+      </li>
+  </ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/getting_started.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="whats_new.html" title="What&amp;#8217;s New">previous</a>
+     |
+    <a title="cpp-netlib v0.7 documentation" href="index.html" accesskey="U">up</a>
+   |
+    <a href="examples.html" title="Examples">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+      documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+  </div>
+
+  </body>
+</html>

@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The message template &mdash; cpp-netlib v0.7 documentation</title>
+    <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.7 documentation" href="index.html" />
+    <link rel="up" title="An in-depth look at the cpp-netlib" href="in_depth.html" />
+    <link rel="next" title="The URI template" href="uri.html" />
+    <link rel="prev" title="An in-depth look at the cpp-netlib" href="in_depth.html" /> 
+  </head>
+  <body>
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t4">
+    <div id="hd">
+      <h1><a href="index.html">cpp-netlib v0.7 documentation</a></h1>
+      <div class="nav">
+    &laquo; <a href="in_depth.html" title="An in-depth look at the &lt;tt class=&#34;docutils literal docutils literal docutils literal docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;cpp-netlib&lt;/span&gt;&lt;/tt&gt;">previous</a>
+     |
+    <a href="in_depth.html" title="An in-depth look at the &lt;tt class=&#34;docutils literal docutils literal docutils literal docutils literal docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;cpp-netlib&lt;/span&gt;&lt;/tt&gt;" accesskey="U">up</a>
+   |
+    <a href="uri.html" title="The URI template">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="message">
+            
+  <div class="section" id="the-message-template">
+<h1>The message template<a class="headerlink" href="#the-message-template" title="Permalink to this headline">¶</a></h1>
+<p>One of the core components in the library is the concept and the
+implementation of a common message type. In most (not all) network
+protocols, the concept of a message is central to the definition of
+the protocol. In HTTP, SMTP, XMPP, and even other protocols like SNMP
+and ICMP, there is a common notion of a &#8220;packet&#8221; or a message. In
+cpp-netlib we chose to implement the concept of a message that has the
+following common parts:</p>
+<blockquote>
+<ul class="simple">
+<li><strong>Source</strong> - every message has a source identifier which varies
+from protocol to protocol.</li>
+<li><strong>Destination</strong> - every message has a destination identifier which
+varies from protocol to protocol.</li>
+<li><strong>Headers</strong> - each message is assumed to contain headers, which
+may be empty in cases where the protocol does not support it, but
+is nonetheless supported by cpp-netlib messages.</li>
+<li><strong>Body</strong> - the content area of a message which varies from
+protocol to protocol (also sometimes referred to as payload).</li>
+</ul>
+</blockquote>
+<p>This division is purely logical &#8211; in the underlying implementation,
+the message type can choose to have different means of storing the
+data, depending on the type used to tag the message. This section
+covers the <a class="reference internal" href="#message-concept">Message Concept</a> as well as the <a class="reference internal" href="#basic-message">basic_message</a>
+implementation.</p>
+<div class="section" id="message-concept">
+<h2><tt class="docutils literal"><span class="pre">Message</span> <span class="pre">Concept</span></tt><a class="headerlink" href="#message-concept" title="Permalink to this headline">¶</a></h2>
+<p>The Message Concept specifies what the valid operations on a message
+are as well as what messages look like semantically. The following
+table summarize the operations and syntactic as well as semantic
+properties of messages.</p>
+<p><strong>Legend</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">M:</th><td class="field-body">The message type.</td>
+</tr>
+<tr class="field"><th class="field-name">H:</th><td class="field-body">A headers container type.</td>
+</tr>
+<tr class="field"><th class="field-name">m,n:</th><td class="field-body">An instance of <strong>M</strong>.</td>
+</tr>
+<tr class="field"><th class="field-name">S:</th><td class="field-body">A string type.</td>
+</tr>
+<tr class="field"><th class="field-name">s,k,v:</th><td class="field-body">An instance of <strong>S</strong>.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="24%" />
+<col width="45%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Construct</th>
+<th class="head">Result</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal"><span class="pre">M()</span></tt></td>
+<td>Instance of M</td>
+<td>Default constructible.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">M(m)</span></tt></td>
+<td>Instance of M</td>
+<td>Copy constructible.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">n;</span></tt></td>
+<td>Reference to m</td>
+<td>Assignable.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">swap(m,</span> <span class="pre">n);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">void</span></tt></td>
+<td>Swappable.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">source(m);</span></tt></td>
+<td>unspecified</td>
+<td>Retrieve the source of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">destination(m);</span></tt></td>
+<td>unspecified</td>
+<td>Retrieve the destination of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">headers(m);</span></tt></td>
+<td>unspecified</td>
+<td>Get the range of headers of <tt class="docutils literal"><span class="pre">m</span></tt>. The
+result should be convertible to <tt class="docutils literal"><span class="pre">H</span></tt></td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">body(m);</span></tt></td>
+<td>unspecified</td>
+<td>Retrieve the body of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">source(s);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Set the source of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">source(m,s);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Set the source of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">destination(s);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Set the destination of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">destination(m,s);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Set the destination of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">header(k,</span> <span class="pre">v);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Add a header to <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">add_header(m,</span> <span class="pre">k,</span> <span class="pre">v);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Add a header to <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">remove_header(k);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Remove a header from <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">remove_header(m,</span> <span class="pre">k);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Remove a header from <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">body(s);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Set the body of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">body(m,s);</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
+<td>Set the body of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+</tr>
+</tbody>
+</table>
+<p>Types that model the Message Concept are meant to encapsulate data
+that has a source, a destination, one or more named headers, and a
+body/payload. Because the accessors and the directives are not
+required to be part of the message type that models the Message
+Concept, a message can be implemented as a POD type and have all
+manipulations performed in the directive implementations, as well as
+value transformations done in the accessors.</p>
+</div>
+<div class="section" id="basic-message">
+<h2><tt class="docutils literal"><span class="pre">basic_message</span></tt><a class="headerlink" href="#basic-message" title="Permalink to this headline">¶</a></h2>
+<p>The default implementation of a simple type that models the Message
+Concept is available in cpp-netlib. This default implementation is
+named <tt class="docutils literal"><span class="pre">basic_message</span></tt> which supports a <tt class="docutils literal"><span class="pre">Tag</span></tt> template
+parameter. The definition of <tt class="docutils literal"><span class="pre">basic_message</span></tt> looks like this:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">basic_message</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">basic_message</span></tt> template requires that the following
+tag-dispatched metafunctions are defined for the type <tt class="docutils literal"><span class="pre">Tag</span></tt>:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">string</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span>
+<span class="k">struct</span> <span class="n">headers_container</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>All the operations defined by the message concept are implemented by
+this basic message type. Other message implementations can either use
+this common message type or specialize it according to whether they
+want to use different containers or whether it&#8217;s going to be just a
+POD type.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The message template</a><ul>
+<li><a class="reference internal" href="#message-concept"><tt class="docutils literal"><span class="pre">Message</span> <span class="pre">Concept</span></tt></a></li>
+<li><a class="reference internal" href="#basic-message"><tt class="docutils literal"><span class="pre">basic_message</span></tt></a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+      <li>Prev: <a href="in_depth.html">An in-depth look at the <tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">cpp-netlib</span></tt></a></li>
+    
+    
+      <li>Next: <a href="uri.html">The URI template</a></li>
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="index.html">cpp-netlib v0.7 documentation</a>
+        
+          <ul><li><a href="in_depth.html">An in-depth look at the <tt class="docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">cpp-netlib</span></tt></a>
+        
+        <ul><li>The message template</li></ul>
+        </li></ul>
+      </li>
+  </ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/message.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="in_depth.html" title="An in-depth look at the &lt;tt class=&#34;docutils literal docutils literal docutils literal docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;cpp-netlib&lt;/span&gt;&lt;/tt&gt;">previous</a>
+     |
+    <a href="in_depth.html" title="An in-depth look at the &lt;tt class=&#34;docutils literal docutils literal docutils literal docutils literal docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;cpp-netlib&lt;/span&gt;&lt;/tt&gt;" accesskey="U">up</a>
+   |
+    <a href="uri.html" title="The URI template">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+      documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+  </div>
+
+  </body>
+</html>
