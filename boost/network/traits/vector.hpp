@@ -6,8 +6,6 @@
 #ifndef BOOST_NETWORK_TRAITS_VECTOR_HPP
 #define BOOST_NETWORK_TRAITS_VECTOR_HPP
 
-#include <vector>
-
 namespace boost { namespace network {
 
     template <class Tag>
@@ -19,16 +17,6 @@ namespace boost { namespace network {
         template <class Type>
         struct apply {
             typedef unsupported_tag<Tag> type;
-        };
-
-    };
-
-    template <>
-    struct vector<tags::http_server> {
-
-        template <class Type>
-        struct apply {
-            typedef std::vector<Type> type;
         };
 
     };

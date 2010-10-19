@@ -29,6 +29,9 @@ namespace boost { namespace network { namespace http {
 
     }
 
+    template <class R>
+    struct Response;
+
     template <class Tag, class T>
     inline
     BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
@@ -39,8 +42,19 @@ namespace boost { namespace network { namespace http {
 
 } // namespace http
 
+    namespace impl {
+        
+        template <class Message, class ValueType, class Async>
+        inline void destination(Message const & message, ValueType const & destination_, http::tags::http_server, Async) {
+            message.destination = destination_;
+        }
+
+    } /* impl */
+
 } // namespace network
 
 } // namespace boost
+
+#include <boost/network/message/modifiers/destination.hpp>
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIER_DESTINATION_HPP_20100624

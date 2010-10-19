@@ -24,10 +24,6 @@ namespace boost { namespace network {
             message.destination(destination_);
         }
 
-        template <class Message, class ValueType, class Async>
-        inline void destination(Message const & message, ValueType const & destination_, tags::http_server, Async) {
-            message.destination = destination_;
-        }
     }
 
     template <class Tag, template<class> class Message, class ValueType>

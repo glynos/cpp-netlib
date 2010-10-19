@@ -9,7 +9,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
-#include <boost/network/tags.hpp>
+#include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/uri/basic_uri_fwd.hpp>
 #include <boost/network/uri/http/detail/parse_specific.hpp>
@@ -17,13 +17,13 @@
 namespace boost { namespace network { namespace uri {
 
     template <>
-        struct basic_uri<tags::http_default_8bit_tcp_resolve> : uri_base<tags::http_default_8bit_tcp_resolve> {
-            typedef uri_base<tags::http_default_8bit_tcp_resolve>::string_type string_type;
-            using uri_base<tags::http_default_8bit_tcp_resolve>::operator=;
-            using uri_base<tags::http_default_8bit_tcp_resolve>::swap;
+        struct basic_uri<http::tags::http_default_8bit_tcp_resolve> : uri_base<http::tags::http_default_8bit_tcp_resolve> {
+            typedef uri_base<http::tags::http_default_8bit_tcp_resolve>::string_type string_type;
+            using uri_base<http::tags::http_default_8bit_tcp_resolve>::operator=;
+            using uri_base<http::tags::http_default_8bit_tcp_resolve>::swap;
 
-            basic_uri() : uri_base<tags::http_default_8bit_tcp_resolve>() {}
-            basic_uri(uri_base<tags::http_default_8bit_tcp_resolve>::string_type const & uri) : uri_base<tags::http_default_8bit_tcp_resolve>(uri) {}
+            basic_uri() : uri_base<http::tags::http_default_8bit_tcp_resolve>() {}
+            basic_uri(uri_base<http::tags::http_default_8bit_tcp_resolve>::string_type const & uri) : uri_base<http::tags::http_default_8bit_tcp_resolve>(uri) {}
 
             boost::uint16_t port() const {
                 return parts_.port ? *(parts_.port) : 
@@ -37,7 +37,7 @@ namespace boost { namespace network { namespace uri {
 
     inline
         boost::uint16_t
-        port(basic_uri<tags::http_default_8bit_tcp_resolve> const & uri) {
+        port(basic_uri<http::tags::http_default_8bit_tcp_resolve> const & uri) {
             return uri.port();
         }
 

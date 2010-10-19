@@ -13,6 +13,9 @@
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HPP
 
 #include <boost/network/protocol/http/traits.hpp>
+#include <boost/network/protocol/http/message/modifiers/add_header.hpp>
+#include <boost/network/protocol/http/message/modifiers/remove_header.hpp>
+#include <boost/network/protocol/http/message/modifiers/clear_headers.hpp>
 #include <boost/network/message.hpp>
 #include <boost/network/tags.hpp>
 #include <string>

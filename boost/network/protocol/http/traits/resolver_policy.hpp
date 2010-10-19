@@ -6,11 +6,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
+#include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/protocol/http/policies/sync_resolver.hpp>
 #include <boost/network/protocol/http/policies/async_resolver.hpp>
+#include <boost/network/protocol/http/support/is_http.hpp>
 #include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_http.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 

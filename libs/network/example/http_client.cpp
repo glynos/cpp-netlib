@@ -65,7 +65,7 @@ int main(int argc, char * argv[]) {
 
     using namespace boost::network;
 
-    typedef http::basic_client<tags::http_async_8bit_tcp_resolve, 1, 0>
+    typedef http::basic_client<http::tags::http_async_8bit_tcp_resolve, 1, 0>
         http_client;
     
     http_client::request request(source);

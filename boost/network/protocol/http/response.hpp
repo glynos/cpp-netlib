@@ -7,9 +7,6 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
 
-#include <boost/network/protocol/http/message.hpp>
-#include <boost/network/message.hpp>
-
 #include <boost/cstdint.hpp>
 
 #include <boost/network/protocol/http/message/traits/version.hpp>
@@ -34,9 +31,10 @@
 #include <boost/network/protocol/http/message/wrappers/destination.hpp>
 #include <boost/network/protocol/http/message/wrappers/source.hpp>
 
-#include <boost/network/protocol/http/response_concept.hpp>
+#include <boost/network/protocol/http/message.hpp>
 #include <boost/network/protocol/http/message/async_message.hpp>
 #include <boost/network/protocol/http/message/message_base.hpp>
+#include <boost/network/protocol/http/response_concept.hpp>
 
 namespace boost { namespace network { namespace http {
 

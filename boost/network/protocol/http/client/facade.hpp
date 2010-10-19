@@ -8,7 +8,7 @@
 
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
-#include <boost/network/support/sync_only.hpp>
+#include <boost/network/protocol/http/support/sync_only.hpp>
 
 namespace boost { namespace network { namespace http {
 

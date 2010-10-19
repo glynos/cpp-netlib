@@ -7,7 +7,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_DELIMITERS_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_DELIMITERS_IPP
 
-#include <boost/network/tags.hpp>
+#include <boost/network/protocol/http/tags.hpp>
 
 namespace boost { namespace network { namespace http {
 

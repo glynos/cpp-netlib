@@ -6,8 +6,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/response_concept.hpp>
-#include <boost/network/protocol/http/request_concept.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/concept/requires.hpp>
 

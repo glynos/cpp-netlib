@@ -9,7 +9,8 @@
 #include <boost/network/support/is_async.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/concept/requires.hpp>
-#include <boost/network/protocol/http/response_concept.hpp>
+#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/message/directives.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -30,6 +31,9 @@ namespace boost { namespace network { namespace http {
 
     }
 
+    template <class R>
+    struct Response;
+
     template <class Tag, class T>
     inline
     BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
@@ -40,8 +44,18 @@ namespace boost { namespace network { namespace http {
 
 } // namespace http
 
+    namespace impl {
+        
+        template <class Message, class ValueType, class Async>
+        inline void source(Message const & message, ValueType const & source_, http::tags::http_server const &, Async const &) {
+            message.source = source_;
+        }
+
+    } /* impl */
+
 } // namespace network
 
 } // namespace boost
 
+#include <boost/network/message/modifiers/source.hpp>
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIER_SOURCE_HPP_20100624

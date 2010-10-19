@@ -6,6 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/tags.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/uri/detail/parse_uri.hpp>
@@ -16,11 +17,8 @@ namespace boost { namespace network { namespace uri {
     namespace detail {
 
         template <>
-            inline bool parse_specific<
-                tags::http_default_8bit_tcp_resolve
-                    >(
-                        uri_parts<tags::http_default_8bit_tcp_resolve> & parts
-                     ) 
+            inline bool parse_specific<http::tags::http_default_8bit_tcp_resolve>
+            (uri_parts<http::tags::http_default_8bit_tcp_resolve> & parts)
             {
                 if ((parts.scheme.size() < 4) || (parts.scheme.size() > 5))
                     return false;

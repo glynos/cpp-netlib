@@ -6,8 +6,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/message/wrappers/helper.hpp>
-
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
@@ -32,6 +30,12 @@ namespace boost { namespace network { namespace http {
         };
 
     } // namespace impl
+
+    template <class R>
+    struct Response;
+
+    template <class R>
+    struct Request;
 
     template <class Tag>
     inline

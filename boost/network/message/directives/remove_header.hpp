@@ -13,6 +13,9 @@
 
 namespace boost { namespace network {
 
+    template <class Tag>
+    struct basic_message;
+
 namespace impl {
 template <
     class T

@@ -7,7 +7,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_CHUNK_CACHE_CONTAINER_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_CHUNK_CACHE_CONTAINER_IPP
 
-#include <boost/network/tags.hpp>
+#include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/traits/char.hpp>
 
 #include <list>

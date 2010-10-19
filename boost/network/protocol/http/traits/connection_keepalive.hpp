@@ -6,7 +6,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_CONECTION_KEEPALIVE_20091218
 #define BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_CONECTION_KEEPALIVE_20091218
 
-#include <boost/network/tags.hpp>
+#include <boost/network/protocol/http/tags.hpp>
 
 namespace boost { namespace network { namespace http {
 

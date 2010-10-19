@@ -1,7 +1,4 @@
 //
-// reply.hpp
-// ~~~~~~~~~
-//
 // Copyright (c) 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 // Copyright (c) 2009 Dean Michael Berris (mikhailberis@gmail.com)
 // Copyright (c) 2009 Tarroo, Inc.
@@ -19,8 +16,9 @@
 
 #include <boost/asio/buffer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/traits/string.hpp>
-#include <boost/network/traits/vector.hpp>
+#include <boost/network/protocol/http/traits/vector.hpp>
 #include <boost/network/protocol/http/header.hpp>
 
 namespace boost { namespace network { namespace http {

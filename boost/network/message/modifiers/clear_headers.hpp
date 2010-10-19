@@ -25,11 +25,6 @@ namespace boost { namespace network {
             header_promise.set_value(typename Message::headers_container_type());
         }
 
-        template <class Message, class Async>
-        inline void clear_headers(Message const & message, tags::http_server const &, Async const &) {
-            (typename Message::headers_container_type()).swap(message.headers);
-        }
-
     } // namespace impl
 
     template <class Tag, template <class> class Message>

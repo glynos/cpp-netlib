@@ -159,8 +159,8 @@ namespace boost { namespace network { namespace http {
 
     /** Specialize the traits for the http_server tag. */
     template <>
-    struct headers_container<tags::http_server> :
-        vector<tags::http_server>::apply<http::request_header>
+    struct headers_container<http::tags::http_server> :
+        vector<http::tags::http_server>::apply<http::request_header>
     {};
 
     namespace http { namespace impl {

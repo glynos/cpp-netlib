@@ -8,8 +8,6 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/cstdint.hpp>
-
-#include <boost/network/protocol/http/response_concept.hpp>
 #include <boost/concept/requires.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -37,6 +35,9 @@ namespace boost { namespace network { namespace http {
         };
 
     } // namespace impl
+
+    template <class R>
+    struct Response;
 
     template <class Tag>
     inline

@@ -14,6 +14,9 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag>
     struct async_message;
+
+    template <class Tag>
+    struct message_impl;
     
     template <class Tag>
     struct message_base
