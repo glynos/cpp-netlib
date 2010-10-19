@@ -60,7 +60,7 @@ Download
 
 You can download the latest releases of the library at:
 
-    http://github.com/mikhailberis/cpp-netlib/downloads
+    http://github.com/cpp-netlib/cpp-netlib/downloads
 
 You can also get the latest developments from the Git_ repository at:
 
@@ -69,7 +69,7 @@ You can also get the latest developments from the Git_ repository at:
 You can find more information about the progress of the development by checking
 the GitHub_ project page at:
 
-    http://github.com/mikhailberis/cpp-netlib
+    http://github.com/cpp-netlib/cpp-netlib
 
 Support
 -------
@@ -81,7 +81,7 @@ mailing list by joining via:
 
 You may also file issues on the Github_ issue tracker at:
 
-    http://github.com/mikhailberis/cpp-netlib/issues
+    http://github.com/cpp-netlib/cpp-netlib/issues
 
 Contents
 --------
