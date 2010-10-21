@@ -8,6 +8,7 @@
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network/utils/thread_pool.hpp>
+#include <boost/bind.hpp>
 
 using namespace boost::network;
 
@@ -24,3 +25,25 @@ BOOST_AUTO_TEST_CASE( default_constructor ) {
     BOOST_CHECK_EQUAL(pool.thread_count(), 1);
 }
 
+struct foo {
+    foo() : val_(0) {}
+    void bar(int val) {
+        val_ += val;
+    }
+    int const val() const {
+        return val_;
+    }
+protected:
+    int val_;
+};
+
+BOOST_AUTO_TEST_CASE( post_work ) {
+    foo instance;
+    {
+        utils::thread_pool pool;
+        BOOST_CHECK_NO_THROW(pool.post(boost::bind(&foo::bar, &instance, 1)));
+        BOOST_CHECK_NO_THROW(pool.post(boost::bind(&foo::bar, &instance, 2)));
+        // require that pool is destroyed here, RAII baby
+    }
+    BOOST_CHECK_EQUAL(instance.val(), 3);
+}
