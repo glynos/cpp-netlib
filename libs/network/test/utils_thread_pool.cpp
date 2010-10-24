@@ -22,7 +22,7 @@ using namespace boost::network;
 
 BOOST_AUTO_TEST_CASE( default_constructor ) {
     utils::thread_pool pool;
-    BOOST_CHECK_EQUAL(pool.thread_count(), 1);
+    BOOST_CHECK_EQUAL(pool.thread_count(), std::size_t(1));
 }
 
 struct foo {
