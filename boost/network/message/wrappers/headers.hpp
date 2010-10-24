@@ -25,7 +25,7 @@ namespace boost { namespace network {
         };
 
     template <class Tag>
-    class basic_message;
+    struct basic_message;
 
     /** headers wrapper for messages.
      *

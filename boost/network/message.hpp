@@ -6,7 +6,7 @@
 #ifndef __NETWORK_MESSAGE_HPP__
 #define __NETWORK_MESSAGE_HPP__
 
-#include "boost/network/message_fwd.hpp"
+#include <boost/network/message_fwd.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/traits/ostringstream.hpp>
 #include <boost/network/traits/headers_container.hpp>
@@ -38,7 +38,7 @@ namespace boost { namespace network {
     /** The common message type.
      */
     template <class Tag>
-    class basic_message {
+    struct basic_message {
         public:
 
         typedef Tag tag;
@@ -138,9 +138,12 @@ namespace boost { namespace network {
         // swap for ADL
         left.swap(right);
     }
-
-BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_string> >));
-BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_wstring> >));
+    
+    // Commenting this out as we don't need to do this anymore.
+    // BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_string> >));
+    // BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_wstring> >));
+    typedef basic_message<tags::default_string> message;
+    typedef basic_message<tags::default_wstring> wmessage;
 
 } // namespace network
 } // namespace boost
