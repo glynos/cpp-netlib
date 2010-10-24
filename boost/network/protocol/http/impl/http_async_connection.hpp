@@ -50,9 +50,9 @@ namespace boost { namespace network { namespace http { namespace impl {
                 resolve_function resolve, 
                 bool follow_redirect 
                 ) : 
+                follow_redirect_(follow_redirect),
                 resolver_(resolver),
                 resolve_(resolve), 
-                follow_redirect_(follow_redirect),
                 request_strand_(new boost::asio::io_service::strand(resolver->get_io_service()))
             {}
 
@@ -303,11 +303,11 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        boost::shared_ptr<boost::asio::io_service::strand> request_strand_;
+        bool follow_redirect_;
         boost::shared_ptr<resolver_type> resolver_;
         boost::shared_ptr<boost::asio::ip::tcp::socket> socket_;
         resolve_function resolve_;
-        bool follow_redirect_;
+        boost::shared_ptr<boost::asio::io_service::strand> request_strand_;
         string_type command_string_;
         string_type method;
     };

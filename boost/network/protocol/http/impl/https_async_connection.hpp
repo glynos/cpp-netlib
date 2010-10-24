@@ -39,11 +39,11 @@ namespace boost { namespace network { namespace http { namespace impl {
                 bool follow_redirect,
                 optional<string_type> const & certificate_filename = optional<string_type>() 
                 ) : 
-                resolver_(resolver),
-                resolve_(resolve), 
                 follow_redirect_(follow_redirect),
-                request_strand_(new boost::asio::io_service::strand(resolver->get_io_service())),
-                certificate_filename_(certificate_filename)
+                resolver_(resolver),
+                certificate_filename_(certificate_filename),
+                resolve_(resolve), 
+                request_strand_(new boost::asio::io_service::strand(resolver->get_io_service()))
             {}
 
 
@@ -337,13 +337,13 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        boost::shared_ptr<boost::asio::io_service::strand> request_strand_;
+        bool follow_redirect_;
         boost::shared_ptr<resolver_type> resolver_;
         optional<string_type> certificate_filename_;
         resolve_function resolve_;
         boost::shared_ptr<boost::asio::ssl::context> context_;
         boost::shared_ptr<boost::asio::ssl::stream<boost::asio::ip::tcp::socket> > socket_;
-        bool follow_redirect_;
+        boost::shared_ptr<boost::asio::io_service::strand> request_strand_;
         string_type command_string_;
         string_type method;
     };
