@@ -13,7 +13,7 @@
 .. :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 .. 	  Dean Michael Berris <mikhailberis@gmail.com>
 .. :Date: Oct 9, 2010
-.. :Version: 0.7
+.. :Version: 0.7.1
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 .. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2010.
 ..             Distributed under the Boost Software License, Version
@@ -33,11 +33,11 @@ some point in the future be submitted for review into Boost.  A
 presentation about :mod:`cpp-netlib` was given at `BoostCon 2010`_,
 for which the `slides`_ and the `paper`_ can be found on-line.
 
-Sneak Peak
+Sneak Peek
 ----------
 
 The :mod:`cpp-netlib` allows you to write semantically consistent code for
-making different kinds of higher level network applications. 
+making different kinds of higher level network applications.
 
 The library allows for writing simple code for simple C++ HTTP client
 applications like:
@@ -60,7 +60,7 @@ Download
 
 You can download the latest releases of the library at:
 
-    http://github.com/mikhailberis/cpp-netlib/downloads
+    http://github.com/cpp-netlib/cpp-netlib/downloads
 
 You can also get the latest developments from the Git_ repository at:
 
@@ -69,7 +69,7 @@ You can also get the latest developments from the Git_ repository at:
 You can find more information about the progress of the development by checking
 the GitHub_ project page at:
 
-    http://github.com/mikhailberis/cpp-netlib
+    http://github.com/cpp-netlib/cpp-netlib
 
 Support
 -------
@@ -81,7 +81,7 @@ mailing list by joining via:
 
 You may also file issues on the Github_ issue tracker at:
 
-    http://github.com/mikhailberis/cpp-netlib/issues
+    http://github.com/cpp-netlib/cpp-netlib/issues
 
 Contents
 --------
@@ -95,7 +95,6 @@ Contents
    in_depth.rst
    techniques.rst
    history.rst
-   install.rst
    references.rst
 
 .. _Boost: http://www.boost.org/
