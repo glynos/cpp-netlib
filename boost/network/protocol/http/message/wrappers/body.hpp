@@ -31,23 +31,16 @@ namespace boost { namespace network { namespace http {
 
     } // namespace impl
 
-    template <class R>
-    struct Response;
-
-    template <class R>
-    struct Request;
-
     template <class Tag>
     inline
-    BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
-        (typename impl::body_wrapper<basic_response<Tag> >::string_type const))
+    typename impl::body_wrapper<basic_response<Tag> >::string_type const
     body(basic_response<Tag> const & message) {
         return impl::body_wrapper<basic_response<Tag> >(message);
     }
 
     template <class Tag>
-    inline BOOST_CONCEPT_REQUIRES(((Request<basic_request<Tag> >)),
-        (typename impl::body_wrapper<basic_request<Tag> >::string_type const))
+    inline
+    typename impl::body_wrapper<basic_request<Tag> >::string_type const
     body(basic_request<Tag> const & message) {
         return impl::body_wrapper<basic_request<Tag> >(message);
     }

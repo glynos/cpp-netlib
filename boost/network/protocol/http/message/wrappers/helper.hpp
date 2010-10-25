@@ -7,7 +7,6 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/mpl/if.hpp>
-#include <boost/concept/requires.hpp>
 
 #ifndef BOOST_NETWORK_DEFINE_HTTP_WRAPPER
 #define BOOST_NETWORK_DEFINE_HTTP_WRAPPER(name, accessor, pod_field)    \
@@ -48,21 +47,21 @@
             : message_(message) {}                                      \
         name##_wrapper(name##_wrapper const & other)                    \
             : message_(other.message_) {}                               \
-        operator string_type () {                                       \
+        operator string_type () const {                                 \
             return this->get_value(message_);                           \
         }                                                               \
     };                                                                  \
                                                                         \
     template <class Tag>                                                \
-    inline BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),   \
-        (name##_wrapper<basic_response<Tag> > const))                   \
+    inline                                                              \
+    name##_wrapper<basic_response<Tag> > const                          \
     name (basic_response<Tag> const & message) {                        \
         return name##_wrapper<basic_response<Tag> >(message);           \
     }                                                                   \
                                                                         \
     template <class Tag>                                                \
-    inline BOOST_CONCEPT_REQUIRES(((Request<basic_request<Tag> >)),     \
-        (name##_wrapper<basic_request<Tag> > const))                    \
+    inline                                                              \
+    name##_wrapper<basic_request<Tag> > const                           \
     name (basic_request<Tag> const & message) {                         \
         return name##_wrapper<basic_request<Tag> >(message);            \
     }

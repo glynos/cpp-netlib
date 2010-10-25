@@ -7,9 +7,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/request_concept.hpp>
-#include <boost/concept/requires.hpp>
-
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
@@ -35,8 +32,7 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag>
     inline
-    BOOST_CONCEPT_REQUIRES(((Request<basic_request<Tag> >)),
-        (impl::path_wrapper<Tag>))
+    impl::path_wrapper<Tag>
     path(basic_request<Tag> const & request) {
         return impl::path_wrapper<Tag>(request);
     }

@@ -8,7 +8,6 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/cstdint.hpp>
-#include <boost/concept/requires.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -41,8 +40,7 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag>
     inline
-    BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
-        (impl::status_wrapper<Tag>))
+    impl::status_wrapper<Tag>
     status(basic_response<Tag> const & response) {
         return impl::status_wrapper<Tag>(response);
     }

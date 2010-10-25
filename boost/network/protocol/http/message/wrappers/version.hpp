@@ -7,8 +7,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/concept/requires.hpp>
-
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
@@ -39,9 +37,7 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag>
     inline 
-    BOOST_CONCEPT_REQUIRES(
-        ((Response<basic_response<Tag> >)),
-        (impl::version_wrapper<Tag>))
+    impl::version_wrapper<Tag>
     version(basic_response<Tag> const & response) {
         return impl::version_wrapper<Tag>(response);
     }
