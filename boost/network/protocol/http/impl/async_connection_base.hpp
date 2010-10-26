@@ -21,7 +21,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         typedef typename resolver_base::resolver_type resolver_type;
         typedef typename resolver_base::resolve_function resolve_function;
         typedef typename string<Tag>::type string_type;
-        typedef basic_request<typename sync_only<Tag>::type> request;
+        typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
         
         static boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > new_connection(resolve_function resolve, boost::shared_ptr<resolver_type> resolver, bool follow_redirect, bool https) {

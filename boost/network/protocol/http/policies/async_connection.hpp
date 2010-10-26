@@ -41,7 +41,7 @@ namespace boost { namespace network { namespace http {
                 pimpl = impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolve, resolver, follow_redirect, https);
             }
 
-            basic_response<Tag> send_request(string_type const & method, basic_request<typename sync_only<Tag>::type> const & request_, bool get_body) {
+            basic_response<Tag> send_request(string_type const & method, basic_request<Tag> const & request_, bool get_body) {
                 return pimpl->start(request_, method, get_body);
             }
 
@@ -52,7 +52,7 @@ namespace boost { namespace network { namespace http {
         };
 
         typedef boost::shared_ptr<connection_impl> connection_ptr;
-        connection_ptr get_connection(boost::shared_ptr<resolver_type> resolver, basic_request<typename sync_only<Tag>::type> const & request_) {
+        connection_ptr get_connection(boost::shared_ptr<resolver_type> resolver, basic_request<Tag> const & request_) {
             string_type protocol_ = protocol(request_);
             connection_ptr connection_(
                 new connection_impl(

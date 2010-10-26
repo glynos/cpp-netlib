@@ -26,9 +26,6 @@
 #include <boost/network/protocol/http/client/facade.hpp>
 #include <boost/network/protocol/http/client/pimpl.hpp>
 
-#include <boost/network/support/sync_only.hpp>
-
-
 namespace boost { namespace network { namespace http {
 
     template <class Tag, unsigned version_major, unsigned version_minor>
@@ -39,7 +36,7 @@ namespace boost { namespace network { namespace http {
         typedef basic_client_impl<Tag,version_major,version_minor> pimpl_type;
         typedef basic_client_facade<Tag, basic_client<Tag,version_major,version_minor> > base_facade_type;
     public:
-        typedef basic_request<typename sync_only<Tag>::type> request;
+        typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
         typedef typename string<Tag>::type string_type;
         typedef Tag tag_type;

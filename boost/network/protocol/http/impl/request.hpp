@@ -20,6 +20,7 @@
 
 #include <boost/network/protocol/http/message/async_message.hpp>
 #include <boost/network/support/is_async.hpp>
+#include <boost/network/protocol/http/support/sync_only.hpp>
 
 #include <boost/cstdint.hpp>
 
@@ -33,24 +34,15 @@ namespace boost { namespace network { namespace http {
       */
 
     template <class Tag>
-    struct request_base 
-        : mpl::if_<
-            is_async<Tag>,
-            async_message<Tag>,
-            basic_message<Tag>
-        >
-    {};
-
-    template <class Tag>
-    struct basic_request : public request_base<Tag>::type
+    struct basic_request : public basic_message<Tag>
     {
 
         mutable boost::network::uri::http::uri uri_;
-        typedef typename request_base<Tag>::type base_type;
+        typedef basic_message<Tag> base_type;
 
     public:
-        typedef Tag tag;
-        typedef typename string<Tag>::type string_type;
+        typedef typename sync_only<Tag>::type tag;
+        typedef typename string<tag>::type string_type;
         typedef boost::uint16_t port_type;
 
         explicit basic_request(string_type const & uri_)

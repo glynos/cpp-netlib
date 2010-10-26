@@ -30,11 +30,11 @@ namespace boost { namespace network { namespace tags {
     // Tag Definition Macro Helper
 #ifndef BOOST_NETWORK_DEFINE_TAG
 #define BOOST_NETWORK_DEFINE_TAG(name)                                      \
-    typedef mpl::inherit_linearly<                                          \
+    struct name : mpl::inherit_linearly<                                    \
                 name##_tags,                                                \
                 mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2>  \
-            >::type name;                                                   \
-    template <> struct components<name> {             \
+            >::type {};                                                     \
+    template <> struct components<name> {                                   \
         typedef name##_tags type;                                           \
     };
 #endif // BOOST_NETWORK_DEFINE_TAG
