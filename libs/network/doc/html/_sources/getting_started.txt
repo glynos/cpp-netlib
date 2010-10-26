@@ -57,7 +57,7 @@ http://svn.github.com/mikhailberis/cpp-netlib.git.
 .. _msysGit: http://code.google.com/p/msysgit/downloads/list
 .. _Subversion: http://subversion.tigris.org/
 
-.. note:: The :mod:`cpp-netlib` project is hosted on GitHub_ and follows the 
+.. note:: The :mod:`cpp-netlib` project is hosted on GitHub_ and follows the
    prescribed development model for GitHub_ based projects. This means in case
    you want to submit patches, you will have to create a fork of the project
    (read up on forking_) and then submit a pull request (read up on submitting
@@ -70,7 +70,7 @@ Getting Boost
 =============
 
 :mod:`cpp-netlib` depends on Boost_.  It should work for any version
-of Boost above 1.41.0.  If Boost is not installed on your system, the
+of Boost above 1.43.0.  If Boost is not installed on your system, the
 latest package can be found on the `Boost web-site`_.  The environment
 variable ``BOOST_ROOT`` must be defined, which must be the full path
 name of the top directory of the Boost distribution.  Although Boost
@@ -164,7 +164,7 @@ join the discussion) you have a few options to choose from.
 
 For reporting bugs, feature requests, and asking questions about the
 implementation and/or the documentation, you can go to the GitHub issues page
-for the project at http://github.com/mikhailberis/cpp-netlib/issues.
+for the project at http://github.com/cpp-netlib/cpp-netlib/issues.
 
 You can also opt to join the developers mailing list for a more personal
 interaction with the developers of the project. You can join the mailing list
@@ -173,4 +173,4 @@ through https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel.
 You may also choose to get commercial support from:
 
     Dean Michael Berris - <me@deanberris.com>
-    
+
