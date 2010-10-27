@@ -115,11 +115,13 @@ namespace boost { namespace network { namespace http {
      *  primarily and be solely a POD for performance
      *  reasons.
      */
-    template <>
-    struct basic_request<tags::http_server> {
-        typedef tags::http_server tag;
-        typedef string<tags::http_server>::type string_type;
-        typedef vector<tags::http_server>::apply<request_header>::type vector_type;
+    template <class Tag>
+    struct pod_request_base {
+        typedef Tag tag;
+        typedef typename string<Tag>::type string_type;
+        typedef typename vector<tags::http_server>::
+            template apply<request_header>::type 
+            vector_type;
         typedef vector_type headers_container_type;
         typedef boost::uint16_t port_type;
         mutable string_type source;
@@ -130,7 +132,7 @@ namespace boost { namespace network { namespace http {
         mutable vector_type headers;
         mutable string_type body;
 
-        void swap(basic_request & r) const {
+        void swap(pod_request_base & r) const {
             using std::swap;
             swap(method, r.method);
             swap(source, r.source);
@@ -141,6 +143,12 @@ namespace boost { namespace network { namespace http {
             swap(body, r.body);
         }
     };
+
+    template <>
+    struct basic_request<tags::http_async_server> : pod_request_base<tags::http_async_server> {};
+
+    template <>
+    struct basic_request<tags::http_server> : pod_request_base<tags::http_server> {};
 
     template <class Tag>
     inline void swap(basic_request<Tag> & lhs, basic_request<Tag> & rhs) {
@@ -153,6 +161,11 @@ namespace boost { namespace network { namespace http {
     template <>
     struct headers_container<http::tags::http_server> :
         vector<http::tags::http_server>::apply<http::request_header>
+    {};
+
+    template <>
+    struct headers_container<http::tags::http_async_server> :
+        vector<http::tags::http_async_server>::apply<http::request_header>
     {};
 
     namespace http { namespace impl {
@@ -173,6 +186,28 @@ namespace boost { namespace network { namespace http {
             typedef string<tags::http_server>::type string_type;
             basic_request<tags::http_server> const & request_;
             body_wrapper(basic_request<tags::http_server> const & request_)
+            : request_(request_) {}
+            operator string_type () {
+                return request_.body;
+            }
+        };
+
+        template <>
+        struct request_headers_wrapper<tags::http_async_server> {
+            basic_request<tags::http_async_server> const & request_;
+            request_headers_wrapper(basic_request<tags::http_async_server> const & request_)
+            : request_(request_) {}
+            typedef headers_container<tags::http_async_server>::type headers_container_type;
+            operator headers_container_type () {
+                return request_.headers;
+            }
+        };
+
+        template <>
+        struct body_wrapper<basic_request<tags::http_async_server> > {
+            typedef string<tags::http_async_server>::type string_type;
+            basic_request<tags::http_async_server> const & request_;
+            body_wrapper(basic_request<tags::http_async_server> const & request_)
             : request_(request_) {}
             operator string_type () {
                 return request_.body;

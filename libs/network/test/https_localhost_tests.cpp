@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
     BOOST_CHECK_EQUAL(body(response_).length(), size);
 
     if (body(response_).length() == size) {
-        std::pair<std::vector<char>::iterator, std::string::iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
+        std::pair<std::vector<char>::iterator, std::string::const_iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
         BOOST_CHECK_EQUAL(boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()), size);
     }
 }
@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
     BOOST_CHECK(size != 0);
     BOOST_CHECK_EQUAL(body(response_).length(), size);
     
-    std::pair<std::vector<char>::iterator, std::string::iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
+    std::pair<std::vector<char>::iterator, std::string::const_iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
     BOOST_CHECK_EQUAL(boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()), size);
 }
 
