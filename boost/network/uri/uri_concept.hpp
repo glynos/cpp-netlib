@@ -20,13 +20,13 @@ namespace boost { namespace network { namespace uri {
 
                 U temp;
                 swap(temp, uri_); // swappable
-                
+
                 string_type scheme_ = scheme(uri); // support functions
-                string_type user_info_ = user_info(uri);
-                string_type host_ = host(uri);
-                uint16_t port_ = port(uri);
-                port_ = 0;
-                string_type path_ = path(uri);
+                // string_type user_info_ = user_info(uri);
+                // string_type host_ = host(uri);
+                // uint16_t port_ = port(uri);
+                // port_ = 0;
+                // string_type path_ = path(uri);
                 string_type query_ = query(uri);
                 string_type fragment_ = fragment(uri);
 

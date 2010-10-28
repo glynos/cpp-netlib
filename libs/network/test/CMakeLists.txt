@@ -16,8 +16,8 @@ set(Boost_USE_MULTITHREADED ON)
 
 if (Boost_FOUND)
     set(
-        TESTS 
-        http_incremental_parser 
+        TESTS
+        http_incremental_parser
         hello_world
         http_1_0_test
         http_1_1_test
@@ -27,6 +27,7 @@ if (Boost_FOUND)
         http_message_test
         message_transform_test
         url_test
+        http_url_test
         utils_thread_pool
         )
     foreach (test ${TESTS})

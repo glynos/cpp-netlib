@@ -14,11 +14,11 @@
 using namespace boost::network;
 
 typedef boost::mpl::list<
-    http::tags::http_default_8bit_tcp_resolve, 
-    http::tags::http_default_8bit_udp_resolve, 
-    http::tags::http_keepalive_8bit_tcp_resolve, 
-    http::tags::http_keepalive_8bit_udp_resolve, 
-    tags::default_string, 
+    http::tags::http_default_8bit_tcp_resolve,
+    http::tags::http_default_8bit_udp_resolve,
+    http::tags::http_keepalive_8bit_tcp_resolve,
+    http::tags::http_keepalive_8bit_udp_resolve,
+    tags::default_string,
     tags::default_wstring
 > tag_types;
 

@@ -16,35 +16,38 @@
 
 namespace boost { namespace network { namespace uri {
 
-    template <>
-        struct basic_uri<http::tags::http_default_8bit_tcp_resolve> : uri_base<http::tags::http_default_8bit_tcp_resolve> {
-            typedef uri_base<http::tags::http_default_8bit_tcp_resolve>::string_type string_type;
-            using uri_base<http::tags::http_default_8bit_tcp_resolve>::operator=;
-            using uri_base<http::tags::http_default_8bit_tcp_resolve>::swap;
+template <>
+struct basic_uri<http::tags::http_default_8bit_tcp_resolve> : uri_base<http::tags::http_default_8bit_tcp_resolve> {
+    typedef uri_base<http::tags::http_default_8bit_tcp_resolve>::string_type string_type;
+    using uri_base<http::tags::http_default_8bit_tcp_resolve>::operator=;
+    using uri_base<http::tags::http_default_8bit_tcp_resolve>::swap;
 
-            basic_uri() : uri_base<http::tags::http_default_8bit_tcp_resolve>() {}
-            basic_uri(uri_base<http::tags::http_default_8bit_tcp_resolve>::string_type const & uri) : uri_base<http::tags::http_default_8bit_tcp_resolve>(uri) {}
+    basic_uri() : uri_base<http::tags::http_default_8bit_tcp_resolve>() {}
+    basic_uri(uri_base<http::tags::http_default_8bit_tcp_resolve>::string_type const & uri) : uri_base<http::tags::http_default_8bit_tcp_resolve>(uri) {}
 
-            boost::uint16_t port() const {
-                return parts_.port ? *(parts_.port) : 
-                    (boost::iequals(parts_.scheme, string_type("https")) ? 443u : 80u);
-            }
+    // boost::uint16_t port() const {
+    string_type port() const {
+        static const char http_port[] = "80";
+        static const char https_port[] = "443";
 
-            string_type path() const {
-                return (parts_.path == "") ? string_type("/") : parts_.path;
-            }
-        };
+        return parts_.port ? *(parts_.port) :
+            (boost::iequals(parts_.scheme, string_type("https")) ?
+             string_type(https_port, https_port + std::strlen(https_port)) :
+             string_type(http_port, http_port + std::strlen(http_port)));
+    }
 
-    inline
-        boost::uint16_t
-        port(basic_uri<http::tags::http_default_8bit_tcp_resolve> const & uri) {
-            return uri.port();
-        }
+    string_type path() const {
+        return (parts_.path == "") ? string_type("/") : parts_.path;
+    }
+};
 
+// inline
+// boost::uint16_t
+// port(basic_uri<http::tags::http_default_8bit_tcp_resolve> const & uri) {
+//     return uri.port();
+// }
 } // namespace uri
-
 } // namespace network
-
 } // namespace boost
 
 #endif

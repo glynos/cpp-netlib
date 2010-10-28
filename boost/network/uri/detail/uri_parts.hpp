@@ -23,7 +23,8 @@ namespace boost { namespace network { namespace uri {
                 string_type scheme;
                 optional<string_type> user_info;
                 optional<string_type> host;
-                optional<boost::uint16_t> port;
+                optional<string_type> port;
+                // optional<boost::uint16_t> port;
                 string_type path;
                 optional<string_type> query;
                 optional<string_type> fragment;
@@ -38,7 +39,8 @@ namespace boost { namespace network { namespace uri {
                     boost::fusion::tuple<
                         optional<string_type> &,
                         optional<string_type> &,
-                        optional<boost::uint16_t> &,
+                        optional<string_type> &,
+                        // optional<boost::uint16_t> &,
                         string_type &
                             >,
                     optional<string_type> &,
@@ -60,7 +62,7 @@ namespace boost { namespace network { namespace uri {
             }
 
         template <class Tag>
-            inline 
+            inline
             bool operator==(uri_parts<Tag> const & l, uri_parts<Tag> const & r) {
                 return (l.scheme == r.scheme) &&
                        (l.user_info == r.user_info) &&
