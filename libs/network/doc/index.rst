@@ -96,6 +96,7 @@ Contents
    techniques.rst
    history.rst
    install.rst
+   reference.rst
    references.rst
 
 .. _Boost: http://www.boost.org/
