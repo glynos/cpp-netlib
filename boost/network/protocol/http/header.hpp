@@ -3,7 +3,7 @@
 // ~~~~~~~~~~
 //
 // Copyright (c) 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-// Copyright (c) 2009 Dean Michael Berris (mikhailberis@gmail.com)
+// Copyright (c) 2009,2010 Dean Michael Berris (mikhailberis@gmail.com)
 // Copyright (c) 2009 Tarroo, Inc.
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -13,20 +13,23 @@
 #ifndef HTTP_SERVER3_HEADER_HPP
 #define HTTP_SERVER3_HEADER_HPP
 
-#include <string>
+#include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace http {
 
-struct request_header
-{
-  std::string name;
-  std::string value;
-};
+    template <class Tag>
+    struct request_header
+    {
+        typedef typename string<Tag>::type string_type;
+        string_type name;
+        std::string value;
+    };
 
-inline void swap(request_header & l, request_header & r) {
-    swap(l.name, r.name);
-    swap(l.value, r.value);
-}
+    template <class Tag>
+    inline void swap(request_header<Tag> & l, request_header<Tag> & r) {
+        swap(l.name, r.name);
+        swap(l.value, r.value);
+    }
 
 } // namespace http
 

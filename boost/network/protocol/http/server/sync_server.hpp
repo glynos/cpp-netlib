@@ -49,8 +49,8 @@ namespace boost { namespace network { namespace http {
         }
 
         void stop() {
-            // TODO Graceful stop here?
-            service_.stop();
+            // stop accepting new connections and let all the existing handlers finish.
+            acceptor_.cancel();
         }
 
         private:

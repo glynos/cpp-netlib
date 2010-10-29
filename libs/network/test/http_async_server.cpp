@@ -24,7 +24,7 @@ struct async_hello_world {
         };
         connection.set_headers(boost::make_iterator_range(headers, headers+2));
         if (request.method != "GET") {
-            connection.set_status(server::connection::method_not_supported);
+            connection.set_status(server::connection::not_supported);
             connection.write("Unsupported method.");
         } else {
             connection.set_status(server::connection::ok);

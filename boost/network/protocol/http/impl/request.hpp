@@ -120,7 +120,7 @@ namespace boost { namespace network { namespace http {
         typedef Tag tag;
         typedef typename string<Tag>::type string_type;
         typedef typename vector<tags::http_server>::
-            template apply<request_header>::type 
+            template apply<request_header<Tag> >::type 
             vector_type;
         typedef vector_type headers_container_type;
         typedef boost::uint16_t port_type;
@@ -160,12 +160,12 @@ namespace boost { namespace network { namespace http {
     /** Specialize the traits for the http_server tag. */
     template <>
     struct headers_container<http::tags::http_server> :
-        vector<http::tags::http_server>::apply<http::request_header>
+        vector<http::tags::http_server>::apply<http::request_header<http::tags::http_server> >
     {};
 
     template <>
     struct headers_container<http::tags::http_async_server> :
-        vector<http::tags::http_async_server>::apply<http::request_header>
+        vector<http::tags::http_async_server>::apply<http::request_header<http::tags::http_async_server> >
     {};
 
     namespace http { namespace impl {

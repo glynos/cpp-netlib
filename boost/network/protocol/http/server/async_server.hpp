@@ -24,10 +24,67 @@ namespace boost { namespace network { namespace http {
                         , string_type const & port
                         , Handler & handler
                         , utils::thread_pool & thread_pool)
-        {}
+        : handler(handler)
+        , thread_pool(thread_pool)
+        , io_service()
+        , acceptor(io_service)
+        , stopping(false)
+        {
+            using boost::asio::ip::tcp;
+            tcp::resolver resolver(io_service);
+            tcp::resolver::query query(address, port);
+            tcp::endpoint endpoint = *resolver.resolve(query);
+            acceptor.open(endpoint.protocol());
+            acceptor.bind(endpoint);
+            acceptor.listen();
+            new_connection.reset(new connection(io_service, handler, thread_pool));
+            acceptor.async_accept(new_connection->socket(),
+                boost::bind(
+                    &async_server_base<Tag,Handler>::handle_accept
+                    , this
+                    , boost::asio::placeholders::error));
+        }
 
-        void run() {};
+        void run() {
+            io_service.run();
+        };
 
+        void stop() {
+            // stop accepting new requests and let all the existing
+            // handlers finish.
+            stopping = true;
+            acceptor.cancel();
+        }
+
+    private:
+        Handler & handler;
+        utils::thread_pool & thread_pool;
+        asio::io_service io_service;
+        asio::ip::tcp::acceptor acceptor;
+        bool stopping;
+        boost::shared_ptr<async_connection<Tag,Handler> > new_connection;
+
+        void handle_accept(boost::system::error_code const & ec) {
+            if (!ec) {
+                new_connection->start();
+                if (!stopping) {
+                    new_connection.reset(
+                        new connection(
+                            io_service
+                            , handler
+                            , thread_pool
+                            )
+                        );
+                    acceptor.async_accept(new_connection->socket(),
+                        boost::bind(
+                            &async_server_base<Tag,Handler>::handle_accept
+                            , this
+                            , boost::asio::placeholders::error
+                            )
+                        );
+                }
+            }
+        }
     };
 
 } /* http */

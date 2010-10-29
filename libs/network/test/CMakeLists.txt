@@ -52,7 +52,7 @@ if (Boost_FOUND)
         target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
         set_target_properties(cpp-netlib-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../../../build/tests)
-        add_test(cpp-netlib-${test} python httplib_acceptance.py ../../../build/tests/cpp-netlib-${test})
+        add_test(cpp-netlib-${test} python httplib_acceptance.py ../../../build/tests/cpp-netlib-${test} ../../../build/tests/cpp-netlib-${test}.passed)
     endforeach (test)
 
 endif()
