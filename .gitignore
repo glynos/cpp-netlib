@@ -9,4 +9,5 @@ build
 _build
 bin
 *.gch
+libs/mime/test/mime-roundtrip
 
