@@ -13,6 +13,8 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/streambuf.hpp>
+#include <boost/asio/strand.hpp>
+#include <boost/asio/buffer.hpp>
 #include <iterator>
 
 namespace boost { namespace network { namespace http {
@@ -46,6 +48,7 @@ namespace boost { namespace network { namespace http {
             , utils::thread_pool & thread_pool
             )
         : socket_(io_service)
+        , strand(io_service)
         , handler(handler)
         , thread_pool_(thread_pool)
         , headers_already_set(false)
@@ -67,11 +70,8 @@ namespace boost { namespace network { namespace http {
                 boost::throw_exception(std::logic_error("Headers have already been set."));
 
             bool commit = false;
-            BOOST_SCOPE_EXIT_TPL((&commit)(&headers_already_set))
-            {
-                if (!commit) {
-                    headers_already_set = false;
-                }
+            BOOST_SCOPE_EXIT_TPL((&commit)(&headers_already_set)) {
+                if (!commit) headers_already_set = false;
             } BOOST_SCOPE_EXIT_END
 
             typedef constants<Tag> consts;
@@ -112,21 +112,45 @@ namespace boost { namespace network { namespace http {
             socket_.close();
         }
 
-        asio::ip::tcp::socket & socket()            { return socket_;               }
+        asio::ip::tcp::socket & socket()    { return socket_;               }
         utils::thread_pool & thread_pool()  { return thread_pool_;          }
 
     private:
         asio::ip::tcp::socket socket_;
+        asio::io_service::strand strand;
         Handler & handler;
         utils::thread_pool & thread_pool_;
         bool headers_already_set;
         asio::streambuf headers_buffer;
+
+        typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> 
+            buffer_type;
+        buffer_type read_buffer_;
         boost::uint16_t status;
 
         template <class, class> friend struct async_server_base;
 
+        enum state_t {
+            method, uri, version, headers
+        };
+
         void start() {
-            // FIXME do something!
+            socket_.async_read_some(
+                asio::buffer(read_buffer_)
+                , strand.wrap(
+                    boost::bind(
+                        &async_connection<Tag,Handler>::handle_read_data,
+                        async_connection<Tag,Handler>::shared_from_this(),
+                        method,
+                        boost::asio::placeholders::error,
+                        boost::asio::placeholders::bytes_transferred
+                        )
+                    )
+                );
+        }
+
+        void handle_read_data(state_t, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+            // FIXME -- damn all that work got wiped out because Jeni tripped on the power. :(
         }
 
     };

@@ -13,7 +13,7 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/connection.hpp>
+#include <boost/network/protocol/http/server/sync_connection.hpp>
 #include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -30,7 +30,7 @@ namespace boost { namespace network { namespace http {
         : handler_(handler)
         , service_()
         , acceptor_(service_)
-        , new_connection(new connection<Tag,Handler>(service_, handler))
+        , new_connection(new sync_connection<Tag,Handler>(service_, handler))
         {
             using boost::asio::ip::tcp;
             tcp::resolver resolver(service_);
@@ -58,12 +58,12 @@ namespace boost { namespace network { namespace http {
         Handler & handler_;
         boost::asio::io_service service_;
         boost::asio::ip::tcp::acceptor acceptor_;
-        boost::shared_ptr<connection<Tag,Handler> > new_connection;
+        boost::shared_ptr<sync_connection<Tag,Handler> > new_connection;
 
         void handle_accept(boost::system::error_code const & ec) {
             if (!ec) {
                 new_connection->start();
-                new_connection.reset(new connection<Tag,Handler>(service_, handler_));
+                new_connection.reset(new sync_connection<Tag,Handler>(service_, handler_));
                 acceptor_.async_accept(new_connection->socket(),
                     boost::bind(&sync_server_base<Tag,Handler>::handle_accept,
                                 this, boost::asio::placeholders::error));

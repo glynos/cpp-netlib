@@ -9,13 +9,8 @@
 #ifndef BOOST_NETWORK_HTTP_SERVER_HPP_
 #define BOOST_NETWORK_HTTP_SERVER_HPP_
 
-#include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
-#include <boost/asio/ip/tcp.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/connection.hpp>
-#include <boost/network/traits/string.hpp>
 #include <boost/network/protocol/http/server/sync_server.hpp>
 #include <boost/network/protocol/http/server/async_server.hpp>
 
