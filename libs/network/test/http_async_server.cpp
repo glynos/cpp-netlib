@@ -30,8 +30,6 @@ struct async_hello_world {
             connection.set_status(server::connection::ok);
             connection.write("Hello, World!");
         }
-        connection.flush();
-        connection.close();
     }
 };
 

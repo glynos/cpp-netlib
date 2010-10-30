@@ -17,6 +17,17 @@
 #include <boost/asio/buffer.hpp>
 #include <iterator>
 
+#ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE
+/** Here we define a page's worth of header connection buffer data.
+ *  This can be tuned to reduce the memory cost of connections, but this 
+ *  default size is set to be friendly to typical service applications.
+ *  This is the maximum size though and Boost.Asio's internal representation
+ *  of a streambuf would make appropriate decisions on how big a buffer
+ *  is to begin with.
+ */
+#define BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE 4096
+#endif /* BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE */
+
 namespace boost { namespace network { namespace http {
 
     template <class Tag, class Handler>
@@ -51,14 +62,14 @@ namespace boost { namespace network { namespace http {
         , strand(io_service)
         , handler(handler)
         , thread_pool_(thread_pool)
-        , headers_already_set(false)
+        , headers_already_sent(false)
+        , headers_buffer(BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE)
         {}
 
         /** Function: template <class Range> set_headers(Range headers)
-         *  Precondition: headers have not been set yet
-         *  Postcondition: headers have been set, and cannot be modified anymore.
-         *  Throws: std::logic_error in case the headers have already been set 
-         *          and the precondition is not satisfied.
+         *  Precondition: headers have not been sent yet
+         *  Postcondition: headers have been linearized to a buffer.
+         *  Throws: std::logic_error in case the headers have already been sent. 
          *
          *  A call to set_headers takes a Range where each element models the
          *  Header concept. This Range will be linearized onto a buffer, which is
@@ -66,16 +77,16 @@ namespace boost { namespace network { namespace http {
          */
         template <class Range>
         void set_headers(Range headers) {
-            if (headers_already_set)
-                boost::throw_exception(std::logic_error("Headers have already been set."));
+            if (headers_already_sent)
+                boost::throw_exception(std::logic_error("Headers have already been sent."));
 
             bool commit = false;
-            BOOST_SCOPE_EXIT_TPL((&commit)(&headers_already_set)) {
-                if (!commit) headers_already_set = false;
+            BOOST_SCOPE_EXIT_TPL((&commit)(&headers_already_sent)) {
+                if (!commit) headers_already_sent = false;
             } BOOST_SCOPE_EXIT_END
 
             typedef constants<Tag> consts;
-
+            headers_buffer.consume(headers_buffer.size());
             std::ostream stream(&headers_buffer);
             if (!boost::empty(headers)) {
                 typedef typename Range::const_iterator iterator;
@@ -88,7 +99,7 @@ namespace boost { namespace network { namespace http {
                 stream << consts::crlf();
             }
             stream << consts::crlf();
-            commit = headers_already_set = true;
+            commit = true;
         }
 
         void set_status(status_t new_status) {
@@ -97,19 +108,12 @@ namespace boost { namespace network { namespace http {
 
         template <class Range>
         void write(Range) {
+            if (!headers_already_sent) {
+                // TODO write out the headers that are already
+                // linearized to the headers_buffer.
+            }
             // linearize the range into a shared array
             // schedule a stranded asynchronous write
-        }
-
-        void flush() {
-            // use this as a synchronization point to ensure
-            // that data has been written; use a unique_future
-        }
-
-        void close() {
-            flush();
-            socket_.shutdown(asio::ip::tcp::socket::shutdown_both);
-            socket_.close();
         }
 
         asio::ip::tcp::socket & socket()    { return socket_;               }
@@ -120,7 +124,7 @@ namespace boost { namespace network { namespace http {
         asio::io_service::strand strand;
         Handler & handler;
         utils::thread_pool & thread_pool_;
-        bool headers_already_set;
+        bool headers_already_sent;
         asio::streambuf headers_buffer;
 
         typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> 
