@@ -7,14 +7,12 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 namespace boost { namespace network { namespace uri {
-
-    template <class Tag>
-        struct basic_uri;
-
+template <
+    class Tag
+    >
+class basic_uri;
 } // namespace uri
-
 } // namespace network
-
 } // namespace boost
 
 #endif

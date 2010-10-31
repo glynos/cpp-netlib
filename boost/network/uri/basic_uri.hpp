@@ -61,8 +61,8 @@ struct uri_base {
         return parts_.host ? *parts_.host : string_type();
     }
 
-    // uint16_t port() const {
-    string_type port() const {
+    uint16_t port() const {
+        // string_type port() const {
         return parts_.port ? *parts_.port : 0;
     }
 
@@ -87,10 +87,6 @@ struct uri_base {
     }
 
     bool valid() const {
-        return is_valid();
-    }
-
-    bool is_valid() const {
         return valid_;
     }
 
@@ -110,13 +106,17 @@ protected:
 };
 
 template <class Tag>
-struct basic_uri : uri_base<Tag> {
+class basic_uri : public uri_base<Tag> {
+
+public:
+
     // using uri_base<Tag>::operator=;
     // using typename uri_base<Tag>::string_type;
     // using uri_base<Tag>::operator==;
     // using uri_base<Tag>::operator!=;
     basic_uri() : uri_base<Tag>() {}
     basic_uri(typename uri_base<Tag>::string_type const & uri) : uri_base<Tag>(uri) {}
+
 };
 
 template <class Tag>
@@ -135,13 +135,6 @@ scheme(basic_uri<Tag> const & uri) {
 template <class Tag>
 inline
 typename string<Tag>::type
-hier_part(basic_uri<Tag> const & uri) {
-    return uri.hier_part();
-}
-
-template <class Tag>
-inline
-typename string<Tag>::type
 user_info(basic_uri<Tag> const & uri) {
     return uri.user_info();
 }
@@ -155,8 +148,8 @@ host(basic_uri<Tag> const & uri) {
 
 template <class Tag>
 inline
-// uint16_t
-typename string<Tag>::type
+uint16_t
+// typename string<Tag>::type
 port(basic_uri<Tag> const & uri) {
     return uri.port();
 }
@@ -185,14 +178,20 @@ fragment(basic_uri<Tag> const & uri) {
 template <class Tag>
 inline
 bool
-is_valid(basic_uri<Tag> const & uri) {
-    return uri.is_valid();
+valid(basic_uri<Tag> const & uri) {
+    return uri.valid();
 }
-//
-//     // Check that the URI concept is met by the basic_uri type.
-// BOOST_CONCEPT_ASSERT((URI<basic_uri<boost::network::tags::default_string> >));
-// BOOST_CONCEPT_ASSERT((URI<basic_uri<boost::network::tags::default_wstring> >));
-//
+} // namespace uri
+} // namespace network
+} // namespace boost
+
+
+// Check that the URI concept is met by the basic_uri type.
+#include <boost/network/uri/uri_concept.hpp>
+#include <boost/network/tags.hpp>
+namespace boost { namespace network { namespace uri {
+BOOST_CONCEPT_ASSERT((URI<basic_uri<boost::network::tags::default_string> >));
+BOOST_CONCEPT_ASSERT((URI<basic_uri<boost::network::tags::default_wstring> >));
 } // namespace uri
 } // namespace network
 } // namespace boost

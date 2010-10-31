@@ -37,8 +37,8 @@ struct transform_attribute<
         boost::fusion::tuple<
         boost::optional<string_type> &,
             boost::optional<string_type> &,
-            boost::optional<string_type> &,
-            // boost::optional<boost::uint16_t> &,
+            // boost::optional<string_type> &,
+            boost::optional<boost::uint16_t> &,
             string_type &
             > hier_part =
             boost::fusion::tie(
@@ -168,16 +168,16 @@ struct uri_grammar : qi::grammar<Iterator, uri_parts<Tag>()> {
                 "//"
                 >>  -(user_info >> '@')
                 >>  host
-                // >>  -(':' >> qi::ushort_)
-                >>  -(':' >> *qi::digit)
+                >>  -(':' >> qi::ushort_)
+                // >>  -(':' >> *qi::digit)
                 >>  path_abempty
                 )
             |
             (
                 qi::attr(optional<typename boost::network::string<Tag>::type>())
                 >>  qi::attr(optional<typename boost::network::string<Tag>::type>())
-                >>  qi::attr(optional<typename boost::network::string<Tag>::type>())
-                // >>  qi::attr(optional<boost::uint16_t>())
+                // >>  qi::attr(optional<typename boost::network::string<Tag>::type>())
+                >>  qi::attr(optional<boost::uint16_t>())
                 >>  (
                     path_absolute
                     |   path_rootless
@@ -215,8 +215,8 @@ struct uri_grammar : qi::grammar<Iterator, uri_parts<Tag>()> {
     qi::rule<Iterator, boost::fusion::tuple<
                            optional<string_type> &,
                            optional<string_type> &,
-                           optional<string_type> &,
-                           // optional<boost::uint16_t> &,
+                           // optional<string_type> &,
+                           optional<boost::uint16_t> &,
                            string_type &
                            >()> hier_part;
 
