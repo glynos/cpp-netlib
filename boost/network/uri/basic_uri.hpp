@@ -62,7 +62,6 @@ struct uri_base {
     }
 
     uint16_t port() const {
-        // string_type port() const {
         return parts_.port ? *parts_.port : 0;
     }
 
@@ -87,6 +86,10 @@ struct uri_base {
     }
 
     bool valid() const {
+        return is_valid();
+    }
+
+    bool is_valid() const {
         return valid_;
     }
 
@@ -110,10 +113,6 @@ class basic_uri : public uri_base<Tag> {
 
 public:
 
-    // using uri_base<Tag>::operator=;
-    // using typename uri_base<Tag>::string_type;
-    // using uri_base<Tag>::operator==;
-    // using uri_base<Tag>::operator!=;
     basic_uri() : uri_base<Tag>() {}
     basic_uri(typename uri_base<Tag>::string_type const & uri) : uri_base<Tag>(uri) {}
 
@@ -149,7 +148,6 @@ host(basic_uri<Tag> const & uri) {
 template <class Tag>
 inline
 uint16_t
-// typename string<Tag>::type
 port(basic_uri<Tag> const & uri) {
     return uri.port();
 }
@@ -180,6 +178,13 @@ inline
 bool
 valid(basic_uri<Tag> const & uri) {
     return uri.valid();
+}
+
+template <class Tag>
+inline
+bool
+is_valid(basic_uri<Tag> const & uri) {
+    return uri.is_valid();
 }
 } // namespace uri
 } // namespace network

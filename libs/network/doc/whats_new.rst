@@ -4,6 +4,11 @@
  What's New
 ************
 
+:mod:`cpp-netlib` 0.8
+---------------------
+
+* Updates to URI unit tests and documentation.
+
 :mod:`cpp-netlib` 0.7
 ---------------------
 

@@ -12,8 +12,8 @@
 
 .. :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 .. 	  Dean Michael Berris <mikhailberis@gmail.com>
-.. :Date: Oct 9, 2010
-.. :Version: 0.7
+.. :Date: Nov 1, 2010
+.. :Version: 0.8
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 .. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2010.
 ..             Distributed under the Boost Software License, Version
@@ -37,7 +37,7 @@ Sneak Peak
 ----------
 
 The :mod:`cpp-netlib` allows you to write semantically consistent code for
-making different kinds of higher level network applications. 
+making different kinds of higher level network applications.
 
 The library allows for writing simple code for simple C++ HTTP client
 applications like:

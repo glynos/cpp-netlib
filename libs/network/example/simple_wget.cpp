@@ -9,7 +9,7 @@
   This is a very basic clone of wget.  It's missing a lot of
   features, such as content-type detection, but it does the
   fundamental things the same.
-  
+
   It demonstrates the use the `http::uri` and the `http::client`.
 */
 
@@ -26,19 +26,18 @@ namespace uri = boost::network::uri;
 
 
 namespace {
-std::string get_filename(const char *url) {
-    uri::http::uri uri(url);
-    std::string path = uri::path(uri);
+std::string get_filename(const uri::http::uri &url) {
+    std::string path = uri::path(url);
     std::size_t index = path.find_last_of('/');
     std::string filename = path.substr(index + 1);
     return filename.empty()? "index.html" : filename;
 }
-}
+} // namespace
 
 
 int
 main(int argc, char *argv[]) {
-    
+
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " url" << std::endl;
         return 1;
@@ -46,11 +45,10 @@ main(int argc, char *argv[]) {
 
     try {
         http::client client;
-        const char *uri = argv[1];
-        http::client::request request(uri);
+        http::client::request request(argv[1]);
         http::client::response response = client.get(request);
 
-        std::string filename = get_filename(uri);
+        std::string filename = get_filename(request.uri());
         std::cout << "Saving to: " << filename << std::endl;
         std::ofstream ofs(filename.c_str());
         ofs << static_cast<std::string>(body(response)) << std::endl;

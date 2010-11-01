@@ -13,12 +13,6 @@
 
 using namespace boost::network;
 
-// typedef boost::mpl::list<
-//     tags::default_string
-//     , tags::default_wstring
-// > tag_types;
-//
-
 BOOST_AUTO_TEST_CASE(http_url_test) {
     typedef uri::basic_uri<http::tags::http_default_8bit_tcp_resolve> uri_type;
     typedef uri_type::string_type string_type;
@@ -30,11 +24,11 @@ BOOST_AUTO_TEST_CASE(http_url_test) {
     const std::string path("/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK_EQUAL(uri::port(instance), port);
     BOOST_CHECK(boost::equal(uri::path(instance), path));
-    BOOST_CHECK(uri::valid(instance));
 }
 
 BOOST_AUTO_TEST_CASE(full_http_url_test) {
@@ -51,7 +45,7 @@ BOOST_AUTO_TEST_CASE(full_http_url_test) {
     const std::string fragment("fragment");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
-    BOOST_CHECK(uri::valid(instance));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::user_info(instance), user_info));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
@@ -72,11 +66,11 @@ BOOST_AUTO_TEST_CASE(https_url_test) {
     const std::string path("/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK_EQUAL(uri::port(instance), port);
     BOOST_CHECK(boost::equal(uri::path(instance), path));
-    BOOST_CHECK(uri::valid(instance));
 }
 
 BOOST_AUTO_TEST_CASE(invalid_http_url_test) {
@@ -86,5 +80,5 @@ BOOST_AUTO_TEST_CASE(invalid_http_url_test) {
     const std::string url("ftp://www.boost.org/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
-    BOOST_CHECK(!uri::valid(instance));
+    BOOST_CHECK(!uri::is_valid(instance));
 }

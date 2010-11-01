@@ -18,7 +18,7 @@ using namespace boost::network;
 typedef boost::mpl::list<
     tags::default_string
     , tags::default_wstring
-> tag_types;
+    > tag_types;
 
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(uri_test, T, tag_types) {
@@ -31,10 +31,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(uri_test, T, tag_types) {
     const std::string path("/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
-    BOOST_CHECK(uri::valid(instance));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, tag_types) {
@@ -45,14 +45,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, tag_types) {
     const std::string scheme("http");
     const std::string user_info("user:password");
     const std::string host("www.boost.org");
-    // const std::string port("8000");
     boost::uint16_t port = 8000;
     const std::string path("/path");
     const std::string query("query");
     const std::string fragment("fragment");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
-    BOOST_CHECK(uri::valid(instance));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::user_info(instance), user_info));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
@@ -72,9 +71,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(mailto_test, T, tag_types) {
     const std::string path("john.doe@example.com");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
-    BOOST_CHECK(uri::valid(instance));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(file_test, T, tag_types) {
@@ -86,9 +85,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(file_test, T, tag_types) {
     const std::string path("/bin/bash");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
-    BOOST_CHECK(uri::valid(instance));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(ipv4_address_test, T, tag_types) {
@@ -101,10 +100,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ipv4_address_test, T, tag_types) {
     const std::string path("/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
-    BOOST_CHECK(uri::valid(instance));
 }
 
 // IPv6 is not yet supported by the parser
@@ -118,6 +117,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ipv4_address_test, T, tag_types) {
 //     const std::string path("/");
 //
 //     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+//     BOOST_REQUIRE(uri::is_valid(instance));
 //     std::cout << uri::scheme(instance) << std::endl;
 //     std::cout << uri::user_info(instance) << std::endl;
 //     std::cout << uri::host(instance) << std::endl;
@@ -128,25 +128,24 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ipv4_address_test, T, tag_types) {
 //     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
 //     BOOST_CHECK(boost::equal(uri::host(instance), host));
 //     BOOST_CHECK(boost::equal(uri::path(instance), path));
-//     BOOST_CHECK(uri::valid(instance));
 // }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(ftp_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("ftp://anonymous@ftp.example.org/");
+    const std::string url("ftp://john.doe@ftp.example.com/");
     const std::string scheme("ftp");
-    const std::string user_info("anonymous");
-    const std::string host("ftp.example.org");
+    const std::string user_info("john.doe");
+    const std::string host("ftp.example.com");
     const std::string path("/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::user_info(instance), user_info));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
-    BOOST_CHECK(uri::valid(instance));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(news_test, T, tag_types) {
@@ -158,9 +157,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(news_test, T, tag_types) {
     const std::string path("comp.infosystems.www.servers.unix");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
-    BOOST_CHECK(uri::valid(instance));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(tel_test, T, tag_types) {
@@ -172,9 +171,25 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(tel_test, T, tag_types) {
     const std::string path("+1-816-555-1212");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
-    BOOST_CHECK(uri::valid(instance));
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_uri_test, T, tag_types) {
+    typedef uri::basic_uri<T> uri_type;
+    typedef typename uri_type::string_type string_type;
+
+    const std::string url("http://.boost.org/");
+    const std::string scheme("http");
+    const std::string host("www.boost.org");
+    const std::string path("/");
+
+    uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
+    BOOST_CHECK(boost::equal(uri::host(instance), host));
+    BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, tag_types) {

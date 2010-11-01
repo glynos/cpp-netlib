@@ -43,8 +43,7 @@ namespace boost { namespace network { namespace http {
     public:
         typedef typename sync_only<Tag>::type tag;
         typedef typename string<tag>::type string_type;
-        // typedef boost::uint16_t port_type;
-        typedef string_type port_type;
+        typedef boost::uint16_t port_type;
 
         explicit basic_request(string_type const & uri_)
         : uri_(uri_)

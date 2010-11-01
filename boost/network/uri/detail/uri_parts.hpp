@@ -23,7 +23,6 @@ struct uri_parts {
     string_type scheme;
     optional<string_type> user_info;
     optional<string_type> host;
-    // optional<string_type> port;
     optional<boost::uint16_t> port;
     string_type path;
     optional<string_type> query;
@@ -39,7 +38,6 @@ struct uri_parts_tuple {
         boost::fusion::tuple<
             optional<string_type> &,
             optional<string_type> &,
-            // optional<string_type> &,
             optional<boost::uint16_t> &,
             string_type &
             >,

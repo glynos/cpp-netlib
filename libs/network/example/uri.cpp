@@ -23,7 +23,7 @@ int main(int argc, char * argv[]) {
     /*<< Create a `boost::network::uri::uri` object from the input.  >>*/
     boost::network::uri::uri uri_(input);
     /*<< Check if it's a valid URI. >>*/
-    std::cout << "You've entered " 
+    std::cout << "You've entered "
               << (boost::network::uri::valid(uri_)?
                   std::string("a valid") : std::string("an invalid"))
               << " URI!" << std::endl;

@@ -24,7 +24,7 @@ template <class Tag>
 struct transform_attribute<
     boost::network::uri::detail::uri_parts<Tag>,
     typename boost::network::uri::detail::uri_parts_tuple<Tag>::type
-#if SPIRIT_VERSION > 0x2030
+#if SPIRIT_VERSION >= 0x2030
         , boost::spirit::qi::domain
 #endif
         >
@@ -37,7 +37,6 @@ struct transform_attribute<
         boost::fusion::tuple<
         boost::optional<string_type> &,
             boost::optional<string_type> &,
-            // boost::optional<string_type> &,
             boost::optional<boost::uint16_t> &,
             string_type &
             > hier_part =
