@@ -36,7 +36,9 @@ namespace boost { namespace network { namespace http {
             , header_name
             , header_colon
             , header_value
+            , header_cr
             , header_line_done
+            , headers_cr
             , headers_done
         };
 
@@ -124,6 +126,40 @@ namespace boost { namespace network { namespace http {
                     case version_cr:
                         if (*current_iterator == '\n') internal_state = version_done;
                         else parsed_ok = false;
+                        break;
+                    case version_done:
+                        if (algorithm::is_alnum()(*current_iterator)) internal_state = header_name;
+                        else if (*current_iterator == '\r') internal_state = headers_cr;
+                        else parsed_ok = false;
+                        break;
+                    case header_name:
+                        if (*current_iterator == ':') internal_state = header_colon;
+                        else if (algorithm::is_alnum()(*current_iterator) || algorithm::is_punct()(*current_iterator)) break;
+                        else parsed_ok = false;
+                        break;
+                    case header_colon:
+                        if (*current_iterator == ' ') internal_state = header_value;
+                        else parsed_ok = false;
+                        break;
+                    case header_value:
+                        if (*current_iterator == '\r') internal_state = header_cr;
+                        else if (algorithm::is_cntrl()(*current_iterator)) parsed_ok = false;
+                        break;
+                    case header_cr:
+                        if (*current_iterator == '\n') internal_state = header_line_done;
+                        else parsed_ok = false;
+                        break;
+                    case header_line_done:
+                        if (*current_iterator == '\r') internal_state = headers_cr;
+                        else if (algorithm::is_alnum()(*current_iterator)) internal_state = header_name;
+                        else parsed_ok = false;
+                        break;
+                    case headers_cr:
+                        if (*current_iterator == '\n') internal_state = headers_done;
+                        else parsed_ok = false;
+                        break;
+                    case headers_done:
+                        // anything that follows after headers_done is allowed.
                         break;
                     default:
                         parsed_ok = false;
