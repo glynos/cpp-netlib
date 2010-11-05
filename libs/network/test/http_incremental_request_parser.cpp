@@ -40,10 +40,44 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_method) {
     typedef boost::iterator_range<std::string::const_iterator> range_type;
     range_type result_range;
     
-    std::string valid_http_method = "GET";
+    std::string valid_http_method = "GET ";
     fusion::tie(parsed_ok, result_range) = p.parse_until(
         request_parser_type::method_done
         , valid_http_method);
     BOOST_CHECK_EQUAL(parsed_ok, true);
     BOOST_CHECK(!boost::empty(result_range));
+    std::string parsed(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " " << p.state() << std::endl;
+}
+
+BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_uri) {
+    request_parser<tags::default_string> p;
+    logic::tribool parsed_ok = false;
+    typedef request_parser<tags::default_string> request_parser_type;
+    typedef boost::iterator_range<std::string::const_iterator> range_type;
+    range_type result_range;
+
+    std::string valid_http_request = "GET / HTTP/1.1\r\n";
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        request_parser_type::uri_done, valid_http_request);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    BOOST_CHECK(!boost::empty(result_range));
+    std::string parsed(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " " << p.state() << std::endl;
+}
+
+BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
+    request_parser<tags::default_string> p;
+    logic::tribool parsed_ok = false;
+    typedef request_parser<tags::default_string> request_parser_type;
+    typedef boost::iterator_range<std::string::const_iterator> range_type;
+    range_type result_range;
+
+    std::string valid_http_request = "GET / HTTP/1.1\r\n";
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        request_parser_type::version_done, valid_http_request);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    BOOST_CHECK(!boost::empty(result_range));
+    std::string parsed(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed << " " << p.state() << std::endl;
 }

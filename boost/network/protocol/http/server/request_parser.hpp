@@ -10,6 +10,7 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/fusion/tuple.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -26,9 +27,11 @@ namespace boost { namespace network { namespace http {
             , version_t1
             , version_t2
             , version_p
+            , version_slash
             , version_d1
             , version_dot
             , version_d2
+            , version_cr
             , version_done
             , header_name
             , header_colon
@@ -50,7 +53,7 @@ namespace boost { namespace network { namespace http {
         template <class Range>
         fusion::tuple<logic::tribool, iterator_range<typename Range::const_iterator> >
         parse_until(state_t stop_state, Range & range) {
-            logic::tribool parsed_ok;
+            logic::tribool parsed_ok = logic::indeterminate;
             typedef typename range_iterator<Range>::type iterator;
             iterator start = boost::begin(range)
                     , end  = boost::end(range)
@@ -60,12 +63,72 @@ namespace boost { namespace network { namespace http {
             while (
                 !boost::empty(local_range)
                 && stop_state != internal_state
-                && parsed_ok == logic::indeterminate
+                && indeterminate(parsed_ok)
             ) {
+                current_iterator = boost::begin(local_range);
                 switch(internal_state) {
+                    case method_start:
+                        if (algorithm::is_upper()(*current_iterator)) internal_state = method_char;
+                        else parsed_ok = false;
+                        break;
+                    case method_char:
+                        if (algorithm::is_upper()(*current_iterator)) break;
+                        else if (algorithm::is_space()(*current_iterator)) internal_state = method_done;
+                        else parsed_ok = false;
+                        break;
+                    case method_done:
+                        if (algorithm::is_cntrl()(*current_iterator)) parsed_ok = false;
+                        else if (algorithm::is_space()(*current_iterator)) parsed_ok = false;
+                        else internal_state = uri_char;
+                        break;
+                    case uri_char:
+                        if (algorithm::is_cntrl()(*current_iterator)) parsed_ok = false;
+                        else if (algorithm::is_space()(*current_iterator)) internal_state = uri_done;
+                        break;
+                    case uri_done:
+                        if (*current_iterator == 'H') internal_state = version_h;
+                        else parsed_ok = false;
+                        break;
+                    case version_h:
+                        if (*current_iterator == 'T') internal_state = version_t1;
+                        else parsed_ok = false;
+                        break;
+                    case version_t1:
+                        if (*current_iterator == 'T') internal_state = version_t2;
+                        else parsed_ok = false;
+                        break;
+                    case version_t2:
+                        if (*current_iterator == 'P') internal_state = version_p;
+                        else parsed_ok = false;
+                        break;
+                    case version_p:
+                        if (*current_iterator == '/') internal_state = version_slash;
+                        else parsed_ok = false;
+                        break;
+                    case version_slash:
+                        if (algorithm::is_digit()(*current_iterator)) internal_state = version_d1;
+                        else parsed_ok = false;
+                        break;
+                    case version_d1:
+                        if (*current_iterator == '.') internal_state = version_dot;
+                        else parsed_ok = false;
+                        break;
+                    case version_dot:
+                        if (algorithm::is_digit()(*current_iterator)) internal_state = version_d2;
+                        else parsed_ok = false;
+                        break;
+                    case version_d2:
+                        if (*current_iterator == '\r') internal_state = version_cr;
+                        else parsed_ok = false;
+                        break;
+                    case version_cr:
+                        if (*current_iterator == '\n') internal_state = version_done;
+                        else parsed_ok = false;
+                        break;
                     default:
                         parsed_ok = false;
                 };
+                if (internal_state == stop_state) parsed_ok = true;
                 local_range = boost::make_iterator_range(
                     ++current_iterator, end);
             }
