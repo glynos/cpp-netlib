@@ -37,6 +37,8 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag, class Handler>
     struct async_connection : boost::enable_shared_from_this<async_connection<Tag,Handler> > {
+        static std::size_t const connection_buffer_size = BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
+
         enum status_t {
             ok = 200
             , created = 201
@@ -151,9 +153,9 @@ namespace boost { namespace network { namespace http {
         bool headers_already_sent;
         asio::streambuf headers_buffer;
 
-        typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> 
+        typedef boost::array<char, connection_buffer_size> 
             buffer_type;
-        typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> 
+        typedef boost::array<char, connection_buffer_size> 
             array;
         typedef std::list<shared_ptr<array> > array_list;
         typedef boost::shared_ptr<array_list> shared_array_list;
@@ -241,14 +243,11 @@ namespace boost { namespace network { namespace http {
 
             std::size_t range_size = boost::distance(range);
             buffers->resize(
-                (range_size / BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE)
-                + (range_size % BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE)
+                (range_size / connection_buffer_size)
+                + ((range_size % connection_buffer_size)?1:0)
                 );
             std::size_t slice_size = 
-                std::min(
-                    range_size,
-                    BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE
-                    );
+                std::min(range_size,connection_buffer_size);
             typename boost::range_iterator<Range>::type
                 start = boost::begin(range)
                 , end  = boost::end(range);
@@ -264,7 +263,7 @@ namespace boost { namespace network { namespace http {
                 std::advance(start, slice_size);
                 range = boost::make_iterator_range(start, end);
                 range_size = boost::distance(range);
-                slice_size = std::min(range_size, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE);
+                slice_size = std::min(range_size, connection_buffer_size);
             }
 
             if (!buffers->empty()) {
