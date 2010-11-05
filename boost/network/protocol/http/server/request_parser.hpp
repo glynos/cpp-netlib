@@ -37,27 +37,44 @@ namespace boost { namespace network { namespace http {
             , headers_done
         };
 
+        explicit request_parser(state_t start_state = method_start)
+        : internal_state(start_state)
+        {}
+
+        void reset(state_t start_state = method_start) {
+            internal_state = method_start;
+        }
+
+        state_t state() const { return internal_state; }
+
         template <class Range>
-        fusion::tuple<logic::tribool, Range>
-        parse_until(state_t state, Range const & range) {
+        fusion::tuple<logic::tribool, iterator_range<typename Range::const_iterator> >
+        parse_until(state_t stop_state, Range & range) {
             logic::tribool parsed_ok;
             typedef typename range_iterator<Range>::type iterator;
             iterator start = boost::begin(range)
                     , end  = boost::end(range)
                     , current_iterator = start;
-
-            while (!boost::empty(range) || state != internal_state) {
+            iterator_range<iterator> local_range = 
+                boost::make_iterator_range(start, end);
+            while (
+                !boost::empty(local_range)
+                && stop_state != internal_state
+                && parsed_ok == logic::indeterminate
+            ) {
                 switch(internal_state) {
                     default:
                         parsed_ok = false;
-                        return fusion::make_tuple(
-                            parsed_ok, 
-                            boost::make_iterator_range(
-                                start, current_iterator
-                                )
-                            );
                 };
+                local_range = boost::make_iterator_range(
+                    ++current_iterator, end);
             }
+            return fusion::make_tuple(
+                parsed_ok, 
+                boost::make_iterator_range(
+                    start, current_iterator
+                )
+                );
         }
 
     private:
