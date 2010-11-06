@@ -97,8 +97,6 @@ private:
   } state_;
 };
 
-typedef basic_request_parser<tags::http_server> request_parser;
-
 } // namespace http
 
 } // namespace network

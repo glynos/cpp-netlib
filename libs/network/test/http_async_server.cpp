@@ -17,18 +17,18 @@ struct async_hello_world;
 typedef http::async_server<async_hello_world> server;
 
 struct async_hello_world {
-    void operator()(server::request const & request, server::connection & connection) {
+    void operator()(server::request const & request, server::connection_ptr connection) {
         server::response_header headers[] = {
             {"Connection", "close"}
             , {"Content-Type", "text/plain"}
         };
-        connection.set_headers(boost::make_iterator_range(headers, headers+2));
+        connection->set_headers(boost::make_iterator_range(headers, headers+2));
         if (request.method != "GET") {
-            connection.set_status(server::connection::not_supported);
-            connection.write("Unsupported method.");
+            connection->set_status(server::connection::not_supported);
+            connection->write("Unsupported method.");
         } else {
-            connection.set_status(server::connection::ok);
-            connection.write("Hello, World!");
+            connection->set_status(server::connection::ok);
+            connection->write("Hello, World!");
         }
     }
 };

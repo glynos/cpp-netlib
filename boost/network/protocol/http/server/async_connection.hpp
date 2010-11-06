@@ -18,6 +18,9 @@
 #include <boost/asio/strand.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/network/protocol/http/server/request_parser.hpp>
+#include <boost/range/iterator_range.hpp>
+#include <boost/spirit/include/qi.hpp>
 #include <list>
 #include <vector>
 #include <iterator>
@@ -37,7 +40,6 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag, class Handler>
     struct async_connection : boost::enable_shared_from_this<async_connection<Tag,Handler> > {
-        static std::size_t const connection_buffer_size = BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
 
         enum status_t {
             ok = 200
@@ -61,6 +63,7 @@ namespace boost { namespace network { namespace http {
         };
 
         typedef typename string<Tag>::type string_type;
+        typedef basic_request<Tag> request;
 
         async_connection(
             asio::io_service & io_service
@@ -73,7 +76,9 @@ namespace boost { namespace network { namespace http {
         , thread_pool_(thread_pool)
         , headers_already_sent(false)
         , headers_buffer(BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE)
-        {}
+        {
+            new_start = read_buffer_.begin();
+        }
 
         /** Function: template <class Range> set_headers(Range headers)
          *  Precondition: headers have not been sent yet
@@ -146,6 +151,13 @@ namespace boost { namespace network { namespace http {
             // TODO implement a sane default here, for now ignore the error
         }
 
+        typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
+        typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> array;
+        typedef std::list<shared_ptr<array> > array_list;
+        typedef boost::shared_ptr<array_list> shared_array_list;
+        typedef boost::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
+        typedef request_parser<Tag> request_parser_type;
+
         asio::ip::tcp::socket socket_;
         asio::io_service::strand strand;
         Handler & handler;
@@ -153,15 +165,12 @@ namespace boost { namespace network { namespace http {
         bool headers_already_sent;
         asio::streambuf headers_buffer;
 
-        typedef boost::array<char, connection_buffer_size> 
-            buffer_type;
-        typedef boost::array<char, connection_buffer_size> 
-            array;
-        typedef std::list<shared_ptr<array> > array_list;
-        typedef boost::shared_ptr<array_list> shared_array_list;
-        typedef boost::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
         buffer_type read_buffer_;
         boost::uint16_t status;
+        request_parser_type parser;
+        request request_;
+        buffer_type::iterator new_start;
+        string_type partial_parsed;
 
         template <class, class> friend struct async_server_base;
 
@@ -170,13 +179,17 @@ namespace boost { namespace network { namespace http {
         };
 
         void start() {
+            read_more(method);
+        }
+
+        void read_more(state_t state) {
             socket_.async_read_some(
                 asio::buffer(read_buffer_)
                 , strand.wrap(
                     boost::bind(
                         &async_connection<Tag,Handler>::handle_read_data,
                         async_connection<Tag,Handler>::shared_from_this(),
-                        method,
+                        state,
                         boost::asio::placeholders::error,
                         boost::asio::placeholders::bytes_transferred
                         )
@@ -184,10 +197,148 @@ namespace boost { namespace network { namespace http {
                 );
         }
 
-        void handle_read_data(state_t, boost::system::error_code const & ec, std::size_t bytes_transferred) {
-            // FIXME -- damn all that work got wiped out because Jeni tripped on the power. :(
+        void handle_read_data(state_t state, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+            if (!ec) {
+                logic::tribool parsed_ok;
+                iterator_range<buffer_type::iterator> result_range, input_range;
+                switch (state) {
+                    case method:
+                        input_range = boost::make_iterator_range(
+                            new_start, read_buffer_.end());
+                        fusion::tie(parsed_ok, result_range) = parser.parse_until(
+                            request_parser_type::method_done, input_range);
+                        if (!parsed_ok) { 
+                            client_error();
+                            break;
+                        } else if (parsed_ok == true) {
+                            swap(partial_parsed, request_.method);
+                            request_.method.append(
+                                boost::begin(result_range),
+                                boost::end(result_range));
+                            trim(request_.method);
+                            new_start = boost::end(result_range);
+                        } else {
+                            partial_parsed.append(
+                                boost::begin(result_range),
+                                boost::end(result_range));
+                            new_start = read_buffer_.begin();
+                            read_more(method);
+                            break;
+                        }
+                    case uri:
+                        input_range = boost::make_iterator_range(
+                            new_start, read_buffer_.end());
+                        fusion::tie(parsed_ok, result_range) = parser.parse_until(
+                            request_parser_type::uri_done,
+                            input_range);
+                        if (!parsed_ok) {
+                            client_error();
+                            break;
+                        } else if (parsed_ok == true) {
+                            swap(partial_parsed, request_.destination);
+                            request_.destination.append(
+                                boost::begin(result_range),
+                                boost::end(result_range));
+                            trim(request_.destination);
+                            new_start = boost::end(result_range);
+                        } else {
+                            partial_parsed.append(
+                                boost::begin(result_range),
+                                boost::end(result_range));
+                            new_start = read_buffer_.begin();
+                            read_more(uri);
+                            break;
+                        }
+                    case version:
+                        input_range = boost::make_iterator_range(
+                            new_start, read_buffer_.end());
+                        fusion::tie(parsed_ok, result_range) = parser.parse_until(
+                            request_parser_type::version_done,
+                            input_range);
+                        if (!parsed_ok) {
+                            client_error();
+                            break;
+                        } else if (parsed_ok == true) {
+                            fusion::tuple<uint8_t, uint8_t> version_pair;
+                            using namespace boost::spirit::qi;
+                            partial_parsed.append(boost::begin(result_range), boost::end(result_range));
+                            parse(
+                                partial_parsed.begin(), partial_parsed.end(),
+                                (
+                                    lit("HTTP/")
+                                    >> ushort_
+                                    >> '.'
+                                    >> ushort_
+                                )
+                                , version_pair);
+                            request_.http_version_major = fusion::get<0>(version_pair);
+                            request_.http_version_minor = fusion::get<1>(version_pair);
+                            new_start = boost::end(result_range);
+                        } else {
+                            partial_parsed.append(
+                                boost::begin(result_range),
+                                boost::end(result_range));
+                            new_start = read_buffer_.begin();
+                            read_more(version);
+                            break;
+                        }
+                    case headers:
+                        input_range = boost::make_iterator_range(
+                            new_start, read_buffer_.end());
+                        fusion::tie(parsed_ok, result_range) = parser.parse_until(
+                            request_parser_type::headers_done,
+                            input_range);
+                        if (!parsed_ok) {
+                            client_error();
+                            break;
+                        } else if (parsed_ok == true) {
+                            partial_parsed.append(
+                                boost::begin(result_range),
+                                boost::end(result_range));
+                            trim(partial_parsed);
+                            parse_headers(partial_parsed, request_.headers);
+                            new_start = boost::end(result_range);
+                            thread_pool().post(
+                                boost::bind(
+                                    &Handler::operator(),
+                                    handler,
+                                    cref(request_),
+                                    async_connection<Tag,Handler>::shared_from_this()));
+                            return;
+                        } else {
+                            partial_parsed.append(
+                                boost::begin(result_range),
+                                boost::end(result_range));
+                            new_start = read_buffer_.begin();
+                            read_more(headers);
+                            break;
+                        }
+                    default:
+                        BOOST_ASSERT(false && "This is a bug, report to the cpp-netlib devel mailing list!");
+                        std::abort();
+                }
+            }
+            // TODO log the error
         }
 
+        void client_error() {
+            //FIXME write out a client request error
+        }
+
+        void parse_headers(string_type & input, typename request::headers_container_type & container) {
+            using namespace boost::spirit::qi;
+            std::vector<fusion::tuple<std::string,std::string> > headers;
+            parse(
+                input.begin(), input.end(),
+                *(
+                    +(alnum|(punct-':'))
+                    >> lit(": ")
+                    >> +(alnum|space|punct)
+                    >> lit("\r\n")
+                )
+                , headers
+                );
+        }
         template <class Range, class Callback>
         void write_headers(Range range, Callback callback) {
             // TODO send out the headers, then once that's done 
@@ -236,6 +387,7 @@ namespace boost { namespace network { namespace http {
             // on doing I/O.
             //
 
+            static std::size_t const connection_buffer_size = BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
             shared_array_list temporaries = 
                 boost::make_shared<array_list>();
             shared_buffers buffers = 

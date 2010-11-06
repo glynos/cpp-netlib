@@ -260,6 +260,7 @@ namespace boost { namespace network { namespace http {
 
         typedef boost::array<char,BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
         buffer_type buffer_;
+        typedef basic_request_parser<Tag> request_parser;
         request_parser parser_;
         basic_request<Tag> request_;
         basic_response<Tag> response_;

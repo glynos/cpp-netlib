@@ -16,9 +16,10 @@ namespace boost { namespace network { namespace http {
     struct async_server_base {
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
-        typedef async_connection<Tag, Handler> connection;
         typedef response_header<Tag> response_header;
         typedef typename string<Tag>::type string_type;
+        typedef async_connection<Tag,Handler> connection;
+        typedef shared_ptr<connection> connection_ptr;
 
         async_server_base(string_type const & address
                         , string_type const & port
@@ -62,7 +63,7 @@ namespace boost { namespace network { namespace http {
         asio::io_service io_service;
         asio::ip::tcp::acceptor acceptor;
         bool stopping;
-        boost::shared_ptr<async_connection<Tag,Handler> > new_connection;
+        connection_ptr new_connection;
 
         void handle_accept(boost::system::error_code const & ec) {
             if (!ec) {

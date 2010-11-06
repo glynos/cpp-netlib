@@ -14,6 +14,9 @@
 #define HTTP_SERVER3_HEADER_HPP
 
 #include <boost/network/traits/string.hpp>
+#include <boost/fusion/adapted/struct/adapt_struct.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/assign/list_of.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -21,8 +24,7 @@ namespace boost { namespace network { namespace http {
     struct request_header
     {
         typedef typename string<Tag>::type string_type;
-        string_type name;
-        std::string value;
+        string_type name, value;
     };
 
     template <class Tag>
@@ -36,5 +38,12 @@ namespace boost { namespace network { namespace http {
 } // namespace network
 
 } // namespace boost
+
+BOOST_FUSION_ADAPT_TPL_STRUCT(
+    (Tag),
+    (boost::network::http::request_header)(Tag),
+    (typename boost::network::string<Tag>::type, name)
+    (typename boost::network::string<Tag>::type, value)
+    )
 
 #endif // HTTP_SERVER3_HEADER_HPP
