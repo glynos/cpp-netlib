@@ -16,8 +16,8 @@ namespace boost { namespace network { namespace http {
     struct async_server_base {
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
-        typedef response_header<Tag> response_header;
         typedef typename string<Tag>::type string_type;
+        typedef boost::network::http::response_header<Tag> response_header;
         typedef async_connection<Tag,Handler> connection;
         typedef shared_ptr<connection> connection_ptr;
 

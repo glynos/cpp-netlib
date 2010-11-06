@@ -14,6 +14,7 @@
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/server/sync_connection.hpp>
+#include <boost/network/protocol/http/server/header.hpp>
 #include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -23,6 +24,7 @@ namespace boost { namespace network { namespace http {
         typedef typename string<Tag>::type string_type;
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
+        typedef boost::network::http::response_header<Tag> response_header;
 
         sync_server_base(string_type const & address,
                      string_type const & port,

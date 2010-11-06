@@ -87,7 +87,7 @@ namespace boost { namespace network { namespace http {
                     if (request_.method[0] == 'P') {
                         // look for the content-length header
                         typename std::vector<request_header<Tag> >::iterator it = 
-                            find_if(
+                            std::find_if(
                                 request_.headers.begin(), 
                                 request_.headers.end(),
                                 is_content_length()
