@@ -16,6 +16,7 @@ namespace boost { namespace network { namespace http {
     
     template <class Tag>
     struct response_header {
+        typedef Tag tag;
         typedef typename string<Tag>::type string_type;
         string_type name, value;
     };

@@ -14,17 +14,21 @@
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag, class ValueType>
+    template <class Tag>
     struct linearize {
         typedef typename string<Tag>::type string_type;
 
         template <class Arguments>
-        struct result {
+        struct result;
+
+        template <class This, class Arg>
+        struct result<This(Arg)> {
             typedef string_type type;
         };
 
+        template <class ValueType>
         BOOST_CONCEPT_REQUIRES(
-            (Header<ValueType),
+            ((Header<ValueType>)),
             (string_type)
         ) operator()(ValueType & header) {
             typedef typename ostringstream<Tag>::type output_stream;

@@ -161,11 +161,10 @@ namespace boost { namespace network { namespace http {
             std::ostream stream(&headers_buffer);
             if (!boost::empty(headers)) {
                 typedef typename Range::const_iterator iterator;
-                typedef typename Range::value_type value_type;
                 typedef typename string<Tag>::type string_type;
                 boost::transform(headers, 
                     std::ostream_iterator<string_type>(stream),
-                    linearize<Tag, value_type>());
+                    linearize<Tag>());
             } else {
                 stream << consts::crlf();
             }
