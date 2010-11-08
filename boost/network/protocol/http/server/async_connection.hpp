@@ -21,6 +21,9 @@
 #include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/spirit/include/qi.hpp>
+#include <boost/optional.hpp>
+#include <boost/utility/typed_in_place_factory.hpp>
+#include <boost/thread/locks.hpp>
 #include <list>
 #include <vector>
 #include <iterator>
@@ -64,6 +67,55 @@ namespace boost { namespace network { namespace http {
 
         typedef typename string<Tag>::type string_type;
         typedef basic_request<Tag> request;
+        typedef shared_ptr<async_connection> connection_ptr;
+
+    private:
+        static char const * status_message(status_t status) {
+            static char const 
+                ok_[]                       = "OK"
+                , created_[]                = "Created"
+                , accepted_[]               = "Accepted"
+                , no_content_[]             = "No Content"
+                , multiple_choices_[]       = "Multiple Choices"
+                , moved_permanently_[]      = "Moved Permanently"
+                , moved_temporarily_[]      = "Moved Temporarily"
+                , not_modified_[]           = "Not Modified"
+                , bad_request_[]            = "Bad Request"
+                , unauthorized_[]           = "Unauthorized"
+                , forbidden_[]              = "Fobidden"
+                , not_found_[]              = "Not Found"
+                , not_supported_[]          = "Not Supported"
+                , not_acceptable_[]         = "Not Acceptable"
+                , internal_server_error_[]  = "Internal Server Error"
+                , not_implemented_[]        = "Not Implemented"
+                , bad_gateway_[]            = "Bad Gateway"
+                , service_unavailable_[]    = "Service Unavailable"
+                , unknown_[]                = "Unknown"
+                ;
+            switch(status) {
+                case ok:                    return ok_;
+                case created:               return created_;
+                case accepted:              return accepted_;
+                case no_content:            return no_content_;
+                case multiple_choices:      return multiple_choices_;
+                case moved_permanently:     return moved_permanently_;
+                case moved_temporarily:     return moved_temporarily_;
+                case not_modified:          return not_modified_;
+                case bad_request:           return bad_request_;
+                case unauthorized:          return unauthorized_;
+                case forbidden:             return forbidden_;
+                case not_found:             return not_found_;
+                case not_supported:         return not_supported_;
+                case not_acceptable:        return not_acceptable_;
+                case internal_server_error: return internal_server_error_;
+                case not_implemented:       return not_implemented_;
+                case bad_gateway:           return bad_gateway_;
+                case service_unavailable:   return service_unavailable_;
+                default:                    return unknown_;
+            }
+        }
+
+    public:
 
         async_connection(
             asio::io_service & io_service
@@ -82,7 +134,8 @@ namespace boost { namespace network { namespace http {
 
         /** Function: template <class Range> set_headers(Range headers)
          *  Precondition: headers have not been sent yet
-         *  Postcondition: headers have been linearized to a buffer.
+         *  Postcondition: headers have been linearized to a buffer, 
+         *                 and assumed to have been sent already when the function exits
          *  Throws: std::logic_error in case the headers have already been sent. 
          *
          *  A call to set_headers takes a Range where each element models the
@@ -90,13 +143,17 @@ namespace boost { namespace network { namespace http {
          *  then sent as soon as the first call to `write` or `flush` commences.
          */
         template <class Range>
-        void set_headers(Range headers, bool immediate = true) {
-            if (headers_already_sent)
-                boost::throw_exception(std::logic_error("Headers have already been sent."));
+        void set_headers(Range headers) {
+            lock_guard lock(headers_mutex);
+
+            if (headers_already_sent) boost::throw_exception(std::logic_error("Headers have already been sent."));
+
+            if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
 
             bool commit = false;
             BOOST_SCOPE_EXIT_TPL((&commit)(&headers_already_sent)) {
                 if (!commit) headers_already_sent = false;
+                else headers_already_sent = true;
             } BOOST_SCOPE_EXIT_END
 
             typedef constants<Tag> consts;
@@ -113,50 +170,94 @@ namespace boost { namespace network { namespace http {
                 stream << consts::crlf();
             }
             stream << consts::crlf();
-            if (immediate) write_headers_only();
+
+            write_headers_only(
+                boost::bind(
+                    &async_connection<Tag,Handler>::do_nothing
+                    , async_connection<Tag,Handler>::shared_from_this()
+                ));
 
             commit = true;
         }
 
         void set_status(status_t new_status) {
+            lock_guard lock(headers_mutex);
+            if (headers_already_sent) boost::throw_exception(std::logic_error("Headers have already been sent, cannot reset status."));
+            if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
+
             status = new_status;
         }
 
         template <class Range>
         void write(Range const & range) {
-            write_impl(
-                boost::make_iterator_range(range)
-                , boost::bind(
+            if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
+
+            boost::function<void(boost::system::error_code)> f = 
+                boost::bind(
                     &async_connection<Tag,Handler>::default_error
                     , async_connection<Tag,Handler>::shared_from_this()
-                    , _1
-                    )
+                    , _1);
+
+            write_impl(
+                boost::make_iterator_range(range)
+                , f
                 );
         }
 
         template <class Range, class Callback>
         void write(Range const & range, Callback const & callback) {
-            write_impl(
-                boost::make_iterator_range(range)
-                , callback
-                );
+            if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
+            boost::function<void(boost::system::error_code)> f = callback;
+            write_impl(boost::make_iterator_range(range), callback);
+        }
+
+    private:
+        typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
+
+    public:
+        typedef iterator_range<buffer_type::const_iterator> input_range;
+        typedef boost::function<void(input_range, boost::system::error_code, std::size_t, connection_ptr)> read_callback_function;
+
+        void read(read_callback_function callback) {
+            if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
+            socket().async_read_some(
+                asio::buffer(read_buffer_)
+                , strand.wrap(
+                    boost::bind(
+                        &async_connection<Tag,Handler>::wrap_read_handler
+                        , async_connection<Tag,Handler>::shared_from_this()
+                        , callback
+                        , asio::placeholders::error, asio::placeholders::bytes_transferred)));
         }
 
         asio::ip::tcp::socket & socket()    { return socket_;               }
         utils::thread_pool & thread_pool()  { return thread_pool_;          }
+        bool has_error()                    { return (!!error_encountered); }
+        optional<boost::system::system_error> error()
+                                            { return error_encountered;     }
 
     private:
 
-        void default_error(boost::system::error_code const & ec) {
-            // TODO implement a sane default here, for now ignore the error
+        void wrap_read_handler(read_callback_function callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+            if (ec) error_encountered = in_place<boost::system::system_error>(ec);
+            thread_pool().post(
+                boost::bind(
+                    callback
+                    , ec
+                    , bytes_transferred
+                    , async_connection<Tag,Handler>::shared_from_this()));
         }
 
-        typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
+        void default_error(boost::system::error_code const & ec) {
+            error_encountered = in_place<boost::system::system_error>(ec);
+        }
+
         typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> array;
         typedef std::list<shared_ptr<array> > array_list;
         typedef boost::shared_ptr<array_list> shared_array_list;
         typedef boost::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
         typedef request_parser<Tag> request_parser_type;
+        typedef boost::lock_guard<boost::mutex> lock_guard;
 
         asio::ip::tcp::socket socket_;
         asio::io_service::strand strand;
@@ -165,12 +266,14 @@ namespace boost { namespace network { namespace http {
         bool headers_already_sent;
         asio::streambuf headers_buffer;
 
+        boost::mutex headers_mutex;
         buffer_type read_buffer_;
-        boost::uint16_t status;
+        status_t status;
         request_parser_type parser;
         request request_;
         buffer_type::iterator new_start;
         string_type partial_parsed;
+        optional<boost::system::system_error> error_encountered;
 
         template <class, class> friend struct async_server_base;
 
@@ -317,12 +420,45 @@ namespace boost { namespace network { namespace http {
                         BOOST_ASSERT(false && "This is a bug, report to the cpp-netlib devel mailing list!");
                         std::abort();
                 }
+            } else {
+                error_encountered = in_place<boost::system::system_error>(ec);
             }
-            // TODO log the error
         }
 
         void client_error() {
-            //FIXME write out a client request error
+            status = bad_request;
+            write_first_line(
+                strand.wrap(
+                    boost::bind(
+                        &async_connection<Tag,Handler>::client_error_first_line_written
+                        , async_connection<Tag,Handler>::shared_from_this()
+                        , asio::placeholders::error
+                        , asio::placeholders::bytes_transferred)));
+        }
+
+        void client_error_first_line_written(boost::system::error_code const & ec, std::size_t bytes_transferred) {
+            static char const * bad_request = 
+                "HTTP/1.0 400 Bad Request\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
+
+            asio::async_write(
+                socket()
+                , asio::buffer(bad_request, 115)
+                , strand.wrap(
+                    boost::bind(
+                        &async_connection<Tag,Handler>::client_error_sent
+                        , async_connection<Tag,Handler>::shared_from_this()
+                        , asio::placeholders::error
+                        , asio::placeholders::bytes_transferred)));
+        }
+
+        void client_error_sent(boost::system::error_code const & ec, std::size_t bytes_transferred) {
+            if (!ec) {
+                boost::system::error_code ignored;
+                socket().shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
+                socket().close(ignored);
+            } else {
+                error_encountered = in_place<boost::system::system_error>(ec);
+            }
         }
 
         void parse_headers(string_type & input, typename request::headers_container_type & container) {
@@ -339,22 +475,74 @@ namespace boost { namespace network { namespace http {
                 , headers
                 );
         }
-        template <class Range, class Callback>
-        void write_headers(Range range, Callback callback) {
-            // TODO send out the headers, then once that's done 
-            // call the write again on the range and callback
+
+        void do_nothing() {}
+
+        template <class Range>
+        void continue_write(Range range, boost::function<void(boost::system::error_code)> callback) {
+            thread_pool().post(
+                boost::bind(
+                    &async_connection<Tag,Handler>::write_impl<Range> 
+                    , async_connection<Tag,Handler>::shared_from_this()
+                    , range, callback));
         }
 
-        void write_headers_only() {
+        template <class Callback>
+        void write_first_line(Callback callback) {
+            std::vector<asio::const_buffer> buffers;
+            typedef constants<Tag> consts;
+            typename ostringstream<Tag>::type first_line_stream;
+            first_line_stream 
+                << consts::http_slash() << 1<< consts::dot() << 1 << consts::space()
+                << status << consts::space() << status_message(status)
+                << consts::space()
+                ;
+            std::string first_line = first_line_stream.str();
+            buffers.push_back(asio::buffer(first_line));
+            asio::async_write(
+                socket()
+                , buffers
+                , callback);
         }
 
-        void handle_write_headers(boost::system::error_code const & ec) {
-            if (ec) {
-                // TODO signal somehow that there was an error so that subsequent
-                // calls to write would throw an exception
-                return;
+        void write_headers_only(boost::function<void()> callback) {
+            write_first_line(
+                strand.wrap(
+                    boost::bind(
+                        &async_connection<Tag,Handler>::handle_first_line_written
+                        , async_connection<Tag,Handler>::shared_from_this()
+                        , callback
+                        , asio::placeholders::error
+                        , asio::placeholders::bytes_transferred)));
+        }
+
+        void handle_first_line_written(boost::function<void()> callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+            lock_guard lock(headers_mutex);
+            if (!ec) {
+                asio::async_write(
+                    socket()
+                    , headers_buffer
+                    , strand.wrap(
+                        boost::bind(
+                            &async_connection<Tag,Handler>::handle_write_headers
+                            , async_connection<Tag,Handler>::shared_from_this()
+                            , callback
+                            , asio::placeholders::error
+                            , asio::placeholders::bytes_transferred)));
+            } else {
+                error_encountered = in_place<boost::system::system_error>(ec);
             }
-            headers_already_sent = true;
+        }
+
+        void handle_write_headers(boost::function<void()> callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+            lock_guard lock(headers_mutex);
+            if (!ec) {
+                headers_buffer.consume(headers_buffer.size());
+                headers_already_sent = true;
+                callback();
+            } else {
+                error_encountered = in_place<boost::system::system_error>(ec);
+            }
         }
 
         void handle_write(
@@ -362,15 +550,24 @@ namespace boost { namespace network { namespace http {
             , shared_array_list temporaries
             , shared_buffers buffers
             , boost::system::error_code const & ec
+            , std::size_t bytes_transferred
         ) {
             // we want to forget the temporaries and buffers
             thread_pool().post(boost::bind(callback, ec));
         }
 
-        template <class Range, class Callback>
-        void write_impl(Range range, Callback callback) {
+        template <class Range>
+        void write_impl(Range range, boost::function<void(boost::system::error_code)> callback) {
             if (!headers_already_sent) {
-                write_headers(range, callback);
+                boost::function<void(boost::system::error_code)> callback_function =
+                    callback;
+
+                write_headers_only(
+                    boost::bind(
+                        &async_connection<Tag,Handler>::continue_write<Range>
+                        , async_connection<Tag,Handler>::shared_from_this()
+                        , range, callback_function
+                    ));
                 return;
             }
 
@@ -431,6 +628,7 @@ namespace boost { namespace network { namespace http {
                             , temporaries
                             , buffers // keep these alive until the handler is called!
                             , boost::asio::placeholders::error
+                            , boost::asio::placeholders::bytes_transferred
                             )
                         )
                     );
