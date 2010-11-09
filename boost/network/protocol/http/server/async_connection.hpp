@@ -24,6 +24,7 @@
 #include <boost/optional.hpp>
 #include <boost/utility/typed_in_place_factory.hpp>
 #include <boost/thread/locks.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 #include <list>
 #include <vector>
 #include <iterator>
@@ -127,9 +128,18 @@ namespace boost { namespace network { namespace http {
         , handler(handler)
         , thread_pool_(thread_pool)
         , headers_already_sent(false)
+        , first_line_already_sent(false)
+        , headers_in_progress(false)
+        , first_line_in_progress(false)
         , headers_buffer(BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE)
         {
             new_start = read_buffer_.begin();
+        }
+
+        ~async_connection() throw () {
+            boost::system::error_code ignored;
+            socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
+            socket_.close(ignored);
         }
 
         /** Function: template <class Range> set_headers(Range headers)
@@ -145,16 +155,11 @@ namespace boost { namespace network { namespace http {
         template <class Range>
         void set_headers(Range headers) {
             lock_guard lock(headers_mutex);
+            if (first_line_in_progress || headers_in_progress || headers_already_sent) 
+                boost::throw_exception(std::logic_error("Headers have already been sent."));
 
-            if (headers_already_sent) boost::throw_exception(std::logic_error("Headers have already been sent."));
-
-            if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
-
-            bool commit = false;
-            BOOST_SCOPE_EXIT_TPL((&commit)(&headers_already_sent)) {
-                if (!commit) headers_already_sent = false;
-                else headers_already_sent = true;
-            } BOOST_SCOPE_EXIT_END
+            if (error_encountered)
+                boost::throw_exception(boost::system::system_error(*error_encountered));
 
             typedef constants<Tag> consts;
             headers_buffer.consume(headers_buffer.size());
@@ -169,14 +174,13 @@ namespace boost { namespace network { namespace http {
                 stream << consts::crlf();
             }
             stream << consts::crlf();
+            stream.flush();
 
             write_headers_only(
                 boost::bind(
                     &async_connection<Tag,Handler>::do_nothing
                     , async_connection<Tag,Handler>::shared_from_this()
                 ));
-
-            commit = true;
         }
 
         void set_status(status_t new_status) {
@@ -189,6 +193,7 @@ namespace boost { namespace network { namespace http {
 
         template <class Range>
         void write(Range const & range) {
+            lock_guard lock(headers_mutex);
             if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
 
             boost::function<void(boost::system::error_code)> f = 
@@ -205,6 +210,7 @@ namespace boost { namespace network { namespace http {
 
         template <class Range, class Callback>
         void write(Range const & range, Callback const & callback) {
+            lock_guard lock(headers_mutex);
             if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
             boost::function<void(boost::system::error_code)> f = callback;
             write_impl(boost::make_iterator_range(range), callback);
@@ -256,16 +262,17 @@ namespace boost { namespace network { namespace http {
         typedef boost::shared_ptr<array_list> shared_array_list;
         typedef boost::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
         typedef request_parser<Tag> request_parser_type;
-        typedef boost::lock_guard<boost::mutex> lock_guard;
+        typedef boost::lock_guard<boost::recursive_mutex> lock_guard;
+        typedef std::list<boost::function<void()> > pending_actions_list;
 
         asio::ip::tcp::socket socket_;
         asio::io_service::strand strand;
         Handler & handler;
         utils::thread_pool & thread_pool_;
-        bool headers_already_sent;
+        volatile bool headers_already_sent, first_line_already_sent, headers_in_progress, first_line_in_progress;
         asio::streambuf headers_buffer;
 
-        boost::mutex headers_mutex;
+        boost::recursive_mutex headers_mutex;
         buffer_type read_buffer_;
         status_t status;
         request_parser_type parser;
@@ -273,6 +280,7 @@ namespace boost { namespace network { namespace http {
         buffer_type::iterator new_start;
         string_type partial_parsed;
         optional<boost::system::system_error> error_encountered;
+        pending_actions_list pending_actions;
 
         template <class, class> friend struct async_server_base;
 
@@ -281,6 +289,10 @@ namespace boost { namespace network { namespace http {
         };
 
         void start() {
+            typename ostringstream<Tag>::type ip_stream;
+            ip_stream << socket_.remote_endpoint().address().to_v4().to_string() << ':'
+                << socket_.remote_endpoint().port();
+            request_.source = ip_stream.str();
             read_more(method);
         }
 
@@ -462,7 +474,6 @@ namespace boost { namespace network { namespace http {
 
         void parse_headers(string_type & input, typename request::headers_container_type & container) {
             using namespace boost::spirit::qi;
-            std::vector<fusion::tuple<std::string,std::string> > headers;
             parse(
                 input.begin(), input.end(),
                 *(
@@ -471,7 +482,7 @@ namespace boost { namespace network { namespace http {
                     >> +(alnum|space|punct)
                     >> lit("\r\n")
                 )
-                , headers
+                , container
                 );
         }
 
@@ -488,13 +499,17 @@ namespace boost { namespace network { namespace http {
 
         template <class Callback>
         void write_first_line(Callback callback) {
+            lock_guard lock(headers_mutex);
+            if (first_line_in_progress) return;
+            first_line_in_progress = true;
+
             std::vector<asio::const_buffer> buffers;
             typedef constants<Tag> consts;
             typename ostringstream<Tag>::type first_line_stream;
             first_line_stream 
                 << consts::http_slash() << 1<< consts::dot() << 1 << consts::space()
                 << status << consts::space() << status_message(status)
-                << consts::space()
+                << consts::crlf()
                 ;
             std::string first_line = first_line_stream.str();
             buffers.push_back(asio::buffer(first_line));
@@ -505,6 +520,9 @@ namespace boost { namespace network { namespace http {
         }
 
         void write_headers_only(boost::function<void()> callback) {
+            if (headers_in_progress) return;
+            headers_in_progress = true;
+
             write_first_line(
                 strand.wrap(
                     boost::bind(
@@ -518,6 +536,7 @@ namespace boost { namespace network { namespace http {
         void handle_first_line_written(boost::function<void()> callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
             lock_guard lock(headers_mutex);
             if (!ec) {
+                first_line_already_sent = true;
                 asio::async_write(
                     socket()
                     , headers_buffer
@@ -538,7 +557,13 @@ namespace boost { namespace network { namespace http {
             if (!ec) {
                 headers_buffer.consume(headers_buffer.size());
                 headers_already_sent = true;
-                callback();
+                thread_pool().post(callback);
+                pending_actions_list::iterator start = pending_actions.begin()
+                    , end = pending_actions.end();
+                while (start != end) {
+                    thread_pool().post(*start++);
+                }
+                pending_actions_list().swap(pending_actions);
             } else {
                 error_encountered = in_place<boost::system::system_error>(ec);
             }
@@ -557,16 +582,24 @@ namespace boost { namespace network { namespace http {
 
         template <class Range>
         void write_impl(Range range, boost::function<void(boost::system::error_code)> callback) {
-            if (!headers_already_sent) {
-                boost::function<void(boost::system::error_code)> callback_function =
-                    callback;
+            lock_guard lock(headers_mutex);
+            boost::function<void(boost::system::error_code)> callback_function =
+                callback;
 
+            if (!headers_already_sent && !headers_in_progress) {
                 write_headers_only(
                     boost::bind(
                         &async_connection<Tag,Handler>::continue_write<Range>
                         , async_connection<Tag,Handler>::shared_from_this()
                         , range, callback_function
                     ));
+                return;
+            } else if (headers_in_progress && !headers_already_sent) {
+                pending_actions.push_back(
+                    boost::bind(
+                        &async_connection<Tag,Handler>::continue_write<Range>
+                        , async_connection<Tag,Handler>::shared_from_this()
+                        , range, callback_function));
                 return;
             }
 
@@ -583,14 +616,15 @@ namespace boost { namespace network { namespace http {
             // on doing I/O.
             //
 
-            static std::size_t const connection_buffer_size = BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
+            static std::size_t const connection_buffer_size =
+                BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
             shared_array_list temporaries = 
                 boost::make_shared<array_list>();
             shared_buffers buffers = 
                 boost::make_shared<std::vector<asio::const_buffer> >(0);
 
             std::size_t range_size = boost::distance(range);
-            buffers->resize(
+            buffers->reserve(
                 (range_size / connection_buffer_size)
                 + ((range_size % connection_buffer_size)?1:0)
                 );
