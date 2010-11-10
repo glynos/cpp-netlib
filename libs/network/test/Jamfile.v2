@@ -48,9 +48,13 @@ unit-test http_1_1_test : http_1_1_test.cpp ;
 unit-test http_message_test : http_message_test.cpp ;
 unit-test url_test : url_test.cpp ;
 unit-test client_server_include_failure : client_server_include_failure.cpp ;
+unit-test http_incremental_parser : http_incremental_parser.cpp ;
+unit-test http_incremental_request_parser : http_incremental_request_parser.cpp ;
+exe http_async_server : http_async_server.cpp ;
 exe hello_world : hello_world.cpp ;
 
 make httplib_acceptance.passed : httplib_acceptance.py hello_world : @python_runner ;
+make httplib_async_acceptance.passed : httplib_acceptance.py http_async_server : @python_runner ;
 actions python_runner {
     python $(>) $(<)
 }

@@ -20,6 +20,6 @@
 
 BOOST_AUTO_TEST_CASE(test1) {
     typedef boost::network::http::basic_client<
-    boost::network::tags::http_keepalive_8bit_udp_resolve, 1, 1> http_client;
+    boost::network::http::tags::http_keepalive_8bit_udp_resolve, 1, 1> http_client;
     http_client client;
 }
