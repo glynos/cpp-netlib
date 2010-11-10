@@ -49,7 +49,21 @@ the HTTP client implementation provided by :mod:`cpp-netlib`.
 Synchronous Clients
 ~~~~~~~~~~~~~~~~~~~
 
-.. FIXME show the table of tags that enable the synchronous implementation.
+Of the client tags shown in the table, the following makes the ``basic_client``
+behave as a fully synchonous client. 
+
+  * **http_default_8bit_tcp_resolve**
+  * **http_default_8bit_udp_resolve**
+  * **http_keepalive_8bit_tcp_resolve**
+  * **http_keepalive_8bit_udp_resolve**
+
+The synchronous client implements all the operations of the client underneath 
+the interface all block to wait for I/O to finish. All the member methods are
+synchronous and will block until the response object is ready or throws if erros
+are encountered in the performance of the HTTP requests.
+
+.. warning:: The synchronous clients are **NOT** thread safe. You will need to do
+   external synchronization to use synchronous client implementations.
 
 Asynchronous Clients
 ~~~~~~~~~~~~~~~~~~~~
