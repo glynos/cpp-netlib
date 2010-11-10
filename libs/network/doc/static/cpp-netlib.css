@@ -89,7 +89,7 @@ ins { font-weight: bold; text-decoration: none}
 
 /*** lists ***/
 ol.arabic li { list-style-type: decimal}
-ul li { list-style-type:none; font-size: 14px}
+ul li { font-size: 1em}
 ol li { margin-bottom: .4em}
 ul ul { padding-left:1.2em}
 ul ul ul { padding-left:1em}
@@ -106,6 +106,7 @@ ol.toc li.b { background-color: #E0FFB8}
 ol.toc li a:hover { background-color: transparent !important; text-decoration: underline !important}
 ol.toc span.release-date { color:#487858; float: right; font-size: 85%; padding-right: .5em}
 ol.toc span.comment-count { font-size: 75%; color: #999}
+ul.simple li { list-style-type: disc; margin-left: 2em}
 
 /*** tables ***/
 table { color:#000; margin-bottom: 1em; width: 100%}
@@ -180,5 +181,6 @@ img {
 tt.py-exc.literal {
     color: red;
 }
+
 
 tt.xref span.pre { color: green; }
