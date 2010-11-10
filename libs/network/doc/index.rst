@@ -12,7 +12,7 @@
 
 .. :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 .. 	  Dean Michael Berris <mikhailberis@gmail.com>
-.. :Date: Nov 1, 2010
+.. :Date: Nov 9, 2010
 .. :Version: 0.8
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 .. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2010.
@@ -33,7 +33,7 @@ some point in the future be submitted for review into Boost.  A
 presentation about :mod:`cpp-netlib` was given at `BoostCon 2010`_,
 for which the `slides`_ and the `paper`_ can be found on-line.
 
-Sneak Peak
+Sneak Peek
 ----------
 
 The :mod:`cpp-netlib` allows you to write semantically consistent code for
