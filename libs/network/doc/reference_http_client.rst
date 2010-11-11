@@ -9,7 +9,8 @@ General
 use and embed in your own applications. All of the HTTP client implementations:
 
   * **Cannot be copied.** This means you may have to store instances of the 
-    clients in dynamic memory.
+    clients in dynamic memory if you intend to use them as function parameters
+    or pass them around in smart pointers or by reference.
   * **Assume that requests made are independent of each other.** There currently
     is no cookie or session management system built-in to cpp-netlib's HTTP client
     implementations.
@@ -46,11 +47,20 @@ the HTTP client implementation provided by :mod:`cpp-netlib`.
 
 .. include:: http_client_tags.rst
 
+In the above table the tags follow a pattern for describing the behavior
+introduced by the tags. This pattern is shown below:
+
+    <protocol>_<modifier>_<character-width>_<resolve-strategy>
+
+For example, the tag ``http_default_8bit_tcp_resolve`` indicates the protocol
+``http``, a modifier ``default``, a character width of ``8bit``, and a resolve
+strategy of ``tcp_resolve``.
+
 Synchronous Clients
 ~~~~~~~~~~~~~~~~~~~
 
 Of the client tags shown in the table, the following makes the ``basic_client``
-behave as a fully synchonous client. 
+behave as a fully synchronous client. 
 
   * **http_default_8bit_tcp_resolve**
   * **http_default_8bit_udp_resolve**
@@ -68,7 +78,29 @@ are encountered in the performance of the HTTP requests.
 Asynchronous Clients
 ~~~~~~~~~~~~~~~~~~~~
 
-.. FIXME show the table of tags that enable the asynchronous implementation.
+The following tags specify the ``basic_client`` to behave in an asynchronous
+manner:
+
+  * **http_async_8bit_tcp_resolve**
+  * **http_async_8bit_udp_resolve**
+
+An asynchronous client implementation means that``basic_client<...>`` is an 
+`Active Object`_. This means that the client has and manages its own lifetime 
+thread, and returns values that are asynchronously filled in. The response 
+object encapsulates Boost.Thread_ futures which get filled in once the values 
+are available.
+
+.. _Boost.Thread: http://www.boost.org/libs/thread
+.. _`Active Object`: http://en.wikipedia.org/wiki/Active_object
+
+The asynchronous clients implement all operations asynchronously which are hidden
+from the user. The interface is still synchronous but the fetching of data
+happens on a different thread.
+
+.. note:: The asynchronous clients are thread safe, and can be shared across
+   many threads. Each request starts a sequence of asynchronous operations
+   dedicated to that request. The client does not re-cycle connections and uses
+   a one-request-one-connection model.
 
 Member Functions
 ----------------
