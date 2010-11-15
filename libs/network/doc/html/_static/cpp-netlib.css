@@ -1,7 +1,7 @@
 @import url(reset-fonts-grids.css);
 
 html, body {background-image: url(./background.jpg); background-repeat:no-repeat; background-position:right top; background-attachment:fixed}
-body {font:16px "Times New Roman", Lucida, serif; color:black}
+body {font:12pt "Times New Roman", Lucida, serif; color:black}
 #custom-doc { width:80%;*width:720px; min-width:720px; max-width:960px; margin:auto; text-align:left; padding-top:16px; margin-top:0}
 #hd { padding: 4px 0 12px 0}
 #bd { background:#C5D88A}
@@ -89,7 +89,7 @@ ins { font-weight: bold; text-decoration: none}
 
 /*** lists ***/
 ol.arabic li { list-style-type: decimal}
-ul li { list-style-type:none; font-size: 14px}
+ul li { font-size: 1em}
 ol li { margin-bottom: .4em}
 ul ul { padding-left:1.2em}
 ul ul ul { padding-left:1em}
@@ -98,7 +98,7 @@ ul.toc ul { margin-left:.6em}
 ul.toc ul li { list-style-type:square}
 ul.toc ul ul li { list-style-type:disc}
 ul.linklist li, ul.toc li { list-style-type:none}
-dt { font-weight:bold; margin-top:.5em; font-size:1.1em}
+dt { font-weight:bold; margin-top:.5em; font-size:1em}
 dd { margin-bottom:.8em}
 ol.toc { margin-bottom: 2em}
 ol.toc li { font-size:125%; padding: .5em; line-height:1.2em; clear: right}
@@ -106,6 +106,7 @@ ol.toc li.b { background-color: #E0FFB8}
 ol.toc li a:hover { background-color: transparent !important; text-decoration: underline !important}
 ol.toc span.release-date { color:#487858; float: right; font-size: 85%; padding-right: .5em}
 ol.toc span.comment-count { font-size: 75%; color: #999}
+ul.simple li { list-style-type: disc; margin-left: 2em}
 
 /*** tables ***/
 table { color:#000; margin-bottom: 1em; width: 100%}
@@ -180,5 +181,6 @@ img {
 tt.py-exc.literal {
     color: red;
 }
+
 
 tt.xref span.pre { color: green; }

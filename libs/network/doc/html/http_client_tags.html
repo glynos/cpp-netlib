@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Examples &mdash; cpp-netlib v0.8 documentation</title>
+    <title>&lt;no title&gt; &mdash; cpp-netlib v0.8 documentation</title>
     <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,9 +22,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.8 documentation" href="index.html" />
-    <link rel="next" title="HTTP examples" href="examples_http.html" />
-    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
+    <link rel="top" title="cpp-netlib v0.8 documentation" href="index.html" /> 
   </head>
   <body>
 
@@ -33,36 +31,69 @@
     <div id="hd">
       <h1><a href="index.html">cpp-netlib v0.8 documentation</a></h1>
       <div class="nav">
-    &laquo; <a href="getting_started.html" title="Getting Started">previous</a>
-     |
-    <a title="cpp-netlib v0.8 documentation" href="index.html" accesskey="U">up</a>
-   |
-    <a href="examples_http.html" title="HTTP examples">next</a> &raquo;</div>
+    <a title="cpp-netlib v0.8 documentation" href="index.html" accesskey="U">up</a></div>
     </div>
 
     <div id="bd">
       <div id="yui-main">
         <div class="yui-b">
-          <div class="yui-g" id="examples">
+          <div class="yui-g" id="http_client_tags">
             
-  <div class="section" id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
-<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is a practical library that is designed to aid
-the development of applications for that need to communicate using
-common networking protocols.  The following set of examples describe a
-series of realistic examples that use the <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> for these
-kinds of application.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples_http.html">HTTP examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="http_client.html">HTTP client</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hello_world_client.html">&#8220;Hello world&#8221; HTTP client</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  <table border="1" class="docutils">
+<colgroup>
+<col width="42%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Tag</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>http_default_8bit_tcp_resolve</td>
+<td>This is the default HTTP implementation tag
+that resolves addresses with a TCP resolver
+and provides a synchronous/blocking HTTP
+client interface.</td>
+</tr>
+<tr><td>http_default_8bit_udp_resolve</td>
+<td>This is similar to the above tag except that
+it specifies the HTTP client to use a UDP
+resolver. It also provides a synchronous/
+blocking HTTP client interface.</td>
+</tr>
+<tr><td>http_keepalive_8bit_tcp_resolve</td>
+<td>This tag specifies that the HTTP client by
+default will keep connections to the server
+alive. It only makes sense if the
+<tt class="docutils literal"><span class="pre">version_major</span></tt> and <tt class="docutils literal"><span class="pre">version_minor</span></tt> are
+both <tt class="docutils literal"><span class="pre">1</span></tt>, to indicate HTTP 1.1. This tag
+causes the HTTP client to resolve using a
+TCP resolver and provides a synchronous/
+blocking HTTP client interface.</td>
+</tr>
+<tr><td>http_keepalive_8bit_udp_resolve</td>
+<td>This is similar to the above tag except that
+it specifies the HTTP client to use a UDP
+resolver. It also provides a synchronous/
+blocking HTTP client interface.</td>
+</tr>
+<tr><td>http_async_8bit_tcp_resolve</td>
+<td>This tag provides an active HTTP client
+object implementation that uses a TCP
+resolver. Response objects returned will
+encapsulate a number of <a class="reference external" href="http://www.boost.org/libs/thread">Boost.Thread</a>
+shared futures to hold values. Users don&#8217;t
+have to see this as they are implementation
+details.</td>
+</tr>
+<tr><td>http_async_8bit_udp_resolve</td>
+<td>This is similar to the above tag except that
+specifies the HTTP client to use a UDP
+resolver.</td>
+</tr>
+</tbody>
+</table>
 
 
           </div>
@@ -77,10 +108,6 @@ kinds of application.</p>
   <h3>Browse</h3>
   <ul>
     
-      <li>Prev: <a href="getting_started.html">Getting Started</a></li>
-    
-    
-      <li>Next: <a href="examples_http.html">HTTP examples</a></li>
     
   </ul>
   <h3>You are here:</h3>
@@ -88,14 +115,14 @@ kinds of application.</p>
       <li>
         <a href="index.html">cpp-netlib v0.8 documentation</a>
         
-        <ul><li>Examples</li></ul>
+        <ul><li>&lt;no title&gt;</li></ul>
         
       </li>
   </ul>
 
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/examples.txt"
+    <li><a href="_sources/http_client_tags.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -120,11 +147,7 @@ kinds of application.</p>
 
     <div id="ft">
       <div class="nav">
-    &laquo; <a href="getting_started.html" title="Getting Started">previous</a>
-     |
-    <a title="cpp-netlib v0.8 documentation" href="index.html" accesskey="U">up</a>
-   |
-    <a href="examples_http.html" title="HTTP examples">next</a> &raquo;</div>
+    <a title="cpp-netlib v0.8 documentation" href="index.html" accesskey="U">up</a></div>
     </div>
   </div>
 

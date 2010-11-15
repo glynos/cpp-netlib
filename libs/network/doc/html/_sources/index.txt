@@ -12,8 +12,8 @@
 
 .. :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 .. 	  Dean Michael Berris <mikhailberis@gmail.com>
-.. :Date: Oct 9, 2010
-.. :Version: 0.7.1
+.. :Date: Nov 9, 2010
+.. :Version: 0.8
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 .. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2010.
 ..             Distributed under the Boost Software License, Version
@@ -95,6 +95,8 @@ Contents
    in_depth.rst
    techniques.rst
    history.rst
+   install.rst
+   reference.rst
    references.rst
 
 .. _Boost: http://www.boost.org/
