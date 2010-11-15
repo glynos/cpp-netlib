@@ -75,8 +75,6 @@ namespace boost { namespace network { namespace http {
         lhs.swap(rhs);
     }
 
-    BOOST_CONCEPT_ASSERT((Response<basic_response<tags::http_default_8bit_udp_resolve> >));
-
 } // namespace http
 
 } // namespace network
