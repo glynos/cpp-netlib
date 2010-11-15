@@ -101,16 +101,99 @@ in the following section.
 Synchronous Servers
 ~~~~~~~~~~~~~~~~~~~
 
-.. FIXME show the table of tags that enable the synchronous implementation.
+The synchronous server implementation is represented by the template ``server``
+in namespace ``boost::network::http``. The ``server`` template takes in a single
+template parameter named ``Handler`` which models the SynchronousHandler
+concept (described above).
+
+An instance of Handler is taken in by reference to the constructor of the HTTP
+server. This means the Handler is not copied around and only a single instance
+of the handler is used for all connections and requests performed against the
+HTTP server.
+
+.. warning:: It is important to note that the HTTP server does not implement any
+   locking upon invoking the Handler. In case you have any state in the Handler
+   that will be associated with the synchronous server, you would have to
+   implement your own synchronization internal to the Handler implementation.
+   This matters especially if you run the synchronous server in multiple
+   threads.
+
+The general pattern of usage for the HTTP Server template is shown below:
+
+.. code-block:: c++
+
+    struct handler;
+    typedef boost::network::http::server<handler> http_server;
+
+    struct handler {
+        void operator()(
+            http_server::request const & req,
+            http_server::response & res
+        ) {
+            // do something, and then edit the res object here.
+        }
+    };
+
+More information about the actual HTTP Server API follows in the next section.
+It is important to understand that the HTTP Server is actually embedded in your
+application, which means you can expose almost all your application logic
+through the Handler type, which you can also initialize appropriately.
+
+API Documentation
+`````````````````
+
+The following sections assume that the following file has been included:
+
+.. code-block:: c++
+    
+    #include <boost/network/include/http/server.hpp>
+
+And that the following typedef's have been put in place:
+
+.. code-block:: c++
+
+    struct handler_type;
+    typedef boost::network::http::server<handler_type> http_server;
+
+Constructor
+***********
+
+``http_server(address, port, handler)``
+    Construct an HTTP Server instance, passing in the address and port as
+    ``std::string const &`` and handler being of type ``handler_type`` but
+    passed in as an lvalue reference.
+
+Public Members
+**************
+
+The following definitions assume that a properly constructed ``http_server``
+instance has been constructed in the following manner:
+
+.. code-block:: c++
+
+    handler_type handler;
+    http_server server("127.0.0.1", "8000", handler);
+
+``server.run()``
+    Run the HTTP Server event loop. This function can be run on multiple threads
+    following the example:
+
+.. code-block:: c++
+
+    boost::thread t1(boost::bind(&http_server::run, &server));
+    boost::thread t2(boost::bind(&http_server::run, &server));
+    server.run();
+
+``server.stop()``
+    Stop the HTTP Server acceptor and wait for all pending requests to finish.
 
 Asynchronous Servers
 ~~~~~~~~~~~~~~~~~~~~
 
 .. FIXME show the table of tags that enable the asynchronous implementation.
 
-Member Functions
-----------------
+API Documentation
+`````````````````
 
 .. FIXME show the table of publicly-accessible member functions.
-
 
