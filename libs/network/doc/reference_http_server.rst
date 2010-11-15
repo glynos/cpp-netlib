@@ -99,7 +99,7 @@ More information about the internals of the `Asynchronous Servers`_ can be found
 in the following section.
 
 Synchronous Servers
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 The synchronous server implementation is represented by the template ``server``
 in namespace ``boost::network::http``. The ``server`` template takes in a single
@@ -140,7 +140,7 @@ application, which means you can expose almost all your application logic
 through the Handler type, which you can also initialize appropriately.
 
 API Documentation
-`````````````````
+~~~~~~~~~~~~~~~~~
 
 The following sections assume that the following file has been included:
 
@@ -156,7 +156,7 @@ And that the following typedef's have been put in place:
     typedef boost::network::http::server<handler_type> http_server;
 
 Constructor
-***********
+```````````
 
 ``http_server(address, port, handler)``
     Construct an HTTP Server instance, passing in the address and port as
@@ -164,7 +164,7 @@ Constructor
     passed in as an lvalue reference.
 
 Public Members
-**************
+``````````````
 
 The following definitions assume that a properly constructed ``http_server``
 instance has been constructed in the following manner:
@@ -188,12 +188,12 @@ instance has been constructed in the following manner:
     Stop the HTTP Server acceptor and wait for all pending requests to finish.
 
 Asynchronous Servers
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 .. FIXME show the table of tags that enable the asynchronous implementation.
 
 API Documentation
-`````````````````
+~~~~~~~~~~~~~~~~~
 
 .. FIXME show the table of publicly-accessible member functions.
 
