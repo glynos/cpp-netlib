@@ -105,6 +105,91 @@ happens on a different thread.
 Member Functions
 ----------------
 
-.. FIXME show the table of publicly-accessible member functions.
+In this section we assume that the following typedef is in effect:
 
+.. code-block:: c++
+
+    typedef boost::network::http::basic_client<
+        boost::network::http::tags::http_default_8bit_udp_resolve
+        , 1
+        ,1
+        >
+        client;
+
+Also, that code using the HTTP client will have use the following header:
+
+.. code-block:: c++
+
+    #include <boost/network/include/http/client.hpp>
+
+Constructors
+~~~~~~~~~~~~
+
+The client implementation can be default constructed, or customized at
+initialization.
+
+``client()``
+    Default constructor.
+``client(client::cache_resolved)``
+    Construct a client which caches resolved endpoints.
+``client(client::follow_redirects)``
+    Construct a client which follows HTTP redirects. [#]_
+``client(client::cache_resolved, client::follow_redirects), client(client::follow_redirects, client::cache_resolved)``
+    Construct a client which caches resolved endpoints and follows HTTP 
+    redirects. [#]_
+
+.. [#] In Asynchronous Clients, redirects are not followed. This means the
+   response objects will contain whatever HTTP response was retrieved by the
+   client implementation.
+.. [#] In Asynchronous Clients, only caching resolved endpoints take effect.
+
+HTTP Methods
+~~~~~~~~~~~~
+
+The client implementation supports various HTTP methods. The following
+constructs assume that a client has been properly constructed named ``client_``
+and that there is an appropriately constructed request object named ``request_``
+and that there is an appropriately constructed response object named
+``response_`` like the following:
+
+.. code-block:: c++
+
+    client client_();
+    client::request request_("http://cpp-netib.github.com/");
+    client::response response_;
+
+``response_ = client_.get(request_)``
+    Perform an HTTP GET request.
+``response_ = client_.head(request_)``
+    Perform an HTTP HEAD request.
+``response_ = client_.post(request_)``
+    Perform an HTTP POST, use the data already set in the request object which
+    includes the headers, and the body.
+``response_ = client_.post(request_, body)``
+    Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
+    is the HTTP Client's ``Tag``. The default content-type used is
+    ``x-application/octet-stream``.
+``response_ = client_.post(request_, content_type, body)``
+    The body and content_type parameters are of type
+    ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
+    ``Tag``. This uses the request object's other headers.
+``response_ = client_.put(request_)``
+    Perform an HTTP PUT, use the data already set in the request object which
+    includes the headers, and the body.
+``response_ = client_.put(request_, body)``
+    Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
+    is the HTTP Client's ``Tag``. The default content-type used is
+    ``x-application/octet-stream``.
+``response_ = client_.put(request_, content_type, body)``
+    The body and content_type parameters are of type
+    ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
+    ``Tag``. This uses the request object's other headers.
+``response_ = client_.delete_(request_)``
+    Perform an HTTP DELETE request.
+
+Client-Specific
+~~~~~~~~~~~~~~~
+
+``client_.clear_resolved_cache()``
+    Clear the cache of resolved endpoints.
 
