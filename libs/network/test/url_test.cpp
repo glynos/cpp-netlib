@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_uri_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("http://.boost.org/");
+    const std::string url("http://www.boost.org/");
     const std::string scheme("http");
     const std::string host("www.boost.org");
     const std::string path("/");
