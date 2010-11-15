@@ -17,6 +17,13 @@
 
 namespace boost { namespace network { namespace http {
 
+    namespace impl {
+
+        template <class Tag>
+        struct ready_wrapper;
+
+    } /* impl */
+
     template <class Tag>
     struct async_message {
 
@@ -137,7 +144,7 @@ namespace boost { namespace network { namespace http {
         mutable std::set<string_type> removed_headers;
         mutable boost::shared_future<string_type> body_;
 
-        friend struct boost::network::detail::wrapper_base<Tag, async_message<Tag> >;
+        friend struct boost::network::http::impl::ready_wrapper<Tag>;
     };
 
     template <class Tag>

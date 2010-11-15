@@ -30,6 +30,7 @@
 #include <boost/network/protocol/http/message/wrappers/status_message.hpp>
 #include <boost/network/protocol/http/message/wrappers/destination.hpp>
 #include <boost/network/protocol/http/message/wrappers/source.hpp>
+#include <boost/network/protocol/http/message/wrappers/ready.hpp>
 
 #include <boost/network/protocol/http/message.hpp>
 #include <boost/network/protocol/http/message/async_message.hpp>

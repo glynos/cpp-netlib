@@ -29,6 +29,7 @@ if (Boost_FOUND)
         url_test
         http_url_test
         utils_thread_pool
+        http_async_message_ready
         )
     foreach (test ${TESTS})
         set_source_files_properties(${test}.cpp
