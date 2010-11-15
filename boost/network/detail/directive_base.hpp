@@ -18,7 +18,7 @@ namespace boost { namespace network { namespace detail {
             //explicit directive_base(basic_message<tag> & message_)
             //    : _message(message_)
             protected:
-                virtual ~directive_base() 
+                ~directive_base() 
                 { }; // can only be extended
 
             //    mutable basic_message<tag> & _message;

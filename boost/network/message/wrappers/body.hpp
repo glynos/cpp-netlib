@@ -8,43 +8,46 @@
 #define __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
 
 #include <boost/network/traits/string.hpp>
+#include <boost/network/detail/wrapper_base.hpp>
 
 namespace boost { namespace network {
 
     namespace impl {
         template <class Tag>
-            struct body_wrapper : public detail::wrapper_base<Tag> {
+            struct body_wrapper : public detail::wrapper_base<Tag, basic_message<Tag> > {
                 typedef basic_message<Tag> message_type;
                 typedef typename string<Tag>::type string_type;
+                typedef detail::wrapper_base<Tag, basic_message<Tag> > wrapper_base;
                 
                 explicit body_wrapper(basic_message<Tag> & message_)
-                    : detail::wrapper_base<Tag>(message_)
+                    : wrapper_base(message_)
                 { };
 
                 operator string_type () const {
-                    return string_type(detail::wrapper_base<Tag>::_message.body());
+                    return string_type(wrapper_base::_message.body());
                 };
 
                 std::size_t size() const {
-                    return detail::wrapper_base<Tag>::_message.body().size();
+                    return wrapper_base::_message.body().size();
                 }
             };
 
         template <class Tag>
-            struct body_wrapper_const : public detail::wrapper_base_const<Tag> {
+            struct body_wrapper_const : public detail::wrapper_base_const<Tag, basic_message<Tag> > {
                 typedef basic_message<Tag> message_type;
                 typedef typename string<Tag>::type string_type;
+                typedef detail::wrapper_base_const<Tag, basic_message<Tag> > wrapper_base;
 
                 explicit body_wrapper_const(basic_message<Tag> const & message_)
-                    : detail::wrapper_base_const<Tag>(message_)
+                    : wrapper_base(message_)
                 {};
 
                 operator string_type () const {
-                    return string_type(detail::wrapper_base_const<Tag>::_message.body());
+                    return string_type(wrapper_base::_message.body());
                 }
 
                 std::size_t size() const {
-                    return detail::wrapper_base<Tag>::_message.body().size();
+                    return wrapper_base::_message.body().size();
                 }
             };
 

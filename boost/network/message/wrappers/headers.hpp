@@ -45,7 +45,7 @@ namespace boost { namespace network {
      */
     namespace impl {
         template <class Tag>
-            struct headers_wrapper : public detail::wrapper_base_const<Tag> {
+            struct headers_wrapper : public detail::wrapper_base_const<Tag, basic_message<Tag> > {
                 typedef Tag tag;
                 typedef basic_message<Tag> message_type;
                 typedef typename string<Tag>::type string_type;
@@ -53,9 +53,10 @@ namespace boost { namespace network {
                 typedef typename headers_container<Tag>::type headers_container_type;
                 typedef typename headers_container_type::const_iterator const_iterator;
                 typedef typename headers_container_type::iterator iterator;
+                typedef detail::wrapper_base_const<Tag, basic_message<Tag> > wrapper_base;
 
                 explicit headers_wrapper(basic_message<Tag> const & message_)
-                    : detail::wrapper_base_const<Tag>(message_)
+                    : wrapper_base(message_)
                 { };
 
                 range_type operator[] (string_type const & key) const {

@@ -15,17 +15,18 @@ namespace boost { namespace network {
 
     namespace impl {
         template <class Tag>
-            struct destination_wrapper : public detail::wrapper_base<Tag> {
+            struct destination_wrapper : public detail::wrapper_base<Tag, basic_message<Tag> > {
                 typedef Tag tag;
                 typedef basic_message<tag> message_type;
                 typedef typename string<Tag>::type string_type;
+                typedef detail::wrapper_base<Tag, basic_message<Tag> > wrapper_base;
 
                 explicit destination_wrapper(message_type & message_)
-                    : detail::wrapper_base<tag>(message_)
+                    : wrapper_base(message_)
                 { };
 
                 operator string_type () const {
-                    return string_type(detail::wrapper_base<tag>::_message.destination());
+                    return string_type(wrapper_base::_message.destination());
                 };
             };
     } // namespace impl
