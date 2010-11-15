@@ -155,6 +155,15 @@ And that the following typedef's have been put in place:
     struct handler_type;
     typedef boost::network::http::server<handler_type> http_server;
 
+    struct handler_type {
+        void operator()(
+            http_server::request const & request,
+            http_server::response & response
+        ) {
+            // do something here
+        }
+    };
+
 Constructor
 ```````````
 
@@ -183,17 +192,281 @@ instance has been constructed in the following manner:
     boost::thread t1(boost::bind(&http_server::run, &server));
     boost::thread t2(boost::bind(&http_server::run, &server));
     server.run();
+    t1.join();
+    t2.join();
 
 ``server.stop()``
     Stop the HTTP Server acceptor and wait for all pending requests to finish.
 
+Response Object
+```````````````
+
+The response object has its own public member functions which can be very
+helpful in certain simple situations.
+
+``response = http_server::response::stock_reply(status, body)``
+    Code like the above should go inside the handler's ``operator()`` overload.
+    The body parameter is an ``std::string``. The status parameter is any of 
+    the following values from the ``http_server::response`` enum 
+    ``status_type``:
+
+.. code-block:: c++
+
+    enum status_type {
+        ok = 200,
+        created = 201,
+        accepted = 202,
+        no_content = 204,
+        multiple_choices = 300,
+        moved_permanently = 301,
+        moved_temporarily = 302,
+        not_modified = 304,
+        bad_request = 400,
+        unauthorized = 401,
+        forbidden = 403,
+        not_found = 404,
+        not_supported = 405,
+        not_acceptable = 406,
+        internal_server_error = 500,
+        not_implemented = 501,
+        bad_gateway = 502,
+        service_unavailable = 503
+    };
+
+The response object also has the following publicly accessible member values
+which can be directly manipulated by the handler.
+
++------------------+----------------------+------------------------------------+
+| Member Name      | Type                 | Description                        |
++==================+======================+====================================+
+| status           | ``status_type``      | The HTTP status of the response.   |
++------------------+----------------------+------------------------------------+
+| headers          | ``vector<header>``   | Vector of headers. [#]_            |
++------------------+----------------------+------------------------------------+
+| content          | ``string_type`` [#]_ | The contents of the response.      |
++------------------+----------------------+------------------------------------+
+
+.. [#] A header is a struct of type
+   ``response_header<http::tags::http_server>``. An instance always has the
+   members ``name`` and ``value`` both of which are of type ``string_type``.
+.. [#] ``string_type`` is 
+   ``boost::network::string<http::tags::http_server>::type``.
+
 Asynchronous Servers
 --------------------
 
-.. FIXME show the table of tags that enable the asynchronous implementation.
+The asynchronous server implementation is significantly different to the
+synchronous server implementation in three ways:
+
+  #. **The Handler instance is invoked asynchronously**. This means the I/O
+     thread used to handle network-related events are free to handle only the
+     I/O related events. This enables the server to scale better as to the
+     number of concurrent connections it can handle.
+  #. **The Handler is able to schedule asynchronous actions on the thread pool
+     associated with the server.** This allows handlers to perform multiple
+     asynchronous computations that later on perform writes to the connection.
+  #. **The Handler is able to control the (asynchronous) writes to and reads from
+     the HTTP connection.** Because the connection is available to the Handler,
+     that means it can write out chunks of data at a time or stream data through
+     the connection continuously.
+
+The asynchronous server is meant to allow for better scalability in terms of the
+number of concurrent connections and for performing asynchronous actions within
+the handlers. If your applacation does not need to write out information
+asynchronously or perform potentially long computations, then the synchronous
+server gives a generally better performance profile than the asynchronous
+server.
+
+The asynchronous server implementation is available from a single user-facing
+template named ``async_server``. This template takes in a single template
+parameter which is the type of the Handler to be called once a request has been
+parsed from a connection.
+
+An instance of Handler is taken as a reference to the constructor similar to the
+synchronous server implementation.
+
+.. warning:: The asynchronous server implementation, like the synchronous server
+   implementation, does not perform any synchronization on the calls to the
+   Handler invocation. This means if your handler contains or maintains internal
+   state, you are responsible for implementing your own synchronization on
+   accesses to the internal state of the Handler.
+
+The general pattern for using the ``async_server`` template is shown below:
+
+.. code-block:: c++
+    
+    struct handler;
+    typedef boost::network::http::async_server<handler> http_server;
+
+    struct handler {
+        void operator()(
+            http_server::request const & req,
+            http_server::connection_ptr connection
+        ) {
+            // handle the request here, and use the connection to 
+            // either read more data or write data out to the client
+        }
+    };
 
 API Documentation
 ~~~~~~~~~~~~~~~~~
 
-.. FIXME show the table of publicly-accessible member functions.
+The following sections assume that the following file has been included:
 
+.. code-block:: c++
+
+    #include <boost/network/include/http/server.hpp>
+    #include <boost/network/utils/thread_pool.hpp>
+
+And that the following typedef's have been put in place:
+
+.. code-block:: c++
+
+    struct handler_type;
+    typedef boost::network::http::server<handler_type> http_server;
+
+    struct handler_type {
+        void operator()(
+            http_server::request const & request,
+            http_server::connection_ptr connection
+        ) {
+            // do something here
+        }
+    };
+
+Constructor
+```````````
+
+``http_server(address, port, handler, thread_pool)``
+    Construct an HTTP Server instance, passing in the address and port as
+    ``std::string const &`` and handler being of type ``handler_type`` but
+    passed in as an lvalue reference. The ``thread_pool`` parameter is an
+    instance of ``boost::network::utils::thread_pool`` that has been previously
+    instantiated.
+
+.. note:: The ``boost::network::utils::thread_pool`` has a single constructor
+   parameter which is the number of threads to run the thread pool.
+
+Public Members
+``````````````
+
+The following definitions assume that a properly constructed ``http_server``
+instance has been constructed in the following manner:
+
+.. code-block:: c++
+
+    handler_type handler;
+    boost::network::utils::thread_pool thread_pool(2);
+    http_server server("127.0.0.1", "8000", handler, thread_pool);
+
+``server.run()``
+    Run the HTTP Server event loop. This function can be run on multiple threads
+    following the example:
+
+.. code-block:: c++
+
+    boost::thread t1(boost::bind(&http_server::run, &server));
+    boost::thread t2(boost::bind(&http_server::run, &server));
+    server.run();
+    t1.join();
+    t2.join();
+
+``server.stop()``
+    Stop the HTTP Server acceptor and wait for all pending requests to finish.
+
+Connection Object
+`````````````````
+
+The connection object has its own public member functions which will be the
+primary means for reading from and writing to the connection.
+
+``template <class Range> write(Range range)``
+    The connection object exposes a function ``write`` that can be given a
+    parameter that adheres to the Boost.Range_ ``Single Pass Range`` Concept.
+    The write function, although it looks synchronous, starts of a series of
+    asynchronous writes to the connection as soon as the range is serialized to
+    appropriately sized buffers.
+
+    To use this in your handler, it would look something like this:
+
+.. code-block:: c++
+
+    connection->write("Hello, world!");
+    std::string sample = "I have a string!";
+    connection->write(sample);
+
+``template <class Range, class Callback> void write(Range range, Callback callback)``
+    The connection object also exposes a function ``write`` that can be given a
+    parameter that adheres to the Boost.Range_ ``Single Pass Range`` Concept, as
+    well as a Callback function that returns ``void`` and takes a
+    ``boost::system::error_code`` as a parameter. This overload of ``write`` is
+    useful for writing streaming applications that send out chunks of data at a
+    time, or for writing data that may not all fit in memory right away.
+
+``template <class ReadCallback> void read(ReadCallback callback)``
+    The connection object has a function ``read`` which can be used to read more
+    information from the connection. This ``read`` function takes in a callback
+    that can be assigned to a Boost.Function_ with the signature
+    ``void(input_range,error_code,size_t,connection_ptr)``. The following list
+    shows what the types actually mean:
+
+      * **input_range** -- ``boost::iterator_range<char const *>`` : The range
+        that denotes the data read from the connection.
+      * **error_code** -- ``boost::system::error_code`` : The error code if
+        there were any errors encountered from the read.
+      * **size_t** -- ``std::size_t`` : The number of bytes transferred.
+      * **connection_ptr** -- ``http_server::connection_ptr`` : A handle to the
+        current connection, so that it is kept alive at the time of the read
+        callback invocation.
+
+    This interface is useful when doing reads of uploaded data that can be
+    potentially large and may not fit in memory. The read handler is then
+    responsible for dealing with the chunks of data available from the
+    connection.
+
+``void set_status(status_t new_status)``
+    The ``set_status`` function takes a parameter of type ``status_t`` which is
+    an enum type nested in ``http_status::connection`` which is given in the
+    following code listing.
+
+.. code-block:: c++
+
+    enum status_t {
+        ok = 200
+        , created = 201
+        , accepted = 202
+        , no_content = 204
+        , multiple_choices = 300
+        , moved_permanently = 301
+        , moved_temporarily = 302
+        , not_modified = 304
+        , bad_request = 400
+        , unauthorized = 401
+        , forbidden = 403
+        , not_found = 404
+        , not_supported = 405
+        , not_acceptable = 406
+        , internal_server_error = 500
+        , not_implemented = 501
+        , bad_gateway = 502
+        , service_unavailable = 503
+    };
+
+.. note:: You may set and re-set the status several times as long as you have
+   not set the headers or sent data through the connection. If you do this after
+   data has already been set, the function will throw an instance of
+   ``std::logic_error``.
+
+``template <class Range> void set_headers(Range range)``
+    The ``set_headers`` function takes a Single Pass Range of
+    ``boost::network::http::response_header<http::tags::http_async_server>``
+    instances and linearizes them to a buffer with at most
+    ``BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE`` and
+    immediately schedules an asynchronous write once that is done.
+
+    The function throws an instance of ``std::logic_error`` if you try to set
+    the headers for a connection more than once.
+
+
+.. _Boost.Range: http://www.boost.org/libs/range
+.. _Boost.Function: http://www.boost.org/libs/function
