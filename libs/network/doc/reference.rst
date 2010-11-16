@@ -9,5 +9,7 @@ to the different client and/or server implementations within :mod:`cpp-netlib`.
    :maxdepth: 2
 
    reference_http_client.rst
+   reference_http_request.rst
+   reference_http_response.rst
    reference_http_server.rst
 
