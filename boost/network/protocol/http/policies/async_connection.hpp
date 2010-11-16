@@ -34,7 +34,7 @@ namespace boost { namespace network { namespace http {
             connection_impl(
                 bool follow_redirect, 
                 resolve_function resolve, 
-                boost::shared_ptr<resolver_type> resolver,
+                resolver_type & resolver,
                 bool https
                 )
             {
@@ -52,7 +52,7 @@ namespace boost { namespace network { namespace http {
         };
 
         typedef boost::shared_ptr<connection_impl> connection_ptr;
-        connection_ptr get_connection(boost::shared_ptr<resolver_type> resolver, basic_request<Tag> const & request_) {
+        connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_) {
             string_type protocol_ = protocol(request_);
             connection_ptr connection_(
                 new connection_impl(
@@ -62,10 +62,8 @@ namespace boost { namespace network { namespace http {
                         this,
                         _1, _2, _3, _4
                         )
-                    , resolver                    
-                    , boost::iequals(protocol_, string_type("https"))
-                    )
-                    );
+                    , resolver
+                    , boost::iequals(protocol_, string_type("https"))));
             return connection_;
         }
 

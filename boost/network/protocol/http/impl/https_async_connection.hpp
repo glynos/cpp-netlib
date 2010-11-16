@@ -34,7 +34,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             typedef typename base::resolver_base::resolve_function resolve_function;
 
             https_async_connection(
-                boost::shared_ptr<resolver_type> resolver,
+                resolver_type & resolver,
                 resolve_function resolve, 
                 bool follow_redirect,
                 optional<string_type> const & certificate_filename = optional<string_type>() 
@@ -43,7 +43,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 resolver_(resolver),
                 certificate_filename_(certificate_filename),
                 resolve_(resolve), 
-                request_strand_(new boost::asio::io_service::strand(resolver->get_io_service()))
+                request_strand_(resolver.get_io_service())
             {}
 
 
@@ -55,7 +55,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 boost::uint16_t port_ = port(request);
                 resolve_(resolver_, host(request), 
                     port_,
-                    request_strand_->wrap(
+                    request_strand_.wrap(
                         boost::bind(
                         &https_async_connection<Tag,version_major,version_minor>::handle_resolved,
                         https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -73,7 +73,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     port
                     );
                 context_.reset(new boost::asio::ssl::context(
-                    resolver_->get_io_service(),
+                    resolver_.get_io_service(),
                     boost::asio::ssl::context::sslv23_client
                     )
                 );
@@ -84,13 +84,13 @@ namespace boost { namespace network { namespace http { namespace impl {
                     context_->set_verify_mode(boost::asio::ssl::context::verify_none);
                 }
                 socket_.reset(new boost::asio::ssl::stream<boost::asio::ip::tcp::socket>(
-                    resolver_->get_io_service(),
+                    resolver_.get_io_service(),
                     *context_
                     )
                 );
                 socket_->lowest_layer().async_connect(
                     endpoint,
-                    request_strand_->wrap(
+                    request_strand_.wrap(
                         boost::bind(
                             &https_async_connection<Tag,version_major,version_minor>::handle_connected,
                             https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -112,7 +112,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         void handle_connected(boost::uint16_t port, bool get_body, resolver_iterator_pair endpoint_range, boost::system::error_code const & ec) {
             if (!ec) {
                 socket_->async_handshake(boost::asio::ssl::stream_base::client,
-                    request_strand_->wrap(
+                    request_strand_.wrap(
                         boost::bind(
                             &https_async_connection<Tag,version_major,version_minor>::handle_handshake,
                             https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -129,13 +129,13 @@ namespace boost { namespace network { namespace http { namespace impl {
                         port
                         );
                     socket_.reset(new boost::asio::ssl::stream<boost::asio::ip::tcp::socket>(
-                        resolver_->get_io_service()
+                        resolver_.get_io_service()
                         , *context_
                         )
                     );
                     socket_->lowest_layer().async_connect(
                         endpoint,
-                        request_strand_->wrap(
+                        request_strand_.wrap(
                             boost::bind(
                                 &https_async_connection<Tag,version_major,version_minor>::handle_connected,
                                 https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -160,7 +160,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         void handle_handshake(boost::uint16_t port, bool get_body, boost::system::error_code const & ec) {
             if (!ec) {
                 boost::asio::async_write(*socket_, boost::asio::buffer(command_string_.data(), command_string_.size()),
-                    request_strand_->wrap(
+                    request_strand_.wrap(
                         boost::bind(
                             &https_async_connection<Tag,version_major,version_minor>::handle_sent_request,
                             https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -193,7 +193,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     boost::asio::mutable_buffers_1(
                         this->part.c_array(), 
                         this->part.size()),
-                    request_strand_->wrap(
+                    request_strand_.wrap(
                         boost::bind(
                             &https_async_connection<Tag,version_major,version_minor>::handle_received_data,
                             https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -221,7 +221,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                         parsed_ok = 
                             this->parse_version(
                                 *socket_,
-                                request_strand_->wrap(
+                                request_strand_.wrap(
                                     boost::bind(
                                         &https_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -233,7 +233,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     case status:
                         parsed_ok =
                             this->parse_status(*socket_,
-                                request_strand_->wrap(
+                                request_strand_.wrap(
                                     boost::bind(
                                         &https_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -245,7 +245,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     case status_message:
                         parsed_ok =
                             this->parse_status_message(*socket_,
-                                request_strand_->wrap(
+                                request_strand_.wrap(
                                     boost::bind(
                                         &https_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -257,7 +257,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     case headers:
                         fusion::tie(parsed_ok, remainder) =
                             this->parse_headers(*socket_,
-                                request_strand_->wrap(
+                                request_strand_.wrap(
                                     boost::bind(
                                         &https_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -272,7 +272,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                         }
                         this->parse_body(
                             *socket_,
-                            request_strand_->wrap(
+                            request_strand_.wrap(
                                 boost::bind(
                                     &https_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                     https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -302,7 +302,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                         } else {
                             this->parse_body(
                                 *socket_,
-                                request_strand_->wrap(
+                                request_strand_.wrap(
                                     boost::bind(
                                         &https_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         https_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -338,12 +338,12 @@ namespace boost { namespace network { namespace http { namespace impl {
         }
 
         bool follow_redirect_;
-        boost::shared_ptr<resolver_type> resolver_;
+        resolver_type & resolver_;
         optional<string_type> certificate_filename_;
         resolve_function resolve_;
         boost::shared_ptr<boost::asio::ssl::context> context_;
         boost::shared_ptr<boost::asio::ssl::stream<boost::asio::ip::tcp::socket> > socket_;
-        boost::shared_ptr<boost::asio::io_service::strand> request_strand_;
+        boost::asio::io_service::strand request_strand_;
         string_type command_string_;
         string_type method;
     };

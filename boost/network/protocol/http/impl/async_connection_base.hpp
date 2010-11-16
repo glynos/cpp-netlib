@@ -24,7 +24,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
         
-        static boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > new_connection(resolve_function resolve, boost::shared_ptr<resolver_type> resolver, bool follow_redirect, bool https) {
+        static boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > new_connection(resolve_function resolve, resolver_type & resolver, bool follow_redirect, bool https) {
             boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > temp;
             if (https) {
 #ifdef BOOST_NETWORK_ENABLE_HTTPS

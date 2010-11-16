@@ -24,7 +24,7 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag, unsigned version_major, unsigned version_minor>
     struct pooled_connection_policy : resolver_policy<Tag>::type {
-        protected:
+    protected:
 
         typedef typename string<Tag>::type string_type;
         typedef typename resolver_policy<Tag>::type resolver_base;
@@ -48,7 +48,7 @@ namespace boost { namespace network { namespace http {
                 pimpl.reset();
             }
 
-            private:
+        private:
 
             basic_response<Tag> send_request_impl(string_type const & method, basic_request<Tag> request_, bool get_body) {
                 boost::uint8_t count = 0;

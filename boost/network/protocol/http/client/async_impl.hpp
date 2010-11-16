@@ -33,25 +33,36 @@ namespace boost { namespace network { namespace http {
 
             async_client(bool cache_resolved, bool follow_redirect)
                 : connection_base(cache_resolved, follow_redirect),
-                service_(new boost::asio::io_service),
-                resolver_(new resolver_type(*service_)),
-                sentinel_(new boost::asio::io_service::work(*service_))
+                service_ptr(new boost::asio::io_service),
+                service_(*service_ptr),
+                resolver_(service_),
+                sentinel_(new boost::asio::io_service::work(service_))
             {
-                connection_base::service_ = service_;
                 connection_base::resolver_strand_.reset(new
-                    boost::asio::io_service::strand(*service_));
+                    boost::asio::io_service::strand(service_));
                 lifetime_thread_.reset(new boost::thread(
                     boost::bind(
                         &boost::asio::io_service::run,
-                        service_
+                        &service_
                         )));
+            }
+
+            async_client(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service)
+                : connection_base(cache_resolved, follow_redirect),
+                service_ptr(),
+                service_(service),
+                resolver_(service_),
+                sentinel_(new boost::asio::io_service::work(service_))
+            {
             }
 
             ~async_client() throw ()
             {
                 sentinel_.reset();
-                lifetime_thread_->join();
-                lifetime_thread_.reset();
+                if (lifetime_thread_.get()) {
+                    lifetime_thread_->join();
+                    lifetime_thread_.reset();
+                }
             }
 
             basic_response<Tag> const request_skeleton(
@@ -65,8 +76,9 @@ namespace boost { namespace network { namespace http {
                 return connection_->send_request(method, request_, get_body);
             }
 
-            boost::shared_ptr<boost::asio::io_service> service_;
-            boost::shared_ptr<resolver_type> resolver_;
+            std::auto_ptr<boost::asio::io_service> service_ptr;
+            boost::asio::io_service & service_;
+            resolver_type resolver_;
             boost::shared_ptr<boost::asio::io_service::work> sentinel_;
             boost::shared_ptr<boost::thread> lifetime_thread_;
         };

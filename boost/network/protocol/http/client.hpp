@@ -75,6 +75,10 @@ namespace boost { namespace network { namespace http {
         : base_facade_type(), pimpl(new pimpl_type(true, true))
         {}
 
+        explicit basic_client(boost::asio::io_service & io_service)
+        : base_facade_type(), pimpl(new pimpl_type(false, false, io_service))
+        {}
+
         //
         // =================================================================
 

@@ -23,6 +23,13 @@ typedef boost::mpl::list<
     , http::tags::http_async_8bit_tcp_resolve
 > tag_types;
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_constructor_test, T, tag_types) {
+    typedef http::basic_client<T, 1, 0> client;
+    client client1; //default constructed
+    boost::asio::io_service io_service;
+    client client2(io_service); // construct with a provided io_service
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test, T, tag_types) {
     typedef http::basic_client<T, 1, 0> client;
     typename client::request request("http://www.boost.org/");
