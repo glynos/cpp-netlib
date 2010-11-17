@@ -45,8 +45,8 @@ struct file_cache {
 
     bool add(std::string const & path) {
         boost::upgrade_lock<boost::shared_mutex> lock(cache_mutex);
-        if (regions.find(doc_root_ + path) != regions.end()) return true;
         std::string real_filename = doc_root_+path;
+        if (regions.find(real_filename) != regions.end()) return true;
         int fd = open(real_filename.c_str(), O_RDONLY|O_NOATIME|O_NONBLOCK);
         if (fd == -1) return false;
         std::size_t size = lseek(fd, 0, SEEK_END);
@@ -91,8 +91,8 @@ struct connection_handler : boost::enable_shared_from_this<connection_handler> {
     : file_cache_(cache) {}
 
     void operator()(std::string const & path, server::connection_ptr connection, bool serve_body) {
-        bool ok = false;
-        if (!file_cache_.has(path)) ok = file_cache_.add(path);
+        bool ok = file_cache_.has(path);
+        if (!ok) ok = file_cache_.add(path);
         if (ok) {
             send_headers(file_cache_.meta(path), connection);
             if (serve_body) send_file(file_cache_.get(path), 0, connection);
