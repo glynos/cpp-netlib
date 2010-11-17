@@ -50,6 +50,7 @@ unit-test url_test : url_test.cpp ;
 unit-test client_server_include_failure : client_server_include_failure.cpp ;
 unit-test http_incremental_parser : http_incremental_parser.cpp ;
 unit-test http_incremental_request_parser : http_incremental_request_parser.cpp ;
+unit-test http_async_message_ready : http_async_message_ready.cpp ;
 exe http_async_server : http_async_server.cpp ;
 exe hello_world : hello_world.cpp ;
 
