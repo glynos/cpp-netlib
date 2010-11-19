@@ -77,6 +77,27 @@ Concept`_ and also supports the following constructs.
 | ``uri(r, s)``         | ``void``    | Set the URI of the request.            |
 +-----------------------+-------------+----------------------------------------+
 
+Pod Server Request Concept
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A type models the Pod Server Request Concept if it models the `Message Concept`_
+and also supports the following constructs.
+
+**Legend**
+
+:R: The request type.
+:r: An instance of R.
+:S: The string type.
+:n,v: Instances of S.
+
++--------------------+--------+----------------------------------+
+| Construct          | Result | Description                      |
++====================+========+==================================+
+| ``R::string_type`` | ``S``  | The nested ``string_type`` type. |
++--------------------+--------+----------------------------------+
+| ``R r = {n,v};``   | **NA** | Static initialization of ``r``.  |
++--------------------+--------+----------------------------------+
+
 
 
 Directives
