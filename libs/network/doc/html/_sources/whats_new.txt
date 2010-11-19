@@ -8,6 +8,13 @@
 ---------------------
 
 * Updates to URI unit tests and documentation.
+* More documentation, covering the HTTP Client and HTTP Server APIs
+* Asynchronous HTTP Server that now supports running request handlers on a
+  different thread pool.
+* An initial thread pool implementation, using Boost.Asio underneath.
+* Adding a ready(...) wrapper to check whether a response object returned by 
+  the asynchronous client in 0.7 already has all the parts available.
+* Some attempts at lowering compile time costs.
 
 :mod:`cpp-netlib` 0.7
 ---------------------
