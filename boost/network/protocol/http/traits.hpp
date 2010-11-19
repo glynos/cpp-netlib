@@ -12,7 +12,7 @@
 
 // Convenience header for including different traits implementations.
 #include <boost/network/protocol/http/traits/message_traits.hpp>
-#include <boost/network/protocol/http/traits/parser_traits.hpp>
+//#include <boost/network/protocol/http/traits/parser_traits.hpp>
 #include <boost/network/protocol/http/traits/connection_keepalive.hpp>
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_HPP

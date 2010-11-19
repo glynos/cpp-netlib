@@ -65,6 +65,7 @@
     name (basic_request<Tag> const & message) {                         \
         return name##_wrapper<basic_request<Tag> >(message);            \
     }
+
 #endif /* BOOST_NETWORK_DEFINE_HTTP_WRAPPER */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_HELPER_20101013 */

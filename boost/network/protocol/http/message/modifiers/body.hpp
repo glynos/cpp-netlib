@@ -17,6 +17,9 @@ namespace boost { namespace network { namespace http {
     template <class Tag>
     struct basic_response;
 
+    template <class Tag>
+    struct basic_request;
+
     namespace impl {
 
         template <class Tag, class T>
@@ -29,6 +32,11 @@ namespace boost { namespace network { namespace http {
             response.body(future);
         }
 
+        template <class Tag, class T>
+        void body(basic_request<Tag> & request, T const & value, tags::server const &) {
+            request.body = value;
+        }
+
     }
 
     template <class Tag, class T>
@@ -37,6 +45,16 @@ namespace boost { namespace network { namespace http {
         (void))
     body(basic_response<Tag> & response, T const & value) {
         impl::body(response, value, is_async<Tag>());
+    }
+
+    template <class R>
+    struct ServerRequest;
+
+    template <class Tag, class T>
+    inline BOOST_CONCEPT_REQUIRES(((ServerRequest<basic_request<Tag> >)),
+        (void))
+    body(basic_request<Tag> & request, T const & value) {
+        impl::body(request, value, Tag());
     }
 
 } // namespace http

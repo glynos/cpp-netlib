@@ -29,6 +29,11 @@ namespace boost { namespace network { namespace http {
             response.source(future);
         }
 
+        template <class Tag, class T>
+        void source(basic_request<Tag> & request, T const & value, tags::server const &) {
+            request.source = value;
+        }
+
     }
 
     template <class R>
@@ -40,6 +45,17 @@ namespace boost { namespace network { namespace http {
         (void))
     source(basic_response<Tag> & response, T const & value) {
         impl::source(response, value, is_async<Tag>());
+    }
+
+    template <class R>
+    struct ServerRequest;
+
+    template <class Tag, class T>
+    inline
+    BOOST_CONCEPT_REQUIRES(((ServerRequest<basic_request<Tag> >)),
+        (void))
+    source(basic_request<Tag> & request, T const & value) {
+        impl::source(request, value, Tag());
     }
 
 } // namespace http

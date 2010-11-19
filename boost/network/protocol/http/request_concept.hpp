@@ -16,23 +16,62 @@
 namespace boost { namespace network { namespace http {
 
     template <class R>
-    struct PodServerRequest 
-        : boost::network::Message<R>
+    struct ServerRequest 
     {
         typedef typename R::string_type string_type;
+        typedef typename R::tag tag;
+        typedef typename R::headers_container_type headers_container_type;
+
+        BOOST_CONCEPT_USAGE(ServerRequest) {
+            string_type source_, method_, destination_;
+            boost::uint8_t major_version_, minor_version_;
+            headers_container_type headers_;
+            string_type body_;
+
+            source_ = source(request);
+            method_ = method(request);
+            destination_ = destination(request);
+            major_version_ = major_version(request);
+            minor_version_ = minor_version(request);
+            headers_ = headers(request);
+            body_ = body(request);
+
+            source(request, source_);
+            method(request, method_);
+            destination(request, destination_);
+            major_version(request, major_version_);
+            minor_version(request, minor_version_);
+            headers(request, headers_);
+            body(request, body_);
+
+            string_type name, value;
+
+            request << ::boost::network::source(source_)
+                << ::boost::network::destination(destination_)
+                << ::boost::network::http::method(method_)
+                << ::boost::network::http::major_version(major_version_)
+                << ::boost::network::http::minor_version(minor_version_)
+                << ::boost::network::header(name, value)
+                << ::boost::network::remove_header(name)
+                << ::boost::network::http::body(body_);
+
+            (void)source_;(void)method_;(void)destination_;
+            (void)major_version_;(void)minor_version_;(void)headers_;
+            (void)body_;(void)name;(void)value;
+        }
         
     private:
         R request;
     };
 
     template <class R>
-    struct NormalClientRequest
+    struct ClientRequest
         : boost::network::Message<R>
     {
         typedef typename R::string_type string_type;
         typedef typename R::port_type port_type;
         
-        BOOST_CONCEPT_USAGE(NormalClientRequest) {
+        BOOST_CONCEPT_USAGE(ClientRequest) {
             string_type tmp;
             R request_(tmp);
             swap(request, request_); // swappable via ADL
@@ -59,18 +98,6 @@ namespace boost { namespace network { namespace http {
     private:
         R request;
     };
-
-    template <class R>
-    struct Request :
-        mpl::if_<
-            is_base_of<
-                tags::pod,
-                typename R::tag
-            >,
-            boost::network::Message<R>,
-            NormalClientRequest<R>
-        >::type
-    {};
 
 } // namespace http
 

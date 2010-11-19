@@ -22,6 +22,9 @@
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/protocol/http/support/sync_only.hpp>
 
+#include <boost/network/protocol/http/message/wrappers/method.hpp>
+#include <boost/network/protocol/http/message/modifiers/method.hpp>
+
 #include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -115,9 +118,12 @@ namespace boost { namespace network { namespace http {
      *  basic_request template above to be
      *  primarily and be solely a POD for performance
      *  reasons.
+     *
+     *  Reality check: This is not a POD because it contains a non-POD
+     *  member, the headers vector. :(
      */
     template <class Tag>
-    struct pod_request_base {
+    struct not_quite_pod_request_base {
         typedef Tag tag;
         typedef typename string<Tag>::type string_type;
         typedef typename vector<tags::http_server>::
@@ -133,7 +139,7 @@ namespace boost { namespace network { namespace http {
         mutable vector_type headers;
         mutable string_type body;
 
-        void swap(pod_request_base & r) const {
+        void swap(not_quite_pod_request_base & r) const {
             using std::swap;
             swap(method, r.method);
             swap(source, r.source);
@@ -146,10 +152,20 @@ namespace boost { namespace network { namespace http {
     };
 
     template <>
-    struct basic_request<tags::http_async_server> : pod_request_base<tags::http_async_server> {};
+    struct basic_request<tags::http_async_server> 
+    : not_quite_pod_request_base<tags::http_async_server>
+    {};
 
     template <>
-    struct basic_request<tags::http_server> : pod_request_base<tags::http_server> {};
+    struct basic_request<tags::http_server>
+    : not_quite_pod_request_base<tags::http_server>
+    {};
+
+    template <class R>
+    struct ServerRequest;
+
+    BOOST_CONCEPT_ASSERT((ServerRequest<basic_request<tags::http_async_server> >));
+    BOOST_CONCEPT_ASSERT((ServerRequest<basic_request<tags::http_server> >));
 
     template <class Tag>
     inline void swap(basic_request<Tag> & lhs, basic_request<Tag> & rhs) {
