@@ -88,23 +88,165 @@ and also supports the following constructs.
 :R: The request type.
 :r: An instance of R.
 :S: The string type.
-:n,v: Instances of S.
+:I: An unsigned 8 bit integer.
+:V: The vector type for headers.
 
-+--------------------+--------+----------------------------------+
-| Construct          | Result | Description                      |
-+====================+========+==================================+
-| ``R::string_type`` | ``S``  | The nested ``string_type`` type. |
-+--------------------+--------+----------------------------------+
-| ``R r = {n,v};``   | **NA** | Static initialization of ``r``.  |
-+--------------------+--------+----------------------------------+
++-------------------------------+--------+-------------------------------------+
+| Construct                     | Result | Description                         |
++===============================+========+=====================================+
+| ``R::string_type``            | ``S``  | The nested ``string_type`` type.    |
++-------------------------------+--------+-------------------------------------+
+| ``R::headers_container_type`` | ``V``  | The nested                          |
+|                               |        | ``headers_container_type`` type.    |
++-------------------------------+--------+-------------------------------------+
+| ``r.source``                  | ``S``  | The nested source of the request.   |
++-------------------------------+--------+-------------------------------------+
+| ``r.method``                  | ``S``  | The method of the request.          |
++-------------------------------+--------+-------------------------------------+
+| ``r.destination``             | ``S``  | The destination of the request.     |
+|                               |        | This is normally the URI of the     |
+|                               |        | request.                            |
++-------------------------------+--------+-------------------------------------+
+| ``r.version_major``           | ``I``  | The major version number part of    |
+|                               |        | the request.                        |
++-------------------------------+--------+-------------------------------------+
+| ``r.version_minor``           | ``I``  | The minor version number part of    |
+|                               |        | the request.                        |
++-------------------------------+--------+-------------------------------------+
+| ``r.headers``                 | ``V``  | The vector of headers.              |
++-------------------------------+--------+-------------------------------------+
+| ``r.body``                    | ``S``  | The body of the request.            |
++-------------------------------+--------+-------------------------------------+
 
-
+.. _Message Concept: message.html#message-concept
 
 Directives
 ----------
 
+This section details the provided directives that are provided by 
+:mod:`cpp-netlib`. The section was written to assume that an appropriately 
+constructed request instance is either of the following:
+
+.. code-block:: c++
+
+    boost::network::http::basic_request<
+      boost::network::http::tags::http_default_8bit_udp_resolve
+    > request;
+
+    // or
+
+    boost::network::http::basic_request<
+      boost::network::http::tags::http_server
+    > request;
+
+The section also assumes that there following using namespace declaration is in
+effect:
+
+.. code-block:: c++
+
+    using namespace boost::network;
+
+Directives are meant to be used in the following manner:
+
+.. code-block:: c++
+
+    request << directive(...);
+
+.. warning:: There are two versions of directives, those that are applicable to
+   messages that support narrow strings (``std::string``) and those that are
+   applicable to messages that support wide strings (``std::wstring``). The
+   :mod:`cpp-netlib` implementation still does not convert wide strings into
+   UTF-8 encoded narrow strings. This will be implemented in subsequent
+   library releases.
+
+   For now all the implemented directives are listed, even if some of them still
+   do not implement things correctly.
+
+*unspecified* ``source(std::string const & source_)``
+    Create a source directive with a ``std::string`` as a parameter, to be set 
+    as the source of the request.
+*unspecified* ``source(std::wstring const & source_)``
+    Create a source directive with a ``std::wstring`` as a parameter, to be set
+    as the source of the request.
+*unspecified* ``destination(std::string const & source_)``
+    Create a destination directive with a ``std::string`` as a parameter, to be 
+    set as the destination of the request.
+*unspecified* ``destination(std::wstring const & source_)``
+    Create a destination directive with a ``std::wstring`` as a parameter, to be
+    set as the destination of the request.
+*unspecified* ``header(std::string const & name, std::string const & value)``
+    Create a header directive that will add the given name and value pair to the
+    headers already associated with the request. In this case the name and
+    values are both ``std::string``.
+*unspecified* ``header(std::wstring const & name, std::wstring const & value)``
+    Create a header directive that will add the given name and value pair to the
+    headers already associated with the request. In this case the name and
+    values are both ``std::wstring``.
+*unspecified* ``remove_header(std::string const & name)``
+    Create a remove_header directive that will remove all the occurences of the
+    given name from the headers already associated with the request. In this
+    case the name of the header is of type ``std::string``.
+*unspecified* ``remove_header(std::wstring const & name)``
+    Create a remove_header directive that will remove all the occurences of the
+    given name from the headers already associated with the request. In this
+    case the name of the header is of type ``std::wstring``.
+*unspecified* ``body(std::string const & body_)``
+    Create a body directive that will set the request's body to the given
+    parameter. In this case the type of the body is an ``std::string``.
+*unspecified* ``body(std::wstring const & body_)``
+    Create a body directive that will set the request's body to the given
+    parameter. In this case the type of the body is an ``std::wstring``.
+
 Modifiers
 ---------
 
+This section details the provided modifiers that are provided by 
+:mod:`cpp-netlib`.
+
+``template <class Tag> inline void source(basic_request<Tag> & request, typename string<Tag>::type const & source_)``
+    Modifies the source of the given ``request``. The type of ``source_`` is
+    dependent on the ``Tag`` specialization of ``basic_request``.
+``template <class Tag> inline void destination(basic_request<Tag> & request, typename string<Tag>::type const & destination_)``
+    Modifies the destination of the given ``request``. The type of ``destination_`` is
+    dependent on the ``Tag`` specialization of ``basic_request``.
+``template <class Tag> inline void add_header(basic_request<Tag> & request, typename string<Tag>::type const & name, typename string<Tag>::type const & value)``
+    Adds a header to the given ``request``. The type of the ``name`` and
+    ``value`` parameters are dependent on the ``Tag`` specialization of
+    ``basic_request``.
+``template <class Tag> inline void remove_header(basic_request<Tag> & request, typename string<Tag>::type const & name)``
+    Removes a header from the given ``request``. The type of the ``name``
+    parameter is dependent on the ``Tag`` specialization of ``basic_request``.
+``template <class Tag> inline void clear_headers(basic_request<Tag> & request)``
+    Removes all headers from the given ``request``.
+``template <class Tag> inline void body(basic_request<Tag> & request, typename string<Tag>::type const & body_)``
+    Modifies the body of the given ``request``. The type of ``body_`` is
+    dependent on the ``Tag`` specialization of ``basic_request``.
+
 Wrappers
 --------
+
+This section details the provided request wrappers that come with
+:mod:`cpp-netlib`. Wrappers are used to convert a message into a different type,
+usually providing accessor operations to retrieve just part of the message. This
+section assumes that the following using namespace directives are in
+effect:
+
+.. code-block:: c++
+    
+    using namespace boost::network;
+    using namespace boost::network::http;
+
+``template <class Tag>`` *unspecified* ``source(basic_request<Tag> const & request)``
+    Returns a wrapper convertible to ``typename string<Tag>::type`` that
+    provides the source of a given request.
+``template <class Tag>`` *unspecified* ``destination(basic_request<Tag> const & request)``
+    Returns a wrapper convertible to ``typename string<Tag>::type`` that
+    provides the destination of a given request.
+``template <class Tag>`` *unspecified* ``headers(basic_request<Tag> const & request)``
+    Returns a wrapper convertible to ``typename headers_range<basic_request<Tag>
+    >::type`` or ``typename basic_request<Tag>::headers_container_type`` that
+    provides the headers of a given request.
+``template <class Tag>`` *unspecified* ``body(basic_request<Tag> const & request)``
+    Returns a wrapper convertible to ``typename string<Tag>::type`` that
+    provides the body of a given request.
+
