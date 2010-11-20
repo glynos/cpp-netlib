@@ -7,14 +7,24 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_pod.hpp>
 #include <boost/thread/future.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/not.hpp>
 
 namespace boost { namespace network {
 
     namespace impl {
         template <class Message, class Tag>
-        inline void clear_headers(Message const & message, Tag const &, mpl::false_ const &) {
+        inline typename enable_if<mpl::not_<is_pod<Tag> >, void>::type
+        clear_headers(Message const & message, Tag const &, mpl::false_ const &) {
             (typename Message::headers_container_type()).swap(message.headers());
+        }
+
+        template <class Message, class Tag>
+        inline typename enable_if<is_pod<Tag>, void>::type
+        clear_headers(Message const & message, Tag const &, mpl::false_ const &) {
+            (typename Message::headers_container_type()).swap(message.headers);
         }
 
         template <class Message, class Tag>

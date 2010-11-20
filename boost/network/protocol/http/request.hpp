@@ -12,6 +12,9 @@
 #include <boost/network/tags.hpp>
 #include <boost/network/message_fwd.hpp>
 #include <boost/network/message/wrappers.hpp>
+#include <boost/network/protocol/http/message/modifiers/add_header.hpp>
+#include <boost/network/protocol/http/message/modifiers/remove_header.hpp>
+
 #include <boost/network/protocol/http/message/directives/uri.hpp>
 #include <boost/network/protocol/http/message/modifiers/uri.hpp>
 #include <boost/network/protocol/http/message/wrappers/uri.hpp>
@@ -25,6 +28,16 @@
 #include <boost/network/protocol/http/message/wrappers/protocol.hpp>
 #include <boost/network/protocol/http/message/wrappers/body.hpp>
 #include <boost/network/protocol/http/message/wrappers/version.hpp>
+#include <boost/network/protocol/http/message/wrappers/method.hpp>
+#include <boost/network/protocol/http/message/modifiers/method.hpp>
+#include <boost/network/protocol/http/message/directives/method.hpp>
+#include <boost/network/protocol/http/message/directives/major_version.hpp>
+#include <boost/network/protocol/http/message/directives/minor_version.hpp>
+#include <boost/network/protocol/http/message/modifiers/major_version.hpp>
+#include <boost/network/protocol/http/message/modifiers/minor_version.hpp>
+#include <boost/network/protocol/http/message/wrappers/major_version.hpp>
+#include <boost/network/protocol/http/message/wrappers/minor_version.hpp>
+
 #include <boost/network/message/directives.hpp>
 #include <boost/network/message/transformers.hpp>
 

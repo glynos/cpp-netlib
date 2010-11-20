@@ -28,7 +28,7 @@ namespace boost { namespace network {
         };
 
         template <class Message, class KeyType, class Async>
-        inline void remove_header(Message const & message, KeyType const & key, http::tags::http_server const &, Async const &) {
+        inline void remove_header(Message const & message, KeyType const & key, http::tags::server const &, Async const &) {
             typedef typename Message::headers_container_type::iterator iterator;
             iterator end = message.headers.end();
             iterator new_end = std::remove_if(

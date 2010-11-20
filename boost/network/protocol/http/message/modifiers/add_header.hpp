@@ -14,7 +14,7 @@ namespace boost { namespace network {
     namespace impl {
 
         template <class Message, class KeyType, class ValueType, class Async>
-        inline void add_header(Message const & message, KeyType const & key, ValueType const & value, http::tags::http_server const &, Async const &) {
+        inline void add_header(Message const & message, KeyType const & key, ValueType const & value, http::tags::server const &, Async const &) {
             typedef typename Message::headers_container_type::value_type value_type;
             value_type header_ = { key, value };
             message.headers.insert(message.headers.end(), header_);

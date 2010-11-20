@@ -22,9 +22,6 @@
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/protocol/http/support/sync_only.hpp>
 
-#include <boost/network/protocol/http/message/wrappers/method.hpp>
-#include <boost/network/protocol/http/message/modifiers/method.hpp>
-
 #include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace http {

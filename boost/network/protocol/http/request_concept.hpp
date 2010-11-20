@@ -42,6 +42,9 @@ namespace boost { namespace network { namespace http {
             major_version(request, major_version_);
             minor_version(request, minor_version_);
             headers(request, headers_);
+            add_header(request, string_type(), string_type());
+            remove_header(request, string_type());
+            clear_headers(request);
             body(request, body_);
 
             string_type name, value;
@@ -52,8 +55,7 @@ namespace boost { namespace network { namespace http {
                 << ::boost::network::http::major_version(major_version_)
                 << ::boost::network::http::minor_version(minor_version_)
                 << ::boost::network::header(name, value)
-                << ::boost::network::remove_header(name)
-                << ::boost::network::http::body(body_);
+                << ::boost::network::body(body_);
 
             (void)source_;(void)method_;(void)destination_;
             (void)major_version_;(void)minor_version_;(void)headers_;
