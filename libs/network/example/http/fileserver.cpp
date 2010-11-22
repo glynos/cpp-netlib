@@ -175,7 +175,7 @@ int main(int argc, char * argv[]) {
     file_cache cache(".");
     file_server handler(cache);
     utils::thread_pool thread_pool(4);
-    server instance("127.0.0.1", "8000", handler, thread_pool);
+    server instance("0.0.0.0", "8000", handler, thread_pool);
     instance.run();
     return 0;
 }
