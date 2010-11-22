@@ -28,8 +28,8 @@ data, depending on the type used to tag the message. This section
 covers the `Message Concept`_ as well as the `basic_message`_
 implementation.
 
-``Message Concept``
-```````````````````
+Message Concept
+```````````````
 
 The Message Concept specifies what the valid operations on a message
 are as well as what messages look like semantically. The following
