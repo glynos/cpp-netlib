@@ -7,7 +7,6 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/server/async_connection.hpp>
-#include <boost/network/protocol/http/server/header.hpp>
 #include <boost/network/utils/thread_pool.hpp>
 
 namespace boost { namespace network { namespace http {

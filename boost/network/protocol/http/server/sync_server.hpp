@@ -14,7 +14,6 @@
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/server/sync_connection.hpp>
-#include <boost/network/protocol/http/server/header.hpp>
 #include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace http {

@@ -1,5 +1,5 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_HEADER_CONCEPT_HPP_20101028
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_HEADER_CONCEPT_HPP_20101028
+#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_CONCEPT_HPP_20101028
+#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_CONCEPT_HPP_20101028
 
 // Copyright 2010 Dean Michael Berris.
 // Distributed under the Boost Software License, Version 1.0.
@@ -17,11 +17,13 @@ namespace boost { namespace network { namespace http {
         , CopyConstructible<H>
     {
         typedef typename H::tag tag;
-        typedef typename string<tag>::type string_type;
 
         BOOST_CONCEPT_USAGE(Header) {
+            typedef typename string<tag>::type string_type;
             string_type name_ = name(header);
             string_type value_ = value(header);
+            H h1, h2;
+            swap(h1,h2); // ADL Swap!
             (void)name_;
             (void)value_;
         }
@@ -36,4 +38,4 @@ namespace boost { namespace network { namespace http {
     
 } /* boost */
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_SERVER_HEADER_CONCEPT_HPP_20101028 */
+#endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_CONCEPT_HPP_20101028 */

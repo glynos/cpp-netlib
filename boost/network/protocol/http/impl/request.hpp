@@ -15,7 +15,6 @@
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
 
 #include <boost/network/uri.hpp>
-#include <boost/network/protocol/http/header.hpp>
 #include <boost/network/traits/vector.hpp>
 
 #include <boost/network/protocol/http/message/async_message.hpp>

@@ -15,7 +15,6 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/network/protocol/http/request_parser.hpp>
 #include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/header.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/buffer.hpp>

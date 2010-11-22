@@ -11,24 +11,38 @@
 #include <boost/thread/future.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/mpl/and.hpp>
 
 namespace boost { namespace network {
 
     namespace impl {
         template <class Message, class Tag>
-        inline typename enable_if<mpl::not_<is_pod<Tag> >, void>::type
-        clear_headers(Message const & message, Tag const &, mpl::false_ const &) {
+        inline typename enable_if<
+            mpl::and_<
+                mpl::not_<is_pod<Tag> >
+                , mpl::not_<is_async<Tag> > 
+                >
+            , void
+            >::type
+        clear_headers(Message const & message, Tag const &) {
             (typename Message::headers_container_type()).swap(message.headers());
         }
 
         template <class Message, class Tag>
         inline typename enable_if<is_pod<Tag>, void>::type
-        clear_headers(Message const & message, Tag const &, mpl::false_ const &) {
+        clear_headers(Message const & message, Tag const &) {
             (typename Message::headers_container_type()).swap(message.headers);
         }
 
         template <class Message, class Tag>
-        inline void clear_headers(Message const & message, Tag const &, mpl::true_ const &) {
+        inline typename enable_if<
+            mpl::and_<
+                mpl::not_<is_pod<Tag> >
+                , is_async<Tag>
+                >
+            , void
+            >::type
+        clear_headers(Message const & message, Tag const &) {
             boost::promise<typename Message::headers_container_type> header_promise;
             boost::shared_future<typename Message::headers_container_type> headers_future(header_promise.get_future());
             message.headers(headers_future);
@@ -39,7 +53,7 @@ namespace boost { namespace network {
 
     template <class Tag, template <class> class Message>
     inline void clear_headers(Message<Tag> const & message) {
-        impl::clear_headers(message, Tag(), is_async<Tag>());
+        impl::clear_headers(message, Tag());
     }
 
 } // namespace network

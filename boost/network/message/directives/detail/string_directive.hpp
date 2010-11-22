@@ -93,7 +93,7 @@ namespace boost { namespace network { namespace detail {
                 typename boost::network::detail::string_value<              \
                     typename Message::tag                                   \
                 >::type const & value                                       \
-            ) const {                                                       \
+            ) {                                                       \
                 pod_body;                                                   \
             }                                                               \
             template <class T> void operator()(T const &) const {           \

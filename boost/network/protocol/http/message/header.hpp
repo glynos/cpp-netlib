@@ -10,8 +10,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef HTTP_SERVER3_HEADER_HPP
-#define HTTP_SERVER3_HEADER_HPP
+#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122
+#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122
 
 #include <boost/network/traits/string.hpp>
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>
@@ -34,6 +34,19 @@ namespace boost { namespace network { namespace http {
         swap(l.value, r.value);
     }
 
+    template <class Tag>
+    struct response_header {
+        typedef Tag tag;
+        typedef typename string<Tag>::type string_type;
+        string_type name, value;
+    };
+
+    template <class Tag>
+    void swap(response_header<Tag> & l, response_header<Tag> & r) {
+        std::swap(l.name, r.name);
+        std::swap(l.value, r.value);
+    }
+
 } // namespace http
 
 } // namespace network
@@ -47,4 +60,11 @@ BOOST_FUSION_ADAPT_TPL_STRUCT(
     (typename boost::network::string<Tag>::type, value)
     )
 
-#endif // HTTP_SERVER3_HEADER_HPP
+BOOST_FUSION_ADAPT_TPL_STRUCT(
+    (Tag),
+    (boost::network::http::response_header) (Tag),
+    (typename boost::network::string<Tag>::type, name)
+    (typename boost::network::string<Tag>::type, value)
+    )
+
+#endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122
