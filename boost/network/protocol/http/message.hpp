@@ -16,8 +16,6 @@
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
 #include <boost/network/protocol/http/message/header_concept.hpp>
-#include <boost/network/protocol/http/message/modifiers/add_header.hpp>
-#include <boost/network/protocol/http/message/modifiers/remove_header.hpp>
 #include <boost/network/message.hpp>
 #include <boost/network/tags.hpp>
 #include <string>

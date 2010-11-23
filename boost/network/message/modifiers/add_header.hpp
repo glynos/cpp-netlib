@@ -8,30 +8,54 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_pod.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
 
 namespace boost { namespace network {
 
     namespace impl {
-        template <class Message, class KeyType, class ValueType>
-        inline void add_header(Message const & message, KeyType const & key, ValueType const & value, tags::default_string const &, mpl::false_ const &) {
+        template <class Message, class KeyType, class ValueType, class Tag>
+        inline typename enable_if<
+            mpl::and_<
+                mpl::not_<is_pod<Tag> >
+                , mpl::not_<is_async<Tag> >
+                >
+            , void
+            >::type
+        add_header(Message & message, KeyType const & key, ValueType const & value, Tag) {
             message.headers().insert(std::make_pair(key, value));
         }
 
-        template <class Message, class KeyType, class ValueType>
-        inline void add_header(Message const & message, KeyType const & key, ValueType const & value, tags::default_wstring const &, mpl::false_ const &) {
-            message.headers().insert(std::make_pair(key, value));
+        template <class Message, class KeyType, class ValueType, class Tag>
+        inline typename enable_if<
+            mpl::and_<
+                mpl::not_<is_pod<Tag> >
+                , is_async<Tag>
+                >
+            , void
+            >::type
+        add_header(Message & message, KeyType const & key, ValueType const & value, Tag) {
+            typedef typename Message::header_type header_type;
+            message.add_header(header_type(key,value));
         }
 
-        template <class Message, class KeyType, class ValueType>
-        inline void add_header(Message const & message, KeyType const & key, ValueType const & value, tags::async const &, mpl::true_ const &) {
-            message.add_header(std::make_pair(key, value));
+        template <class Message, class KeyType, class ValueType, class Tag>
+        inline typename enable_if<
+            is_pod<Tag>
+            , void
+        >::type
+        add_header(Message & message, KeyType const & key, ValueType const & value, Tag) {
+            typename Message::header_type header = { key, value };
+            message.headers.insert(message.headers.end(), header);
         }
 
     }
 
     template <class Tag, template <class> class Message, class KeyType, class ValueType>
-    inline void add_header(Message<Tag> const & message, KeyType const & key, ValueType const & value) {
-        impl::add_header(message, key, value, Tag(), is_async<Tag>());
+    inline void add_header(Message<Tag> & message, KeyType const & key, ValueType const & value) {
+        impl::add_header(message, key, value, Tag());
     }
 
 } // namespace network

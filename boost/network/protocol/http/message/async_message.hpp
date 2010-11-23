@@ -29,6 +29,7 @@ namespace boost { namespace network { namespace http {
 
         typedef typename string<Tag>::type string_type;
         typedef typename headers_container<Tag>::type headers_container_type;
+        typedef typename headers_container_type::value_type header_type;
 
         async_message()
             : status_message_(),
@@ -104,7 +105,7 @@ namespace boost { namespace network { namespace http {
         }
 
         void add_header(typename headers_container_type::value_type const & pair_) const {
-            added_headers.insert(pair_);
+            added_headers.insert(added_headers.end(), pair_);
         }
 
         void remove_header(typename headers_container_type::key_type const & key_) const {

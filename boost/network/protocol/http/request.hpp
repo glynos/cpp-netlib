@@ -12,8 +12,6 @@
 #include <boost/network/tags.hpp>
 #include <boost/network/message_fwd.hpp>
 #include <boost/network/message/wrappers.hpp>
-#include <boost/network/protocol/http/message/modifiers/add_header.hpp>
-#include <boost/network/protocol/http/message/modifiers/remove_header.hpp>
 
 #include <boost/network/protocol/http/message/directives/uri.hpp>
 #include <boost/network/protocol/http/message/modifiers/uri.hpp>

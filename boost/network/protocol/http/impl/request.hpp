@@ -122,8 +122,9 @@ namespace boost { namespace network { namespace http {
     struct not_quite_pod_request_base {
         typedef Tag tag;
         typedef typename string<Tag>::type string_type;
+        typedef request_header<Tag> header_type;
         typedef typename vector<tags::http_server>::
-            template apply<request_header<Tag> >::type
+            template apply<header_type>::type
             vector_type;
         typedef vector_type headers_container_type;
         typedef boost::uint16_t port_type;
