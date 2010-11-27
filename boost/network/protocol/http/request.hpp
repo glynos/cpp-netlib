@@ -74,3 +74,4 @@ namespace boost { namespace network { namespace http {
 #include <boost/network/protocol/http/request_concept.hpp>
 
 #endif // __NETWORK_PROTOCOL_HTTP_REQUEST_20070908-1_HPP__
+
