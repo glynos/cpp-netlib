@@ -6,11 +6,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/traits/string.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
 #include <boost/network/protocol/http/message/header_concept.hpp>
 #include <boost/network/constants.hpp>
-#include <boost/concept_check.hpp>
+#include <boost/concept/requires.hpp>
 #include <boost/range/algorithm/copy.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -89,7 +90,7 @@ namespace boost { namespace network { namespace http {
         *oi = consts::colon_char();
         *oi = consts::space_char();
         boost::copy(request.host(), oi);
-        boost::copy(host, oi);
+        boost::copy(crlf, oi);
         boost::copy(accept, oi);
         *oi = consts::colon_char();
         *oi = consts::space_char();

@@ -30,6 +30,7 @@ if (Boost_FOUND)
         http_url_test
         utils_thread_pool
         http_async_message_ready
+        http_request_linearize
         )
     foreach (test ${TESTS})
         set_source_files_properties(${test}.cpp

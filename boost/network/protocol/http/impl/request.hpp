@@ -9,6 +9,7 @@
 #define __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
 
 #include <boost/network/protocol/http/message.hpp>
+#include <boost/network/protocol/http/message/header.hpp>
 
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
@@ -23,7 +24,20 @@
 
 #include <boost/cstdint.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace boost { namespace network { 
+    
+    /** Specialize the traits for the http_server tag. */
+    template <>
+    struct headers_container<http::tags::http_server> :
+        vector<http::tags::http_server>::apply<http::request_header<http::tags::http_server> >
+    {};
+
+    template <>
+    struct headers_container<http::tags::http_async_server> :
+        vector<http::tags::http_async_server>::apply<http::request_header<http::tags::http_async_server> >
+    {};
+
+namespace http {
 
     /** request.hpp
       *
@@ -123,7 +137,7 @@ namespace boost { namespace network { namespace http {
         typedef Tag tag;
         typedef typename string<Tag>::type string_type;
         typedef request_header<Tag> header_type;
-        typedef typename vector<tags::http_server>::
+        typedef typename vector<Tag>::
             template apply<header_type>::type
             vector_type;
         typedef vector_type headers_container_type;
@@ -170,17 +184,6 @@ namespace boost { namespace network { namespace http {
     }
 
 } // namespace http
-
-    /** Specialize the traits for the http_server tag. */
-    template <>
-    struct headers_container<http::tags::http_server> :
-        vector<http::tags::http_server>::apply<http::request_header<http::tags::http_server> >
-    {};
-
-    template <>
-    struct headers_container<http::tags::http_async_server> :
-        vector<http::tags::http_async_server>::apply<http::request_header<http::tags::http_async_server> >
-    {};
 
     namespace http { namespace impl {
 

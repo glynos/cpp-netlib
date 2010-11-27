@@ -6,6 +6,9 @@
 #ifndef BOOST_NETWORK_TRAITS_VECTOR_HPP
 #define BOOST_NETWORK_TRAITS_VECTOR_HPP
 
+#include <boost/network/support/is_default_string.hpp>
+#include <vector>
+
 namespace boost { namespace network {
 
     template <class Tag>
@@ -15,9 +18,13 @@ namespace boost { namespace network {
     struct vector {
 
         template <class Type>
-        struct apply {
-            typedef unsupported_tag<Tag> type;
-        };
+        struct apply :
+            mpl::if_<
+                is_default_string<Tag>
+                , std::vector<Type>
+                , unsupported_tag<Tag>
+            >
+        {};
 
     };
 
