@@ -56,10 +56,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (request_copy_constructor_test, T, tag_types) {
         copy_port = http::port(copy);
     string_type orig_path = http::path(request),
         copy_path = http::path(copy);
+    string_type orig_body = body(request),
+        copy_body = body(copy);
     BOOST_CHECK_EQUAL ( orig_host, copy_host );
     BOOST_CHECK_EQUAL ( orig_port, copy_port );
     BOOST_CHECK_EQUAL ( orig_path, copy_path );
-    BOOST_CHECK_EQUAL ( body(request), body(copy) );
+    BOOST_CHECK_EQUAL ( orig_body, copy_body );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (request_assignment_test, T, tag_types) {
@@ -76,10 +78,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (request_assignment_test, T, tag_types) {
         copy_port = http::port(copy);
     string_type orig_path = http::path(request),
         copy_path = http::path(copy);
+    string_type orig_body = body(request),
+        copy_body = body(copy);
     BOOST_CHECK_EQUAL ( orig_host, copy_host );
     BOOST_CHECK_EQUAL ( orig_port, copy_port );
     BOOST_CHECK_EQUAL ( orig_path, copy_path );
-    BOOST_CHECK_EQUAL ( body(request), body(copy) );
+    BOOST_CHECK_EQUAL ( orig_body, copy_body );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (request_swap_test, T, tag_types) {
@@ -110,7 +114,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (request_uri_directive_test, T, tag_types) {
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (response_constructor_test, T, tag_types) {
     http::basic_response<T> response;
-    BOOST_CHECK_EQUAL ( body(response), std::string() );
+    typename http::basic_response<T>::string_type body_ = body(response);
+    BOOST_CHECK_EQUAL ( body_, std::string() );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (response_copy_construct_test, T, tag_types) {
@@ -132,9 +137,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (response_copy_construct_test, T, tag_types) {
     BOOST_CHECK_EQUAL ( status_orig, status_copy );
     typename http::basic_response<T>::string_type
         status_message_orig = status_message(response)
-        , status_message_copy = status_message(copy);
+        , status_message_copy = status_message(copy)
+        , body_orig = body(response)
+        , body_copy = body(copy);
     BOOST_CHECK_EQUAL ( status_message_orig, status_message_copy );
-    BOOST_CHECK_EQUAL ( body(response), body(copy) );
+    BOOST_CHECK_EQUAL ( body_orig, body_copy );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (response_assignment_construct_test, T, tag_types) {
@@ -155,7 +162,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (response_assignment_construct_test, T, tag_types)
     string_type status_message_orig = status_message(response)
         , status_message_copy = status_message(copy);
     BOOST_CHECK_EQUAL ( status_message_orig, status_message_copy );
-    BOOST_CHECK_EQUAL ( body(response), body(copy) );
+    string_type body_orig = body(response)
+        , body_copy = body(copy);
+    BOOST_CHECK_EQUAL ( body_orig, body_copy );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE (response_swap_test, T, tag_types) {
@@ -170,11 +179,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE (response_swap_test, T, tag_types) {
     BOOST_CHECK_EQUAL ( response.version(), std::string() );
     BOOST_CHECK_EQUAL ( response.status(), 0u );
     BOOST_CHECK_EQUAL ( response.status_message(), std::string() );
-    BOOST_CHECK_EQUAL ( body(response), std::string() );
+    typename http::basic_response<T>::string_type
+        orig_body = body(response)
+        , swapped_body = body(swapped);
+    BOOST_CHECK_EQUAL ( orig_body, std::string() );
     BOOST_CHECK_EQUAL ( swapped.version(), std::string("HTTP/1.1") );
     BOOST_CHECK_EQUAL ( swapped.status(), 200u );
     BOOST_CHECK_EQUAL ( swapped.status_message(), std::string("OK") );
-    BOOST_CHECK_EQUAL ( body(swapped), std::string("RESPONSE") );
+    BOOST_CHECK_EQUAL ( swapped_body, std::string("RESPONSE") );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -18,19 +18,19 @@ namespace boost { namespace network { namespace http {
 
     template <class T1, class T2>
     T1 & 
-    name(std::pair<T1,T2> & p) {
+    name(std::pair<T1,T2> const & p) {
         return p.first;
     }
 
     template <class Tag>
-    typename string<Tag>::type &
-    name(response_header<Tag> & h) {
+    typename string<Tag>::type const &
+    name(response_header<Tag> const & h) {
         return h.name;
     }
 
     template <class Tag>
-    typename string<Tag>::type &
-    name(request_header<Tag> & h) {
+    typename string<Tag>::type const &
+    name(request_header<Tag> const & h) {
         return h.name;
     }
     

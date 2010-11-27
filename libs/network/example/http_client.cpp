@@ -82,7 +82,8 @@ int main(int argc, char * argv[]) {
         cout << endl;
     };
     
-    cout << body(response) << endl;
+    body_range<http_client::response>::type body_ = body(response).range();
+    boost::copy(body_, std::ostream_iterator<char_<http_client::request::tag>::type>(cout));
     
     return EXIT_SUCCESS;
 }

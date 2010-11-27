@@ -26,6 +26,8 @@ namespace boost { namespace network {
                 return dot_;
             }
 
+            static char dot_char() { return '.'; }
+
             static char const * http_slash() {
                 static char http_slash_[] = { 'H', 'T', 'T', 'P', '/', 0 };
                 return http_slash_;
@@ -36,10 +38,14 @@ namespace boost { namespace network {
                 return space_;
             }
 
+            static char space_char() { return ' '; }
+
             static char const * slash() {
                 static char slash_[] = {'/', 0};
                 return slash_;
             }
+
+            static char slash_char() { return '/'; }
 
             static char const * host() {
                 static char host_[] = {'H', 'o', 's', 't', 0};
@@ -50,6 +56,8 @@ namespace boost { namespace network {
                 static char colon_[] = {':', 0};
                 return colon_;
             }
+            
+            static char colon_char() { return ':'; }
 
             static char const * accept() {
                 static char accept_[] = {'A', 'c', 'c', 'e', 'p', 't', 0};
@@ -89,6 +97,28 @@ namespace boost { namespace network {
                     'c','p','p','-','n','e','t','l','i','b','/',0
                 };
                 return cpp_netlib_slash_;
+            }
+
+            static char question_mark_char() {
+                return '?';
+            }
+
+            static char hash_char() {
+                return '#';
+            }
+
+            static char const * connection() {
+                static char connection_[] = {
+                    'C','o','n','n','e','c','t','i','o','n',0
+                };
+                return connection_;
+            }
+
+            static char const * close() {
+                static char close_[] = {
+                    'C','l','o','s','e', 0
+                };
+                return close_;
             }
 
         };

@@ -7,7 +7,6 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/network/protocol/http/detail/connection_helper.hpp>
 #include <boost/network/traits/ostringstream.hpp>
 #include <boost/network/traits/istringstream.hpp>
 #include <boost/asio/streambuf.hpp>

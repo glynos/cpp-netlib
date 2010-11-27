@@ -24,8 +24,19 @@ namespace boost { namespace network { namespace http {
                 : message_(message) {}
             body_wrapper(body_wrapper const & other)
                 : message_(other.message_) {}
-            operator string_type () {
+
+            operator string_type () const {
                 return message_.body();
+            }
+
+            size_t size() const {
+                return message_.body().size();
+            }
+
+            boost::iterator_range<typename string_type::const_iterator>
+            range() const 
+            {
+                return boost::make_iterator_range(message_.body());
             }
         };
 
@@ -33,14 +44,14 @@ namespace boost { namespace network { namespace http {
 
     template <class Tag>
     inline
-    typename impl::body_wrapper<basic_response<Tag> >::string_type const
+    typename impl::body_wrapper<basic_response<Tag> > 
     body(basic_response<Tag> const & message) {
         return impl::body_wrapper<basic_response<Tag> >(message);
     }
 
     template <class Tag>
     inline
-    typename impl::body_wrapper<basic_request<Tag> >::string_type const
+    typename impl::body_wrapper<basic_request<Tag> > 
     body(basic_request<Tag> const & message) {
         return impl::body_wrapper<basic_request<Tag> >(message);
     }

@@ -169,7 +169,7 @@ namespace boost { namespace network { namespace http {
                 typedef typename string<Tag>::type string_type;
                 boost::transform(headers, 
                     std::ostream_iterator<string_type>(stream),
-                    linearize<Tag>());
+                    linearize_header<Tag>());
             } else {
                 stream << consts::crlf();
             }

@@ -79,7 +79,7 @@ namespace {
     }
     
     std::string get_content_length(std::string const& content) {
-        return boost::lexical_cast<std::string>(content.length());
+        return boost::lexical_cast<std::string>(content.size());
     }
 
 }
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(body_test) {
     http::client::request request_(base_url);
     http::client client_;
     http::client::response response_ = client_.get(request_);
-    BOOST_CHECK(body(response_).length() != 0);
+    BOOST_CHECK(body(response_).size() != 0);
 }
 
 BOOST_AUTO_TEST_CASE(text_content_type_test) {
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(content_length_header_test) {
     headers_range<http::client::response>::type range = headers(response_)["Content-Length"];
     BOOST_CHECK_EQUAL(boost::begin(range)->first, "Content-Length");
     BOOST_CHECK_EQUAL(boost::begin(range)->second, "113");
-    BOOST_CHECK(body(response_).length() != 0);
+    BOOST_CHECK(body(response_).size() != 0);
 }
 
 BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
@@ -146,7 +146,8 @@ BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
     http::client client_;
     http::client::response response_ = client_.get(request_);
     
-    BOOST_CHECK(body(response_).length() != 0);
+    http::client::response::string_type body_ = body(response_);
+    BOOST_CHECK(body_.size() != 0);
 
     using std::ios;
 
@@ -162,10 +163,10 @@ BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
     std::size_t size = readfile(file, memblock);
 
     BOOST_CHECK(size != 0);
-    BOOST_CHECK_EQUAL(body(response_).length(), size);
+    BOOST_CHECK_EQUAL(body(response_).size(), size);
 
-    if (body(response_).length() == size) {
-        std::pair<std::vector<char>::iterator, std::string::const_iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
+    if (body(response_).size() == size) {
+        std::pair<std::vector<char>::iterator, std::string::const_iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body_.begin());
         BOOST_CHECK_EQUAL(boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()), size);
     }
 }
@@ -178,7 +179,8 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
     http::client::response response_;
     BOOST_CHECK_NO_THROW(response_ = client_.get(request_));
     
-    BOOST_CHECK(body(response_).length() != 0);
+    http::client::response::string_type body_ = body(response_);
+    BOOST_CHECK(body_.size() != 0);
 
     using std::ios;
     
@@ -194,9 +196,9 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
     std::size_t size = readfile(file, memblock);
 
     BOOST_CHECK(size != 0);
-    BOOST_CHECK_EQUAL(body(response_).length(), size);
+    BOOST_CHECK_EQUAL(body(response_).size(), size);
     
-    std::pair<std::vector<char>::iterator, std::string::const_iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body(response_).begin());
+    std::pair<std::vector<char>::iterator, std::string::const_iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body_.begin());
     BOOST_CHECK_EQUAL(boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()), size);
 }
 
@@ -209,7 +211,7 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
 //    http::client c;
 //    http::client::response r;
 //    BOOST_REQUIRE_NO_THROW(r = c.get(req));
-//    BOOST_CHECK(body(r).length() != 0);
+//    BOOST_CHECK(body(r).size() != 0);
 //    BOOST_CHECK(headers(r)["Content-Type"].begin() != headers(r)["Content-Type"].end());
 //}
 //
@@ -220,7 +222,7 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
 //    http::client c;
 //    http::client::response r;
 //    BOOST_REQUIRE_NO_THROW(r = c.get(req));
-//    BOOST_CHECK(body(r).length() != 0);
+//    BOOST_CHECK(body(r).size() != 0);
 //    BOOST_CHECK(headers(r)["Content-Type"].begin() != headers(r)["Content-Type"].end());
 //    headers_range<http::client::response>::type range=headers(r)["X-CppNetlib-Test"];
 //    BOOST_REQUIRE(boost::begin(range) != boost::end(range));
@@ -238,7 +240,7 @@ BOOST_AUTO_TEST_CASE(file_not_found) {
     http::client c;
     http::client::response r = c.get(req);
 
-    BOOST_CHECK(body(r).length() != 0);
+    BOOST_CHECK(body(r).size() != 0);
 }
 
 BOOST_AUTO_TEST_CASE(head_test) {
@@ -250,7 +252,7 @@ BOOST_AUTO_TEST_CASE(head_test) {
     headers_range<http::client::response>::type range = headers(response_)["Content-Length"];
     BOOST_CHECK_EQUAL(boost::begin(range)->first, "Content-Length");
     BOOST_CHECK_EQUAL(boost::begin(range)->second, "113");
-    BOOST_CHECK(body(response_).length() == 0);
+    BOOST_CHECK(body(response_).size() == 0);
 }
 
 //BOOST_AUTO_TEST_CASE(post_with_explicit_headers) {

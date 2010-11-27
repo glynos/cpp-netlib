@@ -18,7 +18,7 @@ namespace boost { namespace network { namespace http { namespace impl {
     struct sync_connection_base;
 
     template <class Tag, unsigned version_major, unsigned version_minor>
-    struct https_sync_connection : public virtual sync_connection_base<Tag,version_major,version_minor>, detail::connection_helper<Tag, version_major, version_minor>, sync_connection_base_impl<Tag, version_major, version_minor> {
+    struct https_sync_connection : public virtual sync_connection_base<Tag,version_major,version_minor>, sync_connection_base_impl<Tag, version_major, version_minor> {
         typedef typename resolver_policy<Tag>::type resolver_base;
         typedef typename resolver_base::resolver_type resolver_type;
         typedef typename string<Tag>::type string_type;
@@ -42,7 +42,8 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void send_request_impl(string_type const & method, basic_request<Tag> const & request_) {
             boost::asio::streambuf request_buffer;
-            this->create_request(request_buffer, method, request_);
+            linearize(request_, method, version_major, version_minor,
+                std::ostreambuf_iterator<typename char_<Tag>::type>(&request_buffer));
             connection_base::send_request_impl(socket_, method, request_buffer);
         }
 

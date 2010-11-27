@@ -9,8 +9,14 @@
 
 #include <boost/network/traits/string.hpp>
 #include <boost/network/detail/wrapper_base.hpp>
+#include <boost/range/iterator.hpp>
 
 namespace boost { namespace network {
+
+    template <class Message>
+    struct body_range {
+        typedef typename boost::iterator_range<typename Message::string_type::const_iterator> type;
+    };
 
     namespace impl {
         template <class Tag>
@@ -30,6 +36,23 @@ namespace boost { namespace network {
                 std::size_t size() const {
                     return wrapper_base::_message.body().size();
                 }
+
+                operator boost::iterator_range<
+                    typename boost::range_iterator<string_type>::type
+                    > () const {
+                    return boost::make_iterator_range(wrapper_base::_message.body());
+                }
+
+                typename string_type::const_iterator
+                begin() const {
+                    return wrapper_base::_message.body().begin();
+                }
+
+                typename string_type::const_iterator
+                end() const {
+                    return wrapper_base::_message.body().end();
+                }
+
             };
 
         template <class Tag>
@@ -48,6 +71,10 @@ namespace boost { namespace network {
 
                 std::size_t size() const {
                     return wrapper_base::_message.body().size();
+                }
+
+                operator boost::range_iterator<string_type> () const {
+                    return boost::make_iterator_range(wrapper_base::_message.body());
                 }
             };
 
