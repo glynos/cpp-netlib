@@ -101,6 +101,7 @@ namespace boost { namespace network { namespace http {
             *oi = consts::colon_char();
             *oi = consts::space_char();
             boost::copy(default_accept_encoding, oi);
+            boost::copy(crlf, oi);
         }
         typedef typename headers_range<basic_request<Tag> >::type headers_range;
         typedef typename range_iterator<headers_range>::type headers_iterator;
