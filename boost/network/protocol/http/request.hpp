@@ -37,6 +37,7 @@
 #include <boost/network/protocol/http/message/modifiers/destination.hpp>
 #include <boost/network/protocol/http/message/modifiers/headers.hpp>
 #include <boost/network/protocol/http/message/modifiers/body.hpp>
+#include <boost/network/protocol/http/message/modifiers/clear_headers.hpp>
 #include <boost/network/protocol/http/message/wrappers/major_version.hpp>
 #include <boost/network/protocol/http/message/wrappers/minor_version.hpp>
 #include <boost/network/protocol/http/message/wrappers/source.hpp>

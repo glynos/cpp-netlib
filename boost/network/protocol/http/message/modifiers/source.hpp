@@ -7,6 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/support/is_async.hpp>
+#include <boost/network/protocol/http/support/client_or_server.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/concept/requires.hpp>
 #include <boost/network/protocol/http/tags.hpp>
@@ -34,28 +35,35 @@ namespace boost { namespace network { namespace http {
             request.source = value;
         }
 
+        template <class Tag, class T>
+        void source(basic_request<Tag> & request, T const & value, tags::client const &) {
+            request << ::boost::network::source(value);
+        }
+
     }
 
-    template <class R>
-    struct Response;
-
     template <class Tag, class T>
-    inline
-    BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
-        (void))
+    inline void
     source(basic_response<Tag> & response, T const & value) {
         impl::source(response, value, is_async<Tag>());
     }
 
-    template <class R>
-    struct ServerRequest;
+    template <class Tag, class T>
+    inline void
+    source_impl(basic_request<Tag> & request, T const & value, tags::server) {
+        impl::source(request, value, Tag());
+    }
 
     template <class Tag, class T>
-    inline
-    BOOST_CONCEPT_REQUIRES(((ServerRequest<basic_request<Tag> >)),
-        (void))
-    source(basic_request<Tag> & request, T const & value) {
+    inline void
+    source_impl(basic_request<Tag> & request, T const & value, tags::client) {
         impl::source(request, value, Tag());
+    }
+
+    template <class Tag, class T>
+    inline void
+    source(basic_request<Tag> & request, T const & value) {
+        source_impl(request, value, typename client_or_server<Tag>::type());
     }
 
 } // namespace http

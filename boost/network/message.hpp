@@ -44,6 +44,7 @@ namespace boost { namespace network {
         typedef Tag tag;
 
         typedef typename headers_container<Tag>::type headers_container_type;
+        typedef typename headers_container_type::value_type header_type;
         typedef typename string<Tag>::type string_type;
 
         basic_message()

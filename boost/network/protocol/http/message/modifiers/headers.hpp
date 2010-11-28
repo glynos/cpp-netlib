@@ -38,16 +38,13 @@ namespace boost { namespace network { namespace http {
     }
 
     template <class Tag, class T>
-    inline
-    BOOST_CONCEPT_REQUIRES(((Response<basic_response<Tag> >)),
-        (void))
+    inline void
     headers(basic_response<Tag> & response, T const & value) {
         impl::headers(response, value, is_async<Tag>());
     }
 
     template <class Tag, class T>
-    inline BOOST_CONCEPT_REQUIRES(((ServerRequest<basic_request<Tag> >)),
-        (void))
+    inline void
     headers(basic_request<Tag> & request, T const & value) {
         impl::headers(request, value, Tag());
     }

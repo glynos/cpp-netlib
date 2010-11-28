@@ -10,6 +10,7 @@
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
 #include <boost/network/protocol/http/message/header_concept.hpp>
+#include <boost/network/protocol/http/request_concept.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/concept/requires.hpp>
 #include <boost/range/algorithm/copy.hpp>
@@ -43,15 +44,19 @@ namespace boost { namespace network { namespace http {
         }
     };
 
-    template <class Tag, class OutputIterator>
-    OutputIterator linearize(
-        basic_request<Tag> const & request, 
-        typename string<Tag>::type const & method,
+    template <class Request, class OutputIterator>
+    BOOST_CONCEPT_REQUIRES(
+        ((ClientRequest<Request>)),
+        (OutputIterator)
+    ) linearize(
+        Request const & request, 
+        typename Request::string_type const & method,
         unsigned version_major, 
         unsigned version_minor, 
         OutputIterator oi
         ) 
     {
+        typedef typename Request::tag Tag;
         typedef constants<Tag> consts;
         typedef typename string<Tag>::type string_type;
         static string_type 
@@ -103,7 +108,7 @@ namespace boost { namespace network { namespace http {
             boost::copy(default_accept_encoding, oi);
             boost::copy(crlf, oi);
         }
-        typedef typename headers_range<basic_request<Tag> >::type headers_range;
+        typedef typename headers_range<Request>::type headers_range;
         typedef typename range_iterator<headers_range>::type headers_iterator;
         headers_range request_headers = headers(request);
         headers_iterator iterator = boost::begin(request_headers),
@@ -125,7 +130,7 @@ namespace boost { namespace network { namespace http {
             boost::copy(crlf, oi);
         }
         boost::copy(crlf, oi);
-        typename body_range<basic_request<Tag> >::type body_data = body(request).range();
+        typename body_range<Request>::type body_data = body(request).range();
         return boost::copy(body_data, oi);
     }
     
