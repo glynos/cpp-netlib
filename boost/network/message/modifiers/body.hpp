@@ -6,28 +6,24 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_async.hpp>
+#include <boost/network/support/pod_or_normal.hpp>
 #include <boost/thread/future.hpp>
 
 namespace boost { namespace network {
 
-    namespace impl {
-
-        template <class Message, class ValueType, class Tag>
-        inline void body(Message const & message, ValueType const & body_, Tag const &, mpl::false_ const &) {
-            message.body(body_);
-        }
-
-        template <class Message, class ValueType, class Tag>
-        inline void body(Message const & message, ValueType const & body_, Tag const &, mpl::true_ const &) {
-            message.body(body_);
-        }
-
-    } // namespace impl
+    template <class Tag, template <class> class Message, class ValueType>
+    inline void body_impl(Message<Tag> & message, ValueType const & body, tags::pod) {
+        message.body = body;
+    }
 
     template <class Tag, template <class> class Message, class ValueType>
-    inline void body(Message<Tag> const & message, ValueType const & body_) {
-        impl::body(message, body_, Tag(), is_async<Tag>());
+    inline void body_impl(Message<Tag> & message, ValueType const & body, tags::normal) {
+        message.body(body);
+    }
+
+    template <class Tag, template <class> class Message, class ValueType>
+    inline void body(Message<Tag> & message, ValueType const & body_) {
+        body_impl(message, body_, typename pod_or_normal<Tag>::type());
     }
 
 } // namespace network
