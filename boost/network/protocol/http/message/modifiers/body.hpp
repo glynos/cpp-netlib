@@ -33,16 +33,6 @@ namespace boost { namespace network { namespace http {
             response.body(future);
         }
 
-        template <class Tag, class T>
-        void body(basic_request<Tag> & request, T const & value, tags::server const &) {
-            request.body = value;
-        }
-
-        template <class Tag, class T>
-        void body(basic_request<Tag> & request, T const & value, tags::client const &) {
-            request << ::boost::network::body(value);
-        }
-
     }
 
     template <class Tag, class T>
@@ -54,16 +44,13 @@ namespace boost { namespace network { namespace http {
     template <class Tag, class T>
     inline void
     body_impl(basic_request<Tag> & request, T const & value, tags::server) {
-        impl::body(request, value, Tag());
+        request.body = value;
     }
-
-    template <class R>
-    struct ClientRequest;
 
     template <class Tag, class T>
     inline void
     body_impl(basic_request<Tag> & request, T const & value, tags::client) {
-        impl::body(request, value, Tag());
+        request << ::boost::network::body(value);
     }
 
     template <class Tag, class T>

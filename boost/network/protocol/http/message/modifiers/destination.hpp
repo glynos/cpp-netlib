@@ -7,6 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/support/client_or_server.hpp>
+#include <boost/network/support/pod_or_normal.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/concept/requires.hpp>
@@ -31,16 +32,6 @@ namespace boost { namespace network { namespace http {
             response.destination(future);
         }
 
-        template <class Tag, class T>
-        void destination(basic_request<Tag> & request, T const & value, tags::server const &) {
-            request.destination = value;
-        }
-
-        template <class Tag, class T>
-        void destination(basic_request<Tag> & request, T const & value, tags::client const &) {
-            request << ::boost::network::destination(value);
-        }
-
     }
 
     template <class Tag, class T>
@@ -55,13 +46,25 @@ namespace boost { namespace network { namespace http {
     template <class Tag, class T>
     inline void
     destination_impl(basic_request<Tag> & request, T const & value, tags::server) {
-        impl::destination(request, value, Tag());
+        request.destination = value;
+    }
+
+    template <class Tag, class T>
+    inline void
+    destination_impl(basic_request<Tag> & request, T const & value, tags::pod) {
+        request.destination = value;
+    }
+
+    template <class Tag, class T>
+    inline void
+    destination_impl(basic_request<Tag> & request, T const & value, tags::normal) {
+        request.destination(value);
     }
 
     template <class Tag, class T>
     inline void
     destination_impl(basic_request<Tag> & request, T const & value, tags::client) {
-        impl::destination(request, value, Tag());
+        destination_impl(request, value, typename pod_or_normal<Tag>::type());
     }
 
     template <class Tag, class T>
