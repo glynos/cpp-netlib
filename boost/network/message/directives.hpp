@@ -7,9 +7,6 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_HPP__
 
-/** Include all the various directive headers.
- */
-
 #include <boost/network/message/directives/detail/string_directive.hpp>
 #include <boost/network/message/directives/header.hpp>
 #include <boost/network/message/directives/remove_header.hpp>
