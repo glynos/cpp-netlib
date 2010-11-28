@@ -16,6 +16,7 @@
 namespace boost { namespace network { namespace tags {
 
     struct pod {};
+    struct normal {};
     struct async {};
     struct tcp {};
     struct udp {};
