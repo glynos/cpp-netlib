@@ -11,6 +11,7 @@
 #include <boost/network/traits/string.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/thread/future.hpp>
+#include <boost/mpl/or.hpp>
 
 namespace boost { namespace network { namespace http {
     
