@@ -247,7 +247,7 @@ bool parse_uri(Range & range, uri_parts<Tag> & parts) {
     iterator start_ = boost::begin(range);
     iterator end_ = boost::end(range);
 
-    uri_grammar<iterator, Tag> grammar;
+    static uri_grammar<iterator, Tag> grammar;
 
     bool ok = qi::parse(start_, end_, grammar, parts);
 
