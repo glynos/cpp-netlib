@@ -6,14 +6,16 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/mpl/list.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 
 namespace http = boost::network::http;
 
-typedef boost::mpl::list<
+typedef boost::mpl::vector<
     http::tags::http_default_8bit_tcp_resolve
     , http::tags::http_default_8bit_udp_resolve
+    , http::tags::http_keepalive_8bit_tcp_resolve
+    , http::tags::http_keepalive_8bit_udp_resolve
     , http::tags::http_async_8bit_udp_resolve
     , http::tags::http_async_8bit_tcp_resolve
 > tag_types;
