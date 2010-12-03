@@ -11,6 +11,7 @@
 #include <boost/network/support/is_sync.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/thread/future.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/mpl/if.hpp>
 
 namespace boost { namespace network {
