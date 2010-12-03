@@ -38,7 +38,7 @@ if (Boost_FOUND)
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test} 
-            %{CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
+            ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
     endforeach (test)
 
     set ( SERVER_TESTS
