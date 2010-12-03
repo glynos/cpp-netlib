@@ -21,8 +21,6 @@ if (Boost_FOUND)
         TESTS
         http_incremental_parser
         http_incremental_request_parser
-        http_1_0_test
-        http_1_1_test
         http_localhost_tests
         https_localhost_tests
         message_test
