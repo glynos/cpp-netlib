@@ -13,6 +13,7 @@ project cpp-netlib :
 
 cpp-pch client : boost/network/include/http/client.hpp ;
 cpp-pch server : boost/network/include/http/server.hpp ;
+lib cppnetlib-uri-parsers : libs/network/src/parse_uri_impl.cpp ;
 
 install headers : client server
    : <location>../../../boost/network/include/http ;

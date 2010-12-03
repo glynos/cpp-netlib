@@ -10,24 +10,43 @@
 #include <boost/fusion/tuple.hpp>
 #include <boost/optional.hpp>
 
+#include <boost/mpl/if.hpp>
 #include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace uri {
 
 namespace detail {
+    
+    struct uri_parts_default_base {
+        typedef std::string string_type;
+        string_type scheme;
+        optional<string_type> user_info;
+        optional<string_type> host;
+        optional<boost::uint16_t> port;
+        string_type path;
+        optional<string_type> query;
+        optional<string_type> fragment;
+    };
+
+    struct uri_parts_wide_base {
+        typedef std::wstring string_type;
+        string_type scheme;
+        optional<string_type> user_info;
+        optional<string_type> host;
+        optional<boost::uint16_t> port;
+        string_type path;
+        optional<string_type> query;
+        optional<string_type> fragment;
+    };
 
 template <class Tag>
-struct uri_parts {
-    typedef typename string<Tag>::type string_type;
-
-    string_type scheme;
-    optional<string_type> user_info;
-    optional<string_type> host;
-    optional<boost::uint16_t> port;
-    string_type path;
-    optional<string_type> query;
-    optional<string_type> fragment;
-};
+struct uri_parts :
+    mpl::if_<
+        is_default_string<Tag>
+        , uri_parts_default_base
+        , uri_parts_wide_base
+    >::type
+{};
 
 template <class Tag>
 struct uri_parts_tuple {
