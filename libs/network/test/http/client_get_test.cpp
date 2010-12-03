@@ -11,7 +11,6 @@
 namespace net = boost::network;
 namespace http = boost::network::http;
 
-
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_get_test, T, tag_types) {
     typedef http::basic_client<T, 1, 0> client;
     typename client::request request("http://www.boost.org");
@@ -39,4 +38,28 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test, T, tag_types) {
     BOOST_CHECK_EQUAL ( response_.status(), 200u );
     BOOST_CHECK_EQUAL ( response_.status_message(), std::string("OK") );
 }
+
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(https_get_test_1_0, T, tag_types) {
+    typedef http::basic_client<T, 1, 0> client;
+    typename client::request request("https://www.google.com/");
+    client client_;
+    typename client::response response_ = client_.get(request);
+    typename net::headers_range<typename http::basic_response<T> >::type range = headers(response_)["Content-Type"];
+    BOOST_CHECK ( boost::begin(range) != boost::end(range) );
+    BOOST_CHECK ( body(response_).size() != 0 );
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(https_get_test_1_1, T, tag_types) {
+    typedef http::basic_client<T, 1, 1> client;
+    typename client::request request("https://www.google.com/");
+    client client_;
+    typename client::response response_ = client_.get(request);
+    typename net::headers_range<typename http::basic_response<T> >::type range = headers(response_)["Content-Type"];
+    BOOST_CHECK ( boost::begin(range) != boost::end(range) );
+    BOOST_CHECK ( body(response_).size() != 0 );
+}
+
+#endif
 
