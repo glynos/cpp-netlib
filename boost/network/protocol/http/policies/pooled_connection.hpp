@@ -44,6 +44,7 @@ namespace boost { namespace network { namespace http {
             }
 
             ~connection_impl () {
+                pimpl->close_socket();
                 pimpl.reset();
             }
 
