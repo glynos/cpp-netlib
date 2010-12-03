@@ -14,6 +14,8 @@ find_package( Threads )
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 
+add_subdirectory(http)
+
 if (Boost_FOUND)
     set(
         TESTS
@@ -41,22 +43,8 @@ if (Boost_FOUND)
             target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
         endif()
         set_target_properties(cpp-netlib-${test}
-            PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../../../build/tests)
-        add_test(cpp-netlib-${test} ../../../build/tests/cpp-netlib-${test})
-    endforeach (test)
-
-    set(SERVER_TESTS
-        hello_world
-        http_async_server
-        )
-    foreach (test ${SERVER_TESTS})
-        set_source_files_properties(${test}.cpp
-            PROPERTIES COMPILE_FLAGS "-Wall")
-        add_executable(cpp-netlib-${test} ${test}.cpp)
-        target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-        set_target_properties(cpp-netlib-${test}
-            PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../../../build/tests)
-        add_test(cpp-netlib-${test} python httplib_acceptance.py ../../../build/tests/cpp-netlib-${test} ../../../build/tests/cpp-netlib-${test}.passed)
+            PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
+        add_test(cpp-netlib-${test} ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
     endforeach (test)
 
 endif()
