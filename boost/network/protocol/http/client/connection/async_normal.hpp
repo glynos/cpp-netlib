@@ -20,6 +20,7 @@
 #include <boost/network/protocol/http/parser/incremental.hpp>
 #include <boost/network/protocol/http/message/wrappers/uri.hpp>
 #include <boost/network/protocol/http/client/connection/async_protocol_handler.hpp>
+#include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/array.hpp>
 #include <boost/assert.hpp>
 #include <iterator>
@@ -60,7 +61,8 @@ namespace boost { namespace network { namespace http { namespace impl {
             virtual response start(request const & request, string_type const & method, bool get_body) {
                 response response_;
                 this->init_response(response_, get_body);
-                command_string_ = this->init_command_stream(request, method);
+                linearize(request, method, version_major, version_minor,
+                    std::ostreambuf_iterator<typename char_<Tag>::type>(&command_streambuf));
                 this->method = method;
                 boost::uint16_t port_ = port(request);
                 resolve_(resolver_, host(request), 
@@ -107,8 +109,10 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         void handle_connected(boost::uint16_t port, bool get_body, resolver_iterator_pair endpoint_range, boost::system::error_code const & ec) {
             if (!ec) {
-                boost::asio::async_write(*socket_, boost::asio::buffer(command_string_.data(), command_string_.size()),
-                    request_strand_.wrap(
+                boost::asio::async_write(
+                    *socket_
+                    , command_streambuf
+                    , request_strand_.wrap(
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_sent_request,
                             http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
@@ -308,7 +312,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         boost::shared_ptr<boost::asio::ip::tcp::socket> socket_;
         resolve_function resolve_;
         boost::asio::io_service::strand request_strand_;
-        string_type command_string_;
+        boost::asio::streambuf command_streambuf;
         string_type method;
     };
 

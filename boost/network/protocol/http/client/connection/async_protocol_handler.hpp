@@ -6,6 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/algorithms/linearize.hpp>
+
 namespace boost { namespace network { namespace http { namespace impl {
 
     template <class Tag, unsigned version_major, unsigned version_minor>
@@ -47,52 +49,6 @@ namespace boost { namespace network { namespace http { namespace impl {
                 return header_line.str();
             }
         };
-
-        template <class RequestType>
-        string_type init_command_stream(RequestType const & request, string_type const & method) {
-            typename ostringstream<Tag>::type command_stream;
-            string_type path_str;
-            path_str = path(request);
-            typedef constants<Tag> constants;
-            command_stream 
-                << method << constants::space()
-                << path_str << constants::space()
-                << constants::http_slash() << version_major
-                << constants::dot() << version_minor
-                << constants::crlf();
-            
-            typedef typename headers_range<RequestType>::type headers_range_type;
-            headers_range_type headers_ = headers(request);
-            boost::range::transform(
-                headers_,
-                typename ostream_iterator<Tag, string_type>::type (command_stream),
-                to_http_headers());
-
-            if (boost::empty(headers(request)[constants::host()])) {
-                string_type host_str = host(request);
-                command_stream
-                    << constants::host() << constants::colon() << constants::space() << host_str << constants::crlf();
-            }
-
-            if (boost::empty(headers(request)[constants::accept()])) {
-                command_stream
-                    << constants::accept() << constants::colon() << constants::space() << constants::default_accept_mime() << constants::crlf();
-            }
-
-            if (version_major == 1u && version_minor == 1u && boost::empty(headers(request)[constants::accept_encoding()])) {
-                command_stream
-                    << constants::accept_encoding() << constants::colon() << constants::space() << constants::default_accept_encoding() << constants::crlf();
-            }
-
-            if (boost::empty(headers(request)[constants::user_agent()])) {
-                command_stream
-                    << constants::user_agent() << constants::colon() << constants::space() << constants::cpp_netlib_slash() << BOOST_NETLIB_VERSION << constants::crlf();
-            }
-
-            command_stream << constants::crlf();
-
-            return command_stream.str();
-        }
 
         template <class Socket, class Callback>
         logic::tribool parse_version(Socket & socket_, Callback callback) {

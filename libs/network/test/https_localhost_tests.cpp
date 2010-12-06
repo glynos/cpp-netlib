@@ -55,33 +55,6 @@ namespace {
         return buffer.size();
     }
     
-    std::map<std::string, std::string> parse_headers(std::string const& body) {
-        std::map<std::string, std::string> headers;
-    
-        std::istringstream stream(body);
-        while (stream.good())
-        {
-            std::string line;
-            std::getline(stream, line);
-            if (!stream.eof())
-            {
-                std::size_t colon = line.find(':');
-                if (colon != std::string::npos)
-                {
-                    std::string header = line.substr(0, colon);
-                    std::string value = line.substr(colon + 2);
-                    headers[header] = value;
-                }
-            }
-        }
-        
-        return headers;
-    }
-    
-    std::string get_content_length(std::string const& content) {
-        return boost::lexical_cast<std::string>(content.size());
-    }
-
 }
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
