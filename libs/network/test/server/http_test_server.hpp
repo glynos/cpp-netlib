@@ -82,7 +82,7 @@ private:
     script_handle_t launch_python_script(const boost::filesystem::path& python_script_path) {
         using namespace boost::filesystem;
 
-        path::string_type script_name = python_script_path.filename();
+        path::string_type script_name = python_script_path.filename().string();
         path::string_type script_dir = python_script_path.parent_path().string();
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
@@ -139,7 +139,7 @@ private:
         // set the CGI script execute permission
         for (directory_iterator i(cgibin_path); i != directory_iterator(); ++i) {
             if (is_regular_file(i->status())) {
-                path::string_type file_path = i->path().file_string();
+                path::string_type file_path = i->path().string();
                 if (chmod(file_path.c_str(), S_IWUSR|S_IXUSR|S_IXGRP|S_IXOTH|S_IRUSR|S_IRGRP|S_IROTH) != 0)
                     return false;
             }
