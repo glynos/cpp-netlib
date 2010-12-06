@@ -78,7 +78,7 @@ struct uri_base {
     }
 
     string_type raw() const {
-        return string();
+        return raw_;
     }
 
     string_type string() const {
@@ -115,6 +115,18 @@ public:
 
     basic_uri() : uri_base<Tag>() {}
     basic_uri(typename uri_base<Tag>::string_type const & uri) : uri_base<Tag>(uri) {}
+
+    basic_uri & operator= (basic_uri & rhs) {
+        rhs.swap(*this);
+        return *this;
+    }
+
+    void swap(basic_uri & other) {
+        uri_base<Tag>::swap(other);
+    }
+
+    using uri_base<Tag>::operator==;
+    using uri_base<Tag>::operator!=;
 
 };
 
