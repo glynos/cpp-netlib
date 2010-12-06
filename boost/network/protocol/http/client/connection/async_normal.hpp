@@ -19,7 +19,7 @@
 #include <boost/logic/tribool.hpp>
 #include <boost/network/protocol/http/parser/incremental.hpp>
 #include <boost/network/protocol/http/message/wrappers/uri.hpp>
-#include <boost/network/protocol/http/impl/http_async_protocol_handler.hpp>
+#include <boost/network/protocol/http/client/connection/async_protocol_handler.hpp>
 #include <boost/array.hpp>
 #include <boost/assert.hpp>
 #include <iterator>

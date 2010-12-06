@@ -8,9 +8,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/response.hpp>
-#include <boost/network/protocol/http/impl/http_async_connection.hpp>
+#include <boost/network/protocol/http/client/connection/async_normal.hpp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-#include <boost/network/protocol/http/impl/https_async_connection.hpp>
+#include <boost/network/protocol/http/client/connection/async_ssl.hpp>
 #endif
 
 namespace boost { namespace network { namespace http { namespace impl {

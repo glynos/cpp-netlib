@@ -9,7 +9,7 @@
 
 #include <boost/asio/ssl.hpp>
 #include <boost/asio/strand.hpp>
-#include <boost/network/protocol/http/impl/http_async_protocol_handler.hpp>
+#include <boost/network/protocol/http/client/connection/async_protocol_handler.hpp>
 #include <boost/assert.hpp>
 
 namespace boost { namespace network { namespace http { namespace impl {

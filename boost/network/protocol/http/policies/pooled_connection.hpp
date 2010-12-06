@@ -10,7 +10,7 @@
 
 #include <boost/unordered_map.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/network/protocol/http/impl/sync_connection_base.hpp>
+#include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <utility>

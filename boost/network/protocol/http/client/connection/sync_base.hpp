@@ -16,9 +16,9 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/network/protocol/http/response.hpp>
 
-#include <boost/network/protocol/http/impl/http_sync_connection.hpp>
+#include <boost/network/protocol/http/client/connection/sync_normal.hpp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-#include <boost/network/protocol/http/impl/https_sync_connection.hpp>
+#include <boost/network/protocol/http/client/connection/sync_ssl.hpp>
 #endif
 
 namespace boost { namespace network { namespace http { namespace impl {

@@ -11,7 +11,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/network/protocol/http/impl/sync_connection_base.hpp>
+#include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
