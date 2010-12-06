@@ -16,10 +16,9 @@ namespace boost { namespace network { namespace http {
         , Assignable<H>
         , CopyConstructible<H>
     {
-        typedef typename H::tag tag;
 
         BOOST_CONCEPT_USAGE(Header) {
-            typedef typename string<tag>::type string_type;
+            typedef typename H::string_type string_type;
             string_type name_ = name(header);
             string_type value_ = value(header);
             H h1, h2;

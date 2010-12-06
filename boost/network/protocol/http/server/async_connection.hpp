@@ -20,7 +20,6 @@
 #include <boost/make_shared.hpp>
 #include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/range/iterator_range.hpp>
-#include <boost/spirit/include/qi.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility/typed_in_place_factory.hpp>
 #include <boost/thread/locks.hpp>
@@ -41,6 +40,9 @@
 #endif /* BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE */
 
 namespace boost { namespace network { namespace http {
+
+    extern void parse_version(std::string const & partial_parsed, fusion::tuple<uint8_t,uint8_t> & version_pair);
+    extern void parse_headers(std::string const & input, std::vector<request_header_narrow> & container);
 
     template <class Tag, class Handler>
     struct async_connection : boost::enable_shared_from_this<async_connection<Tag,Handler> > {
@@ -374,17 +376,8 @@ namespace boost { namespace network { namespace http {
                             break;
                         } else if (parsed_ok == true) {
                             fusion::tuple<uint8_t, uint8_t> version_pair;
-                            using namespace boost::spirit::qi;
                             partial_parsed.append(boost::begin(result_range), boost::end(result_range));
-                            parse(
-                                partial_parsed.begin(), partial_parsed.end(),
-                                (
-                                    lit("HTTP/")
-                                    >> ushort_
-                                    >> '.'
-                                    >> ushort_
-                                )
-                                , version_pair);
+                            parse_version(partial_parsed, version_pair);
                             request_.http_version_major = fusion::get<0>(version_pair);
                             request_.http_version_minor = fusion::get<1>(version_pair);
                             new_start = boost::end(result_range);
@@ -470,20 +463,6 @@ namespace boost { namespace network { namespace http {
             } else {
                 error_encountered = in_place<boost::system::system_error>(ec);
             }
-        }
-
-        void parse_headers(string_type & input, typename request::headers_container_type & container) {
-            using namespace boost::spirit::qi;
-            parse(
-                input.begin(), input.end(),
-                *(
-                    +(alnum|(punct-':'))
-                    >> lit(": ")
-                    >> +(alnum|space|punct)
-                    >> lit("\r\n")
-                )
-                , container
-                );
         }
 
         void do_nothing() {}

@@ -51,7 +51,7 @@ namespace boost { namespace network { namespace http {
         } status;
         
         /// The headers to be included in the reply.
-        typedef vector<tags::http_server>::apply<request_header<tags::http_server> >::type headers_vector;
+        typedef vector<tags::http_server>::apply<typename request_header<tags::http_server>::type>::type headers_vector;
         headers_vector headers;
 
         /// The content to be sent in the reply.
@@ -69,7 +69,7 @@ namespace boost { namespace network { namespace http {
             std::vector<const_buffer> buffers;
             buffers.push_back(to_buffer(status));
             for (std::size_t i = 0; i < headers.size(); ++i) {
-                request_header<tags::http_server> & h = headers[i];
+                typename request_header<tags::http_server>::type & h = headers[i];
                 buffers.push_back(buffer(h.name));
                 buffers.push_back(buffer(name_value_separator));
                 buffers.push_back(buffer(h.value));

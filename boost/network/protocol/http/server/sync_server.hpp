@@ -23,7 +23,7 @@ namespace boost { namespace network { namespace http {
         typedef typename string<Tag>::type string_type;
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
-        typedef boost::network::http::response_header<Tag> response_header;
+        typedef typename boost::network::http::response_header<Tag>::type response_header;
 
         sync_server_base(string_type const & address,
                      string_type const & port,

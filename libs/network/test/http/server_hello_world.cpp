@@ -11,6 +11,7 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/lexical_cast.hpp>
 #include <string>
+#include <iostream>
 
 namespace http = boost::network::http;
 using boost::assign::list_of;

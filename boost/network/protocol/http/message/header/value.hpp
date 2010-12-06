@@ -10,26 +10,33 @@
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct response_header;
-
-    template <class Tag>
-    struct request_header;
+    struct request_header_narrow;
+    struct request_header_wide;
+    struct response_header_narrow;
+    struct response_header_wide;
 
     template <class T1, class T2>
     T1 & value(std::pair<T1,T2> const & p) {
         return p.second;
     }
 
-    template <class Tag>
-    typename string<Tag>::type const & 
-    value(response_header<Tag> const & h) {
+    inline request_header_narrow::string_type const &
+    value(request_header_narrow const & h) {
         return h.value;
     }
 
-    template <class Tag>
-    typename string<Tag>::type const &
-    value(request_header<Tag> const & h) {
+    inline request_header_wide::string_type const &
+    value(request_header_wide const & h) {
+        return h.value;
+    }
+    
+    inline response_header_narrow::string_type const &
+    value(response_header_narrow const & h) {
+        return h.value;
+    }
+
+    inline response_header_wide::string_type const &
+    value(response_header_wide const & h) {
         return h.value;
     }
     

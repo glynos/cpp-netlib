@@ -6,15 +6,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/message/header.hpp>
 #include <utility>
 
 namespace boost { namespace network { namespace http {
-
-    template <class Tag>
-    struct response_header;
-
-    template <class Tag>
-    struct request_header;
 
     template <class T1, class T2>
     T1 & 
@@ -22,18 +17,27 @@ namespace boost { namespace network { namespace http {
         return p.first;
     }
 
-    template <class Tag>
-    typename string<Tag>::type const &
-    name(response_header<Tag> const & h) {
+    inline std::string const &
+    name(request_header_narrow const & h) {
         return h.name;
     }
 
-    template <class Tag>
-    typename string<Tag>::type const &
-    name(request_header<Tag> const & h) {
+    inline std::wstring const &
+    name(request_header_wide const &h) {
         return h.name;
     }
+
     
+    inline std::string const &
+    name(response_header_narrow const & h) {
+        return h.name;
+    }
+
+    inline std::wstring const &
+    name(response_header_wide const &h) {
+        return h.name;
+    }
+
 } /* http */
     
 } /* network */

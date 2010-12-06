@@ -29,12 +29,12 @@ namespace boost { namespace network {
     /** Specialize the traits for the http_server tag. */
     template <>
     struct headers_container<http::tags::http_server> :
-        vector<http::tags::http_server>::apply<http::request_header<http::tags::http_server> >
+        vector<http::tags::http_server>::apply<typename http::request_header<http::tags::http_server>::type>
     {};
 
     template <>
     struct headers_container<http::tags::http_async_server> :
-        vector<http::tags::http_async_server>::apply<http::request_header<http::tags::http_async_server> >
+        vector<http::tags::http_async_server>::apply<typename http::request_header<http::tags::http_async_server>::type>
     {};
 
 namespace http {
@@ -136,7 +136,7 @@ namespace http {
     struct not_quite_pod_request_base {
         typedef Tag tag;
         typedef typename string<Tag>::type string_type;
-        typedef request_header<Tag> header_type;
+        typedef typename request_header<Tag>::type header_type;
         typedef typename vector<Tag>::
             template apply<header_type>::type
             vector_type;
