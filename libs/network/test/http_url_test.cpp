@@ -25,6 +25,9 @@ BOOST_AUTO_TEST_CASE(http_url_test) {
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK_EQUAL(instance.raw(), url);
+    string_type scheme_ = uri::scheme(instance);
+    BOOST_CHECK_EQUAL(scheme_, scheme);
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK_EQUAL(uri::port(instance), port);
