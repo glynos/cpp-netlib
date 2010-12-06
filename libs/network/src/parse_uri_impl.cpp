@@ -41,12 +41,98 @@ BOOST_FUSION_ADAPT_STRUCT(boost::network::uri::detail::uri_parts_wide_base,
     (optional<std::wstring>, fragment)
 )
 
+namespace boost { namespace spirit { namespace traits {
+template <>
+struct transform_attribute<
+    boost::network::uri::detail::uri_parts_default_base,
+    boost::fusion::tuple<
+        std::string &,
+        boost::fusion::tuple<
+            boost::optional<std::string>&,
+            boost::optional<std::string>&,
+            boost::optional<boost::uint16_t> &,
+            std::string &
+            >,
+        optional<std::string>&,
+        optional<std::string>&
+    >
+#if SPIRIT_VERSION >= 0x2030
+        , boost::spirit::qi::domain
+#endif
+        >
+{
+    typedef
+    boost::fusion::tuple<
+        std::string &,
+        boost::fusion::tuple<
+            boost::optional<std::string>&,
+            boost::optional<std::string>&,
+            boost::optional<boost::uint16_t> &,
+            std::string &
+            >,
+        optional<std::string>&,
+        optional<std::string>&
+    > type;
+
+    static type pre(boost::network::uri::detail::uri_parts_default_base & parts) {
+        boost::fusion::tuple<
+        boost::optional<std::string> &,
+            boost::optional<std::string> &,
+            boost::optional<boost::uint16_t> &,
+            std::string &
+            > hier_part =
+            boost::fusion::tie(
+                parts.user_info,
+                parts.host,
+                parts.port,
+                parts.path
+                );
+
+    return boost::fusion::tie(
+        parts.scheme,
+        hier_part,
+        parts.query,
+        parts.fragment
+        );
+}
+
+static void post(boost::network::uri::detail::uri_parts_default_base &, type const &) { }
+
+#if SPIRIT_VERSION >= 0x2030
+static void fail(boost::network::uri::detail::uri_parts_default_base & val) { }
+#endif
+};
+
+#if SPIRIT_VERSION < 0x2030
+template <typename Exposed, typename Transformed>
+struct transform_attribute<
+    optional<Exposed>,
+    Transformed,
+    typename disable_if<is_same<optional<Exposed>, Transformed> >::type
+    >
+{
+    typedef Transformed & type;
+
+    static Transformed & pre(optional<Exposed> & val) {
+        if (!val)
+            val = Transformed();
+        return boost::get<Transformed>(val);
+    }
+
+    static void post(optional<Exposed> &, Transformed const &) { }
+};
+#endif
+} // namespace traits
+} // namespace spirit
+} // namespace boost
+
+
 namespace boost { namespace network { namespace uri { namespace detail {
     
 namespace qi = boost::spirit::qi;
 
 template <typename Iterator>
-struct uri_grammar_default : qi::grammar<Iterator, uri_parts_default_base> {
+struct uri_grammar_default : qi::grammar<Iterator, uri_parts_default_base()> {
     uri_grammar_default() : uri_grammar_default::base_type(start, "uri") {
         // gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
         gen_delims %= qi::char_(":/?#[]@");
@@ -166,17 +252,31 @@ struct uri_grammar_default : qi::grammar<Iterator, uri_parts_default_base> {
     scheme, user_info, query, fragment;
 
     qi::rule<Iterator, boost::fusion::tuple<
-                           optional<string_type>,
-                           optional<string_type>,
-                           optional<boost::uint16_t>,
-                           string_type 
+                           optional<string_type>&,
+                           optional<string_type>&,
+                           optional<boost::uint16_t>&,
+                           string_type &
                            >()> hier_part;
 
-// start rule of grammar
-qi::rule<Iterator, uri_parts_default_base> start;
+    // start rule of grammar
+    qi::rule<Iterator, uri_parts_default_base()> start;
 
-// actual uri parser
-qi::rule<Iterator, uri_parts_default_base> uri;
+    // actual uri parser
+    qi::rule<
+        Iterator,
+        boost::fusion::tuple<
+            string_type&,
+            boost::fusion::tuple<
+                optional<string_type>&,
+                optional<string_type>&,
+                optional<boost::uint16_t>&,
+                string_type &
+                >,
+            optional<string_type>&,
+            optional<string_type>&
+        >()
+    > uri;
+
 };
 
 bool parse_uri_impl(boost::iterator_range<std::string::const_iterator> & range, uri_parts_default_base & parts, boost::network::tags::default_string) {
