@@ -17,3 +17,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_constructor_test, client, client_types
     client instance2(io_service);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(http_cient_constructor_params_test, client, client_types) {
+    client instance(
+        http::_follow_redirects=true,
+        http::_cache_resolved=true
+        );
+    boost::asio::io_service io_service;
+    client instance2(
+        http::_follow_redirects=true,
+        http::_io_service=io_service,
+        http::_cache_resolved=true
+        );
+}
+
