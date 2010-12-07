@@ -7,19 +7,11 @@
 #define BOOST_TEST_MODULE HTTP 1.0 Client Constructor Test
 #include <boost/network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
-#include "tag_types.hpp"
+#include "client_types.hpp"
 
 namespace http = boost::network::http;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_1_0_constructor_test, T, tag_types) {
-    typedef http::basic_client<T, 1, 0> client;
-    client instance;
-    boost::asio::io_service io_service;
-    client instance2(io_service);
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_1_1_constructor_test, T, tag_types) {
-    typedef http::basic_client<T, 1, 1> client;
+BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_constructor_test, client, client_types) {
     client instance;
     boost::asio::io_service io_service;
     client instance2(io_service);
