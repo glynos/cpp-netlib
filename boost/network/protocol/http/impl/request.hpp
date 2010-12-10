@@ -29,12 +29,12 @@ namespace boost { namespace network {
     /** Specialize the traits for the http_server tag. */
     template <>
     struct headers_container<http::tags::http_server> :
-        vector<http::tags::http_server>::apply<typename http::request_header<http::tags::http_server>::type>
+        vector<http::tags::http_server>::apply<http::request_header<http::tags::http_server>::type>
     {};
 
     template <>
     struct headers_container<http::tags::http_async_server> :
-        vector<http::tags::http_async_server>::apply<typename http::request_header<http::tags::http_async_server>::type>
+        vector<http::tags::http_async_server>::apply<http::request_header<http::tags::http_async_server>::type>
     {};
 
 namespace http {
