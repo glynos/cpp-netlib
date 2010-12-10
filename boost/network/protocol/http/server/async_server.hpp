@@ -9,12 +9,13 @@
 #include <boost/network/protocol/http/server/async_connection.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/network/protocol/http/server/storage_base.hpp>
+#include <boost/network/protocol/http/server/socket_options_base.hpp>
 #include <boost/network/utils/thread_pool.hpp>
 
 namespace boost { namespace network { namespace http {
     
     template <class Tag, class Handler>
-    struct async_server_base : server_storage_base {
+    struct async_server_base : server_storage_base, socket_options_base {
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
         typedef typename string<Tag>::type string_type;
@@ -33,6 +34,7 @@ namespace boost { namespace network { namespace http {
                 server_storage_base::no_io_service,
                 server_storage_base::has_io_service
                 >::type())
+        , socket_options_base(args)
         , handler(args[_handler])
         , address_(args[_address])
         , port_(args[_port])
@@ -57,9 +59,9 @@ namespace boost { namespace network { namespace http {
         }
 
         void listen() {
+            if (listening) return;
             boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
             if (!listening) start_listening();
-            listening_lock.unlock();
         }
 
     private:
@@ -76,6 +78,7 @@ namespace boost { namespace network { namespace http {
 
         void handle_accept(boost::system::error_code const & ec) {
             if (!ec) {
+                socket_options_base::socket_options(new_connection->socket());
                 new_connection->start();
                 if (!stopping) {
                     new_connection.reset(
@@ -103,6 +106,7 @@ namespace boost { namespace network { namespace http {
             tcp::endpoint endpoint = *resolver.resolve(query);
             acceptor.open(endpoint.protocol());
             acceptor.bind(endpoint);
+            socket_options_base::acceptor_options(acceptor);
             acceptor.listen();
             listening = true;
             new_connection.reset(new connection(io_service, handler, thread_pool));
