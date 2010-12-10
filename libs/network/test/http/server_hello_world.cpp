@@ -26,9 +26,11 @@ typedef http::server<hello_world> server;
 struct hello_world {
 
     void operator()(server::request const & request, server::response & response) {
+        static server::response::header_type header = {"Connection", "close"};
         response = server::response::stock_reply(server::response::ok, "Hello, World!");
+        response.headers.push_back(header);
         assert(response.status == server::response::ok);
-        assert(response.headers.size() == 2);
+        assert(response.headers.size() == 3);
         assert(response.content == "Hello, World!");
     }
 
@@ -41,7 +43,7 @@ struct hello_world {
 
 int main(int argc, char * argv[]) {
     hello_world handler;
-    server server_("127.0.0.1", "8000", handler);
+    server server_("127.0.0.1", "8000", handler, http::_reuse_address=true);
     server_.run();
     return EXIT_SUCCESS;
 }

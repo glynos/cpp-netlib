@@ -25,10 +25,10 @@ namespace boost { namespace network { namespace http {
         socket_options_base(ArgPack const & args)
         : acceptor_reuse_address(args[_reuse_address|false])
         , acceptor_report_aborted(args[_report_aborted|false])
-        , receive_buffer_size(args[_receive_buffer_size|1024])
-        , send_buffer_size(args[_send_buffer_size|1024])
-        , receive_low_watermark(args[_receive_low_watermark|512])
-        , send_low_watermark(args[_send_low_watermark|512])
+        , receive_buffer_size(args[_receive_buffer_size|4096])
+        , send_buffer_size(args[_send_buffer_size|4096])
+        , receive_low_watermark(args[_receive_low_watermark|1024])
+        , send_low_watermark(args[_send_low_watermark|1024])
         , non_blocking_io(args[_non_blocking_io|true])
         , linger(args[_linger|true], args[_linger_timeout|0])
         {}
@@ -39,12 +39,13 @@ namespace boost { namespace network { namespace http {
         }
 
         void socket_options(boost::asio::ip::tcp::socket & socket) {
-            socket.set_option(receive_buffer_size);
-            socket.set_option(receive_low_watermark);
-            socket.set_option(send_buffer_size);
-            socket.set_option(send_low_watermark);
-            socket.io_control(non_blocking_io);
-            socket.set_option(linger);
+            boost::system::error_code ignored;
+            socket.io_control(non_blocking_io, ignored);
+            socket.set_option(linger, ignored);
+            socket.set_option(receive_buffer_size, ignored);
+            socket.set_option(receive_low_watermark, ignored);
+            socket.set_option(send_buffer_size, ignored);
+            socket.set_option(send_low_watermark, ignored);
         }
     };
 

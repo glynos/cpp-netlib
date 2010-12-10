@@ -48,7 +48,7 @@ namespace boost { namespace network { namespace http {
 
         void run() {
             listen();
-            io_service.run();
+            service_.run();
         };
 
         void stop() {
@@ -59,7 +59,6 @@ namespace boost { namespace network { namespace http {
         }
 
         void listen() {
-            if (listening) return;
             boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
             if (!listening) start_listening();
         }
@@ -68,8 +67,6 @@ namespace boost { namespace network { namespace http {
         Handler & handler;
         string_type address_, port_;
         utils::thread_pool & thread_pool;
-        std::auto_ptr<asio::io_service> self_service;
-        asio::io_service io_service;
         asio::ip::tcp::acceptor acceptor;
         bool stopping;
         connection_ptr new_connection;
@@ -83,7 +80,7 @@ namespace boost { namespace network { namespace http {
                 if (!stopping) {
                     new_connection.reset(
                         new connection(
-                            io_service
+                            service_
                             , handler
                             , thread_pool
                             )
@@ -101,20 +98,20 @@ namespace boost { namespace network { namespace http {
 
         void start_listening() {
             using boost::asio::ip::tcp;
-            tcp::resolver resolver(io_service);
+            tcp::resolver resolver(service_);
             tcp::resolver::query query(address_, port_);
             tcp::endpoint endpoint = *resolver.resolve(query);
             acceptor.open(endpoint.protocol());
             acceptor.bind(endpoint);
             socket_options_base::acceptor_options(acceptor);
             acceptor.listen();
-            listening = true;
-            new_connection.reset(new connection(io_service, handler, thread_pool));
+            new_connection.reset(new connection(service_, handler, thread_pool));
             acceptor.async_accept(new_connection->socket(),
                 boost::bind(
                     &async_server_base<Tag,Handler>::handle_accept
                     , this
                     , boost::asio::placeholders::error));
+            listening = true;
         }
     };
 

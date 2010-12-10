@@ -61,10 +61,8 @@ namespace boost { namespace network { namespace http {
         }
 
         void listen() {
-            if (listening_) return;
             boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
             if (!listening_) start_listening();
-            listening_lock.unlock();
         }
 
         private:
@@ -93,14 +91,14 @@ namespace boost { namespace network { namespace http {
             tcp::resolver::query query(address_, port_);
             tcp::endpoint endpoint = *resolver.resolve(query);
             acceptor_.open(endpoint.protocol());
-            acceptor_.bind(endpoint);
             socket_options_base::acceptor_options(acceptor_);
+            acceptor_.bind(endpoint);
             acceptor_.listen();
-            listening_ = true;
             new_connection.reset(new sync_connection<Tag,Handler>(service_, handler_));
             acceptor_.async_accept(new_connection->socket(),
                 boost::bind(&sync_server_base<Tag,Handler>::handle_accept,
                             this, boost::asio::placeholders::error));
+            listening_ = true;
         }
     };
 

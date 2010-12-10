@@ -42,7 +42,7 @@ struct async_hello_world {
 int main(int argc, char * argv[]) {
     utils::thread_pool thread_pool(2); 
     async_hello_world handler;
-    server instance("127.0.0.1", "8000", handler, thread_pool);
+    server instance("127.0.0.1", "8000", handler, thread_pool, http::_reuse_address=true);
     instance.run();
     return 0;
 }
