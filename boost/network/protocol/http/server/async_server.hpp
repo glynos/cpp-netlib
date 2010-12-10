@@ -25,27 +25,22 @@ namespace boost { namespace network { namespace http {
                         , Handler & handler
                         , utils::thread_pool & thread_pool)
         : handler(handler)
+        , address_(address)
+        , port_(port)
         , thread_pool(thread_pool)
+        , self_service(new asio::io_service())
         , io_service()
         , acceptor(io_service)
         , stopping(false)
-        {
-            using boost::asio::ip::tcp;
-            tcp::resolver resolver(io_service);
-            tcp::resolver::query query(address, port);
-            tcp::endpoint endpoint = *resolver.resolve(query);
-            acceptor.open(endpoint.protocol());
-            acceptor.bind(endpoint);
-            acceptor.listen();
-            new_connection.reset(new connection(io_service, handler, thread_pool));
-            acceptor.async_accept(new_connection->socket(),
-                boost::bind(
-                    &async_server_base<Tag,Handler>::handle_accept
-                    , this
-                    , boost::asio::placeholders::error));
-        }
+        , new_connection()
+        , listening_mutex_()
+        , listening(false)
+        {}
 
         void run() {
+            boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
+            if (!listening) start_listening();
+            listening_lock.unlock();
             io_service.run();
         };
 
@@ -58,11 +53,15 @@ namespace boost { namespace network { namespace http {
 
     private:
         Handler & handler;
+        string_type address_, port_;
         utils::thread_pool & thread_pool;
+        std::auto_ptr<asio::io_service> self_service;
         asio::io_service io_service;
         asio::ip::tcp::acceptor acceptor;
         bool stopping;
         connection_ptr new_connection;
+        boost::mutex listening_mutex_;
+        bool listening;
 
         void handle_accept(boost::system::error_code const & ec) {
             if (!ec) {
@@ -84,6 +83,23 @@ namespace boost { namespace network { namespace http {
                         );
                 }
             }
+        }
+
+        void start_listening() {
+            using boost::asio::ip::tcp;
+            tcp::resolver resolver(io_service);
+            tcp::resolver::query query(address_, port_);
+            tcp::endpoint endpoint = *resolver.resolve(query);
+            acceptor.open(endpoint.protocol());
+            acceptor.bind(endpoint);
+            acceptor.listen();
+            listening = true;
+            new_connection.reset(new connection(io_service, handler, thread_pool));
+            acceptor.async_accept(new_connection->socket(),
+                boost::bind(
+                    &async_server_base<Tag,Handler>::handle_accept
+                    , this
+                    , boost::asio::placeholders::error));
         }
     };
 

@@ -15,6 +15,7 @@
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/server/sync_connection.hpp>
 #include <boost/network/traits/string.hpp>
+#include <boost/thread/mutex.hpp>
 
 namespace boost { namespace network { namespace http {
     
@@ -29,23 +30,20 @@ namespace boost { namespace network { namespace http {
                      string_type const & port,
                      Handler & handler)
         : handler_(handler)
-        , service_()
+        , address_(address)
+        , port_(port)
+        , self_service_(new boost::asio::io_service())
+        , service_(*self_service_)
         , acceptor_(service_)
-        , new_connection(new sync_connection<Tag,Handler>(service_, handler))
-        {
-            using boost::asio::ip::tcp;
-            tcp::resolver resolver(service_);
-            tcp::resolver::query query(address, port);
-            tcp::endpoint endpoint = *resolver.resolve(query);
-            acceptor_.open(endpoint.protocol());
-            acceptor_.bind(endpoint);
-            acceptor_.listen();
-            acceptor_.async_accept(new_connection->socket(),
-                boost::bind(&sync_server_base<Tag,Handler>::handle_accept,
-                            this, boost::asio::placeholders::error));
-        }
+        , new_connection()
+        , listening_mutex_()
+        , listening_(false)
+        {}
 
         void run() {
+            boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
+            if (!listening_) start_listening();
+            listening_lock.unlock();
             service_.run();
         }
 
@@ -57,9 +55,13 @@ namespace boost { namespace network { namespace http {
         private:
 
         Handler & handler_;
-        boost::asio::io_service service_;
+        string_type address_, port_;
+        std::auto_ptr<boost::asio::io_service> self_service_;
+        boost::asio::io_service & service_;
         boost::asio::ip::tcp::acceptor acceptor_;
         boost::shared_ptr<sync_connection<Tag,Handler> > new_connection;
+        boost::mutex listening_mutex_;
+        bool listening_;
 
         void handle_accept(boost::system::error_code const & ec) {
             if (!ec) {
@@ -69,6 +71,21 @@ namespace boost { namespace network { namespace http {
                     boost::bind(&sync_server_base<Tag,Handler>::handle_accept,
                                 this, boost::asio::placeholders::error));
             }
+        }
+
+        void start_listening() {
+            using boost::asio::ip::tcp;
+            tcp::resolver resolver(service_);
+            tcp::resolver::query query(address_, port_);
+            tcp::endpoint endpoint = *resolver.resolve(query);
+            acceptor_.open(endpoint.protocol());
+            acceptor_.bind(endpoint);
+            acceptor_.listen();
+            listening_ = true;
+            new_connection.reset(new sync_connection<Tag,Handler>(service_, handler_));
+            acceptor_.async_accept(new_connection->socket(),
+                boost::bind(&sync_server_base<Tag,Handler>::handle_accept,
+                            this, boost::asio::placeholders::error));
         }
     };
 
