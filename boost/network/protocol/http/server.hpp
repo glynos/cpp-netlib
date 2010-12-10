@@ -47,7 +47,15 @@ namespace boost { namespace network { namespace http {
                 (in_out(handler), (Handler &)))
             (optional
                 (in_out(io_service), (boost::asio::io_service &))
-                (socket_options, *))
+                (reuse_address, (bool))
+                (report_aborted, (bool))
+                (receive_buffer_size, (int))
+                (send_buffer_size, (int))
+                (receive_low_watermark, (int))
+                (send_low_watermark, (int))
+                (non_blocking_io, (int))
+                (linger, (bool))
+                (linger_timeout, (int)))
             )
     };
 
@@ -66,7 +74,15 @@ namespace boost { namespace network { namespace http {
                 (in_out(thread_pool), (utils::thread_pool&)))
             (optional
                 (in_out(io_service), (boost::asio::io_service&))
-                (socket_options, *))
+                (reuse_address, (bool))
+                (report_aborted, (bool))
+                (receive_buffer_size, (int))
+                (send_buffer_size, (int))
+                (receive_low_watermark, (int))
+                (send_low_watermark, (int))
+                (non_blocking_io, (int))
+                (linger, (bool))
+                (linger_timeout, (int)))
             )
     };
 

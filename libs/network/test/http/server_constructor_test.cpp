@@ -54,4 +54,31 @@ BOOST_AUTO_TEST_CASE(with_io_service_parameter) {
 }
 
 BOOST_AUTO_TEST_CASE(with_socket_options_parameter) {
+    dummy_sync_handler sync_handler;
+    dummy_async_handler async_handler;
+    util::thread_pool pool;
+
+    BOOST_CHECK_NO_THROW(sync_server sync_instance("127.0.0.1", "80", sync_handler,
+        http::_reuse_address=true,
+        http::_report_aborted=true,
+        http::_receive_buffer_size=4096,
+        http::_send_buffer_size=4096,
+        http::_receive_low_watermark=1024,
+        http::_send_low_watermark=1024,
+        http::_non_blocking_io=true,
+        http::_linger=true,
+        http::_linger_timeout=0
+        ));
+    BOOST_CHECK_NO_THROW(async_server async_instance("127.0.0.1", "80", async_handler, pool,
+        http::_reuse_address=true,
+        http::_report_aborted=true,
+        http::_receive_buffer_size=4096,
+        http::_send_buffer_size=4096,
+        http::_receive_low_watermark=1024,
+        http::_send_low_watermark=1024,
+        http::_non_blocking_io=true,
+        http::_linger=true,
+        http::_linger_timeout=0
+        ));
+
 }

@@ -14,7 +14,16 @@ namespace boost { namespace network { namespace http {
     BOOST_PARAMETER_NAME(port)
     BOOST_PARAMETER_NAME(handler)
     BOOST_PARAMETER_NAME(thread_pool)
-    BOOST_PARAMETER_NAME(socket_options)
+
+    BOOST_PARAMETER_NAME(reuse_address)
+    BOOST_PARAMETER_NAME(report_aborted)
+    BOOST_PARAMETER_NAME(receive_buffer_size)
+    BOOST_PARAMETER_NAME(send_buffer_size)
+    BOOST_PARAMETER_NAME(receive_low_watermark)
+    BOOST_PARAMETER_NAME(send_low_watermark)
+    BOOST_PARAMETER_NAME(non_blocking_io)
+    BOOST_PARAMETER_NAME(linger)
+    BOOST_PARAMETER_NAME(linger_timeout)
     
 } /* http */
     

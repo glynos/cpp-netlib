@@ -7,7 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #if !defined(BOOST_PARAMETER_MAX_ARITY)
-    #define BOOST_PARAMETER_MAX_ARITY 6
+    #define BOOST_PARAMETER_MAX_ARITY 16
 #endif
 #include <boost/parameter.hpp>
 
