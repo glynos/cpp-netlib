@@ -44,6 +44,13 @@ BOOST_AUTO_TEST_CASE(minimal_constructor) {
 }
 
 BOOST_AUTO_TEST_CASE(with_io_service_parameter) {
+    dummy_sync_handler sync_handler;
+    dummy_async_handler async_handler;
+    util::thread_pool pool;
+    boost::asio::io_service io_service;
+
+    BOOST_CHECK_NO_THROW(sync_server sync_instance("127.0.0.1", "80", sync_handler, io_service));
+    BOOST_CHECK_NO_THROW(async_server async_instance("127.0.0.1", "80", async_handler, pool, io_service));
 }
 
 BOOST_AUTO_TEST_CASE(with_socket_options_parameter) {

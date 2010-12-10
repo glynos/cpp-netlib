@@ -6,12 +6,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/parameter.hpp>
+#include <boost/network/protocol/http/parameters.hpp>
 
 namespace boost { namespace network { namespace http {
 
     BOOST_PARAMETER_NAME(follow_redirects)
-    BOOST_PARAMETER_NAME(io_service)
     BOOST_PARAMETER_NAME(cache_resolved)
     
 } /* http */

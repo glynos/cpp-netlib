@@ -7,12 +7,14 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/server/async_connection.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/network/protocol/http/server/storage_base.hpp>
 #include <boost/network/utils/thread_pool.hpp>
 
 namespace boost { namespace network { namespace http {
     
     template <class Tag, class Handler>
-    struct async_server_base {
+    struct async_server_base : server_storage_base {
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
         typedef typename string<Tag>::type string_type;
@@ -20,17 +22,22 @@ namespace boost { namespace network { namespace http {
         typedef async_connection<Tag,Handler> connection;
         typedef shared_ptr<connection> connection_ptr;
 
-        async_server_base(string_type const & address
-                        , string_type const & port
-                        , Handler & handler
-                        , utils::thread_pool & thread_pool)
-        : handler(handler)
-        , address_(address)
-        , port_(port)
-        , thread_pool(thread_pool)
-        , self_service(new asio::io_service())
-        , io_service()
-        , acceptor(io_service)
+        template <class ArgPack>
+        async_server_base(ArgPack const & args)
+        : server_storage_base(args,
+            typename mpl::if_<
+                is_same<
+                    typename parameter::value_type<ArgPack, tag::io_service, void>::type,
+                    void
+                    >,
+                server_storage_base::no_io_service,
+                server_storage_base::has_io_service
+                >::type())
+        , handler(args[_handler])
+        , address_(args[_address])
+        , port_(args[_port])
+        , thread_pool(args[_thread_pool])
+        , acceptor(server_storage_base::service_)
         , stopping(false)
         , new_connection()
         , listening_mutex_()
@@ -38,9 +45,7 @@ namespace boost { namespace network { namespace http {
         {}
 
         void run() {
-            boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
-            if (!listening) start_listening();
-            listening_lock.unlock();
+            listen();
             io_service.run();
         };
 
@@ -49,6 +54,12 @@ namespace boost { namespace network { namespace http {
             // handlers finish.
             stopping = true;
             acceptor.cancel();
+        }
+
+        void listen() {
+            boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
+            if (!listening) start_listening();
+            listening_lock.unlock();
         }
 
     private:

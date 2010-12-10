@@ -13,6 +13,7 @@
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/server/sync_server.hpp>
 #include <boost/network/protocol/http/server/async_server.hpp>
+#include <boost/network/protocol/http/server/parameters.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -38,11 +39,16 @@ namespace boost { namespace network { namespace http {
         typedef typename server_base<tags::http_server, Handler>::type
             server_base;
 
-        server(typename server_base::string_type const & address,
-               typename server_base::string_type const & port,
-               Handler & handler)
-            : server_base(address, port, handler) {}
-        
+        BOOST_PARAMETER_CONSTRUCTOR(
+            server, (server_base), tag,
+            (required
+                (address, (typename server_base::string_type const &))
+                (port, (typename server_base::string_type const &))
+                (in_out(handler), (Handler &)))
+            (optional
+                (in_out(io_service), (boost::asio::io_service &))
+                (socket_options, *))
+            )
     };
 
     template <class Handler>
@@ -51,11 +57,17 @@ namespace boost { namespace network { namespace http {
         typedef typename server_base<tags::http_async_server, Handler>::type
             server_base;
 
-        async_server(typename server_base::string_type const & address,
-                     typename server_base::string_type const & port,
-                     Handler & handler,
-                     utils::thread_pool & thread_pool)
-            : server_base(address, port, handler, thread_pool) {}
+        BOOST_PARAMETER_CONSTRUCTOR(
+            async_server, (server_base), tag,
+            (required
+                (address, (typename server_base::string_type const &))
+                (port, (typename server_base::string_type const &))
+                (in_out(handler), (Handler&))
+                (in_out(thread_pool), (utils::thread_pool&)))
+            (optional
+                (in_out(io_service), (boost::asio::io_service&))
+                (socket_options, *))
+            )
     };
 
 } // namespace http
