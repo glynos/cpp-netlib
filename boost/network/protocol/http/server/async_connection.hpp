@@ -225,6 +225,23 @@ namespace boost { namespace network { namespace http {
 
         void read(read_callback_function callback) {
             if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
+            if (new_start != read_buffer_.begin())
+            {
+                input_range input = boost::make_iterator_range(new_start, read_buffer_.end());
+                thread_pool().post(
+                    strand.wrap(
+                        boost::bind(
+                            callback
+                            , input
+                            , boost::system::error_code()
+                            , data_end - new_start
+                            , async_connection<Tag,Handler>::shared_from_this())
+                    )
+                );
+                new_start = read_buffer_.begin();
+                return;
+            }
+
             socket().async_read_some(
                 asio::buffer(read_buffer_)
                 , strand.wrap(
@@ -248,6 +265,8 @@ namespace boost { namespace network { namespace http {
             thread_pool().post(
                 boost::bind(
                     callback
+                    , boost::make_iterator_range(read_buffer_.begin()
+                                                ,read_buffer_.begin() + bytes_transferred)
                     , ec
                     , bytes_transferred
                     , async_connection<Tag,Handler>::shared_from_this()));
@@ -277,7 +296,7 @@ namespace boost { namespace network { namespace http {
         status_t status;
         request_parser_type parser;
         request request_;
-        buffer_type::iterator new_start;
+        buffer_type::iterator new_start, data_end;
         string_type partial_parsed;
         optional<boost::system::system_error> error_encountered;
         pending_actions_list pending_actions;
@@ -315,10 +334,11 @@ namespace boost { namespace network { namespace http {
             if (!ec) {
                 logic::tribool parsed_ok;
                 iterator_range<buffer_type::iterator> result_range, input_range;
+                data_end = new_start + bytes_transferred;
                 switch (state) {
                     case method:
                         input_range = boost::make_iterator_range(
-                            new_start, read_buffer_.end());
+                            new_start, data_end);
                         fusion::tie(parsed_ok, result_range) = parser.parse_until(
                             request_parser_type::method_done, input_range);
                         if (!parsed_ok) { 
@@ -341,7 +361,7 @@ namespace boost { namespace network { namespace http {
                         }
                     case uri:
                         input_range = boost::make_iterator_range(
-                            new_start, read_buffer_.end());
+                            new_start, data_end);
                         fusion::tie(parsed_ok, result_range) = parser.parse_until(
                             request_parser_type::uri_done,
                             input_range);
@@ -365,7 +385,7 @@ namespace boost { namespace network { namespace http {
                         }
                     case version:
                         input_range = boost::make_iterator_range(
-                            new_start, read_buffer_.end());
+                            new_start, data_end);
                         fusion::tie(parsed_ok, result_range) = parser.parse_until(
                             request_parser_type::version_done,
                             input_range);
@@ -399,7 +419,7 @@ namespace boost { namespace network { namespace http {
                         }
                     case headers:
                         input_range = boost::make_iterator_range(
-                            new_start, read_buffer_.end());
+                            new_start, data_end);
                         fusion::tie(parsed_ok, result_range) = parser.parse_until(
                             request_parser_type::headers_done,
                             input_range);
