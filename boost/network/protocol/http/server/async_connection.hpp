@@ -388,6 +388,7 @@ namespace boost { namespace network { namespace http {
                             request_.http_version_major = fusion::get<0>(version_pair);
                             request_.http_version_minor = fusion::get<1>(version_pair);
                             new_start = boost::end(result_range);
+                            partial_parsed.clear();
                         } else {
                             partial_parsed.append(
                                 boost::begin(result_range),
@@ -409,7 +410,6 @@ namespace boost { namespace network { namespace http {
                             partial_parsed.append(
                                 boost::begin(result_range),
                                 boost::end(result_range));
-                            trim(partial_parsed);
                             parse_headers(partial_parsed, request_.headers);
                             new_start = boost::end(result_range);
                             thread_pool().post(
@@ -479,9 +479,10 @@ namespace boost { namespace network { namespace http {
                 *(
                     +(alnum|(punct-':'))
                     >> lit(": ")
-                    >> +(alnum|space|punct)
+                    >> +((alnum|space|punct) - '\r' - '\n')
                     >> lit("\r\n")
                 )
+                >> lit("\r\n")
                 , container
                 );
         }
