@@ -41,6 +41,23 @@ if (Boost_FOUND)
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
     endforeach (test)
 
+    set ( SERVER_API_TESTS
+        server_constructor_test
+        )
+    foreach ( test ${SERVER_API_TESTS} )
+        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+            set_source_files_properties(${test}.cpp
+                PROPERTIES COMPILE_FLAGS "-Wall")
+        endif()
+        add_executable(cpp-netlib-http-${test} ${test}.cpp)
+        add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
+        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
+        set_target_properties(cpp-netlib-http-${test}
+            PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
+        add_test(cpp-netlib-http-${test}
+            ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
+    endforeach (test)
+
     set ( SERVER_TESTS
         server_hello_world
         server_async
@@ -58,7 +75,7 @@ if (Boost_FOUND)
             ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-${test} 
             python 
-            ${CPP-NETLIB_SOURCE_DIR}/libs/network/httplib_acceptance.py 
+            ${CPP-NETLIB_SOURCE_DIR}/libs/network/test/httplib_acceptance.py 
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}.passed)
     endforeach (test)
