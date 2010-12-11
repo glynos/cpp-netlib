@@ -231,14 +231,12 @@ namespace boost { namespace network { namespace http {
             {
                 input_range input = boost::make_iterator_range(new_start, read_buffer_.end());
                 thread_pool().post(
-                    strand.wrap(
-                        boost::bind(
-                            callback
-                            , input
-                            , boost::system::error_code()
-                            , data_end - new_start
-                            , async_connection<Tag,Handler>::shared_from_this())
-                    )
+                    boost::bind(
+                        callback
+                        , input
+                        , boost::system::error_code()
+                        , std::distance(new_start, data_end)
+                        , async_connection<Tag,Handler>::shared_from_this())
                 );
                 new_start = read_buffer_.begin();
                 return;
@@ -264,11 +262,13 @@ namespace boost { namespace network { namespace http {
 
         void wrap_read_handler(read_callback_function callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
             if (ec) error_encountered = in_place<boost::system::system_error>(ec);
+            buffer_type::const_iterator data_start = read_buffer_.begin()
+                                       ,data_end   = read_buffer_.begin();
+            std::advance(data_end, bytes_transferred);
             thread_pool().post(
                 boost::bind(
                     callback
-                    , boost::make_iterator_range(read_buffer_.begin()
-                                                ,read_buffer_.begin() + bytes_transferred)
+                    , boost::make_iterator_range(data_start, data_end)
                     , ec
                     , bytes_transferred
                     , async_connection<Tag,Handler>::shared_from_this()));
@@ -336,7 +336,8 @@ namespace boost { namespace network { namespace http {
             if (!ec) {
                 logic::tribool parsed_ok;
                 iterator_range<buffer_type::iterator> result_range, input_range;
-                data_end = new_start + bytes_transferred;
+                data_end = read_buffer_.begin();
+                std::advance(data_end, bytes_transferred);
                 switch (state) {
                     case method:
                         input_range = boost::make_iterator_range(
