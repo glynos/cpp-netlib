@@ -291,7 +291,7 @@ namespace boost { namespace network { namespace http {
         Handler & handler;
         utils::thread_pool & thread_pool_;
         volatile bool headers_already_sent, first_line_already_sent, headers_in_progress, first_line_in_progress;
-        asio::streambuf headers_buffer;
+        asio::streambuf headers_buffer, first_line_buffer;
 
         boost::recursive_mutex headers_mutex;
         buffer_type read_buffer_;
@@ -402,6 +402,7 @@ namespace boost { namespace network { namespace http {
                             request_.http_version_major = fusion::get<0>(version_pair);
                             request_.http_version_minor = fusion::get<1>(version_pair);
                             new_start = boost::end(result_range);
+                            partial_parsed.clear();
                         } else {
                             partial_parsed.append(
                                 boost::begin(result_range),
@@ -423,7 +424,6 @@ namespace boost { namespace network { namespace http {
                             partial_parsed.append(
                                 boost::begin(result_range),
                                 boost::end(result_range));
-                            trim(partial_parsed);
                             parse_headers(partial_parsed, request_.headers);
                             new_start = boost::end(result_range);
                             thread_pool().post(
@@ -503,19 +503,18 @@ namespace boost { namespace network { namespace http {
             if (first_line_in_progress) return;
             first_line_in_progress = true;
 
-            std::vector<asio::const_buffer> buffers;
             typedef constants<Tag> consts;
-            typename ostringstream<Tag>::type first_line_stream;
-            first_line_stream 
+            first_line_buffer.consume(first_line_buffer.size());
+            std::ostream first_line_stream(&first_line_buffer);
+            first_line_stream
                 << consts::http_slash() << 1<< consts::dot() << 1 << consts::space()
                 << status << consts::space() << status_message(status)
                 << consts::crlf()
+                << std::flush
                 ;
-            std::string first_line = first_line_stream.str();
-            buffers.push_back(asio::buffer(first_line));
             asio::async_write(
                 socket()
-                , buffers
+                , first_line_buffer
                 , callback);
         }
 

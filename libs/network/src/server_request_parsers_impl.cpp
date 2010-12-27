@@ -31,9 +31,10 @@ namespace boost { namespace network { namespace http {
             *(
                 +(alnum|(punct-':'))
                 >> lit(": ")
-                >> +(alnum|space|punct)
+                >> +((alnum|space|punct) - '\r' - '\n')
                 >> lit("\r\n")
             )
+            >> lit("\r\n")
             , container
             );
     }
