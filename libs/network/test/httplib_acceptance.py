@@ -28,22 +28,32 @@ client = httplib.Http(timeout=5)
 expected = b'Hello, World!'
 
 def test(url, method, expected, headers={}, body=''):
-    resp, content = client.request(url, method, headers=headers, body=body)
-    print('Request: {method} {url} body=\'{body}\''.format(method=method, url=url, body=body)),
-    if content != expected:
-        print('ERROR: \'{0}\' != \'{1}\''.format(content, expected))
+    global status 
+    try:
+        print('Request: {method} {url} body=\'{body}\''.format(method=method, url=url, body=body)),
+        resp, content = client.request(url, method, headers=headers, body=body)
+        if content != expected:
+            print('ERROR: \'{0}\' != \'{1}\''.format(content, expected))
+            status = 1
+        else:
+            print('... passed.')
+    except Exception as e:
+        print('Caught Exception: {0}'.format(e))
         status = 1
-    else:
-        print('... passed.')
 
 def test_status(url, method, expected, headers={}, body=''):
-    resp, content = client.request('http://localhost:8000/', 'PUT', body='')
-    print('Request: {method} {url} body=\'{body}\''.format(method=method, url=url, body=body)),
-    if resp['status'] != expected:
-        print('ERROR: response status ({0}) != 400'.format(resp['status']))
+    global status
+    try:
+        print('Request: {method} {url} body=\'{body}\''.format(method=method, url=url, body=body)),
+        resp, content = client.request('http://localhost:8000/', 'PUT', body='')
+        if resp['status'] != expected:
+            print('ERROR: response status ({0}) != 400'.format(resp['status']))
+            status = 1
+        else:
+            print('... passed.')
+    except Exception as e:
+        print('Caught Exception: {0}'.format(e))
         status = 1
-    else:
-        print('... passed.')
 
 url = 'http://localhost:8000/'
 test(url, 'GET', expected)
