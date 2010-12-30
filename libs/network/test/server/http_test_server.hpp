@@ -5,9 +5,11 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 // Changes by Allister Levi Sanchez 2008
+// Changes by Dean Michael Berris 2010
 #ifndef __NETWORK_TEST_HTTP_TEST_SERVER_HPP__
 #define __NETWORK_TEST_HTTP_TEST_SERVER_HPP__
 
+#define BOOST_FILESYSTEM_VERSION 3
 #include <boost/filesystem.hpp>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(MIN)
