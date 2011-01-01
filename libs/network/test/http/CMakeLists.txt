@@ -23,6 +23,14 @@ if (Boost_FOUND)
         client_get_test
         client_get_different_port_test
         client_get_timeout_test
+        client_localhost_ssl_test
+        client_localhost_normal_test
+        message_async_ready_test
+        message_test
+        request_linearize_test
+        request_incremental_parser_test
+        response_incremental_parser_test
+        url_test
         )
     foreach ( test ${TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)

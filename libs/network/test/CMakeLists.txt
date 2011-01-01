@@ -6,10 +6,6 @@
 include_directories(${CPP-NETLIB_SOURCE_DIR})
 find_package( Boost 1.41.0 COMPONENTS unit_test_framework system regex date_time thread filesystem )
 find_package( OpenSSL )
-if (OPENSSL_FOUND)
-    include_directories(${OPENSSL_INCLUDE_DIR}})
-    add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
-endif()
 find_package( Threads )
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
@@ -19,18 +15,10 @@ add_subdirectory(http)
 if (Boost_FOUND)
     set(
         TESTS
-        http_incremental_parser
-        http_incremental_request_parser
-        http_localhost_tests
-        https_localhost_tests
         message_test
-        http_message_test
         message_transform_test
         url_test
-        http_url_test
         utils_thread_pool
-        http_async_message_ready
-        http_request_linearize
         )
     foreach (test ${TESTS})
         set_source_files_properties(${test}.cpp

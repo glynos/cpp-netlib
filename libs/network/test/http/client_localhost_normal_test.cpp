@@ -5,7 +5,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 // Changes by Kim Grasman 2008
-// Changes by Dean Michael Berris 2008
+// Changes by Dean Michael Berris 2008, 2010
 
 #define BOOST_TEST_MODULE http 1.0 localhost tests
 
@@ -19,7 +19,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "server/http_test_server.hpp"
+#include "http_test_server.hpp"
 
 using std::cout;
 using std::endl;

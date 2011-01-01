@@ -19,7 +19,7 @@
 #include <iostream>
 
 #define HTTPS_SERVER_TEST
-#include "server/http_test_server.hpp"
+#include "http_test_server.hpp"
 
 using std::cout;
 using std::endl;
