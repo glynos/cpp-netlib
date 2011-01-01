@@ -6,6 +6,7 @@
 #!/bin/env python
 
 from sys import argv
+from time import sleep
 import httplib2 as httplib
 from subprocess import Popen,PIPE
 
@@ -19,6 +20,8 @@ pipe = None
 try:
     pipe = Popen(argv[1], executable=argv[1], stdin=PIPE, stdout=PIPE, close_fds=True)
     print('Done with spawning {0}.'.format(argv[1]))
+    print('Sleeping to give the server a chance to run...')
+    sleep(1)
 except:
     print('I cannot spawn \'{0}\' properly.'.format(argv[1]))
     exit(1)
@@ -33,7 +36,7 @@ def test(url, method, expected, headers={}, body=''):
         print('Request: {method} {url} body=\'{body}\''.format(method=method, url=url, body=body)),
         resp, content = client.request(url, method, headers=headers, body=body)
         if content != expected:
-            print('ERROR: \'{0}\' != \'{1}\''.format(content, expected))
+            print('ERROR: \'{0}\' != \'{1}\'; sizes: {2} != {3}'.format(content, expected, len(content), len(expected)))
             status = 1
         else:
             print('... passed.')
@@ -47,7 +50,7 @@ def test_status(url, method, expected, headers={}, body=''):
         print('Request: {method} {url} body=\'{body}\''.format(method=method, url=url, body=body)),
         resp, content = client.request('http://localhost:8000/', 'PUT', body='')
         if resp['status'] != expected:
-            print('ERROR: response status ({0}) != 400'.format(resp['status']))
+            print('ERROR: response status (got {0}) != expecting {1}'.format(resp['status'], expected))
             status = 1
         else:
             print('... passed.')
