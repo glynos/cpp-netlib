@@ -49,7 +49,7 @@ namespace boost { namespace network { namespace http {
 
             async_client(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service)
                 : connection_base(cache_resolved, follow_redirect),
-                service_ptr(),
+                service_ptr(0),
                 service_(service),
                 resolver_(service_),
                 sentinel_(new boost::asio::io_service::work(service_))
@@ -63,6 +63,7 @@ namespace boost { namespace network { namespace http {
                     lifetime_thread_->join();
                     lifetime_thread_.reset();
                 }
+                delete service_ptr;
             }
 
             basic_response<Tag> const request_skeleton(
@@ -76,7 +77,7 @@ namespace boost { namespace network { namespace http {
                 return connection_->send_request(method, request_, get_body);
             }
 
-            std::auto_ptr<boost::asio::io_service> service_ptr;
+            boost::asio::io_service * service_ptr;
             boost::asio::io_service & service_;
             resolver_type resolver_;
             boost::shared_ptr<boost::asio::io_service::work> sentinel_;

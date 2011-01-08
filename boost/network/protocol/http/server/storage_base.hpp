@@ -22,11 +22,16 @@ namespace boost { namespace network { namespace http {
 
         template <class ArgPack>
         server_storage_base(ArgPack const & args, has_io_service)
-        : self_service_()
+        : self_service_(0)
         , service_(args[_io_service])
         {}
 
-        std::auto_ptr<asio::io_service> self_service_;
+        ~server_storage_base() {
+            delete self_service_;
+            self_service_ = 0;
+        }
+
+        asio::io_service * self_service_;
         asio::io_service & service_;
     };
     

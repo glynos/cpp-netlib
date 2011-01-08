@@ -35,7 +35,7 @@ namespace boost { namespace network { namespace http {
             typedef typename resolver<Tag>::type resolver_type;
             friend struct basic_client_impl<Tag,version_major,version_minor>;
 
-            std::auto_ptr<boost::asio::io_service> service_ptr;
+            boost::asio::io_service * service_ptr;
             boost::asio::io_service & service_;
             resolver_type resolver_;
 
@@ -48,12 +48,14 @@ namespace boost { namespace network { namespace http {
 
             sync_client(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service)
                 : connection_base(cache_resolved, follow_redirect),
-                service_ptr(),
+                service_ptr(0),
                 service_(service),
                 resolver_(service_)
             {}
 
-            ~sync_client() {}
+            ~sync_client() {
+                delete service_ptr;
+            }
 
             basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
                 typename connection_base::connection_ptr connection_;
