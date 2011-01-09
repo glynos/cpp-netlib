@@ -121,10 +121,21 @@ namespace boost { namespace network {
                 return close_;
             }
 
+            static char const * https() {
+                static char https_[] = "https";
+                return https_;
+            }
+
         };
 
         template <class Tag>
         struct constants_wide {
+
+            static wchar_t const * https() {
+                static wchar_t https_[] = L"https";
+                return https_;
+            }
+
         };
     }
 

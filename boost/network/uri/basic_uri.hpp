@@ -10,7 +10,8 @@
 
 #include <boost/network/uri/basic_uri_fwd.hpp>
 #include <boost/network/uri/detail/parse_uri.hpp>
-
+#include <boost/network/constants.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace boost { namespace network { namespace uri {
 
@@ -158,10 +159,30 @@ host(basic_uri<Tag> const & uri) {
 }
 
 template <class Tag>
+struct port_wrapper {
+    basic_uri<Tag> const & uri;
+    explicit port_wrapper(basic_uri<Tag> const & uri)
+            : uri(uri)
+    {}
+
+    operator boost::optional<boost::uint16_t>() const {
+        return uri.port();
+    }
+
+    operator boost::uint16_t() const {
+        boost::optional<boost::uint16_t> const & port_ = uri.port();
+        typedef typename string<Tag>::type string_type;
+        typedef constants<Tag> consts;
+        if (port_) return *port_;
+        return boost::iequals(uri.scheme(), string_type(consts::https())) ? 443 : 80;
+    }
+};
+
+template <class Tag>
 inline
-uint16_t
+port_wrapper<Tag> const
 port(basic_uri<Tag> const & uri) {
-    return uri.port();
+    return port_wrapper<Tag>(uri);
 }
 
 template <class Tag>

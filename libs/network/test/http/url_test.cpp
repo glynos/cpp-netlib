@@ -20,14 +20,14 @@ BOOST_AUTO_TEST_CASE(http_url_test) {
     const std::string url("http://www.boost.org/");
     const std::string scheme("http");
     const std::string host("www.boost.org");
-    const boost::uint16_t port = 80;
     const std::string path("/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
-    BOOST_REQUIRE(uri::is_valid(instance));
-    BOOST_CHECK_EQUAL(instance.raw(), url);
     boost::optional<string_type> host_ = uri::host(instance);
     boost::optional<boost::uint16_t> port_ = uri::port(instance);
+
+    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK_EQUAL(instance.raw(), url);
     BOOST_CHECK( !port_ );
     string_type scheme_ = uri::scheme(instance);
     BOOST_CHECK_EQUAL(scheme_, scheme);
@@ -78,12 +78,12 @@ BOOST_AUTO_TEST_CASE(https_url_test) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE(invalid_http_url_test) {
-    typedef uri::basic_uri<http::tags::http_default_8bit_tcp_resolve> uri_type;
-    typedef uri_type::string_type string_type;
+//BOOST_AUTO_TEST_CASE(invalid_http_url_test) {
+//    typedef uri::basic_uri<http::tags::http_default_8bit_tcp_resolve> uri_type;
+//    typedef uri_type::string_type string_type;
 
-    const std::string url("ftp://www.boost.org/");
+//    const std::string url("ftp://www.boost.org/");
 
-    uri_type instance(string_type(boost::begin(url), boost::end(url)));
-    BOOST_CHECK(!uri::is_valid(instance));
-}
+//    uri_type instance(string_type(boost::begin(url), boost::end(url)));
+//    BOOST_CHECK(!uri::is_valid(instance));
+//}

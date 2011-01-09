@@ -92,8 +92,7 @@ namespace http {
         }
 
         port_type port() const {
-            // string_type port() const {
-            return uri_.port();
+            return uri::port(uri_);
         }
 
         string_type const path() const {
