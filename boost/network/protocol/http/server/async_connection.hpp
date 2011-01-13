@@ -212,8 +212,13 @@ namespace boost { namespace network { namespace http {
         void write(Range const & range, Callback const & callback) {
             lock_guard lock(headers_mutex);
             if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
-            boost::function<void(boost::system::error_code)> f = callback;
             write_impl(boost::make_iterator_range(range), callback);
+        }
+
+        template <class ConstBufferSeq, class Callback>
+        void write_vec(ConstBufferSeq const & seq, Callback const & callback)
+        {
+            write_vec_impl(seq, callback, shared_array_list(), shared_buffers());
         }
 
     private:
@@ -510,15 +515,6 @@ namespace boost { namespace network { namespace http {
 
         void do_nothing() {}
 
-        template <class Range>
-        void continue_write(Range range, boost::function<void(boost::system::error_code)> callback) {
-            thread_pool().post(
-                boost::bind(
-                    &async_connection<Tag,Handler>::write_impl<Range> 
-                    , async_connection<Tag,Handler>::shared_from_this()
-                    , range, callback));
-        }
-
         template <class Callback>
         void write_first_line(Callback callback) {
             lock_guard lock(headers_mutex);
@@ -603,27 +599,6 @@ namespace boost { namespace network { namespace http {
 
         template <class Range>
         void write_impl(Range range, boost::function<void(boost::system::error_code)> callback) {
-            lock_guard lock(headers_mutex);
-            boost::function<void(boost::system::error_code)> callback_function =
-                callback;
-
-            if (!headers_already_sent && !headers_in_progress) {
-                write_headers_only(
-                    boost::bind(
-                        &async_connection<Tag,Handler>::continue_write<Range>
-                        , async_connection<Tag,Handler>::shared_from_this()
-                        , range, callback_function
-                    ));
-                return;
-            } else if (headers_in_progress && !headers_already_sent) {
-                pending_actions.push_back(
-                    boost::bind(
-                        &async_connection<Tag,Handler>::continue_write<Range>
-                        , async_connection<Tag,Handler>::shared_from_this()
-                        , range, callback_function));
-                return;
-            }
-
             // linearize the whole range into a vector
             // of fixed-sized buffers, then schedule an asynchronous
             // write of these buffers -- make sure they are live
@@ -670,25 +645,47 @@ namespace boost { namespace network { namespace http {
             }
 
             if (!buffers->empty()) {
-                boost::function<void(boost::system::error_code const &)> f = callback;
-                asio::async_write(
-                    socket_
-                    , *buffers
-                    , strand.wrap(
-                        boost::bind(
-                            &async_connection<Tag,Handler>::handle_write
-                            , async_connection<Tag,Handler>::shared_from_this()
-                            , f
-                            , temporaries
-                            , buffers // keep these alive until the handler is called!
-                            , boost::asio::placeholders::error
-                            , boost::asio::placeholders::bytes_transferred
-                            )
-                        )
-                    );
+                write_vec_impl(*buffers, callback, temporaries, buffers);
             }
         }
 
+        template <class ConstBufferSeq, class Callback>
+        void write_vec_impl(ConstBufferSeq const & seq
+                           ,Callback const & callback
+                           ,shared_array_list temporaries
+                           ,shared_buffers buffers)
+        {
+            lock_guard lock(headers_mutex);
+            if (error_encountered)
+                boost::throw_exception(boost::system::system_error(*error_encountered));
+
+            boost::function<void()> continuation = boost::bind(
+                &async_connection<Tag,Handler>::write_vec_impl<ConstBufferSeq, Callback>
+                ,async_connection<Tag,Handler>::shared_from_this()
+                ,seq, callback, temporaries, buffers
+            );
+
+            if (!headers_already_sent && !headers_in_progress) {
+                write_headers_only(continuation);
+                return;
+            } else if (headers_in_progress && !headers_already_sent) {
+                pending_actions.push_back(continuation);
+                return;
+            }
+
+            asio::async_write(
+                 socket_
+                ,seq
+                ,boost::bind(
+                    &async_connection<Tag,Handler>::handle_write
+                    ,async_connection<Tag,Handler>::shared_from_this()
+                    ,callback
+                    ,temporaries
+                    ,buffers
+                    ,asio::placeholders::error
+                    ,asio::placeholders::bytes_transferred)
+            );
+        }
     };
     
 } /* http */
