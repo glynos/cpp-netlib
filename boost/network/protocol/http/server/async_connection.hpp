@@ -666,10 +666,13 @@ namespace boost { namespace network { namespace http {
             if (error_encountered)
                 boost::throw_exception(boost::system::system_error(*error_encountered));
 
+            boost::function<void(boost::system::error_code)> callback_function =
+                    callback;
+
             boost::function<void()> continuation = boost::bind(
-                &async_connection<Tag,Handler>::write_vec_impl<ConstBufferSeq, Callback>
+                &async_connection<Tag,Handler>::write_vec_impl<ConstBufferSeq, boost::function<void(boost::system::error_code)> >
                 ,async_connection<Tag,Handler>::shared_from_this()
-                ,seq, callback, temporaries, buffers
+                ,seq, callback_function, temporaries, buffers
             );
 
             if (!headers_already_sent && !headers_in_progress) {
@@ -686,7 +689,7 @@ namespace boost { namespace network { namespace http {
                 ,boost::bind(
                     &async_connection<Tag,Handler>::handle_write
                     ,async_connection<Tag,Handler>::shared_from_this()
-                    ,callback
+                    ,callback_function
                     ,temporaries
                     ,buffers
                     ,asio::placeholders::error
