@@ -69,6 +69,7 @@ if (Boost_FOUND)
     set ( SERVER_TESTS
         server_hello_world
         server_async
+        server_async_less_copy
         )
     foreach ( test ${SERVER_TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
