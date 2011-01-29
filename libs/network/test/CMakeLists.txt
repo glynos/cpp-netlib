@@ -47,6 +47,7 @@ if (Boost_FOUND)
     set(SERVER_TESTS
         hello_world
         http_async_server
+        http_server_async_less_copy
         )
     foreach (test ${SERVER_TESTS})
         set_source_files_properties(${test}.cpp
