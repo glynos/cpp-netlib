@@ -25,6 +25,7 @@
 #include <boost/utility/typed_in_place_factory.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/thread/recursive_mutex.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <list>
 #include <vector>
 #include <iterator>
@@ -36,6 +37,10 @@
  *  This is the maximum size though and Boost.Asio's internal representation
  *  of a streambuf would make appropriate decisions on how big a buffer
  *  is to begin with.
+ *
+ *  This kinda assumes that a page is by default 4096. Since we're using
+ *  the default allocator with the static buffers, it's not guaranteed that
+ *  the static buffers will be page-aligned when they are allocated.
  */
 #define BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE 4096
 #endif /* BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE */
@@ -209,14 +214,16 @@ namespace boost { namespace network { namespace http {
         }
 
         template <class Range, class Callback>
-        void write(Range const & range, Callback const & callback) {
+        typename disable_if<is_base_of<asio::const_buffer, Range>, void>::type
+        write(Range const & range, Callback const & callback) {
             lock_guard lock(headers_mutex);
             if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
             write_impl(boost::make_iterator_range(range), callback);
         }
 
         template <class ConstBufferSeq, class Callback>
-        void write_vec(ConstBufferSeq const & seq, Callback const & callback)
+        typename enable_if<is_base_of<asio::const_buffer, ConstBufferSeq>, void>::type
+        write(ConstBufferSeq const & seq, Callback const & callback)
         {
             write_vec_impl(seq, callback, shared_array_list(), shared_buffers());
         }
