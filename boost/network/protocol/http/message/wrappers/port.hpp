@@ -7,6 +7,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/optional.hpp>
+
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
@@ -25,6 +27,10 @@ namespace boost { namespace network { namespace http {
 
             operator port_type() {
                 return message_.port();
+            }
+
+            operator boost::optional<boost::uint16_t> () {
+                return port(message_.uri());
             }
         };
 

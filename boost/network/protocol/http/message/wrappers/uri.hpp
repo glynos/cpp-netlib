@@ -7,6 +7,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/uri/http/uri.hpp>
+
 namespace boost { namespace network { namespace http {
 
     template <class Tag>
@@ -21,6 +23,9 @@ namespace boost { namespace network { namespace http {
             typedef typename basic_request<Tag>::string_type string_type;
             operator string_type() {
                 return message_.uri().raw();
+            }
+            operator boost::network::uri::basic_uri<tags::http_default_8bit_tcp_resolve> () {
+                return message_.uri();
             }
         };
     }
