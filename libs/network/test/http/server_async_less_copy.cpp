@@ -6,6 +6,8 @@
 
 #define BOOST_TEST_MODULE HTTP Asynchronous Server Tests
 
+#include <vector>
+
 #include <boost/config/warning_disable.hpp>
 #include <boost/network/include/http/server.hpp>
 #include <boost/network/utils/thread_pool.hpp>
@@ -51,9 +53,9 @@ struct async_hello_world {
             static char const * hello_world = "Hello, World!";
             connection->set_status(server::connection::ok);
             connection->set_headers(boost::make_iterator_range(headers, headers+3));
-            connection->write(
-                    boost::asio::const_buffers_1(hello_world, 13)
-                    , boost::bind(&async_hello_world::error, this, _1));
+            std::vector<boost::asio::const_buffer> iovec;
+            iovec.push_back(boost::asio::const_buffer(hello_world, 13));
+            connection->write(iovec, boost::bind(&async_hello_world::error, this, _1));
         }
     }
 
