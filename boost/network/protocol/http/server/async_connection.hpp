@@ -214,7 +214,7 @@ namespace boost { namespace network { namespace http {
         }
 
         template <class Range, class Callback>
-        typename disable_if<is_base_of<asio::const_buffer, Range>, void>::type
+        typename disable_if<is_base_of<asio::const_buffer, typename Range::value_type>, void>::type
         write(Range const & range, Callback const & callback) {
             lock_guard lock(headers_mutex);
             if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
@@ -222,7 +222,7 @@ namespace boost { namespace network { namespace http {
         }
 
         template <class ConstBufferSeq, class Callback>
-        typename enable_if<is_base_of<asio::const_buffer, ConstBufferSeq>, void>::type
+        typename enable_if<is_base_of<asio::const_buffer, typename ConstBufferSeq::value_type>, void>::type
         write(ConstBufferSeq const & seq, Callback const & callback)
         {
             write_vec_impl(seq, callback, shared_array_list(), shared_buffers());
