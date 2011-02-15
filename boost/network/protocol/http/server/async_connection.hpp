@@ -514,7 +514,7 @@ namespace boost { namespace network { namespace http {
         void continue_write(Range range, boost::function<void(boost::system::error_code)> callback) {
             thread_pool().post(
                 boost::bind(
-                    &async_connection<Tag,Handler>::write_impl<Range> 
+                    &async_connection<Tag,Handler>::template write_impl<Range> 
                     , async_connection<Tag,Handler>::shared_from_this()
                     , range, callback));
         }
@@ -610,7 +610,7 @@ namespace boost { namespace network { namespace http {
             if (!headers_already_sent && !headers_in_progress) {
                 write_headers_only(
                     boost::bind(
-                        &async_connection<Tag,Handler>::continue_write<Range>
+                        &async_connection<Tag,Handler>::template continue_write<Range>
                         , async_connection<Tag,Handler>::shared_from_this()
                         , range, callback_function
                     ));
@@ -618,7 +618,7 @@ namespace boost { namespace network { namespace http {
             } else if (headers_in_progress && !headers_already_sent) {
                 pending_actions.push_back(
                     boost::bind(
-                        &async_connection<Tag,Handler>::continue_write<Range>
+                        &async_connection<Tag,Handler>::template continue_write<Range>
                         , async_connection<Tag,Handler>::shared_from_this()
                         , range, callback_function));
                 return;
