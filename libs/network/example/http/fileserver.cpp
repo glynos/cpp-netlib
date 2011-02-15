@@ -47,7 +47,11 @@ struct file_cache {
         boost::upgrade_lock<boost::shared_mutex> lock(cache_mutex);
         std::string real_filename = doc_root_+path;
         if (regions.find(real_filename) != regions.end()) return true;
+#ifdef O_NOATIME
         int fd = open(real_filename.c_str(), O_RDONLY|O_NOATIME|O_NONBLOCK);
+#else
+        int fd = open(real_filename.c_str(), O_RDONLY|O_NONBLOCK);
+#endif
         if (fd == -1) return false;
         std::size_t size = lseek(fd, 0, SEEK_END);
         void * region = mmap(0, size, PROT_READ, MAP_PRIVATE, fd, 0);
