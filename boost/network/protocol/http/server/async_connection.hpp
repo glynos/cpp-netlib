@@ -648,7 +648,7 @@ namespace boost { namespace network { namespace http {
                     callback;
 
             boost::function<void()> continuation = boost::bind(
-                &async_connection<Tag,Handler>::write_vec_impl<ConstBufferSeq, boost::function<void(boost::system::error_code)> >
+                &async_connection<Tag,Handler>::template write_vec_impl<ConstBufferSeq, boost::function<void(boost::system::error_code)> >
                 ,async_connection<Tag,Handler>::shared_from_this()
                 ,seq, callback_function, temporaries, buffers
             );
