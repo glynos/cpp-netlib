@@ -28,6 +28,9 @@
 #include <list>
 #include <vector>
 #include <iterator>
+#ifdef BOOST_NETWORK_NO_LIB
+#include <boost/network/protocol/http/server/impl/parsers.ipp>
+#endif
 
 #ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE
 /** Here we define a page's worth of header connection buffer data.
@@ -46,8 +49,10 @@
 
 namespace boost { namespace network { namespace http {
 
+#ifndef BOOST_NETWORK_NO_LIB
     extern void parse_version(std::string const & partial_parsed, fusion::tuple<uint8_t,uint8_t> & version_pair);
     extern void parse_headers(std::string const & input, std::vector<request_header_narrow> & container);
+#endif
 
     template <class Tag, class Handler>
     struct async_connection : boost::enable_shared_from_this<async_connection<Tag,Handler> > {

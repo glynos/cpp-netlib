@@ -92,6 +92,7 @@ if (Boost_FOUND)
 
     set ( INLINED_TESTS
         client_include_inlined
+        server_include_inlined
         )
     foreach ( test ${INLINED_TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
