@@ -43,7 +43,9 @@ struct hello_world {
 
 int main(int argc, char * argv[]) {
     hello_world handler;
-    server server_("127.0.0.1", "8000", handler, http::_reuse_address=true);
+    std::string port = "8000";
+    if (argc > 1) port = argv[1];
+    server server_("127.0.0.1", port, handler, http::_reuse_address=true);
     server_.run();
     return EXIT_SUCCESS;
 }

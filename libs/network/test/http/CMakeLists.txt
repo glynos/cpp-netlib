@@ -25,7 +25,11 @@ if (Boost_FOUND)
         client_get_test
         client_get_different_port_test
         client_get_timeout_test
+        client_localhost_normal_test
         )
+    if (OPENSSL_FOUND)
+        set ( TESTS ${TESTS} client_localhost_ssl_test )
+    endif (OPENSSL_FOUND)
     foreach ( test ${TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
             set_source_files_properties(${test}.cpp
@@ -63,7 +67,9 @@ if (Boost_FOUND)
     set ( SERVER_TESTS
         server_hello_world
         server_async
+        server_async_less_copy
         )
+    set ( PORT 8000 )
     foreach ( test ${SERVER_TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
             set_source_files_properties(${test}.cpp
@@ -79,7 +85,9 @@ if (Boost_FOUND)
             python 
             ${CPP-NETLIB_SOURCE_DIR}/libs/network/test/httplib_acceptance.py 
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}
+            ${PORT}
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}.passed)
+        math (EXPR PORT "${PORT} + 1")
     endforeach (test)
 
     set ( INLINED_TESTS

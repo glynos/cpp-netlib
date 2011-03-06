@@ -10,15 +10,15 @@ from time import sleep
 import httplib2 as httplib
 from subprocess import Popen,PIPE
 
-if len(argv) < 3:
-    print('I need the executable to run.')
+if len(argv) < 4:
+    print('I need the executable to run, the port to run it on, and the final touched file indicator.')
     exit(1)
 
-print('Running {0}...'.format(argv[1]))
+print('Running {0} on port {1}...'.format(argv[1], argv[2]))
 
 pipe = None
 try:
-    pipe = Popen(argv[1], executable=argv[1], stdin=PIPE, stdout=PIPE, close_fds=True)
+    pipe = Popen(args=[argv[1], argv[2]], executable=argv[1], stdin=PIPE, stdout=PIPE, close_fds=True)
     print('Done with spawning {0}.'.format(argv[1]))
     print('Sleeping to give the server a chance to run...')
     sleep(1)
@@ -58,7 +58,7 @@ def test_status(url, method, expected, headers={}, body=''):
         print('Caught Exception: {0}'.format(e))
         status = 1
 
-url = 'http://localhost:8000/'
+url = 'http://localhost:{0}/'.format(argv[2])
 test(url, 'GET', expected)
 test(url, 'DELETE', expected)
 # Good request case, there's a content-length header for POST
@@ -72,10 +72,10 @@ test_status(url, 'PUT', '400')
 
 if status != 0:
     print('Failures encountered.')
-    pipe.kill()
+    pipe.terminate()
     exit(status)
 
 open(argv[len(argv) - 1], 'w').close()
 print('All tests pass.')
-pipe.kill()
+pipe.terminate()
 
