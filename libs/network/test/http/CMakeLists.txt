@@ -5,13 +5,15 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.43.0 COMPONENTS unit_test_framework system regex thread filesystem )
+find_package( Boost 1.43.0 REQUIRED unit_test_framework system regex thread filesystem )
 find_package( OpenSSL )
 
 if (OPENSSL_FOUND)
     include_directories( ${OPENSSL_INCLUDE_DIR} )
     add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
 endif()
+
+add_definitions(-DBOOST_NETWORK_DEBUG)
 
 find_package( Threads )
 set(Boost_USE_STATIC_LIBS ON)
@@ -23,14 +25,6 @@ if (Boost_FOUND)
         client_get_test
         client_get_different_port_test
         client_get_timeout_test
-        client_localhost_ssl_test
-        client_localhost_normal_test
-        message_async_ready_test
-        message_test
-        request_linearize_test
-        request_incremental_parser_test
-        response_incremental_parser_test
-        url_test
         )
     foreach ( test ${TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
@@ -69,7 +63,6 @@ if (Boost_FOUND)
     set ( SERVER_TESTS
         server_hello_world
         server_async
-        server_async_less_copy
         )
     foreach ( test ${SERVER_TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
@@ -87,6 +80,25 @@ if (Boost_FOUND)
             ${CPP-NETLIB_SOURCE_DIR}/libs/network/test/httplib_acceptance.py 
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}.passed)
+    endforeach (test)
+
+    set ( INLINED_TESTS
+        client_include_inlined
+        )
+    foreach ( test ${INLINED_TESTS} )
+        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+            set_source_files_properties(${test}.cpp
+                PROPERTIES COMPILE_FLAGS "-Wall")
+        endif()
+        add_executable(cpp-netlib-http-inlined-${test} ${test}.cpp)
+        target_link_libraries(cpp-netlib-http-inlined-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+        if (OPENSSL_FOUND)
+            target_link_libraries(cpp-netlib-http-inlined-${test} ${OPENSSL_LIBRARIES})
+        endif()
+        set_target_properties(cpp-netlib-http-inlined-${test}
+            PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
+        add_test(cpp-netlib-http-inlined-${test}
+            ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-inlined-${test})
     endforeach (test)
 
 endif()
