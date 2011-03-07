@@ -55,15 +55,22 @@ namespace boost { namespace network { namespace http {
         }
 
         response const post (request request_, string_type const & content_type, string_type const & body_) {
-            request_ << ::boost::network::body(body_)
-                << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
             if (!boost::empty(headers(request_)["Content-Type"]))
-                request_ << header("Content-Type", content_type);
+                request_ << remove_header("Content-Type");
+
+            request_ << ::boost::network::body(body_)
+                << header("Content-Type", content_type)
+                << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
             return post(request_);
         }
 
         response const post (request const & request_, string_type const & body_) {
-            return post(request_, "x-application/octet-stream", body_);
+            string_type content_type = "x-application/octet-stream";
+            typename headers_range<request>::type content_type_headers =
+                headers(request_)["Content-Type"];
+            if (!boost::empty(content_type_headers))
+                content_type = boost::begin(content_type_headers)->second;
+            return post(request_, content_type, body_);
         }
 
         response const put (request const & request_) {
@@ -71,14 +78,21 @@ namespace boost { namespace network { namespace http {
         }
 
         response const put (request const & request_, string_type const & body_) {
-            return put(request_, "x-application/octet-stream", body_);
+            string_type content_type = "x-application/octet-stream";
+            typename headers_range<request>::type content_type_headers =
+                headers(request_)["Content-Type"];
+            if (!boost::empty(content_type_headers))
+                content_type = boost::begin(content_type_headers)->second;
+            return put(request_, content_type, body_);
         }
 
         response const put (request request_, string_type const & content_type, string_type const & body_) {
-            request_ << ::boost::network::body(body_)
-                << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
             if (!boost::empty(headers(request_)["Content-Type"]))
-                request_ << header("Content-Type", content_type);
+                request_ << remove_header("Content-Type");
+
+            request_ << ::boost::network::body(body_)
+                << header("Content-Type", content_type)
+                << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
             return put(request_);
         }
 
