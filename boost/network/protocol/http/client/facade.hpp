@@ -56,8 +56,9 @@ namespace boost { namespace network { namespace http {
 
         response const post (request request_, string_type const & content_type, string_type const & body_) {
             request_ << ::boost::network::body(body_)
-                << header("Content-Type", content_type)
                 << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
+            if (!boost::empty(headers(request_)["Content-Type"]))
+                request_ << header("Content-Type", content_type);
             return post(request_);
         }
 
@@ -75,8 +76,9 @@ namespace boost { namespace network { namespace http {
 
         response const put (request request_, string_type const & content_type, string_type const & body_) {
             request_ << ::boost::network::body(body_)
-                << header("Content-Type", content_type)
                 << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
+            if (!boost::empty(headers(request_)["Content-Type"]))
+                request_ << header("Content-Type", content_type);
             return put(request_);
         }
 
