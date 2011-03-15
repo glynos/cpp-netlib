@@ -4,6 +4,24 @@
  What's New
 ************
 
+:mod:`cpp-netlib` 0.9
+---------------------
+
+* **IMPORTANT BREAKING CHANGE**: By default all compile-time heavy parser 
+  implementations are now compiled to external static libraries. In order to use
+  :mod:`cpp-netlib` in header-only mode, users must define the preprocessor
+  macro ``BOOST_NETWORK_NO_LIB`` before including any :mod:`cpp-netlib` header.
+  This breaks code that relied on the version 0.8.x line where the library is
+  strictly header-only.
+* More consistent message API for client and server messages (request and
+  response objects).
+* Refactoring of internal implementations to allow better separation of concerns
+  and more manageable coding/documentation.
+* Client and Server constructors that support Boost.Parameter named parameters.
+* Client and Server cosntructors now take in an optional reference to a Boost.Asio 
+  ``io_service`` to use internally.
+* Documentation updates to reflect new APIs.
+
 :mod:`cpp-netlib` 0.8
 ---------------------
 
