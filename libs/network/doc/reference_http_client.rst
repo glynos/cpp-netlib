@@ -122,6 +122,12 @@ Also, that code using the HTTP client will have use the following header:
 
     #include <boost/network/include/http/client.hpp>
 
+.. note:: Starting version 0.9, cpp-netlib clients and server implementations
+   by default now have an externally-linked component. This is a breaking change
+   for code that used to rely on cpp-netlib being a header-only library, but can
+   inhibited by defining the ``BOOST_NETWORK_NO_LIB`` preprocessor macro before
+   including any cpp-netlib header.
+
 Constructors
 ~~~~~~~~~~~~
 
@@ -130,18 +136,42 @@ initialization.
 
 ``client()``
     Default constructor.
-``client(client::cache_resolved)``
-    Construct a client which caches resolved endpoints.
-``client(client::follow_redirects)``
-    Construct a client which follows HTTP redirects. [#]_
-``client(client::cache_resolved, client::follow_redirects), client(client::follow_redirects, client::cache_resolved)``
-    Construct a client which caches resolved endpoints and follows HTTP 
-    redirects. [#]_
+``client(boost::asio::io_service & io_service)``
+    Construct a client to use an existing Boost.Asio ``io_service`` instance.
+``template <class ArgPack> client(ArgPack const & args)``
+    Pass in an argument pack. See supported parameters in the table below.
 
-.. [#] In Asynchronous Clients, redirects are not followed. This means the
-   response objects will contain whatever HTTP response was retrieved by the
-   client implementation.
-.. [#] In Asynchronous Clients, only caching resolved endpoints take effect.
++-------------------+-------------------------------+-------------------------+
+| Parameter Name    | Type                          | Description             |
++===================+===============================+=========================+
+| _follow_redirects | ``bool``                      | Boolean to specify      |
+|                   |                               | whether the client      |
+|                   |                               | should follow HTTP      |
+|                   |                               | redirects. Default is   |
+|                   |                               | ``false``.              |
++-------------------+-------------------------------+-------------------------+
+| _cache_resolved   | ``bool``                      | Boolean to specify      |
+|                   |                               | whether the client      |
+|                   |                               | should cache resolved   |
+|                   |                               | endpoints. The default  |
+|                   |                               | is ``false``.           |
++-------------------+-------------------------------+-------------------------+
+| _io_service       | ``boost::asio::io_service &`` | Reference to an         |
+|                   |                               | instance of a           |
+|                   |                               | Boost.Asio              |
+|                   |                               | ``io_service``.         |
++-------------------+-------------------------------+-------------------------+
+
+To use the above supported named parameters, you'll have code that looks like
+the following:
+
+.. code-block:: c++
+    
+    using namespace boost::network::http; // parameters are in this namespace
+    boost::asio::io_service my_io_service;
+    client client_(_follow_redirects=true, _cache_resolved=true,
+                   _io_service=my_io_service);
+    // use client_ as normal from here on out.
 
 HTTP Methods
 ~~~~~~~~~~~~
@@ -192,4 +222,5 @@ Client-Specific
 
 ``client_.clear_resolved_cache()``
     Clear the cache of resolved endpoints.
+
 
