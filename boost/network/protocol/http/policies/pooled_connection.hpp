@@ -31,13 +31,16 @@ namespace boost { namespace network { namespace http {
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
 
         struct connection_impl {
-            typedef function<shared_ptr<connection_impl>(resolver_type &,basic_request<Tag> const &)> get_connection_function;
+            typedef function<shared_ptr<connection_impl>(resolver_type &,basic_request<Tag> const &,optional<string_type> const &, optional<string_type> const &)> get_connection_function;
 
-            connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & host, string_type const & port, resolver_function_type resolve, get_connection_function get_connection, bool https)
-            : pimpl(impl::sync_connection_base<Tag,version_major,version_minor>::new_connection(resolver, resolve, https))
+            connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & host, string_type const & port, resolver_function_type resolve, get_connection_function get_connection, bool https, optional<string_type> const & certificate_file=optional<string_type>(), optional<string_type> const & verify_path=optional<string_type>())
+            : pimpl(impl::sync_connection_base<Tag,version_major,version_minor>::new_connection(resolver, resolve, https, certificate_file, verify_path))
             , resolver_(resolver)
             , connection_follow_redirect_(follow_redirect)
-            , get_connection_(get_connection) {}
+            , get_connection_(get_connection)
+            , certificate_filename_(certificate_file)
+            , verify_path_(verify_path)
+            {}
 
             basic_response<Tag> send_request(string_type const & method, basic_request<Tag> request_, bool get_body) {
                 return send_request_impl(method, request_, get_body);
@@ -104,7 +107,7 @@ namespace boost { namespace network { namespace http {
                             if (location_header != boost::end(location_range)) {
                                 request_.uri(location_header->second);
                                 connection_ptr connection_;
-                                connection_ = get_connection_(resolver_, request_);
+                                connection_ = get_connection_(resolver_, request_, certificate_filename_, verify_path_);
                                 ++count;
                                 continue;
                             } else throw std::runtime_error("Location header not defined in redirect response.");
@@ -118,6 +121,7 @@ namespace boost { namespace network { namespace http {
             resolver_type & resolver_;
             bool connection_follow_redirect_;
             get_connection_function get_connection_;
+            optional<string_type> certificate_filename_, verify_path_;
         };
 
         typedef shared_ptr<connection_impl> connection_ptr;
@@ -126,7 +130,7 @@ namespace boost { namespace network { namespace http {
         host_connection_map host_connections;
         bool follow_redirect_;
 
-        connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_) {
+        connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_, optional<string_type> const & certificate_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>()) {
             string_type index = (request_.host() + ':') + lexical_cast<string_type>(request_.port());
             connection_ptr connection_;
             typename host_connection_map::iterator it =
@@ -145,9 +149,11 @@ namespace boost { namespace network { namespace http {
                     , boost::bind(
                         &pooled_connection_policy<Tag,version_major,version_minor>::get_connection,
                         this,
-                        _1, _2
+                        _1, _2, _3, _4
                         )
                     , boost::iequals(request_.protocol(), string_type("https"))
+                    , certificate_filename
+                    , verify_path
                     )
                 );
                 host_connections.insert(std::make_pair(index, connection_));

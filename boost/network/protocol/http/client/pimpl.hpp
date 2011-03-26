@@ -38,19 +38,30 @@ namespace boost { namespace network { namespace http {
             boost::asio::io_service * service_ptr;
             boost::asio::io_service & service_;
             resolver_type resolver_;
+            optional<string_type> certificate_file, verify_path;
 
-            sync_client(bool cache_resolved, bool follow_redirect)
+            sync_client(bool cache_resolved, bool follow_redirect
+                , optional<string_type> const & certificate_file = optional<string_type>()
+                , optional<string_type> const & verify_path = optional<string_type>()
+            )
                 : connection_base(cache_resolved, follow_redirect),
                 service_ptr(new boost::asio::io_service),
                 service_(*service_ptr),
                 resolver_(service_)
+                , certificate_file(certificate_file)
+                , verify_path(verify_path)
             {}
 
-            sync_client(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service)
+            sync_client(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service
+                , optional<string_type> const & certificate_file = optional<string_type>()
+                , optional<string_type> const & verify_path = optional<string_type>()
+            )
                 : connection_base(cache_resolved, follow_redirect),
                 service_ptr(0),
                 service_(service),
                 resolver_(service_)
+                , certificate_file(certificate_file)
+                , verify_path(verify_path)
             {}
 
             ~sync_client() {
@@ -59,7 +70,7 @@ namespace boost { namespace network { namespace http {
 
             basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
                 typename connection_base::connection_ptr connection_;
-                connection_ = connection_base::get_connection(resolver_, request_);
+                connection_ = connection_base::get_connection(resolver_, request_, certificate_file, verify_path);
                 return connection_->send_request(method, request_, get_body);
             }
 
@@ -91,14 +102,16 @@ namespace boost { namespace network { namespace http {
                 >
             >::value
             ));
-        
+
         typedef typename impl::client_base<Tag,version_major,version_minor>::type base_type;
-        basic_client_impl(bool cache_resolved, bool follow_redirect)
-            : base_type(cache_resolved, follow_redirect)
+        typedef typename base_type::string_type string_type;
+
+        basic_client_impl(bool cache_resolved, bool follow_redirect, optional<string_type> const & certificate_filename, optional<string_type> const & verify_path)
+            : base_type(cache_resolved, follow_redirect, certificate_filename, verify_path)
         {}
 
-        basic_client_impl(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service)
-            : base_type(cache_resolved, follow_redirect, service)
+        basic_client_impl(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service, optional<string_type> const & certificate_filename, optional<string_type> const & verify_path)
+            : base_type(cache_resolved, follow_redirect, service, certificate_filename, verify_path)
         {}
 
         ~basic_client_impl()

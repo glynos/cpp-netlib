@@ -34,10 +34,12 @@ namespace boost { namespace network { namespace http {
                 bool follow_redirect, 
                 resolve_function resolve, 
                 resolver_type & resolver,
-                bool https
+                bool https,
+                optional<string_type> const & certificate_filename,
+                optional<string_type> const & verify_path
                 )
             {
-                pimpl = impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolve, resolver, follow_redirect, https);
+                pimpl = impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolve, resolver, follow_redirect, https, certificate_filename, verify_path);
             }
 
             basic_response<Tag> send_request(string_type const & method, basic_request<Tag> const & request_, bool get_body) {
@@ -51,7 +53,7 @@ namespace boost { namespace network { namespace http {
         };
 
         typedef boost::shared_ptr<connection_impl> connection_ptr;
-        connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_) {
+        connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_, optional<string_type> const & certificate_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>()) {
             string_type protocol_ = protocol(request_);
             connection_ptr connection_(
                 new connection_impl(
@@ -62,7 +64,9 @@ namespace boost { namespace network { namespace http {
                         _1, _2, _3, _4
                         )
                     , resolver
-                    , boost::iequals(protocol_, string_type("https"))));
+                    , boost::iequals(protocol_, string_type("https"))
+                    , certificate_filename
+                    , verify_path));
             return connection_;
         }
 

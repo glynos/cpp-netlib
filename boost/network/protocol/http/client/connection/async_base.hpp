@@ -24,11 +24,11 @@ namespace boost { namespace network { namespace http { namespace impl {
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
         
-        static boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > new_connection(resolve_function resolve, resolver_type & resolver, bool follow_redirect, bool https) {
+        static boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > new_connection(resolve_function resolve, resolver_type & resolver, bool follow_redirect, bool https, optional<string_type> certificate_filename=optional<string_type>(), optional<string_type> const & verify_path=optional<string_type>()) {
             boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > temp;
             if (https) {
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-                temp.reset(new https_async_connection<Tag,version_major,version_minor>(resolver, resolve, follow_redirect));
+                temp.reset(new https_async_connection<Tag,version_major,version_minor>(resolver, resolve, follow_redirect, certificate_filename, verify_path));
                 return temp;
 #else
                 throw std::runtime_error("HTTPS not supported.");

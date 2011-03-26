@@ -12,6 +12,8 @@ namespace boost { namespace network { namespace http {
 
     BOOST_PARAMETER_NAME(follow_redirects)
     BOOST_PARAMETER_NAME(cache_resolved)
+    BOOST_PARAMETER_NAME(openssl_certificate)
+    BOOST_PARAMETER_NAME(openssl_verify_path)
     
 } /* http */
     

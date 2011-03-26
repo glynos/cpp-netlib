@@ -37,11 +37,13 @@ namespace boost { namespace network { namespace http { namespace impl {
                 resolver_type & resolver,
                 resolve_function resolve, 
                 bool follow_redirect,
-                optional<string_type> const & certificate_filename = optional<string_type>() 
+                optional<string_type> const & certificate_filename = optional<string_type>(), 
+                optional<string_type> const & verify_path = optional<string_type>()
                 ) : 
                 follow_redirect_(follow_redirect),
                 resolver_(resolver),
                 certificate_filename_(certificate_filename),
+                verify_path_(verify_path),
                 resolve_(resolve), 
                 request_strand_(resolver.get_io_service())
             {}
@@ -78,9 +80,10 @@ namespace boost { namespace network { namespace http { namespace impl {
                     boost::asio::ssl::context::sslv23_client
                     )
                 );
-                if (certificate_filename_) {
+                if (certificate_filename_ || verify_path_) {
                     context_->set_verify_mode(boost::asio::ssl::context::verify_peer);
-                    context_->load_verify_file(*certificate_filename_);
+                    if (certificate_filename_) context_->load_verify_file(*certificate_filename_);
+                    if (verify_path_) context_->add_verify_path(*verify_path_);
                 } else {
                     context_->set_verify_mode(boost::asio::ssl::context::verify_none);
                 }
@@ -342,7 +345,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
         bool follow_redirect_;
         resolver_type & resolver_;
-        optional<string_type> certificate_filename_;
+        optional<string_type> certificate_filename_, verify_path_;
         resolve_function resolve_;
         boost::shared_ptr<boost::asio::ssl::context> context_;
         boost::shared_ptr<boost::asio::ssl::stream<boost::asio::ip::tcp::socket> > socket_;

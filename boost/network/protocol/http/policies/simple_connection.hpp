@@ -29,11 +29,11 @@ namespace boost { namespace network { namespace http {
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
 
         struct connection_impl {
-            connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & hostname, string_type const & port, resolver_function_type resolve, bool https) 
+            connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & hostname, string_type const & port, resolver_function_type resolve, bool https, optional<string_type> const & certificate_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>()) 
             : pimpl()
             , follow_redirect_(follow_redirect) 
             {
-                pimpl.reset(impl::sync_connection_base<Tag,version_major,version_minor>::new_connection(resolver, resolve, https));
+                pimpl.reset(impl::sync_connection_base<Tag,version_major,version_minor>::new_connection(resolver, resolve, https, certificate_filename, verify_path));
             }
 
             basic_response<Tag> send_request(string_type const & method, basic_request<Tag> request_, bool get_body) {
@@ -72,7 +72,10 @@ namespace boost { namespace network { namespace http {
         };
 
         typedef boost::shared_ptr<connection_impl> connection_ptr;
-        connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_) {
+        connection_ptr get_connection(resolver_type & resolver, basic_request<Tag> const & request_
+            , optional<string_type> const & certificate_file = optional<string_type>()
+            , optional<string_type> const & verify_file = optional<string_type>()
+        ) {
             connection_ptr connection_(
                 new connection_impl(
                     resolver
@@ -85,6 +88,8 @@ namespace boost { namespace network { namespace http {
                         _1, _2, _3
                         )
                     , boost::iequals(request_.protocol(), string_type("https"))
+                    , certificate_file
+                    , verify_file
                     )
                 );
             return connection_;

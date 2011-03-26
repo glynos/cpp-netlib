@@ -25,11 +25,14 @@ namespace boost { namespace network { namespace http { namespace impl {
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type&, string_type const &, string_type const &)> resolver_function_type;
         typedef sync_connection_base_impl<Tag,version_major,version_minor> connection_base;
         
-        https_sync_connection(resolver_type & resolver, resolver_function_type resolve, optional<string_type> const & certificate_filename = optional<string_type>())
+        // FIXME make the certificate filename and verify path parameters be optional ranges
+        https_sync_connection(resolver_type & resolver, resolver_function_type resolve, optional<string_type> const & certificate_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>())
         : connection_base(), resolver_(resolver), resolve_(resolve), context_(resolver.io_service(), boost::asio::ssl::context::sslv23_client), socket_(resolver.io_service(), context_) {
-            if (certificate_filename) {
+            if (certificate_filename || verify_path) {
                 context_.set_verify_mode(boost::asio::ssl::context::verify_peer);
-                context_.load_verify_file(*certificate_filename);
+                // FIXME make the certificate filename and verify path parameters be optional ranges
+                if (certificate_filename) context_.load_verify_file(*certificate_filename);
+                if (verify_path) context_.add_verify_path(*verify_path);
             } else {
                 context_.set_verify_mode(boost::asio::ssl::context::verify_none);
             }

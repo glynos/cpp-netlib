@@ -39,7 +39,6 @@ namespace boost { namespace network { namespace http {
                     no_io_service,
                     has_io_service
                     >::type());
-                
         }
 
         response const head (request const & request_) {
@@ -117,6 +116,8 @@ namespace boost { namespace network { namespace http {
                 new pimpl_type(
                     args[_cache_resolved|false]
                     , args[_follow_redirects|false]
+                    , args[_openssl_certificate|optional<string_type>()]
+                    , args[_openssl_verify_path|optional<string_type>()]
                     )
                 );
         }
@@ -128,6 +129,8 @@ namespace boost { namespace network { namespace http {
                     args[_cache_resolved|false]
                     , args[_follow_redirects|false]
                     , args[_io_service]
+                    , args[_openssl_certificate|optional<string_type>()]
+                    , args[_openssl_verify_path|optional<string_type>()]
                     )
                 );
         }

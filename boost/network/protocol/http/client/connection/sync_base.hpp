@@ -210,10 +210,11 @@ namespace boost { namespace network { namespace http { namespace impl {
         typedef typename string<Tag>::type string_type;
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type&, string_type const &, string_type const &)> resolver_function_type;
 
-        static sync_connection_base<Tag,version_major,version_minor> * new_connection(resolver_type & resolver, resolver_function_type resolve, bool https) {
+        // FIXME make the certificate filename and verify path parameters be optional ranges
+        static sync_connection_base<Tag,version_major,version_minor> * new_connection(resolver_type & resolver, resolver_function_type resolve, bool https, optional<string_type> const & cert_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>()) {
             if (https) {
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-                return dynamic_cast<sync_connection_base<Tag,version_major,version_minor>*>(new https_sync_connection<Tag,version_major,version_minor>(resolver, resolve));
+                return dynamic_cast<sync_connection_base<Tag,version_major,version_minor>*>(new https_sync_connection<Tag,version_major,version_minor>(resolver, resolve, cert_filename, verify_path));
 #else
                 throw std::runtime_error("HTTPS not supported.");
 #endif
