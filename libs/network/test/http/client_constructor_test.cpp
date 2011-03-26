@@ -28,5 +28,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_cient_constructor_params_test, client, client
         http::_io_service=io_service,
         http::_cache_resolved=true
         );
+    client instance3(
+        http::_openssl_certificate="foo",
+        http::_openssl_verify_path="bar"
+        );
 }
 

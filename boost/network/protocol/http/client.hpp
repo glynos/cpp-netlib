@@ -54,6 +54,13 @@ namespace boost { namespace network { namespace http {
         //      _io_service       : boost::asio::io_service &
         //                               -- supply an io_service to the
         //                                  client
+        //      _openssl_certificate : string
+        //                               -- the name of the certificate file
+        //                                  to use
+        //      _openssl_verify_path : string
+        //                               -- the name of the directory from
+        //                                  which the certificate authority
+        //                                  files can be found
 
         BOOST_PARAMETER_CONSTRUCTOR(
             basic_client, (base_facade_type), tag,
@@ -61,6 +68,8 @@ namespace boost { namespace network { namespace http {
                 (in_out(io_service), (boost::asio::io_service))
                 (follow_redirects, (bool))
                 (cache_resolved, (bool))
+                (openssl_certificate, (string_type))
+                (openssl_verify_path, (string_type))
                 ))
 
         //
