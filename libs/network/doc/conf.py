@@ -18,7 +18,8 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.append(os.path.abspath('.'))
 
-sys.path.append(os.path.abspath('ext/breathe'))
+# NOTE -- we can't use Breathe just yet because it doesn't support templates
+#sys.path.append(os.path.abspath('ext/breathe'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -29,7 +30,7 @@ extensions = ['sphinx.ext.todo',
               'sphinx.ext.autodoc',
               'sphinx.ext.doctest',
               'sphinx.ext.coverage',
-              'breathe',
+#              'breathe',
               ]
 
 # Uncomment this to generate output for Github.
@@ -208,8 +209,8 @@ latex_documents = [
 # If false, no module index is generated.
 #latex_use_modindex = True
 
-breathe_projects = {'cpp-netlib': 'doxyxml/'}
+#breathe_projects = {'cpp-netlib': 'doxyxml/'}
 
-breathe_default_project = 'cpp-netlib'
+#breathe_default_project = 'cpp-netlib'
 
 
