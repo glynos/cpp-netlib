@@ -141,26 +141,37 @@ initialization.
 ``template <class ArgPack> client(ArgPack const & args)``
     Pass in an argument pack. See supported parameters in the table below.
 
-+-------------------+-------------------------------+-------------------------+
-| Parameter Name    | Type                          | Description             |
-+===================+===============================+=========================+
-| _follow_redirects | ``bool``                      | Boolean to specify      |
-|                   |                               | whether the client      |
-|                   |                               | should follow HTTP      |
-|                   |                               | redirects. Default is   |
-|                   |                               | ``false``.              |
-+-------------------+-------------------------------+-------------------------+
-| _cache_resolved   | ``bool``                      | Boolean to specify      |
-|                   |                               | whether the client      |
-|                   |                               | should cache resolved   |
-|                   |                               | endpoints. The default  |
-|                   |                               | is ``false``.           |
-+-------------------+-------------------------------+-------------------------+
-| _io_service       | ``boost::asio::io_service &`` | Reference to an         |
-|                   |                               | instance of a           |
-|                   |                               | Boost.Asio              |
-|                   |                               | ``io_service``.         |
-+-------------------+-------------------------------+-------------------------+
++----------------------+-------------------------------+-------------------------+
+| Parameter Name       | Type                          | Description             |
++======================+===============================+=========================+
+| _follow_redirects    | ``bool``                      | Boolean to specify      |
+|                      |                               | whether the client      |
+|                      |                               | should follow HTTP      |
+|                      |                               | redirects. Default is   |
+|                      |                               | ``false``.              |
++----------------------+-------------------------------+-------------------------+
+| _cache_resolved      | ``bool``                      | Boolean to specify      |
+|                      |                               | whether the client      |
+|                      |                               | should cache resolved   |
+|                      |                               | endpoints. The default  |
+|                      |                               | is ``false``.           |
++----------------------+-------------------------------+-------------------------+
+| _io_service          | ``boost::asio::io_service &`` | Reference to an         |
+|                      |                               | instance of a           |
+|                      |                               | Boost.Asio              |
+|                      |                               | ``io_service``.         |
++----------------------+-------------------------------+-------------------------+
+| _openssl_certificate | string                        | The filename of the     |
+|                      |                               | certificate to load for |
+|                      |                               | the SSL connection for  |
+|                      |                               | verification.           |
++----------------------+-------------------------------+-------------------------+
+| _openssl_verify_path | string                        | The directory from      |
+|                      |                               | which the certificate   |
+|                      |                               | authority files are     |
+|                      |                               | located.                |
++----------------------+-------------------------------+-------------------------+
+
 
 To use the above supported named parameters, you'll have code that looks like
 the following:
@@ -170,7 +181,9 @@ the following:
     using namespace boost::network::http; // parameters are in this namespace
     boost::asio::io_service my_io_service;
     client client_(_follow_redirects=true, _cache_resolved=true,
-                   _io_service=my_io_service);
+                   _io_service=my_io_service
+                   , _openssl_certificate="/tmp/my-cert"
+                   , _openssl_verify_path="/tmp/ca-certs/");
     // use client_ as normal from here on out.
 
 HTTP Methods
