@@ -20,23 +20,32 @@ namespace boost { namespace network { namespace http {
         template <class Tag>
         struct unsupported_tag;
 
-        template <class Message>
+        template <class Message, class Enable = void>
         struct version
-        : mpl::if_<
-            is_async<typename Message::tag>,
-            boost::shared_future<typename string<typename Message::tag>::type>,
-            typename mpl::if_<
+        {
+            typedef unsupported_tag<typename Message::tag> type;
+        };
+        
+        template <class Message>
+        struct version<Message, typename enable_if<is_async<typename Message::tag> >::type>
+        {
+            typedef boost::shared_future<typename string<typename Message::tag>::type> type;
+        };
+        
+        template <class Message>
+        struct version<Message, 
+            typename enable_if<
                 mpl::or_<
                     is_sync<typename Message::tag>,
-                    is_same<typename Message::tag, tags::default_string>,
-                    is_same<typename Message::tag, tags::default_wstring>
-                >,
-                typename string<typename Message::tag>::type,
-                unsupported_tag<typename Message::tag>
-            >::type
-        >
-        {};
-
+                    is_default_string<typename Message::tag>,
+                    is_default_wstring<typename Message::tag>
+                    >
+                >::type
+            >
+        {
+            typedef typename string<typename Message::tag>::type type;
+        };
+        
     } /* traits */
 
 } /* http */

@@ -10,26 +10,30 @@
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
 #include <boost/network/traits/char.hpp>
-#include <boost/mpl/if.hpp>
 #include <istream>
 
 namespace boost { namespace network {
     
     template <class Tag>
     struct unsupported_tag;
-
+    
+    template <class Tag, class Enable = void>
+    struct istream
+    {
+        typedef unsupported_tag<Tag> type;
+    };
+    
     template <class Tag>
-    struct istream :
-        mpl::if_<
-            is_default_string<Tag>,
-            std::istream,
-            typename mpl::if_<
-                is_default_wstring<Tag>,
-                std::wistream,
-                unsupported_tag<Tag>
-            >::type
-        >
-    {};
+    struct istream<Tag, typename enable_if<is_default_string<Tag> >::type>
+    {
+        typedef std::istream type;
+    };
+    
+    template <class Tag>
+    struct istream<Tag, typename enable_if<is_default_wstring<Tag> >::type>
+    {
+        typedef std::wistream type;
+    };
 
 } /* network */
     

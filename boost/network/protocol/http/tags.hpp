@@ -10,11 +10,11 @@
 
 namespace boost { namespace network { namespace http { namespace tags {
 
-    struct http {};
-    struct keepalive {};
-    struct simple {};
-    struct server {};
-    struct client {};
+    struct http         { typedef mpl::true_::type is_http; };
+    struct keepalive    { typedef mpl::true_::type is_keepalive; };
+    struct simple       { typedef mpl::true_::type is_simple; };
+    struct server       { typedef mpl::true_::type is_server; };
+    struct client       { typedef mpl::true_::type is_client; };
 
     using namespace boost::network::tags;
 

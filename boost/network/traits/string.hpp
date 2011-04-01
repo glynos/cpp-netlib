@@ -12,7 +12,6 @@
 # include <boost/network/tags.hpp>
 # include <boost/network/support/is_default_string.hpp>
 # include <boost/network/support/is_default_wstring.hpp>
-# include <boost/mpl/if.hpp>
 
 #ifndef BOOST_NETWORK_DEFAULT_STRING
 #define BOOST_NETWORK_DEFAULT_STRING std::string
@@ -26,19 +25,24 @@ namespace boost { namespace network {
 
     template <class Tag>
     struct unsupported_tag;
-
-    template <class Tag>
+    
+    template <class Tag, class Enable = void>
     struct string
-        : mpl::if_<
-            is_default_string<Tag>,
-            BOOST_NETWORK_DEFAULT_STRING,
-            typename mpl::if_<
-                is_default_wstring<Tag>,
-                BOOST_NETWORK_DEFAULT_WSTRING,
-                unsupported_tag<Tag>
-            >::type
-        >
-    {};
+    {
+        typedef unsupported_tag<Tag> type;
+    };
+    
+    template <class Tag>
+    struct string<Tag, typename enable_if<is_default_string<Tag> >::type>
+    {
+        typedef BOOST_NETWORK_DEFAULT_STRING type;
+    };
+    
+    template <class Tag>
+    struct string<Tag, typename enable_if<is_default_wstring<Tag> >::type>
+    {
+        typedef BOOST_NETWORK_DEFAULT_WSTRING type;
+    };
 
 } // namespace network
 

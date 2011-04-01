@@ -7,18 +7,18 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/static_assert.hpp>
 
 namespace boost { namespace network {
-
+    
+    template <class Tag, class Enable = void>
+    struct is_tcp : mpl::false_ {};
+    
     template <class Tag>
-    struct is_tcp :
-        is_base_of<
-            tags::tcp,
-            Tag
-        >
-    {};
-
+    struct is_tcp<Tag, typename enable_if<typename Tag::is_tcp>::type> : mpl::true_ {};
+    
 } // namespace network
 
 } // namespace boost

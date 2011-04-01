@@ -18,19 +18,24 @@ namespace boost { namespace network {
     template <class Tag>
     struct unsupported_tag;
 
+    template <class Tag, class Enable = void>
+    struct ostringstream
+    {
+        typedef unsupported_tag<Tag> type;
+    };
+    
     template <class Tag>
-    struct ostringstream :
-        mpl::if_<
-            is_default_string<Tag>,
-            std::ostringstream,
-            typename mpl::if_<
-                is_default_wstring<Tag>,
-                std::wostringstream,
-                unsupported_tag<Tag>
-            >::type
-        >
-    {};
-
+    struct ostringstream<Tag, typename enable_if<is_default_string<Tag> >::type>
+    {
+        typedef std::ostringstream type;
+    };
+    
+    template <class Tag>
+    struct ostringstream<Tag, typename enable_if<is_default_wstring<Tag> >::type>
+    {
+        typedef std::wostringstream type;
+    };
+    
 } // namespace network
 
 } // namespace boost

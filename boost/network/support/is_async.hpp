@@ -8,18 +8,15 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace network {
 
+    template <class Tag, class Enable = void>
+    struct is_async : mpl::false_ {};
+    
     template <class Tag>
-    struct is_async :
-        is_base_of<
-            tags::async,
-            Tag
-        >
-    {};
+    struct is_async<Tag, typename enable_if<typename Tag::is_async>::type> : mpl::true_ {};
 
 } // namespace network
 

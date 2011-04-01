@@ -7,17 +7,15 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace network {
 
+    template <class Tag, class Enable = void>
+    struct is_pod : mpl::false_ {};
+    
     template <class Tag>
-    struct is_pod :
-        is_base_of<
-            tags::pod,
-            Tag
-        >
-    {};
+    struct is_pod<Tag, typename enable_if<typename Tag::is_pod>::type> : mpl::true_ {};
     
 } /* network */
     

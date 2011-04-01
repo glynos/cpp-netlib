@@ -16,18 +16,23 @@ namespace boost { namespace network {
     template <class Tag>
     struct unsupported_tag;
 
+    template <class Tag, class Enable = void>
+    struct char_
+    {
+        typedef unsupported_tag<Tag> type;
+    };
+    
     template <class Tag>
-    struct char_ :
-        mpl::if_<
-            is_default_string<Tag>,
-            char,
-            typename mpl::if_<
-                is_default_wstring<Tag>,
-                wchar_t,
-                unsupported_tag<Tag>
-            >::type
-        >
-    {};
+    struct char_<Tag, typename enable_if<is_default_string<Tag> >::type>
+    {
+        typedef char type;
+    };
+    
+    template <class Tag>
+    struct char_<Tag, typename enable_if<is_default_wstring<Tag> >::type>
+    {
+        typedef wchar_t type;
+    };
 
 } // namespace network
 

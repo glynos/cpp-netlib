@@ -12,14 +12,11 @@
 
 namespace boost { namespace network {
 
+    template <class Tag, class Enable = void>
+    struct pod_or_normal { typedef tags::normal type; };
+    
     template <class Tag>
-    struct pod_or_normal :
-        mpl::if_<
-            is_pod<Tag>
-            , tags::pod
-            , tags::normal
-            >
-    {};
+    struct pod_or_normal<Tag, typename enable_if<typename Tag::is_pod>::type> : tags::pod {};
     
 } /* network */
     

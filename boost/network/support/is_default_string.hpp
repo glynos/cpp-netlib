@@ -7,18 +7,16 @@
 #define BOOST_NETWORK_SUPPORT_STRING_CHECK_20100808
 
 #include <boost/network/tags.hpp>
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace network {
-
+    
+    template <class Tag, class Enable = void>
+    struct is_default_string : mpl::false_ {};
+    
     template <class Tag>
-    struct is_default_string :
-        is_base_of<
-            tags::default_string,
-            Tag
-        >
-    {};
-
+    struct is_default_string<Tag, typename enable_if<typename Tag::is_default_string>::type> : mpl::true_ {};
+    
 } // namespace network
 
 } // namespace boost

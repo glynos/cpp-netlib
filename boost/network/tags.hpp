@@ -15,15 +15,16 @@
 
 namespace boost { namespace network { namespace tags {
 
-    struct pod {};
-    struct normal {};
-    struct async {};
-    struct tcp {};
-    struct udp {};
-    struct sync {};
-    struct default_string {};
-    struct default_wstring {};
-
+    struct pod      { typedef mpl::true_::type is_pod; };
+    struct normal   { typedef mpl::true_::type is_normal; };
+    struct async    { typedef mpl::true_::type is_async; };
+    struct tcp      { typedef mpl::true_::type is_tcp; };
+    struct udp      { typedef mpl::true_::type is_udp; };
+    struct sync     { typedef mpl::true_::type is_sync; };
+    struct default_string 
+        { typedef mpl::true_::type is_default_string; };
+    struct default_wstring 
+        { typedef mpl::true_::type is_default_wstring; };
 
     template <class Tag>
     struct components;
