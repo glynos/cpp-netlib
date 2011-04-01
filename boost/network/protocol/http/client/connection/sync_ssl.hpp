@@ -27,7 +27,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         
         // FIXME make the certificate filename and verify path parameters be optional ranges
         https_sync_connection(resolver_type & resolver, resolver_function_type resolve, optional<string_type> const & certificate_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>())
-        : connection_base(), resolver_(resolver), resolve_(resolve), context_(resolver.io_service(), boost::asio::ssl::context::sslv23_client), socket_(resolver.io_service(), context_) {
+        : connection_base(), resolver_(resolver), resolve_(resolve), context_(resolver.get_io_service(), boost::asio::ssl::context::sslv23_client), socket_(resolver.get_io_service(), context_) {
             if (certificate_filename || verify_path) {
                 context_.set_verify_mode(boost::asio::ssl::context::verify_peer);
                 // FIXME make the certificate filename and verify path parameters be optional ranges

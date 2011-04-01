@@ -27,7 +27,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         typedef sync_connection_base_impl<Tag,version_major,version_minor> connection_base;
 
         http_sync_connection(resolver_type & resolver, resolver_function_type resolve)
-        : connection_base(), resolver_(resolver), resolve_(resolve), socket_(resolver.io_service()) { }
+        : connection_base(), resolver_(resolver), resolve_(resolve), socket_(resolver.get_io_service()) { }
 
         void init_socket(string_type const & hostname, string_type const & port) {
             connection_base::init_socket(socket_, resolver_, hostname, port, resolve_);
