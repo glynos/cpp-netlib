@@ -23,8 +23,10 @@ struct uri_base {
         :
         raw_(uri),
         parts_(),
-        valid_(parse_uri(raw_, parts_))
-    { }
+        valid_(false)
+    {
+        valid_ = parse_uri(raw_, parts_);
+    }
 
     uri_base(const uri_base & other)
         :
@@ -116,8 +118,9 @@ public:
 
     basic_uri() : uri_base<Tag>() {}
     basic_uri(typename uri_base<Tag>::string_type const & uri) : uri_base<Tag>(uri) {}
+    basic_uri(basic_uri const & other) : uri_base<Tag>(other) {}
 
-    basic_uri & operator= (basic_uri & rhs) {
+    basic_uri & operator= (basic_uri rhs) {
         rhs.swap(*this);
         return *this;
     }
@@ -223,7 +226,7 @@ is_valid(basic_uri<Tag> const & uri) {
 } // namespace network
 } // namespace boost
 
-
+#ifdef BOOST_NETWORK_DEBUG
 // Check that the URI concept is met by the basic_uri type.
 #include <boost/network/uri/uri_concept.hpp>
 #include <boost/network/tags.hpp>
@@ -233,6 +236,7 @@ BOOST_CONCEPT_ASSERT((URI<basic_uri<boost::network::tags::default_wstring> >));
 } // namespace uri
 } // namespace network
 } // namespace boost
+#endif // BOOST_NETWORK_DEBUG
 
 #endif
 

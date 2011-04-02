@@ -131,17 +131,100 @@ struct transform_attribute<
     static void post(optional<Exposed> &, Transformed const &) { }
 };
 #endif
+
+template <>
+struct transform_attribute<
+    boost::network::uri::detail::uri_parts_wide_base,
+    boost::fusion::tuple<
+        std::wstring &,
+        boost::fusion::tuple<
+            boost::optional<std::wstring>&,
+            boost::optional<std::wstring>&,
+            boost::optional<boost::uint16_t> &,
+            std::wstring &
+            >,
+        optional<std::wstring>&,
+        optional<std::wstring>&
+    >
+#if SPIRIT_VERSION >= 0x2030
+        , boost::spirit::qi::domain
+#endif
+        >
+{
+    typedef
+    boost::fusion::tuple<
+        std::wstring &,
+        boost::fusion::tuple<
+            boost::optional<std::wstring>&,
+            boost::optional<std::wstring>&,
+            boost::optional<boost::uint16_t> &,
+            std::wstring &
+            >,
+        optional<std::wstring>&,
+        optional<std::wstring>&
+    > type;
+
+    static type pre(boost::network::uri::detail::uri_parts_wide_base & parts) {
+        boost::fusion::tuple<
+        boost::optional<std::wstring> &,
+            boost::optional<std::wstring> &,
+            boost::optional<boost::uint16_t> &,
+            std::wstring &
+            > hier_part =
+            boost::fusion::tie(
+                parts.user_info,
+                parts.host,
+                parts.port,
+                parts.path
+                );
+
+    return boost::fusion::tie(
+        parts.scheme,
+        hier_part,
+        parts.query,
+        parts.fragment
+        );
+}
+
+static void post(boost::network::uri::detail::uri_parts_wide_base &, type const &) { }
+
+#if SPIRIT_VERSION >= 0x2030
+static void fail(boost::network::uri::detail::uri_parts_wide_base & val) { }
+#endif
+};
+
 } // namespace traits
 } // namespace spirit
 } // namespace boost
 
 
 namespace boost { namespace network { namespace uri { namespace detail {
+
+template <class String>
+struct unsupported_string;
+
+template <class String, class Dummy = void>
+struct choose_uri_base
+{
+    typedef unsupported_string<String> type;
+};
+
+template <class Dummy>
+struct choose_uri_base<std::string, Dummy>
+{
+    typedef uri_parts_default_base type;
+};
+
+template <class Dummy>
+struct choose_uri_base<std::wstring, Dummy>
+{
+    typedef uri_parts_wide_base type;
+};
     
 namespace qi = boost::spirit::qi;
 
-template <typename Iterator>
-struct uri_grammar_default : qi::grammar<Iterator, uri_parts_default_base()> {
+template <typename Iterator, typename String>
+struct uri_grammar_default : qi::grammar<Iterator, typename choose_uri_base<String>::type()> {
     uri_grammar_default() : uri_grammar_default::base_type(start, "uri") {
         // gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
         gen_delims %= qi::char_(":/?#[]@");
@@ -223,8 +306,8 @@ struct uri_grammar_default : qi::grammar<Iterator, uri_parts_default_base()> {
                 )
             |
             (
-                qi::attr(optional<std::string>())
-                >>  qi::attr(optional<std::string>())
+                qi::attr(optional<String>())
+                >>  qi::attr(optional<String>())
                 >>  qi::attr(optional<boost::uint16_t>())
                 >>  (
                     path_absolute
@@ -242,7 +325,7 @@ struct uri_grammar_default : qi::grammar<Iterator, uri_parts_default_base()> {
         start %= uri.alias();
     }
 
-    typedef std::string string_type;
+    typedef String string_type;
 
     qi::rule<Iterator, typename string_type::value_type()>
     gen_delims, sub_delims, reserved, unreserved;
@@ -268,7 +351,7 @@ struct uri_grammar_default : qi::grammar<Iterator, uri_parts_default_base()> {
                            >()> hier_part;
 
     // start rule of grammar
-    qi::rule<Iterator, uri_parts_default_base()> start;
+    qi::rule<Iterator, typename choose_uri_base<String>::type()> start;
 
     // actual uri parser
     qi::rule<
@@ -290,11 +373,11 @@ struct uri_grammar_default : qi::grammar<Iterator, uri_parts_default_base()> {
 
 BOOST_NETWORK_INLINE bool parse_uri_impl(boost::iterator_range<std::string::const_iterator> & range, uri_parts_default_base & parts, boost::network::tags::default_string) {
     // Qualified boost::begin and boost::end because MSVC complains
-    // of ambiguity on call to begin(range) and end(rand).
+    // of ambiguity on call to begin(range) and end(range).
     std::string::const_iterator start_ = boost::begin(range);
     std::string::const_iterator end_   = boost::end(range);
 
-    static uri_grammar_default<std::string::const_iterator> grammar;
+    static uri_grammar_default<std::string::const_iterator, std::string> grammar;
 
     bool ok = qi::parse(start_, end_, grammar, parts);
 
@@ -302,8 +385,16 @@ BOOST_NETWORK_INLINE bool parse_uri_impl(boost::iterator_range<std::string::cons
 }
 
 BOOST_NETWORK_INLINE bool parse_uri_impl(boost::iterator_range<std::wstring::const_iterator> & range, uri_parts_wide_base & parts, boost::network::tags::default_wstring) {
-    // TODO implement the grammar that supports wide strings
-    return false; // this always fails because it's not supported yet!
+    // Qualified boost::begin and boost::end because MSVC complains
+    // of ambiguity on call to begin(range) and end(range).
+    std::wstring::const_iterator start_ = boost::begin(range);
+    std::wstring::const_iterator end_   = boost::end(range);
+
+    static uri_grammar_default<std::wstring::const_iterator, std::wstring> grammar;
+
+    bool ok = qi::parse(start_, end_, grammar, parts);
+
+    return ok && start_ == end_;
 }
 
 } /* detail */

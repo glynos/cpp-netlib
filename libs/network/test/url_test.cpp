@@ -212,5 +212,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(assignment_test, T, tag_types) {
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     uri_type copy;
     copy = instance;
+    BOOST_CHECK(instance.raw() == copy.raw());
     BOOST_CHECK(instance == copy);
 }
