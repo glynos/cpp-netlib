@@ -13,7 +13,9 @@ if (OPENSSL_FOUND)
     add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
 endif()
 
-add_definitions(-DBOOST_NETWORK_DEBUG)
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DBOOST_NETWORK_DEBUG)
+endif()
 
 find_package( Threads )
 set(Boost_USE_STATIC_LIBS ON)
