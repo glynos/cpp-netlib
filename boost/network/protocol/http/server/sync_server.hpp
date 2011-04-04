@@ -57,7 +57,9 @@ namespace boost { namespace network { namespace http {
 
         void stop() {
             // stop accepting new connections and let all the existing handlers finish.
-            acceptor_.cancel();
+            system::error_code ignored;
+            acceptor_.cancel(ignored);
+            service_.stop();
         }
 
         void listen() {

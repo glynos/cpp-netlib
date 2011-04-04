@@ -55,7 +55,8 @@ namespace boost { namespace network { namespace http {
             // stop accepting new requests and let all the existing
             // handlers finish.
             stopping = true;
-            acceptor.cancel();
+            system::error_code ignored;
+            acceptor.cancel(ignored);
         }
 
         void listen() {
@@ -101,10 +102,15 @@ namespace boost { namespace network { namespace http {
             tcp::resolver resolver(service_);
             tcp::resolver::query query(address_, port_);
             tcp::endpoint endpoint = *resolver.resolve(query);
-            acceptor.open(endpoint.protocol());
-            acceptor.bind(endpoint);
+            
+            system::error_code error;
+            acceptor.open(endpoint.protocol(), error);
+            if (error) return;
+            acceptor.bind(endpoint, error);
+            if (error) return;
             socket_options_base::acceptor_options(acceptor);
-            acceptor.listen();
+            acceptor.listen(asio::socket_base::max_connections, error);
+            if (error) return;
             new_connection.reset(new connection(service_, handler, thread_pool));
             acceptor.async_accept(new_connection->socket(),
                 boost::bind(
