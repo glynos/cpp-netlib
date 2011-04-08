@@ -11,7 +11,12 @@ int main(int argc, char * argv[]) {
     using namespace boost::network;
     http::client c;
     http::client::request req("http://www.boost.org/");
-    http::client::response res = c.get(req);
+    try {
+        http::client::response res = c.get(req);
+    } catch (...) {
+        // ignore the error, we just want to make sure
+        // the interface works inlined.
+    }
     return 0;
 }
 
