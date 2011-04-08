@@ -88,7 +88,7 @@ namespace boost { namespace network { namespace utils {
         void swap(basic_thread_pool & other) {
             std::swap(other.threads_, threads_);
             std::swap(other.io_service_, io_service_);
-            std::swap(other.worket_threads_, worker_threads_);
+            std::swap(other.worker_threads_, worker_threads_);
             std::swap(other.sentinel_, sentinel_);
         }
     protected:
