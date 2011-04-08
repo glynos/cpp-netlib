@@ -29,6 +29,10 @@ namespace boost { namespace network { namespace http {
         typedef typename resolver_policy<Tag>::type resolver_base;
         typedef typename resolver_base::resolver_type resolver_type;
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
+        
+        void cleanup() {
+            host_connection_map().swap(host_connections);
+        }
 
         struct connection_impl {
             typedef function<shared_ptr<connection_impl>(resolver_type &,basic_request<Tag> const &,optional<string_type> const &, optional<string_type> const &)> get_connection_function;
@@ -46,11 +50,6 @@ namespace boost { namespace network { namespace http {
                 return send_request_impl(method, request_, get_body);
             }
 
-            ~connection_impl () {
-                pimpl->close_socket();
-                pimpl.reset();
-            }
-
         private:
 
             basic_response<Tag> send_request_impl(string_type const & method, basic_request<Tag> request_, bool get_body) {
@@ -58,7 +57,7 @@ namespace boost { namespace network { namespace http {
                 bool retry = false;
                 do {
                     if (count >= BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT)
-                        throw std::runtime_error("Redirection exceeds maximum redirect count.");
+                        boost::throw_exception(std::runtime_error("Redirection exceeds maximum redirect count."));
 
                     basic_response<Tag> response_;
                     // check if the socket is open first
@@ -110,7 +109,7 @@ namespace boost { namespace network { namespace http {
                                 connection_ = get_connection_(resolver_, request_, certificate_filename_, verify_path_);
                                 ++count;
                                 continue;
-                            } else throw std::runtime_error("Location header not defined in redirect response.");
+                            } else boost::throw_exception(std::runtime_error("Location header not defined in redirect response."));
                         }
                     }
                     return response_;
@@ -162,13 +161,9 @@ namespace boost { namespace network { namespace http {
             return it->second;
         }
 
-        void cleanup() {
-            host_connection_map().swap(host_connections);
-        }
-
         pooled_connection_policy(bool cache_resolved, bool follow_redirect)
         : resolver_base(cache_resolved), host_connections(), follow_redirect_(follow_redirect) {}
-
+        
     };
 
 } // namespace http

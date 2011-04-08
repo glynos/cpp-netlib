@@ -13,29 +13,56 @@ namespace boost { namespace network { namespace http {
 
     namespace impl {
         template <class Tag, unsigned version_major, unsigned version_minor>
-        struct sync_client :
-            connection_policy<Tag,version_major,version_minor>::type
+        struct sync_client  :
+            connection_policy<Tag, version_major, version_minor>::type
         {
-            typedef 
-                typename connection_policy<Tag,version_major,version_minor>::type
-                connection_base;
+            typedef typename string<Tag>::type string_type;
+            typedef typename connection_policy<Tag,version_major,version_minor>::type connection_base;
+            typedef typename resolver<Tag>::type resolver_type;
+            friend struct basic_client_impl<Tag,version_major,version_minor>;
 
-            sync_client(bool cache_resolved, bool follow_redirect)
-                : connection_base(cache_resolved, follow_redirect)
+            boost::asio::io_service * service_ptr;
+            boost::asio::io_service & service_;
+            resolver_type resolver_;
+            optional<string_type> certificate_file, verify_path;
+
+            sync_client(bool cache_resolved, bool follow_redirect
+                , optional<string_type> const & certificate_file = optional<string_type>()
+                , optional<string_type> const & verify_path = optional<string_type>()
+            )
+                : connection_base(cache_resolved, follow_redirect),
+                service_ptr(new boost::asio::io_service),
+                service_(*service_ptr),
+                resolver_(service_)
+                , certificate_file(certificate_file)
+                , verify_path(verify_path)
             {}
 
-            ~sync_client()
-            {
+            sync_client(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service
+                , optional<string_type> const & certificate_file = optional<string_type>()
+                , optional<string_type> const & verify_path = optional<string_type>()
+            )
+                : connection_base(cache_resolved, follow_redirect),
+                service_ptr(0),
+                service_(service),
+                resolver_(service_)
+                , certificate_file(certificate_file)
+                , verify_path(verify_path)
+            {}
+
+            ~sync_client() {
                 connection_base::cleanup();
+                delete service_ptr;
             }
-            
+
             basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
                 typename connection_base::connection_ptr connection_;
-                connection_ = connection_base::get_connection(resolver_, request_);
+                connection_ = connection_base::get_connection(resolver_, request_, certificate_file, verify_path);
                 return connection_->send_request(method, request_, get_body);
             }
 
         };
+        
     } // namespace impl
 
 } // namespace http

@@ -62,13 +62,11 @@ namespace boost { namespace network { namespace http { namespace impl {
         bool is_open() { return socket_.is_open(); }
 
         void close_socket() {
+            if (!is_open()) return;
             boost::system::error_code ignored;
             socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
+            if (ignored) return;
             socket_.close(ignored);
-        }
-
-        ~http_sync_connection() {
-            close_socket();
         }
 
         private:

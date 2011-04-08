@@ -76,6 +76,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         void close_socket() { 
             boost::system::error_code ignored;
             socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
+            if (ignored) return;
             socket_.lowest_layer().close(ignored);
         }
 
