@@ -82,7 +82,7 @@ namespace boost { namespace network { namespace http {
                 (send_buffer_size, (int))
                 (receive_low_watermark, (int))
                 (send_low_watermark, (int))
-                (non_blocking_io, (int))
+                (non_blocking_io, (bool))
                 (linger, (bool))
                 (linger_timeout, (int)))
             )
