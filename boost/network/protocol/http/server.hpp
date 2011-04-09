@@ -16,19 +16,21 @@
 #include <boost/network/protocol/http/server/parameters.hpp>
 
 namespace boost { namespace network { namespace http {
-
+    
+    template <class Tag, class Handler, class Enable = void>
+    struct server_base {
+        typedef unsupported_tag<Tag> type;
+    };
+    
     template <class Tag, class Handler>
-    struct server_base :
-        mpl::if_<
-            is_async<Tag>
-            , async_server_base<Tag, Handler>
-            , typename mpl::if_<
-                is_sync<Tag>
-                , sync_server_base<Tag, Handler>
-                , unsupported_tag<Tag>
-            >::type
-        >
-    {};
+    struct server_base<Tag, Handler, typename enable_if<is_async<Tag> >::type> {
+        typedef async_server_base<Tag, Handler> type;
+    };
+    
+    template <class Tag, class Handler>
+    struct server_base<Tag, Handler, typename enable_if<is_sync<Tag> >::type> {
+        typedef sync_server_base<Tag, Handler> type;
+    };
 
     template <class Tag, class Handler>
     struct basic_server : server_base<Tag, Handler>::type
