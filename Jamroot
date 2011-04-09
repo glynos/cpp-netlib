@@ -9,6 +9,7 @@ import os ;
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
 use-project /boost : $(BOOST_ROOT) ;
+use-project /cpp-netlib : libs/network/build ;
 
 using testing ;
 

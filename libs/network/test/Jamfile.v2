@@ -4,6 +4,7 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
+import testing ;
 import os ;
 
 if [ os.name ] = CYGWIN
@@ -40,28 +41,10 @@ project network_test :
         <link>static
     ;
 
-unit-test http_localhost_tests : http_localhost_tests.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-unit-test https_localhost_tests : https_localhost_tests.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-unit-test message_test : message_test.cpp ;
-unit-test message_transform_test : message_transform_test.cpp ;
-unit-test http_message_test : http_message_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-unit-test url_test : url_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-unit-test client_server_include_failure : client_server_include_failure.cpp ;
-unit-test http_incremental_parser : http_incremental_parser.cpp ;
-unit-test http_incremental_request_parser : http_incremental_request_parser.cpp ;
-unit-test http_async_message_ready : http_async_message_ready.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+build-project http ;
 
-unit-test http_client_constructor_test : http/client_constructor_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-unit-test http_client_get_test : http/client_get_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-unit-test http_client_get_different_port_test : http/client_get_different_port_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-unit-test http_client_get_timeout_test : http/client_get_timeout_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-
-exe http_async_server : http/server_async.cpp /cpp-netlib//cppnetlib-server-parsers ;
-exe hello_world : http/server_hello_world.cpp /cpp-netlib//cppnetlib-server-parsers ;
-
-make httplib_acceptance.passed : httplib_acceptance.py hello_world : @python_runner ;
-make httplib_async_acceptance.passed : httplib_acceptance.py http_async_server : @python_runner ;
-actions python_runner {
-    python $(>) $(<)
-}
+run message_test.cpp ;
+run message_transform_test.cpp ;
+run url_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+run client_server_include_failure.cpp ;
 
