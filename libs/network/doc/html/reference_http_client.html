@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HTTP Client API &mdash; cpp-netlib v0.8 documentation</title>
+    <title>HTTP Client API &mdash; cpp-netlib v0.9 documentation</title>
     <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8',
+        VERSION:     '0.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,17 +22,31 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.8 documentation" href="index.html" />
+    <link rel="top" title="cpp-netlib v0.9 documentation" href="index.html" />
     <link rel="up" title="Reference Manual" href="reference.html" />
     <link rel="next" title="HTTP Request" href="reference_http_request.html" />
-    <link rel="prev" title="Reference Manual" href="reference.html" /> 
+    <link rel="prev" title="Reference Manual" href="reference.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
   </head>
   <body>
 
     <div class="document">
   <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">cpp-netlib v0.8 documentation</a></h1>
+      <h1><a href="index.html">cpp-netlib v0.9 documentation</a></h1>
       <div class="nav">
     &laquo; <a href="reference.html" title="Reference Manual">previous</a>
      |
@@ -53,7 +67,7 @@
 <p><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> includes and implements a number of HTTP clients that you can
 use and embed in your own applications. All of the HTTP client implementations:</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>Cannot be copied.</strong> This means you may have to store instances of the
 clients in dynamic memory if you intend to use them as function parameters
 or pass them around in smart pointers or by reference.</li>
@@ -65,7 +79,7 @@ case you want to upgrade the implementation you are using in your application
 will be distributed as header-only implementations, which means you have to
 re-compile your application to use a newer version of the implementations.</li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>The HTTP clients all share the same API, but the internals are documented in
 terms of what is different and what to expect with the different
 implementations.</p>
@@ -75,14 +89,14 @@ implementations.</p>
 <p>There is a single user-facing template class named <tt class="docutils literal"><span class="pre">basic_client</span></tt> which takes
 three template parameters:</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>Tag</strong> - which static tag you choose that defines the behavior of the client.</li>
 <li><strong>http_version_major</strong> - an unsigned int that defines the HTTP major version
 number, this directly affects the HTTP messages sent by the client.</li>
 <li><strong>http_version_minor</strong> - an unsigned int that defines the HTTP minor version
 number.</li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>There are two major different class of implementations of the <tt class="docutils literal"><span class="pre">basic_client</span></tt>
 template that depend on which tag you choose: <a class="reference internal" href="#synchronous-clients">Synchronous Clients</a> and
 <a class="reference internal" href="#asynchronous-clients">Asynchronous Clients</a>. These two different classes are described in their own
@@ -147,7 +161,7 @@ resolver.</td>
 <p>In the above table the tags follow a pattern for describing the behavior
 introduced by the tags. This pattern is shown below:</p>
 <blockquote>
-&lt;protocol&gt;_&lt;modifier&gt;_&lt;character-width&gt;_&lt;resolve-strategy&gt;</blockquote>
+<div>&lt;protocol&gt;_&lt;modifier&gt;_&lt;character-width&gt;_&lt;resolve-strategy&gt;</div></blockquote>
 <p>For example, the tag <tt class="docutils literal"><span class="pre">http_default_8bit_tcp_resolve</span></tt> indicates the protocol
 <tt class="docutils literal"><span class="pre">http</span></tt>, a modifier <tt class="docutils literal"><span class="pre">default</span></tt>, a character width of <tt class="docutils literal"><span class="pre">8bit</span></tt>, and a resolve
 strategy of <tt class="docutils literal"><span class="pre">tcp_resolve</span></tt>.</p>
@@ -156,13 +170,13 @@ strategy of <tt class="docutils literal"><span class="pre">tcp_resolve</span></t
 <p>Of the client tags shown in the table, the following makes the <tt class="docutils literal"><span class="pre">basic_client</span></tt>
 behave as a fully synchronous client.</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>http_default_8bit_tcp_resolve</strong></li>
 <li><strong>http_default_8bit_udp_resolve</strong></li>
 <li><strong>http_keepalive_8bit_tcp_resolve</strong></li>
 <li><strong>http_keepalive_8bit_udp_resolve</strong></li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>The synchronous client implements all the operations of the client underneath
 the interface all block to wait for I/O to finish. All the member methods are
 synchronous and will block until the response object is ready or throws if erros
@@ -178,11 +192,11 @@ external synchronization to use synchronous client implementations.</p>
 <p>The following tags specify the <tt class="docutils literal"><span class="pre">basic_client</span></tt> to behave in an asynchronous
 manner:</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>http_async_8bit_tcp_resolve</strong></li>
 <li><strong>http_async_8bit_udp_resolve</strong></li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>An asynchronous client implementation means that``basic_client&lt;...&gt;`` is an
 <a class="reference external" href="http://en.wikipedia.org/wiki/Active_object">Active Object</a>. This means that the client has and manages its own lifetime
 thread, and returns values that are asynchronously filled in. The response
@@ -215,6 +229,14 @@ a one-request-one-connection model.</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/include/http/client.hpp&gt;</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Starting version 0.9, cpp-netlib clients and server implementations
+by default now have an externally-linked component. This is a breaking change
+for code that used to rely on cpp-netlib being a header-only library, but can
+inhibited by defining the <tt class="docutils literal"><span class="pre">BOOST_NETWORK_NO_LIB</span></tt> preprocessor macro before
+including any cpp-netlib header.</p>
+</div>
 <div class="section" id="constructors">
 <h3>Constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h3>
 <p>The client implementation can be default constructed, or customized at
@@ -222,28 +244,74 @@ initialization.</p>
 <dl class="docutils">
 <dt><tt class="docutils literal"><span class="pre">client()</span></tt></dt>
 <dd>Default constructor.</dd>
-<dt><tt class="docutils literal"><span class="pre">client(client::cache_resolved)</span></tt></dt>
-<dd>Construct a client which caches resolved endpoints.</dd>
-<dt><tt class="docutils literal"><span class="pre">client(client::follow_redirects)</span></tt></dt>
-<dd>Construct a client which follows HTTP redirects. <a class="footnote-reference" href="#id4" id="id2">[1]</a></dd>
-<dt><tt class="docutils literal"><span class="pre">client(client::cache_resolved,</span> <span class="pre">client::follow_redirects),</span> <span class="pre">client(client::follow_redirects,</span> <span class="pre">client::cache_resolved)</span></tt></dt>
-<dd>Construct a client which caches resolved endpoints and follows HTTP
-redirects. <a class="footnote-reference" href="#id5" id="id3">[2]</a></dd>
+<dt><tt class="docutils literal"><span class="pre">client(boost::asio::io_service</span> <span class="pre">&amp;</span> <span class="pre">io_service)</span></tt></dt>
+<dd>Construct a client to use an existing Boost.Asio <tt class="docutils literal"><span class="pre">io_service</span></tt> instance.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">ArgPack&gt;</span> <span class="pre">client(ArgPack</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">args)</span></tt></dt>
+<dd>Pass in an argument pack. See supported parameters in the table below.</dd>
 </dl>
-<table class="docutils footnote" frame="void" id="id4" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="40%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Parameter Name</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>In Asynchronous Clients, redirects are not followed. This means the
-response objects will contain whatever HTTP response was retrieved by the
-client implementation.</td></tr>
+<tr><td>_follow_redirects</td>
+<td><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+<td>Boolean to specify
+whether the client
+should follow HTTP
+redirects. Default is
+<tt class="docutils literal"><span class="pre">false</span></tt>.</td>
+</tr>
+<tr><td>_cache_resolved</td>
+<td><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+<td>Boolean to specify
+whether the client
+should cache resolved
+endpoints. The default
+is <tt class="docutils literal"><span class="pre">false</span></tt>.</td>
+</tr>
+<tr><td>_io_service</td>
+<td><tt class="docutils literal"><span class="pre">boost::asio::io_service</span> <span class="pre">&amp;</span></tt></td>
+<td>Reference to an
+instance of a
+Boost.Asio
+<tt class="docutils literal"><span class="pre">io_service</span></tt>.</td>
+</tr>
+<tr><td>_openssl_certificate</td>
+<td>string</td>
+<td>The filename of the
+certificate to load for
+the SSL connection for
+verification.</td>
+</tr>
+<tr><td>_openssl_verify_path</td>
+<td>string</td>
+<td>The directory from
+which the certificate
+authority files are
+located.</td>
+</tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id5" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>In Asynchronous Clients, only caching resolved endpoints take effect.</td></tr>
-</tbody>
-</table>
+<p>To use the above supported named parameters, you&#8217;ll have code that looks like
+the following:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span> <span class="c1">// parameters are in this namespace</span>
+<span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">io_service</span> <span class="n">my_io_service</span><span class="p">;</span>
+<span class="n">client</span> <span class="n">client_</span><span class="p">(</span><span class="n">_follow_redirects</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span> <span class="n">_cache_resolved</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span>
+               <span class="n">_io_service</span><span class="o">=</span><span class="n">my_io_service</span>
+               <span class="p">,</span> <span class="n">_openssl_certificate</span><span class="o">=</span><span class="s">&quot;/tmp/my-cert&quot;</span>
+               <span class="p">,</span> <span class="n">_openssl_verify_path</span><span class="o">=</span><span class="s">&quot;/tmp/ca-certs/&quot;</span><span class="p">);</span>
+<span class="c1">// use client_ as normal from here on out.</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="http-methods">
 <h3>HTTP Methods<a class="headerlink" href="#http-methods" title="Permalink to this headline">¶</a></h3>
@@ -339,7 +407,7 @@ is the HTTP Client&#8217;s <tt class="docutils literal"><span class="pre">Tag</s
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">cpp-netlib v0.8 documentation</a>
+        <a href="index.html">cpp-netlib v0.9 documentation</a>
         
           <ul><li><a href="reference.html">Reference Manual</a>
         
@@ -387,6 +455,7 @@ is the HTTP Client&#8217;s <tt class="docutils literal"><span class="pre">Tag</s
     </div>
   <div class="footer">
       documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+      | background image attributed to <a href="http://www.flickr.com/photos/OrangeSmell">OrangeSmell</a>
   </div>
 
   </body>

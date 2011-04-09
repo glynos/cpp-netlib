@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>C++ Network Library &mdash; cpp-netlib v0.8 documentation</title>
+    <title>C++ Network Library &mdash; cpp-netlib v0.9 documentation</title>
     <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8',
+        VERSION:     '0.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,17 +22,31 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.8 documentation" href="#" />
-    <link rel="next" title="What’s New" href="whats_new.html" /> 
+    <link rel="top" title="cpp-netlib v0.9 documentation" href="#" />
+    <link rel="next" title="What’s New" href="whats_new.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
   </head>
   <body>
 
     <div class="document">
   <div id="custom-doc" class="">
     <div id="hd">
-      <h1><a href="#">cpp-netlib v0.8 documentation</a></h1>
+      <h1><a href="#">cpp-netlib v0.9 documentation</a></h1>
       <div class="nav">
-    <a title="cpp-netlib v0.8 documentation" href="#" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9 documentation" href="#" accesskey="U">up</a>
    |
     <a href="whats_new.html" title="What&amp;#8217;s New">next</a> &raquo;</div>
     </div>
@@ -44,7 +58,7 @@
             
   <div class="section" id="c-network-library">
 <h1>C++ Network Library<a class="headerlink" href="#c-network-library" title="Permalink to this headline">¶</a></h1>
-<img align="right" alt="_images/boost.png" class="align-right" src="_images/boost.png" />
+<img alt="_images/boost.png" class="align-right" src="_images/boost.png" />
 <div class="section" id="welcome">
 <h2>Welcome<a class="headerlink" href="#welcome" title="Permalink to this headline">¶</a></h2>
 <p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is a library that provides application layer
@@ -78,30 +92,31 @@ applications like:</p>
 <h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
 <p>You can download the latest releases of the library at:</p>
 <blockquote>
-<a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">http://github.com/cpp-netlib/cpp-netlib/downloads</a></blockquote>
+<div><a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">http://github.com/cpp-netlib/cpp-netlib/downloads</a></div></blockquote>
 <p>You can also get the latest developments from the <a class="reference external" href="http://git-scm.com/">Git</a> repository at:</p>
 <blockquote>
-git://github.com/mikhailberis/cpp-netlib.git</blockquote>
+<div>git://github.com/mikhailberis/cpp-netlib.git</div></blockquote>
 <p>You can find more information about the progress of the development by checking
 the <a class="reference external" href="http://github.com/">GitHub</a> project page at:</p>
 <blockquote>
-<a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib">http://github.com/cpp-netlib/cpp-netlib</a></blockquote>
+<div><a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib">http://github.com/cpp-netlib/cpp-netlib</a></div></blockquote>
 </div>
 <div class="section" id="support">
 <h2>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h2>
 <p>You can ask questions, join the discussion, and report issues to the developers
 mailing list by joining via:</p>
 <blockquote>
-<a class="reference external" href="https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel">https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel</a></blockquote>
+<div><a class="reference external" href="https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel">https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel</a></div></blockquote>
 <p>You may also file issues on the <a class="reference external" href="http://github.com/">Github</a> issue tracker at:</p>
 <blockquote>
-<a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/issues">http://github.com/cpp-netlib/cpp-netlib/issues</a></blockquote>
+<div><a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/issues">http://github.com/cpp-netlib/cpp-netlib/issues</a></div></blockquote>
 </div>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="whats_new.html">What&#8217;s New</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="whats_new.html#cpp-netlib-0-9"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9</a></li>
 <li class="toctree-l2"><a class="reference internal" href="whats_new.html#cpp-netlib-0-8"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.8</a></li>
 <li class="toctree-l2"><a class="reference internal" href="whats_new.html#cpp-netlib-0-7"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7</a></li>
 <li class="toctree-l2"><a class="reference internal" href="whats_new.html#cpp-netlib-0-6"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6</a></li>
@@ -167,7 +182,7 @@ mailing list by joining via:</p>
 
     <div id="ft">
       <div class="nav">
-    <a title="cpp-netlib v0.8 documentation" href="#" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9 documentation" href="#" accesskey="U">up</a>
    |
     <a href="whats_new.html" title="What&amp;#8217;s New">next</a> &raquo;</div>
     </div>
@@ -177,6 +192,7 @@ mailing list by joining via:</p>
     </div>
   <div class="footer">
       documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+      | background image attributed to <a href="http://www.flickr.com/photos/OrangeSmell">OrangeSmell</a>
   </div>
 
   </body>

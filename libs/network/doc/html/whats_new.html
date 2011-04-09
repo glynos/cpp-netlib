@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>What’s New &mdash; cpp-netlib v0.8 documentation</title>
+    <title>What’s New &mdash; cpp-netlib v0.9 documentation</title>
     <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8',
+        VERSION:     '0.9',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,20 +22,34 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.8 documentation" href="index.html" />
+    <link rel="top" title="cpp-netlib v0.9 documentation" href="index.html" />
     <link rel="next" title="Getting Started" href="getting_started.html" />
-    <link rel="prev" title="C++ Network Library" href="index.html" /> 
+    <link rel="prev" title="C++ Network Library" href="index.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
   </head>
   <body>
 
     <div class="document">
   <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">cpp-netlib v0.8 documentation</a></h1>
+      <h1><a href="index.html">cpp-netlib v0.9 documentation</a></h1>
       <div class="nav">
     &laquo; <a href="index.html" title="C++ Network Library">previous</a>
      |
-    <a title="cpp-netlib v0.8 documentation" href="index.html" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9 documentation" href="index.html" accesskey="U">up</a>
    |
     <a href="getting_started.html" title="Getting Started">next</a> &raquo;</div>
     </div>
@@ -47,6 +61,25 @@
             
   <div class="section" id="what-s-new">
 <span id="whats-new"></span><h1>What&#8217;s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cpp-netlib-0-9">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9<a class="headerlink" href="#cpp-netlib-0-9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>IMPORTANT BREAKING CHANGE</strong>: By default all compile-time heavy parser
+implementations are now compiled to external static libraries. In order to use
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> in header-only mode, users must define the preprocessor
+macro <tt class="docutils literal"><span class="pre">BOOST_NETWORK_NO_LIB</span></tt> before including any <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> header.
+This breaks code that relied on the version 0.8.x line where the library is
+strictly header-only.</li>
+<li>More consistent message API for client and server messages (request and
+response objects).</li>
+<li>Refactoring of internal implementations to allow better separation of concerns
+and more manageable coding/documentation.</li>
+<li>Client and Server constructors that support Boost.Parameter named parameters.</li>
+<li>Client and Server cosntructors now take in an optional reference to a Boost.Asio
+<tt class="docutils literal"><span class="pre">io_service</span></tt> to use internally.</li>
+<li>Documentation updates to reflect new APIs.</li>
+</ul>
+</div>
 <div class="section" id="cpp-netlib-0-8">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.8<a class="headerlink" href="#cpp-netlib-0-8" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -103,6 +136,7 @@ the asynchronous client in 0.7 already has all the parts available.</li>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">What&#8217;s New</a><ul>
+<li><a class="reference internal" href="#cpp-netlib-0-9"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9</a></li>
 <li><a class="reference internal" href="#cpp-netlib-0-8"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.8</a></li>
 <li><a class="reference internal" href="#cpp-netlib-0-7"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7</a></li>
 <li><a class="reference internal" href="#cpp-netlib-0-6"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6</a></li>
@@ -123,7 +157,7 @@ the asynchronous client in 0.7 already has all the parts available.</li>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">cpp-netlib v0.8 documentation</a>
+        <a href="index.html">cpp-netlib v0.9 documentation</a>
         
         <ul><li>What&#8217;s New</li></ul>
         
@@ -159,7 +193,7 @@ the asynchronous client in 0.7 already has all the parts available.</li>
       <div class="nav">
     &laquo; <a href="index.html" title="C++ Network Library">previous</a>
      |
-    <a title="cpp-netlib v0.8 documentation" href="index.html" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9 documentation" href="index.html" accesskey="U">up</a>
    |
     <a href="getting_started.html" title="Getting Started">next</a> &raquo;</div>
     </div>
@@ -169,6 +203,7 @@ the asynchronous client in 0.7 already has all the parts available.</li>
     </div>
   <div class="footer">
       documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+      | background image attributed to <a href="http://www.flickr.com/photos/OrangeSmell">OrangeSmell</a>
   </div>
 
   </body>

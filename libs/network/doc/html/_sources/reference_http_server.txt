@@ -172,6 +172,70 @@ Constructor
     ``std::string const &`` and handler being of type ``handler_type`` but
     passed in as an lvalue reference.
 
+``template <class ArgPack> client(ArgPack const & args)``
+    Pass in an argument pack. See supported parameters in the table below.
+
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| Parameter Name         | Type                                     | Description                                                                                      |
++========================+==========================================+==================================================================================================+
+| _address               | string_type                              | The hostname or IP address from which the server should be bound to. This parameter is required. |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _port                  | string_type                              | The port to which the server should bind and listen to. This parameter is required.              |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _handler               | ``Handler &``                            | An lvalue reference to an instance of ``Handler``. This parameter is required.                   |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _thread_pool           | ``boost::network::utils::thread_pool &`` | An lvalue reference to an instance of ``boost::network::utils::thread_pool`` -- this is the      |
+|                        |                                          | thread pool from where the handler is invoked. This parameter is only applicable and required    |
+|                        |                                          | for ``async_server`` instances.                                                                  |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _io_service            | ``boost::asio::io_service &``            | An optional lvalue to an instance of ``boost::asio::io_service`` which allows the server to use  |
+|                        |                                          | an already-constructed ``boost::asio::io_service`` instance instead of instantiating one that it |
+|                        |                                          | manages.                                                                                         |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _reuse_address         | ``bool``                                 | A boolean that specifies whether to re-use the address and port on which the server will be      |
+|                        |                                          | bound to. This enables or disables the socket option for listener sockets. The default is        |
+|                        |                                          | ``false``.                                                                                       |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _report_aborted        | ``bool``                                 | A boolean that specifies whether the listening socket should report aborted connection attempts  |
+|                        |                                          | to the accept handler (an internal detail of cpp-netlib). This is put in place to allow for      |
+|                        |                                          | future-proofing the code in case an optional error handler function is supported in later        |
+|                        |                                          | releases of cpp-netlib. The default is ``false``.                                                |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _receive_buffer_size   | ``int``                                  | The size of the socket's receive buffer. The default is defined by Boost.Asio and is             |
+|                        |                                          | platform-dependent.                                                                              |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _send_buffer_size      | ``int``                                  | The size of the socket's send buffer. The default is defined by Boost.Asio and is                |
+|                        |                                          | platform-dependent.                                                                              |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _receive_low_watermark | ``int``                                  | The size of the socket's low watermark for its receive buffer. The default is defined by         |
+|                        |                                          | Boost.Asio and is platform-dependent.                                                            |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _send_buffer_size      | ``int``                                  | The size of the socket's send low watermark for its send buffer. The default is defined by       |
+|                        |                                          | Boost.Asio and is platform-dependent.                                                            |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _non_blocking_io       | ``bool``                                 | An optional bool to define whether the socket should use non-blocking I/O in case the platform   |
+|                        |                                          | supports it. The default is ``true``.                                                            |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _linger                | ``bool``                                 | An optional bool to determine whether the socket should linger in case there's still data to be  |
+|                        |                                          | sent out at the time of its closing. The default is ``true``.                                    |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| _linger_timeout        | ``int``                                  | An optional int to define the timeout to wait for socket closes before it is set to linger.      |
+|                        |                                          | The default is ``0``.                                                                            |
++------------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+
+To use the above supported named parameters, you'll have code that looks like the following:
+
+.. code-block:: c++
+    
+    using namespace boost::network::http; // parameters are in this namespace
+    boost::asio::io_service my_io_service;
+    boost::network::utils::thread_pool pool(2);
+    handler handler_instance;
+    async_server<handler> instance(_address="0.0.0.0", _port="80", _handler=handler_instance,
+                                   _io_service=my_io_service, _thread_pool=pool,
+                                   _reuse_address=true); 
+    instance.run();
+
 Public Members
 ``````````````
 
