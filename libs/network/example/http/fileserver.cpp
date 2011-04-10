@@ -126,9 +126,9 @@ struct connection_handler : boost::enable_shared_from_this<connection_handler> {
         std::size_t adjusted_offset = offset+4096;
         off_t rightmost_bound = std::min(mmaped_region.second, adjusted_offset);
         connection->write(
-            boost::make_iterator_range(
+            boost::asio::const_buffers_1(
                 static_cast<char const *>(mmaped_region.first) + offset,
-                static_cast<char const *>(mmaped_region.first) + rightmost_bound
+                rightmost_bound
                 )
             , boost::bind(
                 &connection_handler::handle_chunk,
