@@ -35,7 +35,7 @@ main(int argc, char *argv[]) {
         /*<< Gets a response from the HTTP server. >>*/
         http::client::response response = client.get(request);
         /*<< Prints the response body to the console. >>*/
-        std::cout << boost::network::body(response) << std::endl;
+        std::cout << body(response) << std::endl;
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
