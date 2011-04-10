@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'cpp-netlib'
-copyright = u'2008-2010, Glyn Matthews, Dean Michael Berris'
+copyright = u'2008-2011, Glyn Matthews, Dean Michael Berris'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -74,7 +74,7 @@ release = '0.9'
 #today_fmt = '%B %d, %Y'
 
 # List of documents that shouldn't be included in the build.
-#unused_docs = []
+unused_docs = [ 'http_client_tags.rst' ]
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
