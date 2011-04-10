@@ -15,7 +15,7 @@
 .. :Date: Nov 9, 2010
 .. :Version: 0.8
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
-.. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2010.
+.. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2011.
 ..             Distributed under the Boost Software License, Version
 ..             1.0. (See accompanying file LICENSE_1_0.txt or copy at
 ..             http://www.boost.org/LICENSE_1_0.txt)
@@ -40,7 +40,7 @@ The :mod:`cpp-netlib` allows you to write semantically consistent code for
 making different kinds of higher level network applications.
 
 The library allows for writing simple code for simple C++ HTTP client
-applications like:
+applications:
 
 .. code-block:: c++
 
@@ -52,6 +52,34 @@ applications like:
     client client_;
     client::response response_ = client_.get(request);
     std::string body = body(response_);
+
+The library also allows for writing simple C++ HTTP servers:
+
+.. code-block:: c++
+
+    namespace http = boost::network::http;
+
+    struct handler;
+    typedef http::server<handler> http_server;
+
+    struct handler {
+        void operator() (http_server::request const & request_,
+                         http_server::response & response_) {
+            response = http_server::response::stock_reply(
+                http_server::response::ok, "Hello, world!");
+        }
+
+        void log(http_server::string_type const & info) {
+            std::cerr << "ERROR: " << info << '\n';
+        }
+
+    };
+
+    int main(int arg, char * argv[]) {
+        handler handler_;
+        http_server server_("0.0.0.0", "8000", handler_);
+        server_.run();
+    }
 
 The :mod:`cpp-netlib` is being developed for eventual submission to Boost_.
 
