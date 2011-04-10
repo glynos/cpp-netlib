@@ -18,21 +18,22 @@ project network_test :
         <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
         <link>static
         <c++-template-depth>256
+        <variant>debug:<define>BOOST_NETWORK_DEBUG
     ;
 
-exe http_client : http_client.cpp ;
+exe http_client : http_client.cpp /cpp-netlib//cppnetlib-uri-parsers ;
 
 # exe dispatch_table : dispatch_table.cpp ;
 
-exe uri : uri.cpp ;
+exe uri : uri.cpp /cpp-netlib//cppnetlib-uri-parsers ;
 
-exe simple_wget : simple_wget.cpp ;
+exe simple_wget : simple_wget.cpp /cpp-netlib//cppnetlib-uri-parsers ;
 
-exe hello_world_server : http/hello_world_server.cpp ;
+exe hello_world_server : http/hello_world_server.cpp /cpp-netlib//cppnetlib-server-parsers ;
 
-exe hello_world_client : http/hello_world_client.cpp ;
+exe hello_world_client : http/hello_world_client.cpp /cpp-netlib//cppnetlib-uri-parsers ;
 
-exe one_liner : http/one_liner.cpp ;
+exe one_liner : http/one_liner.cpp /cpp-netlib//cppnetlib-uri-parsers ;
 
-exe fileserver : http/fileserver.cpp ;
+exe fileserver : http/fileserver.cpp /cpp-netlib//cppnetlib-server-parsers ;
 
