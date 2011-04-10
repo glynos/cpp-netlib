@@ -1,6 +1,6 @@
-@import url(reset-fonts-grids.css);
+@import url('reset-fonts-grids.css');
 
-html, body {background-image: url(./orange-background.jpg); background-repeat:no-repeat; background-position:left top; background-attachment:fixed; background-color:black}
+html, body {background-image: url('./orange-background.jpg'); background-repeat:no-repeat; background-position:left top; background-attachment:fixed; background-color:black}
 body {font:12pt sans-serif; color:black}
 #custom-doc { width:80%;*width:720px; min-width:720px; max-width:960px; margin:auto; text-align:left; padding-top:16px; margin-top:0}
 #hd { padding: 4px 0 12px 0}
@@ -43,7 +43,7 @@ a.reference em { color: #FF9955;font-style:normal;font-weight:bold;}
 #sidebar h3, #sidebar h4 { color: #487858; font-size: 125%}
 #sidebar a { color: #8B4513}
 #sidebar ul ul { margin-top:0; margin-bottom:0}
-#sidebar li { margin-top: 0.2em; margin-bottom: 0.2em}
+#sidebar li { margin-top: 0.2em; margin-bottom: 0.2em; list-style-position: inside; list-style-type: square;}
 
 /*** nav ***/
 div.nav { margin: 0; font-size: 12px; text-align: right; color: #487858}
