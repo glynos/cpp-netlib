@@ -32,7 +32,7 @@
 {% endblock %}
 
 {% block document %}
-  <div id="custom-doc" class="{% block bodyclass %}{{ 'yui-t4' if pagename != 'index' else '' }}{% endblock %}">
+  <div id="custom-doc" class="{% block bodyclass %}yui-t4{% endblock %}">
     <div id="hd">
       <h1><a href="{{ pathto('index') }}">{{ docstitle }}</a></h1>
       <div class="nav">{{ secondnav() }}</div>
@@ -47,15 +47,13 @@
         </div>
       </div>
       {% block sidebarwrapper %}
-        {% if pagename != 'index' %}
-          <div class="yui-b" id="sidebar">
-            {{ sidebar() }}
-            {%- if last_updated %}
-              <h3>Last update:</h3>
-              <p class="topless">{{ last_updated }}</p>
-            {%- endif %}
-          </div>
-        {% endif %}
+        <div class="yui-b" id="sidebar">
+          {{ sidebar() }}
+          {%- if last_updated %}
+            <h3>Last update:</h3>
+            <p class="topless">{{ last_updated }}</p>
+          {%- endif %}
+        </div>
       {% endblock %}
     </div>
 
