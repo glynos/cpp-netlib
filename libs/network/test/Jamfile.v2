@@ -24,6 +24,7 @@ project network_test :
         <source>/boost//thread
         <source>/boost//filesystem
         <define>BOOST_NETWORK_ENABLE_HTTPS
+        <variant>debug:<define>BOOST_NETWORK_DEBUG
         <toolset>gcc:<linkflags>-lpthread
         <toolset>gcc:<linkflags>-lssl
         <toolset>gcc:<linkflags>-lcrypto

@@ -12,6 +12,7 @@ project network_test/http :
     requirements
         <include>../../../../
         <include>../
+        <variant>debug:<define>BOOST_NETWORK_DEBUG
     ;
 
 run client_constructor_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
