@@ -58,7 +58,7 @@ def test_status(url, method, expected, headers={}, body=''):
         print('Caught Exception: {0}'.format(e))
         status = 1
 
-url = 'http://localhost:{0}/'.format(argv[2])
+url = 'http://127.0.0.1:{0}/'.format(argv[2])
 test(url, 'GET', expected)
 test(url, 'DELETE', expected)
 # Good request case, there's a content-length header for POST

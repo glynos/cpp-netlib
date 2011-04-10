@@ -49,8 +49,12 @@ int main(int argc, char * argv[]) {
     if (argc > 1) port = argv[1];
     server server_("127.0.0.1", port, handler, http::_reuse_address=true);
     boost::thread runner(boost::bind(&server::run, &server_));
-    server_.stop();
-    runner.join();
+    try {
+        server_.stop();
+        runner.join();
+    } catch (...) {
+        /* ignore all errors */
+    }
     return EXIT_SUCCESS;
 }
 
