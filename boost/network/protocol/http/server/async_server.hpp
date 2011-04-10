@@ -6,6 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/detail/debug.hpp>
 #include <boost/network/protocol/http/server/async_connection.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/network/protocol/http/server/storage_base.hpp>
@@ -56,12 +57,17 @@ namespace boost { namespace network { namespace http {
             // handlers finish.
             stopping = true;
             system::error_code ignored;
-            acceptor.cancel(ignored);
+            acceptor.close(ignored);
         }
 
         void listen() {
             boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
+            BOOST_NETWORK_MESSAGE("Listening on " << address_ << ':' << port_);
             if (!listening) start_listening();
+            if (!listening) {
+                BOOST_NETWORK_MESSAGE("Error listening on " << address_ << ':' << port_);
+                boost::throw_exception(std::runtime_error("Error listening on provided port."));
+            }
         }
 
     private:
@@ -94,23 +100,39 @@ namespace boost { namespace network { namespace http {
                             )
                         );
                 }
+            } else {
+                BOOST_NETWORK_MESSAGE("Error accepting connection, reason: " << ec);
             }
         }
-
+        
         void start_listening() {
             using boost::asio::ip::tcp;
-            tcp::resolver resolver(service_);
-            tcp::resolver::query query(address_, port_);
-            tcp::endpoint endpoint = *resolver.resolve(query);
             
             system::error_code error;
+            tcp::resolver resolver(service_);
+            tcp::resolver::query query(address_, port_);
+            tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
+            if (error) {
+                BOOST_NETWORK_MESSAGE("Error resolving '" << address_ << ':' << port_);
+                return;
+            }
+            tcp::endpoint endpoint = *endpoint_iterator;
             acceptor.open(endpoint.protocol(), error);
-            if (error) return;
+            if (error) {
+                BOOST_NETWORK_MESSAGE("Error opening socket: " << address_ << ":" << port_);
+                return;
+            }
             acceptor.bind(endpoint, error);
-            if (error) return;
+            if (error) {
+                BOOST_NETWORK_MESSAGE("Error binding socket: " << address_ << ":" << port_);
+                return;
+            }
             socket_options_base::acceptor_options(acceptor);
             acceptor.listen(asio::socket_base::max_connections, error);
-            if (error) return;
+            if (error) {
+                BOOST_NETWORK_MESSAGE("Error listening on socket: '" << error << "' on " << address_ << ":" << port_);
+                return;
+            }
             new_connection.reset(new connection(service_, handler, thread_pool));
             acceptor.async_accept(new_connection->socket(),
                 boost::bind(
@@ -118,9 +140,10 @@ namespace boost { namespace network { namespace http {
                     , this
                     , boost::asio::placeholders::error));
             listening = true;
+            BOOST_NETWORK_MESSAGE("Now listening on socket: '" << address_ << ":" << port_ << "'");
         }
     };
-
+    
 } /* http */
     
 } /* network */

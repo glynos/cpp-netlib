@@ -8,6 +8,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 #define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 
+#include <boost/network/detail/debug.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/asio/ip/tcp.hpp>
@@ -58,7 +59,7 @@ namespace boost { namespace network { namespace http {
         void stop() {
             // stop accepting new connections and let all the existing handlers finish.
             system::error_code ignored;
-            acceptor_.cancel(ignored);
+            acceptor_.close(ignored);
             service_.stop();
         }
 
@@ -89,13 +90,31 @@ namespace boost { namespace network { namespace http {
 
         void start_listening() {
             using boost::asio::ip::tcp;
+            system::error_code error;
             tcp::resolver resolver(service_);
             tcp::resolver::query query(address_, port_);
-            tcp::endpoint endpoint = *resolver.resolve(query);
-            acceptor_.open(endpoint.protocol());
+            tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
+            if (error) {
+                BOOST_NETWORK_MESSAGE("Error resolving address: " << address_ << ':' << port_);
+                return;
+            }
+            tcp::endpoint endpoint = *endpoint_iterator;
+            acceptor_.open(endpoint.protocol(), error);
+            if (error) {
+                BOOST_NETWORK_MESSAGE("Error opening socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
+                return;
+            }
             socket_options_base::acceptor_options(acceptor_);
-            acceptor_.bind(endpoint);
-            acceptor_.listen();
+            acceptor_.bind(endpoint, error);
+            if (error) {
+                BOOST_NETWORK_MESSAGE("Error binding to socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
+                return;
+            }
+            acceptor_.listen(tcp::socket::max_connections, error);
+            if (error) {
+                BOOST_NETWORK_MESSAGE("Error listening on socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
+                return;
+            }
             new_connection.reset(new sync_connection<Tag,Handler>(service_, handler_));
             acceptor_.async_accept(new_connection->socket(),
                 boost::bind(&sync_server_base<Tag,Handler>::handle_accept,
