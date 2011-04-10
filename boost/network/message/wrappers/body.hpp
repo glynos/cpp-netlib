@@ -77,6 +77,18 @@ namespace boost { namespace network {
                     return boost::make_iterator_range(wrapper_base::_message.body());
                 }
             };
+        
+        template <class Tag>
+        inline std::ostream & operator<<(std::ostream & os, body_wrapper<Tag> const & body) {
+            os << static_cast<typename body_wrapper<Tag>::string_type>(body);
+            return os;
+        }
+        
+        template <class Tag>
+        inline std::ostream & operator<<(std::ostream & os, body_wrapper_const<Tag> const & body) {
+            os << static_cast<typename body_wrapper_const<Tag>::string_type>(body);
+            return os;
+        }
 
     } // namespace impl
 

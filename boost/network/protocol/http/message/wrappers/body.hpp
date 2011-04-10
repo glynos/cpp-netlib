@@ -39,6 +39,12 @@ namespace boost { namespace network { namespace http {
                 return boost::make_iterator_range(message_.body());
             }
         };
+        
+        template <class Message>
+        inline std::ostream & operator<<(std::ostream & os, body_wrapper<Message> const & body) {
+            os << static_cast<typename body_wrapper<Message>::string_type>(body);
+            return os;
+        }
 
     } // namespace impl
 
