@@ -42,7 +42,7 @@
   <body>
 
     <div class="document">
-  <div id="custom-doc" class="">
+  <div id="custom-doc" class="yui-t4">
     <div id="hd">
       <h1><a href="#">cpp-netlib v0.9 documentation</a></h1>
       <div class="nav">
@@ -58,7 +58,7 @@
             
   <div class="section" id="c-network-library">
 <h1>C++ Network Library<a class="headerlink" href="#c-network-library" title="Permalink to this headline">¶</a></h1>
-<img alt="_images/boost.png" class="align-right" src="_images/boost.png" />
+<img alt="_images/boost7.png" class="align-right" src="_images/boost7.png" />
 <div class="section" id="welcome">
 <h2>Welcome<a class="headerlink" href="#welcome" title="Permalink to this headline">¶</a></h2>
 <p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is a library that provides application layer
@@ -75,7 +75,7 @@ for which the <a class="reference external" href="http://www.filetolink.com/b0e8
 <p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> allows you to write semantically consistent code for
 making different kinds of higher level network applications.</p>
 <p>The library allows for writing simple code for simple C++ HTTP client
-applications like:</p>
+applications:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
 
@@ -84,6 +84,32 @@ applications like:</p>
 <span class="n">client</span> <span class="n">client_</span><span class="p">;</span>
 <span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response_</span> <span class="o">=</span> <span class="n">client_</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
 <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">body</span> <span class="o">=</span> <span class="n">body</span><span class="p">(</span><span class="n">response_</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The library also allows for writing simple C++ HTTP servers:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">namespace</span> <span class="n">http</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">handler</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="n">http</span><span class="o">::</span><span class="n">server</span><span class="o">&lt;</span><span class="n">handler</span><span class="o">&gt;</span> <span class="n">http_server</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">handler</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="k">operator</span><span class="p">()</span> <span class="p">(</span><span class="n">http_server</span><span class="o">::</span><span class="n">request</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">request_</span><span class="p">,</span>
+                     <span class="n">http_server</span><span class="o">::</span><span class="n">response</span> <span class="o">&amp;</span> <span class="n">response_</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">http_server</span><span class="o">::</span><span class="n">response</span><span class="o">::</span><span class="n">stock_reply</span><span class="p">(</span>
+            <span class="n">http_server</span><span class="o">::</span><span class="n">response</span><span class="o">::</span><span class="n">ok</span><span class="p">,</span> <span class="s">&quot;Hello, world!&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">log</span><span class="p">(</span><span class="n">http_server</span><span class="o">::</span><span class="n">string_type</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">info</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;ERROR: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">info</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">arg</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="n">handler</span> <span class="n">handler_</span><span class="p">;</span>
+    <span class="n">http_server</span> <span class="n">server_</span><span class="p">(</span><span class="s">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="s">&quot;8000&quot;</span><span class="p">,</span> <span class="n">handler_</span><span class="p">);</span>
+    <span class="n">server_</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is being developed for eventual submission to <a class="reference external" href="http://www.boost.org/">Boost</a>.</p>
@@ -128,22 +154,51 @@ mailing list by joining via:</p>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#downloading-a-development-version">Downloading a development version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#getting-boost">Getting Boost</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#getting-cmake">Getting CMake</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting_started.html#building-with-cmake">Building with CMake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#building-with-cmake">Building with CMake</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#building-on-linux">Building on Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting_started.html#building-on-windows">Building On Windows</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="getting_started.html#reporting-issues-getting-support">Reporting Issues, Getting Support</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples_http.html">HTTP examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples_http.html">HTTP examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="http_client.html">HTTP client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hello_world_client.html">&#8220;Hello world&#8221; HTTP client</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="in_depth.html">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="message.html">The message template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uri.html">The URI template</a></li>
-<li class="toctree-l2"><a class="reference internal" href="http.html">HTTP implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message.html">The message template</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="message.html#message-concept">Message Concept</a></li>
+<li class="toctree-l3"><a class="reference internal" href="message.html#directives-modifiers-and-wrappers">Directives, Modifiers, and Wrappers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="message.html#basic-message"><tt class="docutils literal"><span class="pre">basic_message</span></tt></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="uri.html">The URI template</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uri.html#generic-uri-syntax-overview">Generic URI Syntax Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uri.html#basic-uri"><tt class="docutils literal"><span class="pre">basic_uri</span></tt></a></li>
+<li class="toctree-l3"><a class="reference internal" href="uri.html#uri-concept"><tt class="docutils literal"><span class="pre">URI</span> <span class="pre">Concept</span></tt></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="http.html">HTTP implementation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="http.html#http-client">HTTP client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#http-server">HTTP server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="http.html#http-uri">HTTP URI</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="techniques.html">Techniques</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tag_metafunctions.html">Tag metafunctions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tag_metafunctions.html">Tag metafunctions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tag_metafunctions.html#template-specialization">Template Specialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tag_metafunctions.html#template-metaprogramming">Template Metaprogramming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tag_metafunctions.html#using-tags">Using Tags</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="directives.html">Directives</a></li>
 <li class="toctree-l2"><a class="reference internal" href="polymorphism.html">Static and dynamic polymorphism</a></li>
 </ul>
@@ -155,10 +210,33 @@ mailing list by joining via:</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Full installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Manual</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference_http_client.html">HTTP Client API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_http_request.html">HTTP Request</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_http_response.html">HTTP Response</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference_http_server.html">HTTP Server API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_http_client.html">HTTP Client API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_client.html#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_client.html#implementations">Implementations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_client.html#member-functions">Member Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference_http_request.html">HTTP Request</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_request.html#request-concepts">Request Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_request.html#directives">Directives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_request.html#modifiers">Modifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_request.html#wrappers">Wrappers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference_http_response.html">HTTP Response</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_response.html#response-concept">Response Concept</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_response.html#directives">Directives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_response.html#modifiers">Modifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_response.html#wrappers">Wrappers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference_http_server.html">HTTP Server API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_server.html#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_server.html#implementations">Implementations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_server.html#synchronous-servers">Synchronous Servers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_http_server.html#asynchronous-servers">Asynchronous Servers</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="references.html">References</a><ul>
@@ -176,7 +254,62 @@ mailing list by joining via:</p>
         </div>
       </div>
       
+        <div class="yui-b" id="sidebar">
+          
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">C++ Network Library</a><ul>
+<li><a class="reference internal" href="#welcome">Welcome</a></li>
+<li><a class="reference internal" href="#sneak-peek">Sneak Peek</a></li>
+<li><a class="reference internal" href="#download">Download</a></li>
+<li><a class="reference internal" href="#support">Support</a></li>
+<li><a class="reference internal" href="#contents">Contents</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+    
+      <li>Next: <a href="whats_new.html">What&#8217;s New</a></li>
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="#">cpp-netlib v0.9 documentation</a>
         
+        <ul><li>C++ Network Library</li></ul>
+        
+      </li>
+  </ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
       
     </div>
 
