@@ -140,9 +140,7 @@ namespace boost { namespace network { namespace http {
         , handler(handler)
         , thread_pool_(thread_pool)
         , headers_already_sent(false)
-        , first_line_already_sent(false)
         , headers_in_progress(false)
-        , first_line_in_progress(false)
         , headers_buffer(BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE)
         {
             new_start = read_buffer_.begin();
@@ -167,26 +165,30 @@ namespace boost { namespace network { namespace http {
         template <class Range>
         void set_headers(Range headers) {
             lock_guard lock(headers_mutex);
-            if (first_line_in_progress || headers_in_progress || headers_already_sent) 
+            if (headers_in_progress || headers_already_sent) 
                 boost::throw_exception(std::logic_error("Headers have already been sent."));
 
             if (error_encountered)
                 boost::throw_exception(boost::system::system_error(*error_encountered));
 
             typedef constants<Tag> consts;
-            headers_buffer.consume(headers_buffer.size());
-            std::ostream stream(&headers_buffer);
-            if (!boost::empty(headers)) {
-                typedef typename Range::const_iterator iterator;
-                typedef typename string<Tag>::type string_type;
-                boost::transform(headers, 
-                    std::ostream_iterator<string_type>(stream),
-                    linearize_header<Tag>());
-            } else {
+            {
+                std::ostream stream(&headers_buffer);
+                stream
+                    << consts::http_slash() << 1<< consts::dot() << 1 << consts::space()
+                    << status << consts::space() << status_message(status)
+                    << consts::crlf();
+                if (!boost::empty(headers)) {
+                    typedef typename Range::const_iterator iterator;
+                    typedef typename string<Tag>::type string_type;
+                    boost::transform(headers, 
+                        std::ostream_iterator<string_type>(stream),
+                        linearize_header<Tag>());
+                } else {
+                    stream << consts::crlf();
+                }
                 stream << consts::crlf();
             }
-            stream << consts::crlf();
-            stream.flush();
 
             write_headers_only(
                 boost::bind(
@@ -307,8 +309,8 @@ namespace boost { namespace network { namespace http {
         asio::io_service::strand strand;
         Handler & handler;
         utils::thread_pool & thread_pool_;
-        volatile bool headers_already_sent, first_line_already_sent, headers_in_progress, first_line_in_progress;
-        asio::streambuf headers_buffer, first_line_buffer;
+        volatile bool headers_already_sent, headers_in_progress;
+        asio::streambuf headers_buffer;
 
         boost::recursive_mutex headers_mutex;
         buffer_type read_buffer_;
@@ -468,23 +470,12 @@ namespace boost { namespace network { namespace http {
         }
 
         void client_error() {
-            status = bad_request;
-            write_first_line(
-                strand.wrap(
-                    boost::bind(
-                        &async_connection<Tag,Handler>::client_error_first_line_written
-                        , async_connection<Tag,Handler>::shared_from_this()
-                        , asio::placeholders::error
-                        , asio::placeholders::bytes_transferred)));
-        }
-
-        void client_error_first_line_written(boost::system::error_code const & ec, std::size_t bytes_transferred) {
             static char const * bad_request = 
                 "HTTP/1.0 400 Bad Request\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
 
             asio::async_write(
                 socket()
-                , asio::buffer(bad_request, 115)
+                , asio::buffer(bad_request, strlen(bad_request))
                 , strand.wrap(
                     boost::bind(
                         &async_connection<Tag,Handler>::client_error_sent
@@ -505,58 +496,19 @@ namespace boost { namespace network { namespace http {
 
         void do_nothing() {}
 
-        template <class Callback>
-        void write_first_line(Callback callback) {
-            lock_guard lock(headers_mutex);
-            if (first_line_in_progress) return;
-            first_line_in_progress = true;
-
-            typedef constants<Tag> consts;
-            first_line_buffer.consume(first_line_buffer.size());
-            std::ostream first_line_stream(&first_line_buffer);
-            first_line_stream
-                << consts::http_slash() << 1<< consts::dot() << 1 << consts::space()
-                << status << consts::space() << status_message(status)
-                << consts::crlf()
-                << std::flush
-                ;
-            asio::async_write(
-                socket()
-                , first_line_buffer
-                , callback);
-        }
-
         void write_headers_only(boost::function<void()> callback) {
             if (headers_in_progress) return;
             headers_in_progress = true;
-
-            write_first_line(
-                strand.wrap(
+            asio::async_write(
+                socket()
+                , headers_buffer
+                , strand.wrap(
                     boost::bind(
-                        &async_connection<Tag,Handler>::handle_first_line_written
+                        &async_connection<Tag,Handler>::handle_write_headers
                         , async_connection<Tag,Handler>::shared_from_this()
                         , callback
                         , asio::placeholders::error
                         , asio::placeholders::bytes_transferred)));
-        }
-
-        void handle_first_line_written(boost::function<void()> callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
-            lock_guard lock(headers_mutex);
-            if (!ec) {
-                first_line_already_sent = true;
-                asio::async_write(
-                    socket()
-                    , headers_buffer
-                    , strand.wrap(
-                        boost::bind(
-                            &async_connection<Tag,Handler>::handle_write_headers
-                            , async_connection<Tag,Handler>::shared_from_this()
-                            , callback
-                            , asio::placeholders::error
-                            , asio::placeholders::bytes_transferred)));
-            } else {
-                error_encountered = in_place<boost::system::system_error>(ec);
-            }
         }
 
         void handle_write_headers(boost::function<void()> callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
