@@ -31,6 +31,9 @@ project network_test :
         <toolset>darwin:<linkflags>-lpthread
         <toolset>darwin:<linkflags>-lssl
         <toolset>darwin:<linkflags>-lcrypto
+        <toolset>clang:<linkflags>-lpthread
+        <toolset>clang:<linkflags>-lssl
+        <toolset>clang:<linkflags>-lcrypto
         <os>cygwin,<toolset>gcc:<define>_WIN32_WINNT=0x0501
         <os>cygwin,<toolset>gcc:<define>__USE_W32_SOCKETS
         <os>cygwin,<toolset>gcc:<library>ws2_32
