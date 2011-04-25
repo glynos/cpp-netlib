@@ -15,6 +15,10 @@ namespace boost { namespace network { namespace http {
     BOOST_PARAMETER_NAME(openssl_certificate)
     BOOST_PARAMETER_NAME(openssl_verify_path)
     
+    BOOST_PARAMETER_NAME(request)
+    BOOST_PARAMETER_NAME(body)
+    BOOST_PARAMETER_NAME(content_type)
+    
 } /* http */
     
 } /* network */

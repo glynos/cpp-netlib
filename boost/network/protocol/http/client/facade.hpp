@@ -41,62 +41,80 @@ namespace boost { namespace network { namespace http {
                     >::type());
         }
 
-        response const head (request const & request_) {
-            return pimpl->request_skeleton(request_, "HEAD", false);
+        BOOST_PARAMETER_MEMBER_FUNCTION((response const), head, tag, (required (request,(request const &)))) {
+            return pimpl->request_skeleton(request, "HEAD", false);
         }
 
-        response const get (request const & request_) {
-            return pimpl->request_skeleton(request_, "GET", true);
+        BOOST_PARAMETER_MEMBER_FUNCTION((response const), get , tag, (required (request,(request const &)))) {
+            return pimpl->request_skeleton(request, "GET", true);
         }
 
-        response const post (request const & request_) {
-            return pimpl->request_skeleton(request_, "POST", true);
+        BOOST_PARAMETER_MEMBER_FUNCTION((response const), post, tag, 
+            (required 
+                (request,(request)) // yes sir, we make a copy of the original request.
+                )
+            (optional 
+                (body,(string_type const &),string_type())
+                (content_type,(string_type const &),string_type())
+                )
+            ) {
+            if (body != string_type()) {
+                request << remove_header("Content-Length")
+                    << header("Content-Length", boost::lexical_cast<string_type>(body.size()))
+                    << boost::network::body(body);
+            }
+            typename headers_range<basic_request<Tag> >::type content_type_headers =
+                headers(request)["Content-Type"];
+            if (content_type != string_type()) {
+                if (!boost::empty(content_type_headers))
+                    request << remove_header("Content-Type");
+                request << header("Content-Type", content_type);
+            } else {
+                if (boost::empty(content_type_headers)) {
+                    typedef typename char_<Tag>::type char_type;
+                    static char_type content_type[] = "x-application/octet-stream";
+                    request << header("Content-Type", content_type);
+                }
+            }
+            return pimpl->request_skeleton(request, "POST", true);
         }
 
-        response const post (request request_, string_type const & content_type, string_type const & body_) {
-            if (!boost::empty(headers(request_)["Content-Type"]))
-                request_ << remove_header("Content-Type");
-
-            request_ << ::boost::network::body(body_)
-                << header("Content-Type", content_type)
-                << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
-            return post(request_);
+        BOOST_PARAMETER_MEMBER_FUNCTION((response const), put , tag, 
+            (required 
+                (request,(request)) // yes sir, we make a copy of the original request.
+                )
+            (optional 
+                (body,(string_type const &),string_type())
+                (content_type,(string_type const &),string_type())
+                )
+            ) {
+            if (body != string_type()) {
+                request << remove_header("Content-Length")
+                    << header("Content-Length", boost::lexical_cast<string_type>(body.size()))
+                    << boost::network::body(body);
+            }
+            typename headers_range<basic_request<Tag> >::type content_type_headers =
+                headers(request)["Content-Type"];
+            if (content_type != string_type()) {
+                if (!boost::empty(content_type_headers))
+                    request << remove_header("Content-Type");
+                request << header("Content-Type", content_type);
+            } else {
+                if (boost::empty(content_type_headers)) {
+                    typedef typename char_<Tag>::type char_type;
+                    static char_type content_type[] = "x-application/octet-stream";
+                    request << header("Content-Type", content_type);
+                }
+            }
+            return pimpl->request_skeleton(request, "PUT", true);
         }
 
-        response const post (request const & request_, string_type const & body_) {
-            string_type content_type = "x-application/octet-stream";
-            typename headers_range<request>::type content_type_headers =
-                headers(request_)["Content-Type"];
-            if (!boost::empty(content_type_headers))
-                content_type = boost::begin(content_type_headers)->second;
-            return post(request_, content_type, body_);
-        }
-
-        response const put (request const & request_) {
-            return pimpl->request_skeleton(request_, "PUT", true);
-        }
-
-        response const put (request const & request_, string_type const & body_) {
-            string_type content_type = "x-application/octet-stream";
-            typename headers_range<request>::type content_type_headers =
-                headers(request_)["Content-Type"];
-            if (!boost::empty(content_type_headers))
-                content_type = boost::begin(content_type_headers)->second;
-            return put(request_, content_type, body_);
-        }
-
-        response const put (request request_, string_type const & content_type, string_type const & body_) {
-            if (!boost::empty(headers(request_)["Content-Type"]))
-                request_ << remove_header("Content-Type");
-
-            request_ << ::boost::network::body(body_)
-                << header("Content-Type", content_type)
-                << header("Content-Length", boost::lexical_cast<string_type>(body_.size()));
-            return put(request_);
-        }
-
-        response const delete_ (request const & request_) {
-            return pimpl->request_skeleton(request_, "DELETE", true);
+        BOOST_PARAMETER_MEMBER_FUNCTION((response const), delete_, tag,
+            (required
+                (request,(request const &))
+                )
+            ) {
+            return pimpl->request_skeleton(request, "DELETE", true);
         }
 
         void clear_resolved_cache() {
