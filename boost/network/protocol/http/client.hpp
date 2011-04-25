@@ -77,7 +77,11 @@ namespace boost { namespace network { namespace http {
 
     };
 
-    typedef basic_client<tags::http_default_8bit_udp_resolve, 1, 0> client;
+#ifndef BOOST_NETWORK_HTTP_DEFAULT_TAG
+#define BOOST_NETWORK_HTTP_DEFAULT_TAG tags::http_async_8bit_udp_resolve
+#endif
+
+    typedef basic_client<BOOST_NETWORK_HTTP_DEFAULT_TAG, 1, 1> client;
 
 } // namespace http
 
