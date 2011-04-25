@@ -13,6 +13,11 @@
   macro ``BOOST_NETWORK_NO_LIB`` before including any :mod:`cpp-netlib` header.
   This breaks code that relied on the version 0.8.x line where the library is
   strictly header-only.
+* Fix issue #41: Introduce a macro ``BOOST_NETWORK_HTTP_CLIENT_DEFAULT_TAG`` 
+  which makes the default HTTP client use ``tags::http_async_8bit_udp_resolve``
+  as the tag.
+* Fix issue #40: Write the status line and headers in a single buffer write
+  instead of two writes.
 * More consistent message API for client and server messages (request and
   response objects).
 * Refactoring of internal implementations to allow better separation of concerns
