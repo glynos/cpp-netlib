@@ -34,10 +34,12 @@ run url_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
 exe http_async_server : server_async.cpp /cpp-netlib//cppnetlib-server-parsers ;
 exe hello_world : server_hello_world.cpp /cpp-netlib//cppnetlib-server-parsers ;
 exe http_async_less_copy_server : server_async_less_copy.cpp /cpp-netlib//cppnetlib-server-parsers ;
+exe http_async_run_stop_concurrency_server : server_async_run_stop_concurrency.cpp /cpp-netlib//cppnetlib-server-parsers ;
 
 make httplib_acceptance.passed : ../httplib_acceptance.py hello_world : @httplib_acceptance ;
 make httplib_async_acceptance.passed : ../httplib_acceptance.py http_async_server : @httplib_acceptance ;
 make httplib_async_less_copy_acceptance.passed : ../httplib_acceptance.py http_async_less_copy_server : @httplib_acceptance ;
+make httplib_async_run_stop_concurrency_acceptance.passed : ../httplib_acceptance.py http_async_run_stop_concurrency_server : @httplib_acceptance ;
 
 actions httplib_acceptance {
     export TEST_SCRIPT=`echo "$(>)" | awk '{print $1}'`
