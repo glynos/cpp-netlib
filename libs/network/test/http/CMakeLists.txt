@@ -70,6 +70,7 @@ if (Boost_FOUND)
         server_hello_world
         server_async
         server_async_less_copy
+		server_async_run_stop_concurrency
         )
     set ( PORT 8000 )
     foreach ( test ${SERVER_TESTS} )
