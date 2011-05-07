@@ -148,8 +148,7 @@ namespace boost { namespace network { namespace http {
 
         ~async_connection() throw () {
             boost::system::error_code ignored;
-            socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
-            socket_.close(ignored);
+            socket_.shutdown(asio::ip::tcp::socket::shutdown_receive, ignored);
         }
 
         /** Function: template <class Range> set_headers(Range headers)
