@@ -1,5 +1,5 @@
 
-// Copyright 2010-2011 Dean Michael Berris. 
+// Copyright 2010-2011 Dean Michael Berris.
 // Copyright 2009 Jeroen Habraken.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -220,7 +220,7 @@ struct choose_uri_base<std::wstring, Dummy>
 {
     typedef uri_parts_wide_base type;
 };
-    
+
 namespace qi = boost::spirit::qi;
 
 template <typename Iterator, typename String>
@@ -398,11 +398,11 @@ BOOST_NETWORK_INLINE bool parse_uri_impl(boost::iterator_range<std::wstring::con
 }
 
 } /* detail */
-        
+
 } /* uri */
-    
+
 } /* network */
-    
+
 } /* boost */
 
 #endif /* PARSE_URI_IMPL_AQAWWXWT */

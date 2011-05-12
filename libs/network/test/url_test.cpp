@@ -8,7 +8,7 @@
 #define BOOST_TEST_MODULE URL Test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/uri/basic_uri.hpp>
+#include <boost/network/uri/uri.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -17,7 +17,7 @@ using namespace boost::network;
 
 typedef boost::mpl::list<
     tags::default_string
-    , tags::default_wstring
+    // , tags::default_wstring
     > tag_types;
 
 
@@ -45,7 +45,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, tag_types) {
     const std::string scheme("http");
     const std::string user_info("user:password");
     const std::string host("www.boost.org");
-    boost::uint16_t port = 8000;
+    // boost::uint16_t port = 8000;
+    const std::string port = "8000";
     const std::string path("/path");
     const std::string query("query");
     const std::string fragment("fragment");
@@ -55,7 +56,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::user_info(instance), user_info));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
-    BOOST_CHECK_EQUAL(uri::port(instance), port);
+    // BOOST_CHECK_EQUAL(uri::port(instance), port);
+    BOOST_CHECK(boost::equal(uri::port(instance), port));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
     BOOST_CHECK(boost::equal(uri::query(instance), query));
     BOOST_CHECK(boost::equal(uri::fragment(instance), fragment));
@@ -212,6 +214,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(assignment_test, T, tag_types) {
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     uri_type copy;
     copy = instance;
-    BOOST_CHECK(instance.raw() == copy.raw());
+    // BOOST_CHECK(instance.raw() == copy.raw());
+    BOOST_CHECK(instance.to_string() == copy.to_string());
     BOOST_CHECK(instance == copy);
 }
