@@ -38,10 +38,12 @@ template <
 struct uri_parts
     : boost::fusion::vector<
       iterator_range<Tag>
-    , iterator_range<Tag>
-    , iterator_range<Tag>
-    , iterator_range<Tag>
-    , iterator_range<Tag>
+    , boost::fusion::vector<
+            iterator_range<Tag>
+          , iterator_range<Tag>
+          , iterator_range<Tag>
+          , iterator_range<Tag>
+          >
     , iterator_range<Tag>
     , iterator_range<Tag>
     >
@@ -101,38 +103,62 @@ public:
 
     const_range_type user_info_range() const {
         using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<1>(uri_parts_)),
-                                at_c<1>(at_c<1>(uri_parts_)));
+        const boost::fusion::vector<
+              details::iterator_range<Tag>
+            , details::iterator_range<Tag>
+            , details::iterator_range<Tag>
+            , details::iterator_range<Tag> > &hier_part = at_c<1>(uri_parts_);
+
+        return const_range_type(at_c<0>(at_c<0>(hier_part)),
+                                at_c<1>(at_c<0>(hier_part)));
     }
 
     const_range_type host_range() const {
+        using boost::fusion::at_c;
+        const boost::fusion::vector<
+              details::iterator_range<Tag>
+            , details::iterator_range<Tag>
+            , details::iterator_range<Tag>
+            , details::iterator_range<Tag> > &hier_part = at_c<1>(uri_parts_);
+
+        return const_range_type(at_c<0>(at_c<1>(hier_part)),
+                                at_c<1>(at_c<1>(hier_part)));
+    }
+
+    const_range_type port_range() const {
+        using boost::fusion::at_c;
+        const boost::fusion::vector<
+              details::iterator_range<Tag>
+            , details::iterator_range<Tag>
+            , details::iterator_range<Tag>
+            , details::iterator_range<Tag> > &hier_part = at_c<1>(uri_parts_);
+
+        return const_range_type(at_c<0>(at_c<2>(hier_part)),
+                                at_c<1>(at_c<2>(hier_part)));
+    }
+
+    const_range_type path_range() const {
+        using boost::fusion::at_c;
+        const boost::fusion::vector<
+              details::iterator_range<Tag>
+            , details::iterator_range<Tag>
+            , details::iterator_range<Tag>
+            , details::iterator_range<Tag> > &hier_part = at_c<1>(uri_parts_);
+
+        return const_range_type(at_c<0>(at_c<3>(hier_part)),
+                                at_c<1>(at_c<3>(hier_part)));
+    }
+
+    const_range_type query_range() const {
         using boost::fusion::at_c;
         return const_range_type(at_c<0>(at_c<2>(uri_parts_)),
                                 at_c<1>(at_c<2>(uri_parts_)));
     }
 
-    const_range_type port_range() const {
+    const_range_type fragment_range() const {
         using boost::fusion::at_c;
         return const_range_type(at_c<0>(at_c<3>(uri_parts_)),
                                 at_c<1>(at_c<3>(uri_parts_)));
-    }
-
-    const_range_type path_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<4>(uri_parts_)),
-                                at_c<1>(at_c<4>(uri_parts_)));
-    }
-
-    const_range_type query_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<5>(uri_parts_)),
-                                at_c<1>(at_c<5>(uri_parts_)));
-    }
-
-    const_range_type fragment_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<6>(uri_parts_)),
-                                at_c<1>(at_c<6>(uri_parts_)));
     }
 
     string_type scheme() const {
@@ -214,130 +240,170 @@ struct uri_grammar : qi::grammar<Iterator, uri_parts<Tag>()> {
     uri_grammar() : uri_grammar::base_type(start, "uri") {
         using boost::spirit::repository::qi::iter_pos;
 
-        // // gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-        // gen_delims %= qi::char_(":/?#[]@");
-        // // sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-        // sub_delims %= qi::char_("!$&'()*+,;=");
-        // // reserved = gen-delims / sub-delims
-        // reserved %= gen_delims | sub_delims;
-        // // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
-        // unreserved %= qi::alnum | qi::char_("-._~");
-        // // pct-encoded = "%" HEXDIG HEXDIG
-        // pct_encoded %= qi::char_("%") >> qi::repeat(2)[qi::xdigit];
+        // gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+        gen_delims %= qi::char_(":/?#[]@");
+        // sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+        sub_delims %= qi::char_("!$&'()*+,;=");
+        // reserved = gen-delims / sub-delims
+        reserved %= gen_delims | sub_delims;
+        // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+        unreserved %= qi::alnum | qi::char_("-._~");
+        // pct-encoded = "%" HEXDIG HEXDIG
+        pct_encoded %= qi::char_("%") >> qi::repeat(2)[qi::xdigit];
 
-        // // pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
-        // pchar %= qi::raw[
-        //     unreserved | pct_encoded | sub_delims | qi::char_(":@")
-        //     ];
+        // pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
+        pchar %= qi::raw[
+            unreserved | pct_encoded | sub_delims | qi::char_(":@")
+            ];
 
-        // // segment = *pchar
-        // segment %= qi::raw[*pchar];
-        // // segment-nz = 1*pchar
-        // segment_nz %= qi::raw[+pchar];
-        // // segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
-        // segment_nz_nc %= qi::raw[
-        //     +(unreserved | pct_encoded | sub_delims | qi::char_("@"))
-        //     ];
-        // // path-abempty  = *( "/" segment )
-        // path_abempty %= qi::raw[*(qi::char_("/") >> segment)];
-        // // path-absolute = "/" [ segment-nz *( "/" segment ) ]
-        // path_absolute %= qi::raw[
-        //     qi::char_("/")
-        //     >>  -(segment_nz >> *(qi::char_("/") >> segment))
-        //     ];
-        // // path-rootless = segment-nz *( "/" segment )
-        // path_rootless %= qi::raw[
-        //     segment_nz >> *(qi::char_("/") >> segment)
-        //     ];
-        // // path-empty = 0<pchar>
-        // path_empty %= qi::eps;
+        // segment = *pchar
+        segment %= qi::raw[*pchar];
+        // segment-nz = 1*pchar
+        segment_nz %= qi::raw[+pchar];
+        // segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
+        segment_nz_nc %= qi::raw[
+            +(unreserved | pct_encoded | sub_delims | qi::char_("@"))
+            ];
+        // path-abempty  = *( "/" segment )
+        path_abempty %=
+               iter_pos
+            >> qi::omit[qi::raw[*(qi::char_("/") >> segment)]]
+            >> iter_pos
+            ;
+        // path-absolute = "/" [ segment-nz *( "/" segment ) ]
+        path_absolute %=
+               iter_pos
+            >> qi::omit[qi::raw[
+                                qi::char_("/")
+                                >>  -(segment_nz >> *(qi::char_("/") >> segment))
+                                ]]
+            >> iter_pos
+            ;
+        // path-rootless = segment-nz *( "/" segment )
+        path_rootless %=
+               iter_pos
+            >> qi::omit[qi::raw[
+                                segment_nz >> *(qi::char_("/") >> segment)
+                                ]]
+            >> iter_pos
+            ;
+        // path-empty = 0<pchar>
+        path_empty %=
+               iter_pos
+            >> qi::omit[qi::eps]
+            >> iter_pos
+            ;
 
-        // // scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
-        // scheme %= qi::alpha >> *(qi::alnum | qi::char_("+.-"));
+        // scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+        scheme %=
+               iter_pos
+            >> qi::omit[qi::alpha >> *(qi::alnum | qi::char_("+.-"))]
+            >> iter_pos
+            ;
 
-        // // user_info = *( unreserved / pct-encoded / sub-delims / ":" )
-        // user_info %= qi::raw[
-        //     *(unreserved | pct_encoded | sub_delims | qi::char_(":"))
-        //     ];
+        // user_info = *( unreserved / pct-encoded / sub-delims / ":" )
+        user_info %=
+               iter_pos
+            >> qi::omit[qi::raw[*(unreserved | pct_encoded | sub_delims | qi::char_(":"))]]
+            >> iter_pos
+            ;
 
-        // // dec-octet = DIGIT / %x31-39 DIGIT / "1" 2DIGIT / "2" %x30-34 DIGIT / "25" %x30-35
-        // dec_octet %=
-        //     !(qi::lit('0') >> qi::digit)
-        //     >>  qi::raw[
-        //         qi::uint_parser<boost::uint8_t, 10, 1, 3>()
-        //         ];
-        // // IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
-        // ipv4address %= qi::raw[
-        //     dec_octet >> qi::repeat(3)[qi::lit('.') >> dec_octet]
-        //     ];
-        // // reg-name = *( unreserved / pct-encoded / sub-delims )
-        // reg_name %= qi::raw[
-        //     *(unreserved | pct_encoded | sub_delims)
-        //     ];
-        // // TODO, host = IP-literal / IPv4address / reg-name
-        // host %= ipv4address | reg_name;
+        // dec-octet = DIGIT / %x31-39 DIGIT / "1" 2DIGIT / "2" %x30-34 DIGIT / "25" %x30-35
+        dec_octet %=
+            !(qi::lit('0') >> qi::digit)
+            >>  qi::raw[
+                qi::uint_parser<boost::uint8_t, 10, 1, 3>()
+                ];
+        // IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
+        ipv4address %= qi::raw[
+            dec_octet >> qi::repeat(3)[qi::lit('.') >> dec_octet]
+            ];
+        // reg-name = *( unreserved / pct-encoded / sub-delims )
+        reg_name %= qi::raw[
+            *(unreserved | pct_encoded | sub_delims)
+            ];
+        // TODO, host = IP-literal / IPv4address / reg-name
+        host %=
+               iter_pos
+            >> qi::omit[ipv4address | reg_name]
+            >> iter_pos
+            ;
 
-        // // port %= qi::ushort_;
+        // port %= qi::ushort_;
+        port %=
+               iter_pos
+            >> qi::omit[*qi::digit]
+            >> iter_pos
+            ;
 
-        // // query = *( pchar / "/" / "?" )
-        // query %= qi::raw[*(pchar | qi::char_("/?"))];
-        // // fragment = *( pchar / "/" / "?" )
-        // fragment %= qi::raw[*(pchar | qi::char_("/?"))];
+        // query = *( pchar / "/" / "?" )
+        query %=
+               iter_pos
+            >> qi::omit[qi::raw[*(pchar | qi::char_("/?"))]]
+            >> iter_pos
+            ;
+        // fragment = *( pchar / "/" / "?" )
+        fragment %=
+               iter_pos
+            >> qi::omit[qi::raw[*(pchar | qi::char_("/?"))]]
+            >> iter_pos
+            ;
 
-        // // hier-part = "//" authority path-abempty / path-absolute / path-rootless / path-empty
-        // // authority = [ userinfo "@" ] host [ ":" port ]
-        // hier_part %=
-        //     (
-        //         "//"
-        //         >>  -(user_info >> '@')
-        //         >>  host
-        //         >> -(':' >> port)
-        //         // >>  -(':' >> qi::ushort_)
-        //         >>  path_abempty
-        //         )
-        //     |
-        //     (
-        //         qi::attr(std::string())
-        //         >>  qi::attr(std::string())
-        //         >>  qi::attr(std::string())
-        //         >>  (
-        //             path_absolute
-        //             |   path_rootless
-        //             |   path_empty
-        //             )
-        //         );
+        // hier-part = "//" authority path-abempty / path-absolute / path-rootless / path-empty
+        // authority = [ userinfo "@" ] host [ ":" port ]
+        hier_part %=
+            (
+                "//"
+                >>  -(user_info >> '@')
+                >>  host
+                >> -(':' >> port)
+                >>  path_abempty
+                )
+            |
+            (
+                    qi::attr(iterator_range<Tag>())
+                >>  qi::attr(iterator_range<Tag>())
+                >>  qi::attr(iterator_range<Tag>())
+                >>  (
+                    path_absolute
+                    |   path_rootless
+                    |   path_empty
+                    )
+                )
+            ;
 
-        // start %=
-        //     iter_pos
-        //     >> iter_pos
-        //     >> iter_pos
-        //     >> iter_pos
-        //     >> iter_pos
-        //     >> iter_pos
-        //     >> qi::omit[scheme] >> ':'
-        //     >> hier_part
-        //     // >>  -('?' >> qi::omit[query])
-        //     // >>  -('#' >> qi::omit[fragment])
-        //     ;
+        start %=
+            scheme >> ':'
+            >> hier_part
+            >>  -('?' >> query)
+            >>  -('#' >> fragment)
+            ;
     }
 
-    qi::rule<Iterator, typename std::string::value_type()>
+    qi::rule<Iterator, typename string<Tag>::type::value_type()>
     gen_delims, sub_delims, reserved, unreserved;
+    //qi::rule<Iterator, iterator_range<Tag>()>
     qi::rule<Iterator, std::string()>
     pct_encoded, pchar;
 
     qi::rule<Iterator, std::string()>
     segment, segment_nz, segment_nz_nc;
-    qi::rule<Iterator, std::string()>
+    qi::rule<Iterator, iterator_range<Tag>()>
     path_abempty, path_absolute, path_rootless, path_empty;
 
     qi::rule<Iterator, std::string()>
-    dec_octet, ipv4address, reg_name, host, port;
+    dec_octet, ipv4address, reg_name;
 
-    qi::rule<Iterator, std::string()>
+    qi::rule<Iterator, iterator_range<Tag>()>
+    host, port;
+
+    qi::rule<Iterator, iterator_range<Tag>()>
     scheme, user_info, query, fragment;
 
-    qi::rule<Iterator, std::string()>
+    qi::rule<Iterator, boost::fusion::vector<iterator_range<Tag>,
+                                             iterator_range<Tag>,
+                                             iterator_range<Tag>,
+                                             iterator_range<Tag> >()>
     hier_part;
 
     // actual uri parser
