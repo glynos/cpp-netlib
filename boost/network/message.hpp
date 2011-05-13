@@ -83,7 +83,7 @@ namespace boost { namespace network {
             _headers.erase(key);
         }
 
-        headers_container_type & headers() const {
+        headers_container_type const & headers() const {
             return _headers;
         }
 
@@ -95,7 +95,7 @@ namespace boost { namespace network {
             _body = body_;
         }
 
-        string_type body() const {
+        string_type const & body() const {
             return _body;
         }
         
@@ -107,7 +107,7 @@ namespace boost { namespace network {
             _source = source_;
         }
 
-        string_type source() const {
+        string_type const & source() const {
             return _source;
         }
 
@@ -119,7 +119,7 @@ namespace boost { namespace network {
             _destination = destination_;
         }
 
-        string_type destination() const {
+        string_type const & destination() const {
             return _destination;
         }
 
