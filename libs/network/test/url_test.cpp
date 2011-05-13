@@ -17,7 +17,7 @@ using namespace boost::network;
 
 typedef boost::mpl::list<
     tags::default_string
-    // , tags::default_wstring
+  , tags::default_wstring
     > tag_types;
 
 

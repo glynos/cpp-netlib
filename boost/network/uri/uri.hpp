@@ -383,15 +383,15 @@ struct uri_grammar : qi::grammar<Iterator, uri_parts<Tag>()> {
     qi::rule<Iterator, typename string<Tag>::type::value_type()>
     gen_delims, sub_delims, reserved, unreserved;
     //qi::rule<Iterator, iterator_range<Tag>()>
-    qi::rule<Iterator, std::string()>
+    qi::rule<Iterator, typename string<Tag>::type()>
     pct_encoded, pchar;
 
-    qi::rule<Iterator, std::string()>
+    qi::rule<Iterator, typename string<Tag>::type()>
     segment, segment_nz, segment_nz_nc;
     qi::rule<Iterator, iterator_range<Tag>()>
     path_abempty, path_absolute, path_rootless, path_empty;
 
-    qi::rule<Iterator, std::string()>
+    qi::rule<Iterator, typename string<Tag>::type()>
     dec_octet, ipv4address, reg_name;
 
     qi::rule<Iterator, iterator_range<Tag>()>
