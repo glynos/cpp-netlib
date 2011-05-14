@@ -24,8 +24,8 @@
 
 #include <boost/cstdint.hpp>
 
-namespace boost { namespace network { 
-    
+namespace boost { namespace network {
+
     /** Specialize the traits for the http_server tag. */
     template <>
     struct headers_container<http::tags::http_server> :
@@ -92,7 +92,7 @@ namespace http {
         }
 
         port_type port() const {
-            return uri::port(uri_);
+            return uri::port_us(uri_);
         }
 
         string_type const path() const {
@@ -162,7 +162,7 @@ namespace http {
     };
 
     template <>
-    struct basic_request<tags::http_async_server> 
+    struct basic_request<tags::http_async_server>
     : not_quite_pod_request_base<tags::http_async_server>
     {};
 

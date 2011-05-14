@@ -8,6 +8,7 @@
 
 #include <boost/network/traits/string.hpp>
 #include <boost/network/uri/uri.hpp>
+#include <boost/network/uri/http/uri.hpp>
 
 
 namespace boost { namespace network { namespace uri {

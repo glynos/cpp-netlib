@@ -24,7 +24,7 @@ int main(int argc, char * argv[]) {
     boost::network::uri::uri uri_(input);
     /*<< Check if it's a valid URI. >>*/
     std::cout << "You've entered "
-              << (boost::network::uri::valid(uri_)?
+              << (boost::network::uri::is_valid(uri_)?
                   std::string("a valid") : std::string("an invalid"))
               << " URI!" << std::endl;
 
@@ -32,7 +32,7 @@ int main(int argc, char * argv[]) {
     boost::network::uri::http::uri http_uri_(input);
     /*<< Check if it's a valid HTTP URI. >>*/
     std::cout << "It's also "
-              << (boost::network::uri::valid(http_uri_)?
+              << (boost::network::uri::is_valid(http_uri_)?
                   std::string("a valid HTTP URI") : std::string("an invalid HTTP URI."))
               << "!" << std::endl;
 
