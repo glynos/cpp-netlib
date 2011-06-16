@@ -247,8 +247,7 @@ namespace boost { namespace network { namespace http {
             if (!ec) {
                 using boost::asio::ip::tcp;
                 boost::system::error_code ignored_ec;
-                socket_.shutdown(tcp::socket::shutdown_both, ignored_ec);
-                socket_.close(ignored_ec);
+                socket_.shutdown(tcp::socket::shutdown_receive, ignored_ec);
             }
         }
 
