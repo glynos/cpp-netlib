@@ -79,8 +79,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     boost::end(result_range)
                     );
                 part_begin = part.begin();
-                boost::asio::async_read(
-                    socket_,
+                socket_.async_read_some(
                     boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     callback
                     );
@@ -119,7 +118,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     boost::end(result_range)
                     );
                 part_begin = part.begin();
-                boost::asio::async_read(socket_, 
+                socket_.async_read_some(
                     boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     callback
                     );
@@ -155,8 +154,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     boost::begin(result_range), 
                     boost::end(result_range));
                 part_begin = part.begin();
-                boost::asio::async_read(
-                    socket_,
+                socket_.async_read_some(
                     boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     callback
                     );
@@ -225,8 +223,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             } else {
                 partial_parsed.append(boost::begin(result_range), boost::end(result_range));
                 part_begin = part.begin();
-                boost::asio::async_read(
-                    socket_,
+                socket_.async_read_some(
                     boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                     callback
                     );
@@ -244,8 +241,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         void parse_body(Socket & socket_, Callback callback, size_t bytes) {
             partial_parsed.append(part_begin, bytes);
             part_begin = part.begin();
-            boost::asio::async_read(
-                socket_, 
+            socket_.async_read_some( 
                 boost::asio::mutable_buffers_1(part.c_array(), part.size()),
                 callback
                 );

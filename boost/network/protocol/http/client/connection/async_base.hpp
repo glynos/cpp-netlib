@@ -23,6 +23,9 @@ namespace boost { namespace network { namespace http { namespace impl {
         typedef typename string<Tag>::type string_type;
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
+        typedef 
+            function<void(iterator_range<char const *> const &, system::error_code const &)>
+            body_callback_function_type;
         
         static boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > new_connection(resolve_function resolve, resolver_type & resolver, bool follow_redirect, bool https, optional<string_type> certificate_filename=optional<string_type>(), optional<string_type> const & verify_path=optional<string_type>()) {
             boost::shared_ptr<async_connection_base<Tag,version_major,version_minor> > temp;
@@ -39,7 +42,9 @@ namespace boost { namespace network { namespace http { namespace impl {
             return temp;
         }
 
-        virtual response start(request const & request, string_type const & method, bool get_body) = 0;
+        virtual response start(request const & request, string_type const & method, bool get_body, body_callback_function_type callback) = 0;
+
+        virtual ~async_connection_base() {}
 
     };
 

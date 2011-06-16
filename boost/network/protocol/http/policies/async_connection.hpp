@@ -28,6 +28,7 @@ namespace boost { namespace network { namespace http {
         typedef typename resolver_policy<Tag>::type resolver_base;
         typedef typename resolver_base::resolver_type resolver_type;
         typedef typename resolver_base::resolve_function resolve_function;
+        typedef function<void(iterator_range<char const *> const &, system::error_code const &)> body_callback_function_type;
         
         struct connection_impl {
             connection_impl(
@@ -42,8 +43,8 @@ namespace boost { namespace network { namespace http {
                 pimpl = impl::async_connection_base<Tag,version_major,version_minor>::new_connection(resolve, resolver, follow_redirect, https, certificate_filename, verify_path);
             }
 
-            basic_response<Tag> send_request(string_type const & method, basic_request<Tag> const & request_, bool get_body) {
-                return pimpl->start(request_, method, get_body);
+            basic_response<Tag> send_request(string_type const & method, basic_request<Tag> const & request_, bool get_body, body_callback_function_type callback) {
+                return pimpl->start(request_, method, get_body, callback);
             }
 
         private:

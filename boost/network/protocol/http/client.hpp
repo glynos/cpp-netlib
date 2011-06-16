@@ -25,6 +25,7 @@
 
 #include <boost/network/protocol/http/client/facade.hpp>
 #include <boost/network/protocol/http/client/parameters.hpp>
+#include <boost/network/protocol/http/client/macros.hpp>
 
 namespace boost { namespace network { namespace http {
 

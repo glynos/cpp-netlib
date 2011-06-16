@@ -12,6 +12,7 @@
 #include <boost/network/include/http/server.hpp>
 #include <boost/network/utils/thread_pool.hpp>
 #include <boost/range/algorithm/find_if.hpp>
+#include <iostream>
 
 namespace net = boost::network;
 namespace http = boost::network::http;

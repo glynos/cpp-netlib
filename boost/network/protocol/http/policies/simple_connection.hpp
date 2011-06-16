@@ -27,6 +27,7 @@ namespace boost { namespace network { namespace http {
         typedef typename resolver_policy<Tag>::type resolver_base;
         typedef typename resolver_base::resolver_type resolver_type;
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
+        typedef function<void(iterator_range<char const *> const &, system::error_code const &)> body_callback_function_type;
 
         struct connection_impl {
             connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & hostname, string_type const & port, resolver_function_type resolve, bool https, optional<string_type> const & certificate_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>()) 
@@ -36,7 +37,7 @@ namespace boost { namespace network { namespace http {
                 pimpl.reset(impl::sync_connection_base<Tag,version_major,version_minor>::new_connection(resolver, resolve, https, certificate_filename, verify_path));
             }
 
-            basic_response<Tag> send_request(string_type const & method, basic_request<Tag> request_, bool get_body) {
+            basic_response<Tag> send_request(string_type const & method, basic_request<Tag> request_, bool get_body, body_callback_function_type callback) {
                 basic_response<Tag> response_;
                 do {
                     pimpl->init_socket(request_.host(), lexical_cast<string_type>(request_.port()));

@@ -29,6 +29,7 @@ namespace boost { namespace network { namespace http {
         typedef typename resolver_policy<Tag>::type resolver_base;
         typedef typename resolver_base::resolver_type resolver_type;
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
+        typedef function<void(iterator_range<char const *> const &, system::error_code const &)> body_callback_function_type;
         
         void cleanup() {
             host_connection_map().swap(host_connections);
@@ -46,7 +47,7 @@ namespace boost { namespace network { namespace http {
             , verify_path_(verify_path)
             {}
 
-            basic_response<Tag> send_request(string_type const & method, basic_request<Tag> request_, bool get_body) {
+            basic_response<Tag> send_request(string_type const & method, basic_request<Tag> request_, bool get_body, body_callback_function_type callback) {
                 return send_request_impl(method, request_, get_body);
             }
 

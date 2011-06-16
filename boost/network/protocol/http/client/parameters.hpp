@@ -18,6 +18,7 @@ namespace boost { namespace network { namespace http {
     BOOST_PARAMETER_NAME(request)
     BOOST_PARAMETER_NAME(body)
     BOOST_PARAMETER_NAME(content_type)
+    BOOST_PARAMETER_NAME(body_handler)
     
 } /* http */
     

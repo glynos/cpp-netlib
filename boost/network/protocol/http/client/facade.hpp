@@ -26,6 +26,7 @@ namespace boost { namespace network { namespace http {
         typedef basic_request<Tag> request;
         typedef basic_response<Tag> response;
         typedef basic_client_impl<Tag,version_major,version_minor> pimpl_type;
+        typedef function<void(iterator_range<char const *> const &,system::error_code const &)> body_callback_function_type;
 
         template <class ArgPack>
         basic_client_facade(ArgPack const & args)
@@ -42,11 +43,18 @@ namespace boost { namespace network { namespace http {
         }
 
         BOOST_PARAMETER_MEMBER_FUNCTION((response const), head, tag, (required (request,(request const &)))) {
-            return pimpl->request_skeleton(request, "HEAD", false);
+            return pimpl->request_skeleton(request, "HEAD", false, body_callback_function_type());
         }
 
-        BOOST_PARAMETER_MEMBER_FUNCTION((response const), get , tag, (required (request,(request const &)))) {
-            return pimpl->request_skeleton(request, "GET", true);
+        BOOST_PARAMETER_MEMBER_FUNCTION((response const), get , tag, 
+            (required 
+                (request,(request const &))
+                )
+            (optional
+                (body_handler,(body_callback_function_type),body_callback_function_type())
+                )
+            ) {
+            return pimpl->request_skeleton(request, "GET", true, body_handler);
         }
 
         BOOST_PARAMETER_MEMBER_FUNCTION((response const), post, tag, 
@@ -56,6 +64,7 @@ namespace boost { namespace network { namespace http {
             (optional 
                 (body,(string_type const &),string_type())
                 (content_type,(string_type const &),string_type())
+                (body_handler,(body_callback_function_type),body_callback_function_type())
                 )
             ) {
             if (body != string_type()) {
@@ -76,7 +85,7 @@ namespace boost { namespace network { namespace http {
                     request << header("Content-Type", content_type);
                 }
             }
-            return pimpl->request_skeleton(request, "POST", true);
+            return pimpl->request_skeleton(request, "POST", true, body_handler);
         }
 
         BOOST_PARAMETER_MEMBER_FUNCTION((response const), put , tag, 
@@ -86,6 +95,7 @@ namespace boost { namespace network { namespace http {
             (optional 
                 (body,(string_type const &),string_type())
                 (content_type,(string_type const &),string_type())
+                (body_handler,(body_callback_function_type),body_callback_function_type())
                 )
             ) {
             if (body != string_type()) {
@@ -106,15 +116,18 @@ namespace boost { namespace network { namespace http {
                     request << header("Content-Type", content_type);
                 }
             }
-            return pimpl->request_skeleton(request, "PUT", true);
+            return pimpl->request_skeleton(request, "PUT", true, body_handler);
         }
 
         BOOST_PARAMETER_MEMBER_FUNCTION((response const), delete_, tag,
             (required
                 (request,(request const &))
                 )
+            (optional
+                (body_handler,(body_callback_function_type),body_callback_function_type())
+                )
             ) {
-            return pimpl->request_skeleton(request, "DELETE", true);
+            return pimpl->request_skeleton(request, "DELETE", true, body_handler);
         }
 
         void clear_resolved_cache() {

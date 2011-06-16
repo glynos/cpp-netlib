@@ -23,6 +23,7 @@
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/array.hpp>
 #include <boost/assert.hpp>
+#include <boost/bind/protect.hpp>
 #include <iterator>
 
 namespace boost { namespace network { namespace http { namespace impl {
@@ -45,6 +46,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             typedef typename base::string_type string_type;
             typedef typename base::request request;
             typedef typename base::resolver_base::resolve_function resolve_function;
+            typedef typename base::body_callback_function_type body_callback_function_type;
 
             http_async_connection(
                 resolver_type & resolver,
@@ -58,7 +60,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             {}
 
 
-            virtual response start(request const & request, string_type const & method, bool get_body) {
+            virtual response start(request const & request, string_type const & method, bool get_body, body_callback_function_type callback) {
                 response response_;
                 this->init_response(response_, get_body);
                 linearize(request, method, version_major, version_minor,
@@ -71,13 +73,16 @@ namespace boost { namespace network { namespace http { namespace impl {
                         boost::bind(
                         &http_async_connection<Tag,version_major,version_minor>::handle_resolved,
                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                        port_, get_body,
+                        port_, get_body, callback,
                         _1, _2)));
                 return response_;
             }
 
     private:
-        void handle_resolved(boost::uint16_t port, bool get_body, boost::system::error_code const & ec, resolver_iterator_pair endpoint_range) {
+
+        http_async_connection(http_async_connection const &); // = delete
+
+        void handle_resolved(boost::uint16_t port, bool get_body, body_callback_function_type callback, boost::system::error_code const & ec, resolver_iterator_pair endpoint_range) {
             resolver_iterator iter = boost::begin(endpoint_range);
             if (!ec && !boost::empty(endpoint_range)) {
                 boost::asio::ip::tcp::endpoint endpoint(
@@ -92,7 +97,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_connected,
                             http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                            port, get_body, std::make_pair(++iter, resolver_iterator()),
+                            port, get_body, callback,
+                            std::make_pair(++iter, resolver_iterator()),
                             boost::asio::placeholders::error
                             )));
             } else {
@@ -107,7 +113,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        void handle_connected(boost::uint16_t port, bool get_body, resolver_iterator_pair endpoint_range, boost::system::error_code const & ec) {
+        void handle_connected(boost::uint16_t port, bool get_body, body_callback_function_type callback, resolver_iterator_pair endpoint_range, boost::system::error_code const & ec) {
             if (!ec) {
                 boost::asio::async_write(
                     *socket_
@@ -116,7 +122,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_sent_request,
                             http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                            get_body,
+                            get_body, callback, 
                             boost::asio::placeholders::error,
                             boost::asio::placeholders::bytes_transferred
                             )));
@@ -135,7 +141,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                             boost::bind(
                                 &http_async_connection<Tag,version_major,version_minor>::handle_connected,
                                 http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                                port, get_body, std::make_pair(++iter, resolver_iterator()),
+                                port, get_body, callback, std::make_pair(++iter, resolver_iterator()),
                                 boost::asio::placeholders::error
                                 )));
                 } else {
@@ -157,22 +163,19 @@ namespace boost { namespace network { namespace http { namespace impl {
             version, status, status_message, headers, body
         };
 
-        void handle_sent_request(bool get_body, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+        void handle_sent_request(bool get_body, body_callback_function_type callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
             if (!ec) {
-                boost::asio::async_read(
-                    *socket_,
-                    boost::asio::mutable_buffers_1(
-                        this->part.c_array(), 
-                        this->part.size()),
+                socket_->async_read_some(
+                    boost::asio::mutable_buffers_1(this->part.c_array(), this->part.size()),
                     request_strand_.wrap(
                         boost::bind(
                             &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
                             http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                            version, get_body, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)));
+                            version, get_body, callback,
+                            boost::asio::placeholders::error, 
+                            boost::asio::placeholders::bytes_transferred)));
             } else {
-                boost::system::system_error error(
-                    ec ? ec : boost::asio::error::host_not_found
-                    );
+                boost::system::system_error error(ec);
                 this->version_promise.set_exception(boost::copy_exception(error));
                 this->status_promise.set_exception(boost::copy_exception(error));
                 this->status_message_promise.set_exception(boost::copy_exception(error));
@@ -183,7 +186,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
         }
 
-        void handle_received_data(state_t state, bool get_body, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+        void handle_received_data(state_t state, bool get_body, body_callback_function_type callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
             if (!ec || ec == boost::asio::error::eof) {
                 logic::tribool parsed_ok;
                 size_t remainder;
@@ -195,7 +198,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                                     boost::bind(
                                         &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                                        status, get_body, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
+                                        status, get_body, callback,
+                                        boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
                                         )
                                     )
                                 );
@@ -207,7 +211,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                                     boost::bind(
                                         &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                                        status_message, get_body, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
+                                        status_message, get_body, callback,
+                                        boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
                                         )
                                     )
                                 );
@@ -219,7 +224,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                                     boost::bind(
                                         &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                                        headers, get_body, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
+                                        headers, get_body, callback,
+                                        boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
                                         )
                                     )
                                 );
@@ -231,7 +237,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                                     boost::bind(
                                         &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                                        body, get_body, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
+                                        body, get_body, callback,
+                                        boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
                                         )
                                     )
                                 );
@@ -246,7 +253,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                                 boost::bind(
                                     &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                     http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                                    body, get_body, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
+                                    body, get_body, callback,
+                                    boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
                                     )
                                 ),
                             remainder);
@@ -257,29 +265,53 @@ namespace boost { namespace network { namespace http { namespace impl {
                             return;
                         }
                         if (ec == boost::asio::error::eof) {
-                            string_type body;
-                            std::swap(body, this->partial_parsed);
-                            body.append(
-                                this->part.begin()
-                                , bytes_transferred
-                                );
-                            this->body_promise.set_value(body);
+                            if (!callback.empty()) {
+                                typename protocol_base::buffer_type::const_iterator begin = this->part.begin(), end = begin;
+                                std::advance(end, bytes_transferred);
+                                callback(make_iterator_range(begin, end), ec);
+                                this->body_promise.set_value("");
+                            } else {
+                                string_type body_string;
+                                std::swap(body_string, this->partial_parsed);
+                                body_string.append(
+                                    this->part.begin()
+                                    , bytes_transferred
+                                    );
+                                this->body_promise.set_value(body_string);
+                            }
                             // TODO set the destination value somewhere!
                             this->destination_promise.set_value("");
                             this->source_promise.set_value("");
                             this->part.assign('\0');
                             this->response_parser_.reset();
                         } else {
-                            this->parse_body(
-                                *socket_,
-                                request_strand_.wrap(
-                                    boost::bind(
-                                        &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
-                                        http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                                        body, get_body, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
-                                        )
-                                    ),
-                                bytes_transferred);
+                            if (!callback.empty()) {
+                                typename protocol_base::buffer_type::const_iterator begin = this->part.begin(), end = begin;
+                                std::advance(end, bytes_transferred);
+                                callback(make_iterator_range(begin, end), ec);
+                                socket_->async_read_some( 
+                                    boost::asio::mutable_buffers_1(this->part.c_array(), this->part.size()),
+                                    request_strand_.wrap(
+                                        boost::bind(
+                                            &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
+                                            http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                                            body, get_body, callback,
+                                            boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)
+                                    )
+                                    );
+                            } else {
+                                this->parse_body(
+                                    *socket_,
+                                    request_strand_.wrap(
+                                        boost::bind(
+                                            &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
+                                            http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                                            body, get_body, callback,
+                                            boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
+                                            )
+                                        ),
+                                    bytes_transferred);
+                            }
                         }
                         break;
                     default:

@@ -31,6 +31,10 @@ namespace boost { namespace network { namespace http {
                 typename string<Tag>::type
                 string_type;
 
+            typedef 
+                function<void(boost::iterator_range<char const *> const &, system::error_code const &)>
+                body_callback_function_type;
+
             async_client(bool cache_resolved, bool follow_redirect, optional<string_type> const & certificate_filename, optional<string_type> const & verify_path)
                 : connection_base(cache_resolved, follow_redirect),
                 service_ptr(new boost::asio::io_service),
@@ -73,12 +77,13 @@ namespace boost { namespace network { namespace http {
             basic_response<Tag> const request_skeleton(
                 basic_request<Tag> const & request_, 
                 string_type const & method, 
-                bool get_body
+                bool get_body,
+                body_callback_function_type callback
                 ) 
             {
                 typename connection_base::connection_ptr connection_;
                 connection_ = connection_base::get_connection(resolver_, request_, certificate_filename_, verify_path_);
-                return connection_->send_request(method, request_, get_body);
+                return connection_->send_request(method, request_, get_body, callback);
             }
 
             boost::asio::io_service * service_ptr;

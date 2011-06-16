@@ -32,6 +32,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             typedef typename base::string_type string_type;
             typedef typename base::request request;
             typedef typename base::resolver_base::resolve_function resolve_function;
+            typedef typename base::body_callback_function_type body_callback_function_type;
 
             https_async_connection(
                 resolver_type & resolver,
@@ -49,7 +50,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             {}
 
 
-            virtual response start(request const & request, string_type const & method, bool get_body) {
+            virtual response start(request const & request, string_type const & method, bool get_body, body_callback_function_type callback) {
                 response response_;
                 this->init_response(response_, get_body);
                 linearize(request, method, version_major, version_minor,

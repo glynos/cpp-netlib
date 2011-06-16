@@ -19,6 +19,7 @@ namespace boost { namespace network { namespace http {
             typedef typename string<Tag>::type string_type;
             typedef typename connection_policy<Tag,version_major,version_minor>::type connection_base;
             typedef typename resolver<Tag>::type resolver_type;
+            typedef function<void(iterator_range<char const *> const &, system::error_code const &)> body_callback_function_type;
             friend struct basic_client_impl<Tag,version_major,version_minor>;
 
             boost::asio::io_service * service_ptr;
@@ -55,10 +56,10 @@ namespace boost { namespace network { namespace http {
                 delete service_ptr;
             }
 
-            basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body) {
+            basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body, body_callback_function_type callback) {
                 typename connection_base::connection_ptr connection_;
                 connection_ = connection_base::get_connection(resolver_, request_, certificate_file, verify_path);
-                return connection_->send_request(method, request_, get_body);
+                return connection_->send_request(method, request_, get_body, callback);
             }
 
         };
