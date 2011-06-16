@@ -141,12 +141,12 @@ namespace boost { namespace network { namespace http {
                 BOOST_NETWORK_MESSAGE("Error opening socket: " << address_ << ":" << port_);
                 return;
             }
+            socket_options_base::acceptor_options(acceptor);
             acceptor.bind(endpoint, error);
             if (error) {
                 BOOST_NETWORK_MESSAGE("Error binding socket: " << address_ << ":" << port_);
                 return;
             }
-            socket_options_base::acceptor_options(acceptor);
             acceptor.listen(asio::socket_base::max_connections, error);
             if (error) {
                 BOOST_NETWORK_MESSAGE("Error listening on socket: '" << error << "' on " << address_ << ":" << port_);
