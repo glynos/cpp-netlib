@@ -7,6 +7,11 @@ cmake_minimum_required(VERSION 2.6)
 project(CPP-NETLIB)
 find_package( Boost 1.41.0 )
 set(CMAKE_VERBOSE_MAKEFILE true)
+
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DBOOST_NETWORK_DEBUG)
+endif()
+    
 if (Boost_FOUND)
     set(Boost_USE_STATIC_LIBS ON)
     set(Boost_USE_MULTI_THREADED ON)

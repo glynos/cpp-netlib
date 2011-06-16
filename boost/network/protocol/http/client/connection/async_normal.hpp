@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/version.hpp>
+#include <boost/network/detail/debug.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/cstdint.hpp>
@@ -237,7 +238,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                                     boost::bind(
                                         &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
                                         http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                                        body, get_body, callback,
+                                        headers, get_body, callback,
                                         boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
                                         )
                                     )
@@ -247,29 +248,43 @@ namespace boost { namespace network { namespace http { namespace impl {
                             this->body_promise.set_value("");
                             return;
                         }
-                        this->parse_body(
-                            *socket_,
-                            request_strand_.wrap(
-                                boost::bind(
-                                    &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
-                                    http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
-                                    body, get_body, callback,
-                                    boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
-                                    )
-                                ),
-                            remainder);
+                        if (callback) {
+                            typename protocol_base::buffer_type::const_iterator begin = this->part.begin();
+                            std::advance(begin, remainder);
+                            typename protocol_base::buffer_type::const_iterator end = begin;
+                            std::advance(end, this->part.size() - remainder);
+                            callback(make_iterator_range(begin, end), ec);
+                            socket_->async_read_some( 
+                                boost::asio::mutable_buffers_1(this->part.c_array(), this->part.size()),
+                                request_strand_.wrap(
+                                    boost::bind(
+                                        &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
+                                        http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                                        body, get_body, callback,
+                                        boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred)
+                                )
+                                );
+                            this->body_promise.set_value("");
+                        } else {
+                            this->parse_body(
+                                *socket_,
+                                request_strand_.wrap(
+                                    boost::bind(
+                                        &http_async_connection<Tag,version_major,version_minor>::handle_received_data,
+                                        http_async_connection<Tag,version_major,version_minor>::shared_from_this(),
+                                        body, get_body, callback,
+                                        boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
+                                        )
+                                    ),
+                                remainder);
+                        }
                         break;
                     case body:
-                        if (!get_body) {
-                            this->body_promise.set_value("");
-                            return;
-                        }
                         if (ec == boost::asio::error::eof) {
-                            if (!callback.empty()) {
+                            if (callback) {
                                 typename protocol_base::buffer_type::const_iterator begin = this->part.begin(), end = begin;
                                 std::advance(end, bytes_transferred);
                                 callback(make_iterator_range(begin, end), ec);
-                                this->body_promise.set_value("");
                             } else {
                                 string_type body_string;
                                 std::swap(body_string, this->partial_parsed);
@@ -285,7 +300,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                             this->part.assign('\0');
                             this->response_parser_.reset();
                         } else {
-                            if (!callback.empty()) {
+                            if (callback) {
                                 typename protocol_base::buffer_type::const_iterator begin = this->part.begin(), end = begin;
                                 std::advance(end, bytes_transferred);
                                 callback(make_iterator_range(begin, end), ec);

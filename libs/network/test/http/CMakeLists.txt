@@ -13,10 +13,6 @@ if (OPENSSL_FOUND)
     add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
 endif()
 
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-    add_definitions(-DBOOST_NETWORK_DEBUG)
-endif()
-
 find_package( Threads )
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
@@ -28,6 +24,7 @@ if (Boost_FOUND)
         client_get_different_port_test
         client_get_timeout_test
         client_localhost_normal_test
+        client_get_streaming_test
         )
     if (OPENSSL_FOUND)
         set ( TESTS ${TESTS} client_localhost_ssl_test )
