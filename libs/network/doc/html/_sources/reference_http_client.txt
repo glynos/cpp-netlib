@@ -295,7 +295,7 @@ Streaming Body Handler
 As of v0.9.1 the library now offers a way to support a streaming body callback
 function in all HTTP requests that expect a body part (GET, PUT, POST, DELETE).
 A convenience macro is also provided to make callback handlers easier to write.
-This macro is called `BOOST_NETWORK_HTTP_BODY_CALLBACK` which allows users to
+This macro is called ``BOOST_NETWORK_HTTP_BODY_CALLBACK`` which allows users to
 write the following code to easily create functions or function objects that
 are compatible with the callback function requirements.
 
@@ -339,5 +339,5 @@ to create a function object.
     response_ = client_.get(request("http://cpp-netlib.github.com/"),
                             _body_handler=print_body);
 
-The `BOOST_NETWORK_HTTP_BODY_CALLBACK` macro is defined in
-`boost/network/protocol/http/client/macros.hpp`.
+The ``BOOST_NETWORK_HTTP_BODY_CALLBACK`` macro is defined in
+``boost/network/protocol/http/client/macros.hpp``.
