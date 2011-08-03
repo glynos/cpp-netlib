@@ -31,7 +31,7 @@ namespace boost { namespace network { namespace http {
         template <class ArgPack>
         basic_client_facade(ArgPack const & args)
         {
-            init_pimpl(args, 
+            init_pimpl(args,
                 typename mpl::if_<
                     is_same<
                         typename parameter::value_type<ArgPack, tag::io_service, void>::type,
@@ -46,8 +46,8 @@ namespace boost { namespace network { namespace http {
             return pimpl->request_skeleton(request, "HEAD", false, body_callback_function_type());
         }
 
-        BOOST_PARAMETER_MEMBER_FUNCTION((response const), get , tag, 
-            (required 
+        BOOST_PARAMETER_MEMBER_FUNCTION((response const), get , tag,
+            (required
                 (request,(request const &))
                 )
             (optional
@@ -57,11 +57,11 @@ namespace boost { namespace network { namespace http {
             return pimpl->request_skeleton(request, "GET", true, body_handler);
         }
 
-        BOOST_PARAMETER_MEMBER_FUNCTION((response const), post, tag, 
-            (required 
+        BOOST_PARAMETER_MEMBER_FUNCTION((response const), post, tag,
+            (required
                 (request,(request)) // yes sir, we make a copy of the original request.
                 )
-            (optional 
+            (optional
                 (body,(string_type const &),string_type())
                 (content_type,(string_type const &),string_type())
                 (body_handler,(body_callback_function_type),body_callback_function_type())
@@ -88,11 +88,11 @@ namespace boost { namespace network { namespace http {
             return pimpl->request_skeleton(request, "POST", true, body_handler);
         }
 
-        BOOST_PARAMETER_MEMBER_FUNCTION((response const), put , tag, 
-            (required 
+        BOOST_PARAMETER_MEMBER_FUNCTION((response const), put , tag,
+            (required
                 (request,(request)) // yes sir, we make a copy of the original request.
                 )
-            (optional 
+            (optional
                 (body,(string_type const &),string_type())
                 (content_type,(string_type const &),string_type())
                 (body_handler,(body_callback_function_type),body_callback_function_type())

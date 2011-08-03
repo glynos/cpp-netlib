@@ -16,6 +16,7 @@ import os, sys
 print "X-CppNetlib-Test: multi-line-header\r\n"
 print " that-should-concatenate\r\n"
 print "Content-type: text/plain; charset=us-ascii\r\n\r\n"
+print "\r\n"
 
 form = cgi.FieldStorage()
 qstring = ""
@@ -28,7 +29,6 @@ if os.environ.has_key("QUERY_STRING"):
     except ValueError:
         print "Error parsing query string."
 
-    
 print "Query string:", qstring
 
 print "GET parameters:",
@@ -42,4 +42,3 @@ for i in form.keys():
     if i not in qstring_dict.keys():
         print i,"-",form.getfirst(i, ""),";",
 print
-

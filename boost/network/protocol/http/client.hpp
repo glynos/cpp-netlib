@@ -66,7 +66,7 @@ namespace boost { namespace network { namespace http {
         BOOST_PARAMETER_CONSTRUCTOR(
             basic_client, (base_facade_type), tag,
             (optional   
-                (in_out(io_service), (boost::asio::io_service))
+                (in_out(io_service), (boost::asio::io_service&))
                 (follow_redirects, (bool))
                 (cache_resolved, (bool))
                 (openssl_certificate, (string_type))

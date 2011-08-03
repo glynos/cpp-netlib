@@ -15,6 +15,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_constructor_test, client, client_types
     client instance;
     boost::asio::io_service io_service;
     client instance2(io_service);
+    client instance3(http::_io_service=io_service);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_cient_constructor_params_test, client, client_types) {
@@ -33,4 +34,3 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_cient_constructor_params_test, client, client
         http::_openssl_verify_path="bar"
         );
 }
-

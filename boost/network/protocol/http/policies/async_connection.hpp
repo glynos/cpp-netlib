@@ -29,11 +29,11 @@ namespace boost { namespace network { namespace http {
         typedef typename resolver_base::resolver_type resolver_type;
         typedef typename resolver_base::resolve_function resolve_function;
         typedef function<void(iterator_range<char const *> const &, system::error_code const &)> body_callback_function_type;
-        
+
         struct connection_impl {
             connection_impl(
-                bool follow_redirect, 
-                resolve_function resolve, 
+                bool follow_redirect,
+                resolve_function resolve,
                 resolver_type & resolver,
                 bool https,
                 optional<string_type> const & certificate_filename,

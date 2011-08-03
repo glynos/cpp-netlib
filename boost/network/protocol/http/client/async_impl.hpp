@@ -18,7 +18,7 @@ namespace boost { namespace network { namespace http {
 
     namespace impl {
         template <class Tag, unsigned version_major, unsigned version_minor>
-        struct async_client : 
+        struct async_client :
             connection_policy<Tag,version_major,version_minor>::type
         {
             typedef
@@ -31,7 +31,7 @@ namespace boost { namespace network { namespace http {
                 typename string<Tag>::type
                 string_type;
 
-            typedef 
+            typedef
                 function<void(boost::iterator_range<char const *> const &, system::error_code const &)>
                 body_callback_function_type;
 
@@ -75,11 +75,11 @@ namespace boost { namespace network { namespace http {
             }
 
             basic_response<Tag> const request_skeleton(
-                basic_request<Tag> const & request_, 
-                string_type const & method, 
+                basic_request<Tag> const & request_,
+                string_type const & method,
                 bool get_body,
                 body_callback_function_type callback
-                ) 
+                )
             {
                 typename connection_base::connection_ptr connection_;
                 connection_ = connection_base::get_connection(resolver_, request_, certificate_filename_, verify_path_);

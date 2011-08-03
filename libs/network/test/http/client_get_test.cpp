@@ -15,10 +15,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_get_test, client, client_types) {
     typename client::request request("http://www.boost.org");
     client client_;
     typename client::response response;
-    BOOST_CHECK_NO_THROW ( response = client_.get(request) );
+    BOOST_REQUIRE_NO_THROW ( response = client_.get(request) );
     typename net::headers_range<typename client::response>::type range = headers(response)["Content-Type"];
     BOOST_CHECK ( !boost::empty(range) );
-    BOOST_CHECK ( body(response).size() != 0 );
+    BOOST_REQUIRE_NO_THROW ( BOOST_CHECK ( body(response).size() != 0 ) );
     BOOST_CHECK_EQUAL ( response.version().substr(0,7), std::string("HTTP/1.") );
     BOOST_CHECK_EQUAL ( response.status(), 200u );
     BOOST_CHECK_EQUAL ( response.status_message(), std::string("OK") );
@@ -32,8 +32,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(https_client_get_test, client, client_types) {
     typename client::response response_ = client_.get(request);
     typename net::headers_range<typename client::response>::type range = headers(response_)["Content-Type"];
     BOOST_CHECK ( boost::begin(range) != boost::end(range) );
-    BOOST_CHECK ( body(response_).size() != 0 );
+    BOOST_REQUIRE_NO_THROW ( BOOST_CHECK( body(response_).size() != 0 ) );
 }
 
 #endif
-
