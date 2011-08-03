@@ -167,26 +167,21 @@ repository. It is recommended that forks be made against the upstream repostory
 and pull requests be submitted against the upstream repository so that patches
 and other implementations can be curated by the original maintainer.
 
-Contact and Commercial Support
-------------------------------
+Contact and Support
+-------------------
 
 In case you have any questions or would like to make feature requests, you can
 contact the development team through the `developers mailing list`_
-or by filing issues at http://github.com/mikhailberis/cpp-netlib/issues.
+or by filing issues at http://github.com/cpp-netlib/cpp-netlib/issues.
 
 .. _`developers mailing list`:
    https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
 
 You can reach the maintainers of the project through::
 
-    Dean Michael Berris
-    mikhailberis@gmail.com
+    Dean Michael Berris (dberris@google.com)
 
     Glyn Matthews
 
     Mike Dickey
-
-At this time, paid commercial support is available for cpp-netlib being offered
-by the maintainers. In case you have any questions, please feel free to contact
-any one of the maintainers above or anybody on the developers mailing list.
 

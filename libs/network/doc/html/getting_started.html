@@ -107,7 +107,7 @@ you want to submit patches, you will have to create a fork of the project
 <div class="section" id="getting-boost">
 <h2>Getting Boost<a class="headerlink" href="#getting-boost" title="Permalink to this headline">¶</a></h2>
 <p><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> depends on <a class="reference external" href="http://www.boost.org/doc/libs/release/more/getting_started/index.html">Boost</a>.  It should work for any version
-of Boost above 1.43.0.  If Boost is not installed on your system, the
+of Boost above 1.45.0.  If Boost is not installed on your system, the
 latest package can be found on the <a class="reference external" href="http://www.boost.org/users/download/">Boost web-site</a>.  The environment
 variable <tt class="docutils literal"><span class="pre">BOOST_ROOT</span></tt> must be defined, which must be the full path
 name of the top directory of the Boost distribution.  Although Boost
@@ -118,6 +118,13 @@ still requires linking with <a class="reference external" href="http://www.boost
 <p class="first admonition-title">Note</p>
 <p class="last">You can follow the steps in the <a class="reference external" href="http://www.boost.org/doc/libs/release/more/getting_started/index.html">Boost Getting Started</a> guide to
 install Boost into your development system.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">There is a known incompatibility between <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> and
+Boost 1.46.1 on some compilers. It is not recommended to use <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>
+with Boost 1.46.1. Some have reported though that Boost 1.47.0
+and <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> work together better.</p>
 </div>
 </div>
 <div class="section" id="getting-cmake">
@@ -187,10 +194,7 @@ implementation and/or the documentation, you can go to the GitHub issues page
 for the project at <a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/issues">http://github.com/cpp-netlib/cpp-netlib/issues</a>.</p>
 <p>You can also opt to join the developers mailing list for a more personal
 interaction with the developers of the project. You can join the mailing list
-through <a class="reference external" href="https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel">https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel</a>.</p>
-<p>You may also choose to get commercial support from:</p>
-<blockquote>
-<div>Dean Michael Berris - &lt;<a class="reference external" href="mailto:me&#37;&#52;&#48;deanberris&#46;com">me<span>&#64;</span>deanberris<span>&#46;</span>com</a>&gt;</div></blockquote>
+through <a class="reference external" href="https://groups.google.com/group/cpp-netlib">https://groups.google.com/group/cpp-netlib</a>.</p>
 </div>
 </div>
 
