@@ -1,10 +1,12 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_PARSER_INCREMENTAL_HPP_20100909
 #define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_INCREMENTAL_HPP_20100909
 
-//          Copyright Dean Michael Berris 2010.
+// Copyright Dean Michael Berris 2010.
+// Copyright 2011 Dean Michael Berris (dberris@google.com).
+// Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/tags.hpp>
 #include <boost/range.hpp>
@@ -15,7 +17,7 @@
 #include <utility>
 
 namespace boost { namespace network { namespace http {
-    
+
     template <class Tag>
     struct response_parser {
 
@@ -47,11 +49,11 @@ namespace boost { namespace network { namespace http {
         explicit response_parser (state_t state=http_response_begin)
             : state_(state) {}
 
-        response_parser (response_parser const & other) 
+        response_parser (response_parser const & other)
             : state_(other.state_) {}
 
         ~response_parser () {}
-    
+
         void swap(response_parser & other) {
             std::swap(other.state_, this->state_);
         }
@@ -63,7 +65,6 @@ namespace boost { namespace network { namespace http {
 
         template <class Range>
         fusion::tuple<logic::tribool,iterator_range<typename Range::const_iterator> > parse_until(state_t stop_state, Range & range_) {
-            //FIXME -- find a way to make better use of the Boost.String_algorithm classifiers
             logic::tribool parsed_ok(logic::indeterminate);
             typename Range::const_iterator start = boost::begin(range_),
                 current = start,
@@ -263,7 +264,6 @@ namespace boost { namespace network { namespace http {
                 local_range = boost::make_iterator_range(current, end);
             }
             if (state_ == stop_state) parsed_ok = true;
-            else parsed_ok = false;
             return fusion::make_tuple(parsed_ok,boost::make_iterator_range(start, current));
         }
 
@@ -279,12 +279,12 @@ namespace boost { namespace network { namespace http {
         state_t state_;
 
     };
-    
+
 
 } /* http */
 
 } /* network */
-    
+
 } /* boost */
 
 #endif

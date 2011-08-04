@@ -105,7 +105,7 @@ Support
 You can ask questions, join the discussion, and report issues to the developers
 mailing list by joining via:
 
-    https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
+    https://groups.google.com/group/cpp-netlib
 
 You may also file issues on the Github_ issue tracker at:
 

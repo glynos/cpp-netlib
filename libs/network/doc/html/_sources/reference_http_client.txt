@@ -8,7 +8,7 @@ General
 :mod:`cpp-netlib` includes and implements a number of HTTP clients that you can
 use and embed in your own applications. All of the HTTP client implementations:
 
-  * **Cannot be copied.** This means you may have to store instances of the 
+  * **Cannot be copied.** This means you may have to store instances of the
     clients in dynamic memory if you intend to use them as function parameters
     or pass them around in smart pointers or by reference.
   * **Assume that requests made are independent of each other.** There currently
@@ -18,10 +18,13 @@ use and embed in your own applications. All of the HTTP client implementations:
     case you want to upgrade the implementation you are using in your application
     will be distributed as header-only implementations, which means you have to
     re-compile your application to use a newer version of the implementations.
-  
+
 The HTTP clients all share the same API, but the internals are documented in
 terms of what is different and what to expect with the different
 implementations.
+
+As of 0.9.1 the default implementation for the :mod:`cpp-netlib` HTTP client is
+asynchronous.
 
 Implementations
 ---------------
@@ -60,14 +63,14 @@ Synchronous Clients
 ~~~~~~~~~~~~~~~~~~~
 
 Of the client tags shown in the table, the following makes the ``basic_client``
-behave as a fully synchronous client. 
+behave as a fully synchronous client.
 
   * **http_default_8bit_tcp_resolve**
   * **http_default_8bit_udp_resolve**
   * **http_keepalive_8bit_tcp_resolve**
   * **http_keepalive_8bit_udp_resolve**
 
-The synchronous client implements all the operations of the client underneath 
+The synchronous client implements all the operations of the client underneath
 the interface all block to wait for I/O to finish. All the member methods are
 synchronous and will block until the response object is ready or throws if erros
 are encountered in the performance of the HTTP requests.
@@ -84,10 +87,10 @@ manner:
   * **http_async_8bit_tcp_resolve**
   * **http_async_8bit_udp_resolve**
 
-An asynchronous client implementation means that``basic_client<...>`` is an 
-`Active Object`_. This means that the client has and manages its own lifetime 
-thread, and returns values that are asynchronously filled in. The response 
-object encapsulates Boost.Thread_ futures which get filled in once the values 
+An asynchronous client implementation means that``basic_client<...>`` is an
+`Active Object`_. This means that the client has and manages its own lifetime
+thread, and returns values that are asynchronously filled in. The response
+object encapsulates Boost.Thread_ futures which get filled in once the values
 are available.
 
 .. _Boost.Thread: http://www.boost.org/libs/thread
@@ -177,7 +180,7 @@ To use the above supported named parameters, you'll have code that looks like
 the following:
 
 .. code-block:: c++
-    
+
     using namespace boost::network::http; // parameters are in this namespace
     boost::asio::io_service my_io_service;
     client client_(_follow_redirects=true, _cache_resolved=true,
@@ -197,38 +200,87 @@ and that there is an appropriately constructed response object named
 
 .. code-block:: c++
 
+    using namespace boost::network::http;  // parameters are here
     client client_();
     client::request request_("http://cpp-netib.github.com/");
     client::response response_;
 
 ``response_ = client_.get(request_)``
     Perform an HTTP GET request.
+``response_ = client_.get(request_, _body_handler=callback)``
+    Perform an HTTP GET request, and have the body chunks be handled by the
+    ``callback`` parameter. The signature of ``callback`` should be the following:
+    ``void(iterator_range<char const *> const &, boost::system::error_code const
+    &)``.
 ``response_ = client_.head(request_)``
     Perform an HTTP HEAD request.
 ``response_ = client_.post(request_)``
     Perform an HTTP POST, use the data already set in the request object which
     includes the headers, and the body.
+``response_ = client_.post(request_, _body_handler=callback)``
+    Perform an HTTP POST request, and have the body chunks be handled by the
+    ``callback`` parameter. The signature of ``callback`` should be the following:
+    ``void(iterator_range<char const *> const &, boost::system::error_code const
+    &)``.
 ``response_ = client_.post(request_, body)``
     Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
     is the HTTP Client's ``Tag``. The default content-type used is
     ``x-application/octet-stream``.
+``response_ = client_.post(request_, body, _body_handler=callback)``
+    Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
+    is the HTTP Client's ``Tag``. The default content-type used is
+    ``x-application/octet-stream``. Have the response body chunks be handled by
+    the ``callback`` parameter. The signature of ``callback`` should be the
+    following: ``void(iterator_range<char const *> const &,
+    boost::system::error_code const &)``.
 ``response_ = client_.post(request_, content_type, body)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers.
+``response_ = client_.post(request_, content_type, body, _body_handler=callback)``
+    The body and content_type parameters are of type
+    ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
+    ``Tag``. This uses the request object's other headers. Have the response
+    body chunks be handled by the ``callback`` parameter. The signature of
+    ``callback`` should be the following: ``void(iterator_range<char const *> const
+    &, boost::system::error_code const &)``.
 ``response_ = client_.put(request_)``
     Perform an HTTP PUT, use the data already set in the request object which
     includes the headers, and the body.
+``response_ = client_.put(request_, _body_handler=callback)``
+    Perform an HTTP PUT request, and have the body chunks be handled by the
+    ``callback`` parameter. The signature of ``callback`` should be the following:
+    ``void(iterator_range<char const *> const &, boost::system::error_code const
+    &)``.
 ``response_ = client_.put(request_, body)``
     Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
     is the HTTP Client's ``Tag``. The default content-type used is
     ``x-application/octet-stream``.
+``response_ = client_.put(request_, body, _body_handler=callback)``
+    Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
+    is the HTTP Client's ``Tag``. The default content-type used is
+    ``x-application/octet-stream``. Have the response body chunks be handled by
+    the ``callback`` parameter. The signature of ``callback`` should be the
+    following: ``void(iterator_range<char const *> const &,
+    boost::system::error_code const &)``.
 ``response_ = client_.put(request_, content_type, body)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers.
+``response_ = client_.put(request_, content_type, body, _body_handler=callback)``
+    The body and content_type parameters are of type
+    ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
+    ``Tag``. This uses the request object's other headers. Have the response
+    body chunks be handled by the ``callback`` parameter. The signature of
+    ``callback`` should be the following: ``void(iterator_range<char const *> const
+    &, boost::system::error_code const &)``.
 ``response_ = client_.delete_(request_)``
     Perform an HTTP DELETE request.
+``response_ = client_.delete_(request_, _body_handler=callback)``
+    Perform an HTTP DELETE request, and have the response body chunks be handled
+    by the ``callback`` parameter. The signature of ``callback`` should be the
+    following: ``void(iterator_range<char const *> const &,
+    boost::system::error_code const &)``.
 
 Client-Specific
 ~~~~~~~~~~~~~~~
@@ -237,3 +289,55 @@ Client-Specific
     Clear the cache of resolved endpoints.
 
 
+Streaming Body Handler
+~~~~~~~~~~~~~~~~~~~~~~
+
+As of v0.9.1 the library now offers a way to support a streaming body callback
+function in all HTTP requests that expect a body part (GET, PUT, POST, DELETE).
+A convenience macro is also provided to make callback handlers easier to write.
+This macro is called ``BOOST_NETWORK_HTTP_BODY_CALLBACK`` which allows users to
+write the following code to easily create functions or function objects that
+are compatible with the callback function requirements.
+
+An example of how to use the macro is shown below:
+
+.. code-block:: c++
+
+    struct body_handler {
+        explicit body_handler(std::string & body)
+        : body(body) {}
+
+        BOOST_NETWORK_HTTP_BODY_CALLBACK(operator(), range, error) {
+            // in here, range is the Boost.Range iterator_range, and error is
+            // the Boost.System error code.
+            if (!error)
+                body.append(boost::begin(range), boost::end(range));
+        }
+
+        std::string & body;
+    };
+
+    // somewhere else
+    std::string some_string;
+    response_ = client_.get(request("http://cpp-netlib.github.com/"),
+                            _body_handler=body_handler(some_string));
+
+You can also use if for standalone functions instead if you don't want or need
+to create a function object.
+
+.. code-block:: c++
+
+    BOOST_NETWORK_HTTP_BODY_CALLBACK(print_body, range, error) {
+        if (!error)
+            std::cout << "Received " << boost::distance(range) << "bytes."
+                      << std::endl;
+        else
+            std::cout << "Error: " << error << std::endl;
+    }
+
+    // somewhere else
+    response_ = client_.get(request("http://cpp-netlib.github.com/"),
+                            _body_handler=print_body);
+
+The ``BOOST_NETWORK_HTTP_BODY_CALLBACK`` macro is defined in
+``boost/network/protocol/http/client/macros.hpp``.

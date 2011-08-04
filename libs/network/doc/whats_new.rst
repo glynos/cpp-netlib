@@ -7,6 +7,17 @@
 :mod:`cpp-netlib` 0.9
 ---------------------
 
+v0.9.1
+~~~~~~
+* Introduced macro ``BOOST_NETWORK_DEFAULT_TAG`` to allow for programmatically
+  defining the default flag to use throughout the compilation unit.
+* Support for streaming body handlers when performing HTTP client operations.
+  See documentation for HTTP client interface for more information.
+* Numerous bug fixes from v0.9.0.
+* Google, Inc. contributions.
+
+v0.9.0
+~~~~~~
 * **IMPORTANT BREAKING CHANGE**: By default all compile-time heavy parser 
   implementations are now compiled to external static libraries. In order to use
   :mod:`cpp-netlib` in header-only mode, users must define the preprocessor

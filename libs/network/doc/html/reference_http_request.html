@@ -280,17 +280,6 @@ effect:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">directive</span><span class="p">(...);</span>
 </pre></div>
 </div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p>There are two versions of directives, those that are applicable to
-messages that support narrow strings (<tt class="docutils literal"><span class="pre">std::string</span></tt>) and those that are
-applicable to messages that support wide strings (<tt class="docutils literal"><span class="pre">std::wstring</span></tt>). The
-<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> implementation still does not convert wide strings into
-UTF-8 encoded narrow strings. This will be implemented in subsequent
-library releases.</p>
-<p class="last">For now all the implemented directives are listed, even if some of them still
-do not implement things correctly.</p>
-</div>
 <dl class="docutils">
 <dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">source(std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">source_)</span></tt></dt>
 <dd>Create a source directive with a <tt class="docutils literal"><span class="pre">std::string</span></tt> as a parameter, to be set

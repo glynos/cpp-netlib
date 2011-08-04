@@ -34,7 +34,7 @@ namespace boost { namespace network { namespace http {
         : basic_client_facade<Tag, version_major, version_minor>
     {
     private:
-        typedef basic_client_facade<Tag, version_major, version_minor> 
+        typedef basic_client_facade<Tag, version_major, version_minor>
             base_facade_type;
     public:
         typedef basic_request<Tag> request;
@@ -65,8 +65,8 @@ namespace boost { namespace network { namespace http {
 
         BOOST_PARAMETER_CONSTRUCTOR(
             basic_client, (base_facade_type), tag,
-            (optional   
-                (in_out(io_service), (boost::asio::io_service))
+            (optional
+                (in_out(io_service), (boost::asio::io_service&))
                 (follow_redirects, (bool))
                 (cache_resolved, (bool))
                 (openssl_certificate, (string_type))

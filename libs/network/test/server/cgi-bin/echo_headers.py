@@ -13,6 +13,7 @@ import os, sys
 import cgisupport
 
 sys.stdout.write( "Content-type: text/plain; charset=us-ascii\r\n\r\n" )
+sys.stdout.write( "\r\n" )
 
 hdrs = cgisupport.http_headers(os.environ.get('HTTP_ALL_HEADERS'))
 

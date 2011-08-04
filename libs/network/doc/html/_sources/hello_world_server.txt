@@ -38,12 +38,12 @@ simple response to any HTTP request.
 
     int
     main(int argc, char * argv[]) {
-        
+
         if (argc != 3) {
             std::cerr << "Usage: " << argv[0] << " address port" << std::endl;
             return 1;
         }
-    
+
         try {
             hello_world handler;
             server server_(argv[1], argv[2], handler);
@@ -53,7 +53,7 @@ simple response to any HTTP request.
             std::cerr << e.what() << std::endl;
             return 1;
         }
-        
+
         return 0;
     }
 
@@ -115,9 +115,9 @@ This header contains all the code needed to develop an HTTP server with
 ``hello_world`` is a functor class which handles HTTP requests.  All
 the operator does here is return an HTTP response with HTTP code 200
 and the body ``"Hello, <ip>!"``. The ``<ip>`` in this case would be
-the IP address of the client that made the request. 
+the IP address of the client that made the request.
 
-There are a number of pre-defined stock replies differentiated by 
+There are a number of pre-defined stock replies differentiated by
 status code with configurable bodies.
 
 All the supported enumeration values for the response status codes can be found
@@ -134,10 +134,10 @@ the port on which the server will listen.  The third argument is the
 the handler object defined previously.
 
 .. note:: In this example, the server is specifically made to be single-threaded.
-   In a multi-threaded server, you would invoke the ``hello_world::run`` member 
-   method in a set of threads. In a multi-threaded environment you would also 
-   make sure that the handler does all the necessary synchronization for shared 
-   resources across threads. The handler is passed by reference to the server 
-   constructor and you should ensure that any calls to the ``operator()`` overload 
+   In a multi-threaded server, you would invoke the ``hello_world::run`` member
+   method in a set of threads. In a multi-threaded environment you would also
+   make sure that the handler does all the necessary synchronization for shared
+   resources across threads. The handler is passed by reference to the server
+   constructor and you should ensure that any calls to the ``operator()`` overload
    are thread-safe.
 

@@ -70,7 +70,7 @@ Getting Boost
 =============
 
 :mod:`cpp-netlib` depends on Boost_.  It should work for any version
-of Boost above 1.43.0.  If Boost is not installed on your system, the
+of Boost above 1.45.0.  If Boost is not installed on your system, the
 latest package can be found on the `Boost web-site`_.  The environment
 variable ``BOOST_ROOT`` must be defined, which must be the full path
 name of the top directory of the Boost distribution.  Although Boost
@@ -89,6 +89,11 @@ still requires linking with `Boost.System`_, `Boost.Date_time`_, and
 
 .. _`Boost Getting Started`:
    http://www.boost.org/doc/libs/release/more/getting_started/index.html
+
+.. warning:: There is a known incompatibility between :mod:`cpp-netlib` and
+   Boost 1.46.1 on some compilers. It is not recommended to use :mod:`cpp-netlib`
+   with Boost 1.46.1. Some have reported though that Boost 1.47.0
+   and :mod:`cpp-netlib` work together better.
 
 Getting CMake
 =============
@@ -168,9 +173,5 @@ for the project at http://github.com/cpp-netlib/cpp-netlib/issues.
 
 You can also opt to join the developers mailing list for a more personal
 interaction with the developers of the project. You can join the mailing list
-through https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel.
-
-You may also choose to get commercial support from:
-
-    Dean Michael Berris - <me@deanberris.com>
+through https://groups.google.com/group/cpp-netlib.
 

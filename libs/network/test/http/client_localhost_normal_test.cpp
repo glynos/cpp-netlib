@@ -27,7 +27,7 @@ using std::endl;
 namespace {
     const std::string base_url = "http://localhost:8000";
     const std::string cgi_url = base_url + "/cgi-bin/requestinfo.py";
-    
+
     struct running_server_fixture
     {
         // NOTE: Can't use BOOST_REQUIRE_MESSAGE here, as Boost.Test data structures
@@ -36,15 +36,15 @@ namespace {
             if( !server.start() )
                 cout << "Failed to start HTTP server for test!" << endl;
         }
-      
+
         ~running_server_fixture() {
             if( !server.stop() )
                 cout << "Failed to stop HTTP server for test!" << endl;
         }
-     
+
         http_test_server server;
     };
-    
+
     std::size_t readfile(std::ifstream& file, std::vector<char>& buffer) {
         using std::ios;
 
@@ -54,10 +54,10 @@ namespace {
 
         return buffer.size();
     }
-    
+
     std::map<std::string, std::string> parse_headers(std::string const& body) {
         std::map<std::string, std::string> headers;
-    
+
         std::istringstream stream(body);
         while (stream.good())
         {
@@ -74,10 +74,10 @@ namespace {
                 }
             }
         }
-        
+
         return headers;
     }
-    
+
     std::string get_content_length(std::string const& content) {
         return boost::lexical_cast<std::string>(content.length());
     }
@@ -85,8 +85,8 @@ namespace {
 }
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-    // Uncomment the below if you're running Python pre-2.6. There was a bug 
-    // in the Python HTTP server for earlier versions that causes this test 
+    // Uncomment the below if you're running Python pre-2.6. There was a bug
+    // in the Python HTTP server for earlier versions that causes this test
     // case to fail.
     //BOOST_AUTO_TEST_CASE_EXPECTED_FAILURES(text_query_preserves_crlf, 2);
 #endif
@@ -98,7 +98,8 @@ BOOST_AUTO_TEST_CASE(body_test) {
     using namespace boost::network;
     http::client::request request_(base_url);
     http::client client_;
-    http::client::response response_ = client_.get(request_);
+    http::client::response response_;
+    BOOST_REQUIRE_NO_THROW( response_ = client_.get(request_) );
     BOOST_CHECK(body(response_).size() != 0);
 }
 
@@ -107,7 +108,8 @@ BOOST_AUTO_TEST_CASE(text_content_type_test) {
     using namespace boost::network;
     http::client::request request_(base_url);
     http::client client_;
-    http::client::response response_ = client_.get(request_);
+    http::client::response response_;
+    BOOST_REQUIRE_NO_THROW( response_ = client_.get(request_) );
     BOOST_REQUIRE(headers(response_).count("Content-type") != 0);
     headers_range<http::client::response>::type range = headers(response_)["Content-type"];
     BOOST_CHECK(boost::begin(range)->first == "Content-type");
@@ -119,7 +121,8 @@ BOOST_AUTO_TEST_CASE(binary_content_type_test) {
     using namespace boost::network;
     http::client::request request_(base_url + "/boost.jpg");
     http::client client_;
-    http::client::response response_ = client_.get(request_);
+    http::client::response response_;
+    BOOST_REQUIRE_NO_THROW( response_ = client_.get(request_) );
     BOOST_REQUIRE(headers(response_).count("Content-type") != 0);
     headers_range<http::client::response>::type range = headers(response_)["Content-type"];
     BOOST_CHECK(boost::begin(range)->first == "Content-type");
@@ -131,7 +134,8 @@ BOOST_AUTO_TEST_CASE(content_length_header_test) {
     using namespace boost::network;
     http::client::request request_(base_url + "/test.xml");
     http::client client_;
-    http::client::response response_ = client_.get(request_);
+    http::client::response response_;
+    BOOST_REQUIRE_NO_THROW( response_ = client_.get(request_) );
     BOOST_REQUIRE(headers(response_).count("Content-Length") != 0);
     headers_range<http::client::response>::type range = headers(response_)["Content-Length"];
     BOOST_CHECK_EQUAL(boost::begin(range)->first, "Content-Length");
@@ -144,8 +148,9 @@ BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
     using namespace boost::network;
     http::client::request request_(base_url + "/test.xml");
     http::client client_;
-    http::client::response response_ = client_.get(request_);
-    
+    http::client::response response_;
+    BOOST_REQUIRE_NO_THROW( response_ = client_.get(request_) );
+
     http::client::response::string_type body_ = body(response_);
     BOOST_CHECK(body(response_).size() != 0);
 
@@ -156,7 +161,7 @@ BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
         file.clear();
         file.open("server/test.xml", ios::in | ios::binary);
     }
-    
+
     BOOST_REQUIRE_MESSAGE( file, "Could not open local test.xml");
 
     std::vector<char> memblock;
@@ -177,27 +182,27 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
     http::client::request request_(base_url + "/boost.jpg");
     http::client client_;
     http::client::response response_;
-    BOOST_CHECK_NO_THROW(response_ = client_.get(request_));
-    
+    BOOST_REQUIRE_NO_THROW(response_ = client_.get(request_));
+
     http::client::response::string_type body_ = body(response_);
     BOOST_CHECK(body_.size() != 0);
 
     using std::ios;
-    
+
     std::ifstream file("libs/network/test/server/boost.jpg", ios::in | ios::binary);
     if( ! file ) {
         file.clear();
         file.open("server/boost.jpg", ios::in | ios::binary);
     }
-    
+
     BOOST_REQUIRE_MESSAGE( file, "Could not open boost.jpg locally");
 
-    std::vector<char> memblock;        
+    std::vector<char> memblock;
     std::size_t size = readfile(file, memblock);
 
     BOOST_CHECK(size != 0);
     BOOST_CHECK_EQUAL(body_.size(), size);
-    
+
     std::pair<std::vector<char>::iterator, std::string::const_iterator> diff_pos = std::mismatch(memblock.begin(), memblock.end(), body_.begin());
     BOOST_CHECK_EQUAL(boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()), size);
 }
@@ -247,7 +252,8 @@ BOOST_AUTO_TEST_CASE(head_test) {
     using namespace boost::network;
     http::client::request request_(base_url + "/test.xml");
     http::client client_;
-    http::client::response response_ = client_.head(request_);
+    http::client::response response_;
+    BOOST_REQUIRE_NO_THROW( response_ = client_.head(request_) );
     BOOST_REQUIRE(headers(response_).count("Content-Length") != 0);
     headers_range<http::client::response>::type range = headers(response_)["Content-Length"];
     BOOST_CHECK_EQUAL(boost::begin(range)->first, "Content-Length");
@@ -272,7 +278,7 @@ BOOST_AUTO_TEST_CASE(post_with_explicit_headers) {
     http::client c;
     http::client::response r;
     BOOST_REQUIRE_NO_THROW(r = c.post(req));
-    
+
     std::map<std::string, std::string> headers = parse_headers(body(r));
     BOOST_CHECK_EQUAL(headers["content-length"], content_length);
     BOOST_CHECK_EQUAL(headers["content-type"], content_type);
@@ -290,7 +296,7 @@ BOOST_AUTO_TEST_CASE(post_with_implicit_headers) {
     http::client c;
     http::client::response r;
     BOOST_REQUIRE_NO_THROW(r = c.post(req, postdata));
-    
+
     std::map<std::string, std::string> headers = parse_headers(body(r));
     BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
     BOOST_CHECK_EQUAL(headers["content-type"], "x-application/octet-stream");
@@ -309,7 +315,7 @@ BOOST_AUTO_TEST_CASE(post_with_explicit_content_type) {
     http::client c;
     http::client::response r;
     BOOST_REQUIRE_NO_THROW(r = c.post(req, content_type, postdata));
-    
+
     std::map<std::string, std::string> headers = parse_headers(body(r));
     BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
     BOOST_CHECK_EQUAL(headers["content-type"], content_type);
@@ -338,11 +344,11 @@ BOOST_AUTO_TEST_CASE(post_with_custom_headers) {
 
     http::client::request req(base_url + "/cgi-bin/echo_headers.py");
     req << header("X-Cpp-Netlib", "rocks!");
-    
+
     http::client c;
     http::client::response r;
     BOOST_REQUIRE_NO_THROW(r = c.post(req, std::string()));
-    
+
     std::map<std::string, std::string> headers = parse_headers(body(r));
     BOOST_CHECK_EQUAL(headers["x-cpp-netlib"], "rocks!");
 }

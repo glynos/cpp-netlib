@@ -14,6 +14,7 @@ import cgi
 import os, sys
 
 sys.stdout.write( "Content-type: text/plain; charset=us-ascii\r\n\r\n" )
+sys.stdout.write( "\r\n" )
 
 # POST data/form data is available in the .value property
 sys.stdout.write( cgi.FieldStorage().value )

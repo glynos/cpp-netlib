@@ -63,6 +63,19 @@
 <span id="whats-new"></span><h1>What&#8217;s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="cpp-netlib-0-9">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9<a class="headerlink" href="#cpp-netlib-0-9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="v0-9-1">
+<h3>v0.9.1<a class="headerlink" href="#v0-9-1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Introduced macro <tt class="docutils literal"><span class="pre">BOOST_NETWORK_DEFAULT_TAG</span></tt> to allow for programmatically
+defining the default flag to use throughout the compilation unit.</li>
+<li>Support for streaming body handlers when performing HTTP client operations.
+See documentation for HTTP client interface for more information.</li>
+<li>Numerous bug fixes from v0.9.0.</li>
+<li>Google, Inc. contributions.</li>
+</ul>
+</div>
+<div class="section" id="v0-9-0">
+<h3>v0.9.0<a class="headerlink" href="#v0-9-0" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><strong>IMPORTANT BREAKING CHANGE</strong>: By default all compile-time heavy parser
 implementations are now compiled to external static libraries. In order to use
@@ -70,6 +83,11 @@ implementations are now compiled to external static libraries. In order to use
 macro <tt class="docutils literal"><span class="pre">BOOST_NETWORK_NO_LIB</span></tt> before including any <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> header.
 This breaks code that relied on the version 0.8.x line where the library is
 strictly header-only.</li>
+<li>Fix issue #41: Introduce a macro <tt class="docutils literal"><span class="pre">BOOST_NETWORK_HTTP_CLIENT_DEFAULT_TAG</span></tt>
+which makes the default HTTP client use <tt class="docutils literal"><span class="pre">tags::http_async_8bit_udp_resolve</span></tt>
+as the tag.</li>
+<li>Fix issue #40: Write the status line and headers in a single buffer write
+instead of two writes.</li>
 <li>More consistent message API for client and server messages (request and
 response objects).</li>
 <li>Refactoring of internal implementations to allow better separation of concerns
@@ -79,6 +97,7 @@ and more manageable coding/documentation.</li>
 <tt class="docutils literal"><span class="pre">io_service</span></tt> to use internally.</li>
 <li>Documentation updates to reflect new APIs.</li>
 </ul>
+</div>
 </div>
 <div class="section" id="cpp-netlib-0-8">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.8<a class="headerlink" href="#cpp-netlib-0-8" title="Permalink to this headline">¶</a></h2>
@@ -135,7 +154,11 @@ the asynchronous client in 0.7 already has all the parts available.</li>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">What&#8217;s New</a><ul>
-<li><a class="reference internal" href="#cpp-netlib-0-9"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9</a></li>
+<li><a class="reference internal" href="#cpp-netlib-0-9"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9</a><ul>
+<li><a class="reference internal" href="#v0-9-1">v0.9.1</a></li>
+<li><a class="reference internal" href="#v0-9-0">v0.9.0</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#cpp-netlib-0-8"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.8</a></li>
 <li><a class="reference internal" href="#cpp-netlib-0-7"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7</a></li>
 <li><a class="reference internal" href="#cpp-netlib-0-6"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6</a></li>

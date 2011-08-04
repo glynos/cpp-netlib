@@ -9,7 +9,6 @@
 # It will be used to test the http::client interface of the library
 
 import BaseHTTPServer
-import SimpleHTTPServer
 import CGIHTTPServer
 import os
 
@@ -33,4 +32,3 @@ def run_server(server_class=BaseHTTPServer.HTTPServer, handler_class=HttpTestHan
 
 if __name__ == '__main__':
     run_server()
-    

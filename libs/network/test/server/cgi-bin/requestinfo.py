@@ -15,6 +15,7 @@ import os, sys
 
 sys.stdout.write( "HTTP/1.0 200 Requestinfo.py Output follows\r\n" )
 sys.stdout.write( "Content-type: text/plain; charset=us-ascii\r\n\r\n" )
+sys.stdout.write( "\r\n" )
 
 form = cgi.FieldStorage()
 qstring = ""
