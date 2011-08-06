@@ -263,18 +263,21 @@ struct port_wrapper {
 
     }
 
-    operator boost::optional<unsigned short> () const {
+    boost::optional<unsigned short> to_optional() const {
         typename basic_uri<Tag>::string_type port = uri.port();
         return (port.empty())?
             boost::optional<unsigned short>() :
             boost::optional<unsigned short>(boost::lexical_cast<unsigned short>(port));
     }
 
+    operator boost::optional<unsigned short> () const {
+        return to_optional();
+    }
+
     operator unsigned short () const {
-        const boost::optional<unsigned short> &port =
-            static_cast<boost::optional<unsigned short> >(*this);
         typedef typename string<Tag>::type string_type;
         typedef constants<Tag> consts;
+        const boost::optional<unsigned short> &port = to_optional();
         if (port) return *port;
         return boost::iequals(uri.scheme_range(), string_type(consts::https())) ? 443 : 80;
     }

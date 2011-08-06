@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::user_info(instance), user_info));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
-    // BOOST_CHECK_EQUAL(uri::port(instance), port);
+    BOOST_CHECK_EQUAL(static_cast<unsigned short>(uri::port_us(instance)), 8000);
     BOOST_CHECK(boost::equal(uri::port(instance), port));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
     BOOST_CHECK(boost::equal(uri::query(instance), query));
@@ -214,7 +214,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(assignment_test, T, tag_types) {
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     uri_type copy;
     copy = instance;
-    // BOOST_CHECK(instance.raw() == copy.raw());
     BOOST_CHECK(instance.to_string() == copy.to_string());
     BOOST_CHECK(instance == copy);
 }
