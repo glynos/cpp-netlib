@@ -12,6 +12,9 @@
 # include <boost/network/tags.hpp>
 # include <boost/network/constants.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
+# ifdef BOOST_NETWORK_NO_LIB
+#  include <boost/network/uri/detail/parse_uri.hpp>
+# endif // #ifdef BOOST_NETWORK_NO_LIB
 # include <boost/algorithm/string.hpp>
 # include <boost/range/iterator_range.hpp>
 # include <boost/operators.hpp>
@@ -83,6 +86,22 @@ public:
         boost::swap(uri_, other.uri_);
         boost::swap(uri_parts_, other.uri_parts_);
         boost::swap(is_valid_, other.is_valid_);
+    }
+
+    iterator_type begin() {
+        return uri_.begin();
+    }
+
+    const_iterator_type begin() const {
+        return uri_.begin();
+    }
+
+    iterator_type end() {
+        return uri_.end();
+    }
+
+    const_iterator_type end() const {
+        return uri_.end();
     }
 
     const_range_type scheme_range() const {

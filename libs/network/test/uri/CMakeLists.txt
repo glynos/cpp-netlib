@@ -4,30 +4,24 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.41.0 COMPONENTS unit_test_framework system regex date_time thread filesystem )
+find_package( Boost 1.41.0 COMPONENTS unit_test_framework system regex date_time filesystem )
 find_package( OpenSSL )
 find_package( Threads )
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 
-add_subdirectory(uri)
-add_subdirectory(http)
 
 if (Boost_FOUND)
     set(
         TESTS
-        message_test
-        message_transform_test
-        utils_thread_pool
+        url_test
+        url_http_test
         )
     foreach (test ${TESTS})
         set_source_files_properties(${test}.cpp
             PROPERTIES COMPILE_FLAGS "-Wall")
         add_executable(cpp-netlib-${test} ${test}.cpp)
 	add_dependencies(cpp-netlib-${test} cppnetlib-uri-parsers)
-
-        # add_dependencies(cpp-netlib-${test} cppnetlib-uri-parsers)
-        # target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri-parsers)
         target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri-parsers)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
@@ -38,4 +32,3 @@ if (Boost_FOUND)
     endforeach (test)
 
 endif()
-
