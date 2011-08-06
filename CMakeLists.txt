@@ -34,6 +34,6 @@ add_subdirectory(libs/network/src)
 add_subdirectory(libs/network/test)
 if (NOT MSVC)
   add_subdirectory(libs/mime/test)
-endif(NOT_MSVC)
+endif(NOT MSVC)
 add_subdirectory(libs/network/example)
 
