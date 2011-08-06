@@ -12,7 +12,6 @@
 # include <boost/network/tags.hpp>
 # include <boost/network/constants.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
-# include <boost/network/uri/detail/parse_uri.hpp>
 # include <boost/algorithm/string.hpp>
 # include <boost/range/iterator_range.hpp>
 # include <boost/operators.hpp>
