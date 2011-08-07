@@ -84,8 +84,7 @@ public:
 
     void swap(basic_uri &other) {
         boost::swap(uri_, other.uri_);
-        boost::swap(uri_parts_, other.uri_parts_);
-        boost::swap(is_valid_, other.is_valid_);
+        parse();
     }
 
     iterator_type begin() {

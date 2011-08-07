@@ -26,9 +26,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(not_http, T, tag_types)
     typedef typename uri_type::string_type string_type;
     const std::string url("mailto:john.doe@example.com");
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
-    std::copy(instance.begin(), instance.end(),
-              std::ostream_iterator<char>(std::cout));
-    std::cout << std::endl;
     //BOOST_CHECK(!uri::is_valid(instance));
 }
 
