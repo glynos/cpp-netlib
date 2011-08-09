@@ -23,12 +23,14 @@ if (Boost_FOUND)
         client_get_test
         client_get_different_port_test
         client_get_timeout_test
-        client_localhost_normal_test
+        # TODO: refactor these so that local servers are no longer necessary
+        # client_localhost_normal_test
         client_get_streaming_test
         )
-    if (OPENSSL_FOUND)
-        set ( TESTS ${TESTS} client_localhost_ssl_test )
-    endif (OPENSSL_FOUND)
+    # TODO: refactor these so that local servers are no longer necessary
+    #if (OPENSSL_FOUND)
+    #    set ( TESTS ${TESTS} client_localhost_ssl_test )
+    #endif (OPENSSL_FOUND)
     foreach ( test ${TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
             set_source_files_properties(${test}.cpp
@@ -42,12 +44,13 @@ if (Boost_FOUND)
         endif()
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
-        add_test(cpp-netlib-http-${test} 
+        add_test(cpp-netlib-http-${test}
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
     endforeach (test)
 
     set ( SERVER_API_TESTS
         server_constructor_test
+        server_async_run_stop_concurrency
         )
     foreach ( test ${SERVER_API_TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
@@ -67,7 +70,6 @@ if (Boost_FOUND)
         server_hello_world
         server_async
         server_async_less_copy
-		server_async_run_stop_concurrency
         )
     set ( PORT 8000 )
     foreach ( test ${SERVER_TESTS} )

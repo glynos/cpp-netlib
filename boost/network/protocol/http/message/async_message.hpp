@@ -3,6 +3,8 @@
 
 // Copyright 2010 (c) Dean Michael Berris
 // Copyright 2010 (c) Sinefunc, Inc.
+// Copyright 2011 Dean Michael Berris (dberris@google.com).
+// Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -91,13 +93,15 @@ namespace boost { namespace network { namespace http {
             destination_ = future;
         }
 
-        headers_container_type const headers() const {
+        headers_container_type const & headers() const {
+            if (retrieved_headers_) return *retrieved_headers_;
             headers_container_type raw_headers = headers_.get();
             raw_headers.insert(added_headers.begin(), added_headers.end());
             BOOST_FOREACH(string_type const & key, removed_headers) {
                 raw_headers.erase(key);
             }
-            return raw_headers;
+            retrieved_headers_ = raw_headers;
+            return *retrieved_headers_;
         }
 
         void headers(boost::shared_future<headers_container_type> const & future) const {
@@ -144,6 +148,7 @@ namespace boost { namespace network { namespace http {
         mutable headers_container_type added_headers;
         mutable std::set<string_type> removed_headers;
         mutable boost::shared_future<string_type> body_;
+        mutable boost::optional<headers_container_type> retrieved_headers_;
 
         friend struct boost::network::http::impl::ready_wrapper<Tag>;
     };
