@@ -299,6 +299,5 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_query_map_test, T, tag_types) {
     BOOST_CHECK(boost::equal(queries.begin()->first, key_1));
     BOOST_CHECK(boost::equal(queries.begin()->second, value_1));
     BOOST_CHECK(boost::equal((++queries.begin())->first, key_2));
-    //BOOST_CHECK(boost::equal((++queries.begin())->second, value_2));
-    //BOOST_CHECK_EQUAL((++queries.begin())->second, value_2);
+    BOOST_CHECK(boost::equal((++queries.begin())->second, value_2));
 }
