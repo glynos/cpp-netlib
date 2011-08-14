@@ -15,6 +15,7 @@
 # ifdef BOOST_NETWORK_NO_LIB
 #  include <boost/network/uri/detail/parse_uri.hpp>
 # endif // #ifdef BOOST_NETWORK_NO_LIB
+# include <boost/fusion/include/std_pair.hpp>
 # include <boost/algorithm/string.hpp>
 # include <boost/range/iterator_range.hpp>
 # include <boost/operators.hpp>
@@ -111,50 +112,26 @@ public:
 
     const_range_type user_info_range() const {
         using boost::fusion::at_c;
-        const boost::fusion::vector<
-              detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type> > &hier_part = at_c<1>(uri_parts_);
-
-        return const_range_type(at_c<0>(at_c<0>(hier_part)),
-                                at_c<1>(at_c<0>(hier_part)));
+        return const_range_type(at_c<0>(at_c<0>(at_c<1>(uri_parts_))),
+                                at_c<1>(at_c<0>(at_c<1>(uri_parts_))));
     }
 
     const_range_type host_range() const {
         using boost::fusion::at_c;
-        const boost::fusion::vector<
-              detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type> > &hier_part = at_c<1>(uri_parts_);
-
-        return const_range_type(at_c<0>(at_c<1>(hier_part)),
-                                at_c<1>(at_c<1>(hier_part)));
+        return const_range_type(at_c<0>(at_c<1>(at_c<1>(uri_parts_))),
+                                at_c<1>(at_c<1>(at_c<1>(uri_parts_))));
     }
 
     const_range_type port_range() const {
         using boost::fusion::at_c;
-        const boost::fusion::vector<
-              detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type> > &hier_part = at_c<1>(uri_parts_);
-
-        return const_range_type(at_c<0>(at_c<2>(hier_part)),
-                                at_c<1>(at_c<2>(hier_part)));
+        return const_range_type(at_c<0>(at_c<2>(at_c<1>(uri_parts_))),
+                                at_c<1>(at_c<2>(at_c<1>(uri_parts_))));
     }
 
     const_range_type path_range() const {
         using boost::fusion::at_c;
-        const boost::fusion::vector<
-              detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type>
-            , detail::iterator_range<typename string<Tag>::type> > &hier_part = at_c<1>(uri_parts_);
-
-        return const_range_type(at_c<0>(at_c<3>(hier_part)),
-                                at_c<1>(at_c<3>(hier_part)));
+        return const_range_type(at_c<0>(at_c<3>(at_c<1>(uri_parts_))),
+                                at_c<1>(at_c<3>(at_c<1>(uri_parts_))));
     }
 
     const_range_type query_range() const {
@@ -208,6 +185,10 @@ public:
         return uri_;
     }
 
+    string_type raw() const {
+        return to_string();
+    }
+
     bool is_valid() const {
         return is_valid_;
     }
@@ -222,10 +203,10 @@ private:
 
 };
 
-
 template <
     class Tag
     >
+inline
 void basic_uri<Tag>::parse() {
     const_iterator_type first(boost::begin(uri_)), last(boost::end(uri_));
     is_valid_ = detail::parse(first, last, uri_parts_);
@@ -300,7 +281,6 @@ struct port_wrapper {
         return boost::iequals(uri.scheme_range(), string_type(consts::https())) ? 443 : 80;
     }
 };
-
 
 template <
     class Tag

@@ -7,10 +7,14 @@
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network/uri/uri.hpp>
+#include <boost/network/uri/uri_accessors.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/algorithm/equal.hpp>
+#include <boost/range/algorithm/copy.hpp>
 #include <boost/filesystem/path.hpp>
+#include <map>
+
 
 using namespace boost::network;
 
@@ -24,9 +28,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(uri_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("http://www.boost.org/");
+    const std::string url("http://www.example.com/");
     const std::string scheme("http");
-    const std::string host("www.boost.org");
+    const std::string host("www.example.com");
     const std::string path("/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
@@ -40,11 +44,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("http://user:password@www.boost.org:8000/path?query#fragment");
+    const std::string url("http://user:password@www.example.com:80/path?query#fragment");
     const std::string scheme("http");
     const std::string user_info("user:password");
-    const std::string host("www.boost.org");
-    const std::string port = "8000";
+    const std::string host("www.example.com");
+    const std::string port = "80";
     const std::string path("/path");
     const std::string query("query");
     const std::string fragment("fragment");
@@ -54,7 +58,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::user_info(instance), user_info));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
-    BOOST_CHECK_EQUAL(static_cast<unsigned short>(uri::port_us(instance)), 8000);
+    BOOST_CHECK_EQUAL(static_cast<unsigned short>(uri::port_us(instance)), 80);
     BOOST_CHECK(boost::equal(uri::port(instance), port));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
     BOOST_CHECK(boost::equal(uri::query(instance), query));
@@ -88,6 +92,23 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(file_test, T, tag_types) {
     BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_test, T, tag_types) {
+    typedef uri::basic_uri<T> uri_type;
+    typedef typename uri_type::string_type string_type;
+
+    const std::string url("xmpp:example-node@example.com?message;subject=Hello%20World");
+    const std::string scheme("xmpp");
+    // RFC 3986 interprets this as the path
+    const std::string path("example-node@example.com");
+    const std::string query("message;subject=Hello%20World");
+
+    uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
+    BOOST_CHECK(boost::equal(uri::path(instance), path));
+    BOOST_CHECK(boost::equal(uri::query(instance), query));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(ipv4_address_test, T, tag_types) {
@@ -180,9 +201,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_uri_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("http://www.boost.org/");
+    const std::string url("http://www.example.com/");
     const std::string scheme("http");
-    const std::string host("www.boost.org");
+    const std::string host("www.example.com");
     const std::string path("/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
@@ -196,7 +217,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("http://www.boost.org/");
+    const std::string url("http://www.example.com/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     uri_type copy = instance;
@@ -207,7 +228,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(assignment_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("http://www.boost.org/");
+    const std::string url("http://www.example.com/");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     uri_type copy;
@@ -216,14 +237,68 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(assignment_test, T, tag_types) {
     BOOST_CHECK(instance == copy);
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(username_test, T, tag_types) {
+    typedef uri::basic_uri<T> uri_type;
+    typedef typename uri_type::string_type string_type;
+
+    const std::string url("ftp://john.doe:password@ftp.example.com/");
+    const std::string scheme("http");
+    const std::string username("john.doe");
+    const std::string password("password");
+
+    uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK(boost::equal(uri::username(instance), username));
+    BOOST_CHECK(boost::equal(uri::password(instance), password));
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(authority_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("http://user:password@www.boost.org:8000/path?query#fragment");
-    const std::string authority("user:password@www.boost.org:8000");
+    const std::string url("http://user:password@www.example.com:80/path?query#fragment");
+    const std::string authority("user:password@www.example.com:80");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::authority(instance), authority));
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(http_query_map_test, T, tag_types) {
+    typedef uri::basic_uri<T> uri_type;
+    typedef typename uri_type::string_type string_type;
+
+    const std::string url("http://user:password@www.example.com:80/path?query#fragment");
+
+    uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
+    const std::string key("query");
+    const std::string value;
+
+    std::map<string_type, string_type> queries;
+    uri::query_map(instance, queries);
+    BOOST_CHECK_EQUAL(queries.size(), std::size_t(1));
+    BOOST_CHECK(boost::equal(queries.begin()->first, key));
+    BOOST_CHECK(boost::equal(queries.begin()->second, value));
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_query_map_test, T, tag_types) {
+    typedef uri::basic_uri<T> uri_type;
+    typedef typename uri_type::string_type string_type;
+
+    const std::string url("xmpp:example-node@example.com?message;subject=Hello%20World");
+
+    uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
+    const std::string key_1("message"), key_2("subject");
+    const std::string value_1, value_2("Hello%20World");
+
+    std::map<string_type, string_type> queries;
+    uri::query_map(instance, queries);
+    BOOST_CHECK_EQUAL(queries.size(), std::size_t(2));
+    BOOST_CHECK(boost::equal(queries.begin()->first, key_1));
+    BOOST_CHECK(boost::equal(queries.begin()->second, value_1));
+    BOOST_CHECK(boost::equal((++queries.begin())->first, key_2));
+    //BOOST_CHECK(boost::equal((++queries.begin())->second, value_2));
+    //BOOST_CHECK_EQUAL((++queries.begin())->second, value_2);
 }
