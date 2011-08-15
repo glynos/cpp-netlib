@@ -181,12 +181,12 @@ public:
         return string_type(boost::begin(range), boost::end(range));
     }
 
-    string_type to_string() const {
+    string_type string() const {
         return uri_;
     }
 
     string_type raw() const {
-        return to_string();
+        return string();
     }
 
     bool is_valid() const {
@@ -198,7 +198,7 @@ private:
     void parse();
 
     string_type uri_;
-    detail::uri_parts<typename string<Tag>::type> uri_parts_;
+    detail::uri_parts<typename boost::network::string<Tag>::type> uri_parts_;
     bool is_valid_;
 
 };
@@ -337,7 +337,7 @@ template <
     >
 inline
 bool operator == (const basic_uri<Tag> &lhs, const basic_uri<Tag> &rhs) {
-    return lhs.to_string() == rhs.to_string();
+    return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 } // namespace uri
 } // namespace network

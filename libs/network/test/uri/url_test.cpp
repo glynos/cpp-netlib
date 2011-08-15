@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(assignment_test, T, tag_types) {
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     uri_type copy;
     copy = instance;
-    BOOST_CHECK(instance.to_string() == copy.to_string());
+    BOOST_CHECK(instance.string() == copy.string());
     BOOST_CHECK(instance == copy);
 }
 
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_query_map_test, T, tag_types) {
 
     std::map<string_type, string_type> queries;
     uri::query_map(instance, queries);
-    BOOST_CHECK_EQUAL(queries.size(), std::size_t(1));
+    BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(1));
     BOOST_CHECK(boost::equal(queries.begin()->first, key));
     BOOST_CHECK(boost::equal(queries.begin()->second, value));
 }
@@ -295,7 +295,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_query_map_test, T, tag_types) {
 
     std::map<string_type, string_type> queries;
     uri::query_map(instance, queries);
-    BOOST_CHECK_EQUAL(queries.size(), std::size_t(2));
+    BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(2));
     BOOST_CHECK(boost::equal(queries.begin()->first, key_1));
     BOOST_CHECK(boost::equal(queries.begin()->second, value_1));
     BOOST_CHECK(boost::equal((++queries.begin())->first, key_2));
