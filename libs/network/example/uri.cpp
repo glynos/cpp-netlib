@@ -10,7 +10,6 @@
   This is a simple program that validates a URI.
  */
 #include <boost/network/uri.hpp>
-#include <boost/network/uri/http/uri.hpp>
 #include <string>
 #include <iostream>
 

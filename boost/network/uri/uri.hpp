@@ -338,6 +338,16 @@ template <
     class Tag
     >
 inline
+typename basic_uri<Tag>::string_type authority(const basic_uri<Tag> &uri) {
+    typename basic_uri<Tag>::const_range_type user_info(uri.user_info_range());
+    typename basic_uri<Tag>::const_range_type port(uri.port_range());
+    return typename basic_uri<Tag>::string_type(user_info.begin(), port.end());
+}
+
+template <
+    class Tag
+    >
+inline
 bool is_valid(const basic_uri<Tag> &uri) {
     return uri.is_valid();
 }

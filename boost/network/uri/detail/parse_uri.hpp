@@ -112,14 +112,17 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
             >>  qi::raw[
                 qi::uint_parser<boost::uint8_t, 10, 1, 3>()
                 ];
+
         // IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
         ipv4address %= qi::raw[
             dec_octet >> qi::repeat(3)[qi::lit('.') >> dec_octet]
             ];
+
         // reg-name = *( unreserved / pct-encoded / sub-delims )
         reg_name %= qi::raw[
             *(unreserved | pct_encoded | sub_delims)
             ];
+
         // TODO, host = IP-literal / IPv4address / reg-name
         host %=
                iter_pos
@@ -140,6 +143,7 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
             >> qi::omit[qi::raw[*(pchar | qi::char_("/?"))]]
             >> iter_pos
             ;
+
         // fragment = *( pchar / "/" / "?" )
         fragment %=
                iter_pos

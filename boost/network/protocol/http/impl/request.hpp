@@ -15,7 +15,7 @@
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
 
-#include <boost/network/uri.hpp>
+#include <boost/network/uri/http/uri.hpp>
 #include <boost/network/traits/vector.hpp>
 
 #include <boost/network/protocol/http/message/async_message.hpp>
@@ -50,7 +50,7 @@ namespace http {
     struct basic_request : public basic_message<Tag>
     {
 
-        mutable boost::network::uri::http::uri uri_;
+        mutable boost::network::uri::http::basic_uri<Tag> uri_;
         typedef basic_message<Tag> base_type;
 
     public:
@@ -115,7 +115,7 @@ namespace http {
             uri_ = new_uri;
         }
 
-        boost::network::uri::http::uri const uri() const {
+        boost::network::uri::http::basic_uri<Tag> const & uri() const {
             return uri_;
         }
 
