@@ -26,7 +26,10 @@ namespace uri = boost::network::uri;
 
 
 namespace {
-std::string get_filename(const uri::http::uri &url) {
+template <
+    class Tag
+    >
+std::string get_filename(const uri::http::basic_uri<Tag> &url) {
     std::string path = uri::path(url);
     std::size_t index = path.find_last_of('/');
     std::string filename = path.substr(index + 1);
