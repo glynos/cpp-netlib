@@ -9,6 +9,7 @@
 #include <utility>
 #include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
+#include <boost/fusion/include/tuple.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/unordered_map.hpp>

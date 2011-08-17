@@ -1,5 +1,5 @@
 
-# Copyright 2010 Dean Michael Berris. 
+# Copyright 2010 Dean Michael Berris.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -81,11 +81,11 @@ if (Boost_FOUND)
         add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
         target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
         set_target_properties(cpp-netlib-http-${test}
-            PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+            PROPERTIES RUNTIME_OUTPUT_DIRECTORY
             ${CPP-NETLIB_BINARY_DIR}/tests)
-        add_test(cpp-netlib-${test} 
-            python 
-            ${CPP-NETLIB_SOURCE_DIR}/libs/network/test/httplib_acceptance.py 
+        add_test(cpp-netlib-${test}
+            python
+            ${CPP-NETLIB_SOURCE_DIR}/libs/network/test/httplib_acceptance.py
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}
             ${PORT}
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}.passed)

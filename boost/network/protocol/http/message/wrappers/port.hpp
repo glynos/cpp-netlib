@@ -30,7 +30,7 @@ namespace boost { namespace network { namespace http {
             }
 
             operator boost::optional<boost::uint16_t> () {
-                return port(message_.uri());
+                return port_us(message_.uri());
             }
         };
 

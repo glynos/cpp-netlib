@@ -1,43 +1,95 @@
-#ifndef BOOST_NETWORK_URL_HTTP_URL_HPP_
-#define BOOST_NETWORK_URL_HTTP_URL_HPP_
-
-// Copyright 2009 Dean Michael Berris, Jeroen Habraken.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-
-#include <boost/cstdint.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/network/protocol/http/tags.hpp>
-#include <boost/network/traits/string.hpp>
-#include <boost/network/uri/basic_uri.hpp>
-#include <boost/network/uri/http/detail/parse_specific.hpp>
+#ifndef __BOOST_NETWORK_URI_HTTP_URI_INC__
+# define __BOOST_NETWORK_URI_HTTP_URI_INC__
 
 
-namespace boost { namespace network { namespace uri {
+# include <boost/network/uri/uri.hpp>
 
-template <>
-class basic_uri<http::tags::http_default_8bit_tcp_resolve>
-    : public uri_base<http::tags::http_default_8bit_tcp_resolve> {
+
+namespace boost {
+namespace network {
+namespace uri {
+namespace http {
+template <
+    class Tag
+    >
+class basic_uri
+    : public boost::network::uri::basic_uri<Tag> {
+
+    typedef boost::network::uri::basic_uri<Tag> base_type;
 
 public:
-    basic_uri() : uri_base<http::tags::http_default_8bit_tcp_resolve>() {}
-    basic_uri(uri_base<http::tags::http_default_8bit_tcp_resolve>::string_type const & uri) : uri_base<http::tags::http_default_8bit_tcp_resolve>(uri) {}
 
-    boost::optional<boost::uint16_t> port() const {
-        return parts_.port;
-        return parts_.port ? *(parts_.port) :
-            (boost::iequals(parts_.scheme, string_type("https")) ? 443 : 80);
+    basic_uri() {
+
     }
 
-    string_type path() const {
-        return (parts_.path == "") ? string_type("/") : parts_.path;
+    basic_uri(const typename base_type::string_type &uri) : base_type(uri) {
+
     }
+
+    basic_uri &operator = (const typename base_type::string_type &uri) {
+        basic_uri(uri).swap(*this);
+        return *this;
+    }
+
 };
+} // namespace http
 
+template <
+    class Tag
+    >
+bool is_http(const http::basic_uri<Tag> &uri) {
+    static const char scheme_http[] = {'h', 't', 't', 'p'};
+    return boost::equal(uri.scheme_range(), scheme_http);
+}
+
+template <
+    class Tag
+    >
+bool is_https(const http::basic_uri<Tag> &uri) {
+    static const char scheme_https[] = {'h', 't', 't', 'p', 's'};
+    return boost::equal(uri.scheme_range(), scheme_https);
+}
+
+template <
+    class Tag
+    >
+inline
+bool is_valid(const http::basic_uri<Tag> &uri) {
+    return is_http(uri) || is_https(uri);
+}
+
+template <
+    class Tag
+    >
+inline
+typename basic_uri<Tag>::string_type port(const http::basic_uri<Tag> &uri) {
+    typedef typename basic_uri<Tag>::range_type range_type;
+    typedef typename basic_uri<Tag>::string_type string_type;
+
+    static const char default_http_port[] = "80";
+    static const char default_https_port[] = "443";
+
+    range_type scheme = uri.scheme_range();
+    range_type port = uri.port_range();
+
+    if (boost::empty(port)) {
+        if (is_http(uri)) {
+            return string_type(boost::begin(default_http_port),
+                               boost::end(default_http_port));
+        }
+        else if (is_https(uri)) {
+            return string_type(boost::begin(default_https_port),
+                               boost::end(default_https_port));
+        }
+    }
+    return string_type(boost::begin(port), boost::end(port));
+}
+
+typedef basic_uri<tags::default_string> uri;
 } // namespace uri
 } // namespace network
 } // namespace boost
 
-#endif
 
+#endif // __BOOST_NETWORK_URI_HTTP_URI_INC__
