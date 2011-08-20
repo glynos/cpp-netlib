@@ -15,7 +15,7 @@
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
 
-#include <boost/network/uri.hpp>
+#include <boost/network/uri/http/uri.hpp>
 #include <boost/network/traits/vector.hpp>
 
 #include <boost/network/protocol/http/message/async_message.hpp>
@@ -24,8 +24,8 @@
 
 #include <boost/cstdint.hpp>
 
-namespace boost { namespace network { 
-    
+namespace boost { namespace network {
+
     /** Specialize the traits for the http_server tag. */
     template <>
     struct headers_container<http::tags::http_server> :
@@ -50,7 +50,7 @@ namespace http {
     struct basic_request : public basic_message<Tag>
     {
 
-        mutable boost::network::uri::http::uri uri_;
+        mutable boost::network::uri::http::basic_uri<Tag> uri_;
         typedef basic_message<Tag> base_type;
 
     public:
@@ -92,7 +92,7 @@ namespace http {
         }
 
         port_type port() const {
-            return uri::port(uri_);
+            return uri::port_us(uri_);
         }
 
         string_type const path() const {
@@ -115,7 +115,7 @@ namespace http {
             uri_ = new_uri;
         }
 
-        boost::network::uri::http::uri const uri() const {
+        boost::network::uri::http::basic_uri<Tag> const & uri() const {
             return uri_;
         }
 
@@ -162,7 +162,7 @@ namespace http {
     };
 
     template <>
-    struct basic_request<tags::http_async_server> 
+    struct basic_request<tags::http_async_server>
     : not_quite_pod_request_base<tags::http_async_server>
     {};
 
