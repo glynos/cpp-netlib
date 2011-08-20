@@ -17,6 +17,7 @@ if (Boost_FOUND)
         url_test
         url_http_test
         url_mailto_test
+	builder_test
         )
     foreach (test ${TESTS})
         set_source_files_properties(${test}.cpp
