@@ -23,14 +23,8 @@ if (Boost_FOUND)
         client_get_test
         client_get_different_port_test
         client_get_timeout_test
-        # TODO: refactor these so that local servers are no longer necessary
-        # client_localhost_normal_test
         client_get_streaming_test
         )
-    # TODO: refactor these so that local servers are no longer necessary
-    #if (OPENSSL_FOUND)
-    #    set ( TESTS ${TESTS} client_localhost_ssl_test )
-    #endif (OPENSSL_FOUND)
     foreach ( test ${TESTS} )
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
             set_source_files_properties(${test}.cpp
@@ -38,7 +32,7 @@ if (Boost_FOUND)
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test} cppnetlib-uri-parsers)
-        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri-parsers)
+        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri-parsers cppnetlib-client-connections)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()
