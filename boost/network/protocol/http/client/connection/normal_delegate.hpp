@@ -8,6 +8,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
+#include <boost/scoped_ptr.hpp>
+#include <boost/asio/placeholders.hpp>
 
 namespace boost { namespace network { namespace http { namespace impl {
 
