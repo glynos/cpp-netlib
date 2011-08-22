@@ -26,6 +26,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(builder_test, T, tag_types)
 {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
+    namespace urib = uri::builder;
 
     const std::string scheme("http");
     const std::string host("www.example.com");
@@ -33,12 +34,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(builder_test, T, tag_types)
 
     uri_type instance;
     uri::basic_builder<T> builder(instance);
-    builder << uri::builder::scheme(string_type(boost::begin(scheme),
-                                                boost::end(scheme)))
-            << uri::builder::host(string_type(boost::begin(host),
-                                              boost::end(host)))
-            << uri::builder::path(string_type(boost::begin(path),
-                                              boost::end(path)))
+    builder << urib::scheme(string_type(boost::begin(scheme), boost::end(scheme)))
+            << urib::host(string_type(boost::begin(host), boost::end(host)))
+            << urib::path(string_type(boost::begin(path), boost::end(path)))
         ;
     BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
