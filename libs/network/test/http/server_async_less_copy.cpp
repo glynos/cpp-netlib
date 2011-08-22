@@ -1,5 +1,5 @@
 
-// Copyright 2010 Dean Michael Berris. 
+// Copyright 2010 Dean Michael Berris.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -51,11 +51,10 @@ struct async_hello_world {
 };
 
 int main(int argc, char * argv[]) {
-    utils::thread_pool thread_pool(2); 
+    utils::thread_pool thread_pool(2);
     async_hello_world handler;
     std::string port = "8000";
     if (argc > 1) port = argv[1];
-    std::cerr << "Configuration: port = " << port << std::endl;
     server instance("127.0.0.1", port, handler, thread_pool, http::_reuse_address=true);
     instance.run();
     return 0;

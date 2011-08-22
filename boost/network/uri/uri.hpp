@@ -328,6 +328,14 @@ template <
     class Tag
     >
 inline
+typename basic_uri<Tag>::string_type netloc(const basic_uri<Tag> &uri) {
+    return authority(uri);
+}
+
+template <
+    class Tag
+    >
+inline
 bool is_valid(const basic_uri<Tag> &uri) {
     return uri.is_valid();
 }
