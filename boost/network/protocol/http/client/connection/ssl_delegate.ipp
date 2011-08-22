@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
+#include <boost/bind.hpp>
 
 boost::network::http::impl::ssl_delegate::ssl_delegate(asio::io_service & service,
                                          optional<std::string> certificate_filename,
