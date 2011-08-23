@@ -9,6 +9,8 @@
 
 
 # include <boost/network/uri/uri.hpp>
+# include <boost/network/uri/encode.hpp>
+# include <boost/network/uri/decode.hpp>
 # include <boost/spirit/include/qi.hpp>
 
 
@@ -79,6 +81,16 @@ typename basic_uri<Tag>::string_type password(const basic_uri<Tag> &uri) {
         }
     }
     return typename string<Tag>::type(it, boost::end(user_info_range));
+}
+
+template <
+    class Tag
+    >
+typename basic_uri<Tag>::string_type decoded_path(const basic_uri<Tag> &uri) {
+    typename basic_uri<Tag>::const_range_type path_range = uri.path_range();
+    typename basic_uri<Tag>::string_type decoded_path;
+    decode(path_range, std::back_inserter(decoded_path));
+    return decoded_path;
 }
 } // namespace uri
 } // namespace network
