@@ -201,16 +201,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_uri_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("http://www.example.com/");
+    const std::string url("http://www.example.com/Path%20With%20%28Some%29%20Encoded%20Characters%21");
     const std::string scheme("http");
     const std::string host("www.example.com");
-    const std::string path("/");
+    const std::string encoded_path("/Path%20With%20%28Some%29%20Encoded%20Characters%21");
+    const std::string decoded_path("/Path With (Some) Encoded Characters!");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
-    BOOST_CHECK(boost::equal(uri::path(instance), path));
+    BOOST_CHECK(boost::equal(uri::path(instance), encoded_path));
+    BOOST_CHECK(boost::equal(uri::decoded_path(instance), decoded_path));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, tag_types) {
