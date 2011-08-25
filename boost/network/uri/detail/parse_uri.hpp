@@ -106,6 +106,36 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
             >> iter_pos
             ;
 
+        ip_literal %=
+            qi::lit('[') >> (ipv6address | ipvfuture) >> ']'
+            ;
+
+        ipvfuture %=
+            qi::lit('v') >> +qi::xdigit >> '.' >> +( unreserved | sub_delims | ':')
+            ;
+
+        ipv6address %= qi::raw[
+            //qi::lit("1080:0:0:0:8:800:200C:417A")
+                                                                      qi::repeat(6)[h16 >> ':'] >> ls32
+            |                                                 "::" >> qi::repeat(5)[h16 >> ':'] >> ls32
+            | qi::raw[                                h16] >> "::" >> qi::repeat(4)[h16 >> ':'] >> ls32
+            |             qi::raw[+(*(h16 >> ':')) >> h16] >> "::" >> qi::repeat(3)[h16 >> ':'] >> ls32
+            | qi::raw[qi::repeat(2)[*(h16 >> ':')] >> h16] >> "::" >> qi::repeat(2)[h16 >> ':'] >> ls32
+            | qi::raw[qi::repeat(3)[*(h16 >> ':')] >> h16] >> "::" >>               h16 >> ':'  >> ls32
+            | qi::raw[qi::repeat(4)[*(h16 >> ':')] >> h16] >> "::"                              >> ls32
+            | qi::raw[qi::repeat(5)[*(h16 >> ':')] >> h16] >> "::"                              >> h16
+            | qi::raw[qi::repeat(6)[*(h16 >> ':')] >> h16] >> "::"
+
+            ];
+
+        // ls32 = ( h16 ":" h16 ) / IPv4address
+        ls32 %= (h16 >> ':' >> h16) | ipv4address
+            ;
+
+        // h16 = 1*4HEXDIG
+        h16 %= qi::repeat(1, 4)[qi::xdigit]
+            ;
+
         // dec-octet = DIGIT / %x31-39 DIGIT / "1" 2DIGIT / "2" %x30-34 DIGIT / "25" %x30-35
         dec_octet %=
             !(qi::lit('0') >> qi::digit)
@@ -126,7 +156,7 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
         // TODO, host = IP-literal / IPv4address / reg-name
         host %=
                iter_pos
-            >> qi::omit[ipv4address | reg_name]
+            >> qi::omit[ip_literal | ipv4address | reg_name]
             >> iter_pos
             ;
 
@@ -193,7 +223,10 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
     path_abempty, path_absolute, path_rootless, path_empty;
 
     qi::rule<Iterator, String()>
-    dec_octet, ipv4address, reg_name;
+    dec_octet, ipv4address, reg_name, ipv6address, ipvfuture, ip_literal;
+
+    qi::rule<Iterator, String()>
+    h16, ls32;
 
     qi::rule<Iterator, iterator_range<String>()>
     host, port;

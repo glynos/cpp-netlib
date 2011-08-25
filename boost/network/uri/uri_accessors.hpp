@@ -92,6 +92,26 @@ typename basic_uri<Tag>::string_type decoded_path(const basic_uri<Tag> &uri) {
     decode(path_range, std::back_inserter(decoded_path));
     return decoded_path;
 }
+
+template <
+    class Tag
+    >
+typename basic_uri<Tag>::string_type decoded_query(const basic_uri<Tag> &uri) {
+    typename basic_uri<Tag>::const_range_type query_range = uri.query_range();
+    typename basic_uri<Tag>::string_type decoded_query;
+    decode(query_range, std::back_inserter(decoded_query));
+    return decoded_query;
+}
+
+template <
+    class Tag
+    >
+typename basic_uri<Tag>::string_type decoded_fragment(const basic_uri<Tag> &uri) {
+    typename basic_uri<Tag>::const_range_type fragment_range = uri.fragment_range();
+    typename basic_uri<Tag>::string_type decoded_fragment;
+    decode(fragment_range, std::back_inserter(decoded_fragment));
+    return decoded_fragment;
+}
 } // namespace uri
 } // namespace network
 } // namespace boost
