@@ -185,10 +185,6 @@ public:
         return uri_;
     }
 
-    string_type raw() const {
-        return string();
-    }
-
     bool is_valid() const {
         return is_valid_;
     }

@@ -2,6 +2,12 @@
 # define __BOOST_NETWORK_URI_DIRECTIVES_SCHEME_INC__
 
 
+# include <boost/network/support/is_pod.hpp>
+# include <boost/utility/enable_if.hpp>
+# include <boost/mpl/if.hpp>
+# include <boost/mpl/or.hpp>
+
+
 namespace boost {
 namespace network {
 namespace uri {
@@ -20,7 +26,7 @@ struct scheme_directive {
         >
     typename enable_if<is_pod<Tag>, void>::type
     operator () (Uri<Tag> &uri) const {
-        char separator[] = {':', '/', '/'};
+        static const char separator[] = {':', '/', '/'};
         uri.append(value);
         uri.append(boost::begin(separator), boost::end(separator));
     }
@@ -31,7 +37,7 @@ struct scheme_directive {
         >
     typename enable_if<mpl::not_<is_pod<Tag> >, void>::type
     operator () (Uri<Tag> &uri) const {
-        char separator[] = {':', '/', '/'};
+        static const char separator[] = {':', '/', '/'};
         uri.append(value);
         uri.append(boost::begin(separator), boost::end(separator));
     }
