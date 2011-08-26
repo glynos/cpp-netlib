@@ -121,6 +121,7 @@ void encode_char(CharT in, OutputIterator &out) {
     case '.':
     case '_':
     case '~':
+    case '/':
         out++ = in;
     break;
     default:

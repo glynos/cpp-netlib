@@ -11,10 +11,6 @@
 # include <boost/network/uri/directives/path.hpp>
 # include <boost/network/uri/directives/query.hpp>
 # include <boost/network/uri/directives/fragment.hpp>
-# include <boost/network/support/is_pod.hpp>
-# include <boost/utility/enable_if.hpp>
-# include <boost/mpl/if.hpp>
-# include <boost/mpl/or.hpp>
 
 
 namespace boost {

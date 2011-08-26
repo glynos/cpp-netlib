@@ -7,7 +7,7 @@
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network/uri/uri.hpp>
-#include <boost/network/uri/uri_accessors.hpp>
+#include <boost/network/uri/accessors.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -17,6 +17,7 @@
 
 
 using namespace boost::network;
+
 
 typedef boost::mpl::list<
     tags::default_string
