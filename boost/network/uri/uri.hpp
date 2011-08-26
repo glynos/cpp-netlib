@@ -193,6 +193,19 @@ public:
         return is_valid_;
     }
 
+    void append(const string_type &data) {
+        uri_.append(data);
+        parse();
+    }
+
+    template <
+        class Iterator
+        >
+    void append(Iterator first, Iterator last) {
+        uri_.append(first, last);
+        parse();
+    }
+
 private:
 
     void parse();
