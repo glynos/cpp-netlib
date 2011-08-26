@@ -7,18 +7,21 @@
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network/uri/uri.hpp>
-#include <boost/network/uri/builder.hpp>
+#include <boost/network/uri/directives.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/copy.hpp>
 
 
+#include <iostream>
+
+
 using namespace boost::network;
 
 typedef boost::mpl::list<
     tags::default_string
-//  , tags::default_wstring
+  , tags::default_wstring
     > tag_types;
 
 
@@ -26,17 +29,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(builder_test, T, tag_types)
 {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
-    namespace urib = uri::builder;
 
     const std::string scheme("http");
     const std::string host("www.example.com");
     const std::string path("/");
 
     uri_type instance;
-    uri::basic_builder<T> builder(instance);
-    builder << urib::scheme(string_type(boost::begin(scheme), boost::end(scheme)))
-            << urib::host(string_type(boost::begin(host), boost::end(host)))
-            << urib::path(string_type(boost::begin(path), boost::end(path)))
+    //instance << uri::scheme("http") << uri::host("www.example.com") << uri::path("/");
+    instance << uri::scheme(string_type(boost::begin(scheme), boost::end(scheme)))
+             << uri::host(string_type(boost::begin(host), boost::end(host)))
+             << uri::path(string_type(boost::begin(path), boost::end(path)))
         ;
     BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));

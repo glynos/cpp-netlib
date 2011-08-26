@@ -18,7 +18,7 @@ if (Boost_FOUND)
         url_http_test
         url_mailto_test
 	url_encoding_test
-	builder_test
+	url_builder_test
         )
     foreach (test ${TESTS})
         set_source_files_properties(${test}.cpp

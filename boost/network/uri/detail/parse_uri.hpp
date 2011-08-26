@@ -115,11 +115,10 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
             ;
 
         ipv6address %= qi::raw[
-            //qi::lit("1080:0:0:0:8:800:200C:417A")
                                                                       qi::repeat(6)[h16 >> ':'] >> ls32
             |                                                 "::" >> qi::repeat(5)[h16 >> ':'] >> ls32
             | qi::raw[                                h16] >> "::" >> qi::repeat(4)[h16 >> ':'] >> ls32
-            |             qi::raw[+(*(h16 >> ':')) >> h16] >> "::" >> qi::repeat(3)[h16 >> ':'] >> ls32
+            | qi::raw[            +(*(h16 >> ':')) >> h16] >> "::" >> qi::repeat(3)[h16 >> ':'] >> ls32
             | qi::raw[qi::repeat(2)[*(h16 >> ':')] >> h16] >> "::" >> qi::repeat(2)[h16 >> ':'] >> ls32
             | qi::raw[qi::repeat(3)[*(h16 >> ':')] >> h16] >> "::" >>               h16 >> ':'  >> ls32
             | qi::raw[qi::repeat(4)[*(h16 >> ':')] >> h16] >> "::"                              >> ls32
