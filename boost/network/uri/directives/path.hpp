@@ -3,10 +3,7 @@
 
 
 # include <boost/network/uri/encode.hpp>
-# include <boost/network/support/is_pod.hpp>
-# include <boost/utility/enable_if.hpp>
-# include <boost/mpl/if.hpp>
-# include <boost/mpl/or.hpp>
+# include <boost/range/as_literal.hpp>
 
 
 namespace boost {
@@ -25,21 +22,39 @@ struct path_directive {
         class Tag
       , template <class> class Uri
         >
-    typename enable_if<is_pod<Tag>, void>::type
-    operator () (Uri<Tag> &uri) const {
-        typename string<Tag>::type encoded_value;
-        encode(boost::begin(value), boost::end(value), std::back_inserter(encoded_value));
-        uri.append(encoded_value);
+    void operator () (Uri<Tag> &uri) const {
+        (*this)(boost::as_literal(value), uri);
     }
+
+    template <
+        class Rng
+      , class Tag
+      , template <class> class Uri
+        >
+    void operator () (const Rng &rng, Uri<Tag> &uri) const {
+        uri.append(boost::begin(rng), boost::end(rng));
+    }
+
+    const ValueType &value;
+
+};
+
+template <
+    class ValueType
+    >
+struct encoded_path_directive {
+
+    explicit encoded_path_directive(const ValueType &value)
+        : value(value)
+    {}
 
     template <
         class Tag
       , template <class> class Uri
         >
-    typename enable_if<mpl::not_<is_pod<Tag> >, void>::type
-    operator () (Uri<Tag> &uri) const {
+    void operator () (Uri<Tag> &uri) const {
         typename string<Tag>::type encoded_value;
-        encode(boost::begin(value), boost::end(value), std::back_inserter(encoded_value));
+        encode(boost::as_literal(value), std::back_inserter(encoded_value));
         uri.append(encoded_value);
     }
 
@@ -53,6 +68,14 @@ template <
 inline
 path_directive<T> path(const T &value)  {
     return path_directive<T>(value);
+}
+
+template <
+    class T
+    >
+inline
+encoded_path_directive<T> encoded_path(const T &value)  {
+    return encoded_path_directive<T>(value);
 }
 } // namespace uri
 } // namespace network

@@ -361,4 +361,8 @@ bool operator == (const basic_uri<Tag> &lhs, const basic_uri<Tag> &rhs) {
 } // namespace boost
 
 
+# include <boost/network/uri/accessors.hpp>
+# include <boost/network/uri/directives.hpp>
+
+
 #endif // __BOOST_NETWORK_URI_INC__

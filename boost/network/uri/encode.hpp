@@ -9,6 +9,7 @@
 
 
 # include <boost/iterator/iterator_traits.hpp>
+# include <boost/iterator/transform_iterator.hpp>
 # include <boost/range/begin.hpp>
 # include <boost/range/end.hpp>
 # include <cassert>
@@ -137,7 +138,9 @@ template <
     class InputIterator,
     class OutputIterator
     >
-OutputIterator encode(const InputIterator &in_begin, const InputIterator &in_end, const OutputIterator &out_begin) {
+OutputIterator encode(const InputIterator &in_begin,
+                      const InputIterator &in_end,
+                      const OutputIterator &out_begin) {
     typedef typename boost::iterator_value<InputIterator>::type value_type;
 
     InputIterator it = in_begin;
@@ -154,7 +157,8 @@ template <
     class OutputIterator
     >
 inline
-OutputIterator encode(const SinglePassRange &range, const OutputIterator &out) {
+OutputIterator encode(const SinglePassRange &range,
+                      const OutputIterator &out) {
     return encode(boost::begin(range), boost::end(range), out);
 }
 } // namespace uri
