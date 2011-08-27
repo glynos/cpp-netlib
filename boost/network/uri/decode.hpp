@@ -59,7 +59,9 @@ template <
     class InputIterator,
     class OutputIterator
     >
-OutputIterator decode(const InputIterator &in_begin, const InputIterator &in_end, const OutputIterator &out_begin) {
+OutputIterator decode(const InputIterator &in_begin,
+                      const InputIterator &in_end,
+                      const OutputIterator &out_begin) {
     typedef typename boost::iterator_value<InputIterator>::type value_type;
 
     InputIterator it = in_begin;
@@ -87,7 +89,8 @@ template <
     class OutputIterator
     >
 inline
-OutputIterator decode(const SinglePassRange &range, const OutputIterator &out) {
+OutputIterator decode(const SinglePassRange &range,
+                      const OutputIterator &out) {
     return decode(boost::begin(range), boost::end(range), out);
 }
 } // namespace uri

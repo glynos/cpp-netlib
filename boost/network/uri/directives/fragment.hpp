@@ -2,10 +2,9 @@
 # define __BOOST_NETWORK_URI_DIRECTIVES_FRAGMENT_INC__
 
 
-# include <boost/network/support/is_pod.hpp>
-# include <boost/utility/enable_if.hpp>
-# include <boost/mpl/if.hpp>
-# include <boost/mpl/or.hpp>
+# include <boost/network/uri/encode.hpp>
+# include <boost/range/begin.hpp>
+# include <boost/range/end.hpp>
 
 
 namespace boost {
@@ -24,22 +23,12 @@ struct fragment_directive {
         class Tag
       , template <class> class Uri
         >
-    typename enable_if<is_pod<Tag>, void>::type
-    operator () (Uri<Tag> &uri) const {
+    void operator () (Uri<Tag> &uri) const {
+        typename string<Tag>::type encoded_value;
         static const char separator[] = {'#'};
         uri.append(boost::begin(separator), boost::end(separator));
-        uri.append(value);
-    }
-
-    template <
-        class Tag
-      , template <class> class Uri
-        >
-    typename enable_if<mpl::not_<is_pod<Tag> >, void>::type
-    operator () (Uri<Tag> &uri) const {
-        static const char separator[] = {'#'};
-        uri.append(boost::begin(separator), boost::end(separator));
-        uri.append(value);
+        encode(boost::as_literal(value), std::back_inserter(encoded_value));
+        uri.append(encoded_value);
     }
 
     const ValueType &value;

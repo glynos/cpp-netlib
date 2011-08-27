@@ -117,7 +117,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_path_test, T, tag_types)
     instance << uri::scheme(string_type(boost::begin(scheme), boost::end(scheme)))
              << uri::host(string_type(boost::begin(host), boost::end(host)))
              << uri::port(8000)
-             << uri::path(string_type(boost::begin(decoded_path), boost::end(decoded_path)))
+             << uri::encoded_path(string_type(boost::begin(decoded_path), boost::end(decoded_path)))
+             //<< uri::path(uri::encoded(string_type(boost::begin(decoded_path), boost::end(decoded_path))))
         ;
     BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
@@ -202,4 +203,47 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(fragment_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
     BOOST_CHECK(boost::equal(uri::fragment(instance), fragment));
+}
+
+//BOOST_AUTO_TEST_CASE_TEMPLATE(scheme_test, T, tag_types)
+//{
+//    typedef uri::basic_uri<T> uri_type;
+//    typedef typename uri_type::string_type string_type;
+//
+//    const std::string scheme("http");
+//    const std::string host("www.example.com");
+//    const std::string path("/");
+//
+//    uri_type instance;
+//    //instance << uri::scheme("http") << uri::host("www.example.com") << uri::path("/");
+//    instance << uri::schemes::http
+//             << uri::host(string_type(boost::begin(host), boost::end(host)))
+//             << uri::path(string_type(boost::begin(path), boost::end(path)))
+//        ;
+//    BOOST_REQUIRE(uri::is_valid(instance));
+//    BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
+//    BOOST_CHECK(boost::equal(uri::host(instance), host));
+//    BOOST_CHECK(boost::equal(uri::path(instance), path));
+//}
+
+BOOST_AUTO_TEST_CASE(encoded_null_char_test)
+{
+    typedef uri::basic_uri<tags::default_string> uri_type;
+    typedef uri_type::string_type string_type;
+
+    const std::string scheme("http");
+    const std::string host("www.example.com");
+    const std::string path("/");
+
+    uri_type instance;
+    // there is a potential bug in the way we process ranges if the
+    // strings are null terminated.
+    instance << uri::scheme("http")
+             << uri::host("www.example.com")
+             << uri::encoded_path("/")
+        ;
+    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK_EQUAL(uri::scheme(instance), scheme);
+    BOOST_CHECK_EQUAL(uri::host(instance), host);
+    BOOST_CHECK_EQUAL(uri::path(instance), path);
 }

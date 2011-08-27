@@ -2,10 +2,8 @@
 # define __BOOST_NETWORK_URI_DIRECTIVES_USER_INFO_INC__
 
 
-# include <boost/network/support/is_pod.hpp>
-# include <boost/utility/enable_if.hpp>
-# include <boost/mpl/if.hpp>
-# include <boost/mpl/or.hpp>
+# include <boost/range/begin.hpp>
+# include <boost/range/end.hpp>
 
 
 namespace boost {
@@ -24,19 +22,7 @@ struct user_info_directive {
         class Tag
       , template <class> class Uri
         >
-    typename enable_if<is_pod<Tag>, void>::type
-    operator () (Uri<Tag> &uri) const {
-        static const char separator[] = {'@'};
-        uri.append(value);
-        uri.append(boost::begin(separator), boost::end(separator));
-    }
-
-    template <
-        class Tag
-      , template <class> class Uri
-        >
-    typename enable_if<mpl::not_<is_pod<Tag> >, void>::type
-    operator () (Uri<Tag> &uri) const {
+    void operator () (Uri<Tag> &uri) const {
         static const char separator[] = {'@'};
         uri.append(value);
         uri.append(boost::begin(separator), boost::end(separator));
