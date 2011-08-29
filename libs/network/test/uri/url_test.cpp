@@ -7,7 +7,7 @@
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network/uri/uri.hpp>
-#include <boost/network/uri/uri_accessors.hpp>
+#include <boost/network/uri/accessors.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/algorithm/equal.hpp>
@@ -17,6 +17,7 @@
 
 
 using namespace boost::network;
+
 
 typedef boost::mpl::list<
     tags::default_string
@@ -127,29 +128,37 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ipv4_address_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-//// IPv6 is not yet supported by the parser
-//BOOST_AUTO_TEST_CASE_TEMPLATE(ipv6_address_test, T, tag_types) {
-//    typedef uri::basic_uri<T> uri_type;
-//    typedef typename uri_type::string_type string_type;
-//
-//    const std::string url("http://1080:0:0:0:8:800:200C:417A/");
-//    const std::string scheme("http");
-//    const std::string host("1080:0:0:8:800:200C:417A");
-//    const std::string path("/");
-//
-//    uri_type instance(string_type(boost::begin(url), boost::end(url)));
-//    std::cout << uri::scheme(instance) << std::endl;
-//    std::cout << uri::user_info(instance) << std::endl;
-//    std::cout << uri::host(instance) << std::endl;
-//    std::cout << uri::port(instance) << std::endl;
-//    std::cout << uri::path(instance) << std::endl;
-//    std::cout << uri::query(instance) << std::endl;
-//    std::cout << uri::fragment(instance) << std::endl;
-//    BOOST_REQUIRE(uri::is_valid(instance));
-//    BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
-//    BOOST_CHECK(boost::equal(uri::host(instance), host));
-//    BOOST_CHECK(boost::equal(uri::path(instance), path));
-//}
+BOOST_AUTO_TEST_CASE_TEMPLATE(ipv6_address_test_1, T, tag_types) {
+    typedef uri::basic_uri<T> uri_type;
+    typedef typename uri_type::string_type string_type;
+
+    const std::string url("http://[1080:0:0:0:8:800:200C:417A]/");
+    const std::string scheme("http");
+    const std::string host("[1080:0:0:0:8:800:200C:417A]");
+    const std::string path("/");
+
+    uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
+    BOOST_CHECK(boost::equal(uri::host(instance), host));
+    BOOST_CHECK(boost::equal(uri::path(instance), path));
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(ipv6_address_test_2, T, tag_types) {
+    typedef uri::basic_uri<T> uri_type;
+    typedef typename uri_type::string_type string_type;
+
+    const std::string url("http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/");
+    const std::string scheme("http");
+    const std::string host("[2001:db8:85a3:8d3:1319:8a2e:370:7348]");
+    const std::string path("/");
+
+    uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
+    BOOST_CHECK(boost::equal(uri::host(instance), host));
+    BOOST_CHECK(boost::equal(uri::path(instance), path));
+}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(ftp_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
@@ -201,16 +210,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_uri_test, T, tag_types) {
     typedef uri::basic_uri<T> uri_type;
     typedef typename uri_type::string_type string_type;
 
-    const std::string url("http://www.example.com/");
+    const std::string url("http://www.example.com/Path%20With%20%28Some%29%20Encoded%20Characters%21");
     const std::string scheme("http");
     const std::string host("www.example.com");
-    const std::string path("/");
+    const std::string encoded_path("/Path%20With%20%28Some%29%20Encoded%20Characters%21");
+    const std::string decoded_path("/Path With (Some) Encoded Characters!");
 
     uri_type instance(string_type(boost::begin(url), boost::end(url)));
     BOOST_REQUIRE(uri::is_valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
-    BOOST_CHECK(boost::equal(uri::path(instance), path));
+    BOOST_CHECK(boost::equal(uri::path(instance), encoded_path));
+    BOOST_CHECK(boost::equal(uri::decoded_path(instance), decoded_path));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, tag_types) {
