@@ -23,9 +23,9 @@ template <
     typename Map
     >
 struct key_value_sequence
-    : spirit::qi::grammar<typename Uri::const_iterator_type, Map()>
+    : spirit::qi::grammar<typename Uri::const_iterator, Map()>
 {
-    typedef typename Uri::const_iterator_type const_iterator_type;
+    typedef typename Uri::const_iterator const_iterator;
 
     key_value_sequence()
         : key_value_sequence::base_type(query)
@@ -36,9 +36,9 @@ struct key_value_sequence
         value = +spirit::qi::char_("a-zA-Z_0-9/%");
     }
 
-    spirit::qi::rule<const_iterator_type, Map()> query;
-    spirit::qi::rule<const_iterator_type, std::pair<typename Uri::string_type, typename Uri::string_type>()> pair;
-    spirit::qi::rule<const_iterator_type, typename Uri::string_type()> key, value;
+    spirit::qi::rule<const_iterator, Map()> query;
+    spirit::qi::rule<const_iterator, std::pair<typename Uri::string_type, typename Uri::string_type>()> pair;
+    spirit::qi::rule<const_iterator, typename Uri::string_type()> key, value;
 };
 } // namespace details
 
@@ -59,7 +59,7 @@ template <
     >
 typename basic_uri<Tag>::string_type username(const basic_uri<Tag> &uri) {
     typename basic_uri<Tag>::const_range_type user_info_range = uri.user_info_range();
-    typename basic_uri<Tag>::const_iterator_type it(boost::begin(user_info_range)), end(boost::end(user_info_range));
+    typename basic_uri<Tag>::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
     for (; it != end; ++it) {
         if (*it == ':') {
             break;
@@ -73,7 +73,7 @@ template <
     >
 typename basic_uri<Tag>::string_type password(const basic_uri<Tag> &uri) {
     typename basic_uri<Tag>::const_range_type user_info_range = uri.user_info_range();
-    typename basic_uri<Tag>::const_iterator_type it(boost::begin(user_info_range)), end(boost::end(user_info_range));
+    typename basic_uri<Tag>::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
     for (; it != end; ++it) {
         if (*it == ':') {
             ++it;

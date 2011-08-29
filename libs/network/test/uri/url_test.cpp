@@ -312,3 +312,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_query_map_test, T, tag_types) {
     BOOST_CHECK(boost::equal((++queries.begin())->first, key_2));
     BOOST_CHECK(boost::equal((++queries.begin())->second, value_2));
 }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(range_test, T, tag_types)
+{
+    typedef uri::basic_uri<T> uri_type;
+    typedef typename uri_type::string_type string_type;
+
+    const std::string url("http://www.example.com/");
+
+    uri_type instance(string_type(boost::begin(url), boost::end(url)));
+    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK(boost::equal(instance, url));
+}

@@ -18,6 +18,17 @@ namespace network {
 namespace uri {
 template <
     class Tag
+    >
+inline
+basic_uri<Tag> &operator << (basic_uri<Tag> &uri, const basic_uri<Tag> &root_uri) {
+    if (root_uri.is_valid()) {
+        uri.append(boost::begin(root_uri), boost::end(root_uri));
+    }
+    return uri;
+}
+
+template <
+    class Tag
   , class Directive
     >
 inline
