@@ -205,6 +205,30 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(fragment_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::fragment(instance), fragment));
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(from_root_test, T, tag_types)
+{
+    typedef uri::basic_uri<T> uri_type;
+    typedef typename uri_type::string_type string_type;
+
+    const std::string root("http://www.example.com");
+    const std::string scheme("http");
+    const std::string host("www.example.com");
+    const std::string path("/");
+    const std::string fragment("fragment");
+
+    uri_type root_uri(boost::begin(root), boost::end(root));
+    uri_type instance;
+    //instance << uri::uri("http://www.example.com") << uri::path("/") << uri::fragment("fragment");
+    instance << root_uri
+             << uri::path(string_type(boost::begin(path), boost::end(path)))
+             << uri::fragment(string_type(boost::begin(fragment), boost::end(fragment)));
+    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
+    BOOST_CHECK(boost::equal(uri::host(instance), host));
+    BOOST_CHECK(boost::equal(uri::path(instance), path));
+    BOOST_CHECK(boost::equal(uri::fragment(instance), fragment));
+}
+
 //BOOST_AUTO_TEST_CASE_TEMPLATE(scheme_test, T, tag_types)
 //{
 //    typedef uri::basic_uri<T> uri_type;

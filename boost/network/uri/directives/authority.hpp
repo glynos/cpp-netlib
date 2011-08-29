@@ -34,7 +34,7 @@ template <
     class T
     >
 inline
-authority_directive<T> authority(const T &value)  {
+authority_directive<T> authority(const T &value) {
     return authority_directive<T>(value);
 }
 } // namespace uri

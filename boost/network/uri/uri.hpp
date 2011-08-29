@@ -48,13 +48,22 @@ class basic_uri
 public:
 
     typedef typename string<Tag>::type string_type;
-    typedef typename string_type::iterator iterator_type;
-    typedef boost::iterator_range<iterator_type> range_type;
-    typedef typename string_type::const_iterator const_iterator_type;
-    typedef boost::iterator_range<const_iterator_type> const_range_type;
+    typedef typename string_type::iterator iterator;
+    typedef boost::iterator_range<iterator> range_type;
+    typedef typename string_type::const_iterator const_iterator;
+    typedef boost::iterator_range<const_iterator> const_range_type;
 
-    basic_uri() : is_valid_(false) {
+    basic_uri()
+        : is_valid_(false) {
 
+    }
+
+    template <
+        class FwdIter
+        >
+    basic_uri(const FwdIter &first, const FwdIter &last)
+        : uri_(first, last), is_valid_(false) {
+        parse();
     }
 
     basic_uri(const string_type &uri)
@@ -88,19 +97,19 @@ public:
         parse();
     }
 
-    iterator_type begin() {
+    iterator begin() {
         return uri_.begin();
     }
 
-    const_iterator_type begin() const {
+    const_iterator begin() const {
         return uri_.begin();
     }
 
-    iterator_type end() {
+    iterator end() {
         return uri_.end();
     }
 
-    const_iterator_type end() const {
+    const_iterator end() const {
         return uri_.end();
     }
 
@@ -195,9 +204,9 @@ public:
     }
 
     template <
-        class Iterator
+        class FwdIter
         >
-    void append(Iterator first, Iterator last) {
+    void append(const FwdIter &first, const FwdIter &last) {
         uri_.append(first, last);
         parse();
     }
@@ -217,16 +226,8 @@ template <
     >
 inline
 void basic_uri<Tag>::parse() {
-    const_iterator_type first(boost::begin(uri_)), last(boost::end(uri_));
+    const_iterator first(boost::begin(uri_)), last(boost::end(uri_));
     is_valid_ = detail::parse(first, last, uri_parts_);
-}
-
-template <
-    class Tag
-    >
-inline
-void swap(basic_uri<Tag> &lhs, basic_uri<Tag> &rhs) {
-    lhs.swap(rhs);
 }
 
 template <
@@ -358,6 +359,46 @@ bool operator == (const basic_uri<Tag> &lhs, const basic_uri<Tag> &rhs) {
 }
 } // namespace uri
 } // namespace network
+
+template <
+    class Tag
+    >
+inline
+typename network::uri::basic_uri<Tag>::iterator begin(network::uri::basic_uri<Tag> &uri) {
+    return uri.begin();
+}
+
+template <
+    class Tag
+    >
+inline
+typename network::uri::basic_uri<Tag>::iterator end(network::uri::basic_uri<Tag> &uri) {
+    return uri.end();
+}
+
+template <
+    class Tag
+    >
+inline
+typename network::uri::basic_uri<Tag>::const_iterator begin(const network::uri::basic_uri<Tag> &uri) {
+    return uri.begin();
+}
+
+template <
+    class Tag
+    >
+inline
+typename network::uri::basic_uri<Tag>::const_iterator end(const network::uri::basic_uri<Tag> &uri) {
+    return uri.end();
+}
+
+template <
+    class Tag
+    >
+inline
+void swap(network::uri::basic_uri<Tag> &lhs, network::uri::basic_uri<Tag> &rhs) {
+    lhs.swap(rhs);
+}
 } // namespace boost
 
 
