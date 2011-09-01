@@ -6,6 +6,7 @@
 #define BOOST_TEST_MODULE URI builder test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/network/uri.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/directives.hpp>
 #include <boost/network/uri/accessors.hpp>
@@ -19,14 +20,14 @@
 using namespace boost::network;
 
 typedef boost::mpl::list<
-    tags::default_string
-  , tags::default_wstring
-    > tag_types;
+    uri::uri
+  , uri::wuri
+    > uri_types;
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(builder_test, T, tag_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(builder_test, T, uri_types)
 {
-    typedef uri::basic_uri<T> uri_type;
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string scheme("http");
@@ -45,9 +46,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(builder_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_builder_test, T, tag_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_builder_test, T, uri_types)
 {
-    typedef uri::basic_uri<T> uri_type;
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string scheme("http");
@@ -78,9 +79,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_builder_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::fragment(instance), fragment));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(port_test, T, tag_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(port_test, T, uri_types)
 {
-    typedef uri::basic_uri<T> uri_type;
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string scheme("http");
@@ -102,9 +103,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(port_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_path_test, T, tag_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_path_test, T, uri_types)
 {
-    typedef uri::basic_uri<T> uri_type;
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string scheme("http");
@@ -128,9 +129,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_path_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::decoded_path(instance), decoded_path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(query_test, T, tag_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(query_test, T, uri_types)
 {
-    typedef uri::basic_uri<T> uri_type;
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string scheme("http");
@@ -154,9 +155,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(query_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::query(instance), query));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(query_2_test, T, tag_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(query_2_test, T, uri_types)
 {
-    typedef uri::basic_uri<T> uri_type;
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string scheme("http");
@@ -182,9 +183,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(query_2_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::query(instance), query));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(fragment_test, T, tag_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(fragment_test, T, uri_types)
 {
-    typedef uri::basic_uri<T> uri_type;
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string scheme("http");
@@ -205,9 +206,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(fragment_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::fragment(instance), fragment));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(from_root_test, T, tag_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(from_root_test, T, uri_types)
 {
-    typedef uri::basic_uri<T> uri_type;
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string root("http://www.example.com");
@@ -229,9 +230,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(from_root_test, T, tag_types)
     BOOST_CHECK(boost::equal(uri::fragment(instance), fragment));
 }
 
-//BOOST_AUTO_TEST_CASE_TEMPLATE(scheme_test, T, tag_types)
+//BOOST_AUTO_TEST_CASE_TEMPLATE(scheme_test, T, uri_types)
 //{
-//    typedef uri::basic_uri<T> uri_type;
+//    typedef T uri_type;
 //    typedef typename uri_type::string_type string_type;
 //
 //    const std::string scheme("http");
@@ -252,7 +253,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(from_root_test, T, tag_types)
 
 BOOST_AUTO_TEST_CASE(encoded_null_char_test)
 {
-    typedef uri::basic_uri<tags::default_string> uri_type;
+    typedef uri::uri uri_type;
     typedef uri_type::string_type string_type;
 
     const std::string scheme("http");
