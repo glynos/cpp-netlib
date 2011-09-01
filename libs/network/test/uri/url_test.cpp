@@ -6,9 +6,9 @@
 #define BOOST_TEST_MODULE URL Test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/network/uri.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/accessors.hpp>
-#include <boost/network/tags.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/copy.hpp>
@@ -18,15 +18,14 @@
 
 using namespace boost::network;
 
-
 typedef boost::mpl::list<
-    tags::default_string
-  , tags::default_wstring
-    > tag_types;
+    uri::uri
+  , uri::wuri
+    > uri_types;
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(uri_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(uri_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://www.example.com/");
@@ -41,8 +40,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(uri_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://user:password@www.example.com:80/path?query#fragment");
@@ -66,8 +65,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::fragment(instance), fragment));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(mailto_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(mailto_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("mailto:john.doe@example.com");
@@ -81,8 +80,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(mailto_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(file_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(file_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("file:///bin/bash");
@@ -95,8 +94,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(file_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("xmpp:example-node@example.com?message;subject=Hello%20World");
@@ -112,8 +111,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::query(instance), query));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(ipv4_address_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(ipv4_address_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://129.79.245.252/");
@@ -128,8 +127,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ipv4_address_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(ipv6_address_test_1, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(ipv6_address_test_1, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://[1080:0:0:0:8:800:200C:417A]/");
@@ -144,8 +143,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ipv6_address_test_1, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(ipv6_address_test_2, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(ipv6_address_test_2, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/");
@@ -160,8 +159,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ipv6_address_test_2, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(ftp_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(ftp_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("ftp://john.doe@ftp.example.com/");
@@ -178,8 +177,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ftp_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(news_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(news_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("news:comp.infosystems.www.servers.unix");
@@ -192,8 +191,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(news_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(tel_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(tel_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("tel:+1-816-555-1212");
@@ -206,8 +205,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(tel_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::path(instance), path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_uri_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_uri_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://www.example.com/Path%20With%20%28Some%29%20Encoded%20Characters%21");
@@ -224,8 +223,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_uri_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::decoded_path(instance), decoded_path));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://www.example.com/");
@@ -235,8 +234,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, tag_types) {
     BOOST_CHECK(instance == copy);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(assignment_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(assignment_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://www.example.com/");
@@ -248,8 +247,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(assignment_test, T, tag_types) {
     BOOST_CHECK(instance == copy);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(username_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(username_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("ftp://john.doe:password@ftp.example.com/");
@@ -263,8 +262,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(username_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::password(instance), password));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(authority_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(authority_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://user:password@www.example.com:80/path?query#fragment");
@@ -275,8 +274,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(authority_test, T, tag_types) {
     BOOST_CHECK(boost::equal(uri::authority(instance), authority));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_query_map_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(http_query_map_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://user:password@www.example.com:80/path?query#fragment");
@@ -293,8 +292,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_query_map_test, T, tag_types) {
     BOOST_CHECK(boost::equal(queries.begin()->second, value));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_query_map_test, T, tag_types) {
-    typedef uri::basic_uri<T> uri_type;
+BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_query_map_test, T, uri_types) {
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("xmpp:example-node@example.com?message;subject=Hello%20World");
@@ -313,9 +312,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(xmpp_query_map_test, T, tag_types) {
     BOOST_CHECK(boost::equal((++queries.begin())->second, value_2));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(range_test, T, tag_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(range_test, T, uri_types)
 {
-    typedef uri::basic_uri<T> uri_type;
+    typedef T uri_type;
     typedef typename uri_type::string_type string_type;
 
     const std::string url("http://www.example.com/");
