@@ -5,8 +5,6 @@
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
 find_package( Boost 1.41.0 COMPONENTS unit_test_framework system regex date_time thread filesystem )
-find_package( OpenSSL )
-find_package( Threads )
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 

@@ -1,4 +1,4 @@
-// 
+//
 //          Copyright Kim Grasman 2008.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
@@ -16,14 +16,14 @@
     #include <windows.h>
 
     // ShellExecuteEx
-    #include <shellapi.h> 
+    #include <shellapi.h>
     #pragma comment( lib, "shell32" )
 #else
     #include <unistd.h>     // fork, execlp etc.
     #include <sys/types.h>
     #include <sys/wait.h>   // for waitpid
     #include <sys/stat.h>   // for chmod
-    #include <signal.h>     // for kill 
+    #include <signal.h>     // for kill
 #endif
 
 struct http_test_server
@@ -61,7 +61,7 @@ private:
     boost::filesystem::path get_server_path(const boost::filesystem::path& base_path) {
         using namespace boost::filesystem;
 
-        const path script_name = 
+        const path script_name =
 #if defined(HTTPS_SERVER_TEST)
             "https_test_server.py"
 #else
@@ -84,8 +84,8 @@ private:
     script_handle_t launch_python_script(const boost::filesystem::path& python_script_path) {
         using namespace boost::filesystem;
 
-        path::string_type script_name = python_script_path.filename().string();
-        path::string_type script_dir = python_script_path.parent_path().string();
+        path::string_type script_name = python_script_path.filename().native();
+        path::string_type script_dir = python_script_path.parent_path().native();
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
         SHELLEXECUTEINFOA sei = {0};
@@ -93,8 +93,8 @@ private:
         sei.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;
         sei.lpVerb = "open";
         sei.lpFile = "python.exe";
-        sei.lpParameters = script_name.c_str();
-        sei.lpDirectory = script_dir.c_str();
+        sei.lpParameters = reinterpret_cast<LPCSTR>(script_name.c_str());
+        sei.lpDirectory = reinterpret_cast<LPCSTR>(script_dir.c_str());
         sei.nShow = SW_SHOWNOACTIVATE;
 
         if (!ShellExecuteExA(&sei))
@@ -107,16 +107,16 @@ private:
         if (child_process < 0)
             return false;
 
-        if (child_process == 0) { 
+        if (child_process == 0) {
             // child process
-            
+
             // cd into script dir and launch python script
             current_path(script_dir);
 
             if (execlp("python", "python", script_name.c_str(), (char*)NULL) == -1)
                 return 0;
-        } 
-        else { 
+        }
+        else {
             // parent
             sleep(1);
         }

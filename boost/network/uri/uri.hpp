@@ -185,12 +185,21 @@ public:
         return uri_;
     }
 
-    string_type raw() const {
-        return string();
-    }
-
     bool is_valid() const {
         return is_valid_;
+    }
+
+    void append(const string_type &data) {
+        uri_.append(data);
+        parse();
+    }
+
+    template <
+        class Iterator
+        >
+    void append(Iterator first, Iterator last) {
+        uri_.append(first, last);
+        parse();
     }
 
 private:
@@ -328,6 +337,14 @@ template <
     class Tag
     >
 inline
+typename basic_uri<Tag>::string_type netloc(const basic_uri<Tag> &uri) {
+    return authority(uri);
+}
+
+template <
+    class Tag
+    >
+inline
 bool is_valid(const basic_uri<Tag> &uri) {
     return uri.is_valid();
 }
@@ -342,6 +359,10 @@ bool operator == (const basic_uri<Tag> &lhs, const basic_uri<Tag> &rhs) {
 } // namespace uri
 } // namespace network
 } // namespace boost
+
+
+# include <boost/network/uri/accessors.hpp>
+# include <boost/network/uri/directives.hpp>
 
 
 #endif // __BOOST_NETWORK_URI_INC__

@@ -85,8 +85,8 @@ namespace boost { namespace network { namespace http { namespace impl {
       }
     };
 
-    template <class Socket, class Callback>
-    logic::tribool parse_version(Socket & socket_,
+    template <class Delegate, class Callback>
+    logic::tribool parse_version(Delegate & delegate_,
                    Callback callback,
                    size_t bytes) {
       logic::tribool parsed_ok;
@@ -133,7 +133,7 @@ namespace boost { namespace network { namespace http { namespace impl {
           boost::end(result_range)
           );
         part_begin = part.begin();
-        socket_.async_read_some(
+        delegate_->read_some(
           boost::asio::mutable_buffers_1(part.c_array(), part.size()),
           callback
           );
@@ -141,8 +141,8 @@ namespace boost { namespace network { namespace http { namespace impl {
       return parsed_ok;
     }
 
-    template <class Socket, class Callback>
-    logic::tribool parse_status(Socket & socket_,
+    template <class Delegate, class Callback>
+    logic::tribool parse_status(Delegate & delegate_,
                   Callback callback,
                   size_t bytes) {
       logic::tribool parsed_ok;
@@ -189,7 +189,7 @@ namespace boost { namespace network { namespace http { namespace impl {
           boost::end(result_range)
           );
         part_begin = part.begin();
-        socket_.async_read_some(
+        delegate_->read_some(
           boost::asio::mutable_buffers_1(part.c_array(), part.size()),
           callback
           );
@@ -197,8 +197,8 @@ namespace boost { namespace network { namespace http { namespace impl {
       return parsed_ok;
     }
 
-    template <class Socket, class Callback>
-    logic::tribool parse_status_message(Socket & socket_,
+    template <class Delegate, class Callback>
+    logic::tribool parse_status_message(Delegate & delegate_,
                       Callback callback,
                       size_t bytes) {
       logic::tribool parsed_ok;
@@ -241,7 +241,7 @@ namespace boost { namespace network { namespace http { namespace impl {
           boost::begin(result_range),
           boost::end(result_range));
         part_begin = part.begin();
-        socket_.async_read_some(
+        delegate_->read_some(
           boost::asio::mutable_buffers_1(part.c_array(), part.size()),
           callback
           );
@@ -289,8 +289,8 @@ namespace boost { namespace network { namespace http { namespace impl {
       headers_promise.set_value(headers);
     }
 
-    template <class Socket, class Callback>
-    fusion::tuple<logic::tribool, size_t> parse_headers(Socket & socket_,
+    template <class Delegate, class Callback>
+    fusion::tuple<logic::tribool, size_t> parse_headers(Delegate & delegate_,
                               Callback callback,
                               size_t bytes) {
       logic::tribool parsed_ok;
@@ -332,7 +332,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         partial_parsed.append(boost::begin(result_range),
                     boost::end(result_range));
         part_begin = part.begin();
-        socket_.async_read_some(
+        delegate_->read_some(
           boost::asio::mutable_buffers_1(part.c_array(), part.size()),
           callback
           );
@@ -346,13 +346,13 @@ namespace boost { namespace network { namespace http { namespace impl {
         );
     }
 
-    template <class Socket, class Callback>
-    void parse_body(Socket & socket_, Callback callback, size_t bytes) {
+    template <class Delegate, class Callback>
+    void parse_body(Delegate & delegate_, Callback callback, size_t bytes) {
       // TODO: we should really not use a string for the partial body
       // buffer.
       partial_parsed.append(part_begin, bytes);
       part_begin = part.begin();
-      socket_.async_read_some(
+      delegate_->read_some(
         boost::asio::mutable_buffers_1(part.c_array(), part.size()),
         callback
         );
