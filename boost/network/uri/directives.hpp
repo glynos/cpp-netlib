@@ -17,22 +17,22 @@ namespace boost {
 namespace network {
 namespace uri {
 template <
-    class Tag
+    class String
     >
 inline
-basic_uri<Tag> &operator << (basic_uri<Tag> &uri, const basic_uri<Tag> &root_uri) {
-    if (root_uri.is_valid()) {
+basic_uri<String> &operator << (basic_uri<String> &uri, const basic_uri<String> &root_uri) {
+    if (empty(uri) && valid(root_uri)) {
         uri.append(boost::begin(root_uri), boost::end(root_uri));
     }
     return uri;
 }
 
 template <
-    class Tag
+    class String
   , class Directive
     >
 inline
-basic_uri<Tag> &operator << (basic_uri<Tag> &uri, const Directive &directive) {
+basic_uri<String> &operator << (basic_uri<String> &uri, const Directive &directive) {
     directive(uri);
     return uri;
 }

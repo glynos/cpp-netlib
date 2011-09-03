@@ -49,11 +49,11 @@ struct encoded_path_directive {
     {}
 
     template <
-        class Tag
+        class StringT
       , template <class> class Uri
         >
-    void operator () (Uri<Tag> &uri) const {
-        typename string<Tag>::type encoded_value;
+    void operator () (Uri<StringT> &uri) const {
+        StringT encoded_value;
         encode(boost::as_literal(value), std::back_inserter(encoded_value));
         uri.append(encoded_value);
     }

@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(builder_test, T, uri_types)
              << uri::host(string_type(boost::begin(host), boost::end(host)))
              << uri::path(string_type(boost::begin(path), boost::end(path)))
         ;
-    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
@@ -68,11 +68,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(full_uri_builder_test, T, uri_types)
              << uri::query(string_type(boost::begin(query), boost::end(query)))
              << uri::fragment(string_type(boost::begin(fragment), boost::end(fragment)))
         ;
-    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::user_info(instance), user_info));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
-    BOOST_CHECK_EQUAL(static_cast<unsigned short>(uri::port_us(instance)), 80);
+    BOOST_CHECK(uri::port_us(instance));
+    BOOST_CHECK_EQUAL(uri::port_us(instance).get(), 80);
     BOOST_CHECK(boost::equal(uri::port(instance), port));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
     BOOST_CHECK(boost::equal(uri::query(instance), query));
@@ -96,7 +97,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(port_test, T, uri_types)
              << uri::port(8000)
              << uri::path(string_type(boost::begin(path), boost::end(path)))
         ;
-    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::port(instance), port));
@@ -121,7 +122,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(encoded_path_test, T, uri_types)
              << uri::encoded_path(string_type(boost::begin(decoded_path), boost::end(decoded_path)))
              //<< uri::path(uri::encoded(string_type(boost::begin(decoded_path), boost::end(decoded_path))))
         ;
-    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::port(instance), port));
@@ -148,7 +149,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(query_test, T, uri_types)
              << uri::path(string_type(boost::begin(path), boost::end(path)))
              << uri::query(string_type(boost::begin(query_key), boost::end(query_key)),
                            string_type(boost::begin(query_value), boost::end(query_value)));
-    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
@@ -176,7 +177,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(query_2_test, T, uri_types)
                            string_type(boost::begin(query_value), boost::end(query_value)))
              << uri::query(string_type(boost::begin(query_key), boost::end(query_key)),
                            string_type(boost::begin(query_value), boost::end(query_value)));
-    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
@@ -199,7 +200,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(fragment_test, T, uri_types)
              << uri::host(string_type(boost::begin(host), boost::end(host)))
              << uri::path(string_type(boost::begin(path), boost::end(path)))
              << uri::fragment(string_type(boost::begin(fragment), boost::end(fragment)));
-    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
@@ -223,7 +224,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(from_root_test, T, uri_types)
     instance << root_uri
              << uri::path(string_type(boost::begin(path), boost::end(path)))
              << uri::fragment(string_type(boost::begin(fragment), boost::end(fragment)));
-    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
     BOOST_CHECK(boost::equal(uri::host(instance), host));
     BOOST_CHECK(boost::equal(uri::path(instance), path));
@@ -245,7 +246,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(from_root_test, T, uri_types)
 //             << uri::host(string_type(boost::begin(host), boost::end(host)))
 //             << uri::path(string_type(boost::begin(path), boost::end(path)))
 //        ;
-//    BOOST_REQUIRE(uri::is_valid(instance));
+//    BOOST_REQUIRE(uri::valid(instance));
 //    BOOST_CHECK(boost::equal(uri::scheme(instance), scheme));
 //    BOOST_CHECK(boost::equal(uri::host(instance), host));
 //    BOOST_CHECK(boost::equal(uri::path(instance), path));
@@ -267,7 +268,7 @@ BOOST_AUTO_TEST_CASE(encoded_null_char_test)
              << uri::host("www.example.com")
              << uri::encoded_path("/")
         ;
-    BOOST_REQUIRE(uri::is_valid(instance));
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), scheme);
     BOOST_CHECK_EQUAL(uri::host(instance), host);
     BOOST_CHECK_EQUAL(uri::path(instance), path);
