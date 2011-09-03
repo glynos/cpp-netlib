@@ -3,16 +3,19 @@
 
 
 # include <boost/network/uri/uri.hpp>
+# include <string>
 
 
 namespace boost {
 namespace network {
 namespace uri {
-template <
-    class Tag
-    >
 inline
-std::ostream &operator << (std::ostream &os, const basic_uri<Tag> &uri) {
+std::ostream &operator << (std::ostream &os, const basic_uri<std::string> &uri) {
+    return os << uri.string();
+}
+
+inline
+std::wostream &operator << (std::wostream &os, const basic_uri<std::wstring> &uri) {
     return os << uri.string();
 }
 } // namespace uri

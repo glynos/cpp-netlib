@@ -43,72 +43,72 @@ struct key_value_sequence
 } // namespace details
 
 template <
-    class Tag,
+    class String,
     class Map
     >
 inline
-Map &query_map(const basic_uri<Tag> &uri, Map &map) {
-    typename basic_uri<Tag>::const_range_type range = uri.query_range();
-    details::key_value_sequence<basic_uri<Tag>, Map> parser;
+Map &query_map(const basic_uri<String> &uri, Map &map) {
+    typename basic_uri<String>::const_range_type range = uri.query_range();
+    details::key_value_sequence<basic_uri<String>, Map> parser;
     spirit::qi::parse(boost::begin(range), boost::end(range), parser, map);
     return map;
 }
 
 template <
-    class Tag
+    class String
     >
-typename basic_uri<Tag>::string_type username(const basic_uri<Tag> &uri) {
-    typename basic_uri<Tag>::const_range_type user_info_range = uri.user_info_range();
-    typename basic_uri<Tag>::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
+String username(const basic_uri<String> &uri) {
+    typename basic_uri<String>::const_range_type user_info_range = uri.user_info_range();
+    typename basic_uri<String>::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
     for (; it != end; ++it) {
         if (*it == ':') {
             break;
         }
     }
-    return typename string<Tag>::type(boost::begin(user_info_range), it);
+    return String(boost::begin(user_info_range), it);
 }
 
 template <
-    class Tag
+    class String
     >
-typename basic_uri<Tag>::string_type password(const basic_uri<Tag> &uri) {
-    typename basic_uri<Tag>::const_range_type user_info_range = uri.user_info_range();
-    typename basic_uri<Tag>::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
+String password(const basic_uri<String> &uri) {
+    typename basic_uri<String>::const_range_type user_info_range = uri.user_info_range();
+    typename basic_uri<String>::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
     for (; it != end; ++it) {
         if (*it == ':') {
             ++it;
             break;
         }
     }
-    return typename string<Tag>::type(it, boost::end(user_info_range));
+    return String(it, boost::end(user_info_range));
 }
 
 template <
-    class Tag
+    class String
     >
-typename basic_uri<Tag>::string_type decoded_path(const basic_uri<Tag> &uri) {
-    typename basic_uri<Tag>::const_range_type path_range = uri.path_range();
-    typename basic_uri<Tag>::string_type decoded_path;
+String decoded_path(const basic_uri<String> &uri) {
+    typename basic_uri<String>::const_range_type path_range = uri.path_range();
+    String decoded_path;
     decode(path_range, std::back_inserter(decoded_path));
     return decoded_path;
 }
 
 template <
-    class Tag
+    class String
     >
-typename basic_uri<Tag>::string_type decoded_query(const basic_uri<Tag> &uri) {
-    typename basic_uri<Tag>::const_range_type query_range = uri.query_range();
-    typename basic_uri<Tag>::string_type decoded_query;
+String decoded_query(const basic_uri<String> &uri) {
+    typename basic_uri<String>::const_range_type query_range = uri.query_range();
+    String decoded_query;
     decode(query_range, std::back_inserter(decoded_query));
     return decoded_query;
 }
 
 template <
-    class Tag
+    class String
     >
-typename basic_uri<Tag>::string_type decoded_fragment(const basic_uri<Tag> &uri) {
-    typename basic_uri<Tag>::const_range_type fragment_range = uri.fragment_range();
-    typename basic_uri<Tag>::string_type decoded_fragment;
+String decoded_fragment(const basic_uri<String> &uri) {
+    typename basic_uri<String>::const_range_type fragment_range = uri.fragment_range();
+    String decoded_fragment;
     decode(fragment_range, std::back_inserter(decoded_fragment));
     return decoded_fragment;
 }

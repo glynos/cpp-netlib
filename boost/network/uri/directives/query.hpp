@@ -20,11 +20,11 @@ struct query_directive {
     {}
 
     template <
-        class Tag
+        class String
       , template <class> class Uri
         >
-    void operator () (Uri<Tag> &uri) const {
-        typename string<Tag>::type encoded_value;
+    void operator () (Uri<String> &uri) const {
+        String encoded_value;
         static const char separator[] = {'?'};
         uri.append(boost::begin(separator), boost::end(separator));
         uri.append(value);
@@ -53,11 +53,11 @@ struct query_key_value_directive {
     {}
 
     template <
-        class Tag
+        class String
       , template <class> class Uri
         >
-    void operator () (Uri<Tag> &uri) const {
-        typename string<Tag>::type encoded_key, encoded_value;
+    void operator () (Uri<String> &uri) const {
+        String encoded_key, encoded_value;
         static const char qmark[] = {'?'};
         static const char equal[] = {'='};
         static const char scolon[] = {';'};

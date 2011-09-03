@@ -22,10 +22,10 @@ struct port_directive {
     {}
 
     template <
-        class Tag
+        class String
       , template <class> class Uri
         >
-    void operator () (Uri<Tag> &uri) const {
+    void operator () (Uri<String> &uri) const {
         static const char separator[] = {':'};
         uri.append(boost::begin(separator), boost::end(separator));
         uri.append(value);
@@ -43,13 +43,13 @@ struct port_directive_us {
     {}
 
     template <
-        class Tag
+        class String
       , template <class> class Uri
         >
-    void operator () (Uri<Tag> &uri) const {
+    void operator () (Uri<String> &uri) const {
         static const char separator[] = {':'};
         uri.append(boost::begin(separator), boost::end(separator));
-        typename string<Tag>::type port = boost::lexical_cast<typename string<Tag>::type>(value);
+        String port = boost::lexical_cast<String>(value);
         uri.append(port);
     }
 
