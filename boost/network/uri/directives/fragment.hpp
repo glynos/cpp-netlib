@@ -20,11 +20,11 @@ struct fragment_directive {
     {}
 
     template <
-        class Tag
+        class String
       , template <class> class Uri
         >
-    void operator () (Uri<Tag> &uri) const {
-        typename string<Tag>::type encoded_value;
+    void operator () (Uri<String> &uri) const {
+        String encoded_value;
         static const char separator[] = {'#'};
         uri.append(boost::begin(separator), boost::end(separator));
         encode(boost::as_literal(value), std::back_inserter(encoded_value));
