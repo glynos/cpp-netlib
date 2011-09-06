@@ -14,8 +14,6 @@ if (Boost_FOUND)
   set(
     TESTS
     url_test
-    url_http_test
-    url_mailto_test
     url_encoding_test
     url_builder_test
     )
