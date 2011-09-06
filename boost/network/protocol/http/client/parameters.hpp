@@ -14,16 +14,16 @@ namespace boost { namespace network { namespace http {
     BOOST_PARAMETER_NAME(cache_resolved)
     BOOST_PARAMETER_NAME(openssl_certificate)
     BOOST_PARAMETER_NAME(openssl_verify_path)
-    
+
     BOOST_PARAMETER_NAME(request)
     BOOST_PARAMETER_NAME(body)
     BOOST_PARAMETER_NAME(content_type)
     BOOST_PARAMETER_NAME(body_handler)
-    
+
+    BOOST_PARAMETER_NAME(connection_manager)
+
 } /* http */
-    
 } /* network */
-    
 } /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_PARAMETERS_HPP_2010127 */

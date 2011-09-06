@@ -12,51 +12,42 @@
 
 namespace boost { namespace network { namespace http { namespace policies {
 
-    template <class Tag>
-    struct async_resolver
-        : boost::enable_shared_from_this<async_resolver<Tag> >
-    {
-        typedef typename resolver<Tag>::type resolver_type;
-        typedef typename resolver_type::iterator resolver_iterator;
-        typedef typename resolver_type::query resolver_query;
-        typedef std::pair<resolver_iterator, resolver_iterator> resolver_iterator_pair;
-        typedef typename string<Tag>::type string_type;
-        typedef boost::unordered_map<string_type, resolver_iterator_pair> endpoint_cache;
-        typedef boost::function<void(boost::system::error_code const &,resolver_iterator_pair)> resolve_completion_function;
-        typedef boost::function<void(resolver_type&,string_type,boost::uint16_t,resolve_completion_function)> resolve_function;
-    protected:
-        bool cache_resolved_;
-        endpoint_cache endpoint_cache_;
-        boost::shared_ptr<boost::asio::io_service> service_;
-        boost::shared_ptr<boost::asio::io_service::strand> resolver_strand_;
+struct async_resolver : enable_shared_from_this<async_resolver> {
+  typedef asio::ip::resolver::iterator resolver_iterator;
+  typedef asio::ip::resolver::query resolver_query;
+  typedef std::pair<resolver_iterator, resolver_iterator> resolver_iterator_pair;
+  typedef boost::unordered_map<std::string, resolver_iterator_pair> endpoint_cache;
+  typedef boost::function<void(boost::system::error_code const &,resolver_iterator_pair)> resolve_completion_function;
+  typedef boost::function<void(resolver_type&,std::string,boost::uint16_t,resolve_completion_function)> resolve_function;
+ protected:
+  bool cache_resolved_;
+  endpoint_cache endpoint_cache_;
+  boost::shared_ptr<boost::asio::io_service::strand> resolver_strand_;
 
-        explicit async_resolver(bool cache_resolved)
-            : cache_resolved_(cache_resolved), endpoint_cache_()
-        {
-            
-        }
+  async_resolver(bool cache_resolved):
+    cache_resolved_(cache_resolved),
+    endpoint_cache_()
+  {}
 
-        void resolve(
-            resolver_type & resolver_, 
-            string_type const & host, 
-            boost::uint16_t port,
-            resolve_completion_function once_resolved
-            ) 
-        {
-            if (cache_resolved_) {
-                typename endpoint_cache::iterator iter = 
-                    endpoint_cache_.find(boost::to_lower_copy(host));
-                if (iter != endpoint_cache_.end()) {
-                    boost::system::error_code ignored;
-                    once_resolved(ignored, iter->second);
-                    return;
-                }
-            }
-            
+  void resolve(
+      resolver_type & resolver_,
+      std::string const & host,
+      boost::uint16_t port,
+      resolve_completion_function once_resolved) {
+    if (cache_resolved_) {
+      typename endpoint_cache::iterator iter =
+          endpoint_cache_.find(boost::to_lower_copy(host));
+      if (iter != endpoint_cache_.end()) {
+        boost::system::error_code ignored;
+        once_resolved(ignored, iter->second);
+        return;
+      }
+    }
+
             typename resolver_type::query q(
                 resolver_type::protocol_type::v4()
                 , host
-                , lexical_cast<string_type>(port));
+                , lexical_cast<std::string>(port));
             resolver_.async_resolve(
                 q,
                 resolver_strand_->wrap(
@@ -73,8 +64,8 @@ namespace boost { namespace network { namespace http { namespace policies {
         }
 
         void handle_resolve(
-            string_type const & host,
-            resolve_completion_function once_resolved, 
+            std::string const & host,
+            resolve_completion_function once_resolved,
             boost::system::error_code const & ec,
             resolver_iterator endpoint_iterator
             )

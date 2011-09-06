@@ -42,10 +42,13 @@ namespace boost { namespace network { namespace http { namespace impl {
           async_connection;
       typedef typename delegate_factory<Tag>::type delegate_factory_type;
       connection_ptr temp;
+      typedef typename resolver_delegate_factory<Tag>::type
+          resolver_delegate_factory_type;
       temp.reset(
           new async_connection(
-              resolver,
-              resolve,
+              resolver_delegate_factory_type::new_resolver_delegate(
+                  resolve,
+                  resolver),
               follow_redirect,
               delegate_factory_type::new_connection_delegate(
                   resolver.get_io_service(),

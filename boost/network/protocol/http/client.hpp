@@ -62,6 +62,9 @@ namespace boost { namespace network { namespace http {
         //                               -- the name of the directory from
         //                                  which the certificate authority
         //                                  files can be found
+        //      _connection_manager : shared_ptr<connection_manager>
+        //                              -- The connection manager to use for
+        //                                 this client.
 
         BOOST_PARAMETER_CONSTRUCTOR(
             basic_client, (base_facade_type), tag,
@@ -71,6 +74,7 @@ namespace boost { namespace network { namespace http {
                 (cache_resolved, (bool))
                 (openssl_certificate, (string_type))
                 (openssl_verify_path, (string_type))
+                (connection_manager, (shared_ptr<connection_manager>))
                 ))
 
         //

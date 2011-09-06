@@ -59,15 +59,14 @@ namespace boost { namespace network { namespace http { namespace impl {
       typedef typename delegate_factory_type::connection_delegate_ptr
           connection_delegate_ptr;
 
-      http_async_connection(resolver_type & resolver,
-                            resolve_function resolve,
+      http_async_connection(resolver_delegate_ptr resolver_delegate,
+                            asio::io_service & io_service,
                             bool follow_redirect,
                             connection_delegate_ptr delegate)
           :
             follow_redirect_(follow_redirect),
-            resolver_(resolver),
-            resolve_(resolve),
-            request_strand_(resolver.get_io_service()),
+            request_strand_(io_service),
+            resolver_delegate_(resolver_delegate),
             delegate_(delegate) {}
 
       // This is the main entry point for the connection/request pipeline. We're
@@ -83,17 +82,17 @@ namespace boost { namespace network { namespace http { namespace impl {
           std::ostreambuf_iterator<typename char_<Tag>::type>(&command_streambuf));
         this->method = method;
         boost::uint16_t port_ = port(request);
-        resolve_(resolver_,
-                 host(request),
-                 port_,
-                 request_strand_.wrap(
-                     boost::bind(&this_type::handle_resolved,
-                                 this_type::shared_from_this(),
-                                 port_,
-                                 get_body,
-                                 callback,
-                                 _1,
-                                 _2)));
+        resolver_delegate_->resolve(host(request),
+                                    port_,
+                                    request_strand_.wrap(
+                                        boost::bind(
+                                            &this_type::handle_resolved,
+                                            this_type::shared_from_this(),
+                                            port_,
+                                            get_body,
+                                            callback,
+                                            _1,
+                                            _2)));
         return response_;
       }
 
@@ -419,9 +418,8 @@ namespace boost { namespace network { namespace http { namespace impl {
     }
 
     bool follow_redirect_;
-    resolver_type & resolver_;
-    resolve_function resolve_;
     boost::asio::io_service::strand request_strand_;
+    resolver_delegate_ptr resolver_delegate_;
     connection_delegate_ptr delegate_;
     boost::asio::streambuf command_streambuf;
     string_type method;

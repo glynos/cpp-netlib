@@ -20,15 +20,8 @@ namespace boost { namespace network { namespace http {
 
   namespace impl {
     template <class Tag, unsigned version_major, unsigned version_minor>
-    struct async_client :
-      connection_policy<Tag,version_major,version_minor>::type
+    struct async_client
     {
-      typedef
-        typename connection_policy<Tag,version_major,version_minor>::type
-        connection_base;
-      typedef
-        typename resolver<Tag>::type
-        resolver_type;
       typedef
         typename string<Tag>::type
         string_type;
@@ -37,17 +30,12 @@ namespace boost { namespace network { namespace http {
         function<void(boost::iterator_range<char const *> const &, system::error_code const &)>
         body_callback_function_type;
 
-      async_client(bool cache_resolved, bool follow_redirect, optional<string_type> const & certificate_filename, optional<string_type> const & verify_path)
-        : connection_base(cache_resolved, follow_redirect),
-        service_ptr(new boost::asio::io_service),
+      async_client(shared_ptr<connection_manager> connection_manager)
+        : service_ptr(new boost::asio::io_service),
         service_(*service_ptr),
-        resolver_(service_),
         sentinel_(new boost::asio::io_service::work(service_)),
-        certificate_filename_(certificate_filename),
-        verify_path_(verify_path)
+        connection_manager_(connection_manager)
       {
-        connection_base::resolver_strand_.reset(new
-          boost::asio::io_service::strand(service_));
         lifetime_thread_.reset(new boost::thread(
           boost::bind(
             &boost::asio::io_service::run,
@@ -55,20 +43,19 @@ namespace boost { namespace network { namespace http {
             )));
       }
 
-      async_client(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service, optional<string_type> const & certificate_filename, optional<string_type> const & verify_path)
-        : connection_base(cache_resolved, follow_redirect),
-        service_ptr(0),
+      async_client(boost::asio::io_service & service,
+                   shared_ptr<connection_manager> connection_manager)
+        : service_ptr(0),
         service_(service),
-        resolver_(service_),
         sentinel_(new boost::asio::io_service::work(service_)),
-        certificate_filename_(certificate_filename),
-        verify_path_(verify_path)
+        connection_manager_(connection_manager)
       {
       }
 
       ~async_client() throw ()
       {
         sentinel_.reset();
+        connection_manager_->reset();
         if (lifetime_thread_.get()) {
           lifetime_thread_->join();
           lifetime_thread_.reset();
@@ -83,17 +70,18 @@ namespace boost { namespace network { namespace http {
         body_callback_function_type callback
         )
       {
-        typename connection_base::connection_ptr connection_;
-        connection_ = connection_base::get_connection(resolver_, request_, certificate_filename_, verify_path_);
-        return connection_->send_request(method, request_, get_body, callback);
+        shared_ptr<client_connection> connection_;
+        connection_ = connection_manager_->get_connection(service_, request_);
+        shared_ptr<response_base> response = connection_->send_request(
+            method, request_, get_body, callback);
+        return *response;
       }
 
       boost::asio::io_service * service_ptr;
       boost::asio::io_service & service_;
-      resolver_type resolver_;
       boost::shared_ptr<boost::asio::io_service::work> sentinel_;
       boost::shared_ptr<boost::thread> lifetime_thread_;
-      optional<string_type> certificate_filename_, verify_path_;
+      shared_ptr<connection_manager> connection_manager_;
     };
   } // namespace impl
 
