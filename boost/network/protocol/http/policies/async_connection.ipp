@@ -10,8 +10,7 @@
 namespace boost { namespace network { namespace http {
 
 struct simple_async_client_connection : client_connection {
-  simple_async_client_connection(asio::io_service & service,
-                                 bool follow_redirects,
+  simple_async_client_connection(bool follow_redirects,
                                  shared_ptr<resolver_delegate> resolver_delegate,
                                  shared_ptr<connection_delegate> connection_delegate);
   virtual shared_ptr<response_base> send_request(std::string const & method,
@@ -21,7 +20,6 @@ struct simple_async_client_connection : client_connection {
   virtual void reset();  // override
   virtual ~client_connection();  // override
  protected:
-  asio::io_service & service_;
   bool follow_redirects_;
   shared_ptr<resolver_delegate> resolver_delegate_;
   shared_ptr<connection_delegate> connection_delegate_;
@@ -29,12 +27,10 @@ struct simple_async_client_connection : client_connection {
 };
 
 simple_async_client_connection::simple_async_client_connection(
-    asio::io_service & service,
     bool follow_redirects,
     shared_ptr<resolver_delegate> resolver_delegate,
     shared_ptr<connection_delegate> connection_delegate)
-: service_(service),
-  follow_redirects_(follow_redirects),
+: follow_redirects_(follow_redirects),
   resolver_delegate_(resolver_delegate),
   connection_delegate_(connection_delegate),
 {}
@@ -45,9 +41,12 @@ shared_ptr<response_base> send_request(std::string const & method,
                                        callback_type callback) {
   shared_ptr<response_base> response;
   shared_ptr<connection> connection_;
-  connection_.reset(new impl::async_connection(resolver_delegate_,
-                                               follow_redirects_,
-                                               connection_delegate_))
+  connection_.reset(new(std::nothrow) impl::async_connection(
+      resolver_delegate_,
+      follow_redirects_,
+      connection_delegate_))
+  if (!connection_.get())
+    BOOST_THROW_EXCEPTION(std::runtime_error("Insufficient memory."));
   response = connection_->start(request, method, get_body, callback);
   return response
 }
@@ -86,7 +85,7 @@ boost::network::http::simple_async_connection_manager::get_connection(
   } else {
     resolver_delegate.reset(new(std::nothrow) async_resolver(service));
     if (!resolver_delegate_.get())
-      BOOST_THROW_EXCEPTION(std::runtime_error("Insuffucuent memory."));
+      BOOST_THROW_EXCEPTION(std::runtime_error("Insuffucient memory."));
   }
   shared_ptr<connection_delegate> connection_delegate;
   bool https = (scheme(request) == "https");
@@ -94,8 +93,7 @@ boost::network::http::simple_async_connection_manager::get_connection(
       connection_delegate_factory::new_connection_delegate(
           service, openssl_certificate_, openssl_verify_path_);
   connection.reset(
-      new(std::nothrow) simple_async_client_connection(service,
-                                                       follow_redirects_,
+      new(std::nothrow) simple_async_client_connection(follow_redirects_,
                                                        resolver_delegate,
                                                        connection_delegate));
   if (!connection.get())
@@ -109,5 +107,17 @@ void boost::network::http::simple_async_connection_manager::reset() {
     this->shared_resolver_delegate.reset();
   }
 }
+
+namespace boost { namespace network { namespace http {
+
+struct http_1_1_async_connection : client_connection {
+  http_1_1_async_connection(bool follow_redirects,
+                            shared_ptr<resolver_delegate> resolver_delegate,
+                            shared_ptr<connection_delegate> connection_delegate)
+}
+
+} /* http */
+} /* network */
+} /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_CONNECTION_IPP_20110930 */

@@ -16,6 +16,7 @@
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/protocol/http/client/connection/async_base.hpp>
 #include <boost/network/protocol/http/client/connection_manager.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
@@ -39,9 +40,9 @@ struct simple_async_connection_manager : connection_manager {
   shared_ptr<resolver_delegate> shared_resolver_delegate;
 };
 
-struct http_1_1_async_connection_manager_pimpl;
+struct http_1_1_async_connection;
 
-struct http_1_1_async_connection_manager : connection_manager {
+struct http_1_1_async_connection_manager : connection_manager, enable_shared_from_this<http_1_1_async_connection_manager> {
   http_1_1_async_connection_manager(bool cache_resolved,
                                     bool follow_redirects,
                                     optional<std::string> openssl_certificate,
@@ -51,6 +52,15 @@ struct http_1_1_async_connection_manager : connection_manager {
       request_base const & request);  // override
   virtual void reset();  // override
   virtual ~http_1_1_async_connection_manager();  // override
+
+ protected:
+  friend struct http_1_1_async_connection;
+  void add_ready_connection(shared_ptr<client_connection> connection_ptr);
+  shared_ptr<client_connection> get_ready_connection(std::string const & host);
+  bool cache_resolved, follow_redirects_;
+  mutex shared_resolver_mutex;
+  shared_ptr<resolver_delegate> shared_resolver_delegate;
+  unordered_map<std::string, shared_ptr<client_connection> > ready_connections;
 };
 
 template <class Tag, unsigned version_major, unsigned version_minor>
