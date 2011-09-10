@@ -7,10 +7,6 @@
 #ifndef __NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP__
 #define __NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP__
 
-
-#include <boost/network/traits/string.hpp>
-
-
 namespace boost { namespace network {
 
     namespace impl {

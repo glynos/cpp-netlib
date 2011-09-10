@@ -8,7 +8,6 @@
 # define __BOOST_NETWORK_URI_INC__
 
 
-# include <boost/network/traits/string.hpp>
 # include <boost/network/constants.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
 # ifdef BOOST_NETWORK_NO_LIB

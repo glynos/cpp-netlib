@@ -8,9 +8,6 @@
 #define __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
 
 
-#include <boost/network/traits/string.hpp>
-
-
 namespace boost { namespace network {
 
     namespace impl {

@@ -7,9 +7,6 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__
 
-#include <boost/network/traits/string.hpp>
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_sync.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>

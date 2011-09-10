@@ -6,7 +6,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/pod_or_normal.hpp>
 #include <boost/thread/future.hpp>
 
 namespace boost { namespace network {

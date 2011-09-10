@@ -13,16 +13,16 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122
 
-#include <boost/network/traits/string.hpp>
+#include <string>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/assign/list_of.hpp>
-#include <boost/network/support/is_default_wstring.hpp>
-#include <boost/network/support/is_default_wstring.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct unsupported_tag;
+    template <class String>
+    struct unsupported_string;
 
     struct request_header_narrow {
         typedef std::string string_type;
@@ -34,18 +34,20 @@ namespace boost { namespace network { namespace http {
         std::wstring name, value;
     };
 
-    template <class Tag>
-    struct request_header
-    : mpl::if_<
-        is_default_string<Tag>,
-        request_header_narrow,
-        typename mpl::if_<
-            is_default_wstring<Tag>,
-            request_header_wide,
-            unsupported_tag<Tag>
-        >::type
-    >
-    {};
+    template <class String, class Enable=void>
+    struct request_header {
+      typedef unsupported_string<String> type;
+    };
+
+    template <class String>
+    struct request_header<String, typename enable_if<is_same<String, std::string> >::type> {
+      typedef request_header_narrow type;
+    };
+
+    template <class String>
+    struct request_header<String, typename enable_if<is_same<String, std::wstring> >::type> {
+      typedef request_header_wide type;
+    };
 
     inline void swap(request_header_narrow & l, request_header_narrow & r) {
         swap(l.name, r.name);
@@ -67,18 +69,20 @@ namespace boost { namespace network { namespace http {
         std::wstring name, value;
     };
 
-    template <class Tag>
-    struct response_header
-    : mpl::if_<
-        is_default_string<Tag>,
-        response_header_narrow,
-        typename mpl::if_<
-            is_default_wstring<Tag>,
-            response_header_wide,
-            unsupported_tag<Tag>
-        >::type
-    >
-    {};
+    template <class String, class Enable=void>
+    struct response_header {
+      typedef unsupported_string<String> type;
+    };
+
+    template <class String>
+    struct response_header<String, typename enable_if<is_same<String, std::wstring> >::type> {
+      typedef response_header_wide type;
+    };
+
+    template <class String>
+    struct response_header<String, typename enable_if<is_same<String, std::string> >::type> {
+      typedef response_header_narrow type;
+    };
 
     inline void swap(response_header_narrow & l, response_header_narrow & r) {
         std::swap(l.name, r.name);

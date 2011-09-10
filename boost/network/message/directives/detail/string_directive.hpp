@@ -6,11 +6,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/traits/string.hpp>
 #include <boost/variant/variant.hpp>
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
-#include <boost/network/support/is_pod.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>

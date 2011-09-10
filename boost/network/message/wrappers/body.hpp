@@ -7,7 +7,6 @@
 #ifndef __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
 #define __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
 
-#include <boost/network/traits/string.hpp>
 #include <boost/network/detail/wrapper_base.hpp>
 #include <boost/range/iterator.hpp>
 

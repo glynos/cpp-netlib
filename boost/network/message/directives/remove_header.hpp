@@ -8,9 +8,6 @@
 #define NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP
 
 
-#include <boost/network/traits/string.hpp>
-
-
 namespace boost { namespace network {
 
     template <class Tag>

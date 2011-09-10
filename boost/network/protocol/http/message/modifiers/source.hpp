@@ -6,11 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/protocol/http/support/client_or_server.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/concept/requires.hpp>
-#include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/message/directives.hpp>
 
 namespace boost { namespace network { namespace http {

@@ -7,9 +7,6 @@
 #define __NETWORK_MESSAGE_HPP__
 
 #include <boost/network/message_fwd.hpp>
-#include <boost/network/traits/string.hpp>
-#include <boost/network/traits/ostringstream.hpp>
-#include <boost/network/traits/headers_container.hpp>
 #include <boost/network/detail/directive_base.hpp>
 #include <boost/network/detail/wrapper_base.hpp>
 #include <boost/network/message/directives.hpp>

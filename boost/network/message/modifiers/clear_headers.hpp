@@ -6,8 +6,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_pod.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/not.hpp>

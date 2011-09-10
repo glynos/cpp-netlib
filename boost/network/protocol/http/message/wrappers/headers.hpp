@@ -7,9 +7,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/traits/headers_container.hpp>
-#include <boost/network/traits/string.hpp>
-
 namespace boost { namespace network { namespace http {
 
     template <class Message>

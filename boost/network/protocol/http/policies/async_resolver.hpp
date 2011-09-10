@@ -1,95 +1,37 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_RESOLVER_20100622
 #define BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_RESOLVER_20100622
 
-// Copyright Dean Michael Berris 2010.
+// Copyright 2011 Dean Michael Berris <dberris@google.com>.
+// Copyright 2011 Google, Inc. 
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/asio/placeholders.hpp>
-#include <boost/asio/strand.hpp>
+#include <utility>
+#include <boost/shared_ptr.hpp>
+#include <boost/asio/ip/udp.hpp>
 
 namespace boost { namespace network { namespace http { namespace policies {
 
-struct async_resolver : enable_shared_from_this<async_resolver> {
-  typedef asio::ip::resolver::iterator resolver_iterator;
-  typedef asio::ip::resolver::query resolver_query;
-  typedef std::pair<resolver_iterator, resolver_iterator> resolver_iterator_pair;
-  typedef boost::unordered_map<std::string, resolver_iterator_pair> endpoint_cache;
-  typedef boost::function<void(boost::system::error_code const &,resolver_iterator_pair)> resolve_completion_function;
-  typedef boost::function<void(resolver_type&,std::string,boost::uint16_t,resolve_completion_function)> resolve_function;
+struct async_resolver_pimpl;
+
+struct async_resolver {
+  typedef asio::ip::udp::resolver::iterator resolver_iterator;
+  typedef std::pair<resolver_iterator, resolver_iterator>
+          iterator_pair;
+  typedef function<void(system::error_code const &, iterator_pair)>
+          resolve_completion_function;
+
+  explicit async_resolver(asio::io_service & service);
+  void resolve(std::string const & host,
+               uint16_t port,
+               resolve_completion_function once_resolved);
+  void clear_resolved_cache();
+  ~async_resolver();
+
  protected:
-  bool cache_resolved_;
-  endpoint_cache endpoint_cache_;
-  boost::shared_ptr<boost::asio::io_service::strand> resolver_strand_;
-
-  async_resolver(bool cache_resolved):
-    cache_resolved_(cache_resolved),
-    endpoint_cache_()
-  {}
-
-  void resolve(
-      resolver_type & resolver_,
-      std::string const & host,
-      boost::uint16_t port,
-      resolve_completion_function once_resolved) {
-    if (cache_resolved_) {
-      typename endpoint_cache::iterator iter =
-          endpoint_cache_.find(boost::to_lower_copy(host));
-      if (iter != endpoint_cache_.end()) {
-        boost::system::error_code ignored;
-        once_resolved(ignored, iter->second);
-        return;
-      }
-    }
-
-            typename resolver_type::query q(
-                resolver_type::protocol_type::v4()
-                , host
-                , lexical_cast<std::string>(port));
-            resolver_.async_resolve(
-                q,
-                resolver_strand_->wrap(
-                    boost::bind(
-                        &async_resolver<Tag>::handle_resolve,
-                        async_resolver<Tag>::shared_from_this(),
-                        boost::to_lower_copy(host),
-                        once_resolved,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::iterator
-                        )
-                    )
-                );
-        }
-
-        void handle_resolve(
-            std::string const & host,
-            resolve_completion_function once_resolved,
-            boost::system::error_code const & ec,
-            resolver_iterator endpoint_iterator
-            )
-        {
-            typename endpoint_cache::iterator iter;
-            bool inserted = false;
-            if (!ec && cache_resolved_) {
-                boost::fusion::tie(iter, inserted) =
-                    endpoint_cache_.insert(
-                        std::make_pair(
-                            host,
-                            std::make_pair(
-                                endpoint_iterator,
-                                resolver_iterator()
-                                )
-                                )
-                                );
-                once_resolved(ec, iter->second);
-            } else {
-                once_resolved(ec, std::make_pair(endpoint_iterator,resolver_iterator()));
-            }
-        }
-
-    };
+  shared_ptr<async_resolver_pimpl> pimpl;
+};
 
 } // namespace policies
 
@@ -98,5 +40,9 @@ struct async_resolver : enable_shared_from_this<async_resolver> {
 } // namespace network
 
 } // namespace boost
+
+#ifdef BOOST_NETWORK_NO_LIB
+#include <boost/network/protocol/http/policies/async_resolver.ipp>
+#endif
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_RESOLVER_20100622

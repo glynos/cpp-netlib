@@ -7,8 +7,6 @@
 #ifndef __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
 #define __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
 
-#include <boost/network/traits/string.hpp>
-#include <boost/network/traits/headers_container.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/network/detail/wrapper_base.hpp>

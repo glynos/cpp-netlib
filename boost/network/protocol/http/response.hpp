@@ -32,7 +32,6 @@
 #include <boost/network/protocol/http/message/wrappers/source.hpp>
 #include <boost/network/protocol/http/message/wrappers/ready.hpp>
 
-#include <boost/network/protocol/http/message.hpp>
 #include <boost/network/protocol/http/message/async_message.hpp>
 #include <boost/network/protocol/http/message/message_base.hpp>
 #include <boost/network/protocol/http/response_concept.hpp>

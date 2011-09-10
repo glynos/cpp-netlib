@@ -6,14 +6,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_sync.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/static_assert.hpp>
 
-#include <boost/network/protocol/http/traits/connection_policy.hpp>
 #include <boost/network/protocol/http/client/async_impl.hpp>
 #include <boost/network/protocol/http/client/sync_impl.hpp>
 

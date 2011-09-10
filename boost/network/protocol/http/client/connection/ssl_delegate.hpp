@@ -12,8 +12,6 @@
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/network/support/is_default_string.hpp>
-#include <boost/network/support/is_default_wstring.hpp>
 
 namespace boost { namespace network { namespace http { namespace impl {
 
