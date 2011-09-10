@@ -12,6 +12,7 @@
 # include <boost/network/uri/encode.hpp>
 # include <boost/network/uri/decode.hpp>
 # include <boost/spirit/include/qi.hpp>
+# include <boost/fusion/include/std_pair.hpp>
 
 
 namespace boost {

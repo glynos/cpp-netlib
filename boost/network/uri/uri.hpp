@@ -11,10 +11,6 @@
 # include <boost/network/traits/string.hpp>
 # include <boost/network/constants.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
-# ifdef BOOST_NETWORK_NO_LIB
-#  include <boost/network/uri/detail/parse_uri.hpp>
-# endif // #ifdef BOOST_NETWORK_NO_LIB
-# include <boost/fusion/include/std_pair.hpp>
 # include <boost/fusion/sequence/intrinsic/at_c.hpp>
 # include <boost/algorithm/string.hpp>
 # include <boost/range/iterator_range.hpp>
