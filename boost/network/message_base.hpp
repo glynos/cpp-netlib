@@ -7,6 +7,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/function.hpp>
+#include <boost/range/iterator_range.hpp>
+
 namespace boost { namespace network {
 
 struct message_base {
@@ -16,6 +19,7 @@ struct message_base {
   virtual void append_header(std::string const & name,
                              std::string const & value) = 0;
   virtual void remove_headers(std::string const & name) = 0;
+  virtual void remove_headers() = 0;
   virtual void set_body(std::string const & body) = 0;
   virtual void append_body(std::string const & data) = 0;
 
