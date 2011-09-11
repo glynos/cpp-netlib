@@ -9,8 +9,6 @@
 
 #include <boost/cstdint.hpp>
 
-#include <boost/network/protocol/http/message/traits/version.hpp>
-
 #include <boost/network/protocol/http/message/directives/status_message.hpp>
 #include <boost/network/protocol/http/message/directives/version.hpp>
 #include <boost/network/protocol/http/message/directives/status.hpp>

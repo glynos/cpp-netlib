@@ -10,10 +10,6 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/concept_check.hpp>
-#include <boost/network/message/traits/body.hpp>
-#include <boost/network/message/traits/source.hpp>
-#include <boost/network/message/traits/destination.hpp>
-#include <boost/network/message/traits/headers.hpp>
 #include <boost/network/message/wrappers.hpp>
 #include <boost/network/message/transformers.hpp>
 #include <boost/network/message/directives.hpp>
@@ -29,13 +25,11 @@ namespace boost { namespace network {
         BOOST_CONCEPT_USAGE(Message) {
             M message_;
             swap(message, message_);
-
-            typedef typename traits::body<M>::type body_type;
-            typedef typename traits::source<M>::type source_type;
-            typedef typename traits::destination<M>::type destination_type;
-
-            typedef typename traits::header_key<M>::type header_key_type;
-            typedef typename traits::header_value<M>::type header_value_type;
+            typedef std::string source_type;
+            typedef std::string destination_type;
+            typedef std::string body_type;
+            typedef std::string header_key_type;
+            typedef std::string header_value_type;
 
             headers_container_type headers_ = headers(message);
             string_type body_ = body(message);

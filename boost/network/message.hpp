@@ -20,7 +20,11 @@
 #include <boost/network/message/modifiers/destination.hpp>
 #include <boost/network/message/modifiers/body.hpp>
 
+#ifdef BOOST_NETWORK_DEBUG
 #include <boost/network/message/message_concept.hpp>
+#endif
+
+#include <boost/network/message/basic_message.hpp>
 
 /** message.hpp
  *
@@ -34,114 +38,98 @@ namespace boost { namespace network {
 
     /** The common message type.
      */
-    template <class Tag>
-    struct basic_message {
-        public:
-
-        typedef Tag tag;
-
-        typedef typename headers_container<Tag>::type headers_container_type;
-        typedef typename headers_container_type::value_type header_type;
-        typedef typename string<Tag>::type string_type;
+    template <class String>
+    struct basic_message : basic_storage_base {
+        typedef std::pair<String, String> header_type;
+        typedef std::multimap<String, String> headers_container_type;
+        typedef String string_type;
 
         basic_message()
-            : _headers(), _body(), _source(), _destination()
-        { }
+        : basic_storage_base()
+        {}
 
         basic_message(const basic_message & other)
-            : _headers(other._headers), _body(other._body), _source(other._source), _destination(other._destination)
-        { }
+        : basic_storage_base(other)
+        {}
 
-        basic_message & operator=(basic_message<Tag> rhs) {
+        basic_message & operator=(basic_message<String> rhs) {
             rhs.swap(*this);
             return *this;
         }
 
-        void swap(basic_message<Tag> & other) {
-            std::swap(other._headers, _headers);
-            std::swap(other._body, _body);
-            std::swap(other._source, _source);
-            std::swap(other._destination, _destination);
+        void swap(basic_message<String> & other) {
+          basic_storage_base & this_ = *this,
+                             & other_ = other;
+          swap(this_, other_);
         }
 
         headers_container_type & headers() {
-            return _headers;
+          return pimpl->headers_;
         }
 
         void headers(headers_container_type const & headers_) const {
-            _headers = headers_;
+          pimpl->headers_ = headers_;
         }
 
         void add_header(typename headers_container_type::value_type const & pair_) const {
-            _headers.insert(pair_);
+          this->append_header(pair_.first, pair_.second);
         }
 
         void remove_header(typename headers_container_type::key_type const & key) const {
-            _headers.erase(key);
+          this->remove_headers(key);
         }
 
         headers_container_type const & headers() const {
-            return _headers;
+          return pimpl->headers_;
         }
 
         string_type & body() {
-            return _body;
+          return pimpl->body_;
         }
 
         void body(string_type const & body_) const {
-            _body = body_;
+          this->set_body(body_);
         }
 
         string_type const & body() const {
-            return _body;
+          return pimpl->body_;
         }
         
         string_type & source() {
-            return _source;
+          return pimpl->source_;
         }
 
         void source(string_type const & source_) const {
-            _source = source_;
+          this->set_source(source_);
         }
 
         string_type const & source() const {
-            return _source;
+          return pimpl->source_;
         }
 
         string_type & destination() {
-            return _destination;
+          return pimpl->destination_;
         }
 
         void destination(string_type const & destination_) const {
-            _destination = destination_;
+          this->set_destination(destination_);
         }
 
         string_type const & destination() const {
-            return _destination;
+          return pimpl->destination_;
         }
-
-        private:
-        
-        friend struct detail::directive_base<Tag> ;
-        friend struct detail::wrapper_base<Tag, basic_message<Tag> > ;
-
-        mutable headers_container_type _headers;
-        mutable string_type _body;
-        mutable string_type _source;
-        mutable string_type _destination;
     };
 
-    template <class Tag>
-    inline void swap(basic_message<Tag> & left, basic_message<Tag> & right) {
-        // swap for ADL
+    template <class String>
+    inline void swap(basic_message<String> & left, basic_message<String> & right) {
         left.swap(right);
     }
     
     // Commenting this out as we don't need to do this anymore.
     // BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_string> >));
     // BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_wstring> >));
-    typedef basic_message<tags::default_string> message;
-    typedef basic_message<tags::default_wstring> wmessage;
+    typedef basic_message<std::string> message;
+    typedef basic_message<std::wstring> wmessage;
 
 } // namespace network
 } // namespace boost
