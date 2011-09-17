@@ -10,37 +10,27 @@
 namespace boost {
 namespace network {
 namespace uri {
-template <
-    class ValueType
-    >
 struct fragment_directive {
 
-    explicit fragment_directive(const ValueType &value)
-        : value(value)
+    explicit fragment_directive(const std::string &fragment)
+        : fragment(fragment)
     {}
 
-    template <
-        class String
-      , template <class> class Uri
-        >
-    void operator () (Uri<String> &uri) const {
-        String encoded_value;
+    void operator () (uri &uri_) const {
+        std::string encoded_fragment;
         static const char separator[] = {'#'};
-        uri.append(boost::begin(separator), boost::end(separator));
-        encode(boost::as_literal(value), std::back_inserter(encoded_value));
-        uri.append(encoded_value);
+        uri_.append(boost::begin(separator), boost::end(separator));
+        encode(fragment, std::back_inserter(encoded_fragment));
+        uri_.append(encoded_fragment);
     }
 
-    const ValueType &value;
+    std::string fragment;
 
 };
 
-template <
-    class T
-    >
 inline
-fragment_directive<T> fragment(const T &value)  {
-    return fragment_directive<T>(value);
+fragment_directive fragment(const std::string &fragment)  {
+    return fragment_directive(fragment);
 }
 } // namespace uri
 } // namespace network

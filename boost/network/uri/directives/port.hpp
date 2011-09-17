@@ -2,9 +2,8 @@
 # define __BOOST_NETWORK_URI_DIRECTIVES_PORT_INC__
 
 
-# include <boost/utility/enable_if.hpp>
-# include <boost/type_traits/is_integral.hpp>
 # include <boost/cstdint.hpp>
+# include <boost/lexical_cast.hpp>
 # include <boost/range/begin.hpp>
 # include <boost/range/end.hpp>
 
@@ -12,64 +11,48 @@
 namespace boost {
 namespace network {
 namespace uri {
-template <
-    class ValueType
-    >
 struct port_directive {
 
-    explicit port_directive(const ValueType &value)
-        : value(value)
+    explicit port_directive(const std::string &port)
+        : port(port)
     {}
 
-    template <
-        class String
-      , template <class> class Uri
-        >
-    void operator () (Uri<String> &uri) const {
+    void operator () (uri &uri_) const {
         static const char separator[] = {':'};
-        uri.append(boost::begin(separator), boost::end(separator));
-        uri.append(value);
+        uri_.append(boost::begin(separator), boost::end(separator));
+        uri_.append(port);
     }
 
-    const ValueType &value;
+    std::string port;
 
 };
 
 
 struct port_directive_us {
 
-    explicit port_directive_us(boost::uint16_t value)
-        : value(value)
+    explicit port_directive_us(boost::uint16_t port)
+        : port(port)
     {}
 
-    template <
-        class String
-      , template <class> class Uri
-        >
-    void operator () (Uri<String> &uri) const {
+    void operator () (uri &uri_) const {
         static const char separator[] = {':'};
-        uri.append(boost::begin(separator), boost::end(separator));
-        String port = boost::lexical_cast<String>(value);
-        uri.append(port);
+        uri_.append(boost::begin(separator), boost::end(separator));
+        std::string port_ = boost::lexical_cast<std::string>(port);
+        uri_.append(port_);
     }
 
-    boost::uint16_t value;
+    boost::uint16_t port;
 
 };
 
-
-template <
-    class T
-    >
 inline
-port_directive<T> port(const T &value,
-                       typename boost::disable_if<typename boost::is_integral<T>::type>::type * = 0)  {
-    return port_directive<T>(value);
+port_directive port(const std::string &port)  {
+    return port_directive(port);
 }
 
 inline
-port_directive_us port(boost::uint16_t value) {
-    return port_directive_us(value);
+port_directive_us port(boost::uint16_t port) {
+    return port_directive_us(port);
 }
 } // namespace uri
 } // namespace network
