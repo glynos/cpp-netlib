@@ -28,28 +28,21 @@ namespace detail {
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
            uri_parts<std::string> &parts);
-
-bool parse(std::wstring::const_iterator first,
-           std::wstring::const_iterator last,
-           uri_parts<std::wstring> &parts);
 } // namespace detail
 
 
-template <
-    class String
-    >
-class basic_uri
-    : public boost::equality_comparable<basic_uri<String> > {
+class uri
+    : public boost::equality_comparable<uri> {
 
 public:
 
-    typedef String string_type;
-    typedef typename string_type::iterator iterator;
+    typedef std::string string_type;
+    typedef string_type::iterator iterator;
     typedef boost::iterator_range<iterator> range_type;
-    typedef typename string_type::const_iterator const_iterator;
+    typedef string_type::const_iterator const_iterator;
     typedef boost::iterator_range<const_iterator> const_range_type;
 
-    basic_uri()
+    uri()
         : is_valid_(false) {
 
     }
@@ -57,38 +50,38 @@ public:
     template <
         class FwdIter
         >
-    basic_uri(const FwdIter &first, const FwdIter &last)
+    uri(const FwdIter &first, const FwdIter &last)
         : uri_(first, last), is_valid_(false) {
         parse();
     }
 
-    basic_uri(const string_type &uri)
+    uri(const string_type &uri)
         : uri_(uri), is_valid_(false) {
         parse();
     }
 
-    basic_uri(const basic_uri &other)
+    uri(const uri &other)
         : uri_(other.uri_),
           uri_parts_(other.uri_parts_),
           is_valid_(other.is_valid_) {
 
     }
 
-    basic_uri &operator = (const basic_uri &other) {
-        basic_uri(other).swap(*this);
+    uri &operator = (const uri &other) {
+        uri(other).swap(*this);
         return *this;
     }
 
-    basic_uri &operator = (const string_type &uri) {
-        basic_uri(uri).swap(*this);
+    uri &operator = (const string_type &uri_) {
+        uri(uri_).swap(*this);
         return *this;
     }
 
-    ~basic_uri() {
+    ~uri() {
 
     }
 
-    void swap(basic_uri &other) {
+    void swap(uri &other) {
         boost::swap(uri_, other.uri_);
         parse();
     }
@@ -212,168 +205,111 @@ private:
     void parse();
 
     string_type uri_;
-    detail::uri_parts<String> uri_parts_;
+    detail::uri_parts<std::string> uri_parts_;
     bool is_valid_;
 
 };
 
-template <
-    class String
-    >
 inline
-void basic_uri<String>::parse() {
+void uri::parse() {
     const_iterator first(boost::begin(uri_)), last(boost::end(uri_));
     is_valid_ = detail::parse(first, last, uri_parts_);
 }
 
-template <
-    class String
-    >
 inline
-String scheme(const basic_uri<String> &uri) {
-    return uri.scheme();
+std::string scheme(const uri &uri_) {
+    return uri_.scheme();
 }
 
-template <
-    class String
-    >
 inline
-String user_info(const basic_uri<String> &uri) {
-    return uri.user_info();
+std::string user_info(const uri &uri_) {
+    return uri_.user_info();
 }
 
-template <
-    class String
-    >
 inline
-String host(const basic_uri<String> &uri) {
-    return uri.host();
+std::string host(const uri &uri_) {
+    return uri_.host();
 }
 
-template <
-    class String
-    >
 inline
-String port(const basic_uri<String> &uri) {
-    return uri.port();
+std::string port(const uri &uri_) {
+    return uri_.port();
 }
 
-template <
-    class String
-    >
 inline
-boost::optional<unsigned short> port_us(const basic_uri<String> &uri) {
-    String port = uri.port();
+boost::optional<unsigned short> port_us(const uri &uri_) {
+    std::string port = uri_.port();
     return (port.empty())?
         boost::optional<unsigned short>() :
         boost::optional<unsigned short>(boost::lexical_cast<unsigned short>(port));
 }
 
-template <
-    class String
-    >
 inline
-String path(const basic_uri<String> &uri) {
-    return uri.path();
+std::string path(const uri &uri_) {
+    return uri_.path();
 }
 
-template <
-    class String
-    >
 inline
-String query(const basic_uri<String> &uri) {
-    return uri.query();
+std::string query(const uri &uri_) {
+    return uri_.query();
 }
 
-template <
-    class String
-    >
 inline
-String fragment(const basic_uri<String> &uri) {
-    return uri.fragment();
+std::string fragment(const uri &uri_) {
+    return uri_.fragment();
 }
 
-template <
-    class String
-    >
 inline
-String authority(const basic_uri<String> &uri) {
-    typename basic_uri<String>::const_range_type user_info(uri.user_info_range());
-    typename basic_uri<String>::const_range_type port(uri.port_range());
-    return String(user_info.begin(), port.end());
+std::string authority(const uri &uri_) {
+    uri::const_range_type user_info(uri_.user_info_range());
+    uri::const_range_type port(uri_.port_range());
+    return std::string(user_info.begin(), port.end());
 }
 
-template <
-    class String
-    >
 inline
-String netloc(const basic_uri<String> &uri) {
-    return authority(uri);
+std::string netloc(const uri &uri_) {
+    return authority(uri_);
 }
 
-template <
-    class String
-    >
 inline
-bool valid(const basic_uri<String> &uri) {
-    return uri.is_valid();
+bool valid(const uri &uri_) {
+    return uri_.is_valid();
 }
 
-template <
-    class String
-    >
 inline
-bool is_valid(const basic_uri<String> &uri) {
-    return valid(uri);
+bool is_valid(const uri &uri_) {
+    return valid(uri_);
 }
 
-template <
-    class String
-    >
 inline
-bool operator == (const basic_uri<String> &lhs, const basic_uri<String> &rhs) {
+bool operator == (const uri &lhs, const uri &rhs) {
     return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 } // namespace uri
 } // namespace network
 
-template <
-    class String
-    >
 inline
-typename network::uri::basic_uri<String>::iterator begin(network::uri::basic_uri<String> &uri) {
-    return uri.begin();
+network::uri::uri::iterator begin(network::uri::uri &uri_) {
+    return uri_.begin();
 }
 
-template <
-    class String
-    >
 inline
-typename network::uri::basic_uri<String>::iterator end(network::uri::basic_uri<String> &uri) {
-    return uri.end();
+network::uri::uri::iterator end(network::uri::uri &uri_) {
+    return uri_.end();
 }
 
-template <
-    class String
-    >
 inline
-typename network::uri::basic_uri<String>::const_iterator begin(const network::uri::basic_uri<String> &uri) {
-    return uri.begin();
+network::uri::uri::const_iterator begin(const network::uri::uri &uri_) {
+    return uri_.begin();
 }
 
-template <
-    class String
-    >
 inline
-typename network::uri::basic_uri<String>::const_iterator end(const network::uri::basic_uri<String> &uri) {
-    return uri.end();
+network::uri::uri::const_iterator end(const network::uri::uri &uri_) {
+    return uri_.end();
 }
 
-template <
-    class String
-    >
 inline
-void swap(network::uri::basic_uri<String> &lhs, network::uri::basic_uri<String> &rhs) {
+void swap(network::uri::uri &lhs, network::uri::uri &rhs) {
     lhs.swap(rhs);
 }
 } // namespace boost

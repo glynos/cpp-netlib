@@ -10,13 +10,8 @@ namespace boost {
 namespace network {
 namespace uri {
 inline
-std::ostream &operator << (std::ostream &os, const basic_uri<std::string> &uri) {
-    return os << uri.string();
-}
-
-inline
-std::wostream &operator << (std::wostream &os, const basic_uri<std::wstring> &uri) {
-    return os << uri.string();
+std::ostream &operator << (std::ostream &os, const uri &uri_) {
+    return os << uri_.string();
 }
 } // namespace uri
 } // namespace network
