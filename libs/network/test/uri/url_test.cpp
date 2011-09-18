@@ -16,8 +16,34 @@
 using namespace boost::network;
 
 
-BOOST_AUTO_TEST_CASE(uri_test) {
+BOOST_AUTO_TEST_CASE(basic_uri_range_test) {
     uri::uri instance("http://www.example.com/");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK(boost::equal(instance.scheme_range(), boost::as_literal("http")));
+    BOOST_CHECK(boost::equal(instance.user_info_range(), boost::as_literal("")));
+    BOOST_CHECK(boost::equal(instance.host_range(), boost::as_literal("www.example.com")));
+    BOOST_CHECK(boost::equal(instance.port_range(), boost::as_literal("")));
+    BOOST_CHECK(boost::equal(instance.path_range(), boost::as_literal("/")));
+    BOOST_CHECK(boost::equal(instance.query_range(), boost::as_literal("")));
+    BOOST_CHECK(boost::equal(instance.fragment_range(), boost::as_literal("")));
+}
+
+BOOST_AUTO_TEST_CASE(full_uri_range_test) {
+    uri::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK(boost::equal(instance.scheme_range(), boost::as_literal("http")));
+    BOOST_CHECK(boost::equal(instance.user_info_range(), boost::as_literal("user:password")));
+    BOOST_CHECK(boost::equal(instance.host_range(), boost::as_literal("www.example.com")));
+    BOOST_CHECK(boost::equal(instance.port_range(), boost::as_literal("80")));
+    BOOST_CHECK(boost::equal(instance.path_range(), boost::as_literal("/path")));
+    BOOST_CHECK(boost::equal(instance.query_range(), boost::as_literal("query")));
+    BOOST_CHECK(boost::equal(instance.fragment_range(), boost::as_literal("fragment")));
+}
+
+BOOST_AUTO_TEST_CASE(basic_uri_test) {
+    uri::uri instance("http://www.example.com/");
+    uri::uri::const_range_type scheme = instance.scheme_range();
+    uri::uri::const_range_type user_info = instance.host_range();
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
@@ -144,31 +170,27 @@ BOOST_AUTO_TEST_CASE(authority_test) {
 }
 
 BOOST_AUTO_TEST_CASE(http_query_map_test) {
-    uri::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+    uri::uri instance("http://user:password@www.example.com:80/path?query=something#fragment");
     BOOST_REQUIRE(uri::valid(instance));
-    const std::string key("query");
-    const std::string value;
 
     std::map<std::string, std::string> queries;
     uri::query_map(instance, queries);
     BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(1));
-    BOOST_CHECK_EQUAL(queries.begin()->first, key);
-    BOOST_CHECK_EQUAL(queries.begin()->second, value);
+    BOOST_CHECK_EQUAL(queries.begin()->first, "query");
+    BOOST_CHECK_EQUAL(queries.begin()->second, "something");
 }
 
 BOOST_AUTO_TEST_CASE(xmpp_query_map_test) {
     uri::uri instance("xmpp:example-node@example.com?message;subject=Hello%20World");
     BOOST_REQUIRE(uri::valid(instance));
-    const std::string key_1("message"), key_2("subject");
-    const std::string value_1, value_2("Hello%20World");
 
     std::map<std::string, std::string> queries;
     uri::query_map(instance, queries);
     BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(2));
-    BOOST_CHECK_EQUAL(queries.begin()->first, key_1);
-    BOOST_CHECK_EQUAL(queries.begin()->second, value_1);
-    BOOST_CHECK_EQUAL((++queries.begin())->first, key_2);
-    BOOST_CHECK_EQUAL((++queries.begin())->second, value_2);
+    BOOST_CHECK_EQUAL(queries.begin()->first, "message");
+    BOOST_CHECK_EQUAL(queries.begin()->second, "");
+    BOOST_CHECK_EQUAL((++queries.begin())->first, "subject");
+    BOOST_CHECK_EQUAL((++queries.begin())->second, "Hello%20World");
 }
 
 BOOST_AUTO_TEST_CASE(range_test)

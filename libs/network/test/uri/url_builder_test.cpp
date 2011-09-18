@@ -70,10 +70,9 @@ BOOST_AUTO_TEST_CASE(encoded_path_test)
     instance << uri::scheme("http")
              << uri::host("www.example.com")
              << uri::port(8000)
-             << uri::encoded_path("/Path%20With%20%28Some%29%20Encoded%20Characters%21")
-             //<< uri::path(uri::encoded("/Path%20With%20%28Some%29%20Encoded%20Characters%21")
+             << uri::encoded_path("/Path With (Some) Encoded Characters!")
         ;
-    std::cout << instance << std::endl;
+        ;
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
@@ -141,24 +140,17 @@ BOOST_AUTO_TEST_CASE(from_root_test)
 //    BOOST_CHECK_EQUAL(uri::path(instance), "/");
 //}
 
-//BOOST_AUTO_TEST_CASE(encoded_null_char_test)
-//{
-//    typedef uri::uri uri_type;
-//    typedef uri_type::string_type string_type;
-//
-//    const std::string scheme("http");
-//    const std::string host("www.example.com");
-//    const std::string path("/");
-//
-//    uri_type instance;
-//    // there is a potential bug in the way we process ranges if the
-//    // strings are null terminated.
-//    instance << uri::scheme("http")
-//             << uri::host("www.example.com")
-//             << uri::encoded_path("/")
-//        ;
-//    BOOST_REQUIRE(uri::valid(instance));
-//    BOOST_CHECK_EQUAL(uri::scheme(instance), scheme);
-//    BOOST_CHECK_EQUAL(uri::host(instance), host);
-//    BOOST_CHECK_EQUAL(uri::path(instance), path);
-//}
+BOOST_AUTO_TEST_CASE(encoded_null_char_test)
+{
+    // there is a potential bug in the way we process ranges if the
+    // strings are null terminated.
+    uri::uri instance;
+    instance << uri::scheme("http")
+             << uri::host("www.example.com")
+             << uri::encoded_path("/")
+        ;
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
+    BOOST_CHECK_EQUAL(uri::path(instance), "/");
+}

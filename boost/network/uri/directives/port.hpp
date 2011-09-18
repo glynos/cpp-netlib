@@ -17,31 +17,19 @@ struct port_directive {
         : port(port)
     {}
 
-    void operator () (uri &uri_) const {
-        static const char separator[] = {':'};
-        uri_.append(boost::begin(separator), boost::end(separator));
-        uri_.append(port);
+    explicit port_directive(boost::uint16_t port)
+        : port(boost::lexical_cast<std::string>(port))
+    {}
+
+    template <
+        class Uri
+        >
+    void operator () (Uri &uri) const {
+        uri.append(":");
+        uri.append(port);
     }
 
     std::string port;
-
-};
-
-
-struct port_directive_us {
-
-    explicit port_directive_us(boost::uint16_t port)
-        : port(port)
-    {}
-
-    void operator () (uri &uri_) const {
-        static const char separator[] = {':'};
-        uri_.append(boost::begin(separator), boost::end(separator));
-        std::string port_ = boost::lexical_cast<std::string>(port);
-        uri_.append(port_);
-    }
-
-    boost::uint16_t port;
 
 };
 
@@ -51,8 +39,8 @@ port_directive port(const std::string &port)  {
 }
 
 inline
-port_directive_us port(boost::uint16_t port) {
-    return port_directive_us(port);
+port_directive port(boost::uint16_t port) {
+    return port_directive(port);
 }
 } // namespace uri
 } // namespace network

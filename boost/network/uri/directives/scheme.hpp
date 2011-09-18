@@ -15,10 +15,12 @@ struct scheme_directive {
         : scheme(scheme)
     {}
 
-    void operator () (uri &uri_) const {
-        static const char separator[] = {':', '/', '/'};
-        uri_.append(scheme);
-        uri_.append(boost::begin(separator), boost::end(separator));
+    template <
+        class Uri
+        >
+    void operator () (Uri &uri) const {
+        uri.append(scheme);
+        uri.append("://");
     }
 
     std::string scheme;

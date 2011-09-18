@@ -16,12 +16,12 @@ struct fragment_directive {
         : fragment(fragment)
     {}
 
-    void operator () (uri &uri_) const {
-        std::string encoded_fragment;
-        static const char separator[] = {'#'};
-        uri_.append(boost::begin(separator), boost::end(separator));
-        encode(fragment, std::back_inserter(encoded_fragment));
-        uri_.append(encoded_fragment);
+    template <
+        class Uri
+        >
+    void operator () (Uri &uri) const {
+        uri.append("#");
+        uri.append(fragment);
     }
 
     std::string fragment;
