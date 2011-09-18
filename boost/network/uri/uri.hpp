@@ -282,6 +282,21 @@ bool is_valid(const uri &uri_) {
 }
 
 inline
+bool is_hierarchical(const uri &uri_) {
+    //uri::const_range_type scheme = uri_.scheme_range();
+    //uri::const_range_type user_info = uri_.user_info_range();
+    //return is_valid(uri_) &&
+    //    boost::equal(std::make_pair(boost::end(scheme),
+    //                                boost::begin(user_info)),
+    //                 boost::as_literal("://"));
+    return false;
+}
+
+bool is_opaque(const uri &uri_) {
+    return false;
+}
+
+inline
 bool operator == (const uri &lhs, const uri &rhs) {
     return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }

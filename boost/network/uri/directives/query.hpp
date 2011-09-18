@@ -16,11 +16,12 @@ struct query_directive {
         : query(query)
     {}
 
-    void operator () (uri &uri_) const {
-        std::string encoded_query;
-        static const char separator[] = {'?'};
-        uri_.append(boost::begin(separator), boost::end(separator));
-        uri_.append(query);
+    template <
+        class Uri
+        >
+    void operator () (Uri &uri) const {
+        uri.append("?");
+        uri.append(query);
     }
 
     std::string query;
@@ -38,24 +39,22 @@ struct query_key_query_directive {
         : key(key), query(query)
     {}
 
-    void operator () (uri &uri_) const {
+    template <
+        class Uri
+        >
+    void operator () (Uri &uri) const {
         std::string encoded_key, encoded_query;
-        static const char qmark[] = {'?'};
-        static const char equal[] = {'='};
-        static const char scolon[] = {';'};
-        if (!uri_.query_range())
+        if (!uri.query_range())
         {
-            uri_.append(boost::begin(qmark), boost::end(qmark));
+            uri.append("?");
         }
         else
         {
-            uri_.append(boost::begin(scolon), boost::end(scolon));
+            uri.append(";");
         }
-        encode(key, std::back_inserter(encoded_key));
-        uri_.append(encoded_key);
-        uri_.append(boost::begin(equal), boost::end(equal));
-        encode(query, std::back_inserter(encoded_query));
-        uri_.append(encoded_query);
+        uri.append(key);
+        uri.append("=");
+        uri.append(query);
     }
 
     std::string key;

@@ -15,10 +15,12 @@ struct user_info_directive {
         : user_info(user_info)
     {}
 
-    void operator () (uri &uri_) const {
-        static const char separator[] = {'@'};
-        uri_.append(user_info);
-        uri_.append(boost::begin(separator), boost::end(separator));
+    template <
+        class Uri
+        >
+    void operator () (Uri &uri) const {
+        uri.append(user_info);
+        uri.append("@");
     }
 
     std::string user_info;

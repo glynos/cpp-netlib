@@ -15,8 +15,11 @@ struct host_directive {
         : host(host)
     {}
 
-    void operator () (uri &uri_) const {
-        uri_.append(host);
+    template <
+        class Uri
+        >
+    void operator () (Uri &uri) const {
+        uri.append(host);
     }
 
     std::string host;
