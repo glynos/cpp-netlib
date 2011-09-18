@@ -20,12 +20,12 @@ BOOST_AUTO_TEST_CASE(basic_uri_range_test) {
     uri::uri instance("http://www.example.com/");
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(instance.scheme_range(), boost::as_literal("http")));
-    BOOST_CHECK(boost::equal(instance.user_info_range(), boost::as_literal("")));
+    BOOST_CHECK(boost::empty(instance.user_info_range()));
     BOOST_CHECK(boost::equal(instance.host_range(), boost::as_literal("www.example.com")));
-    BOOST_CHECK(boost::equal(instance.port_range(), boost::as_literal("")));
+    BOOST_CHECK(boost::empty(instance.port_range()));
     BOOST_CHECK(boost::equal(instance.path_range(), boost::as_literal("/")));
-    BOOST_CHECK(boost::equal(instance.query_range(), boost::as_literal("")));
-    BOOST_CHECK(boost::equal(instance.fragment_range(), boost::as_literal("")));
+    BOOST_CHECK(boost::empty(instance.query_range()));
+    BOOST_CHECK(boost::empty(instance.fragment_range()));
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_range_test) {
@@ -42,8 +42,6 @@ BOOST_AUTO_TEST_CASE(full_uri_range_test) {
 
 BOOST_AUTO_TEST_CASE(basic_uri_test) {
     uri::uri instance("http://www.example.com/");
-    uri::uri::const_range_type scheme = instance.scheme_range();
-    uri::uri::const_range_type user_info = instance.host_range();
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
