@@ -72,8 +72,9 @@ public:
         return *this;
     }
 
-    uri &operator = (const string_type &uri_) {
-        uri(uri_).swap(*this);
+    uri &operator = (const string_type &uri) {
+        uri_ = uri;
+        parse();
         return *this;
     }
 

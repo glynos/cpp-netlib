@@ -198,3 +198,13 @@ BOOST_AUTO_TEST_CASE(range_test)
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(instance, url));
 }
+
+BOOST_AUTO_TEST_CASE(issue_67_test)
+{
+    const std::string site_name("http://www.google.com");
+    uri::uri bar0;
+    uri::uri bar1 = site_name;
+    bar0 = site_name;
+    BOOST_CHECK(uri::is_valid(bar0));
+    BOOST_CHECK(uri::is_valid(bar1));
+}
