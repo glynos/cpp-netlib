@@ -8,7 +8,7 @@
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
 set(CPP-NETLIB_URI_SRCS uri/parse.cpp)
-add_library(cppnetlib-uri-parsers ${CPP-NETLIB_URI_SRCS})
+add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
 
 set(CPP-NETLIB_HTTP_SERVER_SRCS server_request_parsers_impl.cpp)
 add_library(cppnetlib-server-parsers ${CPP-NETLIB_HTTP_SERVER_SRCS})
