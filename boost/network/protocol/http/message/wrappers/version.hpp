@@ -9,38 +9,27 @@
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_response;
+namespace impl {
 
-    namespace impl {
+struct version_wrapper {
+  explicit version_wrapper(response_base & response_);
+  operator std::string() const;
+ private:
+  response_base & response_;
+  mutable optional<std::string> cache_;
+};
 
-        template <class Tag>
-        struct version_wrapper {
+inline std::ostream & operator<< (std::ostream & os, version_wrapper const & version) {
+  return os << static_cast<std::string>(version);
+}
 
-            typedef typename string<Tag>::type string_type;
+} // namespace impl
 
-            basic_response<Tag> const & response_;
-
-            explicit version_wrapper(basic_response<Tag> const & response)
-                : response_(response) {}
-
-            version_wrapper(version_wrapper const & other)
-                : response_(other.response_) {}
-
-            operator string_type () {
-                return response_.version();
-            }
-
-        };
-
-    } // namespace impl
-
-    template <class Tag>
-    inline 
-    impl::version_wrapper<Tag>
-    version(basic_response<Tag> const & response) {
-        return impl::version_wrapper<Tag>(response);
-    }
+inline 
+impl::version_wrapper
+version(response_base & response) {
+  return impl::version_wrapper(response);
+}
 
 } // namespace http
 

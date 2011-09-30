@@ -16,6 +16,8 @@ namespace impl {
 struct source_wrapper {
   explicit source_wrapper(message_base & message_);
   operator std::string () const;
+ private:
+  message_base & message_;
 };
 
 } // namespace impl

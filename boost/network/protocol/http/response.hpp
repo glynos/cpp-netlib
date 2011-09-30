@@ -9,6 +9,8 @@
 
 #include <boost/cstdint.hpp>
 
+struct response_base;
+
 #include <boost/network/protocol/http/message/directives/status_message.hpp>
 #include <boost/network/protocol/http/message/directives/version.hpp>
 #include <boost/network/protocol/http/message/directives/status.hpp>
@@ -18,60 +20,15 @@
 #include <boost/network/protocol/http/message/modifiers/version.hpp>
 #include <boost/network/protocol/http/message/modifiers/status.hpp>
 #include <boost/network/protocol/http/message/modifiers/status_message.hpp>
-#include <boost/network/protocol/http/message/modifiers/source.hpp>
-#include <boost/network/protocol/http/message/modifiers/destination.hpp>
-#include <boost/network/protocol/http/message/modifiers/headers.hpp>
-#include <boost/network/protocol/http/message/modifiers/body.hpp>
 
 #include <boost/network/protocol/http/message/wrappers/version.hpp>
 #include <boost/network/protocol/http/message/wrappers/status.hpp>
 #include <boost/network/protocol/http/message/wrappers/status_message.hpp>
-#include <boost/network/protocol/http/message/wrappers/destination.hpp>
-#include <boost/network/protocol/http/message/wrappers/source.hpp>
 #include <boost/network/protocol/http/message/wrappers/ready.hpp>
 
-#include <boost/network/protocol/http/message/async_message.hpp>
-#include <boost/network/protocol/http/message/message_base.hpp>
 #include <boost/network/protocol/http/response_concept.hpp>
 
 namespace boost { namespace network { namespace http {
-
-    template <class Tag>
-    struct basic_response : public message_base<Tag>::type {
-
-        typedef typename string<Tag>::type string_type;
-
-    private:
-        typedef typename message_base<Tag>::type base_type;
-
-    public:
-
-        typedef Tag tag;
-
-        basic_response()
-        : base_type()
-        {}
-
-        basic_response(basic_response const & other)
-        : base_type(other)
-        {}
-
-        basic_response & operator=(basic_response rhs) {
-            rhs.swap(*this);
-            return *this;
-        };
-
-        void swap(basic_response & other) {
-            base_type & base_ref(other),
-                & this_ref(*this);
-            std::swap(this_ref, base_ref);
-        };
-    };
-
-    template <class Tag>
-    inline void swap(basic_response<Tag> & lhs, basic_response<Tag> & rhs) {
-        lhs.swap(rhs);
-    }
 
 } // namespace http
 

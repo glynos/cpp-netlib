@@ -7,32 +7,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/thread/future.hpp>
-#include <boost/mpl/if.hpp>
+#include <boost/network/protocol/http/response_base.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_response;
-
-    namespace impl {
-
-        template <class Tag, class T>
-        void version(basic_response<Tag> & response, T const & value, mpl::false_ const &) {
-            response << boost::network::http::version(value);
-        }
-
-        template <class Tag, class T>
-        void version(basic_response<Tag> & response, T const & future, mpl::true_ const &) {
-            response.version(future);
-        }
-
-    } // namespace impl
-
-    template <class Tag, class T>
-    void version(basic_response<Tag> & response, T const & value) {
-        impl::version(response, value, is_async<Tag>());
-    }
+inline void version(response_base & response, std::string const & value) {
+  response.set_version(value);
+}
 
 } // namespace http
 

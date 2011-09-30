@@ -23,9 +23,9 @@ namespace boost { namespace network { namespace http {
             R response_;
             swap(response, response_); // swappable via ADL
 
-            typedef typename traits::version<R>::type version_type;
-            typedef typename traits::status<R>::type status_type;
-            typedef typename traits::status_message<R>::type status_message_type;
+            typedef std::string version_type;
+            typedef std::string status_type;
+            typedef std::string status_message_type;
 
             response << version(version_type()) // version directive
                 << status(status_type()) // status directive

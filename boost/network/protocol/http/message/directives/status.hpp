@@ -11,6 +11,7 @@
 #include <boost/thread/future.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/network/protocol/http/response_base.hpp>
 
 namespace boost { namespace network { namespace http {
 

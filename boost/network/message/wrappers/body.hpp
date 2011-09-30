@@ -1,11 +1,12 @@
 
-//          Copyright Dean Michael Berris 2007.
+// Copyright 2011 Dean Michael Berris <dberris@google.com>.
+// Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
-#define __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
+#ifndef BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
+#define BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
 
 #include <boost/range/iterator.hpp>
 #include <boost/optional.hpp>

@@ -7,40 +7,31 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/response_base.hpp>
+
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_response;
+namespace impl {
 
-    namespace impl {
+struct status_message_wrapper {
+  explicit status_message_wrapper(response_base & response_);
+  operator std::string () const;
+ private:
+  response_base & response_;
+  mutable optional<std::string> cache_;
+};
 
-        template <class Tag>
-        struct status_message_wrapper {
+inline std::ostream & operator<<(std::ostream & os, status_message_wrapper const & status_message) {
+  return os << static_cast<std::string>(status_message);
+}
 
-            typedef typename string<Tag>::type string_type;
+} // namespace impl
 
-            basic_response<Tag> const & response_;
-
-            explicit status_message_wrapper(basic_response<Tag> const & response)
-                : response_(response) {}
-
-            status_message_wrapper(status_message_wrapper const & other)
-                : response_(other.response_) {}
-
-            operator string_type () {
-                return response_.status_message();
-            }
-
-        };
-
-    } // namespace impl
-
-    template <class Tag>
-    inline 
-    impl::status_message_wrapper<Tag>
-    status_message(basic_response<Tag> const & response) {
-        return impl::status_message_wrapper<Tag>(response);
-    }
+inline 
+impl::status_message_wrapper
+status_message(response_base & response) {
+    return impl::status_message_wrapper(response);
+}
 
 } // namespace http
 

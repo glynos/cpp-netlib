@@ -35,7 +35,7 @@ namespace boost { namespace network { namespace http {
             , version_pair);
     }
 
-    BOOST_NETWORK_INLINE void parse_headers(std::string const & input, std::vector<request_header_narrow> & container) {
+    BOOST_NETWORK_INLINE void parse_headers(std::string const & input, std::vector<request_header> & container) {
         using namespace boost::spirit::qi;
         parse(
             input.begin(), input.end(),

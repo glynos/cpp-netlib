@@ -29,15 +29,9 @@
 #include <boost/network/protocol/http/message/modifiers/method.hpp>
 #include <boost/network/protocol/http/message/modifiers/major_version.hpp>
 #include <boost/network/protocol/http/message/modifiers/minor_version.hpp>
-#include <boost/network/protocol/http/message/modifiers/source.hpp>
-#include <boost/network/protocol/http/message/modifiers/destination.hpp>
-#include <boost/network/protocol/http/message/modifiers/headers.hpp>
-#include <boost/network/protocol/http/message/modifiers/body.hpp>
 #include <boost/network/protocol/http/message/modifiers/clear_headers.hpp>
 #include <boost/network/protocol/http/message/wrappers/major_version.hpp>
 #include <boost/network/protocol/http/message/wrappers/minor_version.hpp>
-#include <boost/network/protocol/http/message/wrappers/source.hpp>
-#include <boost/network/protocol/http/message/wrappers/destination.hpp>
 
 #include <boost/network/message/directives.hpp>
 #include <boost/network/message/transformers.hpp>
