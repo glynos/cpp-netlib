@@ -64,11 +64,15 @@ namespace boost { namespace network {
         }
 
         headers_container_type & headers() {
-          return pimpl->headers_;
+          if (!headers_) {
+            headers_ = headers_container_type();
+            this->get_headers(*headers_);
+          }
+          return *headers_;
         }
 
         void headers(headers_container_type const & headers_) const {
-          pimpl->headers_ = headers_;
+          this->set_headers(headers_);
         }
 
         void add_header(typename headers_container_type::value_type const & pair_) const {
@@ -80,11 +84,19 @@ namespace boost { namespace network {
         }
 
         headers_container_type const & headers() const {
-          return pimpl->headers_;
+          if (!headers_) {
+            headers_ = headers_container_type();
+            this->get_headers(*headers_);
+          }
+          return *headers_;
         }
 
         string_type & body() {
-          return pimpl->body_;
+          if (!body_) {
+            body_ = String();
+            this->get_body(*body_);
+          }
+          return *body_;
         }
 
         void body(string_type const & body_) const {
@@ -92,11 +104,19 @@ namespace boost { namespace network {
         }
 
         string_type const & body() const {
-          return pimpl->body_;
+          if (!body_) {
+            body_ = String();
+            this->get_body(*body_);
+          }
+          return *body_;
         }
         
         string_type & source() {
-          return pimpl->source_;
+          if (!source_) {
+            source_ = String();
+            this->get_source(*source_);
+          }
+          return *source_;
         }
 
         void source(string_type const & source_) const {
@@ -104,11 +124,19 @@ namespace boost { namespace network {
         }
 
         string_type const & source() const {
-          return pimpl->source_;
+          if (!source_) {
+            source_ = String();
+            this->get_source(*source_);
+          }
+          return *source_;
         }
 
         string_type & destination() {
-          return pimpl->destination_;
+          if (!destination_) {
+            destination_ = String();
+            this->get_destination(*destination_);
+          }
+          return *destination_;
         }
 
         void destination(string_type const & destination_) const {
@@ -116,8 +144,17 @@ namespace boost { namespace network {
         }
 
         string_type const & destination() const {
-          return pimpl->destination_;
+          if (!destination_) {
+            destination_ = String();
+            this->get_destination(*destination_);
+          }
+          return *destination_;
         }
+
+      protected:
+        optional<String> source_, destination_;
+        optional<headers_container_type> headers_;
+        optional<String> body_;
     };
 
     template <class String>

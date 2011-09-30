@@ -33,7 +33,7 @@ struct request_storage_base {
   virtual void append_header(std::string const &name, std::string const &value);
 };
 
-struct request_base : request_storage_base {
+struct request_base : message_base, request_storage_base {
  protected:
   using request_storage_base::body_stream;
   request_base();
