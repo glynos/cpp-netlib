@@ -24,8 +24,9 @@ namespace boost { namespace network { namespace http {
 
     BOOST_NETWORK_INLINE void parse_version(std::string const & partial_parsed, fusion::tuple<uint8_t,uint8_t> & version_pair) {
         using namespace boost::spirit::qi;
+        std::string::const_iterator it = partial_parsed.begin();
         parse(
-            partial_parsed.begin(), partial_parsed.end(),
+            it, partial_parsed.end(),
             (
                 lit("HTTP/")
                 >> ushort_
@@ -37,8 +38,9 @@ namespace boost { namespace network { namespace http {
 
     BOOST_NETWORK_INLINE void parse_headers(std::string const & input, std::vector<request_header_narrow> & container) {
         using namespace boost::spirit::qi;
+        std::string::const_iterator it = input.begin();
         parse(
-            input.begin(), input.end(),
+            it, input.end(),
             *(
                 +(alnum|(punct-':'))
                 >> lit(": ")
