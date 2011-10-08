@@ -12,18 +12,18 @@
 #include <boost/network/protocol/http/client/facade.hpp>
 #include <boost/network/protocol/http/client/parameters.hpp>
 #include <boost/network/protocol/http/client/macros.hpp>
+#include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/response.hpp>
 
 namespace boost { namespace network { namespace http {
 
-template <class String>
-struct basic_client : basic_client_facade {
+struct client : basic_client_facade {
  private:
   typedef basic_client_facade
           base_facade_type;
  public:
-  typedef basic_request<String> request;
-  typedef basic_response<String> response;
-  typedef String string_type;
+  typedef ::boost::network::http::request request;
+  typedef ::boost::network::http::response response;
 
   // Constructor
   // =================================================================

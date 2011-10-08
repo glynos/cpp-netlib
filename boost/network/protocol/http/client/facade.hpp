@@ -8,29 +8,17 @@
 
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
-#include <boost/network/protocol/http/client/pimpl.hpp>
+#include <boost/network/protocol/http/client/base.hpp>
 #include <boost/network/protocol/http/client/parameters.hpp>
 
 namespace boost { namespace network { namespace http {
 
-template <class Tag>
-struct basic_request;
-
-template <class Tag>
-struct basic_response;
-
-template <class Tag, unsigned version_major, unsigned version_minor>
 struct basic_client_facade {
-
-  typedef typename string<Tag>::type string_type;
-  typedef basic_request<Tag> request;
-  typedef basic_response<Tag> response;
-  typedef basic_client_impl<Tag,version_major,version_minor> pimpl_type;
-  typedef function<void(iterator_range<char const *> const &,system::error_code const &)> body_callback_function_type;
+  typedef client_base::body_callback_function_type body_callback_function_type;
 
   template <class ArgPack>
   basic_client_facade(ArgPack const & args) {
-    init_pimpl(args,
+    init_base(args,
                typename mpl::if_<
                  is_same<
                    typename parameter::value_type<ArgPack, tag::io_service, void>::type,
@@ -42,7 +30,7 @@ struct basic_client_facade {
   }
 
   BOOST_PARAMETER_MEMBER_FUNCTION((response const), head, tag, (required (request,(request const &)))) {
-    return pimpl->request_skeleton(request, "HEAD", false, body_callback_function_type());
+    return base->request_skeleton(request, "HEAD", false, body_callback_function_type());
   }
 
   BOOST_PARAMETER_MEMBER_FUNCTION((response const), get , tag,
@@ -52,7 +40,7 @@ struct basic_client_facade {
                                   (optional
                                    (body_handler,(body_callback_function_type),body_callback_function_type())
                                    )) {
-    return pimpl->request_skeleton(request, "GET", true, body_handler);
+    return base->request_skeleton(request, "GET", true, body_handler);
   }
 
   BOOST_PARAMETER_MEMBER_FUNCTION((response const), post, tag,
@@ -83,7 +71,7 @@ struct basic_client_facade {
         request << header("Content-Type", content_type);
       }
     }
-    return pimpl->request_skeleton(request, "POST", true, body_handler);
+    return base->request_skeleton(request, "POST", true, body_handler);
   }
 
   BOOST_PARAMETER_MEMBER_FUNCTION((response const), put , tag,
@@ -114,7 +102,7 @@ struct basic_client_facade {
         request << header("Content-Type", content_type);
       }
     }
-    return pimpl->request_skeleton(request, "PUT", true, body_handler);
+    return base->request_skeleton(request, "PUT", true, body_handler);
   }
 
   BOOST_PARAMETER_MEMBER_FUNCTION((response const), delete_, tag,
@@ -124,11 +112,11 @@ struct basic_client_facade {
                                   (optional
                                    (body_handler,(body_callback_function_type),body_callback_function_type())
                                    )) {
-    return pimpl->request_skeleton(request, "DELETE", true, body_handler);
+    return base->request_skeleton(request, "DELETE", true, body_handler);
   }
 
   void clear_resolved_cache() {
-    pimpl->clear_resolved_cache();
+    base->clear_resolved_cache();
   }
 
  protected:
@@ -136,16 +124,16 @@ struct basic_client_facade {
   struct no_io_service {};
   struct has_io_service {};
 
-  boost::scoped_ptr<pimpl_type> pimpl;
+  boost::scoped_ptr<client_base> base;
 
   template <class ArgPack>
-  void init_pimpl(ArgPack const & args, no_io_service) {
-    pimpl.reset(new pimpl_type(this->get_connection_manager(args)));
+  void init_base(ArgPack const & args, no_io_service) {
+    base.reset(new base_type(this->get_connection_manager(args)));
   }
 
   template <class ArgPack>
-  void init_pimpl(ArgPack const & args, has_io_service) {
-    pimpl.reset(new pimpl_type(args[_io_service], this->get_connection_manager(args)));
+  void init_base(ArgPack const & args, has_io_service) {
+    base.reset(new base_type(args[_io_service], this->get_connection_manager(args)));
   }
 
  private:

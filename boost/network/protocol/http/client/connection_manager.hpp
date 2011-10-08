@@ -11,16 +11,16 @@ namespace boost { namespace network { namespace http {
 
 struct request_base;
 
-struct response_base;
+struct response;
 
 struct client_connection {
   typedef function<void(iterator_range<char const *> const &,
                         system::error_code const &)>
       callback_type;
-  virtual shared_ptr<response_base> send_request(std::string const & method,
-                                                 request_base const & request,
-                                                 bool get_body,
-                                                 callback_type callback) = 0;
+  virtual response send_request(std::string const & method,
+                                request_base const & request,
+                                bool get_body,
+                                callback_type callback) = 0;
   virtual void reset() = 0;
   virtual ~client_connection() = 0;
 };

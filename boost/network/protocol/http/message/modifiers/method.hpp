@@ -6,18 +6,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/utility/enable_if.hpp>
+#include <boost/network/protocol/http/request_base.hpp>
 
 namespace boost { namespace network { namespace http {
     
-    template <class Tag>
-    struct basic_request;
-
-    template <class Tag>
-    inline typename enable_if<is_server<Tag>, void>::type
-    method(basic_request<Tag> & request, typename string<Tag>::type const & method_) {
-        request.method = method_;
-    }
+inline void method(request_base & request, std::string const & method_) {
+  request.set_method(method_);
+}
 
 } /* http */
     
