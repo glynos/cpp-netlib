@@ -24,7 +24,7 @@ namespace boost { namespace network { namespace http {
             operator string_type() {
                 return message_.uri().raw();
             }
-            operator boost::network::uri::basic_uri<typename string<Tag>::type> () {
+            operator boost::network::uri::uri () {
                 return message_.uri();
             }
         };

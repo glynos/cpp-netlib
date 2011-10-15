@@ -50,7 +50,7 @@ namespace http {
     struct basic_request : public basic_message<Tag>
     {
 
-        mutable boost::network::uri::basic_uri<typename string<Tag>::type> uri_;
+        mutable boost::network::uri::uri uri_;
         typedef basic_message<Tag> base_type;
 
     public:
@@ -121,7 +121,7 @@ namespace http {
             uri_ = new_uri;
         }
 
-        boost::network::uri::basic_uri<typename string<Tag>::type> const & uri() const {
+        boost::network::uri::uri const & uri() const {
             return uri_;
         }
 

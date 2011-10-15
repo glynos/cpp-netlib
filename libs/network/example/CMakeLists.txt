@@ -34,6 +34,10 @@ if (Boost_FOUND)
       target_link_libraries(simple_wget ${OPENSSL_LIBRARIES})
     endif (OPENSSL_FOUND)
 
+    add_executable(one_liner http/one_liner.cpp)
+    target_link_libraries(one_liner ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri)
+    set_target_properties(one_liner PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+
     add_executable(hello_world_server http/hello_world_server.cpp)
     target_link_libraries(hello_world_server ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
     set_target_properties(hello_world_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
