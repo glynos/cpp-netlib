@@ -24,8 +24,6 @@
 #include <boost/network/message/message_concept.hpp>
 #endif
 
-#include <boost/network/message/basic_message.hpp>
-
 /** message.hpp
  *
  * This header file implements the common message type which
@@ -38,136 +36,44 @@ namespace boost { namespace network {
 
     /** The common message type.
      */
-    template <class String>
-    struct basic_message : basic_storage_base {
-        typedef std::pair<String, String> header_type;
-        typedef std::multimap<String, String> headers_container_type;
-        typedef String string_type;
+    struct message : message_base {
+      // Nested types
+      typedef iterator_range<
+        shared_container_iterator<std::multimap<std::string, std::string> > >
+        headers_range;
 
-        basic_message()
-        : basic_storage_base()
-        {}
+      // Mutators
+      virtual void set_destination(std::string const & destination);
+      virtual void set_source(std::string const & source);
+      virtual void append_header(std::string const & name,
+                                 std::string const & value);
+      virtual void remove_headers(std::string const & name);
+      virtual void remove_headers();
+      virtual void set_body(std::string const & body);
+      virtual void append_body(std::string const & data);
 
-        basic_message(const basic_message & other)
-        : basic_storage_base(other)
-        {}
-
-        basic_message & operator=(basic_message<String> rhs) {
-            rhs.swap(*this);
-            return *this;
-        }
-
-        void swap(basic_message<String> & other) {
-          basic_storage_base & this_ = *this,
-                             & other_ = other;
-          swap(this_, other_);
-        }
-
-        headers_container_type & headers() {
-          if (!headers_) {
-            headers_ = headers_container_type();
-            this->get_headers(*headers_);
-          }
-          return *headers_;
-        }
-
-        void headers(headers_container_type const & headers_) const {
-          this->set_headers(headers_);
-        }
-
-        void add_header(typename headers_container_type::value_type const & pair_) const {
-          this->append_header(pair_.first, pair_.second);
-        }
-
-        void remove_header(typename headers_container_type::key_type const & key) const {
-          this->remove_headers(key);
-        }
-
-        headers_container_type const & headers() const {
-          if (!headers_) {
-            headers_ = headers_container_type();
-            this->get_headers(*headers_);
-          }
-          return *headers_;
-        }
-
-        string_type & body() {
-          if (!body_) {
-            body_ = String();
-            this->get_body(*body_);
-          }
-          return *body_;
-        }
-
-        void body(string_type const & body_) const {
-          this->set_body(body_);
-        }
-
-        string_type const & body() const {
-          if (!body_) {
-            body_ = String();
-            this->get_body(*body_);
-          }
-          return *body_;
-        }
-        
-        string_type & source() {
-          if (!source_) {
-            source_ = String();
-            this->get_source(*source_);
-          }
-          return *source_;
-        }
-
-        void source(string_type const & source_) const {
-          this->set_source(source_);
-        }
-
-        string_type const & source() const {
-          if (!source_) {
-            source_ = String();
-            this->get_source(*source_);
-          }
-          return *source_;
-        }
-
-        string_type & destination() {
-          if (!destination_) {
-            destination_ = String();
-            this->get_destination(*destination_);
-          }
-          return *destination_;
-        }
-
-        void destination(string_type const & destination_) const {
-          this->set_destination(destination_);
-        }
-
-        string_type const & destination() const {
-          if (!destination_) {
-            destination_ = String();
-            this->get_destination(*destination_);
-          }
-          return *destination_;
-        }
-
-      protected:
-        optional<String> source_, destination_;
-        optional<headers_container_type> headers_;
-        optional<String> body_;
+      // Retrievers
+      virtual void get_destination(std::string & destination);
+      virtual void get_source(std::string & source);
+      virtual void get_headers(function<void(std::string const &, std::string const &)> inserter);
+      virtual void get_headers(std::string const & name, function<void(std::string const &, std::string const &)> inserter);
+      virtual void get_headers(function<bool(std::string const &, std::string const &)> predicate, function<void(std::string const &, std::string const &)> inserter);
+      virtual void get_body(std::string const & body);
+      virtual void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size);
+      void swap(message & other);
+      virtual ~message();
     };
 
-    template <class String>
-    inline void swap(basic_message<String> & left, basic_message<String> & right) {
+    inline void swap(message & left, message & right) {
         left.swap(right);
     }
-    
-    // Commenting this out as we don't need to do this anymore.
-    // BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_string> >));
-    // BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_wstring> >));
-    typedef basic_message<std::string> message;
-    typedef basic_message<std::wstring> wmessage;
 
+    template <class Directive>
+    message_base & operator<< (message_base & msg, Directive directive) {
+      directive(msg);
+      return msg;
+    }
+    
 } // namespace network
 } // namespace boost
 

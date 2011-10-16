@@ -13,11 +13,10 @@ namespace boost { namespace network {
 
 namespace impl {
 
-template <class KeyType, class ValueType>
 struct header_directive {
 
-  explicit header_directive(KeyType const & header_name, 
-                            ValueType const & header_value) :
+  explicit header_directive(std::string const & header_name, 
+                            std::string const & header_value) :
       _header_name(header_name),
       _header_value(header_value)
   { };
@@ -28,16 +27,15 @@ struct header_directive {
 
  private:
 
-  KeyType const & _header_name;
-  ValueType const & _header_value;
+  std::string const & _header_name;
+  std::string const & _header_value;
 };
 
 } // namespace impl
 
-template <class T1, class T2>
-inline impl::header_directive<T1, T2>
-header(T1 const & header_name, T2 const & header_value) {
-    return impl::header_directive<T1, T2>(header_name, header_value);
+inline impl::header_directive
+header(std::string const & header_name, std::string const & header_value) {
+    return impl::header_directive(header_name, header_value);
 }
 } // namespace network
 } // namespace boost

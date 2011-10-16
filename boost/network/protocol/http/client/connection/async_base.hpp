@@ -9,7 +9,6 @@
 
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
-#include <boost/network/protocol/http/traits/delegate_factory.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
 
 namespace boost { namespace network { namespace http { namespace impl {

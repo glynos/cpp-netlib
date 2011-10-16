@@ -11,7 +11,7 @@
 
 namespace boost { namespace network { namespace http {
 
-    BOOST_NETWORK_STRING_DIRECTIVE(version, version_, message.version(version_), message.version=version_);
+    BOOST_NETWORK_STRING_DIRECTIVE(version);
 
 } // namespace http
 

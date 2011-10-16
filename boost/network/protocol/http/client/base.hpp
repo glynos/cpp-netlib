@@ -31,6 +31,7 @@ struct client_base {
                                   std::string const & method,
                                   bool get_body,
                                   body_callback_function_type callback);
+  void clear_resolved_cache();
  private:
   client_base_pimpl * pimpl;
 };

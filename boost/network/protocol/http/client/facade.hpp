@@ -10,6 +10,7 @@
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/client/base.hpp>
 #include <boost/network/protocol/http/client/parameters.hpp>
+#include <boost/network/protocol/http/policies/async_connection.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -48,26 +49,25 @@ struct basic_client_facade {
                                    (request,(request)) // yes sir, we make a copy of the original request.
                                    )
                                   (optional
-                                   (body,(string_type const &),string_type())
-                                   (content_type,(string_type const &),string_type())
+                                   (body,(std::string const &),std::string())
+                                   (content_type,(std::string const &),std::string())
                                    (body_handler,(body_callback_function_type),body_callback_function_type())
                                    )) {
-    if (body != string_type()) {
+    if (body.size()) {
       request << remove_header("Content-Length")
-              << header("Content-Length", boost::lexical_cast<string_type>(body.size()))
+              << header("Content-Length", boost::lexical_cast<std::string>(body.size()))
               << boost::network::body(body);
     }
 
-    typename headers_range<basic_request<Tag> >::type content_type_headers =
+    std::multimap<std::string, std::string> content_type_headers =
         headers(request)["Content-Type"];
-    if (content_type != string_type()) {
+    if (content_type.size()) {
       if (!boost::empty(content_type_headers))
         request << remove_header("Content-Type");
       request << header("Content-Type", content_type);
     } else {
       if (boost::empty(content_type_headers)) {
-        typedef typename char_<Tag>::type char_type;
-        static char_type content_type[] = "x-application/octet-stream";
+        static char content_type[] = "x-application/octet-stream";
         request << header("Content-Type", content_type);
       }
     }
@@ -79,26 +79,25 @@ struct basic_client_facade {
                                    (request,(request)) // yes sir, we make a copy of the original request.
                                    )
                                   (optional
-                                   (body,(string_type const &),string_type())
-                                   (content_type,(string_type const &),string_type())
+                                   (body,(std::string const &),std::string())
+                                   (content_type,(std::string const &),std::string())
                                    (body_handler,(body_callback_function_type),body_callback_function_type())
                                    )) {
-    if (body != string_type()) {
+    if (body != std::string()) {
       request << remove_header("Content-Length")
-              << header("Content-Length", boost::lexical_cast<string_type>(body.size()))
+              << header("Content-Length", boost::lexical_cast<std::string>(body.size()))
               << boost::network::body(body);
     }
 
-    typename headers_range<basic_request<Tag> >::type content_type_headers =
+    std::multimap<std::string, std::string> content_type_headers =
         headers(request)["Content-Type"];
-    if (content_type != string_type()) {
+    if (content_type.size()) {
       if (!boost::empty(content_type_headers))
         request << remove_header("Content-Type");
       request << header("Content-Type", content_type);
     } else {
       if (boost::empty(content_type_headers)) {
-        typedef typename char_<Tag>::type char_type;
-        static char_type content_type[] = "x-application/octet-stream";
+        static char content_type[] = "x-application/octet-stream";
         request << header("Content-Type", content_type);
       }
     }
@@ -128,29 +127,27 @@ struct basic_client_facade {
 
   template <class ArgPack>
   void init_base(ArgPack const & args, no_io_service) {
-    base.reset(new base_type(this->get_connection_manager(args)));
+    base.reset(new client_base(this->get_connection_manager(args)));
   }
 
   template <class ArgPack>
   void init_base(ArgPack const & args, has_io_service) {
-    base.reset(new base_type(args[_io_service], this->get_connection_manager(args)));
+    base.reset(new client_base(args[_io_service], this->get_connection_manager(args)));
   }
 
  private:
 
   template <class ArgPack>
   shared_ptr<connection_manager> get_connection_manager(ArgPack const & args) {
-    shared_ptr<connection_manager> connection_manager_ = ptr;
+    shared_ptr<connection_manager> connection_manager_ = args[_connection_manager|shared_ptr<connection_manager>()];
     if (!connection_manager_.get()) {
       // Because there's no explicit connection manager, we use the default
       // implementation as provided by the tag.
-      typedef typename async_connection_policy<Tag,version_major,version_minor>::type
-          default_connection_manager_type;
       connection_manager_.reset(
-          new default_connection_manager_type(args[_cache_resolved|false],
+          new simple_async_connection_manager(args[_cache_resolved|false],
                                               args[_follow_redirects|false],
-                                              args[_openssl_certificate|optional<string_type>()],
-                                              args[_openssl_verify_path|optional<string_type>()]));
+                                              args[_openssl_certificate|optional<std::string>()],
+                                              args[_openssl_verify_path|optional<std::string>()]));
     }
 
     return connection_manager_;

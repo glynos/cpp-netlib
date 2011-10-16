@@ -18,23 +18,12 @@ namespace boost { namespace network { namespace http {
     }
 
     inline std::string const &
-    name(request_header_narrow const & h) {
+    name(request_header const & h) {
         return h.name;
     }
 
-    inline std::wstring const &
-    name(request_header_wide const &h) {
-        return h.name;
-    }
-
-    
     inline std::string const &
-    name(response_header_narrow const & h) {
-        return h.name;
-    }
-
-    inline std::wstring const &
-    name(response_header_wide const &h) {
+    name(response_header const & h) {
         return h.name;
     }
 

@@ -29,29 +29,22 @@
  */
     
 #ifndef BOOST_NETWORK_STRING_DIRECTIVE
-#define BOOST_NETWORK_STRING_DIRECTIVE(name, value, body, pod_body)         \
-    template <class ValueType>                                              \
+#define BOOST_NETWORK_STRING_DIRECTIVE(name)                                \
     struct name##_directive {                                               \
-        ValueType const & value;                                            \
-        explicit name##_directive(ValueType const & value_)                 \
+        std::string const & value;                                          \
+        explicit name##_directive(std::string const & value_)               \
         : value(value_) {}                                                  \
         name##_directive(name##_directive const & other)                    \
         : value(other.value) {}                                             \
-        template <class Tag, template <class> class Message>                \
-        typename enable_if<is_pod<Tag>, void>::type                         \
-        operator()(Message<Tag> & message) const {                          \
-            pod_body;                                                       \
-        }                                                                   \
-        template <class Tag, template <class> class Message>                \
-        typename enable_if<mpl::not_<is_pod<Tag> >, void>::type             \
-        operator()(Message<Tag> & message) const {                          \
-            body;                                                           \
+        template <class Message>                                            \
+        void operator()(Message & message) const {                          \
+            message.set_##name(value);                                      \
         }                                                                   \
     };                                                                      \
                                                                             \
-    template <class T> inline name##_directive<T>                           \
-    name (T const & input) {                                                \
-        return name##_directive<T>(input);                                  \
+    inline name##_directive const                                           \
+    name (std::string const & input) {                                      \
+        return name##_directive(input);                                     \
     }
 #endif /* BOOST_NETWORK_STRING_DIRECTIVE */
 

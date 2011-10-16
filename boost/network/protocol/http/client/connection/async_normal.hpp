@@ -17,8 +17,6 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/network/constants.hpp>
-#include <boost/network/traits/ostream_iterator.hpp>
-#include <boost/network/traits/istream.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/network/protocol/http/parser/incremental.hpp>
 #include <boost/network/protocol/http/message/wrappers/uri.hpp>
@@ -29,8 +27,6 @@
 #include <boost/bind/protect.hpp>
 #include <iterator>
 
-#include <boost/network/protocol/http/traits/delegate_factory.hpp>
-
 namespace boost { namespace network { namespace http { namespace impl {
 
   template <class Tag, unsigned version_major, unsigned version_minor>
@@ -38,7 +34,6 @@ namespace boost { namespace network { namespace http { namespace impl {
 
   namespace placeholders = boost::asio::placeholders;
 
-  template <class Tag, unsigned version_major, unsigned version_minor>
   struct http_async_connection
     : async_connection_base<Tag,version_major,version_minor>,
     protected http_async_protocol_handler<Tag,version_major,version_minor>,

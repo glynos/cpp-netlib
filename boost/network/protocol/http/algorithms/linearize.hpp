@@ -6,7 +6,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/traits/string.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
 #include <boost/network/protocol/http/message/header_concept.hpp>
@@ -18,9 +17,8 @@
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
     struct linearize_header {
-        typedef typename string<Tag>::type string_type;
+        typedef std::string string_type;
 
         template <class Arguments>
         struct result;
@@ -35,8 +33,8 @@ namespace boost { namespace network { namespace http {
             ((Header<ValueType>)),
             (string_type)
         ) operator()(ValueType & header) {
-            typedef typename ostringstream<Tag>::type output_stream;
-            typedef constants<Tag> consts;
+            typedef std::ostringstream output_stream;
+            typedef constants consts;
             output_stream header_line;
             header_line << name(header) 
                 << consts::colon() << consts::space() 
@@ -57,9 +55,8 @@ namespace boost { namespace network { namespace http {
         OutputIterator oi
         ) 
     {
-        typedef typename Request::tag Tag;
-        typedef constants<Tag> consts;
-        typedef typename string<Tag>::type string_type;
+        typedef constants consts;
+        typedef std::string string_type;
         static string_type 
             http_slash = consts::http_slash()
             , accept   = consts::accept()
@@ -115,7 +112,7 @@ namespace boost { namespace network { namespace http {
             boost::copy(default_accept_encoding, oi);
             boost::copy(crlf, oi);
         }
-        typedef typename headers_range<Request>::type headers_range;
+        typedef boost::iterator_range<std::multimap<std::string, std::string>::const_iterator> headers_range;
         typedef typename range_iterator<headers_range>::type headers_iterator;
         headers_range request_headers = headers(request);
         headers_iterator iterator = boost::begin(request_headers),
@@ -129,15 +126,9 @@ namespace boost { namespace network { namespace http {
             boost::copy(header_value, oi);
             boost::copy(crlf, oi);
         }
-        if (!connection_keepalive<Tag>::value) {
-            boost::copy(connection, oi);
-            *oi = consts::colon_char();
-            *oi = consts::space_char();
-            boost::copy(close, oi);
-            boost::copy(crlf, oi);
-        }
         boost::copy(crlf, oi);
-        typename body_range<Request>::type body_data = body(request).range();
+        boost::iterator_range<std::string::const_iterator> body_data =
+          body(request);
         return boost::copy(body_data, oi);
     }
     

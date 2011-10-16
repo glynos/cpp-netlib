@@ -50,13 +50,13 @@ struct client : basic_client_facade {
   //                                 this client.
 
   BOOST_PARAMETER_CONSTRUCTOR(
-      basic_client, (base_facade_type), tag,
+      client, (base_facade_type), tag,
       (optional
           (in_out(io_service), (boost::asio::io_service&))
           (follow_redirects, (bool))
           (cache_resolved, (bool))
-          (openssl_certificate, (string_type))
-          (openssl_verify_path, (string_type))
+          (openssl_certificate, (std::string))
+          (openssl_verify_path, (std::string))
           (connection_manager, (shared_ptr<connection_manager>))
           ))
 

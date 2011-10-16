@@ -17,18 +17,16 @@ namespace boost { namespace network { namespace http { namespace impl {
   struct http_async_protocol_handler {
   protected:
 
-    typedef typename string<Tag>::type string_type;
-
 #ifdef BOOST_NETWORK_DEBUG
     struct debug_escaper {
-      string_type & string;
-      explicit debug_escaper(string_type & string_)
+      std::string & string;
+      explicit debug_escaper(std::string & string_)
         : string(string_) {}
       debug_escaper(debug_escaper const & other)
         : string(other.string) {}
-      void operator()(typename string_type::value_type input) {
+      void operator()(typename std::string::value_type input) {
       if (!algorithm::is_print()(input)) {
-        typename ostringstream<Tag>::type escaped_stream;
+        std::ostringstream escaped_stream;
         if (input == '\r') {
         string.append("\\r");
         } else if (input == '\n') {
@@ -46,36 +44,33 @@ namespace boost { namespace network { namespace http { namespace impl {
 
     template <class ResponseType>
     void init_response(ResponseType & response_, bool get_body) {
-      boost::shared_future<string_type> source_future(
+      boost::shared_future<std::string> source_future(
         source_promise.get_future());
       source(response_, source_future);
-      boost::shared_future<string_type> destination_future(
+      boost::shared_future<std::string> destination_future(
         destination_promise.get_future());
       destination(response_, destination_future);
-      boost::shared_future<typename headers_container<Tag>::type>
+      boost::shared_future<std::multimap<std::string, std::string> >
         headers_future(headers_promise.get_future());
       headers(response_, headers_future);
-      boost::shared_future<string_type> body_future(
+      boost::shared_future<std::string> body_future(
         body_promise.get_future());
       body(response_, body_future);
-      boost::shared_future<string_type> version_future(
+      boost::shared_future<std::string> version_future(
         version_promise.get_future());
       version(response_, version_future);
       boost::shared_future<boost::uint16_t> status_future(
         status_promise.get_future());
       status(response_, status_future);
-      boost::shared_future<string_type> status_message_future(
+      boost::shared_future<std::string> status_message_future(
         status_message_promise.get_future());
       status_message(response_, status_message_future);
     }
 
     struct to_http_headers {
-      typedef typename string<Tag>::type string_type;
       template <class U>
-      string_type const operator() (U const & pair) const {
-        typedef typename ostringstream<Tag>::type ostringstream_type;
-        typedef constants<Tag> constants;
-        ostringstream_type header_line;
+      std::string const operator() (U const & pair) const {
+        std::ostringstream header_line;
         header_line << pair.first
           << constants::colon()
           << constants::space()
@@ -100,7 +95,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         response_parser_type::http_version_done,
         input_range);
       if (parsed_ok == true) {
-        string_type version;
+        std::string version;
         std::swap(version, partial_parsed);
         version.append(boost::begin(result_range),
                  boost::end(result_range));
@@ -109,7 +104,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         part_begin = boost::end(result_range);
       } else if (parsed_ok == false) {
 #ifdef BOOST_NETWORK_DEBUG
-        string_type escaped;
+        std::string escaped;
         debug_escaper escaper(escaped);
         std::for_each(part_begin, part_end, escaper);
         BOOST_NETWORK_MESSAGE("[parser:"
@@ -155,7 +150,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         response_parser_type::http_status_done,
         input_range);
       if (parsed_ok == true) {
-        string_type status;
+        std::string status;
         std::swap(status, partial_parsed);
         status.append(boost::begin(result_range),
                 boost::end(result_range));
@@ -166,7 +161,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         part_begin = boost::end(result_range);
       } else if (parsed_ok == false) {
 #ifdef BOOST_NETWORK_DEBUG
-        string_type escaped;
+        std::string escaped;
         debug_escaper escaper(escaped);
         std::for_each(part_begin, part_end, escaper);
         BOOST_NETWORK_MESSAGE("[parser:"
@@ -211,7 +206,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         response_parser_type::http_status_message_done,
         input_range);
       if (parsed_ok == true) {
-        string_type status_message;
+        std::string status_message;
         std::swap(status_message, partial_parsed);
         status_message.append(boost::begin(result_range),
                     boost::end(result_range));
@@ -220,7 +215,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         part_begin = boost::end(result_range);
       } else if (parsed_ok == false) {
 #ifdef BOOST_NETWORK_DEBUG
-        string_type escaped;
+        std::string escaped;
         debug_escaper escaper(escaped);
         std::for_each(part_begin, part_end, escaper);
         BOOST_NETWORK_MESSAGE("[parser:"
@@ -249,15 +244,15 @@ namespace boost { namespace network { namespace http { namespace impl {
       return parsed_ok;
     }
 
-    void parse_headers_real(string_type & headers_part) {
-      typename boost::iterator_range<typename string_type::const_iterator>
+    void parse_headers_real(std::string & headers_part) {
+      typename boost::iterator_range<typename std::string::const_iterator>
         input_range = boost::make_iterator_range(headers_part)
         , result_range;
       logic::tribool parsed_ok;
       response_parser_type headers_parser(
         response_parser_type::http_header_line_done);
-      typename headers_container<Tag>::type headers;
-      std::pair<string_type,string_type> header_pair;
+      std::multimap<std::string, std::string> headers;
+      std::pair<std::string,std::string> header_pair;
       while (!boost::empty(input_range)) {
         fusion::tie(parsed_ok, result_range) =
           headers_parser.parse_until(
@@ -266,14 +261,14 @@ namespace boost { namespace network { namespace http { namespace impl {
         if (headers_parser.state()
           != response_parser_type::http_header_colon)
           break;
-        header_pair.first = string_type(boost::begin(result_range),
+        header_pair.first = std::string(boost::begin(result_range),
                         boost::end(result_range));
         input_range.advance_begin(boost::distance(result_range));
         fusion::tie(parsed_ok, result_range) =
           headers_parser.parse_until(
             response_parser_type::http_header_line_done,
             input_range);
-        header_pair.second = string_type(boost::begin(result_range),
+        header_pair.second = std::string(boost::begin(result_range),
                          boost::end(result_range));
         input_range.advance_begin(boost::distance(result_range));
 
@@ -303,7 +298,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         response_parser_type::http_headers_done,
         input_range);
       if (parsed_ok == true) {
-        string_type headers_string;
+        std::string headers_string;
         std::swap(headers_string, partial_parsed);
         headers_string.append(boost::begin(result_range),
                     boost::end(result_range));
@@ -313,7 +308,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         // We want to output the contents of the buffer that caused
         // the error in debug builds.
 #ifdef BOOST_NETWORK_DEBUG
-        string_type escaped;
+        std::string escaped;
         debug_escaper escaper(escaped);
         std::for_each(part_begin, part_end, escaper);
         BOOST_NETWORK_MESSAGE("[parser:"
@@ -359,20 +354,19 @@ namespace boost { namespace network { namespace http { namespace impl {
     }
 
     typedef response_parser<Tag> response_parser_type;
-    // TODO: make 1024 go away and become a configurable value.
-    typedef boost::array<typename char_<Tag>::type, 1024> buffer_type;
+    typedef boost::array<char, BOOST_NETWORK_BUFFER_CHUNK> buffer_type;
 
     response_parser_type response_parser_;
-    boost::promise<string_type> version_promise;
+    boost::promise<std::string> version_promise;
     boost::promise<boost::uint16_t> status_promise;
-    boost::promise<string_type> status_message_promise;
-    boost::promise<typename headers_container<Tag>::type> headers_promise;
-    boost::promise<string_type> source_promise;
-    boost::promise<string_type> destination_promise;
-    boost::promise<string_type> body_promise;
+    boost::promise<std::string> status_message_promise;
+    boost::promise<std::multimap<std::string, std::string> > headers_promise;
+    boost::promise<std::string> source_promise;
+    boost::promise<std::string> destination_promise;
+    boost::promise<std::string> body_promise;
     buffer_type part;
     typename buffer_type::const_iterator part_begin;
-    string_type partial_parsed;
+    std::string partial_parsed;
   };
 
 

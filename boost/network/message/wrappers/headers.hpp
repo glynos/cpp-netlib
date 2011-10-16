@@ -35,13 +35,14 @@ namespace impl {
  */
 struct headers_wrapper {
   typedef std::multimap<std::string, std::string> container_type;
-  typedef shared_container_iterator<container_type> iterator;
   typedef iterator_range<shared_container_iterator<container_type> >
           range_type;
 
   explicit headers_wrapper(message_base & message);
   range_type operator[] (std::string const & key) const;
+  operator range_type () const;
   container_type::size_type count() const;
+  container_type::size_type count(std::string const &key) const;
  private:
   void init_cache_all();
   mutable shared_ptr<container_type> cache_;
@@ -50,7 +51,7 @@ struct headers_wrapper {
 } // namespace impl
 
 /// Factory method to create the right wrapper object
-inline impl::headers_wrapper 
+inline impl::headers_wrapper const
 headers(message_base & message_) {
     return impl::headers_wrapper(message_);
 }

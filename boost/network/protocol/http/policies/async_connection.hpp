@@ -13,14 +13,13 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/network/protocol/http/client/connection/async_base.hpp>
-#include <boost/network/protocol/http/client/connection_manager.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/network/protocol/http/client/connection/resolver_delegate.hpp>
+#include <boost/unordered_map.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -60,21 +59,8 @@ struct http_1_1_async_connection_manager : connection_manager, enable_shared_fro
   bool cache_resolved, follow_redirects_;
   mutex shared_resolver_mutex;
   shared_ptr<resolver_delegate> shared_resolver_delegate;
-  unordered_map<std::string, shared_ptr<client_connection> > ready_connections;
+  boost::unordered_map<std::string, shared_ptr<client_connection> > ready_connections;
 };
-
-template <class Tag, unsigned version_major, unsigned version_minor>
-struct async_connection_policy;
-
-template <class Tag>
-struct async_connection_policy<Tag,1u,0u> {  // HTTP/1.0
-  typedef simple_async_connection_manager type;
-}
-
-template <class Tag>
-struct async_connection_policy<Tag,1u,1u> {  // HTTP/1.1
-  typedef http_1_1_connection_manager type;
-}
 
 } // namespace http
 

@@ -8,10 +8,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
 #include <boost/range.hpp>
 #include <boost/fusion/tuple.hpp>
-#include <boost/network/traits/string.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <utility>
