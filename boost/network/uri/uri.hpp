@@ -300,8 +300,6 @@ inline
 bool operator == (const uri &lhs, const uri &rhs) {
     return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
-} // namespace uri
-} // namespace network
 
 inline
 network::uri::uri::iterator begin(network::uri::uri &uri_) {
@@ -327,6 +325,9 @@ inline
 void swap(network::uri::uri &lhs, network::uri::uri &rhs) {
     lhs.swap(rhs);
 }
+
+} // namespace uri
+} // namespace network
 } // namespace boost
 
 

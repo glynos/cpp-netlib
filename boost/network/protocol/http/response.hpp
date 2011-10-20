@@ -49,7 +49,7 @@ struct response : response_base {
   virtual void get_headers(function<void(std::string const &, std::string const &)> inserter);
   virtual void get_headers(std::string const & name, function<void(std::string const &, std::string const &)> inserter);
   virtual void get_headers(function<bool(std::string const &, std::string const &)> predicate, function<void(std::string const &, std::string const &)> inserter);
-  virtual void get_body(std::string const & body);
+  virtual void get_body(std::string & body);
   virtual void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size);
 
   // From response_base...

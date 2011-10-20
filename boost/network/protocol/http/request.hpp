@@ -58,9 +58,9 @@ struct request : request_base {
   virtual void get_headers(function<void(std::string const &, std::string const &)> inserter);
   virtual void get_headers(std::string const & name, function<void(std::string const &, std::string const &)> inserter);
   virtual void get_headers(function<bool(std::string const &, std::string const &)> predicate, function<void(std::string const &, std::string const &)> inserter);
-  virtual void get_body(std::string const & body);
+  virtual void get_body(std::string & body);
   virtual void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size);
-  
+
   // From request_base...
   // Setters
   virtual void set_method(std::string const & method);
@@ -103,4 +103,3 @@ request_base & operator<< (request_base & request,
 #include <boost/network/protocol/http/request_concept.hpp>
 
 #endif // __NETWORK_PROTOCOL_HTTP_REQUEST_20070908-1_HPP__
-

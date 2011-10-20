@@ -29,7 +29,7 @@ struct message_base {
   virtual void get_headers(function<void(std::string const &, std::string const &)> inserter) = 0;
   virtual void get_headers(std::string const & name, function<void(std::string const &, std::string const &)> inserter) = 0;
   virtual void get_headers(function<bool(std::string const &, std::string const &)> predicate, function<void(std::string const &, std::string const &)> inserter) = 0;
-  virtual void get_body(std::string const & body) = 0;
+  virtual void get_body(std::string & body) = 0;
   virtual void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) = 0;
 
   // Destructor
