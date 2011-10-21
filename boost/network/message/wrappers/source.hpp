@@ -1,5 +1,5 @@
-#ifndef __NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP__
-#define __NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP__
+#ifndef BOOST_NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP_20111021
+#define BOOST_NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP_20111021
 
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
@@ -14,10 +14,11 @@ namespace boost { namespace network {
 namespace impl {
 
 struct source_wrapper {
-  explicit source_wrapper(message_base & message_);
+  explicit source_wrapper(message_base & message);
   operator std::string () const;
  private:
   message_base & message_;
+  mutable boost::optional<std::string> cache_;
 };
 
 } // namespace impl
@@ -35,4 +36,4 @@ source(message_base & message_) {
 #include <boost/network/message/wrappers/source.ipp>
 #endif
 
-#endif // __NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP__
+#endif // BOOST_NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP_20111021

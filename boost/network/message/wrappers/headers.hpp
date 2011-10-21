@@ -24,27 +24,23 @@ namespace impl {
  * a range of iterators (std::pair<iterator, iterator>)
  * whose keys are all equal to the index string.
  *
- * This type is also convertible to a 
- *  headers_range<basic_message<tag> >::type
- * Which allows for full range support.
- *
- * The type is also convertible to a
- *  headers_container<Tag>::type
- * Which copies the headers from the wrapped message.
- *
  */
 struct headers_wrapper {
   typedef std::multimap<std::string, std::string> container_type;
-  typedef iterator_range<shared_container_iterator<container_type> >
-          range_type;
+  typedef shared_container_iterator<container_type> iterator;
+  typedef iterator_range<iterator> range_type;
 
   explicit headers_wrapper(message_base & message);
   range_type operator[] (std::string const & key) const;
   operator range_type () const;
+  operator container_type () const;
   container_type::size_type count() const;
   container_type::size_type count(std::string const &key) const;
+  iterator begin() const;
+  iterator end() const;
  private:
-  void init_cache_all();
+  void init_cache_all() const;
+  message_base & message_;
   mutable shared_ptr<container_type> cache_;
 };
 
@@ -65,4 +61,3 @@ headers(message_base & message_) {
 #endif
 
 #endif // __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
-

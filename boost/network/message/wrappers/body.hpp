@@ -1,12 +1,11 @@
+#ifndef BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
+#define BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
 
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
-
-#ifndef BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
-#define BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/range/iterator.hpp>
 #include <boost/optional.hpp>
@@ -17,7 +16,7 @@ namespace boost { namespace network {
 namespace impl {
 
 struct body_wrapper {
-  explicit body_wrapper(message_base & message_);
+  explicit body_wrapper(message_base & message);
   operator std::string () const;
   std::size_t size() const;
   operator iterator_range<std::string::const_iterator> () const;

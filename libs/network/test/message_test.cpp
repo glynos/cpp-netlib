@@ -7,9 +7,8 @@
 #define BOOST_TEST_MODULE message test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network.hpp>
+#include <boost/network/message.hpp>
 #include <algorithm>
-#include <boost/mpl/list.hpp>
 
 using namespace boost::network;
 
@@ -71,5 +70,3 @@ BOOST_AUTO_TEST_CASE(remove_header_directive_test) {
     message::headers_range range = headers(instance);
     BOOST_CHECK ( boost::begin(range) == boost::end(range) );
 }
-
-

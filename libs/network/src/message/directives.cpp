@@ -4,11 +4,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// This is the conglomeration of all message-related implementation files. All
-// we're doing is including all the .ipp files that are relevant.
+// This is the directives file where all standard directives on messages are
+// pulled in and compiled into a library.
 
 #ifdef BOOST_NETWORK_NO_LIB
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/message/message.ipp>
+#include <boost/network/message/directives/header.ipp>
+#include <boost/network/message/directives/remove_header.ipp>

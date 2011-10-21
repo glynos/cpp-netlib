@@ -14,21 +14,12 @@ namespace boost { namespace network {
 namespace impl {
 
 struct header_directive {
-
-  explicit header_directive(std::string const & header_name, 
-                            std::string const & header_value) :
-      _header_name(header_name),
-      _header_value(header_value)
-  { };
-
-  void operator() (message_base & msg) const {
-    msg.append_header(_header_name, _header_value);
-  }
-
+  explicit header_directive(std::string const & name,
+                            std::string const & value);
+  void operator() (message_base & msg) const;
  private:
-
-  std::string const & _header_name;
-  std::string const & _header_value;
+  std::string const & name_;
+  std::string const & value_;
 };
 
 } // namespace impl
@@ -39,5 +30,9 @@ header(std::string const & header_name, std::string const & header_value) {
 }
 } // namespace network
 } // namespace boost
+
+#ifdef BOOST_NETWORK_NO_LIB
+#include <boost/network/message/directives/header.ipp>
+#endif
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__

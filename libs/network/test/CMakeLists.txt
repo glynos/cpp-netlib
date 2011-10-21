@@ -22,11 +22,19 @@ if (Boost_FOUND)
         set_source_files_properties(${test}.cpp
             PROPERTIES COMPILE_FLAGS "-Wall")
         add_executable(cpp-netlib-${test} ${test}.cpp)
-        add_dependencies(cpp-netlib-${test} cppnetlib-uri cppnetlib-message)
+        add_dependencies(cpp-netlib-${test}
+            cppnetlib-uri
+            cppnetlib-message
+            cppnetlib-message-directives
+            cppnetlib-message-wrappers)
 
-        # add_dependencies(cpp-netlib-${test} cppnetlib-uri)
-        # target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri)
-        target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri cppnetlib-message)
+        target_link_libraries(cpp-netlib-${test}
+            ${Boost_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-uri
+            cppnetlib-message
+            cppnetlib-message-directives
+            cppnetlib-message-wrappers)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
         endif()
