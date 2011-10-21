@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/response_base.hpp>
+#include <boost/network/protocol/http/response/response_base.hpp>
 
 namespace boost { namespace network { namespace http {
 

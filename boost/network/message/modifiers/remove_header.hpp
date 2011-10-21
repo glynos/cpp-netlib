@@ -8,7 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <string>
-#include <boost/network/message_base.hpp>
+#include <boost/network/message/message_base.hpp>
 
 namespace boost { namespace network {
 
@@ -22,4 +22,3 @@ void remove_header(message_base & message, std::string const & key) {
 } // namespace boost
 
 #endif // BOOST_NETWORK_MESSAGE_MODIFIER_REMOVE_HEADER_HPP_20100824
-

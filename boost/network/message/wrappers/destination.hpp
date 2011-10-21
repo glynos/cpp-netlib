@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/message_base.hpp>
+#include <boost/network/message/message_base.hpp>
 
 namespace boost { namespace network {
 
@@ -34,4 +34,3 @@ destination(message_base & message_) {
 #endif
 
 #endif // __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
-

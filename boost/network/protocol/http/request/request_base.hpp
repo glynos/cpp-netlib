@@ -11,7 +11,7 @@
 #define BOOST_NETWORK_BUFFER_CHUNK 1024  // We want 1KiB worth of data at least.
 #endif
 
-#include <boost/network/message_base.hpp>
+#include <boost/network/message/message_base.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/iostreams/categories.hpp>
 

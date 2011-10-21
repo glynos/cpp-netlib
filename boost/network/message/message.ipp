@@ -10,7 +10,7 @@
 #include <iterator>
 #include <utility>
 #include <algorithm>
-#include <boost/network/message.hpp>
+#include <boost/network/message/message.hpp>
 
 namespace boost { namespace network {
 
