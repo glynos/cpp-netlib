@@ -67,6 +67,6 @@ BOOST_AUTO_TEST_CASE(remove_header_directive_test) {
     message instance;
     instance << header("name", "value")
         << remove_header("name");
-    message::headers_range range = headers(instance);
+    message::headers_range range = headers(instance)["name"];
     BOOST_CHECK ( boost::begin(range) == boost::end(range) );
 }
