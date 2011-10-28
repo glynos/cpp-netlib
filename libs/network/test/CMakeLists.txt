@@ -48,9 +48,9 @@ if (Boost_FOUND)
     add_dependencies(cpp-netlib-utils_thread_pool
       cppnetlib-utils-thread_pool)
     target_link_libraries(cpp-netlib-utils_thread_pool
+      cppnetlib-utils-thread_pool
       ${Boost_LIBRARIES}
-      ${CMAKE_THREAD_LIBS_INIT}
-      cppnetlib-utils-thread_pool)
+      ${CMAKE_THREAD_LIBS_INIT})
     set_target_properties(cpp-netlib-utils_thread_pool
       PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
     add_test(cpp-netlib-utils_thread_pool ${CPP-NETLIB_BRINARY_DIR}/tests/cpp-netlib-utils_thread_pool)
