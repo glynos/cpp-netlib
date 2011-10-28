@@ -135,6 +135,7 @@ message::message(message const & other)
 
 message& message::operator=(message other) {
   *pimpl = *other.pimpl;
+  return *this;
 }
 
 message::~message() {
