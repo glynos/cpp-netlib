@@ -16,7 +16,6 @@ if (Boost_FOUND)
         TESTS
         message_test
         message_transform_test
-        utils_thread_pool
         )
     foreach (test ${TESTS})
         set_source_files_properties(${test}.cpp
@@ -42,6 +41,19 @@ if (Boost_FOUND)
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-${test} ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
     endforeach (test)
+
+    set_source_files_properties(utils_thread_pool.cpp
+      PROPERTIES COMPILE_FLAGS "-Wall")
+    add_executable(cpp-netlib-utils_thread_pool utils_thread_pool.cpp)
+    add_dependencies(cpp-netlib-utils_thread_pool
+      cppnetlib-utils-thread_pool)
+    target_link_libraries(cpp-netlib-utils_thread_pool
+      ${Boost_LIBRARIES}
+      ${CMAKE_THREAD_LIBS_INIT}
+      cppnetlib-utils-thread_pool)
+    set_target_properties(cpp-netlib-utils_thread_pool
+      PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
+    add_test(cpp-netlib-utils_thread_pool ${CPP-NETLIB_BRINARY_DIR}/tests/cpp-netlib-utils_thread_pool)
 
 endif()
 
