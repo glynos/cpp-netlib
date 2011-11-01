@@ -28,6 +28,10 @@ struct simple_async_connection_manager : connection_manager {
                                   bool follow_redirects,
                                   optional<std::string> openssl_certificate,
                                   optional<std::string> openssl_verify_path);
+  simple_async_connection_manager(bool cache_resolved,
+                                  bool follow_redirects,
+                                  std::string const & openssl_certificate,
+                                  std::string const & openssl_verify_path);
   virtual shared_ptr<client_connection> get_connection(
       asio::io_service & service,
       request_base const & request);  // override
@@ -46,6 +50,10 @@ struct http_1_1_async_connection_manager : connection_manager, enable_shared_fro
                                     bool follow_redirects,
                                     optional<std::string> openssl_certificate,
                                     optional<std::string> openssl_verify_path);
+  http_1_1_async_connection_manager(bool cache_resolved,
+                                    bool follow_redirects,
+                                    std::string const & openssl_certificate,
+                                    std::string const & openssl_verify_path);
   virtual shared_ptr<client_connection> get_connection(
       asio::io_service & service,
       request_base const & request);  // override

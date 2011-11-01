@@ -11,7 +11,7 @@
 #include <boost/shared_container_iterator.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/range/functions.hpp>
-#include <boost/network/detail/wrapper_base.hpp>
+#include <boost/network/message/message_base.hpp>
 
 namespace boost { namespace network {
 

@@ -14,7 +14,7 @@
 #include <boost/network/message/transformers/selectors.hpp>
 #include <boost/network/message/transformers/to_upper.hpp>
 #include <boost/network/message/transformers/to_lower.hpp>
-
+#include <boost/network/message/message_base.hpp>
 #include <boost/type_traits.hpp>
 
 namespace boost { namespace network {
@@ -37,23 +37,22 @@ namespace boost { namespace network {
             };
 
         template <class Algorithm, class Selector>
-            struct transform_impl : public get_real_algorithm<Algorithm, Selector>::type { };
+        struct transform_impl : public get_real_algorithm<Algorithm, Selector>::type { };
     } // namspace impl
 
     template <class Algorithm, class Selector>
-        inline impl::transform_impl<Algorithm, Selector>
-        transform(Algorithm, Selector) {
-            return impl::transform_impl<Algorithm, Selector>();
-        }
+    inline impl::transform_impl<Algorithm, Selector>
+    transform(Algorithm, Selector) {
+      return impl::transform_impl<Algorithm, Selector>();
+    }
 
-    template <class Tag, class Algorithm, class Selector>
-        inline basic_message<Tag> &
-        operator<< (basic_message<Tag> & msg_, 
-                impl::transform_impl<Algorithm, Selector> 
-                    const & transformer) {
-            transformer(msg_);
-            return msg_;
-        }
+    template <class Algorithm, class Selector>
+    message_base & operator<< (
+        message_base & msg_,
+        impl::transform_impl<Algorithm, Selector> const & transformer) {
+      transformer(msg_);
+      return msg_;
+    }
 
 } // namespace network
 
