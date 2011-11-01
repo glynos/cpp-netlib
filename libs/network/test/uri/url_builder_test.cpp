@@ -11,7 +11,6 @@
 #include <boost/network/uri/directives.hpp>
 #include <boost/network/uri/accessors.hpp>
 #include <boost/network/uri/uri_io.hpp>
-#include <boost/network/tags.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/copy.hpp>
