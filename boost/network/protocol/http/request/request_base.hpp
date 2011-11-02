@@ -64,4 +64,8 @@ struct request_base : message_base, request_storage_base {
   
 } /* boost */
 
+#ifdef BOOST_NETWORK_NO_LIB
+#include <boost/network/protocol/http/request/request_base.ipp>
+#endif
+
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008 */

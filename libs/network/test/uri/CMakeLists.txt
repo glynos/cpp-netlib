@@ -22,7 +22,10 @@ if (Boost_FOUND)
       PROPERTIES COMPILE_FLAGS "-Wall")
     add_executable(cpp-netlib-${test} ${test}.cpp)
     add_dependencies(cpp-netlib-${test} cppnetlib-uri)
-    target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri)
+    target_link_libraries(cpp-netlib-${test}
+        ${Boost_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+        cppnetlib-uri)
     if (OPENSSL_FOUND)
       target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
     endif()
