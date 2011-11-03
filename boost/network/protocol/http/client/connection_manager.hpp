@@ -7,23 +7,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/client/client_connection.hpp>
+#include <boost/network/protocol/http/request/request_base.hpp>
+#include <boost/network/protocol/http/response/response_base.hpp>
+#include <boost/asio/io_service.hpp>
+
 namespace boost { namespace network { namespace http {
-
-struct request_base;
-
-struct response;
-
-struct client_connection {
-  typedef function<void(iterator_range<char const *> const &,
-                        system::error_code const &)>
-      callback_type;
-  virtual response send_request(std::string const & method,
-                                request_base const & request,
-                                bool get_body,
-                                callback_type callback) = 0;
-  virtual void reset() = 0;
-  virtual ~client_connection() = 0;
-};
 
 struct connection_manager {
   virtual shared_ptr<client_connection> get_connection(
@@ -34,7 +23,13 @@ struct connection_manager {
 };
 
 } /* http */
+
 } /* network */
+
 } /* boost */
+
+#ifdef BOOST_NETWORK_NO_LIB
+#include <boost/network/protocol/http/client/connection_manager.ipp>
+#endif
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_MANAGER_HPP_20110930 */

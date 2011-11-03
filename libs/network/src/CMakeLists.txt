@@ -28,5 +28,8 @@ add_library(cppnetlib-message-wrappers ${CPP-NETLIB_MESSAGE_WRAPPERS_SRCS})
 set(CPP-NETLIB_HTTP_MESSAGE_SRCS http/request.cpp http/response.cpp)
 add_library(cppnetlib-http-message ${CPP-NETLIB_HTTP_MESSAGE_SRCS})
 
+set(CPP-NETLIB_HTTP_CLIENT_CONNECTIONS_SRCS http/client_connections.cpp)
+add_library(cppnetlib-http-client-connections ${CPP-NETLIB_HTTP_CLIENT_CONNECTIONS_SRCS})
+
 set(CPP-NETLIB_UTILS_THREAD_POOL_SRCS utils/thread_pool.cpp)
 add_library(cppnetlib-utils-thread_pool ${CPP-NETLIB_UTILS_THREAD_POOL_SRCS})
