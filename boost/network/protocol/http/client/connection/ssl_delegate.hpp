@@ -13,7 +13,7 @@
 #include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-namespace boost { namespace network { namespace http { namespace impl {
+namespace boost { namespace network { namespace http {
 
 struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate> {
   ssl_delegate(asio::io_service & service,
@@ -40,8 +40,6 @@ struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate>
   void handle_connected(system::error_code const & ec,
                         function<void(system::error_code const &)> handler);
 };
-
-} /* impl */
 
 } /* http */
 

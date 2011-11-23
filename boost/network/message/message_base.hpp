@@ -24,13 +24,13 @@ struct message_base {
   virtual void append_body(std::string const & data) = 0;
 
   // Retrievers
-  virtual void get_destination(std::string & destination) = 0;
-  virtual void get_source(std::string & source) = 0;
-  virtual void get_headers(function<void(std::string const &, std::string const &)> inserter) = 0;
-  virtual void get_headers(std::string const & name, function<void(std::string const &, std::string const &)> inserter) = 0;
-  virtual void get_headers(function<bool(std::string const &, std::string const &)> predicate, function<void(std::string const &, std::string const &)> inserter) = 0;
-  virtual void get_body(std::string & body) = 0;
-  virtual void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) = 0;
+  virtual void get_destination(std::string & destination) const = 0;
+  virtual void get_source(std::string & source) const = 0;
+  virtual void get_headers(function<void(std::string const &, std::string const &)> inserter) const = 0;
+  virtual void get_headers(std::string const & name, function<void(std::string const &, std::string const &)> inserter) const = 0;
+  virtual void get_headers(function<bool(std::string const &, std::string const &)> predicate, function<void(std::string const &, std::string const &)> inserter) const = 0;
+  virtual void get_body(std::string & body) const = 0;
+  virtual void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) const = 0;
 
   // Destructor
   virtual ~message_base() = 0;  // pure virtual

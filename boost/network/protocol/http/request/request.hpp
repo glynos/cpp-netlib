@@ -28,13 +28,13 @@ struct request : request_base {
   virtual void append_body(std::string const & data);
 
   // Retrievers
-  virtual void get_destination(std::string & destination);
-  virtual void get_source(std::string & source);
-  virtual void get_headers(function<void(std::string const &, std::string const &)> inserter);
-  virtual void get_headers(std::string const & name, function<void(std::string const &, std::string const &)> inserter);
-  virtual void get_headers(function<bool(std::string const &, std::string const &)> predicate, function<void(std::string const &, std::string const &)> inserter);
-  virtual void get_body(std::string & body);
-  virtual void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size);
+  virtual void get_destination(std::string & destination) const;
+  virtual void get_source(std::string & source) const;
+  virtual void get_headers(function<void(std::string const &, std::string const &)> inserter) const;
+  virtual void get_headers(std::string const & name, function<void(std::string const &, std::string const &)> inserter) const;
+  virtual void get_headers(function<bool(std::string const &, std::string const &)> predicate, function<void(std::string const &, std::string const &)> inserter) const;
+  virtual void get_body(std::string & body) const;
+  virtual void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) const;
 
   // From request_base...
   // Setters
@@ -46,12 +46,12 @@ struct request : request_base {
   virtual void set_uri(network::uri::uri const &uri);
 
   // Getters
-  virtual void get_uri(network::uri::uri &uri);
-  virtual void get_uri(std::string &uri);
-  virtual void get_method(std::string & method);
-  virtual void get_status(std::string & status);
-  virtual void get_status_message(std::string & status_message);
-  virtual void get_body_stream(body_stream & output_stream);
+  virtual void get_uri(network::uri::uri &uri) const;
+  virtual void get_uri(std::string &uri) const;
+  virtual void get_method(std::string & method) const;
+  virtual void get_status(std::string & status) const;
+  virtual void get_status_message(std::string & status_message) const;
+  virtual void get_body_stream(body_stream & output_stream) const;
 
   virtual ~request();
  private:

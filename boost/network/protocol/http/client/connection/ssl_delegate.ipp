@@ -10,14 +10,14 @@
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
 #include <boost/bind.hpp>
 
-boost::network::http::impl::ssl_delegate::ssl_delegate(asio::io_service & service,
+boost::network::http::ssl_delegate::ssl_delegate(asio::io_service & service,
                                          optional<std::string> certificate_filename,
                                          optional<std::string> verify_path) :
   service_(service),
   certificate_filename_(certificate_filename),
   verify_path_(verify_path) {}
 
-void boost::network::http::impl::ssl_delegate::connect(
+void boost::network::http::ssl_delegate::connect(
     asio::ip::tcp::endpoint & endpoint,
     function<void(system::error_code const &)> handler) {
   context_.reset(new asio::ssl::context(
@@ -33,13 +33,13 @@ void boost::network::http::impl::ssl_delegate::connect(
   socket_.reset(new asio::ssl::stream<asio::ip::tcp::socket>(service_, *context_));
   socket_->lowest_layer().async_connect(
       endpoint,
-      bind(&boost::network::http::impl::ssl_delegate::handle_connected,
-           boost::network::http::impl::ssl_delegate::shared_from_this(),
+      bind(&boost::network::http::ssl_delegate::handle_connected,
+           boost::network::http::ssl_delegate::shared_from_this(),
            asio::placeholders::error,
            handler));
 }
 
-void boost::network::http::impl::ssl_delegate::handle_connected(system::error_code const & ec,
+void boost::network::http::ssl_delegate::handle_connected(system::error_code const & ec,
                                            function<void(system::error_code const &)> handler) {
   if (!ec) {
     socket_->async_handshake(asio::ssl::stream_base::client, handler);
@@ -48,18 +48,18 @@ void boost::network::http::impl::ssl_delegate::handle_connected(system::error_co
   }
 }
 
-void boost::network::http::impl::ssl_delegate::write(
+void boost::network::http::ssl_delegate::write(
     asio::streambuf & command_streambuf,
     function<void(system::error_code const &, size_t)> handler) {
   asio::async_write(*socket_, command_streambuf, handler);
 }
 
-void boost::network::http::impl::ssl_delegate::read_some(
+void boost::network::http::ssl_delegate::read_some(
     asio::mutable_buffers_1 const & read_buffer,
     function<void(system::error_code const &, size_t)> handler) {
   socket_->async_read_some(read_buffer, handler);
 }
 
-boost::network::http::impl::ssl_delegate::~ssl_delegate() {}
+boost::network::http::ssl_delegate::~ssl_delegate() {}
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_IPP_20110819 */

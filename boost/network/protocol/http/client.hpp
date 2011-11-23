@@ -58,6 +58,7 @@ struct client : basic_client_facade {
           (openssl_certificate, (std::string))
           (openssl_verify_path, (std::string))
           (connection_manager, (shared_ptr<connection_manager>))
+          (connection_factory, (shared_ptr<connection_factory>))
           ))
 
   //

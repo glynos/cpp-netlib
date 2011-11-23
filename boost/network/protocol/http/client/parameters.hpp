@@ -21,6 +21,7 @@ namespace boost { namespace network { namespace http {
     BOOST_PARAMETER_NAME(body_handler)
 
     BOOST_PARAMETER_NAME(connection_manager)
+    BOOST_PARAMETER_NAME(connection_factory)
 
 } /* http */
 } /* network */

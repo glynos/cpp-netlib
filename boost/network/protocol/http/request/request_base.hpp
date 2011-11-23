@@ -49,12 +49,12 @@ struct request_base : message_base, request_storage_base {
   virtual void set_uri(network::uri::uri const &uri) = 0;
 
   // Getters
-  virtual void get_uri(network::uri::uri &uri) = 0;
-  virtual void get_uri(std::string &uri) = 0;
-  virtual void get_method(std::string & method) = 0;
-  virtual void get_status(std::string & status) = 0;
-  virtual void get_status_message(std::string & status_message) = 0;
-  virtual void get_body_stream(body_stream & output_stream) = 0;
+  virtual void get_uri(network::uri::uri &uri) const = 0;
+  virtual void get_uri(std::string &uri) const = 0;
+  virtual void get_method(std::string & method) const = 0;
+  virtual void get_status(std::string & status) const = 0;
+  virtual void get_status_message(std::string & status_message) const = 0;
+  virtual void get_body_stream(body_stream & output_stream) const = 0;
   virtual ~request_base() = 0;
 };
 

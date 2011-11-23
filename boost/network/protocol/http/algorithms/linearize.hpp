@@ -9,7 +9,7 @@
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
 #include <boost/network/protocol/http/message/header_concept.hpp>
-#include <boost/network/protocol/http/request_concept.hpp>
+#include <boost/network/protocol/http/request/request_concept.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/concept/requires.hpp>
 #include <boost/optional.hpp>

@@ -14,17 +14,17 @@ namespace boost { namespace network {
 namespace impl {
 
 struct destination_wrapper {
-  explicit destination_wrapper(message_base & message);
+  explicit destination_wrapper(message_base const & message);
   operator std::string () const;
  private:
-  message_base & message_;
+  message_base const & message_;
   mutable optional<std::string> cache_;
 };
 
 } // namespace impl
 
 inline std::string const
-destination(message_base & message_) {
+destination(message_base const & message_) {
   return impl::destination_wrapper(message_);
 }
 

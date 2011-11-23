@@ -24,20 +24,20 @@ struct response : response_base {
   virtual void append_body(std::string const & data);
 
   // Retrievers
-  virtual void get_destination(std::string & destination);
-  virtual void get_source(std::string & source);
+  virtual void get_destination(std::string & destination) const;
+  virtual void get_source(std::string & source) const;
   virtual void get_headers(
-      function<void(std::string const &, std::string const &)> inserter);
+      function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_headers(
       std::string const & name,
-      function<void(std::string const &, std::string const &)> inserter);
+      function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_headers(
       function<bool(std::string const &, std::string const &)> predicate,
-      function<void(std::string const &, std::string const &)> inserter);
-  virtual void get_body(std::string & body);
+      function<void(std::string const &, std::string const &)> inserter) const;
+  virtual void get_body(std::string & body) const;
   virtual void get_body(
       function<void(iterator_range<char const *>)> chunk_reader,
-      size_t size);
+      size_t size) const;
 
   // From response_base...
   virtual void set_status(std::string const & new_status);

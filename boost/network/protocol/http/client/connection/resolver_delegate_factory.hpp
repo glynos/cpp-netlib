@@ -9,21 +9,20 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace boost { namespace network { namespace http { namespace impl {
+namespace boost { namespace network { namespace http {
 
 struct resolver_base;
 
-template <class Tag, class Enable>
-struct resolver_delegate_factory;
-
-template <class Tag>
-struct resolver_delegate_factory<Tag, typename enable_if<is_async<Tag> >::type> {
-  typedef shared_ptr<resolver_base> resolver_delegate_ptr;
-  // TODO Implement this!
-  resolver_delegate_ptr new_resolver_delegate(...);
+struct resolver_delegate_factory {
+  resolver_delegate_factory();
+  virtual shared_ptr<resolver_base> create_resolver_delegate(
+      asio::io_service & service,
+      request_base const & request);
+ private:
+  resolver_delegate_factory(resolver_delegate_factory const &);  // = delete
+  resolver_delegate_factory& operator=(resolver_delegate_factory);  // = delete
 };
 
-} /* impl */
 } /* http */
 } /* network */
 } /* boost */

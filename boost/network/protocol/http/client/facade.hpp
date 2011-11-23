@@ -10,7 +10,8 @@
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/client/base.hpp>
 #include <boost/network/protocol/http/client/parameters.hpp>
-#include <boost/network/protocol/http/policies/async_connection.hpp>
+#include <boost/network/protocol/http/client/connection/simple_connection_factory.hpp>
+#include <boost/network/protocol/http/client/simple_connection_manager.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -127,12 +128,16 @@ struct basic_client_facade {
 
   template <class ArgPack>
   void init_base(ArgPack const & args, no_io_service) {
-    base.reset(new client_base(this->get_connection_manager(args)));
+    base.reset(new client_base(
+        this->get_connection_manager(args)));
   }
 
   template <class ArgPack>
   void init_base(ArgPack const & args, has_io_service) {
-    base.reset(new client_base(args[_io_service], this->get_connection_manager(args)));
+    base.reset(
+        new client_base(
+            args[_io_service],
+            this->get_connection_manager(args)));
   }
 
  private:
@@ -142,16 +147,32 @@ struct basic_client_facade {
     shared_ptr<connection_manager> connection_manager_ = args[_connection_manager|shared_ptr<connection_manager>()];
     if (!connection_manager_.get()) {
       // Because there's no explicit connection manager, we use the default
-      // implementation as provided by the tag.
+      // implementation.
       connection_manager_.reset(
-          new simple_async_connection_manager(args[_cache_resolved|false],
-                                              args[_follow_redirects|false],
-                                              args[_openssl_certificate|optional<std::string>()],
-                                              args[_openssl_verify_path|optional<std::string>()]));
+          new (std::nothrow) simple_connection_manager(
+              args[_cache_resolved|false],
+              args[_follow_redirects|false],
+              args[_openssl_certificate|optional<std::string>()],
+              args[_openssl_verify_path|optional<std::string>()],
+              this->get_connection_factory(args)));
     }
 
     return connection_manager_;
   }
+
+  template <class ArgPack>
+  shared_ptr<connection_factory> get_connection_factory(ArgPack const & args) {
+    shared_ptr<connection_factory> connection_factory_ = args[_connection_factory|shared_ptr<connection_factory>()];
+    if (!connection_factory_.get()) {
+      // Because there's no explicit connection factory, we use the default
+      // implementation.
+      connection_factory_.reset(
+          new (std::nothrow) simple_connection_factory());
+    }
+
+    return connection_factory_;
+  }
+
 };
 
 } // namespace http

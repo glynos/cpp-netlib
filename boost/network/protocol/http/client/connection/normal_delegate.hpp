@@ -11,7 +11,7 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/asio/placeholders.hpp>
 
-namespace boost { namespace network { namespace http { namespace impl {
+namespace boost { namespace network { namespace http {
 
 struct normal_delegate : connection_delegate {
   normal_delegate(asio::io_service & service);
@@ -31,8 +31,6 @@ struct normal_delegate : connection_delegate {
   normal_delegate(normal_delegate const &);  // = delete
   normal_delegate& operator=(normal_delegate);  // = delete
 };
-
-} /* impl */
 
 } /* http */
 

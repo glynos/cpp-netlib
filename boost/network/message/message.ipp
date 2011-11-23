@@ -53,22 +53,22 @@ struct message_pimpl {
   }
 
   // Retrievers
-  void get_destination(std::string & destination) {
+  void get_destination(std::string & destination) const {
     destination = destination_;
   }
 
-  void get_source(std::string & source) {
+  void get_source(std::string & source) const {
     source = source_;
   }
 
-  void get_headers(function<void(std::string const &, std::string const &)> inserter) {
+  void get_headers(function<void(std::string const &, std::string const &)> inserter) const {
     std::multimap<std::string, std::string>::const_iterator it  = headers_.begin(),
                                                             end = headers_.end();
     for (; it != end; ++it) inserter(it->first, it->second);
   }
 
   void get_headers(std::string const & name,
-                   function<void(std::string const &, std::string const &)> inserter) {
+                   function<void(std::string const &, std::string const &)> inserter) const {
     std::multimap<std::string, std::string>::const_iterator it = headers_.find(name),
                                                             end= headers_.end();
     while (it != end) {
@@ -78,7 +78,7 @@ struct message_pimpl {
   }
 
   void get_headers(function<bool(std::string const &, std::string const &)> predicate,
-                   function<void(std::string const &, std::string const &)> inserter) {
+                   function<void(std::string const &, std::string const &)> inserter) const {
     std::multimap<std::string, std::string>::const_iterator it = headers_.begin(),
                                                             end = headers_.end();
     while (it != end) {
@@ -92,7 +92,7 @@ struct message_pimpl {
     body = body_;
   }
 
-  void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) {
+  void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) const {
     static char const * nullptr_ = 0;
     if (body_read_pos == body_.size())
       chunk_reader(boost::make_iterator_range(nullptr_, nullptr_));
@@ -122,7 +122,7 @@ struct message_pimpl {
   std::multimap<std::string, std::string> headers_;
   // TODO: use Boost.IOStreams here later on.
   std::string body_;
-  size_t body_read_pos;
+  mutable size_t body_read_pos;
 };
 
 message::message()
@@ -171,33 +171,33 @@ void message::append_body(std::string const & data) {
   pimpl->append_body(data);
 }
 
-void message::get_destination(std::string & destination) {
+void message::get_destination(std::string & destination) const {
   pimpl->get_destination(destination);
 }
 
-void message::get_source(std::string & source) {
+void message::get_source(std::string & source) const {
   pimpl->get_source(source);
 }
 
-void message::get_headers(function<void(std::string const &, std::string const &)> inserter) {
+void message::get_headers(function<void(std::string const &, std::string const &)> inserter) const {
   pimpl->get_headers(inserter);
 }
 
 void message::get_headers(std::string const & name,
-                          function<void(std::string const &, std::string const &)> inserter) {
+                          function<void(std::string const &, std::string const &)> inserter) const {
   pimpl->get_headers(name, inserter);
 }
 
 void message::get_headers(function<bool(std::string const &, std::string const &)> predicate,
-                          function<void(std::string const &, std::string const &)> inserter) {
+                          function<void(std::string const &, std::string const &)> inserter) const {
   pimpl->get_headers(predicate, inserter);
 }
 
-void message::get_body(std::string & body) {
+void message::get_body(std::string & body) const {
   pimpl->get_body(body);
 }
 
-void message::get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) {
+void message::get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) const {
   pimpl->get_body(chunk_reader, size);
 }
 

@@ -11,7 +11,7 @@
 
 namespace boost { namespace network { namespace impl {
 
-destination_wrapper::destination_wrapper(message_base & message):
+destination_wrapper::destination_wrapper(message_base const & message):
   message_(message) {}
 
 destination_wrapper::operator std::string () const {

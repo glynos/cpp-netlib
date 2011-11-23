@@ -9,53 +9,35 @@
 
 #include <boost/throw_exception.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
-#include <boost/network/protocol/http/client/connection/normal_delegate.hpp>
-#ifdef BOOST_NETWORK_ENABLE_HTTPS
-#include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
-#endif /* BOOST_NETWORK_ENABLE_HTTPS */
 
-namespace boost { namespace network { namespace http { namespace impl {
-
-struct ssl_delegate;
-
-struct normal_delegate;
+namespace boost { namespace network { namespace http {
 
 struct connection_delegate_factory {
   typedef shared_ptr<connection_delegate> connection_delegate_ptr;
 
+  connection_delegate_factory();
+
   // This is the factory method that actually returns the delegate instance.
   // TODO Support passing in proxy settings when crafting connections.
-  static connection_delegate_ptr new_connection_delegate(
+  virtual connection_delegate_ptr create_connection_delegate(
       asio::io_service & service,
       bool https,
       optional<std::string> certificate_filename,
       optional<std::string> verify_path);
+
+  virtual ~connection_delegate_factory();
+
+ private:
+  connection_delegate_factory(connection_delegate_factory const &);  // = delete
+  connection_delegate_factory& operator=(connection_delegate_factory);  // = delete
 };
 
-connection_delegate_factory::connection_delegate_ptr
-connection_delegate_factory::new_connection_delegate(
-    asio::io_service & service,
-    bool https,
-    optional<std::string> certificate_filename,
-    optional<std::string> verify_path) {
-  connection_delegate_ptr delegate;
-  if (https) {
-#ifdef BOOST_NETWORK_ENABLE_HTTPS
-    delegate.reset(new ssl_delegate(service,
-                                    certificate_filename,
-                                    verify_path));
-#else
-    BOOST_THROW_EXCEPTION(std::runtime_error("HTTPS not supported."));
-#endif /* BOOST_NETWORK_ENABLE_HTTPS */
-  } else {
-    delegate.reset(new normal_delegate(service));
-  }
-  return delegate;
-}
-
-} /* impl */
 } /* http */
 } /* network */
 } /* boost */
+
+#ifdef BOOST_NETWORK_NO_LIB
+#include <boost/network/protocol/http/client/connection/connection_delegate_factory.ipp>
+#endif
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_DELEGATE_FACTORY_HPP_20110819 */
