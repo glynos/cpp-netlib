@@ -17,7 +17,7 @@ struct resolver_delegate_factory {
   resolver_delegate_factory();
   virtual shared_ptr<resolver_delegate> create_resolver_delegate(
       asio::io_service & service,
-      request_base const & request);
+      bool cache_resolved);
   virtual ~resolver_delegate_factory();
  private:
   resolver_delegate_factory(resolver_delegate_factory const &);  // = delete

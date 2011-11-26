@@ -17,7 +17,7 @@ struct async_resolver_pimpl;
 struct async_resolver : resolver_delegate {
   using resolver_delegate::resolve_completion_function;
 
-  explicit async_resolver(asio::io_service & service);
+  async_resolver(asio::io_service & service, bool cache_resolved);
   virtual void resolve(std::string const & host,
                        uint16_t port,
                        resolve_completion_function once_resolved);  // override

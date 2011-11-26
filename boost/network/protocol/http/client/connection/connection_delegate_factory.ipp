@@ -39,6 +39,8 @@ connection_delegate_factory::create_connection_delegate(
   return delegate;
 }
 
+connection_delegate_factory::~connection_delegate_factory() {}
+
 } /* http */
   
 } /* network */

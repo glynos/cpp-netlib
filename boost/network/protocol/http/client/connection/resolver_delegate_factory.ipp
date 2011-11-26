@@ -16,8 +16,9 @@ resolver_delegate_factory::resolver_delegate_factory() {}
 
 shared_ptr<resolver_delegate>
 resolver_delegate_factory::create_resolver_delegate(asio::io_service & service,
-                                                    request_base const & request) {
-  shared_ptr<resolver_delegate> resolver_(new (std::nothrow) async_resolver(service));
+                                                    bool cache_resolved) {
+  shared_ptr<resolver_delegate> resolver_(
+      new (std::nothrow) async_resolver(service, cache_resolved));
   return resolver_;
 }
 

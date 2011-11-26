@@ -32,7 +32,7 @@ struct simple_connection_factory_pimpl {
     bool https = to_lower_copy(scheme(uri_)) == "https";
     shared_ptr<client_connection> conn_;
     conn_.reset(new (std::nothrow) http_async_connection(
-      res_delegate_factory_->create_resolver_delegate(service, request),
+      res_delegate_factory_->create_resolver_delegate(service, cache_resolved),
       conn_delegate_factory_->create_connection_delegate(
         service, https, openssl_certificate, openssl_verify_path),
       service,
