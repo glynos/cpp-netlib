@@ -55,7 +55,6 @@ struct simple_connection_manager_pimpl {
   bool cache_resolved_, follow_redirects_;
   optional<std::string> openssl_certificate_, openssl_verify_path_;
   shared_ptr<connection_factory> connection_factory_;
-
 };
 
 simple_connection_manager::simple_connection_manager(bool cache_resolved,

@@ -35,5 +35,9 @@ set(CPP-NETLIB_HTTP_CLIENT_CONNECTIONS_SRCS
     http/connection_delegate_factory.cpp)
 add_library(cppnetlib-http-client-connections ${CPP-NETLIB_HTTP_CLIENT_CONNECTIONS_SRCS})
 
+set(CPP-NETLIB_HTTP_CLIENT_SRCS
+    http/client.cpp)
+add_library(cppnetlib-http-client ${CPP-NETLIB_HTTP_CLIENT_SRCS})
+
 set(CPP-NETLIB_UTILS_THREAD_POOL_SRCS utils/thread_pool.cpp)
 add_library(cppnetlib-utils-thread_pool ${CPP-NETLIB_UTILS_THREAD_POOL_SRCS})

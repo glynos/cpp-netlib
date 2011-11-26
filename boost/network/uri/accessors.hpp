@@ -51,6 +51,7 @@ Map &query_map(const uri &uri_, Map &map) {
     return map;
 }
 
+inline
 std::string username(const uri &uri_) {
     uri::const_range_type user_info_range = uri_.user_info_range();
     uri::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
@@ -62,6 +63,7 @@ std::string username(const uri &uri_) {
     return std::string(boost::begin(user_info_range), it);
 }
 
+inline
 std::string password(const uri &uri_) {
     uri::const_range_type user_info_range = uri_.user_info_range();
     uri::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
@@ -74,6 +76,7 @@ std::string password(const uri &uri_) {
     return std::string(it, boost::end(user_info_range));
 }
 
+inline
 std::string decoded_path(const uri &uri_) {
     uri::const_range_type path_range = uri_.path_range();
     std::string decoded_path;
@@ -81,6 +84,7 @@ std::string decoded_path(const uri &uri_) {
     return decoded_path;
 }
 
+inline
 std::string decoded_query(const uri &uri_) {
     uri::const_range_type query_range = uri_.query_range();
     std::string decoded_query;
@@ -88,6 +92,7 @@ std::string decoded_query(const uri &uri_) {
     return decoded_query;
 }
 
+inline
 std::string decoded_fragment(const uri &uri_) {
     uri::const_range_type fragment_range = uri_.fragment_range();
     std::string decoded_fragment;

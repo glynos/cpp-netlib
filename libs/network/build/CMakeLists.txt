@@ -13,3 +13,12 @@ add_library(cppnetlib-http-message
     STATIC
     ${CPP-NETLIB_SOURCE_DIR}/libs/network/src/http/request.cpp
     ${CPP-NETLIB_SOURCE_DIR}/libs/network/src/http/response.cpp)
+add_library(cppnetlib-http-client-connections
+    STATIC
+    ${CPP-NETLIB_SOURCE_DIR}/libs/network/src/http/client_connections.cpp
+    ${CPP-NETLIB_SOURCE_DIR}/libs/network/src/http/simple_connection_manager.cpp
+    ${CPP-NETLIB_SOURCE_DIR}/libs/network/src/http/simple_connection_factory.cpp
+    ${CPP-NETLIB_SOURCE_DIR}/libs/network/src/http/connection_delegate_factory.cpp)
+add_library(cppnetlib-http-client
+    STATIC
+    ${CPP-NETLIB_SOURCE_DIR}/libs/network/src/http/client.cpp)

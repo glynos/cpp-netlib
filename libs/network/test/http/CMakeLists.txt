@@ -35,14 +35,16 @@ if (Boost_FOUND)
             cppnetlib-uri
             cppnetlib-message
             cppnetlib-http-message
-            cppnetlib-client-connections)
+            cppnetlib-http-client
+            cppnetlib-http-client-connections)
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT}
             cppnetlib-uri
             cppnetlib-message
             cppnetlib-http-message
-            cppnetlib-client-connections)
+            cppnetlib-http-client
+            cppnetlib-http-client-connections)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()

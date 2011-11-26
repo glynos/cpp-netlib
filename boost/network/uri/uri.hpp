@@ -292,6 +292,7 @@ bool is_hierarchical(const uri &uri_) {
     return false;
 }
 
+inline
 bool is_opaque(const uri &uri_) {
     return false;
 }
