@@ -23,7 +23,7 @@ struct http_async_connection
 : client_connection
 , enable_shared_from_this<http_async_connection> {
   using client_connection::callback_type;
-  http_async_connection(shared_ptr<resolver_base> resolver_delegate,
+  http_async_connection(shared_ptr<resolver_delegate> resolver_delegate,
                         shared_ptr<connection_delegate> connection_delegate,
                         asio::io_service & io_service,
                         bool follow_redirects);

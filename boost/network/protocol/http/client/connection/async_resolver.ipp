@@ -1,5 +1,5 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_RESOLVER_IPP_20110910
-#define BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_RESOLVER_IPP_20110910
+#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_ASYNC_RESOLVER_IPP_20110911
+#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_ASYNC_RESOLVER_IPP_20111126
 
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
@@ -38,6 +38,8 @@ void async_resolver::clear_resolved_cache() {
 async_resolver::~async_resolver() {
   // Do nothing
 }
+
+// Define the actual implementation in a private implementation class.
 
 struct async_resolver_pimpl : enable_shared_from_this<async_resolver_pimpl> {
   explicit async_resolver_pimpl(asio::io_service & service);
@@ -121,4 +123,4 @@ void handle_resolve(std::string const & host,
 } /* boost */
 
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_RESOLVER_IPP_20110910 */
+#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_ASYNC_RESOLVER_IPP_20111126 */
