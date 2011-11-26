@@ -7,11 +7,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/client/base.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
 #include <boost/network/protocol/http/client/connection_manager.hpp>
+#include <boost/network/protocol/http/request/request_base.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -20,8 +22,8 @@ struct client_base_pimpl {
     function<void(boost::iterator_range<char const *> const &, system::error_code const &)>
     body_callback_function_type;
   client_base_pimpl(shared_ptr<connection_manager> connection_manager_);
-  client_base_pimpl(io_service & service, shared_ptr<connection_manager> connection_manager_);
-  response const request_skeleton(request const & request_,
+  client_base_pimpl(asio::io_service & service, shared_ptr<connection_manager> connection_manager_);
+  response const request_skeleton(request_base const & request_,
                                   std::string const & method,
                                   bool get_body,
                                   body_callback_function_type callback);
@@ -80,7 +82,7 @@ client_base_pimpl::client_base_pimpl(boost::asio::io_service & service,
     BOOST_THROW_EXCEPTION(std::runtime_error("Cannot allocate sentinel; not enough memory."));
 }
 
-~client_base_pimpl::client_base_pimpl()
+client_base_pimpl::~client_base_pimpl()
 {
   sentinel_.reset();
   connection_manager_->reset();
@@ -92,7 +94,7 @@ client_base_pimpl::client_base_pimpl(boost::asio::io_service & service,
 }
 
 response const client_base_pimpl::request_skeleton(
-  request const & request_,
+  request_base const & request_,
   std::string const & method,
   bool get_body,
   body_callback_function_type callback
