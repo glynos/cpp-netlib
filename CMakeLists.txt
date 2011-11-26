@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 2.6)
 project(CPP-NETLIB)
-find_package( Boost 1.41.0 )
+find_package( Boost 1.45.0 )
 find_package( OpenSSL )
 find_package( Threads )
 set(CMAKE_VERBOSE_MAKEFILE true)
@@ -32,8 +32,8 @@ endif()
 
 add_subdirectory(libs/network/src)
 add_subdirectory(libs/network/test)
-if (NOT MSVC)
-  add_subdirectory(libs/mime/test)
-endif(NOT MSVC)
+#if (NOT MSVC)
+#  add_subdirectory(libs/mime/test)
+#endif(NOT MSVC)
 add_subdirectory(libs/network/example)
 

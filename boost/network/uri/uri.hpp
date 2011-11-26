@@ -303,31 +303,6 @@ bool operator == (const uri &lhs, const uri &rhs) {
 }
 } // namespace uri
 } // namespace network
-
-inline
-network::uri::uri::iterator begin(network::uri::uri &uri_) {
-    return uri_.begin();
-}
-
-inline
-network::uri::uri::iterator end(network::uri::uri &uri_) {
-    return uri_.end();
-}
-
-inline
-network::uri::uri::const_iterator begin(const network::uri::uri &uri_) {
-    return uri_.begin();
-}
-
-inline
-network::uri::uri::const_iterator end(const network::uri::uri &uri_) {
-    return uri_.end();
-}
-
-inline
-void swap(network::uri::uri &lhs, network::uri::uri &rhs) {
-    lhs.swap(rhs);
-}
 } // namespace boost
 
 

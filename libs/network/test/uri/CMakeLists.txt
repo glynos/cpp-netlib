@@ -4,7 +4,7 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.41.0 COMPONENTS unit_test_framework system regex date_time filesystem )
+find_package( Boost 1.45.0 COMPONENTS unit_test_framework system regex date_time filesystem )
 find_package( OpenSSL )
 find_package( Threads )
 

@@ -4,7 +4,7 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.41.0 COMPONENTS unit_test_framework system regex date_time thread filesystem )
+find_package( Boost 1.45.0 COMPONENTS unit_test_framework system regex date_time thread filesystem )
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 
@@ -23,9 +23,6 @@ if (Boost_FOUND)
             PROPERTIES COMPILE_FLAGS "-Wall")
         add_executable(cpp-netlib-${test} ${test}.cpp)
 	add_dependencies(cpp-netlib-${test} cppnetlib-uri)
-
-        # add_dependencies(cpp-netlib-${test} cppnetlib-uri)
-        # target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri)
         target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
