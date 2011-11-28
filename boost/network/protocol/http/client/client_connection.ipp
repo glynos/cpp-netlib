@@ -8,11 +8,18 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/client/client_connection.hpp>
+#include <boost/assert.hpp>
 
 namespace boost { namespace network { namespace http {
 
 client_connection::~client_connection() {
-  // default implementation, for linkage only.
+  // For exposition only.
+  BOOST_ASSERT(false && "This should not ever be called.");
+}
+
+client_connection * client_connection::clone() const {
+  // For exposition only.
+  BOOST_ASSERT(false && "This should not ever be called.");
 }
 
 

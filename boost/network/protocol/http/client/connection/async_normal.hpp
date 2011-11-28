@@ -19,14 +19,14 @@ namespace boost { namespace network { namespace http {
 
 struct http_async_connection_pimpl;
 
-struct http_async_connection
-: client_connection
-, enable_shared_from_this<http_async_connection> {
+struct http_async_connection : client_connection
+                             , enable_shared_from_this<http_async_connection> {
   using client_connection::callback_type;
   http_async_connection(shared_ptr<resolver_delegate> resolver_delegate,
                         shared_ptr<connection_delegate> connection_delegate,
                         asio::io_service & io_service,
                         bool follow_redirects);
+  http_async_connection * clone() const;
   virtual response send_request(std::string const & method,
                                 request_base const & request,
                                 bool get_body,
@@ -34,7 +34,7 @@ struct http_async_connection
   virtual void reset();  // override
   virtual ~http_async_connection();
  private:
-  scoped_ptr<http_async_connection_pimpl> pimpl;
+  shared_ptr<http_async_connection_pimpl> pimpl;
 };
 
 } // namespace http

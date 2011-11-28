@@ -14,51 +14,50 @@ namespace boost { namespace network { namespace http {
 
 namespace placeholders = boost::asio::placeholders;
 
-struct http_async_connection
-: client_connection
-, boost::enable_shared_from_this<http_async_connection>
+struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_connection_pimpl>
 {
+  http_async_connection_pimpl(
+    resolver_delegate_ptr resolver_delegate,
+    asio::io_service & io_service,
+    bool follow_redirect,
+    connection_delegate_ptr delegate)
+  :
+        follow_redirect_(follow_redirect),
+        request_strand_(io_service),
+        resolver_delegate_(resolver_delegate),
+        delegate_(delegate) {}
 
-    http_async_connection(resolver_delegate_ptr resolver_delegate,
-                          asio::io_service & io_service,
-                          bool follow_redirect,
-                          connection_delegate_ptr delegate)
-        :
-          follow_redirect_(follow_redirect),
-          request_strand_(io_service),
-          resolver_delegate_(resolver_delegate),
-          delegate_(delegate) {}
+  // This is the main entry point for the connection/request pipeline. We're
+  // overriding async_connection_base<...>::start(...) here which is called
+  // by the client.
+  response start(request const & request,
+                 string_type const & method,
+                 bool get_body,
+                 body_callback_function_type callback) {
+    response response_;
+    this->init_response(response_, get_body);
+    linearize(request, method, version_major, version_minor,
+      std::ostreambuf_iterator<typename char_<Tag>::type>(&command_streambuf));
+    this->method = method;
+    boost::uint16_t port_ = port(request);
+    resolver_delegate_->resolve(
+        host(request),
+        port_,
+        request_strand_.wrap(
+            boost::bind(
+                &this_type::handle_resolved,
+                this_type::shared_from_this(),
+                port_,
+                get_body,
+                callback,
+                _1,
+                _2)));
+    return response_;
+  }
 
-    // This is the main entry point for the connection/request pipeline. We're
-    // overriding async_connection_base<...>::start(...) here which is called
-    // by the client.
-    virtual response start(request const & request,
-                           string_type const & method,
-                           bool get_body,
-                           body_callback_function_type callback) {
-      response response_;
-      this->init_response(response_, get_body);
-      linearize(request, method, version_major, version_minor,
-        std::ostreambuf_iterator<typename char_<Tag>::type>(&command_streambuf));
-      this->method = method;
-      boost::uint16_t port_ = port(request);
-      resolver_delegate_->resolve(host(request),
-                                  port_,
-                                  request_strand_.wrap(
-                                      boost::bind(
-                                          &this_type::handle_resolved,
-                                          this_type::shared_from_this(),
-                                          port_,
-                                          get_body,
-                                          callback,
-                                          _1,
-                                          _2)));
-      return response_;
-    }
+ private:
 
-private:
-
-  http_async_connection(http_async_connection const &); // = delete
+  http_async_connection_pimpl(http_async_connection_pimpl const &); // = delete
 
   void set_errors(boost::system::error_code const & ec) {
     boost::system::system_error error(ec);
@@ -385,6 +384,19 @@ private:
   string_type method;
 };
 
+// END OF PIMPL DEFINITION
+
+http_async_connection::http_async_connection(shared_ptr<resolver_delegate> resolver_delegate,
+                                             shared_ptr<connection_delegate> connection_delegate,
+                                             asio::io_service & io_service,
+                                             bool follow_redirects)
+: pimpl(new (std::nothrow) http_async_connection_pimpl(resolver_delegate,
+                                                       connection_delegate,
+                                                       io_service,
+                                                       follow_redirects))
+{}
+
+http_async_connection::http
   
 } /* http */
   

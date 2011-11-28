@@ -23,6 +23,7 @@ struct client_connection {
                                 request_base const & request,
                                 bool get_body,
                                 callback_type callback) = 0;
+  virtual client_connection * clone() const = 0;
   virtual void reset() = 0;
   virtual ~client_connection() = 0;
 };
