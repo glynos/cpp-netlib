@@ -12,6 +12,7 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
+#include <boost/network/protocol/http/client/client_connection.hpp>
 #include <boost/network/protocol/http/client/connection/resolver_delegate.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 

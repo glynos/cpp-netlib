@@ -9,6 +9,8 @@
 
 #include <boost/asio/placeholders.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
+#include <boost/network/protocol/http/algorithms/linearize.hpp>
+#include <boost/asio/strand.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -16,28 +18,31 @@ namespace placeholders = boost::asio::placeholders;
 
 struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_connection_pimpl>
 {
+  typedef http_async_connection::callback_type body_callback_function_type;
+  typedef resolver_delegate::resolver_iterator resolver_iterator;
+  typedef resolver_delegate::iterator_pair resolver_iterator_pair;
+
   http_async_connection_pimpl(
-    resolver_delegate_ptr resolver_delegate,
+    shared_ptr<resolver_delegate> resolver_delegate,
+    shared_ptr<connection_delegate> connection_delegate,
     asio::io_service & io_service,
-    bool follow_redirect,
-    connection_delegate_ptr delegate)
+    bool follow_redirect)
   :
         follow_redirect_(follow_redirect),
         request_strand_(io_service),
         resolver_delegate_(resolver_delegate),
-        delegate_(delegate) {}
+        connection_delegate_(connection_delegate) {}
 
   // This is the main entry point for the connection/request pipeline. We're
   // overriding async_connection_base<...>::start(...) here which is called
   // by the client.
   response start(request const & request,
-                 string_type const & method,
+                 std::string const & method,
                  bool get_body,
                  body_callback_function_type callback) {
     response response_;
-    this->init_response(response_, get_body);
-    linearize(request, method, version_major, version_minor,
-      std::ostreambuf_iterator<typename char_<Tag>::type>(&command_streambuf));
+    linearize(request, method, 1, 1,
+      std::ostreambuf_iterator<char>(&command_streambuf));
     this->method = method;
     boost::uint16_t port_ = port(request);
     resolver_delegate_->resolve(
@@ -61,13 +66,14 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
 
   void set_errors(boost::system::error_code const & ec) {
     boost::system::system_error error(ec);
-    this->version_promise.set_exception(boost::copy_exception(error));
-    this->status_promise.set_exception(boost::copy_exception(error));
-    this->status_message_promise.set_exception(boost::copy_exception(error));
-    this->headers_promise.set_exception(boost::copy_exception(error));
-    this->source_promise.set_exception(boost::copy_exception(error));
-    this->destination_promise.set_exception(boost::copy_exception(error));
-    this->body_promise.set_exception(boost::copy_exception(error));
+    // FIXME: Wire up the response object for errors.
+//    this->version_promise.set_exception(boost::copy_exception(error));
+//    this->status_promise.set_exception(boost::copy_exception(error));
+//    this->status_message_promise.set_exception(boost::copy_exception(error));
+//    this->headers_promise.set_exception(boost::copy_exception(error));
+//    this->source_promise.set_exception(boost::copy_exception(error));
+//    this->destination_promise.set_exception(boost::copy_exception(error));
+//    this->body_promise.set_exception(boost::copy_exception(error));
   }
 
   void handle_resolved(boost::uint16_t port,
@@ -80,7 +86,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       // that there's still more endpoints to try connecting to.
       resolver_iterator iter = boost::begin(endpoint_range);
       asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
-      delegate_->connect(endpoint,
+      connection_delegate_->connect(endpoint,
                          request_strand_.wrap(
                              boost::bind(
                                  &this_type::handle_connected,
@@ -102,8 +108,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                         resolver_iterator_pair endpoint_range,
                         boost::system::error_code const & ec) {
     if (!ec) {
-      BOOST_ASSERT(delegate_.get() != 0);
-      delegate_->write(command_streambuf,
+      BOOST_ASSERT(connection_delegate_.get() != 0);
+      connection_delegate_->write(command_streambuf,
                        request_strand_.wrap(
                            boost::bind(
                                &this_type::handle_sent_request,
@@ -116,7 +122,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       if (!boost::empty(endpoint_range)) {
         resolver_iterator iter = boost::begin(endpoint_range);
         asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
-        delegate_->connect(endpoint,
+        connection_delegate_->connect(endpoint,
                            request_strand_.wrap(
                                boost::bind(
                                    &this_type::handle_connected,
@@ -142,7 +148,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                            boost::system::error_code const & ec,
                            std::size_t bytes_transferred) {
     if (!ec) {
-      delegate_->read_some(
+      connection_delegate_->read_some(
           boost::asio::mutable_buffers_1(this->part.c_array(),
                                          this->part.size()),
           request_strand_.wrap(
@@ -163,7 +169,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       switch(state) {
         case version:
           parsed_ok =
-              this->parse_version(delegate_,
+              this->parse_version(connection_delegate_,
                                   request_strand_.wrap(
                                       boost::bind(
                                           &this_type::handle_received_data,
@@ -175,7 +181,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status:
           parsed_ok =
-              this->parse_status(delegate_,
+              this->parse_status(connection_delegate_,
                                  request_strand_.wrap(
                                      boost::bind(
                                          &this_type::handle_received_data,
@@ -187,7 +193,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status_message:
           parsed_ok =
-            this->parse_status_message(delegate_,
+            this->parse_status_message(connection_delegate_,
               request_strand_.wrap(
                 boost::bind(
                   &this_type::handle_received_data,
@@ -205,7 +211,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           // that the data remaining in the buffer is dealt with before
           // another call to get more data for the body is scheduled.
           fusion::tie(parsed_ok, remainder) =
-            this->parse_headers(delegate_,
+            this->parse_headers(connection_delegate_,
               request_strand_.wrap(
                 boost::bind(
                   &this_type::handle_received_data,
@@ -251,7 +257,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
             // wait before scheduling another read.
             callback(make_iterator_range(begin, end), ec);
 
-            delegate_->read_some(
+            connection_delegate_->read_some(
                 boost::asio::mutable_buffers_1(this->part.c_array(),
                                                this->part.size()),
                 request_strand_.wrap(
@@ -266,7 +272,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
             // Here we handle the body data ourself and append to an
             // ever-growing string buffer.
             this->parse_body(
-              delegate_,
+              connection_delegate_,
               request_strand_.wrap(
                 boost::bind(
                   &this_type::handle_received_data,
@@ -295,7 +301,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               // it appropriately.
               callback(make_iterator_range(begin, end), ec);
             } else {
-              string_type body_string;
+              std::string body_string;
               std::swap(body_string, this->partial_parsed);
               body_string.append(
                 this->part.begin()
@@ -319,7 +325,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               typename protocol_base::buffer_type::const_iterator end = begin;
               std::advance(end, bytes_transferred);
               callback(make_iterator_range(begin, end), ec);
-              delegate_->read_some(
+              connection_delegate_->read_some(
                   boost::asio::mutable_buffers_1(
                       this->part.c_array(),
                       this->part.size()),
@@ -337,7 +343,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               // make sure that we deal with the remainder
               // from the headers part in case we do have data
               // that's still in the buffer.
-              this->parse_body(delegate_,
+              this->parse_body(connection_delegate_,
                                request_strand_.wrap(
                                    boost::bind(
                                        &this_type::handle_received_data,
@@ -360,16 +366,16 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       this->destination_promise.set_exception(boost::copy_exception(error));
       switch (state) {
         case version:
-          this->version_promise.set_exception(boost::copy_exception(error));
+//          this->version_promise.set_exception(boost::copy_exception(error));
         case status:
-          this->status_promise.set_exception(boost::copy_exception(error));
+//          this->status_promise.set_exception(boost::copy_exception(error));
         case status_message:
-          this->status_message_promise.set_exception(boost::copy_exception(error));
+//          this->status_message_promise.set_exception(boost::copy_exception(error));
         case headers:
-          this->headers_promise.set_exception(boost::copy_exception(error));
+//          this->headers_promise.set_exception(boost::copy_exception(error));
         case body:
-          this->body_promise.set_exception(boost::copy_exception(error));
-          break;
+//          this->body_promise.set_exception(boost::copy_exception(error));
+//          break;
         default:
           BOOST_ASSERT(false && "Bug, report this to the developers!");
       }
@@ -378,10 +384,10 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
 
   bool follow_redirect_;
   boost::asio::io_service::strand request_strand_;
-  resolver_delegate_ptr resolver_delegate_;
-  connection_delegate_ptr delegate_;
+  shared_ptr<resolver_delegate> resolver_delegate_;
+  shared_ptr<connection_delegate> connection_delegate_;
   boost::asio::streambuf command_streambuf;
-  string_type method;
+  std::string method;
 };
 
 // END OF PIMPL DEFINITION

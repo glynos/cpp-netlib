@@ -37,7 +37,8 @@ set(CPP-NETLIB_HTTP_CLIENT_CONNECTIONS_SRCS
     http/client_resolver_delegate_factory.cpp
     http/client_connection_delegates.cpp
     http/client_connection_factory.cpp
-    http/client_async_resolver.cpp)
+    http/client_async_resolver.cpp
+    http/client_connection_normal.cpp)
 add_library(cppnetlib-http-client-connections ${CPP-NETLIB_HTTP_CLIENT_CONNECTIONS_SRCS})
 
 set(CPP-NETLIB_HTTP_CLIENT_SRCS
