@@ -37,6 +37,7 @@ struct simple_connection_factory_pimpl {
         service, https, openssl_certificate, openssl_verify_path),
       service,
       follow_redirects));
+    return conn_;
   }
 
  private:

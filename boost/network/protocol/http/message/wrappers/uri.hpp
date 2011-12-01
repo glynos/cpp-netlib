@@ -12,22 +12,18 @@
 
 namespace boost { namespace network { namespace http {
 
-namespace impl {
-
 struct uri_wrapper {
-  explicit uri_wrapper(request_base & request_);
+  explicit uri_wrapper(request_base const & request_);
   operator std::string() const;
   operator boost::network::uri::uri() const;
  private:
   request_base & request_;
 };
 
-} // namespace impl
-
 inline
-impl::uri_wrapper
-uri(request_base & request) {
-    return impl::uri_wrapper(request);
+uri_wrapper const
+uri(request_base const & request) {
+    return uri_wrapper(request);
 }
 
 } // namespace http

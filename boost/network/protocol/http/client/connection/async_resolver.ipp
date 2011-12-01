@@ -20,6 +20,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/fusion/tuple.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/network/protocol/http/client/connection/async_resolver.hpp>
 
 namespace boost { namespace network { namespace http {

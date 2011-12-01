@@ -3,45 +3,28 @@
 
 // Copyright 2010 (c) Dean Michael Berris.
 // Copyright 2010 (c) Sinefunc, Inc.
+// Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/request/request_base.hpp>
 #include <boost/optional.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_request;
+struct port_wrapper {
+  port_wrapper(request_base const & request);
+  operator boost::uint16_t () const;
+  operator boost::optional<boost::uint16_t> () const;
+ private:
+  request_base const & message_;
+};
 
-    namespace impl {
-
-        template <class Tag>
-        struct port_wrapper {
-            basic_request<Tag> const & message_;
-
-            port_wrapper(basic_request<Tag> const & message)
-                : message_(message) {}
-
-            typedef typename basic_request<Tag>::port_type port_type;
-
-            operator port_type() {
-                return message_.port();
-            }
-
-            operator boost::optional<boost::uint16_t> () {
-                return uri::port_us(message_.uri());
-            }
-        };
-
-    } // namespace impl
-
-    template <class Tag>
-    inline
-    impl::port_wrapper<Tag>
-    port(basic_request<Tag> const & request) {
-        return impl::port_wrapper<Tag>(request);
-    }
+inline port_wrapper const
+port(request_base const & request) {
+  return port_wrapper(request);
+}
 
 } // namespace http
 

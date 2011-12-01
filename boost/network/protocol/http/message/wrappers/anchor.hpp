@@ -3,33 +3,26 @@
 
 // Copyright 2010 (c) Dean Michael Berris.
 // Copyright 2010 (c) Sinefunc, Inc.
+// Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/request/request_base.hpp>
+
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_request;
+struct anchor_wrapper {
+  explicit anchor_wrapper(request_base const & request);
+  operator std::string () const;
+ private:
+  request_base const & request_;
+};
 
-    namespace impl {
-        template <class Tag>
-        struct anchor_wrapper {
-            basic_request<Tag> const & message_;
-            anchor_wrapper(basic_request<Tag> const & message)
-                : message_(message) {}
-            typedef typename basic_request<Tag>::string_type string_type;
-            operator string_type() {
-                return message_.anchor();
-            }
-        };
-    }
-
-    template <class Tag> inline
-    impl::anchor_wrapper<Tag>
-    anchor(basic_request<Tag> const & request) {
-        return impl::anchor_wrapper<Tag>(request);
-    }
+inline anchor_wrapper const
+anchor(request_base const & request) {
+  return anchor_wrapper(request);
+}
 
 } // namespace http
 

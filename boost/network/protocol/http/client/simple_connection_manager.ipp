@@ -17,7 +17,7 @@ struct simple_connection_manager_pimpl {
                                   optional<std::string> openssl_certificate,
                                   optional<std::string> openssl_verify_path,
                                   shared_ptr<connection_factory> connection_factory)
-  : cache_resolved_(cache_resolved_)
+  : cache_resolved_(cache_resolved)
   , follow_redirects_(follow_redirects)
   , openssl_certificate_(openssl_certificate)
   , openssl_verify_path_(openssl_verify_path)
@@ -29,7 +29,7 @@ struct simple_connection_manager_pimpl {
                                   std::string const & openssl_certificate,
                                   std::string const & openssl_verify_path,
                                   shared_ptr<connection_factory> connection_factory)
-  : cache_resolved_(cache_resolved_)
+  : cache_resolved_(cache_resolved)
   , follow_redirects_(follow_redirects)
   , openssl_certificate_(openssl_certificate)
   , openssl_verify_path_(openssl_verify_path)
