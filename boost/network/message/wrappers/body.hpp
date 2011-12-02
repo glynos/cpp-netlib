@@ -16,14 +16,14 @@ namespace boost { namespace network {
 namespace impl {
 
 struct body_wrapper {
-  explicit body_wrapper(message_base & message);
+  explicit body_wrapper(message_base const & message);
   operator std::string () const;
   std::size_t size() const;
   operator iterator_range<std::string::const_iterator> () const;
   std::string::const_iterator begin() const;
   std::string::const_iterator end() const;
  private:
-  message_base & message_;
+  message_base const & message_;
   mutable optional<std::string> cache_;
 };
 
@@ -35,7 +35,7 @@ inline std::ostream & operator<<(std::ostream & os, body_wrapper const & body) {
 } // namespace impl
 
 inline impl::body_wrapper const
-body(message_base & message_) {
+body(message_base const & message_) {
     return impl::body_wrapper(message_);
 }
 

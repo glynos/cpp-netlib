@@ -9,8 +9,11 @@
 
 #include <boost/asio/placeholders.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
+#include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
+#include <boost/network/protocol/http/impl/access.hpp>
 #include <boost/asio/strand.hpp>
+#include <boost/network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -21,6 +24,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   typedef http_async_connection::callback_type body_callback_function_type;
   typedef resolver_delegate::resolver_iterator resolver_iterator;
   typedef resolver_delegate::iterator_pair resolver_iterator_pair;
+  typedef http_async_connection_pimpl this_type;
 
   http_async_connection_pimpl(
     shared_ptr<resolver_delegate> resolver_delegate,
@@ -41,6 +45,10 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                  bool get_body,
                  body_callback_function_type callback) {
     response response_;
+    this->init_response(response_);
+    // Use HTTP/1.1 -- at some point we might want to implement a different
+    // connection type just for HTTP/1.0.
+    // TODO: Implement a different connection type and factory for HTTP/1.0.
     linearize(request, method, 1, 1,
       std::ostreambuf_iterator<char>(&command_streambuf));
     this->method = method;
@@ -64,16 +72,26 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
 
   http_async_connection_pimpl(http_async_connection_pimpl const &); // = delete
 
+  void init_response(response &r) {
+    impl::setter_access accessor;
+    this->source_promise = accessor.get_source_promise(r);
+    this->destination_promise = accessor.get_destination_promise(r);
+    this->headers_promise = accessor.get_headers_promise(r);
+    this->body_promise = accessor.get_body_promise(r);
+    this->version_promise = accessor.get_version_promise(r);
+    this->status_promise = accessor.get_status_promise(r);
+    this->status_message_promise = accessor.get_status_message_promise(r);
+  }
+
   void set_errors(boost::system::error_code const & ec) {
     boost::system::system_error error(ec);
-    // FIXME: Wire up the response object for errors.
-//    this->version_promise.set_exception(boost::copy_exception(error));
-//    this->status_promise.set_exception(boost::copy_exception(error));
-//    this->status_message_promise.set_exception(boost::copy_exception(error));
-//    this->headers_promise.set_exception(boost::copy_exception(error));
-//    this->source_promise.set_exception(boost::copy_exception(error));
-//    this->destination_promise.set_exception(boost::copy_exception(error));
-//    this->body_promise.set_exception(boost::copy_exception(error));
+    this->version_promise.set_exception(boost::copy_exception(error));
+    this->status_promise.set_exception(boost::copy_exception(error));
+    this->status_message_promise.set_exception(boost::copy_exception(error));
+    this->headers_promise.set_exception(boost::copy_exception(error));
+    this->source_promise.set_exception(boost::copy_exception(error));
+    this->destination_promise.set_exception(boost::copy_exception(error));
+    this->body_promise.set_exception(boost::copy_exception(error));
   }
 
   void handle_resolved(boost::uint16_t port,
@@ -169,8 +187,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       switch(state) {
         case version:
           parsed_ok =
-              this->parse_version(connection_delegate_,
-                                  request_strand_.wrap(
+              this->parse_version(request_strand_.wrap(
                                       boost::bind(
                                           &this_type::handle_received_data,
                                           this_type::shared_from_this(),
@@ -181,8 +198,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status:
           parsed_ok =
-              this->parse_status(connection_delegate_,
-                                 request_strand_.wrap(
+              this->parse_status(request_strand_.wrap(
                                      boost::bind(
                                          &this_type::handle_received_data,
                                          this_type::shared_from_this(),
@@ -193,7 +209,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status_message:
           parsed_ok =
-            this->parse_status_message(connection_delegate_,
+            this->parse_status_message(
               request_strand_.wrap(
                 boost::bind(
                   &this_type::handle_received_data,
@@ -211,7 +227,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           // that the data remaining in the buffer is dealt with before
           // another call to get more data for the body is scheduled.
           fusion::tie(parsed_ok, remainder) =
-            this->parse_headers(connection_delegate_,
+            this->parse_headers(
               request_strand_.wrap(
                 boost::bind(
                   &this_type::handle_received_data,
@@ -243,8 +259,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
             // has already been parsed appropriately and we're
             // looking to treat everything that remains in the
             // buffer.
-            typename protocol_base::buffer_type::const_iterator begin = this->part_begin;
-            typename protocol_base::buffer_type::const_iterator end = begin;
+            buffer_type::const_iterator begin = this->part_begin;
+            buffer_type::const_iterator end = begin;
             std::advance(end, remainder);
 
             // We're setting the body promise here to an empty string because
@@ -272,7 +288,6 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
             // Here we handle the body data ourself and append to an
             // ever-growing string buffer.
             this->parse_body(
-              connection_delegate_,
               request_strand_.wrap(
                 boost::bind(
                   &this_type::handle_received_data,
@@ -291,7 +306,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
             // has been reached while reading the socket. This signals the end
             // of the body processing chain.
             if (callback) {
-              typename protocol_base::buffer_type::const_iterator begin =
+              buffer_type::const_iterator begin =
                   this->part.begin(),
                   end = begin;
               std::advance(end, bytes_transferred);
@@ -321,8 +336,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               // Here we have a body_handler callback. Let's invoke the
               // callback from here and make sure we're getting more data
               // right after.
-              typename protocol_base::buffer_type::const_iterator begin = this->part.begin();
-              typename protocol_base::buffer_type::const_iterator end = begin;
+              buffer_type::const_iterator begin = this->part.begin();
+              buffer_type::const_iterator end = begin;
               std::advance(end, bytes_transferred);
               callback(make_iterator_range(begin, end), ec);
               connection_delegate_->read_some(
@@ -343,8 +358,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               // make sure that we deal with the remainder
               // from the headers part in case we do have data
               // that's still in the buffer.
-              this->parse_body(connection_delegate_,
-                               request_strand_.wrap(
+              this->parse_body(request_strand_.wrap(
                                    boost::bind(
                                        &this_type::handle_received_data,
                                        this_type::shared_from_this(),
@@ -382,12 +396,330 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     }
   }
 
+#ifdef BOOST_NETWORK_DEBUG
+  struct debug_escaper {
+    std::string & string;
+    explicit debug_escaper(std::string & string_)
+      : string(string_) {}
+    debug_escaper(debug_escaper const & other)
+      : string(other.string) {}
+    void operator()( std::string::value_type input) {
+      if (!algorithm::is_print()(input)) {
+        std::ostringstream escaped_stream;
+        if (input == '\r') {
+          string.append("\\r");
+        } else if (input == '\n') {
+          string.append("\\n");
+        } else {
+          escaped_stream << "\\x" << static_cast<int>(input);
+          string.append(escaped_stream.str());
+        }
+      } else {
+        string.push_back(input);
+      }
+    }
+  };
+#endif
+    
+  struct to_http_headers {
+    template <class U>
+    std::string const operator() (U const & pair) const {
+      std::ostringstream header_line;
+      header_line << pair.first
+        << constants::colon()
+        << constants::space()
+        << pair.second
+        << constants::crlf();
+      return header_line.str();
+    }
+  };
+
+  logic::tribool parse_version(
+      function<void(system::error_code, size_t)> callback,
+      size_t bytes) {
+    logic::tribool parsed_ok;
+    part_begin = part.begin();
+    buffer_type::const_iterator part_end = part.begin();
+    std::advance(part_end, bytes);
+    boost::iterator_range<buffer_type::const_iterator>
+      result_range,
+      input_range = boost::make_iterator_range(part_begin, part_end);
+    fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
+      response_parser::http_version_done,
+      input_range);
+    if (parsed_ok == true) {
+      std::string version;
+      std::swap(version, partial_parsed);
+      version.append(boost::begin(result_range),
+               boost::end(result_range));
+      algorithm::trim(version);
+      version_promise.set_value(version);
+      part_begin = boost::end(result_range);
+    } else if (parsed_ok == false) {
+#ifdef BOOST_NETWORK_DEBUG
+      std::string escaped;
+      debug_escaper escaper(escaped);
+      std::for_each(part_begin, part_end, escaper);
+      BOOST_NETWORK_MESSAGE("[parser:"
+                  << response_parser_.state()
+                  << "] buffer contents: \""
+                  << escaped
+                  << "\"");
+#endif
+      std::runtime_error error("Invalid Version Part.");
+      version_promise.set_exception(boost::copy_exception(error));
+      status_promise.set_exception(boost::copy_exception(error));
+      status_message_promise.set_exception(
+        boost::copy_exception(error));
+      headers_promise.set_exception(boost::copy_exception(error));
+      source_promise.set_exception(boost::copy_exception(error));
+      destination_promise.set_exception(boost::copy_exception(error));
+      body_promise.set_exception(boost::copy_exception(error));
+    } else {
+      partial_parsed.append(
+        boost::begin(result_range),
+        boost::end(result_range)
+        );
+      part_begin = part.begin();
+      connection_delegate_->read_some(
+        boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+        callback
+        );
+    }
+    return parsed_ok;
+  }
+    
+  logic::tribool parse_status(
+      function<void(system::error_code, size_t)> callback,
+      size_t bytes) {
+    logic::tribool parsed_ok;
+     buffer_type::const_iterator part_end = part.begin();
+    std::advance(part_end, bytes);
+     boost::iterator_range< buffer_type::const_iterator>
+      result_range,
+      input_range = boost::make_iterator_range(part_begin, part_end);
+    fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
+      response_parser::http_status_done,
+      input_range);
+    if (parsed_ok == true) {
+      std::string status;
+      std::swap(status, partial_parsed);
+      status.append(boost::begin(result_range),
+              boost::end(result_range));
+      trim(status);
+      boost::uint16_t status_int =
+        lexical_cast<boost::uint16_t>(status);
+      status_promise.set_value(status_int);
+      part_begin = boost::end(result_range);
+    } else if (parsed_ok == false) {
+#ifdef BOOST_NETWORK_DEBUG
+      std::string escaped;
+      debug_escaper escaper(escaped);
+      std::for_each(part_begin, part_end, escaper);
+      BOOST_NETWORK_MESSAGE("[parser:"
+                  << response_parser_.state()
+                  << "] buffer contents: \""
+                  << escaped
+                  << "\"");
+#endif
+      std::runtime_error error("Invalid status part.");
+      status_promise.set_exception(boost::copy_exception(error));
+      status_message_promise.set_exception(
+        boost::copy_exception(error));
+      headers_promise.set_exception(boost::copy_exception(error));
+      source_promise.set_exception(boost::copy_exception(error));
+      destination_promise.set_exception(boost::copy_exception(error));
+      body_promise.set_exception(boost::copy_exception(error));
+    } else {
+      partial_parsed.append(
+        boost::begin(result_range),
+        boost::end(result_range)
+        );
+      part_begin = part.begin();
+      connection_delegate_->read_some(
+        boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+        callback
+        );
+    }
+    return parsed_ok;
+  }
+
+  logic::tribool parse_status_message(
+      function<void(system::error_code, size_t)> callback,
+      size_t bytes) {
+    logic::tribool parsed_ok;
+     buffer_type::const_iterator part_end = part.begin();
+    std::advance(part_end, bytes);
+     boost::iterator_range< buffer_type::const_iterator>
+      result_range,
+      input_range = boost::make_iterator_range(part_begin, part_end);
+    fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
+      response_parser::http_status_message_done,
+      input_range);
+    if (parsed_ok == true) {
+      std::string status_message;
+      std::swap(status_message, partial_parsed);
+      status_message.append(boost::begin(result_range),
+                  boost::end(result_range));
+      algorithm::trim(status_message);
+      status_message_promise.set_value(status_message);
+      part_begin = boost::end(result_range);
+    } else if (parsed_ok == false) {
+#ifdef BOOST_NETWORK_DEBUG
+      std::string escaped;
+      debug_escaper escaper(escaped);
+      std::for_each(part_begin, part_end, escaper);
+      BOOST_NETWORK_MESSAGE("[parser:"
+                  << response_parser_.state()
+                  << "] buffer contents: \""
+                  << escaped
+                  << "\"");
+#endif
+      std::runtime_error error("Invalid status message part.");
+      status_message_promise.set_exception(
+        boost::copy_exception(error));
+      headers_promise.set_exception(boost::copy_exception(error));
+      source_promise.set_exception(boost::copy_exception(error));
+      destination_promise.set_exception(boost::copy_exception(error));
+      body_promise.set_exception(boost::copy_exception(error));
+    } else {
+      partial_parsed.append(
+        boost::begin(result_range),
+        boost::end(result_range));
+      part_begin = part.begin();
+      connection_delegate_->read_some(
+        boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+        callback
+        );
+    }
+    return parsed_ok;
+  }
+
+  void parse_headers_real(std::string & headers_part) {
+     boost::iterator_range< std::string::const_iterator>
+      input_range = boost::make_iterator_range(headers_part)
+      , result_range;
+    logic::tribool parsed_ok;
+    response_parser headers_parser(
+      response_parser::http_header_line_done);
+    std::multimap<std::string, std::string> headers;
+    std::pair<std::string,std::string> header_pair;
+    while (!boost::empty(input_range)) {
+      fusion::tie(parsed_ok, result_range) =
+        headers_parser.parse_until(
+          response_parser::http_header_colon,
+          input_range);
+      if (headers_parser.state()
+        != response_parser::http_header_colon)
+        break;
+      header_pair.first = std::string(boost::begin(result_range),
+                      boost::end(result_range));
+      input_range.advance_begin(boost::distance(result_range));
+      fusion::tie(parsed_ok, result_range) =
+        headers_parser.parse_until(
+          response_parser::http_header_line_done,
+          input_range);
+      header_pair.second = std::string(boost::begin(result_range),
+                       boost::end(result_range));
+      input_range.advance_begin(boost::distance(result_range));
+
+      trim(header_pair.first);
+      if (header_pair.first.size() > 1) {
+        header_pair.first.erase(
+          header_pair.first.size() - 1
+        );
+      }
+      trim(header_pair.second);
+      headers.insert(header_pair);
+    }
+    headers_promise.set_value(headers);
+  }
+
+  fusion::tuple<logic::tribool, size_t> parse_headers(
+      function<void(system::error_code, size_t)> callback,
+      size_t bytes) {
+    logic::tribool parsed_ok;
+    buffer_type::const_iterator part_end = part.begin();
+    std::advance(part_end, bytes);
+    boost::iterator_range<buffer_type::const_iterator>
+      result_range,
+      input_range = boost::make_iterator_range(part_begin, part_end);
+    fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
+      response_parser::http_headers_done,
+      input_range);
+    if (parsed_ok == true) {
+      std::string headers_string;
+      std::swap(headers_string, partial_parsed);
+      headers_string.append(boost::begin(result_range),
+                  boost::end(result_range));
+      part_begin = boost::end(result_range);
+      this->parse_headers_real(headers_string);
+    } else if (parsed_ok == false) {
+      // We want to output the contents of the buffer that caused
+      // the error in debug builds.
+#ifdef BOOST_NETWORK_DEBUG
+      std::string escaped;
+      debug_escaper escaper(escaped);
+      std::for_each(part_begin, part_end, escaper);
+      BOOST_NETWORK_MESSAGE("[parser:"
+                  << response_parser_.state()
+                  << "] buffer contents: \""
+                  << escaped
+                  << "\" consumed length: "
+                  << boost::distance(result_range));
+#endif
+      std::runtime_error error("Invalid header part.");
+      headers_promise.set_exception(boost::copy_exception(error));
+      body_promise.set_exception(boost::copy_exception(error));
+      source_promise.set_exception(boost::copy_exception(error));
+      destination_promise.set_exception(boost::copy_exception(error));
+    } else {
+      partial_parsed.append(boost::begin(result_range),
+                  boost::end(result_range));
+      part_begin = part.begin();
+      connection_delegate_->read_some(
+        boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+        callback
+        );
+    }
+    return fusion::make_tuple(
+      parsed_ok,
+      std::distance(
+        boost::end(result_range)
+        , part_end
+        )
+      );
+  }
+
+  void parse_body(function<void(system::error_code, size_t)> callback, size_t bytes) {
+    // TODO: we should really not use a string for the partial body
+    // buffer.
+    partial_parsed.append(part_begin, bytes);
+    part_begin = part.begin();
+    connection_delegate_->read_some(
+      boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+      callback
+      );
+  }
+
   bool follow_redirect_;
   boost::asio::io_service::strand request_strand_;
   shared_ptr<resolver_delegate> resolver_delegate_;
   shared_ptr<connection_delegate> connection_delegate_;
   boost::asio::streambuf command_streambuf;
   std::string method;
+  response_parser response_parser_;
+  boost::promise<std::string> version_promise;
+  boost::promise<boost::uint16_t> status_promise;
+  boost::promise<std::string> status_message_promise;
+  boost::promise<std::multimap<std::string, std::string> > headers_promise;
+  boost::promise<std::string> source_promise;
+  boost::promise<std::string> destination_promise;
+  boost::promise<std::string> body_promise;
+  typedef boost::array<char, BOOST_NETWORK_BUFFER_CHUNK> buffer_type;
+  buffer_type part;
+  buffer_type::const_iterator part_begin;
+  std::string partial_parsed;
 };
 
 // END OF PIMPL DEFINITION
@@ -402,12 +734,10 @@ http_async_connection::http_async_connection(shared_ptr<resolver_delegate> resol
                                                        follow_redirects))
 {}
 
-http_async_connection::http
-  
 } /* http */
   
 } /* network */
   
 } /* boost */
 
-#endbooif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_ASYNC_NORMAL_IPP_20111123 */
+#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_ASYNC_NORMAL_IPP_20111123 */

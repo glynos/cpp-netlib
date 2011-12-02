@@ -13,7 +13,6 @@
 
 namespace boost { namespace network { namespace http { namespace impl {
 
-  template <class Tag, unsigned version_major, unsigned version_minor>
   struct http_async_protocol_handler {
   protected:
 
@@ -24,7 +23,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         : string(string_) {}
       debug_escaper(debug_escaper const & other)
         : string(other.string) {}
-      void operator()(typename std::string::value_type input) {
+      void operator()( std::string::value_type input) {
       if (!algorithm::is_print()(input)) {
         std::ostringstream escaped_stream;
         if (input == '\r') {
@@ -42,8 +41,7 @@ namespace boost { namespace network { namespace http { namespace impl {
     };
 #endif
 
-    template <class ResponseType>
-    void init_response(ResponseType & response_, bool get_body) {
+    void init_response(response & response_) {
       boost::shared_future<std::string> source_future(
         source_promise.get_future());
       source(response_, source_future);
@@ -86,13 +84,13 @@ namespace boost { namespace network { namespace http { namespace impl {
                    size_t bytes) {
       logic::tribool parsed_ok;
       part_begin = part.begin();
-      typename buffer_type::const_iterator part_end = part.begin();
+       buffer_type::const_iterator part_end = part.begin();
       std::advance(part_end, bytes);
-      typename boost::iterator_range<typename buffer_type::const_iterator>
+       boost::iterator_range< buffer_type::const_iterator>
         result_range,
         input_range = boost::make_iterator_range(part_begin, part_end);
       fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
-        response_parser_type::http_version_done,
+        response_parser::http_version_done,
         input_range);
       if (parsed_ok == true) {
         std::string version;
@@ -141,13 +139,13 @@ namespace boost { namespace network { namespace http { namespace impl {
                   Callback callback,
                   size_t bytes) {
       logic::tribool parsed_ok;
-      typename buffer_type::const_iterator part_end = part.begin();
+       buffer_type::const_iterator part_end = part.begin();
       std::advance(part_end, bytes);
-      typename boost::iterator_range<typename buffer_type::const_iterator>
+       boost::iterator_range< buffer_type::const_iterator>
         result_range,
         input_range = boost::make_iterator_range(part_begin, part_end);
       fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
-        response_parser_type::http_status_done,
+        response_parser::http_status_done,
         input_range);
       if (parsed_ok == true) {
         std::string status;
@@ -197,13 +195,13 @@ namespace boost { namespace network { namespace http { namespace impl {
                       Callback callback,
                       size_t bytes) {
       logic::tribool parsed_ok;
-      typename buffer_type::const_iterator part_end = part.begin();
+       buffer_type::const_iterator part_end = part.begin();
       std::advance(part_end, bytes);
-      typename boost::iterator_range<typename buffer_type::const_iterator>
+       boost::iterator_range< buffer_type::const_iterator>
         result_range,
         input_range = boost::make_iterator_range(part_begin, part_end);
       fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
-        response_parser_type::http_status_message_done,
+        response_parser::http_status_message_done,
         input_range);
       if (parsed_ok == true) {
         std::string status_message;
@@ -245,28 +243,28 @@ namespace boost { namespace network { namespace http { namespace impl {
     }
 
     void parse_headers_real(std::string & headers_part) {
-      typename boost::iterator_range<typename std::string::const_iterator>
+       boost::iterator_range< std::string::const_iterator>
         input_range = boost::make_iterator_range(headers_part)
         , result_range;
       logic::tribool parsed_ok;
-      response_parser_type headers_parser(
-        response_parser_type::http_header_line_done);
+      response_parser headers_parser(
+        response_parser::http_header_line_done);
       std::multimap<std::string, std::string> headers;
       std::pair<std::string,std::string> header_pair;
       while (!boost::empty(input_range)) {
         fusion::tie(parsed_ok, result_range) =
           headers_parser.parse_until(
-            response_parser_type::http_header_colon,
+            response_parser::http_header_colon,
             input_range);
         if (headers_parser.state()
-          != response_parser_type::http_header_colon)
+          != response_parser::http_header_colon)
           break;
         header_pair.first = std::string(boost::begin(result_range),
                         boost::end(result_range));
         input_range.advance_begin(boost::distance(result_range));
         fusion::tie(parsed_ok, result_range) =
           headers_parser.parse_until(
-            response_parser_type::http_header_line_done,
+            response_parser::http_header_line_done,
             input_range);
         header_pair.second = std::string(boost::begin(result_range),
                          boost::end(result_range));
@@ -289,13 +287,13 @@ namespace boost { namespace network { namespace http { namespace impl {
                               Callback callback,
                               size_t bytes) {
       logic::tribool parsed_ok;
-      typename buffer_type::const_iterator part_end = part.begin();
+       buffer_type::const_iterator part_end = part.begin();
       std::advance(part_end, bytes);
-      typename boost::iterator_range<typename buffer_type::const_iterator>
+       boost::iterator_range< buffer_type::const_iterator>
         result_range,
         input_range = boost::make_iterator_range(part_begin, part_end);
       fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
-        response_parser_type::http_headers_done,
+        response_parser::http_headers_done,
         input_range);
       if (parsed_ok == true) {
         std::string headers_string;
@@ -353,10 +351,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         );
     }
 
-    typedef response_parser<Tag> response_parser_type;
-    typedef boost::array<char, BOOST_NETWORK_BUFFER_CHUNK> buffer_type;
-
-    response_parser_type response_parser_;
+    response_parser response_parser_;
     boost::promise<std::string> version_promise;
     boost::promise<boost::uint16_t> status_promise;
     boost::promise<std::string> status_message_promise;
@@ -364,8 +359,9 @@ namespace boost { namespace network { namespace http { namespace impl {
     boost::promise<std::string> source_promise;
     boost::promise<std::string> destination_promise;
     boost::promise<std::string> body_promise;
+    typedef boost::array<char, BOOST_NETWORK_BUFFER_CHUNK> buffer_type;
     buffer_type part;
-    typename buffer_type::const_iterator part_begin;
+     buffer_type::const_iterator part_begin;
     std::string partial_parsed;
   };
 

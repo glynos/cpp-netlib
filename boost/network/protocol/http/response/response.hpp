@@ -7,10 +7,17 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/impl/access.hpp>
+#include <boost/network/protocol/http/parser/incremental.hpp>
+
 namespace boost { namespace network { namespace http {
 
 struct response : response_base {
   // FIXME implement all these!
+  response();
+  response(response const &);
+  response& operator=(response);
+  void swap(response &);
 
   // From message_base...
   // Mutators
@@ -44,7 +51,23 @@ struct response : response_base {
   virtual void set_status_message(std::string const & new_status_message);
   virtual void set_version(std::string const & new_version);
   virtual ~response();
+
+ private:
+  friend class impl::setter_access;  // Hide access through accessor class.
+  // These methods are unique to the response type which will allow for creating
+  // promises that can be set appropriately.
+  promise<std::string> get_version_promise();
+  promise<boost::uint16_t> get_status_promise();
+  promise<std::string> get_status_message_promise();
+  promise<std::multimap<std::string, std::string> > get_headers_promise();
+  promise<std::string> get_source_promise();
+  promise<std::string> get_destination_promise();
+  promise<std::string> get_body_promise();
 };
+
+inline void swap(response &l, response &r) {
+  l.swap(r);
+}
 
 template <class Directive>
 response & operator<<(

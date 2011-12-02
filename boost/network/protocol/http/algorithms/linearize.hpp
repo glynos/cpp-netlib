@@ -49,7 +49,7 @@ namespace boost { namespace network { namespace http {
         (OutputIterator)
     ) linearize(
         Request const & request, 
-        typename Request::string_type const & method,
+        std::string const & method,
         unsigned version_major, 
         unsigned version_minor, 
         OutputIterator oi
@@ -64,22 +64,31 @@ namespace boost { namespace network { namespace http {
             , accept_encoding = consts::accept_encoding()
             , default_accept_encoding = consts::default_accept_encoding()
             , crlf = consts::crlf()
-            , host = consts::host()
+            , host_const = consts::host()
             , connection = consts::connection()
             , close = consts::close()
             ;
         boost::copy(method, oi);
         *oi = consts::space_char();
-        if (request.path().empty() || request.path()[0] != consts::slash_char()) 
-            *oi = consts::slash_char();
-        boost::copy(request.path(), oi);
-        if (!request.query().empty()) {
-            *oi = consts::question_mark_char();
-            boost::copy(request.query(), oi);
+        {
+          std::string path_ = path(request);
+          if (path_.empty() || path_[0] != consts::slash_char()) 
+              *oi = consts::slash_char();
+          boost::copy(path_, oi);
         }
-        if (!request.anchor().empty()) {
+        {
+          std::string query_ = query(request);
+          if (!query_.empty()) {
+              *oi = consts::question_mark_char();
+              boost::copy(query_, oi);
+          }
+        }
+        {
+          std::string anchor_ = anchor(request);
+          if (!anchor_.empty()) {
             *oi = consts::hash_char();
-            boost::copy(request.anchor(), oi);
+            boost::copy(anchor_, oi);
+          }
         }
         *oi = consts::space_char();
         boost::copy(http_slash, oi);
@@ -89,10 +98,13 @@ namespace boost { namespace network { namespace http {
         *oi = consts::dot_char();
         boost::copy(version_minor_str, oi);
         boost::copy(crlf, oi);
-        boost::copy(host, oi);
+        boost::copy(host_const, oi);
         *oi = consts::colon_char();
         *oi = consts::space_char();
-        boost::copy(request.host(), oi);
+        {
+          std::string host_ = host(request);
+          boost::copy(host_, oi);
+        }
         boost::optional<boost::uint16_t> port_ = port(request);
         if (port_) {
             string_type port_str = boost::lexical_cast<string_type>(*port_);
@@ -112,9 +124,9 @@ namespace boost { namespace network { namespace http {
             boost::copy(default_accept_encoding, oi);
             boost::copy(crlf, oi);
         }
-        typedef boost::iterator_range<std::multimap<std::string, std::string>::const_iterator> headers_range;
+        typedef headers_wrapper::range_type headers_range;
         typedef typename range_iterator<headers_range>::type headers_iterator;
-        headers_range request_headers = headers(request);
+        headers_range request_headers = boost::network::headers(request);
         headers_iterator iterator = boost::begin(request_headers),
                          end = boost::end(request_headers);
         for (; iterator != end; ++iterator) {
@@ -128,7 +140,7 @@ namespace boost { namespace network { namespace http {
         }
         boost::copy(crlf, oi);
         boost::iterator_range<std::string::const_iterator> body_data =
-          body(request);
+          boost::network::body(request);
         return boost::copy(body_data, oi);
     }
     

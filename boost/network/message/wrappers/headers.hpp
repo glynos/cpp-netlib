@@ -15,8 +15,6 @@
 
 namespace boost { namespace network {
 
-namespace impl {
-
 /** headers wrapper for messages.
  *
  * This exposes an interface similar to a map, indexable
@@ -30,7 +28,7 @@ struct headers_wrapper {
   typedef shared_container_iterator<container_type> iterator;
   typedef iterator_range<iterator> range_type;
 
-  explicit headers_wrapper(message_base & message);
+  explicit headers_wrapper(message_base const & message);
   range_type operator[] (std::string const & key) const;
   operator range_type () const;
   operator container_type () const;
@@ -40,16 +38,14 @@ struct headers_wrapper {
   iterator end() const;
  private:
   void init_cache_all() const;
-  message_base & message_;
+  message_base const & message_;
   mutable shared_ptr<container_type> cache_;
 };
 
-} // namespace impl
-
 /// Factory method to create the right wrapper object
-inline impl::headers_wrapper const
-headers(message_base & message_) {
-    return impl::headers_wrapper(message_);
+inline headers_wrapper const
+headers(message_base const & message_) {
+    return headers_wrapper(message_);
 }
 
 } // namespace network
