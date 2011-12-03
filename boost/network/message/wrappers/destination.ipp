@@ -9,7 +9,7 @@
 
 #include <boost/network/message/wrappers/destination.hpp>
 
-namespace boost { namespace network { namespace impl {
+namespace boost { namespace network {
 
 destination_wrapper::destination_wrapper(message_base const & message):
   message_(message) {}
@@ -23,8 +23,6 @@ destination_wrapper::operator std::string () const {
   cache_ = tmp;
   return *cache_;
 }
-
-} /* impl */
 
 } /* network */
 

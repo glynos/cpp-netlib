@@ -68,6 +68,18 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     return response_;
   }
 
+  http_async_connection_pimpl * clone() {
+    return new (std::nothrow) http_async_connection_pimpl(
+        this->resolver_delegate_,
+        this->connection_delegate_,
+        request_strand_.get_io_service(),
+        follow_redirect_);
+  }
+
+  void reset() {
+    // FIXME Perform the actual re-set of the internal state and pending stuff.
+  }
+
  private:
 
   http_async_connection_pimpl(http_async_connection_pimpl const &); // = delete
@@ -731,8 +743,28 @@ http_async_connection::http_async_connection(shared_ptr<resolver_delegate> resol
 : pimpl(new (std::nothrow) http_async_connection_pimpl(resolver_delegate,
                                                        connection_delegate,
                                                        io_service,
-                                                       follow_redirects))
-{}
+                                                       follow_redirects)) {}
+
+http_async_connection::http_async_connection(shared_ptr<http_async_connection_pimpl> new_pimpl)
+: pimpl(new_pimpl) {}
+
+http_async_connection::~http_async_connection() {}
+
+http_async_connection * http_async_connection::clone() const {
+  shared_ptr<http_async_connection_pimpl> new_pimpl(pimpl->clone());
+  return new (std::nothrow) http_async_connection(new_pimpl);
+}
+
+response http_async_connection::send_request(std::string const & method,
+                                             request const & request,
+                                             bool get_body,
+                                             callback_type callback) {
+  return pimpl->start(request, method, get_body, callback);
+}
+
+void http_async_connection::reset() {
+  pimpl->reset();  // NOTE: We're not resetting the pimpl, just the internal state.
+}
 
 } /* http */
   

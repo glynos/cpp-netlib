@@ -13,7 +13,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
 #include <boost/network/protocol/http/client/connection_manager.hpp>
-#include <boost/network/protocol/http/request/request_base.hpp>
+#include <boost/network/protocol/http/request.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -23,7 +23,7 @@ struct client_base_pimpl {
     body_callback_function_type;
   client_base_pimpl(shared_ptr<connection_manager> connection_manager_);
   client_base_pimpl(asio::io_service & service, shared_ptr<connection_manager> connection_manager_);
-  response const request_skeleton(request_base const & request_,
+  response const request_skeleton(request const & request_,
                                   std::string const & method,
                                   bool get_body,
                                   body_callback_function_type callback);
@@ -45,7 +45,7 @@ client_base::client_base(asio::io_service & service,
 : pimpl(new (std::nothrow) client_base_pimpl(service, connection_manager_))
 {}
 
-response const client_base::request_skeleton(request_base const & request_,
+response const client_base::request_skeleton(request const & request_,
                                              std::string const & method,
                                              bool get_body,
                                              body_callback_function_type callback) {
@@ -94,7 +94,7 @@ client_base_pimpl::~client_base_pimpl()
 }
 
 response const client_base_pimpl::request_skeleton(
-  request_base const & request_,
+  request const & request_,
   std::string const & method,
   bool get_body,
   body_callback_function_type callback

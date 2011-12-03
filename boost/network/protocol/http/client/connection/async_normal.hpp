@@ -29,12 +29,13 @@ struct http_async_connection : client_connection
                         bool follow_redirects);
   http_async_connection * clone() const;
   virtual response send_request(std::string const & method,
-                                request_base const & request,
+                                request const & request,
                                 bool get_body,
                                 callback_type callback);  // override
   virtual void reset();  // override
   virtual ~http_async_connection();
  private:
+  explicit http_async_connection(shared_ptr<http_async_connection_pimpl>);
   shared_ptr<http_async_connection_pimpl> pimpl;
 };
 

@@ -13,8 +13,6 @@
 
 namespace boost { namespace network {
 
-namespace impl {
-
 struct body_wrapper {
   explicit body_wrapper(message_base const & message);
   operator std::string () const;
@@ -32,11 +30,9 @@ inline std::ostream & operator<<(std::ostream & os, body_wrapper const & body) {
   return os;
 }
 
-} // namespace impl
-
-inline impl::body_wrapper const
+inline body_wrapper const
 body(message_base const & message_) {
-    return impl::body_wrapper(message_);
+    return body_wrapper(message_);
 }
 
 } // namespace network

@@ -27,7 +27,7 @@ struct client_base {
   client_base(asio::io_service & service,
               shared_ptr<connection_manager> connection_manager_);
   ~client_base();
-  response const request_skeleton(request_base const & request_,
+  response const request_skeleton(request const & request_,
                                   std::string const & method,
                                   bool get_body,
                                   body_callback_function_type callback);

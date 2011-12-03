@@ -9,9 +9,9 @@
 
 #include <boost/network/message/wrappers/body.hpp>
 
-namespace boost { namespace network { namespace impl {
+namespace boost { namespace network {
 
-body_wrapper::body_wrapper(message_base & message):
+body_wrapper::body_wrapper(message_base const & message):
   message_(message) {}
 
 body_wrapper::operator std::string () const {
@@ -64,7 +64,6 @@ std::string::const_iterator body_wrapper::end() const {
   return cache_->end();
 }
 
-} /* impl */
 } /* network */
 } /* boost */
 

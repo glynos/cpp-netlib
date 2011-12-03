@@ -60,7 +60,8 @@ BOOST_AUTO_TEST_CASE(source_directive_test) {
 BOOST_AUTO_TEST_CASE(destination_directive_test) {
     message instance;
     instance << destination("destination");
-    BOOST_CHECK ( destination(instance) == "destination" );
+    std::string const & destination_ = destination(instance);
+    BOOST_CHECK ( destination_ == "destination" );
 }
 
 BOOST_AUTO_TEST_CASE(remove_header_directive_test) {

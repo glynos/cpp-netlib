@@ -34,6 +34,7 @@ if (Boost_FOUND)
         add_dependencies(cpp-netlib-http-${test}
             cppnetlib-uri
             cppnetlib-message
+            cppnetlib-message-wrappers
             cppnetlib-http-message
             cppnetlib-http-client
             cppnetlib-http-client-connections)
@@ -42,6 +43,7 @@ if (Boost_FOUND)
             ${CMAKE_THREAD_LIBS_INIT}
             cppnetlib-uri
             cppnetlib-message
+            cppnetlib-message-wrappers
             cppnetlib-http-message
             cppnetlib-http-client
             cppnetlib-http-client-connections)

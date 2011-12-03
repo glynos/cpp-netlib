@@ -10,7 +10,7 @@
 #include <boost/function.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/system/error_code.hpp>
-#include <boost/network/protocol/http/request/request_base.hpp>
+#include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -20,7 +20,7 @@ struct client_connection {
                         system::error_code const &)>
       callback_type;
   virtual response send_request(std::string const & method,
-                                request_base const & request,
+                                request const & request,
                                 bool get_body,
                                 callback_type callback) = 0;
   virtual client_connection * clone() const = 0;

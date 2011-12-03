@@ -11,8 +11,6 @@
 
 namespace boost { namespace network {
 
-namespace impl {
-
 struct source_wrapper {
   explicit source_wrapper(message_base & message);
   operator std::string () const;
@@ -21,11 +19,13 @@ struct source_wrapper {
   mutable boost::optional<std::string> cache_;
 };
 
-} // namespace impl
-
-inline std::string const
+inline source_wrapper const
 source(message_base & message_) {
-  return impl::source_wrapper(message_);
+  return source_wrapper(message_);
+}
+
+inline std::ostream & operator<<(std::ostream &os, source_wrapper const &s) {
+  return os << static_cast<std::string>(s);
 }
 
 } // namespace network

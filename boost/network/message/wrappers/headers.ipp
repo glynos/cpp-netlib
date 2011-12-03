@@ -10,9 +10,9 @@
 #include <boost/network/message/wrappers/headers.hpp>
 #include <boost/function.hpp>
 
-namespace boost { namespace network { namespace impl {
+namespace boost { namespace network {
 
-headers_wrapper::headers_wrapper(message_base & message)
+headers_wrapper::headers_wrapper(message_base const & message)
 : message_(message)
 {}
 
@@ -75,8 +75,6 @@ void headers_wrapper::init_cache_all() const {
     message_.get_headers(kv_inserter<container_type>(*cache_));
   }
 }
-
-} /* impl */
 
 } /* network */
 
