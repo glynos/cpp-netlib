@@ -32,6 +32,7 @@ if (Boost_FOUND)
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test}
+            cppnetlib-constants
             cppnetlib-uri
             cppnetlib-message
             cppnetlib-message-wrappers
@@ -41,6 +42,7 @@ if (Boost_FOUND)
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-constants
             cppnetlib-uri
             cppnetlib-message
             cppnetlib-message-wrappers

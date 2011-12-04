@@ -18,7 +18,7 @@ struct port_wrapper {
   operator boost::uint16_t () const;
   operator boost::optional<boost::uint16_t> () const;
  private:
-  request_base const & message_;
+  request_base const & request_;
 };
 
 inline port_wrapper const

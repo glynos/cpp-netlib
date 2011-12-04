@@ -9,3 +9,8 @@
 #endif
 
 #include <boost/network/protocol/http/request/request_base.ipp>
+#include <boost/network/protocol/http/message/wrappers/anchor.ipp>
+#include <boost/network/protocol/http/message/wrappers/host.ipp>
+#include <boost/network/protocol/http/message/wrappers/path.ipp>
+#include <boost/network/protocol/http/message/wrappers/port.ipp>
+#include <boost/network/protocol/http/message/wrappers/query.ipp>

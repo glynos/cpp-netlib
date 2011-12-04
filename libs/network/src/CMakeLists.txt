@@ -47,3 +47,6 @@ add_library(cppnetlib-http-client ${CPP-NETLIB_HTTP_CLIENT_SRCS})
 
 set(CPP-NETLIB_UTILS_THREAD_POOL_SRCS utils/thread_pool.cpp)
 add_library(cppnetlib-utils-thread_pool ${CPP-NETLIB_UTILS_THREAD_POOL_SRCS})
+
+set(CPP-NETLIB_CONSTANTS_SRCS constants.cpp)
+add_library(cppnetlib-constants ${CPP-NETLIB_CONSTANTS_SRCS})
