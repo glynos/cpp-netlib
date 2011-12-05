@@ -1,4 +1,4 @@
-// Copyright 2011 Dean Michael Berris &lt;mikhailberis@gmail.com&gt;. 
+// Copyright 2011 Dean Michael Berris &lt;mikhailberis@gmail.com&gt;.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -43,6 +43,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_get_streaming_test, client, async_only
         BOOST_CHECK_EQUAL ( response.status_message(), std::string("OK") );
         dummy_body = body(response);
     }
-    BOOST_CHECK ( dummy_body == typename client::string_type() ); 
+    BOOST_CHECK ( dummy_body == typename client::string_type() );
 }
 

@@ -30,9 +30,9 @@ namespace boost { namespace network { namespace http {
         typedef function<void(iterator_range<char const *> const &, system::error_code const &)> body_callback_function_type;
 
         struct connection_impl {
-            connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & hostname, string_type const & port, resolver_function_type resolve, bool https, optional<string_type> const & certificate_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>()) 
+            connection_impl(resolver_type & resolver, bool follow_redirect, string_type const & hostname, string_type const & port, resolver_function_type resolve, bool https, optional<string_type> const & certificate_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>())
             : pimpl()
-            , follow_redirect_(follow_redirect) 
+            , follow_redirect_(follow_redirect)
             {
                 pimpl.reset(impl::sync_connection_base<Tag,version_major,version_minor>::new_connection(resolver, resolve, https, certificate_filename, verify_path));
             }
@@ -55,7 +55,7 @@ namespace boost { namespace network { namespace http {
                         boost::uint16_t status = response_.status();
                         if (status >= 300 && status <= 307) {
                             typename headers_range<http::basic_response<Tag> >::type location_range = headers(response_)["Location"];
-                            typename range_iterator<typename headers_range<http::basic_request<Tag> >::type>::type location_header = boost::begin(location_range);
+                            typename range_iterator<typename headers_range<http::basic_response<Tag> >::type>::type location_header = boost::begin(location_range);
                             if (location_header != boost::end(location_range)) {
                                 request_.uri(location_header->second);
                             } else throw std::runtime_error("Location header not defined in redirect response.");
@@ -98,7 +98,7 @@ namespace boost { namespace network { namespace http {
 
         void cleanup() { }
 
-        simple_connection_policy(bool cache_resolved, bool follow_redirect) 
+        simple_connection_policy(bool cache_resolved, bool follow_redirect)
         : resolver_base(cache_resolved), follow_redirect_(follow_redirect) {}
 
         // member variables

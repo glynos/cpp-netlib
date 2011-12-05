@@ -1,8 +1,16 @@
+//            Copyright (c) Glyn Matthews 2011.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+
 #ifndef __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
 # define __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
 
 
 # include <boost/network/uri/uri.hpp>
+# include <boost/network/uri/encode.hpp>
+# include <boost/network/uri/decode.hpp>
 # include <boost/spirit/include/qi.hpp>
 
 
@@ -73,6 +81,36 @@ typename basic_uri<Tag>::string_type password(const basic_uri<Tag> &uri) {
         }
     }
     return typename string<Tag>::type(it, boost::end(user_info_range));
+}
+
+template <
+    class Tag
+    >
+typename basic_uri<Tag>::string_type decoded_path(const basic_uri<Tag> &uri) {
+    typename basic_uri<Tag>::const_range_type path_range = uri.path_range();
+    typename basic_uri<Tag>::string_type decoded_path;
+    decode(path_range, std::back_inserter(decoded_path));
+    return decoded_path;
+}
+
+template <
+    class Tag
+    >
+typename basic_uri<Tag>::string_type decoded_query(const basic_uri<Tag> &uri) {
+    typename basic_uri<Tag>::const_range_type query_range = uri.query_range();
+    typename basic_uri<Tag>::string_type decoded_query;
+    decode(query_range, std::back_inserter(decoded_query));
+    return decoded_query;
+}
+
+template <
+    class Tag
+    >
+typename basic_uri<Tag>::string_type decoded_fragment(const basic_uri<Tag> &uri) {
+    typename basic_uri<Tag>::const_range_type fragment_range = uri.fragment_range();
+    typename basic_uri<Tag>::string_type decoded_fragment;
+    decode(fragment_range, std::back_inserter(decoded_fragment));
+    return decoded_fragment;
 }
 } // namespace uri
 } // namespace network
