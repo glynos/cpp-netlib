@@ -5,19 +5,17 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.43.0 REQUIRED unit_test_framework system regex thread filesystem )
-find_package( OpenSSL )
 
 if (OPENSSL_FOUND)
     include_directories( ${OPENSSL_INCLUDE_DIR} )
     add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
 endif()
 
-find_package( Threads )
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
-
 if (Boost_FOUND)
+    set ( BOOST_LIBS
+        ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+        ${Boost_THREAD_LIBRARY}
+        ${Boost_SYSTEM_LIBRARY})
     set ( TESTS
         client_constructor_test
         client_get_test
@@ -31,8 +29,13 @@ if (Boost_FOUND)
                 PROPERTIES COMPILE_FLAGS "-Wall")
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
-        add_dependencies(cpp-netlib-http-${test} cppnetlib-uri-parsers)
-        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri-parsers cppnetlib-client-connections)
+        add_dependencies(cpp-netlib-http-${test}
+            cppnetlib-uri-parsers
+            cppnetlib-client-connections)
+        target_link_libraries(cpp-netlib-http-${test}
+            ${BOOST_LIBS} ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-uri-parsers
+            cppnetlib-client-connections)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()
@@ -53,7 +56,7 @@ if (Boost_FOUND)
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
-        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
+        target_link_libraries(cpp-netlib-http-${test} ${BOOST_LIBS} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}
@@ -73,7 +76,7 @@ if (Boost_FOUND)
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
-        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
+        target_link_libraries(cpp-netlib-http-${test} ${BOOST_LIBS} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY
             ${CPP-NETLIB_BINARY_DIR}/tests)
@@ -96,7 +99,7 @@ if (Boost_FOUND)
                 PROPERTIES COMPILE_FLAGS "-Wall")
         endif()
         add_executable(cpp-netlib-http-inlined-${test} ${test}.cpp)
-        target_link_libraries(cpp-netlib-http-inlined-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+        target_link_libraries(cpp-netlib-http-inlined-${test} ${BOOST_LIBS} ${CMAKE_THREAD_LIBS_INIT})
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-inlined-${test} ${OPENSSL_LIBRARIES})
         endif()
