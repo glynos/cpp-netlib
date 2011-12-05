@@ -29,8 +29,13 @@ if (Boost_FOUND)
                 PROPERTIES COMPILE_FLAGS "-Wall")
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
-        add_dependencies(cpp-netlib-http-${test} cppnetlib-uri-parsers)
-        target_link_libraries(cpp-netlib-http-${test} ${BOOST_LIBS} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri-parsers)
+        add_dependencies(cpp-netlib-http-${test}
+            cppnetlib-uri-parsers
+            cppnetlib-client-connections)
+        target_link_libraries(cpp-netlib-http-${test}
+            ${BOOST_LIBS} ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-uri-parsers
+            cppnetlib-client-connections)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()

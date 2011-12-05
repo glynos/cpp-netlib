@@ -6,17 +6,13 @@
 include_directories(${CPP-NETLIB_SOURCE_DIR})
 include_directories(${OPENSSL_INCLUDE_DIR})
 
-if (OPENSSL_FOUND)
-    add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
-endif()
-
 add_executable(http_client http_client.cpp)
 add_executable(simple_wget simple_wget.cpp)
 add_executable(hello_world_server http/hello_world_server.cpp)
 add_executable(fileserver http/fileserver.cpp)
 add_executable(uri uri.cpp)
-add_dependencies(http_client cppnetlib-uri-parsers)
-add_dependencies(simple_wget cppnetlib-uri-parsers)
+add_dependencies(http_client cppnetlib-uri-parsers cppnetlib-client-connections)
+add_dependencies(simple_wget cppnetlib-uri-parsers cppnetlib-client-connections)
 add_dependencies(uri cppnetlib-uri-parsers)
 set(BOOST_CLIENT_LIBS
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
@@ -32,13 +28,15 @@ target_link_libraries(http_client
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     ${OPENSSL_LIBRARIES}
-    cppnetlib-uri-parsers)
+    cppnetlib-uri-parsers
+    cppnetlib-client-connections)
 
 target_link_libraries(simple_wget
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     ${OPENSSL_LIBRARIES}
-    cppnetlib-uri-parsers)
+    cppnetlib-uri-parsers
+    cppnetlib-client-connections)
 
 target_link_libraries(hello_world_server
     ${BOOST_SERVER_LIBS}

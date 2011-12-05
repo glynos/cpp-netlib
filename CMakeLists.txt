@@ -16,7 +16,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DBOOST_NETWORK_DEBUG)
 endif()
 
-if (OpenSSL_FOUND)
+if (OPENSSL_FOUND)
     add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
 endif()
 
