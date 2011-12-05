@@ -5,6 +5,8 @@
 
 cmake_minimum_required(VERSION 2.6)
 project(CPP-NETLIB)
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTI_THREADED ON)
 find_package( Boost 1.43.0 REQUIRED unit_test_framework system regex date_time thread filesystem )
 find_package( OpenSSL )
 find_package( Threads )
@@ -15,8 +17,6 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 endif()
 
 if (Boost_FOUND)
-    set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_MULTI_THREADED ON)
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
 enable_testing()
