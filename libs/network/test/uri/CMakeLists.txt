@@ -4,12 +4,6 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.41.0 COMPONENTS unit_test_framework system regex date_time filesystem )
-find_package( OpenSSL )
-find_package( Threads )
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
-
 
 if (Boost_FOUND)
     set(
@@ -22,14 +16,16 @@ if (Boost_FOUND)
         set_source_files_properties(${test}.cpp
             PROPERTIES COMPILE_FLAGS "-Wall")
         add_executable(cpp-netlib-${test} ${test}.cpp)
-	add_dependencies(cpp-netlib-${test} cppnetlib-uri-parsers)
-        target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri-parsers)
+        add_dependencies(cpp-netlib-${test} cppnetlib-uri-parsers)
+        target_link_libraries(cpp-netlib-${test}
+            ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri-parsers)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
         endif()
         set_target_properties(cpp-netlib-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
-        add_test(cpp-netlib-${test} ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
+        add_test(cpp-netlib-${test}
+            ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
     endforeach (test)
 
 endif()
