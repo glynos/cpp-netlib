@@ -5,7 +5,11 @@
 
 cmake_minimum_required(VERSION 2.6)
 project(CPP-NETLIB)
-find_package( Boost 1.41.0 )
+find_package( Boost 1.43.0 REQUIRED unit_test_framework system regex date_time thread filesystem )
+find_package( OpenSSL )
+find_package( Threads )
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
 set(CMAKE_VERBOSE_MAKEFILE true)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)

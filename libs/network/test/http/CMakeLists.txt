@@ -5,17 +5,11 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.43.0 REQUIRED unit_test_framework system regex thread filesystem )
-find_package( OpenSSL )
 
 if (OPENSSL_FOUND)
     include_directories( ${OPENSSL_INCLUDE_DIR} )
     add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
 endif()
-
-find_package( Threads )
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
 
 if (Boost_FOUND)
     set ( TESTS

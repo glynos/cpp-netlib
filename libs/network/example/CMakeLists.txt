@@ -4,12 +4,7 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.41.0 COMPONENTS program_options system regex date_time thread filesystem )
-find_package( OpenSSL )
 include_directories(${OPENSSL_INCLUDE_DIR})
-find_package( Threads )
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
 
 if (Boost_FOUND)
     add_executable(http_client http_client.cpp)
