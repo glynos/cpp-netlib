@@ -7,6 +7,10 @@
 # boost_network_uri
 include_directories(${CPP-NETLIB_SOURCE_DIR})
 
+if (OPENSSL_FOUND)
+    add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
+endif()
+
 set(CPP-NETLIB_URI_SRCS uri/parse.cpp)
 add_library(cppnetlib-uri-parsers ${CPP-NETLIB_URI_SRCS})
 
