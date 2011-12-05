@@ -8,7 +8,6 @@
 
 
 # include <boost/fusion/include/vector.hpp>
-# include <boost/fusion/sequence/intrinsic/at_c.hpp>
 
 
 namespace boost {

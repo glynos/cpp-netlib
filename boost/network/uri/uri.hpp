@@ -9,13 +9,9 @@
 
 
 # include <boost/network/traits/string.hpp>
-# include <boost/network/tags.hpp>
 # include <boost/network/constants.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
-# ifdef BOOST_NETWORK_NO_LIB
-#  include <boost/network/uri/detail/parse_uri.hpp>
-# endif // #ifdef BOOST_NETWORK_NO_LIB
-# include <boost/fusion/include/std_pair.hpp>
+# include <boost/fusion/sequence/intrinsic/at_c.hpp>
 # include <boost/algorithm/string.hpp>
 # include <boost/range/iterator_range.hpp>
 # include <boost/operators.hpp>
@@ -32,75 +28,78 @@ namespace detail {
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
            uri_parts<std::string> &parts);
-
-bool parse(std::wstring::const_iterator first,
-           std::wstring::const_iterator last,
-           uri_parts<std::wstring> &parts);
 } // namespace detail
 
 
-template <
-    class Tag
-    >
-class basic_uri
-    : public boost::equality_comparable<basic_uri<Tag> > {
+class uri
+    : public boost::equality_comparable<uri> {
 
 public:
 
-    typedef typename string<Tag>::type string_type;
-    typedef typename string_type::iterator iterator_type;
-    typedef boost::iterator_range<iterator_type> range_type;
-    typedef typename string_type::const_iterator const_iterator_type;
-    typedef boost::iterator_range<const_iterator_type> const_range_type;
+    typedef std::string string_type;
+    typedef string_type::iterator iterator;
+    typedef boost::iterator_range<iterator> range_type;
+    typedef string_type::const_iterator const_iterator;
+    typedef boost::iterator_range<const_iterator> const_range_type;
 
-    basic_uri() : is_valid_(false) {
+    uri()
+        : is_valid_(false) {
 
     }
 
-    basic_uri(const string_type &uri)
+    template <
+        class FwdIter
+        >
+    uri(const FwdIter &first, const FwdIter &last)
+        : uri_(first, last), is_valid_(false) {
+        parse();
+    }
+
+    uri(const string_type &uri)
         : uri_(uri), is_valid_(false) {
         parse();
     }
 
-    basic_uri(const basic_uri &other)
+    uri(const uri &other)
         : uri_(other.uri_),
           uri_parts_(other.uri_parts_),
           is_valid_(other.is_valid_) {
 
     }
 
-    basic_uri &operator = (const basic_uri &other) {
-        basic_uri(other).swap(*this);
+    uri &operator = (const uri &other) {
+        uri(other).swap(*this);
         return *this;
     }
 
-    basic_uri &operator = (const string_type &uri) {
-        basic_uri(uri).swap(*this);
+    uri &operator = (const string_type &uri) {
+        uri_ = uri;
+        parse();
         return *this;
     }
 
-    ~basic_uri() {
+    ~uri() {
 
     }
 
-    void swap(basic_uri &other) {
+    void swap(uri &other) {
         boost::swap(uri_, other.uri_);
         parse();
     }
 
-    iterator_type begin() {
+    iterator begin() {
         return uri_.begin();
     }
 
-    const_iterator_type begin() const {
+    const_iterator begin() const {
         return uri_.begin();
     }
 
-    iterator_type end() {
+    iterator end() {
         return uri_.end();
     }
 
-    const_iterator_type end() const {
+    const_iterator end() const {
         return uri_.end();
     }
 
@@ -195,9 +194,9 @@ public:
     }
 
     template <
-        class Iterator
+        class FwdIter
         >
-    void append(Iterator first, Iterator last) {
+    void append(const FwdIter &first, const FwdIter &last) {
         uri_.append(first, last);
         parse();
     }
@@ -207,157 +206,128 @@ private:
     void parse();
 
     string_type uri_;
-    detail::uri_parts<typename boost::network::string<Tag>::type> uri_parts_;
+    detail::uri_parts<std::string> uri_parts_;
     bool is_valid_;
 
 };
 
-template <
-    class Tag
-    >
 inline
-void basic_uri<Tag>::parse() {
-    const_iterator_type first(boost::begin(uri_)), last(boost::end(uri_));
+void uri::parse() {
+    const_iterator first(boost::begin(uri_)), last(boost::end(uri_));
     is_valid_ = detail::parse(first, last, uri_parts_);
 }
 
-template <
-    class Tag
-    >
 inline
-void swap(basic_uri<Tag> &lhs, basic_uri<Tag> &rhs) {
-    lhs.swap(rhs);
+std::string scheme(const uri &uri_) {
+    return uri_.scheme();
 }
 
-template <
-    class Tag
-    >
 inline
-typename basic_uri<Tag>::string_type scheme(const basic_uri<Tag> &uri) {
-    return uri.scheme();
+std::string user_info(const uri &uri_) {
+    return uri_.user_info();
 }
 
-template <
-    class Tag
-    >
 inline
-typename basic_uri<Tag>::string_type user_info(const basic_uri<Tag> &uri) {
-    return uri.user_info();
+std::string host(const uri &uri_) {
+    return uri_.host();
 }
 
-template <
-    class Tag
-    >
 inline
-typename basic_uri<Tag>::string_type host(const basic_uri<Tag> &uri) {
-    return uri.host();
+std::string port(const uri &uri_) {
+    return uri_.port();
 }
 
-template <
-    class Tag
-    >
 inline
-typename basic_uri<Tag>::string_type port(const basic_uri<Tag> &uri) {
-    return uri.port();
+boost::optional<unsigned short> port_us(const uri &uri_) {
+    std::string port = uri_.port();
+    return (port.empty())?
+        boost::optional<unsigned short>() :
+        boost::optional<unsigned short>(boost::lexical_cast<unsigned short>(port));
 }
 
-template <
-    class Tag
-    >
-struct port_wrapper {
-    const basic_uri<Tag> &uri;
-
-    port_wrapper(const basic_uri<Tag> &uri) : uri(uri) {
-
-    }
-
-    boost::optional<unsigned short> to_optional() const {
-        typename basic_uri<Tag>::string_type port = uri.port();
-        return (port.empty())?
-            boost::optional<unsigned short>() :
-            boost::optional<unsigned short>(boost::lexical_cast<unsigned short>(port));
-    }
-
-    operator boost::optional<unsigned short> () const {
-        return to_optional();
-    }
-
-    operator unsigned short () const {
-        typedef typename string<Tag>::type string_type;
-        typedef constants<Tag> consts;
-        const boost::optional<unsigned short> &port = to_optional();
-        if (port) return *port;
-        return boost::iequals(uri.scheme_range(), string_type(consts::https())) ? 443 : 80;
-    }
-};
-
-template <
-    class Tag
-    >
 inline
-port_wrapper<Tag> port_us(const basic_uri<Tag> &uri) {
-    return port_wrapper<Tag>(uri);
+std::string path(const uri &uri_) {
+    return uri_.path();
 }
 
-template <
-    class Tag
-    >
 inline
-typename basic_uri<Tag>::string_type path(const basic_uri<Tag> &uri) {
-    return uri.path();
+std::string query(const uri &uri_) {
+    return uri_.query();
 }
 
-template <
-    class Tag
-    >
 inline
-typename basic_uri<Tag>::string_type query(const basic_uri<Tag> &uri) {
-    return uri.query();
+std::string fragment(const uri &uri_) {
+    return uri_.fragment();
 }
 
-template <
-    class Tag
-    >
 inline
-typename basic_uri<Tag>::string_type fragment(const basic_uri<Tag> &uri) {
-    return uri.fragment();
+std::string authority(const uri &uri_) {
+    uri::const_range_type user_info(uri_.user_info_range());
+    uri::const_range_type port(uri_.port_range());
+    return std::string(user_info.begin(), port.end());
 }
 
-template <
-    class Tag
-    >
 inline
-typename basic_uri<Tag>::string_type authority(const basic_uri<Tag> &uri) {
-    typename basic_uri<Tag>::const_range_type user_info(uri.user_info_range());
-    typename basic_uri<Tag>::const_range_type port(uri.port_range());
-    return typename basic_uri<Tag>::string_type(user_info.begin(), port.end());
+std::string netloc(const uri &uri_) {
+    return authority(uri_);
 }
 
-template <
-    class Tag
-    >
 inline
-typename basic_uri<Tag>::string_type netloc(const basic_uri<Tag> &uri) {
-    return authority(uri);
+bool valid(const uri &uri_) {
+    return uri_.is_valid();
 }
 
-template <
-    class Tag
-    >
 inline
-bool is_valid(const basic_uri<Tag> &uri) {
-    return uri.is_valid();
+bool is_valid(const uri &uri_) {
+    return valid(uri_);
 }
 
-template <
-    class Tag
-    >
 inline
-bool operator == (const basic_uri<Tag> &lhs, const basic_uri<Tag> &rhs) {
+bool is_hierarchical(const uri &uri_) {
+    //uri::const_range_type scheme = uri_.scheme_range();
+    //uri::const_range_type user_info = uri_.user_info_range();
+    //return is_valid(uri_) &&
+    //    boost::equal(std::make_pair(boost::end(scheme),
+    //                                boost::begin(user_info)),
+    //                 boost::as_literal("://"));
+    return false;
+}
+
+bool is_opaque(const uri &uri_) {
+    return false;
+}
+
+inline
+bool operator == (const uri &lhs, const uri &rhs) {
     return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 } // namespace uri
 } // namespace network
+
+inline
+network::uri::uri::iterator begin(network::uri::uri &uri_) {
+    return uri_.begin();
+}
+
+inline
+network::uri::uri::iterator end(network::uri::uri &uri_) {
+    return uri_.end();
+}
+
+inline
+network::uri::uri::const_iterator begin(const network::uri::uri &uri_) {
+    return uri_.begin();
+}
+
+inline
+network::uri::uri::const_iterator end(const network::uri::uri &uri_) {
+    return uri_.end();
+}
+
+inline
+void swap(network::uri::uri &lhs, network::uri::uri &rhs) {
+    lhs.swap(rhs);
+}
 } // namespace boost
 
 

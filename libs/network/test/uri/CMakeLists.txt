@@ -27,5 +27,4 @@ if (Boost_FOUND)
         add_test(cpp-netlib-${test}
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
     endforeach (test)
-
 endif()

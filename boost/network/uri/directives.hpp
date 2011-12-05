@@ -16,14 +16,21 @@
 namespace boost {
 namespace network {
 namespace uri {
+inline
+uri &operator << (uri &uri_, const uri &root_uri) {
+    if (empty(uri_) && valid(root_uri)) {
+        uri_.append(boost::begin(root_uri), boost::end(root_uri));
+    }
+    return uri_;
+}
+
 template <
-    class Tag
-  , class Directive
+    class Directive
     >
 inline
-basic_uri<Tag> &operator << (basic_uri<Tag> &uri, const Directive &directive) {
-    directive(uri);
-    return uri;
+uri &operator << (uri &uri_, const Directive &directive) {
+    directive(uri_);
+    return uri_;
 }
 } // namespace uri
 } // namespace network
