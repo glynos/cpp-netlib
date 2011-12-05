@@ -9,47 +9,73 @@
 namespace boost {
 namespace network {
 namespace uri {
+template <
+    class ValueType
+    >
 struct path_directive {
 
-    explicit path_directive(const std::string &path)
-        : path(path)
+    explicit path_directive(const ValueType &value)
+        : value(value)
     {}
 
     template <
-        class Uri
+        class Tag
+      , template <class> class Uri
         >
-    void operator () (Uri &uri) const {
-        uri.append(path);
+    void operator () (Uri<Tag> &uri) const {
+        (*this)(boost::as_literal(value), uri);
     }
 
-    std::string path;
+    template <
+        class Rng
+      , class Tag
+      , template <class> class Uri
+        >
+    void operator () (const Rng &rng, Uri<Tag> &uri) const {
+        uri.append(boost::begin(rng), boost::end(rng));
+    }
+
+    const ValueType &value;
 
 };
 
+template <
+    class ValueType
+    >
 struct encoded_path_directive {
 
-    explicit encoded_path_directive(const std::string &path)
-        : path(path)
+    explicit encoded_path_directive(const ValueType &value)
+        : value(value)
     {}
 
-    void operator () (uri &uri_) const {
-        std::string encoded_path;
-        encode(path, std::back_inserter(encoded_path));
-        uri_.append(encoded_path);
+    template <
+        class Tag
+      , template <class> class Uri
+        >
+    void operator () (Uri<Tag> &uri) const {
+        typename string<Tag>::type encoded_value;
+        encode(boost::as_literal(value), std::back_inserter(encoded_value));
+        uri.append(encoded_value);
     }
 
-    std::string path;
+    const ValueType &value;
 
 };
 
+template <
+    class T
+    >
 inline
-path_directive path(const std::string &path)  {
-    return path_directive(path);
+path_directive<T> path(const T &value)  {
+    return path_directive<T>(value);
 }
 
+template <
+    class T
+    >
 inline
-encoded_path_directive encoded_path(const std::string &path)  {
-    return encoded_path_directive(path);
+encoded_path_directive<T> encoded_path(const T &value)  {
+    return encoded_path_directive<T>(value);
 }
 } // namespace uri
 } // namespace network

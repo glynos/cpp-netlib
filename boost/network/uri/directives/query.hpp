@@ -10,61 +10,84 @@
 namespace boost {
 namespace network {
 namespace uri {
+template <
+    class ValueType
+    >
 struct query_directive {
 
-    explicit query_directive(const std::string &query)
-        : query(query)
+    explicit query_directive(const ValueType &value)
+        : value(value)
     {}
 
     template <
-        class Uri
+        class Tag
+      , template <class> class Uri
         >
-    void operator () (Uri &uri) const {
-        uri.append("?");
-        uri.append(query);
+    void operator () (Uri<Tag> &uri) const {
+        typename string<Tag>::type encoded_value;
+        static const char separator[] = {'?'};
+        uri.append(boost::begin(separator), boost::end(separator));
+        uri.append(value);
     }
 
-    std::string query;
+    const ValueType &value;
 
 };
 
+template <
+    class T
+    >
 inline
-query_directive query(const std::string &query)  {
-    return query_directive(query);
+query_directive<T> query(const T &value)  {
+    return query_directive<T>(value);
 }
 
-struct query_key_query_directive {
+template <
+    class KeyType
+  , class ValueType
+    >
+struct query_key_value_directive {
 
-    query_key_query_directive(const std::string &key, const std::string &query)
-        : key(key), query(query)
+    query_key_value_directive(const KeyType &key, const ValueType &value)
+        : key(key), value(value)
     {}
 
     template <
-        class Uri
+        class Tag
+      , template <class> class Uri
         >
-    void operator () (Uri &uri) const {
-        std::string encoded_key, encoded_query;
+    void operator () (Uri<Tag> &uri) const {
+        typename string<Tag>::type encoded_key, encoded_value;
+        static const char qmark[] = {'?'};
+        static const char equal[] = {'='};
+        static const char scolon[] = {';'};
         if (!uri.query_range())
         {
-            uri.append("?");
+            uri.append(boost::begin(qmark), boost::end(qmark));
         }
         else
         {
-            uri.append(";");
+            uri.append(boost::begin(scolon), boost::end(scolon));
         }
-        uri.append(key);
-        uri.append("=");
-        uri.append(query);
+        encode(boost::as_literal(key), std::back_inserter(encoded_key));
+        uri.append(encoded_key);
+        uri.append(boost::begin(equal), boost::end(equal));
+        encode(boost::as_literal(value), std::back_inserter(encoded_value));
+        uri.append(encoded_value);
     }
 
-    std::string key;
-    std::string query;
+    const KeyType &key;
+    const ValueType &value;
 
 };
 
+template <
+    class Key
+  , class Value
+    >
 inline
-query_key_query_directive query(const std::string &key, const std::string &query)  {
-    return query_key_query_directive(key, query);
+query_key_value_directive<Key, Value> query(const Key &key, const Value &value)  {
+    return query_key_value_directive<Key, Value>(key, value);
 }
 } // namespace uri
 } // namespace network

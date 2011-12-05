@@ -9,26 +9,33 @@
 namespace boost {
 namespace network {
 namespace uri {
+template <
+    class ValueType
+    >
 struct host_directive {
 
-    explicit host_directive(const std::string &host)
-        : host(host)
+    explicit host_directive(const ValueType &value)
+        : value(value)
     {}
 
     template <
-        class Uri
+        class Tag
+      , template <class> class Uri
         >
-    void operator () (Uri &uri) const {
-        uri.append(host);
+    void operator () (Uri<Tag> &uri) const {
+        uri.append(value);
     }
 
-    std::string host;
+    const ValueType &value;
 
 };
 
+template <
+    class T
+    >
 inline
-host_directive host(const std::string &host)  {
-    return host_directive(host);
+host_directive<T> host(const T &value)  {
+    return host_directive<T>(value);
 }
 } // namespace uri
 } // namespace network

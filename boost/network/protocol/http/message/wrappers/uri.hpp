@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/uri/uri.hpp>
+#include <boost/network/uri/http/uri.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -24,7 +24,7 @@ namespace boost { namespace network { namespace http {
             operator string_type() {
                 return message_.uri().raw();
             }
-            operator boost::network::uri::basic_uri<typename string<Tag>::type> () {
+            operator boost::network::uri::basic_uri<tags::http_default_8bit_tcp_resolve> () {
                 return message_.uri();
             }
         };
@@ -40,6 +40,6 @@ namespace boost { namespace network { namespace http {
 
 } // namespace network
 
-} // namespace boost
+} // nmaespace boost
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_URI_HPP_20100620

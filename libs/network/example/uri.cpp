@@ -27,13 +27,13 @@ int main(int argc, char * argv[]) {
                   std::string("a valid") : std::string("an invalid"))
               << " URI!" << std::endl;
 
-    ///*<< Create a `boost::network::http::uri` object from the input. >>*/
-    //boost::network::uri::http::uri http_uri_(input);
-    ///*<< Check if it's a valid HTTP URI. >>*/
-    //std::cout << "It's also "
-    //          << (boost::network::uri::is_valid(http_uri_)?
-    //              std::string("a valid HTTP URI") : std::string("an invalid HTTP URI."))
-    //          << "!" << std::endl;
+    /*<< Create a `boost::network::http::uri` object from the input. >>*/
+    boost::network::uri::http::uri http_uri_(input);
+    /*<< Check if it's a valid HTTP URI. >>*/
+    std::cout << "It's also "
+              << (boost::network::uri::is_valid(http_uri_)?
+                  std::string("a valid HTTP URI") : std::string("an invalid HTTP URI."))
+              << "!" << std::endl;
 
     return EXIT_SUCCESS;
 }

@@ -49,6 +49,6 @@ build-project http ;
 
 run message_test.cpp ;
 run message_transform_test.cpp ;
-run url_test.cpp /cpp-netlib//cppnetlib-uri ;
+run url_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
 run client_server_include_failure.cpp ;
 

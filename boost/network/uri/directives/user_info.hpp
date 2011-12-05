@@ -9,27 +9,35 @@
 namespace boost {
 namespace network {
 namespace uri {
+template <
+    class ValueType
+    >
 struct user_info_directive {
 
-    explicit user_info_directive(const std::string &user_info)
-        : user_info(user_info)
+    explicit user_info_directive(const ValueType &value)
+        : value(value)
     {}
 
     template <
-        class Uri
+        class Tag
+      , template <class> class Uri
         >
-    void operator () (Uri &uri) const {
-        uri.append(user_info);
-        uri.append("@");
+    void operator () (Uri<Tag> &uri) const {
+        static const char separator[] = {'@'};
+        uri.append(value);
+        uri.append(boost::begin(separator), boost::end(separator));
     }
 
-    std::string user_info;
+    const ValueType &value;
 
 };
 
+template <
+    class T
+    >
 inline
-user_info_directive user_info(const std::string &user_info)  {
-    return user_info_directive(user_info);
+user_info_directive<T> user_info(const T &value)  {
+    return user_info_directive<T>(value);
 }
 } // namespace uri
 } // namespace network
