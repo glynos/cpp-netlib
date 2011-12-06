@@ -12,8 +12,9 @@
 
 namespace boost { namespace network { namespace http {
 
+struct response_pimpl;
+
 struct response : response_base {
-  // FIXME implement all these!
   response();
   response(response const &);
   response& operator=(response);
@@ -47,9 +48,12 @@ struct response : response_base {
       size_t size) const;
 
   // From response_base...
-  virtual void set_status(std::string const & new_status);
+  virtual void set_status(boost::uint16_t new_status);
   virtual void set_status_message(std::string const & new_status_message);
   virtual void set_version(std::string const & new_version);
+  virtual void get_status(boost::uint16_t &status) const;
+  virtual void get_status_message(std::string &status_message) const;
+  virtual void get_version(std::string &version) const;
   virtual ~response();
 
  private:
@@ -63,6 +67,8 @@ struct response : response_base {
   promise<std::string> get_source_promise();
   promise<std::string> get_destination_promise();
   promise<std::string> get_body_promise();
+
+  scoped_ptr<response_pimpl> pimpl_;
 };
 
 inline void swap(response &l, response &r) {

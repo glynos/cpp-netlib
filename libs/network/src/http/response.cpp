@@ -9,3 +9,4 @@
 #endif
 
 #include <boost/network/protocol/http/response/response_base.ipp>
+#include <boost/network/protocol/http/response/response.ipp>

@@ -11,7 +11,7 @@
 
 namespace boost { namespace network { namespace http {
 
-inline void status(response_base & response, std::string const & value) {
+inline void status(response_base & response, boost::uint16_t value) {
   response.set_status(value);
 }
 
