@@ -4,9 +4,6 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.45.0 COMPONENTS unit_test_framework system regex date_time thread filesystem )
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
 
 add_subdirectory(uri)
 add_subdirectory(http)
@@ -29,7 +26,8 @@ if (Boost_FOUND)
         endif()
         set_target_properties(cpp-netlib-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
-        add_test(cpp-netlib-${test} ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
+        add_test(cpp-netlib-${test}
+            ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
     endforeach (test)
 
 endif()

@@ -4,61 +4,59 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( Boost 1.45.0 COMPONENTS program_options system regex date_time thread filesystem )
-find_package( OpenSSL )
-find_package( Threads )
-
-if (Boost_FOUND)
-    set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_MULTITHREADED ON)
-endif (Boost_FOUND)
-
 if (OPENSSL_FOUND)
   include_directories(${OPENSSL_INCLUDE_DIR})
 endif (OPENSSL_FOUND)
 
-if (Boost_FOUND)
-    add_executable(http_client http_client.cpp)
-    add_dependencies(http_client cppnetlib-uri)
-    target_link_libraries(http_client ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri cppnetlib-client-connections)
-    set_target_properties(http_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
-    if (OPENSSL_FOUND)
-      target_link_libraries(http_client ${OPENSSL_LIBRARIES})
-    endif (OPENSSL_FOUND)
+add_executable(http_client http_client.cpp)
+add_executable(simple_wget simple_wget.cpp)
+add_executable(hello_world_server http/hello_world_server.cpp)
+add_executable(fileserver http/fileserver.cpp)
+add_executable(uri uri.cpp)
+add_dependencies(http_client cppnetlib-uri cppnetlib-client-connections)
+add_dependencies(simple_wget cppnetlib-uri cppnetlib-client-connections)
+add_dependencies(uri cppnetlib-uri)
+set(BOOST_CLIENT_LIBS
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${Boost_THREAD_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY})
 
-    add_executable(simple_wget simple_wget.cpp)
-    add_dependencies(simple_wget cppnetlib-uri)
-    target_link_libraries(simple_wget ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri cppnetlib-client-connections)
-    set_target_properties(simple_wget PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
-    if (OPENSSL_FOUND)
-      target_link_libraries(simple_wget ${OPENSSL_LIBRARIES})
-    endif (OPENSSL_FOUND)
+set(BOOST_SERVER_LIBS
+    ${Boost_THREAD_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_PROGRAM_OPTIONS_LIBRARY})
 
-    add_executable(one_liner http/one_liner.cpp)
-    target_link_libraries(one_liner ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri cppnetlib-client-connections)
-    set_target_properties(one_liner PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
-    if (OPENSSL_FOUND)
-      target_link_libraries(one_liner ${OPENSSL_LIBRARIES})
-    endif (OPENSSL_FOUND)
+target_link_libraries(http_client
+    ${BOOST_CLIENT_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT}
+    cppnetlib-uri
+    cppnetlib-client-connections)
 
-    add_executable(hello_world_server http/hello_world_server.cpp)
-    target_link_libraries(hello_world_server ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
-    set_target_properties(hello_world_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+target_link_libraries(simple_wget
+    ${BOOST_CLIENT_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT}
+    cppnetlib-uri
+    cppnetlib-client-connections)
 
-    if (UNIX)
-      add_executable(fileserver http/fileserver.cpp)
-      target_link_libraries(fileserver ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
-      set_target_properties(fileserver PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
-    endif (UNIX)
+target_link_libraries(hello_world_server
+    ${BOOST_SERVER_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT})
 
-    add_executable(uri uri.cpp)
-    add_dependencies(uri cppnetlib-uri)
-    target_link_libraries(uri cppnetlib-uri)
-    set_target_properties(uri PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+if (OPENSSL_FOUND)
+  target_link_libraries(http_client ${OPENSSL_LIBRARIES})
+  target_link_libraries(simple_wget ${OPENSSL_LIBRARIES})
+  target_link_libraries(hello_world_server ${OPENSSL_LIBRARIES})
+endif (OPENSSL_FOUND)
 
-    add_executable(uri_builder uri_builder.cpp)
-    add_dependencies(uri_builder cppnetlib-uri)
-    target_link_libraries(uri_builder cppnetlib-uri)
-    set_target_properties(uri_builder PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+target_link_libraries(fileserver
+    ${BOOST_SERVER_LIBS}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${CMAKE_THREAD_LIBS_INIT}
+    cppnetlib-server-parsers)
 
-endif()
+target_link_libraries(uri cppnetlib-uri)
+set_target_properties(http_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+set_target_properties(simple_wget PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+set_target_properties(hello_world_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+set_target_properties(fileserver PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+set_target_properties(uri PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)

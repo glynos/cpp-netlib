@@ -3,12 +3,12 @@
 
 
 # include <boost/network/uri/uri.hpp>
-# include <string>
 
 
 namespace boost {
 namespace network {
 namespace uri {
+
 inline
 std::ostream &operator << (std::ostream &os, const uri &uri_) {
     return os << uri_.string();

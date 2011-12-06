@@ -6,7 +6,6 @@
 #define BOOST_TEST_MODULE URI builder test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/uri.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/directives.hpp>
 #include <boost/network/uri/accessors.hpp>
