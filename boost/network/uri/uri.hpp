@@ -11,7 +11,6 @@
 # include <boost/network/traits/string.hpp>
 # include <boost/network/constants.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
-# include <boost/fusion/sequence/intrinsic/at_c.hpp>
 # include <boost/algorithm/string.hpp>
 # include <boost/range/iterator_range.hpp>
 # include <boost/operators.hpp>
@@ -104,45 +103,38 @@ public:
     }
 
     const_range_type scheme_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<0>(uri_parts_)),
-                                at_c<1>(at_c<0>(uri_parts_)));
+        return const_range_type(uri_parts_.scheme.first,
+                                uri_parts_.scheme.second);
     }
 
     const_range_type user_info_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<0>(at_c<1>(uri_parts_))),
-                                at_c<1>(at_c<0>(at_c<1>(uri_parts_))));
+        return const_range_type(uri_parts_.hier_part.user_info.first,
+                                uri_parts_.hier_part.user_info.second);
     }
 
     const_range_type host_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<1>(at_c<1>(uri_parts_))),
-                                at_c<1>(at_c<1>(at_c<1>(uri_parts_))));
+        return const_range_type(uri_parts_.hier_part.host.first,
+                                uri_parts_.hier_part.host.second);
     }
 
     const_range_type port_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<2>(at_c<1>(uri_parts_))),
-                                at_c<1>(at_c<2>(at_c<1>(uri_parts_))));
+        return const_range_type(uri_parts_.hier_part.port.first,
+                                uri_parts_.hier_part.port.second);
     }
 
     const_range_type path_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<3>(at_c<1>(uri_parts_))),
-                                at_c<1>(at_c<3>(at_c<1>(uri_parts_))));
+        return const_range_type(uri_parts_.hier_part.path.first,
+                                uri_parts_.hier_part.path.second);
     }
 
     const_range_type query_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<2>(uri_parts_)),
-                                at_c<1>(at_c<2>(uri_parts_)));
+        return const_range_type(uri_parts_.query.first,
+                                uri_parts_.query.second);
     }
 
     const_range_type fragment_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<3>(uri_parts_)),
-                                at_c<1>(at_c<3>(uri_parts_)));
+        return const_range_type(uri_parts_.fragment.first,
+                                uri_parts_.fragment.second);
     }
 
     string_type scheme() const {

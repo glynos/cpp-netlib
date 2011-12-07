@@ -7,7 +7,7 @@
 # define BOOST_NETWORK_URL_DETAIL_URL_PARTS_HPP_
 
 
-# include <boost/fusion/include/vector.hpp>
+# include <utility>
 
 
 namespace boost {
@@ -18,29 +18,28 @@ template <
     class String
     >
 struct iterator_range
-    : boost::fusion::vector<
+    : std::pair<
       typename String::const_iterator
-    , typename String::const_iterator
-    >
-{ };
+    , typename String::const_iterator> {
 
+};
 
 template <
     class String
     >
-struct uri_parts
-    : boost::fusion::vector<
-      iterator_range<String>         // scheme
-    , boost::fusion::vector<
-            iterator_range<String>   // user_info
-          , iterator_range<String>   // host
-          , iterator_range<String>   // port
-          , iterator_range<String>   // path
-          >
-    , iterator_range<String>         // query
-    , iterator_range<String>         // fragment
+struct hierarchical_part {
+    iterator_range<String> user_info, host, port, path;
+};
+
+template <
+    class String
     >
-{ };
+struct uri_parts {
+    iterator_range<String> scheme;
+    hierarchical_part<String> hier_part;
+    iterator_range<String> query;
+    iterator_range<String> fragment;
+};
 } // namespace detail
 } // namespace uri
 } // namespace network

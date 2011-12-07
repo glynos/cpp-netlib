@@ -10,6 +10,36 @@
 #include <boost/spirit/include/phoenix_operator.hpp>
 #include <boost/spirit/include/version.hpp>
 #include <boost/spirit/repository/include/qi_iter_pos.hpp>
+#include <boost/fusion/adapted/struct/adapt_struct.hpp>
+
+
+BOOST_FUSION_ADAPT_TPL_STRUCT
+(
+    (String),
+    (boost::network::uri::detail::iterator_range)(String),
+    (typename String::const_iterator, first)
+    (typename String::const_iterator, second)
+    );
+
+BOOST_FUSION_ADAPT_TPL_STRUCT
+(
+    (String),
+    (boost::network::uri::detail::hierarchical_part)(String),
+    (boost::network::uri::detail::iterator_range<String>, user_info)
+    (boost::network::uri::detail::iterator_range<String>, host)
+    (boost::network::uri::detail::iterator_range<String>, port)
+    (boost::network::uri::detail::iterator_range<String>, path)
+    );
+
+BOOST_FUSION_ADAPT_TPL_STRUCT
+(
+    (String),
+    (boost::network::uri::detail::uri_parts)(String),
+    (boost::network::uri::detail::iterator_range<String>, scheme)
+    (boost::network::uri::detail::hierarchical_part<String>, hier_part)
+    (boost::network::uri::detail::iterator_range<String>, query)
+    (boost::network::uri::detail::iterator_range<String>, fragment)
+    );
 
 
 namespace boost {
@@ -222,10 +252,7 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
     qi::rule<Iterator, iterator_range<String>()>
     scheme, user_info, query, fragment;
 
-    qi::rule<Iterator, boost::fusion::vector<iterator_range<String>,
-                                             iterator_range<String>,
-                                             iterator_range<String>,
-                                             iterator_range<String> >()>
+    qi::rule<Iterator, hierarchical_part<String>()>
     hier_part;
 
     // actual uri parser
@@ -238,15 +265,6 @@ bool parse(std::string::const_iterator first,
            uri_parts<std::string> &parts) {
     namespace qi = boost::spirit::qi;
     static detail::uri_grammar<std::string, std::string::const_iterator> grammar;
-    bool is_valid = qi::parse(first, last, grammar, parts);
-    return is_valid && (first == last);
-}
-
-bool parse(std::wstring::const_iterator first,
-           std::wstring::const_iterator last,
-           uri_parts<std::wstring> &parts) {
-    namespace qi = boost::spirit::qi;
-    static uri_grammar<std::wstring, std::wstring::const_iterator> grammar;
     bool is_valid = qi::parse(first, last, grammar, parts);
     return is_valid && (first == last);
 }
