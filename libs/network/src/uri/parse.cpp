@@ -6,41 +6,28 @@
 
 #include <boost/network/uri/detail/uri_parts.hpp>
 #include <boost/config/warning_disable.hpp>
-#include <boost/spirit/include/qi.hpp>
-#include <boost/spirit/include/phoenix_operator.hpp>
-#include <boost/spirit/include/version.hpp>
-#include <boost/spirit/repository/include/qi_iter_pos.hpp>
+#include <boost/spirit/home/qi.hpp>
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>
 
-
 BOOST_FUSION_ADAPT_TPL_STRUCT
 (
-    (String),
-    (boost::network::uri::detail::iterator_range)(String),
-    (typename String::const_iterator, first)
-    (typename String::const_iterator, second)
+    (FwdIter),
+    (boost::network::uri::detail::hierarchical_part)(FwdIter),
+    (boost::iterator_range<FwdIter>, user_info)
+    (boost::iterator_range<FwdIter>, host)
+    (boost::iterator_range<FwdIter>, port)
+    (boost::iterator_range<FwdIter>, path)
     );
 
 BOOST_FUSION_ADAPT_TPL_STRUCT
 (
-    (String),
-    (boost::network::uri::detail::hierarchical_part)(String),
-    (boost::network::uri::detail::iterator_range<String>, user_info)
-    (boost::network::uri::detail::iterator_range<String>, host)
-    (boost::network::uri::detail::iterator_range<String>, port)
-    (boost::network::uri::detail::iterator_range<String>, path)
+    (FwdIter),
+    (boost::network::uri::detail::uri_parts)(FwdIter),
+    (boost::iterator_range<FwdIter>, scheme)
+    (boost::network::uri::detail::hierarchical_part<FwdIter>, hier_part)
+    (boost::iterator_range<FwdIter>, query)
+    (boost::iterator_range<FwdIter>, fragment)
     );
-
-BOOST_FUSION_ADAPT_TPL_STRUCT
-(
-    (String),
-    (boost::network::uri::detail::uri_parts)(String),
-    (boost::network::uri::detail::iterator_range<String>, scheme)
-    (boost::network::uri::detail::hierarchical_part<String>, hier_part)
-    (boost::network::uri::detail::iterator_range<String>, query)
-    (boost::network::uri::detail::iterator_range<String>, fragment)
-    );
-
 
 namespace boost {
 namespace network {
@@ -49,14 +36,16 @@ namespace detail {
 namespace qi = boost::spirit::qi;
 
 template <
-    class String,
-    typename Iterator
+    class String
     >
-struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
+struct uri_grammar : qi::grammar<
+    typename String::const_iterator
+  , detail::uri_parts<typename String::const_iterator>()> {
+
+    typedef String string_type;
+    typedef typename String::const_iterator const_iterator;
 
     uri_grammar() : uri_grammar::base_type(start, "uri") {
-        using boost::spirit::repository::qi::iter_pos;
-
         // gen-delims = ":" / "/" / "?" / "#" / "[" / "]" / "@"
         gen_delims %= qi::char_(":/?#[]@");
         // sub-delims = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
@@ -83,46 +72,34 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
             ];
         // path-abempty  = *( "/" segment )
         path_abempty %=
-               iter_pos
-            >> qi::omit[qi::raw[*(qi::char_("/") >> segment)]]
-            >> iter_pos
+            qi::raw[qi::raw[*(qi::char_("/") >> segment)]]
             ;
         // path-absolute = "/" [ segment-nz *( "/" segment ) ]
         path_absolute %=
-               iter_pos
-            >> qi::omit[qi::raw[
+            qi::raw[qi::raw[
                                 qi::char_("/")
                                 >>  -(segment_nz >> *(qi::char_("/") >> segment))
                                 ]]
-            >> iter_pos
             ;
         // path-rootless = segment-nz *( "/" segment )
         path_rootless %=
-               iter_pos
-            >> qi::omit[qi::raw[
+            qi::raw[qi::raw[
                                 segment_nz >> *(qi::char_("/") >> segment)
                                 ]]
-            >> iter_pos
             ;
         // path-empty = 0<pchar>
         path_empty %=
-               iter_pos
-            >> qi::omit[qi::eps]
-            >> iter_pos
+            qi::raw[qi::eps]
             ;
 
         // scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
         scheme %=
-               iter_pos
-            >> qi::omit[qi::alpha >> *(qi::alnum | qi::char_("+.-"))]
-            >> iter_pos
+            qi::raw[qi::alpha >> *(qi::alnum | qi::char_("+.-"))]
             ;
 
         // user_info = *( unreserved / pct-encoded / sub-delims / ":" )
         user_info %=
-               iter_pos
-            >> qi::omit[qi::raw[*(unreserved | pct_encoded | sub_delims | qi::char_(":"))]]
-            >> iter_pos
+            qi::raw[qi::raw[*(unreserved | pct_encoded | sub_delims | qi::char_(":"))]]
             ;
 
         ip_literal %=
@@ -173,30 +150,22 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
 
         // TODO, host = IP-literal / IPv4address / reg-name
         host %=
-               iter_pos
-            >> qi::omit[ip_literal | ipv4address | reg_name]
-            >> iter_pos
+            qi::raw[ip_literal | ipv4address | reg_name]
             ;
 
         // port %= qi::ushort_;
         port %=
-               iter_pos
-            >> qi::omit[*qi::digit]
-            >> iter_pos
+            qi::raw[*qi::digit]
             ;
 
         // query = *( pchar / "/" / "?" )
         query %=
-               iter_pos
-            >> qi::omit[qi::raw[*(pchar | qi::char_("/?"))]]
-            >> iter_pos
+            qi::raw[qi::raw[*(pchar | qi::char_("/?"))]]
             ;
 
         // fragment = *( pchar / "/" / "?" )
         fragment %=
-               iter_pos
-            >> qi::omit[qi::raw[*(pchar | qi::char_("/?"))]]
-            >> iter_pos
+            qi::raw[qi::raw[*(pchar | qi::char_("/?"))]]
             ;
 
         // hier-part = "//" authority path-abempty / path-absolute / path-rootless / path-empty
@@ -211,9 +180,9 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
                 )
             |
             (
-                    qi::attr(iterator_range<String>())
-                >>  qi::attr(iterator_range<String>())
-                >>  qi::attr(iterator_range<String>())
+                    qi::attr(iterator_range<const_iterator>())
+                >>  qi::attr(iterator_range<const_iterator>())
+                >>  qi::attr(iterator_range<const_iterator>())
                 >>  (
                     path_absolute
                     |   path_rootless
@@ -230,41 +199,41 @@ struct uri_grammar : qi::grammar<Iterator, detail::uri_parts<String>()> {
             ;
     }
 
-    qi::rule<Iterator, typename String::value_type()>
+    qi::rule<const_iterator, typename string_type::value_type()>
     gen_delims, sub_delims, reserved, unreserved;
-    qi::rule<Iterator, String()>
+    qi::rule<const_iterator, string_type()>
     pct_encoded, pchar;
 
-    qi::rule<Iterator, String()>
+    qi::rule<const_iterator, string_type()>
     segment, segment_nz, segment_nz_nc;
-    qi::rule<Iterator, iterator_range<String>()>
+    qi::rule<const_iterator, iterator_range<const_iterator>()>
     path_abempty, path_absolute, path_rootless, path_empty;
 
-    qi::rule<Iterator, String()>
+    qi::rule<const_iterator, string_type()>
     dec_octet, ipv4address, reg_name, ipv6address, ipvfuture, ip_literal;
 
-    qi::rule<Iterator, String()>
+    qi::rule<const_iterator, string_type()>
     h16, ls32;
 
-    qi::rule<Iterator, iterator_range<String>()>
+    qi::rule<const_iterator, iterator_range<const_iterator>()>
     host, port;
 
-    qi::rule<Iterator, iterator_range<String>()>
+    qi::rule<const_iterator, iterator_range<const_iterator>()>
     scheme, user_info, query, fragment;
 
-    qi::rule<Iterator, hierarchical_part<String>()>
+    qi::rule<const_iterator, hierarchical_part<const_iterator>()>
     hier_part;
 
     // actual uri parser
-    qi::rule<Iterator, uri_parts<String>()> start;
+    qi::rule<const_iterator, uri_parts<const_iterator>()> start;
 
 };
 
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
-           uri_parts<std::string> &parts) {
+           uri_parts<std::string::const_iterator> &parts) {
     namespace qi = boost::spirit::qi;
-    static detail::uri_grammar<std::string, std::string::const_iterator> grammar;
+    static detail::uri_grammar<std::string> grammar;
     bool is_valid = qi::parse(first, last, grammar, parts);
     return is_valid && (first == last);
 }

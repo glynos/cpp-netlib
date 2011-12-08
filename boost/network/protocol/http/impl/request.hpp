@@ -17,6 +17,7 @@
 
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/traits/vector.hpp>
+#include <boost/network/constants.hpp>
 
 #include <boost/network/protocol/http/message/async_message.hpp>
 #include <boost/network/support/is_async.hpp>

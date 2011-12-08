@@ -7,12 +7,7 @@
 #ifndef __BOOST_NETWORK_URI_INC__
 # define __BOOST_NETWORK_URI_INC__
 
-
-# include <boost/network/traits/string.hpp>
-# include <boost/network/constants.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
-# include <boost/algorithm/string.hpp>
-# include <boost/range/iterator_range.hpp>
 # include <boost/operators.hpp>
 # include <boost/utility/swap.hpp>
 # include <boost/lexical_cast.hpp>
@@ -26,7 +21,7 @@ namespace uri {
 namespace detail {
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
-           uri_parts<std::string> &parts);
+           uri_parts<std::string::const_iterator> &parts);
 } // namespace detail
 
 
@@ -50,7 +45,7 @@ public:
         class FwdIter
         >
     uri(const FwdIter &first, const FwdIter &last)
-        : uri_(first, last), is_valid_(false) {
+        : uri_(first, last), uri_parts_(first, first), is_valid_(false) {
         parse();
     }
 
@@ -103,38 +98,31 @@ public:
     }
 
     const_range_type scheme_range() const {
-        return const_range_type(uri_parts_.scheme.first,
-                                uri_parts_.scheme.second);
+        return uri_parts_.scheme;
     }
 
     const_range_type user_info_range() const {
-        return const_range_type(uri_parts_.hier_part.user_info.first,
-                                uri_parts_.hier_part.user_info.second);
+        return uri_parts_.hier_part.user_info;
     }
 
     const_range_type host_range() const {
-        return const_range_type(uri_parts_.hier_part.host.first,
-                                uri_parts_.hier_part.host.second);
+        return uri_parts_.hier_part.host;
     }
 
     const_range_type port_range() const {
-        return const_range_type(uri_parts_.hier_part.port.first,
-                                uri_parts_.hier_part.port.second);
+        return uri_parts_.hier_part.port;
     }
 
     const_range_type path_range() const {
-        return const_range_type(uri_parts_.hier_part.path.first,
-                                uri_parts_.hier_part.path.second);
+        return uri_parts_.hier_part.path;
     }
 
     const_range_type query_range() const {
-        return const_range_type(uri_parts_.query.first,
-                                uri_parts_.query.second);
+        return uri_parts_.query;
     }
 
     const_range_type fragment_range() const {
-        return const_range_type(uri_parts_.fragment.first,
-                                uri_parts_.fragment.second);
+        return uri_parts_.fragment;
     }
 
     string_type scheme() const {
@@ -198,7 +186,7 @@ private:
     void parse();
 
     string_type uri_;
-    detail::uri_parts<std::string> uri_parts_;
+    detail::uri_parts<std::string::const_iterator> uri_parts_;
     bool is_valid_;
 
 };
