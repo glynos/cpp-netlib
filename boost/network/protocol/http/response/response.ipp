@@ -145,53 +145,39 @@ struct response_pimpl {
     }
   }
 
-  promise<std::string> get_source_promise() {
-    promise<std::string> promise_;
+  void set_source_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
     source_future_ = move(tmp_future);
-    return move(promise_);
   }
 
-  promise<std::string> get_destination_promise() {
-    promise<std::string> promise_;
+  void set_destination_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
     destination_future_ = move(tmp_future);
-    return move(promise_);
   }
 
-  promise<std::multimap<std::string, std::string> > get_headers_promise() {
-    promise<std::multimap<std::string, std::string> > promise_;
+  void set_headers_promise(promise<std::multimap<std::string, std::string> > &promise_) {
     unique_future<std::multimap<std::string, std::string> > tmp_future = promise_.get_future();
     headers_future_ = move(tmp_future);
-    return promise_;
   }
 
-  promise<boost::uint16_t> get_status_promise() {
-    promise<boost::uint16_t> promise_;
+  void set_status_promise(promise<boost::uint16_t> &promise_) {
     unique_future<boost::uint16_t> tmp_future = promise_.get_future();
     status_future_ = move(tmp_future);
-    return promise_;
   }
 
-  promise<std::string> get_status_message_promise() {
-    promise<std::string> promise_;
+  void set_status_message_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
     status_message_future_ = move(tmp_future);
-    return promise_;
   }
 
-  promise<std::string> get_version_promise() {
-    promise<std::string> promise_;
+  void set_version_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
     version_future_ = move(tmp_future);
-    return promise_;
   }
 
-  promise<std::string> get_body_promise() {
-    promise<std::string> promise_;
+  void set_body_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
     body_future_ = move(tmp_future);
-    return promise_;
   }
 
  private:
@@ -307,32 +293,32 @@ void response::get_version(std::string &version) const {
 
 response::~response() {}
 
-promise<std::string> response::get_version_promise() {
-  return pimpl_->get_version_promise();
+void response::set_version_promise(promise<std::string> &promise) {
+  return pimpl_->set_version_promise(promise);
 }
 
-promise<boost::uint16_t> response::get_status_promise() {
-  return pimpl_->get_status_promise();
+void response::set_status_promise(promise<boost::uint16_t> &promise) {
+  return pimpl_->set_status_promise(promise);
 }
 
-promise<std::string> response::get_status_message_promise() {
-  return pimpl_->get_status_message_promise();
+void response::set_status_message_promise(promise<std::string> &promise) {
+  return pimpl_->set_status_message_promise(promise);
 }
 
-promise<std::multimap<std::string, std::string> > response::get_headers_promise() {
-  return pimpl_->get_headers_promise();
+void response::set_headers_promise(promise<std::multimap<std::string, std::string> > &promise) {
+  return pimpl_->set_headers_promise(promise);
 }
 
-promise<std::string> response::get_source_promise() {
-  return pimpl_->get_source_promise();
+void response::set_source_promise(promise<std::string> &promise) {
+  return pimpl_->set_source_promise(promise);
 }
 
-promise<std::string> response::get_destination_promise() {
-  return pimpl_->get_destination_promise();
+void response::set_destination_promise(promise<std::string> &promise) {
+  return pimpl_->set_destination_promise(promise);
 }
 
-promise<std::string> response::get_body_promise() {
-  return pimpl_->get_body_promise();
+void response::set_body_promise(promise<std::string> &promise) {
+  return pimpl_->set_body_promise(promise);
 }
 
 }  // namespace http

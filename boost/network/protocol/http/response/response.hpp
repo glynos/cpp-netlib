@@ -60,13 +60,13 @@ struct response : response_base {
   friend class impl::setter_access;  // Hide access through accessor class.
   // These methods are unique to the response type which will allow for creating
   // promises that can be set appropriately.
-  promise<std::string> get_version_promise();
-  promise<boost::uint16_t> get_status_promise();
-  promise<std::string> get_status_message_promise();
-  promise<std::multimap<std::string, std::string> > get_headers_promise();
-  promise<std::string> get_source_promise();
-  promise<std::string> get_destination_promise();
-  promise<std::string> get_body_promise();
+  void set_version_promise(promise<std::string>&);
+  void set_status_promise(promise<boost::uint16_t>&);
+  void set_status_message_promise(promise<std::string>&);
+  void set_headers_promise(promise<std::multimap<std::string, std::string> >&);
+  void set_source_promise(promise<std::string>&);
+  void set_destination_promise(promise<std::string>&);
+  void set_body_promise(promise<std::string>&);
 
   scoped_ptr<response_pimpl> pimpl_;
 };

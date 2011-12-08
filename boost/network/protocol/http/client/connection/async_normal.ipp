@@ -86,13 +86,12 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
 
   void init_response(response &r) {
     impl::setter_access accessor;
-    this->source_promise = accessor.get_source_promise(r);
-    this->destination_promise = accessor.get_destination_promise(r);
-    this->headers_promise = accessor.get_headers_promise(r);
-    this->body_promise = accessor.get_body_promise(r);
-    this->version_promise = accessor.get_version_promise(r);
-    this->status_promise = accessor.get_status_promise(r);
-    this->status_message_promise = accessor.get_status_message_promise(r);
+    accessor.set_source_promise(r, this->source_promise);
+    accessor.set_destination_promise(r, this->destination_promise);
+    accessor.set_headers_promise(r, this->headers_promise);
+    accessor.set_body_promise(r, this->body_promise);
+    accessor.set_version_promise(r, this->version_promise);
+    accessor.set_status_message_promise(r, this->status_message_promise);
   }
 
   void set_errors(boost::system::error_code const & ec) {
@@ -392,16 +391,16 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       this->destination_promise.set_exception(boost::copy_exception(error));
       switch (state) {
         case version:
-//          this->version_promise.set_exception(boost::copy_exception(error));
+          this->version_promise.set_exception(boost::copy_exception(error));
         case status:
-//          this->status_promise.set_exception(boost::copy_exception(error));
+          this->status_promise.set_exception(boost::copy_exception(error));
         case status_message:
-//          this->status_message_promise.set_exception(boost::copy_exception(error));
+          this->status_message_promise.set_exception(boost::copy_exception(error));
         case headers:
-//          this->headers_promise.set_exception(boost::copy_exception(error));
+          this->headers_promise.set_exception(boost::copy_exception(error));
         case body:
-//          this->body_promise.set_exception(boost::copy_exception(error));
-//          break;
+          this->body_promise.set_exception(boost::copy_exception(error));
+          break;
         default:
           BOOST_ASSERT(false && "Bug, report this to the developers!");
       }

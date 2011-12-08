@@ -16,13 +16,13 @@ struct response;
 namespace impl {
 
 struct setter_access {
-  promise<std::string> get_version_promise(response &r);
-  promise<boost::uint16_t> get_status_promise(response &r);
-  promise<std::string> get_status_message_promise(response &r);
-  promise<std::multimap<std::string, std::string> > get_headers_promise(response &r);
-  promise<std::string> get_source_promise(response &r);
-  promise<std::string> get_destination_promise(response &r);
-  promise<std::string> get_body_promise(response &r);
+  void set_version_promise(response &r, promise<std::string> &p);
+  void set_status_promise(response &r, promise<boost::uint16_t> &p);
+  void set_status_message_promise(response &r, promise<std::string>&p);
+  void set_headers_promise(response &r, promise<std::multimap<std::string, std::string> > &p);
+  void set_source_promise(response &r, promise<std::string> &p);
+  void set_destination_promise(response &r, promise<std::string> &p);
+  void set_body_promise(response &r, promise<std::string> &p);
 };
 
 }  // namespace impl

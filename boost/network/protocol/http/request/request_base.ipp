@@ -14,6 +14,10 @@ namespace boost { namespace network { namespace http {
 request_base::~request_base() {
   // default implementation, only required for linking.
 }
+
+request_storage_base::~request_storage_base() {
+  // default implementation, only required for linking.
+}
   
 } /* http */
 

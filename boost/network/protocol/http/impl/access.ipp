@@ -5,33 +5,33 @@
 
 namespace boost { namespace network { namespace http { namespace impl {
 
-promise<std::string> setter_access::get_version_promise(response &r) {
-  return r.get_version_promise();
+void setter_access::set_version_promise(response &r, promise<std::string> &p) {
+  return r.set_version_promise(p);
 }
 
-promise<boost::uint16_t> setter_access::get_status_promise(response &r) {
-  return r.get_status_promise();
+void setter_access::set_status_promise(response &r, promise<boost::uint16_t> &p) {
+  return r.set_status_promise(p);
 }
 
-promise<std::string> setter_access::get_status_message_promise(response &r) {
-  return r.get_status_message_promise();
+void setter_access::set_status_message_promise(response &r, promise<std::string> &p) {
+  return r.set_status_message_promise(p);
 }
 
-promise<std::multimap<std::string, std::string> >
-setter_access::get_headers_promise(response &r) {
-  return r.get_headers_promise();
+void
+setter_access::set_headers_promise(response &r, promise<std::multimap<std::string, std::string> > &p) {
+  return r.set_headers_promise(p);
 }
 
-promise<std::string> setter_access::get_source_promise(response &r) {
-  return r.get_source_promise();
+void setter_access::set_source_promise(response &r, promise<std::string> &p) {
+  return r.set_source_promise(p);
 }
 
-promise<std::string> setter_access::get_destination_promise(response &r) {
-  return r.get_destination_promise();
+void setter_access::set_destination_promise(response &r, promise<std::string> &p) {
+  return r.set_destination_promise(p);
 }
 
-promise<std::string> setter_access::get_body_promise(response &r) {
-  return r.get_body_promise();
+void setter_access::set_body_promise(response &r, promise<std::string> &p) {
+  return r.set_body_promise(p);
 }
 
 }  // namespace impl
