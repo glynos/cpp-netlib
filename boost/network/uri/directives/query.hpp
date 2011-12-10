@@ -44,7 +44,7 @@ struct query_key_query_directive {
         >
     void operator () (Uri &uri) const {
         std::string encoded_key, encoded_query;
-        if (!uri.query_range())
+        if (boost::empty(uri.query()))
         {
             uri.append("?");
         }

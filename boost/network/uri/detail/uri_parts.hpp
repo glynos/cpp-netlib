@@ -7,48 +7,36 @@
 # define BOOST_NETWORK_URL_DETAIL_URL_PARTS_HPP_
 
 
-# include <boost/range/iterator_range.hpp>
+# include <string>
 
 
 namespace boost {
 namespace network {
 namespace uri {
 namespace detail {
-template <
-    class FwdIter
-    >
 struct hierarchical_part {
-    iterator_range<FwdIter> user_info, host, port, path;
+    std::string user_info, host, port, path;
 
-    hierarchical_part()
-    {}
-
-    hierarchical_part(FwdIter begin, FwdIter end)
-        : user_info(begin, end)
-        , host(begin, end)
-        , port(begin, end)
-        , path(begin, end)
-    { }
+    void clear() {
+        user_info.clear();
+        host.clear();
+        port.clear();
+        path.clear();
+    }
 };
 
-template <
-    class FwdIter
-    >
 struct uri_parts {
-    iterator_range<FwdIter> scheme;
-    hierarchical_part<FwdIter> hier_part;
-    iterator_range<FwdIter> query;
-    iterator_range<FwdIter> fragment;
+    std::string scheme;
+    hierarchical_part hier_part;
+    std::string query;
+    std::string fragment;
 
-    uri_parts()
-    {}
-
-    uri_parts(FwdIter begin, FwdIter end)
-        : scheme(begin, end)
-        , hier_part(begin, end)
-        , query(begin, end)
-        , fragment(begin, end)
-    { }
+    void clear() {
+        scheme.clear();
+        hier_part.clear();
+        query.clear();
+        fragment.clear();
+    }
 };
 } // namespace detail
 } // namespace uri

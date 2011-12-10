@@ -96,7 +96,7 @@ namespace http {
             if (!port)
             {
                 typedef constants<Tag> consts;
-                return boost::iequals(uri_.scheme_range(),
+                return boost::iequals(uri_.scheme(),
                                       string_type(consts::https()))? 443 : 80;
             }
             return *port;

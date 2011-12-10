@@ -10,6 +10,7 @@
 # include <boost/network/uri/detail/uri_parts.hpp>
 # include <boost/operators.hpp>
 # include <boost/utility/swap.hpp>
+# include <boost/range/iterator_range.hpp>
 # include <boost/lexical_cast.hpp>
 # include <boost/optional.hpp>
 # include <algorithm>
@@ -21,7 +22,7 @@ namespace uri {
 namespace detail {
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
-           uri_parts<std::string::const_iterator> &parts);
+           uri_parts &parts);
 } // namespace detail
 
 
@@ -32,9 +33,7 @@ public:
 
     typedef std::string string_type;
     typedef string_type::iterator iterator;
-    typedef boost::iterator_range<iterator> range_type;
     typedef string_type::const_iterator const_iterator;
-    typedef boost::iterator_range<const_iterator> const_range_type;
 
     uri()
         : is_valid_(false) {
@@ -45,7 +44,7 @@ public:
         class FwdIter
         >
     uri(const FwdIter &first, const FwdIter &last)
-        : uri_(first, last), uri_parts_(first, first), is_valid_(false) {
+        : uri_(first, last), is_valid_(false) {
         parse();
     }
 
@@ -97,67 +96,32 @@ public:
         return uri_.end();
     }
 
-    const_range_type scheme_range() const {
+    string_type scheme() const {
         return uri_parts_.scheme;
     }
 
-    const_range_type user_info_range() const {
+    string_type user_info() const {
         return uri_parts_.hier_part.user_info;
     }
 
-    const_range_type host_range() const {
+    string_type host() const {
         return uri_parts_.hier_part.host;
     }
 
-    const_range_type port_range() const {
+    string_type port() const {
         return uri_parts_.hier_part.port;
     }
 
-    const_range_type path_range() const {
+    string_type path() const {
         return uri_parts_.hier_part.path;
     }
 
-    const_range_type query_range() const {
+    string_type query() const {
         return uri_parts_.query;
     }
 
-    const_range_type fragment_range() const {
-        return uri_parts_.fragment;
-    }
-
-    string_type scheme() const {
-        const_range_type range = scheme_range();
-        return string_type(boost::begin(range), boost::end(range));
-    }
-
-    string_type user_info() const {
-        const_range_type range = user_info_range();
-        return string_type(boost::begin(range), boost::end(range));
-    }
-
-    string_type host() const {
-        const_range_type range = host_range();
-        return string_type(boost::begin(range), boost::end(range));
-    }
-
-    string_type port() const {
-        const_range_type range = port_range();
-        return string_type(boost::begin(range), boost::end(range));
-    }
-
-    string_type path() const {
-        const_range_type range = path_range();
-        return string_type(boost::begin(range), boost::end(range));
-    }
-
-    string_type query() const {
-        const_range_type range = query_range();
-        return string_type(boost::begin(range), boost::end(range));
-    }
-
     string_type fragment() const {
-        const_range_type range = fragment_range();
-        return string_type(boost::begin(range), boost::end(range));
+        return uri_parts_.fragment;
     }
 
     string_type string() const {
@@ -186,13 +150,14 @@ private:
     void parse();
 
     string_type uri_;
-    detail::uri_parts<std::string::const_iterator> uri_parts_;
+    detail::uri_parts uri_parts_;
     bool is_valid_;
 
 };
 
 inline
 void uri::parse() {
+    uri_parts_.clear();
     const_iterator first(boost::begin(uri_)), last(boost::end(uri_));
     is_valid_ = detail::parse(first, last, uri_parts_);
 }
@@ -242,14 +207,25 @@ std::string fragment(const uri &uri_) {
 
 inline
 std::string authority(const uri &uri_) {
-    uri::const_range_type user_info(uri_.user_info_range());
-    uri::const_range_type port(uri_.port_range());
-    return std::string(user_info.begin(), port.end());
-}
-
-inline
-std::string netloc(const uri &uri_) {
-    return authority(uri_);
+    std::string user_info(uri_.user_info());
+	std::string host(uri_.host());
+    std::string port(uri_.port());
+	std::string authority;
+	if (!boost::empty(user_info))
+	{
+		std::copy(boost::begin(user_info), boost::end(user_info), std::back_inserter(authority));
+		authority.push_back('@');
+	}
+	if (!boost::empty(host))
+	{
+		std::copy(boost::begin(host), boost::end(host), std::back_inserter(authority));
+	}
+	if (!boost::empty(port))
+	{
+		authority.push_back(':');
+		std::copy(boost::begin(port), boost::end(port), std::back_inserter(authority));
+	}
+	return authority;
 }
 
 inline
