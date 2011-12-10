@@ -45,14 +45,14 @@ template <
     >
 inline
 Map &query_map(const uri &uri_, Map &map) {
-    std::string range = uri_.query();
+    const std::string range = uri_.query();
     details::key_value_sequence<Map> parser;
     spirit::qi::parse(boost::begin(range), boost::end(range), parser, map);
     return map;
 }
 
 std::string username(const uri &uri_) {
-    std::string user_info = uri_.user_info();
+    const std::string user_info = uri_.user_info();
     uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
     for (; it != end; ++it) {
         if (*it == ':') {
@@ -63,7 +63,7 @@ std::string username(const uri &uri_) {
 }
 
 std::string password(const uri &uri_) {
-    std::string user_info = uri_.user_info();
+    const std::string user_info = uri_.user_info();
     uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
     for (; it != end; ++it) {
         if (*it == ':') {
@@ -75,21 +75,21 @@ std::string password(const uri &uri_) {
 }
 
 std::string decoded_path(const uri &uri_) {
-    std::string path = uri_.path();
+    const std::string path = uri_.path();
     std::string decoded_path;
     decode(path, std::back_inserter(decoded_path));
     return decoded_path;
 }
 
 std::string decoded_query(const uri &uri_) {
-    std::string query = uri_.query();
+    const std::string query = uri_.query();
     std::string decoded_query;
     decode(query, std::back_inserter(decoded_query));
     return decoded_query;
 }
 
 std::string decoded_fragment(const uri &uri_) {
-    std::string fragment = uri_.fragment();
+    const std::string fragment = uri_.fragment();
     std::string decoded_fragment;
     decode(fragment, std::back_inserter(decoded_fragment));
     return decoded_fragment;
