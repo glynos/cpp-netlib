@@ -1,9 +1,9 @@
-The URI template
-================
+The URI class
+=============
 
 In addition to protocol implementations, the :mod:`cpp-netlib`
-provides a powerful URI template.  The URI template implements a
-parser based on `RFC 3986`_.
+provides a powerful URI class.  The class implements a parser based
+on `RFC 3986`_ and `RFC 2732`_.
 
 Generic URI Syntax Overview
 ```````````````````````````
@@ -60,30 +60,23 @@ elements.  Another example, using HTTP is given below:
 The difference here between the path in a hierarchical URI and that in
 the example above for the non-hierarchical URI.
 
-``basic_uri``
-`````````````
+The ``uri`` class
+`````````````````
 
-The ``basic_uri`` definition is consistent with that of
-``basic_message``::
-
-   template <class Tag>
-   class basic_uri;
-
-As it stands, the template only supplies a URI parser and no builder.
+As of version 0.9.3, ``uri`` supplies a URI parser and builder.
 To use the parser, it's as simple as supplying a string to the
 constructor::
 
-   boost::network::uri::uri instance("http://cpp-netlib.github.com/");
+   using namespace boost::network;
+   uri::uri instance("http://cpp-netlib.github.com/");
    assert(boost::is_valid(instance));
-   std::cout << "scheme: " << boost::network::uri::scheme(instance) << std::endl
-             << "host: " << boost::network::uri::host(instance) << std::endl;
+   std::cout << "scheme: " << uri::scheme(instance) << std::endl
+             << "host: " << uri::host(instance) << std::endl;
 
 The command-line output of this program will be::
 
    scheme: http
    host: cpp-netlib.github.com
-
-A future version of ``basic_uri`` will provide a full builder API.
 
 ``URI Concept``
 ```````````````
@@ -127,3 +120,4 @@ A future version of ``basic_uri`` will provide a full builder API.
 .. _`RFC 3986`: http://tools.ietf.org/html/rfc3986
 .. _`RFC 2368`: http://tools.ietf.org/html/rfc2368
 .. _`RFC 3513`: http://tools.ietf.org/html/rfc3513
+.. _`RFC 2732`: http://tools.ietf.org/html/rfc2732
