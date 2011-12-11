@@ -22,7 +22,7 @@ namespace uri {
 namespace detail {
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
-           uri_parts &parts);
+           uri_parts<std::string> &parts);
 } // namespace detail
 
 
@@ -150,7 +150,7 @@ private:
     void parse();
 
     string_type uri_;
-    detail::uri_parts uri_parts_;
+    detail::uri_parts<std::string> uri_parts_;
     bool is_valid_;
 
 };

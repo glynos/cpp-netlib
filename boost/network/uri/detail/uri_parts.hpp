@@ -7,15 +7,15 @@
 # define BOOST_NETWORK_URL_DETAIL_URL_PARTS_HPP_
 
 
-# include <string>
-
-
 namespace boost {
 namespace network {
 namespace uri {
 namespace detail {
+template <
+    class String
+    >
 struct hierarchical_part {
-    std::string user_info, host, port, path;
+    String user_info, host, port, path;
 
     void clear() {
         user_info.clear();
@@ -25,11 +25,14 @@ struct hierarchical_part {
     }
 };
 
+template <
+    class String
+    >
 struct uri_parts {
-    std::string scheme;
-    hierarchical_part hier_part;
-    std::string query;
-    std::string fragment;
+    String scheme;
+    hierarchical_part<String> hier_part;
+    String query;
+    String fragment;
 
     void clear() {
         scheme.clear();

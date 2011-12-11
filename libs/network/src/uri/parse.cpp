@@ -9,22 +9,24 @@
 #include <boost/spirit/home/qi.hpp>
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>
 
-BOOST_FUSION_ADAPT_STRUCT
+BOOST_FUSION_ADAPT_TPL_STRUCT
 (
-    boost::network::uri::detail::hierarchical_part,
-    (std::string, user_info)
-    (std::string, host)
-    (std::string, port)
-    (std::string, path)
+    (String),
+    (boost::network::uri::detail::hierarchical_part)(String),
+    (String, user_info)
+    (String, host)
+    (String, port)
+    (String, path)
     );
 
-BOOST_FUSION_ADAPT_STRUCT
+BOOST_FUSION_ADAPT_TPL_STRUCT
 (
-    boost::network::uri::detail::uri_parts,
-    (std::string, scheme)
-    (boost::network::uri::detail::hierarchical_part, hier_part)
-    (std::string, query)
-    (std::string, fragment)
+    (String),
+    (boost::network::uri::detail::uri_parts)(String),
+    (String, scheme)
+    (boost::network::uri::detail::hierarchical_part<String>, hier_part)
+    (String, query)
+    (String, fragment)
     );
 
 namespace boost {
@@ -38,7 +40,7 @@ template <
     >
 struct uri_grammar : qi::grammar<
     typename String::const_iterator
-  , detail::uri_parts()> {
+  , detail::uri_parts<String>()> {
 
     typedef String string_type;
     typedef typename String::const_iterator const_iterator;
@@ -216,17 +218,17 @@ struct uri_grammar : qi::grammar<
     qi::rule<const_iterator, string_type()>
     scheme, user_info, query, fragment;
 
-    qi::rule<const_iterator, hierarchical_part()>
+    qi::rule<const_iterator, hierarchical_part<string_type>()>
     hier_part;
 
     // actual uri parser
-    qi::rule<const_iterator, uri_parts()> start;
+    qi::rule<const_iterator, uri_parts<string_type>()> start;
 
 };
 
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
-           uri_parts &parts) {
+           uri_parts<std::string> &parts) {
     namespace qi = boost::spirit::qi;
     static detail::uri_grammar<std::string> grammar;
     bool is_valid = qi::parse(first, last, grammar, parts);
