@@ -51,6 +51,7 @@ Map &query_map(const uri &uri_, Map &map) {
     return map;
 }
 
+inline
 std::string username(const uri &uri_) {
     const std::string user_info = uri_.user_info();
     uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
@@ -62,6 +63,7 @@ std::string username(const uri &uri_) {
     return std::string(boost::begin(user_info), it);
 }
 
+inline
 std::string password(const uri &uri_) {
     const std::string user_info = uri_.user_info();
     uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
@@ -74,6 +76,7 @@ std::string password(const uri &uri_) {
     return std::string(it, boost::end(user_info));
 }
 
+inline
 std::string decoded_path(const uri &uri_) {
     const std::string path = uri_.path();
     std::string decoded_path;
@@ -81,6 +84,7 @@ std::string decoded_path(const uri &uri_) {
     return decoded_path;
 }
 
+inline
 std::string decoded_query(const uri &uri_) {
     const std::string query = uri_.query();
     std::string decoded_query;
@@ -88,6 +92,7 @@ std::string decoded_query(const uri &uri_) {
     return decoded_query;
 }
 
+inline
 std::string decoded_fragment(const uri &uri_) {
     const std::string fragment = uri_.fragment();
     std::string decoded_fragment;
