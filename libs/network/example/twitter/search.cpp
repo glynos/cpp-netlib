@@ -31,7 +31,7 @@ int main(int argc, char * argv[]) {
 		std::cout << "Searching Twitter for query: " << argv[1] << std::endl;
         uri::uri search_1;
         search_1 << search_uri << uri::query("q", uri::encoded(argv[1]));
-        http::client::request request(search_1.string());
+        http::client::request request(search_1);
         http::client::response response = client.get(request);
 
         std::cout << body(response) << std::endl;

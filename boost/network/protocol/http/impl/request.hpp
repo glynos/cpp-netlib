@@ -63,7 +63,15 @@ namespace http {
         : uri_(uri_)
         { }
 
+        explicit basic_request(boost::network::uri::uri const & uri_)
+        : uri_(uri_)
+        { }
+
         void uri(string_type const & new_uri) {
+            uri_ = new_uri;
+        }
+
+        void uri(boost::network::uri::uri const & new_uri) {
             uri_ = new_uri;
         }
 
