@@ -5,7 +5,6 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package( PythonInterp )
 
 if (OPENSSL_FOUND)
     include_directories( ${OPENSSL_INCLUDE_DIR} )
@@ -59,55 +58,5 @@ if (Boost_FOUND)
         add_test(cpp-netlib-http-${test}
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
     endforeach (test)
-
-    # if ( PYTHONINTERP_FOUND )
-    #   set ( SERVER_TESTS
-    #     server_hello_world
-    #     server_async
-    #     server_async_less_copy
-    #     )
-    #   set ( PORT 8000 )
-    #   foreach ( test ${SERVER_TESTS} )
-    #     if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    #       set_source_files_properties(${test}.cpp
-    #         PROPERTIES COMPILE_FLAGS "-Wall")
-    #     endif()
-    #     add_executable(cpp-netlib-http-${test} ${test}.cpp)
-    #     add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
-    #     target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
-    #     set_target_properties(cpp-netlib-http-${test}
-    #       PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-    #       ${CPP-NETLIB_BINARY_DIR}/tests)
-    #     add_test(cpp-netlib-${test}
-    #       ${PYTHON_EXECUTABLE}
-    #       ${CPP-NETLIB_SOURCE_DIR}/libs/network/test/httplib_acceptance.py
-    #       ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}
-    #       ${PORT}
-    #       ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test}.passed)
-    #     math (EXPR PORT "${PORT} + 1")
-    #   endforeach (test)
-    # #else()
-    # #  message(STATUS "Python not found, won't run server tests."
-    # endif( PYTHONINTERP_FOUND )
-
-    #set ( INLINED_TESTS
-    #    client_include_inlined
-    #    server_include_inlined
-    #    )
-    #foreach ( test ${INLINED_TESTS} )
-    #    if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    #        set_source_files_properties(${test}.cpp
-    #            PROPERTIES COMPILE_FLAGS "-Wall")
-    #    endif()
-    #    add_executable(cpp-netlib-http-inlined-${test} ${test}.cpp)
-    #    target_link_libraries(cpp-netlib-http-inlined-${test} ${BOOST_LIBS} ${CMAKE_THREAD_LIBS_INIT})
-    #    if (OPENSSL_FOUND)
-    #        target_link_libraries(cpp-netlib-http-inlined-${test} ${OPENSSL_LIBRARIES})
-    #    endif()
-    #    set_target_properties(cpp-netlib-http-inlined-${test}
-    #        PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
-    #    add_test(cpp-netlib-http-inlined-${test}
-    #        ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-inlined-${test})
-    #endforeach (test)
 
 endif()
