@@ -44,8 +44,12 @@ BOOST_AUTO_TEST_CASE(basic_uri_test) {
     uri::uri instance("http://www.example.com/");
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(uri::user_info(instance), "");
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
+    BOOST_CHECK_EQUAL(uri::port(instance), "");
     BOOST_CHECK_EQUAL(uri::path(instance), "/");
+    BOOST_CHECK_EQUAL(uri::query(instance), "");
+    BOOST_CHECK_EQUAL(uri::fragment(instance), "");
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_test) {
@@ -164,7 +168,6 @@ BOOST_AUTO_TEST_CASE(username_test) {
 BOOST_AUTO_TEST_CASE(authority_test) {
     uri::uri instance("http://user:password@www.example.com:80/path?query#fragment");
     BOOST_REQUIRE(uri::valid(instance));
-	std::cout << uri::authority(instance) << std::endl;
     BOOST_CHECK_EQUAL(uri::authority(instance), "user:password@www.example.com:80");
 }
 

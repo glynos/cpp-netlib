@@ -13,10 +13,10 @@ BOOST_FUSION_ADAPT_TPL_STRUCT
 (
     (String),
     (boost::network::uri::detail::hierarchical_part)(String),
-    (String, user_info)
-    (String, host)
-    (String, port)
-    (String, path)
+    (boost::optional<String>, user_info)
+    (boost::optional<String>, host)
+    (boost::optional<String>, port)
+    (boost::optional<String>, path)
     );
 
 BOOST_FUSION_ADAPT_TPL_STRUCT
@@ -25,8 +25,8 @@ BOOST_FUSION_ADAPT_TPL_STRUCT
     (boost::network::uri::detail::uri_parts)(String),
     (String, scheme)
     (boost::network::uri::detail::hierarchical_part<String>, hier_part)
-    (String, query)
-    (String, fragment)
+    (boost::optional<String>, query)
+    (boost::optional<String>, fragment)
     );
 
 namespace boost {

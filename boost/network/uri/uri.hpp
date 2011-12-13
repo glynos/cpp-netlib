@@ -101,27 +101,39 @@ public:
     }
 
     string_type user_info() const {
-        return uri_parts_.hier_part.user_info;
+        return uri_parts_.hier_part.user_info?
+            uri_parts_.hier_part.user_info.get() :
+            string_type();
     }
 
     string_type host() const {
-        return uri_parts_.hier_part.host;
+        return uri_parts_.hier_part.host?
+            uri_parts_.hier_part.host.get() :
+            string_type();
     }
 
     string_type port() const {
-        return uri_parts_.hier_part.port;
+        return uri_parts_.hier_part.port?
+            uri_parts_.hier_part.port.get() :
+            string_type();
     }
 
     string_type path() const {
-        return uri_parts_.hier_part.path;
+        return uri_parts_.hier_part.path?
+            uri_parts_.hier_part.path.get() :
+            string_type();
     }
 
     string_type query() const {
-        return uri_parts_.query;
+        return uri_parts_.query ?
+            uri_parts_.query.get() :
+            string_type();
     }
 
     string_type fragment() const {
-        return uri_parts_.fragment;
+        return uri_parts_.fragment?
+            uri_parts_.fragment.get() :
+            string_type();
     }
 
     string_type string() const {

@@ -7,6 +7,9 @@
 # define BOOST_NETWORK_URL_DETAIL_URL_PARTS_HPP_
 
 
+# include <boost/optional.hpp>
+
+
 namespace boost {
 namespace network {
 namespace uri {
@@ -15,14 +18,10 @@ template <
     class String
     >
 struct hierarchical_part {
-    String user_info, host, port, path;
-
-    void clear() {
-        user_info.clear();
-        host.clear();
-        port.clear();
-        path.clear();
-    }
+    boost::optional<String> user_info;
+    boost::optional<String> host;
+    boost::optional<String> port;
+    boost::optional<String> path;
 };
 
 template <
@@ -31,14 +30,17 @@ template <
 struct uri_parts {
     String scheme;
     hierarchical_part<String> hier_part;
-    String query;
-    String fragment;
+    boost::optional<String> query;
+    boost::optional<String> fragment;
 
     void clear() {
         scheme.clear();
-        hier_part.clear();
-        query.clear();
-        fragment.clear();
+        hier_part.user_info = boost::optional<String>();
+        hier_part.host = boost::optional<String>();
+        hier_part.port = boost::optional<String>();
+        hier_part.path = boost::optional<String>();
+        query = boost::optional<String>();
+        fragment = boost::optional<String>();
     }
 };
 } // namespace detail
