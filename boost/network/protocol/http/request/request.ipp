@@ -7,6 +7,32 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// TODO Implement the basic request proxy!
+#include <boost/network/protocol/http/request/request.hpp>
+#include <boost/network/protocol/http/request/request_concept.hpp>
+
+#ifdef BOOST_NETWORK_DEBUG
+BOOST_CONCEPT_ASSERT((boost::network::http::ClientRequest<boost::network::http::request>));
+#endif
+
+namespace boost { namespace network { namespace http {
+
+struct request_pimpl {
+  explicit request_pimpl(std::string const & url) {}
+};
+
+request::~request() {
+  // Do nothing here.
+}
+
+request::request(std::string const & url)
+: pimpl_(new request_pimpl(url))
+{}
+
+
+}  // namespace http
+
+}  // namespace network
+
+}  // namespace boost
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IPP_20110910 */

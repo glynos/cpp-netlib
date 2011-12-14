@@ -8,6 +8,7 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
+#include <boost/network/protocol/http/request/request.ipp>
 #include <boost/network/protocol/http/request/request_base.ipp>
 #include <boost/network/protocol/http/message/wrappers/anchor.ipp>
 #include <boost/network/protocol/http/message/wrappers/host.ipp>

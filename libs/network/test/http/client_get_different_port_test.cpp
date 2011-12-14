@@ -7,17 +7,14 @@
 #define BOOST_TEST_MODULE HTTP Client Get Different Port Test
 #include <boost/network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
-#include "client_types.hpp"
 
-namespace net = boost::network;
-namespace http = boost::network::http;
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_different_port, client, client_types) {
-    typename client::request request("http://www.boost.org:80/");
-    client client_;
-    typename client::response response_ = client_.get(request);
-    typename net::headers_range<typename client::response>::type range = headers(response_)["Content-Type"];
-    BOOST_CHECK ( boost::begin(range) != boost::end(range) );
-    BOOST_CHECK ( body(response_).size() != 0 );
+BOOST_AUTO_TEST_CASE(http_get_test_different_port) {
+  using namespace boost::network::http;
+  request request_("http://www.boost.org:80/");
+  client client_;
+  response response_ = client_.get(request_);
+  boost::network::headers_wrapper::range_type headers_ = headers(response_)["Content-Type"];
+  BOOST_CHECK( boost::begin(headers_) != boost::end(headers_) );
+  BOOST_CHECK( body(response_).size() > 0 );
 }
 

@@ -8,8 +8,10 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/request/request_base.hpp>
-#include <boost/network/protocol/http/request/request_concept.hpp>
 #include <boost/network/uri/uri.hpp>
+#include <boost/network/protocol/http/message/directives/major_version.hpp>
+#include <boost/network/protocol/http/message/directives/minor_version.hpp>
+#include <boost/scoped_ptr.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -20,8 +22,8 @@ struct request : request_base {
 
   // We support full value semantics.
   request();
-  explicit request(std::string url);
-  explicit request(uri::uri url);
+  explicit request(std::string const & url);
+  explicit request(uri::uri const & url);
   request(request const &);
   request& operator=(request);
   void swap(request & other);
@@ -65,7 +67,7 @@ struct request : request_base {
 
   virtual ~request();
  private:
-  request_pimpl * pimpl_;
+  scoped_ptr<request_pimpl> pimpl_;
 };
 
 template <class Directive>
@@ -95,9 +97,5 @@ inline void swap(request &l, request &r) {
 #include <boost/network/protocol/http/message/directives.hpp>
 #include <boost/network/protocol/http/message/modifiers.hpp>
 #include <boost/network/protocol/http/message/wrappers.hpp>
-
-#ifdef BOOST_NETWORK_DEBUG
-BOOST_CONCEPT_ASSERT((boost::network::http::ClientRequest<boost::network::http::request>));
-#endif
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021 */
