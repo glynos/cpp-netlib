@@ -5,7 +5,7 @@ In addition to protocol implementations, the :mod:`cpp-netlib`
 provides a powerful URI class.  The class implements a parser based
 on `RFC 3986`_ and `RFC 2732`_.
 
-Generic URI Syntax Overview
+Generic URI syntax overview
 ```````````````````````````
 
 A generic URI will take the form::
@@ -13,8 +13,7 @@ A generic URI will take the form::
   [scheme:]scheme-specific-part[#fragment]
 
 A URI is known as `absolute` if it specifies the scheme.  Otherwise,
-it is known as a relative URI.  Currently, ``basic_uri`` supports
-only absolute URIs.
+it is known as a relative URI.  Currently, ``uri`` supports only absolute URIs.
 
 URIs can be further classified according to whether they're
 hierarchical or opaque (non-hierarchical).
@@ -69,9 +68,9 @@ constructor::
 
    using namespace boost::network;
    uri::uri instance("http://cpp-netlib.github.com/");
-   assert(boost::is_valid(instance));
-   std::cout << "scheme: " << uri::scheme(instance) << std::endl
-             << "host: " << uri::host(instance) << std::endl;
+   assert(instance.is_valid());
+   std::cout << "scheme: " << instance.scheme() << std::endl
+             << "host: " << instance.host() << std::endl;
 
 The command-line output of this program will be::
 

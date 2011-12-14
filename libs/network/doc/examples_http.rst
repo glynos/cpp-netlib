@@ -11,3 +11,7 @@ embedded into larger applications.
    http_client.rst
    hello_world_server.rst
    hello_world_client.rst
+   simple_wget.rst
+   atom_reader.rst
+   rss_reader.rst
+   twitter_search.rst

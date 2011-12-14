@@ -1,13 +1,13 @@
-.. _http_client:
+.. _simple_wget:
 
-*************
- HTTP client
-*************
+***************
+ Simple `wget`
+***************
 
 The first code example is the simplest thing you can do with the
 :mod:`cpp-netlib`.  The application is a simple HTTP client, which can
 be found in the subdirectory ``libs/network/example/http_client.cpp``.
-All this example doing is creating and sending an HTTP request to a server
+All we are doing is creating and sending an HTTP request to a server
 and printing the response body.
 
 The code
@@ -37,8 +37,19 @@ Without further ado, the code to do this is as follows:
   	return 0;
     }
 
-Running the example
-===================
+Building and Running The Code
+=============================
+
+To be build this example, you can follow the steps below without having to build
+the whole :mod:`cpp-netlib` distribution::
+
+    $ cd ~/cpp-netlib
+    $ g++ -o http_client1 libs/network/example/http_client1.cpp \
+    >     -I.                                                   \
+    >     -I$BOOST_ROOT                                         \
+    >     -L$BOOST_ROOT/stage/lib                               \
+    >     -lboost_system                                        \
+    >     -pthread
 
 You can then run this to get the Boost_ website::
 
@@ -46,7 +57,7 @@ You can then run this to get the Boost_ website::
 
 .. _Boost: http://www.boost.org/
 
-Diving into the code
+Diving into the Code
 ====================
 
 Since this is the first example, each line will be presented and

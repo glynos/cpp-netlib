@@ -99,7 +99,7 @@ returns, in the default case, a multimap of strings to strings:
     response_headers headers_ = headers(response);
     for (iterator it = headers_.begin(); it != headers_.end(); ++it) {
         std::cout << it->first << ": " << it->second << std::endl;
-    }    
+    }
     std::cout << std::endl;
 
 
@@ -145,9 +145,9 @@ implementation while the user-visible implementation is the
     namespace boost { namespace network { namespace http {
 
         template <class RequestHandler>
-        class server : 
+        class server :
             public basic_server<default_, RequestHandler> {};
-    
+
     }}}
 
 To use the forwarding server type you just supply the request handler
@@ -178,36 +178,3 @@ Here, all we're doing is returning the original request body with an
 HTTP OK response (200). We are also printing the IP address from where the
 request came from. Notice that we are using a wrapper to access the source of
 the request.
-
-HTTP URI
-````````
-
-:mod:`cpp-netlib` provides a specialization and ``typedef`` for an
-HTTP URI:
-
-.. code-block:: c++
-
-    namespace http {
-    template <class T> class basic_uri;
-    typedef basic_uri<default_> uri;
-    }
-    
-``basic_uri`` provides a parser which breaks down a URI string passed
-to it's constructor into different parts.
-
-.. code-block:: c++
-
-    using namespace boost::network::uri;
-    http::uri uri_("http://www.boost.org/");
-    assert(valid(uri_));
-    assert(scheme(uri_) == "http");
-    assert(host(uri_) == "www.boost.org")
-    assert(port(uri_) == 80)
-    assert(path(uri_) == "/");
-
-The syntax of the HTTP URI are defined in RFC 1738 section 3.3 [#]_
-and the default URI provided with cpp-netlib conforms to this.  In
-such a way, specializations that conform to any URI scheme can be
-provided.
-
-.. [#] http://tools.ietf.org/html/rfc1738

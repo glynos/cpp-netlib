@@ -10,7 +10,7 @@
   features, such as content-type detection, but it does the
   fundamental things the same.
 
-  It demonstrates the use the `http::uri` and the `http::client`.
+  It demonstrates the use the `uri` and the `http::client`.
 */
 
 

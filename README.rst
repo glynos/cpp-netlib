@@ -15,8 +15,8 @@ cpp-netlib offers the following implementations:
      generate message objects from strings.
   *  Adapters and Wrappers -- A collection of Adapters and wrappers aimed
      towards making the message type STL friendly.
-  *  Network protocol client and server implementations -- A collection 
-     of network protocol implementations that include embeddable client 
+  *  Network protocol client and server implementations -- A collection
+     of network protocol implementations that include embeddable client
      and server types.
 
 This library is released under the Boost Software License (please see
@@ -47,30 +47,15 @@ The recommended installation procedure would be to follow the steps below::
     $ sudo mkdir -p /usr/local/include/cpp-netlib
     $ sudo cp -r cpp-netlib/boost /usr/local/include/cpp-netlib
 
-Now don't forget to add ``/usr/local/include/cpp-netlib`` in your project's
-compiler include directories to start using cpp-netlib in your projects.
-
-Running Tests
--------------
-
-If you want to run the tests that come with cpp-netlib, there are a few things
-you will need. These are:
-
-  * A compiler (GCC 4.x or Clang 2.8)
-  * A build tool (CMake [#]_ recommended, Boost.Build also an option)
-  * OpenSSL headers (optional with CMake, mandatory for Boost.Build)
-  * Python 2.6
-
-.. note:: This assumes that you have the cpp-netlib distribution package
-   unpacked somwhere in your home directory. This specifically assumes that you
-   have cpp-netlib at the toplevel of your home directory.
-.. [#] http://www.cmake.org/
+Don't forget to add ``/usr/local/include/cpp-netlib`` in your project's
+compiler include directories to start using cpp-netlib.
 
 Building with CMake
 ~~~~~~~~~~~~~~~~~~~
 
-To build and run the tests with CMake, you will need to have CMake version 2.8
-or higher installed appropriately in your system.
+To build the libraries and run the tests with CMake, you will need to
+have CMake version 2.8 or higher installed appropriately in your
+system.
 
 ::
 
@@ -81,15 +66,10 @@ Inside the cpp-netlib directory, you can issue the following statements to
 configure and generate the Makefiles, and build the tests::
 
     $ cd ~/cpp-netlib      # we're assuming it's where cpp-netlib is
-    $ cmake -DCMAKE_BUILD_TYPE=Debug \
-    >    -CMAKE_C_COMPILER=clang     \
-    >    -CMAKE_CXX_COMPILER=clang++ \
+    $ cmake -DCMAKE_BUILD_TYPE=Debug     \
+    >       -DCMAKE_C_COMPILER=clang     \
+    >       -DCMAKE_CXX_COMPILER=clang++ \
     >    .
-
-.. note:: This uses the source directory as the build directory as well. At the
-   time of this writing, cpp-netlib is meant to be tested in the same directory
-   where the source files are, because of the way the tests depend on Python
-   being installed and having access to Python scripts during the build.
 
 Once CMake is done with generating the Makefiles and configuring the project,
 you can now build the tests and run them::
@@ -102,7 +82,7 @@ If for some reason some of the tests fail, you can send the files in
 ``Testing/Temporary/`` as attachments to the cpp-netlib `developers mailing
 list`_.
 
-.. _`developers mailing list`: https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
+.. _`developers mailing list`: cpp-netlib@googlegroups.com
 
 Building with Boost.Build
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -113,7 +93,7 @@ to copy the ``bjam`` executable to a directory that is already in your ``PATH``
 so that you don't have to go hunting for it all the time. A good place to put it
 is in ``/usr/local/bin``.
 
-.. [#] http://www.boost.org/doc/libs/1_44_0/more/getting_started/index.html
+.. [#] http://www.boost.org/doc/libs/release/more/getting_started/
 
 Building and running the tests can be as simple as doing the following::
 
@@ -130,7 +110,22 @@ please do the following::
 And then attach the ``build-test.log`` file to the email you will send to the
 cpp-netlib `developers mailing list`_.
 
-.. _`developers mailing list`: https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
+.. _`developers mailing list`: cpp-netlib@googlegroups.com
+
+Running Tests
+-------------
+
+If you want to run the tests that come with cpp-netlib, there are a few things
+you will need. These are:
+
+  * A compiler (GCC 4.x, Clang 2.8, MSVC 2008)
+  * A build tool (CMake [#]_ recommended, Boost.Build also an option)
+  * OpenSSL headers (optional)
+
+.. note:: This assumes that you have the cpp-netlib distribution package
+   unpacked somwhere in your home directory. This specifically assumes that you
+   have cpp-netlib at the toplevel of your home directory.
+.. [#] http://www.cmake.org/
 
 Hacking on cpp-netlib
 ---------------------
@@ -174,14 +169,10 @@ In case you have any questions or would like to make feature requests, you can
 contact the development team through the `developers mailing list`_
 or by filing issues at http://github.com/cpp-netlib/cpp-netlib/issues.
 
-.. _`developers mailing list`:
-   https://lists.sourceforge.net/lists/listinfo/cpp-netlib-devel
+.. _`developers mailing list`: cpp-netlib@googlegroups.com
 
 You can reach the maintainers of the project through::
 
     Dean Michael Berris (dberris@google.com)
 
-    Glyn Matthews
-
-    Mike Dickey
-
+    Glyn Matthews (glyn.matthews@gmail.com)
