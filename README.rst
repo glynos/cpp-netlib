@@ -33,23 +33,6 @@ You can find official release packages of the library at::
 Building and Installing
 -----------------------
 
-Since cpp-netlib is a header-only library, there is nothing to build. To install
-cpp-netlib, you can choose to copy the contents of the ``boost`` directory into
-an existing Boost [#]_ distribution or to a different location. All that is
-required is for projects that use cpp-netlib when building, have the directory
-where cpp-netlib is installed as part of the include paths.
-
-.. [#] http://www.boost.org/
-
-The recommended installation procedure would be to follow the steps below::
-
-    # On Linux/Mac, consider the `$` character as the shell prompt
-    $ sudo mkdir -p /usr/local/include/cpp-netlib
-    $ sudo cp -r cpp-netlib/boost /usr/local/include/cpp-netlib
-
-Don't forget to add ``/usr/local/include/cpp-netlib`` in your project's
-compiler include directories to start using cpp-netlib.
-
 Building with CMake
 ~~~~~~~~~~~~~~~~~~~
 
