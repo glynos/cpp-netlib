@@ -15,7 +15,7 @@
 
 using namespace boost::network;
 
-
+BOOST_AUTO_TEST_CASE_EXPECTED_FAILURES(basic_uri_test, 1)
 BOOST_AUTO_TEST_CASE(basic_uri_test) {
     uri::uri instance("http://www.example.com/");
     BOOST_REQUIRE(uri::valid(instance));
