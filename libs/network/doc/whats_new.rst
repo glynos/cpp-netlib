@@ -12,7 +12,7 @@ v0.9.3
 * Updated URI parser.
 * A new URI builder.
 * URI support for IPv6 RFC 2732.
-* Fix issue #67, #72, #78, #79, #80, #81, #82, #83.
+* Fix issues #67, #72, #78, #79, #80, #81, #82, #83.
 * New examples for the HTTP client, including an Atom feed, an RSS feed and a
   very simple client that uses the Twitter Search API.
 

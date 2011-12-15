@@ -158,7 +158,7 @@ Building On Windows
 If you're using the Microsoft Visual C++ compiler or the Microsoft Visual Studio
 IDE and you would like to build cpp-netlib from within Visual Studio, you can
 look for the solution and project files as the artifacts of the call to
-``cmake`` -- the file should be named ``cpp-netlib.sln`` (the solution) along
+``cmake`` -- the file should be named ``CPP-NETLIB.sln`` (the solution) along
 with a number of project files for Visual Studio.
 
 Reporting Issues, Getting Support
@@ -173,5 +173,5 @@ for the project at http://github.com/cpp-netlib/cpp-netlib/issues.
 
 You can also opt to join the developers mailing list for a more personal
 interaction with the developers of the project. You can join the mailing list
-through https://groups.google.com/group/cpp-netlib.
+through http://groups.google.com/forum/#!forum/cpp-netlib.
 

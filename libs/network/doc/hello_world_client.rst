@@ -51,7 +51,7 @@ Just like with the HTTP Server and HTTP client example before, we can build this
 example by doing the following on the shell:
 
 .. code-block:: bash
-    
+
     $ cd ~/cpp-netlib
     $ g++ -o hello_world_client \
     >     libs/network/example/http/hello_world_client.cpp  \
@@ -70,7 +70,7 @@ This example can be run from the command line as follows:
 .. note:: This assumes that you have the ``hello_world_server`` running on
    localhost port 8000.
 
-Diving into the Code
+Diving into the code
 ====================
 
 All this example shows is how easy it is to write an HTTP client that connects
@@ -92,7 +92,7 @@ perform the request via HTTP:
 
     http::client client;
     http::client::request request("http://my.webservice.com/");
-    http::client::response = 
+    http::client::response =
         client.post(request, "application/xml", some_xml_string);
     std::data = body(response);
 

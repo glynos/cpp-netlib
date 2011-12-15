@@ -59,7 +59,7 @@ simple response to any HTTP request.
 
 This is about a straightforward as server programming will get in C++.
 
-Building the Server
+Building the server
 ===================
 
 Just like with the HTTP client, we can build this example by doing the following
@@ -86,7 +86,7 @@ a command line as follows:
 .. note:: If you're going to run the server on port 80, you may have to run it
    as an administrator.
 
-Diving into the Code
+Diving into the code
 ====================
 
 Let's take a look at the code listing above in greater detail.

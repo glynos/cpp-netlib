@@ -13,7 +13,8 @@ A generic URI will take the form::
   [scheme:]scheme-specific-part[#fragment]
 
 A URI is known as `absolute` if it specifies the scheme.  Otherwise,
-it is known as a relative URI.  Currently, ``uri`` supports only absolute URIs.
+it is known as a relative URI.  Currently, ``uri`` supports only
+absolute URIs.
 
 URIs can be further classified according to whether they're
 hierarchical or opaque (non-hierarchical).
@@ -66,6 +67,8 @@ As of version 0.9.3, ``uri`` supplies a URI parser and builder.
 To use the parser, it's as simple as supplying a string to the
 constructor::
 
+.. code-block:: c++
+
    using namespace boost::network;
    uri::uri instance("http://cpp-netlib.github.com/");
    assert(instance.is_valid());
@@ -76,6 +79,32 @@ The command-line output of this program will be::
 
    scheme: http
    host: cpp-netlib.github.com
+
+The ``uri`` builder
+```````````````````
+
+``uri`` support a stream style syntax to create a URI from it's
+elements.  For example the program::
+
+.. code-block:: c++
+
+   #include <iostream>
+   #include <boost/network/uri.hpp>
+   #include <boost/network/uri/uri_io.hpp>
+   using namespace boost::network;
+
+   int main() {
+       uri::uri url;
+       url << uri::scheme("http")
+           << uri::host("www.github.com")
+           << uri::path("/cpp-netlib");
+       std::cout << url << std::endl;
+       return 0;
+   }
+
+will output::
+
+   htp://www.github.com/cpp-netlib
 
 ``URI Concept``
 ```````````````
@@ -90,6 +119,7 @@ The command-line output of this program will be::
 
 +----------------------------+----------------------+-----------------------------------------+
 | Construct                  | Result               | Description                             |
+
 +============================+======================+=========================================+
 | ``U(u)``                   | Instance of U        | Copy constructible.                     |
 +----------------------------+----------------------+-----------------------------------------+
