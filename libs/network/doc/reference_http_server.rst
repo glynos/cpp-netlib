@@ -35,7 +35,7 @@ Handler function object.
 There are two different Handler concepts, one concept for `Synchronous Servers`_
 and another for `Asynchronous Servers`.
 
-The SynchronusHandler concept for `Synchronous Servers`_ is described by the
+The SynchronousHandler concept for `Synchronous Servers`_ is described by the
 following table:
 
 ---------------
@@ -145,7 +145,7 @@ API Documentation
 The following sections assume that the following file has been included:
 
 .. code-block:: c++
-    
+
     #include <boost/network/include/http/server.hpp>
 
 And that the following typedef's have been put in place:
@@ -226,14 +226,14 @@ Constructor
 To use the above supported named parameters, you'll have code that looks like the following:
 
 .. code-block:: c++
-    
+
     using namespace boost::network::http; // parameters are in this namespace
     boost::asio::io_service my_io_service;
     boost::network::utils::thread_pool pool(2);
     handler handler_instance;
     async_server<handler> instance(_address="0.0.0.0", _port="80", _handler=handler_instance,
                                    _io_service=my_io_service, _thread_pool=pool,
-                                   _reuse_address=true); 
+                                   _reuse_address=true);
     instance.run();
 
 Public Members
@@ -270,8 +270,8 @@ helpful in certain simple situations.
 
 ``response = http_server::response::stock_reply(status, body)``
     Code like the above should go inside the handler's ``operator()`` overload.
-    The body parameter is an ``std::string``. The status parameter is any of 
-    the following values from the ``http_server::response`` enum 
+    The body parameter is an ``std::string``. The status parameter is any of
+    the following values from the ``http_server::response`` enum
     ``status_type``:
 
 .. code-block:: c++
@@ -313,7 +313,7 @@ which can be directly manipulated by the handler.
 .. [#] A header is a struct of type
    ``response_header<http::tags::http_server>``. An instance always has the
    members ``name`` and ``value`` both of which are of type ``string_type``.
-.. [#] ``string_type`` is 
+.. [#] ``string_type`` is
    ``boost::network::string<http::tags::http_server>::type``.
 
 Asynchronous Servers
@@ -358,7 +358,7 @@ synchronous server implementation.
 The general pattern for using the ``async_server`` template is shown below:
 
 .. code-block:: c++
-    
+
     struct handler;
     typedef boost::network::http::async_server<handler> http_server;
 
@@ -367,7 +367,7 @@ The general pattern for using the ``async_server`` template is shown below:
             http_server::request const & req,
             http_server::connection_ptr connection
         ) {
-            // handle the request here, and use the connection to 
+            // handle the request here, and use the connection to
             // either read more data or write data out to the client
         }
     };

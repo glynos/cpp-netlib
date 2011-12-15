@@ -123,7 +123,6 @@ Contents
    in_depth.rst
    techniques.rst
    history.rst
-   install.rst
    reference.rst
    references.rst
 
