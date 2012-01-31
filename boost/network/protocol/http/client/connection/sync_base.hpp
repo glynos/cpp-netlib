@@ -132,6 +132,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                     bool stopping = false;
                     do {
                         std::size_t chunk_size_line = read_until(socket_, response_buffer, "\r\n", error);
+                        std::size_t tooMuchRead = response_buffer.size() - chunk_size_line;
                         if ((chunk_size_line == 0) && (error != boost::asio::error::eof)) throw boost::system::system_error(error);
                         std::size_t chunk_size = 0;
                         string_type data;
@@ -148,7 +149,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                         } else {
                             bool stopping_inner = false;
                             do {
-                                std::size_t chunk_bytes_read = read(socket_, response_buffer, boost::asio::transfer_at_least(chunk_size + 2), error);
+                                assert( tooMuchRead <= chunk_size + 2 );
+                                std::size_t chunk_bytes_read = read(socket_, response_buffer, boost::asio::transfer_at_least(chunk_size + 2 - tooMuchRead), error);
                                 if (chunk_bytes_read == 0) {
                                     if (error != boost::asio::error::eof) throw boost::system::system_error(error);
                                     stopping_inner = true;
