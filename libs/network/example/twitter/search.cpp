@@ -6,13 +6,17 @@
 
 #include <boost/network/protocol/http/client.hpp>
 #include <boost/foreach.hpp>
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/document.h"
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/filestream.h"
 #include <iostream>
 
 // This example uses the Twitter Search API.
 //
 // https://dev.twitter.com/docs/using-search
 
-int main(int argc, char * argv[]) {
+int main(int argc, char *argv[]) {
     using namespace boost::network;
 
     if (argc != 2) {
@@ -25,13 +29,18 @@ int main(int argc, char * argv[]) {
 
         uri::uri search_uri("http://search.twitter.com/search.json");
 
-		std::cout << "Searching Twitter for query: " << argv[1] << std::endl;
+        std::cout << "Searching Twitter for query: " << argv[1] << std::endl;
         uri::uri search_1;
         search_1 << search_uri << uri::query("q", uri::encoded(argv[1]));
         http::client::request request(search_1);
         http::client::response response = client.get(request);
 
-        std::cout << body(response) << std::endl;
+        rapidjson::Document d;
+        if (!d.Parse<0>(response.body().c_str()).HasParseError()) {
+            rapidjson::FileStream f(stdout);
+            rapidjson::PrettyWriter<rapidjson::FileStream> writer(f);
+            d.Accept(writer);
+        }
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
@@ -39,4 +48,3 @@ int main(int argc, char * argv[]) {
 
     return 0;
 }
-
