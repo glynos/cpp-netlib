@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HTTP client &mdash; cpp-netlib v0.9 documentation</title>
+    <title>HTTP client &mdash; cpp-netlib v0.9.3 documentation</title>
     <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.9',
+        VERSION:     '0.9.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,10 +22,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.9 documentation" href="index.html" />
-    <link rel="up" title="HTTP examples" href="examples_http.html" />
-    <link rel="next" title="“Hello world” HTTP server" href="hello_world_server.html" />
-    <link rel="prev" title="HTTP examples" href="examples_http.html" />
+    <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -46,13 +43,9 @@
     <div class="document">
   <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">cpp-netlib v0.9 documentation</a></h1>
+      <h1><a href="index.html">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
-    &laquo; <a href="examples_http.html" title="HTTP examples">previous</a>
-     |
-    <a href="examples.html" title="Examples" accesskey="U">up</a>
-   |
-    <a href="hello_world_server.html" title="&amp;#8220;Hello world&amp;#8221; HTTP server">next</a> &raquo;</div>
+    <a title="cpp-netlib v0.9.3 documentation" href="index.html" accesskey="U">up</a></div>
     </div>
 
     <div id="bd">
@@ -65,10 +58,10 @@
 <p>The first code example is the simplest thing you can do with the
 <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>.  The application is a simple HTTP client, which can
 be found in the subdirectory <tt class="docutils literal"><span class="pre">libs/network/example/http_client.cpp</span></tt>.
-All we are doing is creating and sending an HTTP request to a server
+All this example doing is creating and sending an HTTP request to a server
 and printing the response body.</p>
 <div class="section" id="the-code">
-<h2>The Code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
+<h2>The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
 <p>Without further ado, the code to do this is as follows:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
 <span class="cp">#include &lt;iostream&gt;</span>
@@ -92,24 +85,14 @@ and printing the response body.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="building-and-running-the-code">
-<h2>Building and Running The Code<a class="headerlink" href="#building-and-running-the-code" title="Permalink to this headline">¶</a></h2>
-<p>To be build this example, you can follow the steps below without having to build
-the whole <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> distribution:</p>
-<div class="highlight-python"><pre>$ cd ~/cpp-netlib
-$ g++ -o http_client1 libs/network/example/http_client1.cpp \
-&gt;     -I.                                                   \
-&gt;     -I$BOOST_ROOT                                         \
-&gt;     -L$BOOST_ROOT/stage/lib                               \
-&gt;     -lboost_system                                        \
-&gt;     -pthread</pre>
-</div>
+<div class="section" id="running-the-example">
+<h2>Running the example<a class="headerlink" href="#running-the-example" title="Permalink to this headline">¶</a></h2>
 <p>You can then run this to get the <a class="reference external" href="http://www.boost.org/">Boost</a> website:</p>
 <div class="highlight-python"><pre>$ ./http_client1 http://www.boost.org/</pre>
 </div>
 </div>
 <div class="section" id="diving-into-the-code">
-<h2>Diving into the Code<a class="headerlink" href="#diving-into-the-code" title="Permalink to this headline">¶</a></h2>
+<h2>Diving into the code<a class="headerlink" href="#diving-into-the-code" title="Permalink to this headline">¶</a></h2>
 <p>Since this is the first example, each line will be presented and
 explained in detail.</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
@@ -169,9 +152,9 @@ compress this to a single line:</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">HTTP client</a><ul>
-<li><a class="reference internal" href="#the-code">The Code</a></li>
-<li><a class="reference internal" href="#building-and-running-the-code">Building and Running The Code</a></li>
-<li><a class="reference internal" href="#diving-into-the-code">Diving into the Code</a></li>
+<li><a class="reference internal" href="#the-code">The code</a></li>
+<li><a class="reference internal" href="#running-the-example">Running the example</a></li>
+<li><a class="reference internal" href="#diving-into-the-code">Diving into the code</a></li>
 </ul>
 </li>
 </ul>
@@ -179,23 +162,15 @@ compress this to a single line:</p>
   <h3>Browse</h3>
   <ul>
     
-      <li>Prev: <a href="examples_http.html">HTTP examples</a></li>
-    
-    
-      <li>Next: <a href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a></li>
     
   </ul>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">cpp-netlib v0.9 documentation</a>
-        
-          <ul><li><a href="examples.html">Examples</a>
-        
-          <ul><li><a href="examples_http.html">HTTP examples</a>
+        <a href="index.html">cpp-netlib v0.9.3 documentation</a>
         
         <ul><li>HTTP client</li></ul>
-        </li></ul></li></ul>
+        
       </li>
   </ul>
 
@@ -225,11 +200,7 @@ compress this to a single line:</p>
 
     <div id="ft">
       <div class="nav">
-    &laquo; <a href="examples_http.html" title="HTTP examples">previous</a>
-     |
-    <a href="examples.html" title="Examples" accesskey="U">up</a>
-   |
-    <a href="hello_world_server.html" title="&amp;#8220;Hello world&amp;#8221; HTTP server">next</a> &raquo;</div>
+    <a title="cpp-netlib v0.9.3 documentation" href="index.html" accesskey="U">up</a></div>
     </div>
   </div>
 

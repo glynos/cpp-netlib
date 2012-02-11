@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HTTP Request &mdash; cpp-netlib v0.9 documentation</title>
+    <title>HTTP Request &mdash; cpp-netlib v0.9.3 documentation</title>
     <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.9',
+        VERSION:     '0.9.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.9 documentation" href="index.html" />
+    <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
     <link rel="up" title="Reference Manual" href="reference.html" />
     <link rel="next" title="HTTP Response" href="reference_http_response.html" />
     <link rel="prev" title="HTTP Client API" href="reference_http_client.html" />
@@ -46,7 +46,7 @@
     <div class="document">
   <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">cpp-netlib v0.9 documentation</a></h1>
+      <h1><a href="index.html">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
     &laquo; <a href="reference_http_client.html" title="HTTP Client API">previous</a>
      |
@@ -280,6 +280,17 @@ effect:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">directive</span><span class="p">(...);</span>
 </pre></div>
 </div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>There are two versions of directives, those that are applicable to
+messages that support narrow strings (<tt class="docutils literal"><span class="pre">std::string</span></tt>) and those that are
+applicable to messages that support wide strings (<tt class="docutils literal"><span class="pre">std::wstring</span></tt>). The
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> implementation still does not convert wide strings into
+UTF-8 encoded narrow strings. This will be implemented in subsequent
+library releases.</p>
+<p class="last">For now all the implemented directives are listed, even if some of them still
+do not implement things correctly.</p>
+</div>
 <dl class="docutils">
 <dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">source(std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">source_)</span></tt></dt>
 <dd>Create a source directive with a <tt class="docutils literal"><span class="pre">std::string</span></tt> as a parameter, to be set
@@ -407,7 +418,7 @@ provides the body of a given request.</dd>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">cpp-netlib v0.9 documentation</a>
+        <a href="index.html">cpp-netlib v0.9.3 documentation</a>
         
           <ul><li><a href="reference.html">Reference Manual</a>
         

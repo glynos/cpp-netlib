@@ -1,11 +1,11 @@
-The URI template
-================
+The URI class
+=============
 
 In addition to protocol implementations, the :mod:`cpp-netlib`
-provides a powerful URI template.  The URI template implements a
-parser based on `RFC 3986`_.
+provides a powerful URI class.  The class implements a parser based
+on `RFC 3986`_ and `RFC 2732`_.
 
-Generic URI Syntax Overview
+Generic URI syntax overview
 ```````````````````````````
 
 A generic URI will take the form::
@@ -13,8 +13,8 @@ A generic URI will take the form::
   [scheme:]scheme-specific-part[#fragment]
 
 A URI is known as `absolute` if it specifies the scheme.  Otherwise,
-it is known as a relative URI.  Currently, ``basic_uri`` supports
-only absolute URIs.
+it is known as a relative URI.  Currently, ``uri`` supports only
+absolute URIs.
 
 URIs can be further classified according to whether they're
 hierarchical or opaque (non-hierarchical).
@@ -60,30 +60,51 @@ elements.  Another example, using HTTP is given below:
 The difference here between the path in a hierarchical URI and that in
 the example above for the non-hierarchical URI.
 
-``basic_uri``
-`````````````
+The ``uri`` class
+`````````````````
 
-The ``basic_uri`` definition is consistent with that of
-``basic_message``::
-
-   template <class Tag>
-   class basic_uri;
-
-As it stands, the template only supplies a URI parser and no builder.
+As of version 0.9.3, ``uri`` supplies a URI parser and builder.
 To use the parser, it's as simple as supplying a string to the
-constructor::
+constructor:
 
-   boost::network::uri::uri instance("http://cpp-netlib.github.com/");
-   assert(boost::is_valid(instance));
-   std::cout << "scheme: " << boost::network::uri::scheme(instance) << std::endl
-             << "host: " << boost::network::uri::host(instance) << std::endl;
+.. code-block:: c++
+
+   using namespace boost::network;
+   uri::uri instance("http://cpp-netlib.github.com/");
+   assert(instance.is_valid());
+   std::cout << "scheme: " << instance.scheme() << std::endl
+             << "host: " << instance.host() << std::endl;
 
 The command-line output of this program will be::
 
    scheme: http
    host: cpp-netlib.github.com
 
-A future version of ``basic_uri`` will provide a full builder API.
+The ``uri`` builder
+```````````````````
+
+``uri`` support a stream style syntax to create a URI from it's
+elements.  For example the program:
+
+.. code-block:: c++
+
+   #include <iostream>
+   #include <boost/network/uri.hpp>
+   #include <boost/network/uri/uri_io.hpp>
+   using namespace boost::network;
+
+   int main() {
+       uri::uri url;
+       url << uri::scheme("http")
+           << uri::host("www.github.com")
+           << uri::path("/cpp-netlib");
+       std::cout << url << std::endl;
+       return 0;
+   }
+
+will output::
+
+   htp://www.github.com/cpp-netlib
 
 ``URI Concept``
 ```````````````
@@ -127,3 +148,4 @@ A future version of ``basic_uri`` will provide a full builder API.
 .. _`RFC 3986`: http://tools.ietf.org/html/rfc3986
 .. _`RFC 2368`: http://tools.ietf.org/html/rfc2368
 .. _`RFC 3513`: http://tools.ietf.org/html/rfc3513
+.. _`RFC 2732`: http://tools.ietf.org/html/rfc2732

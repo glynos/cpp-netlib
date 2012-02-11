@@ -8,6 +8,7 @@ embedded into larger applications.
 .. toctree::
    :maxdepth: 2
 
+   http_client.rst
    simple_wget.rst
    hello_world_server.rst
    hello_world_client.rst

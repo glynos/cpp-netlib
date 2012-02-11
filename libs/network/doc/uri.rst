@@ -65,7 +65,7 @@ The ``uri`` class
 
 As of version 0.9.3, ``uri`` supplies a URI parser and builder.
 To use the parser, it's as simple as supplying a string to the
-constructor::
+constructor:
 
 .. code-block:: c++
 
@@ -84,7 +84,7 @@ The ``uri`` builder
 ```````````````````
 
 ``uri`` support a stream style syntax to create a URI from it's
-elements.  For example the program::
+elements.  For example the program:
 
 .. code-block:: c++
 
@@ -119,7 +119,6 @@ will output::
 
 +----------------------------+----------------------+-----------------------------------------+
 | Construct                  | Result               | Description                             |
-
 +============================+======================+=========================================+
 | ``U(u)``                   | Instance of U        | Copy constructible.                     |
 +----------------------------+----------------------+-----------------------------------------+

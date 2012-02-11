@@ -7,10 +7,10 @@
 The first code example is the simplest thing you can do with the
 :mod:`cpp-netlib`.  The application is a simple HTTP client, which can
 be found in the subdirectory ``libs/network/example/http_client.cpp``.
-All we are doing is creating and sending an HTTP request to a server
-and printing the response body.  
+All this example doing is creating and sending an HTTP request to a server
+and printing the response body.
 
-The Code
+The code
 ========
 
 Without further ado, the code to do this is as follows:
@@ -19,37 +19,26 @@ Without further ado, the code to do this is as follows:
 
     #include <boost/network/protocol/http/client.hpp>
     #include <iostream>
-    
+
     int main(int argc, char *argv[]) {
         using namespace boost::network;
-	
+
 	if (argc != 2) {
 	    std::cout << "Usage: " << argv[0] << " [url]" << std::endl;
     	    return 1;
         }
-	
+
         http::client client;
         http::client::request request(argv[1]);
 	request << header("Connection", "close");
 	http::client::response response = client.get(request);
 	std::cout << body(response) << std::endl;
-	
+
   	return 0;
     }
 
-Building and Running The Code
-=============================
-
-To be build this example, you can follow the steps below without having to build
-the whole :mod:`cpp-netlib` distribution::
-
-    $ cd ~/cpp-netlib
-    $ g++ -o http_client1 libs/network/example/http_client1.cpp \
-    >     -I.                                                   \
-    >     -I$BOOST_ROOT                                         \
-    >     -L$BOOST_ROOT/stage/lib                               \
-    >     -lboost_system                                        \
-    >     -pthread
+Running the example
+===================
 
 You can then run this to get the Boost_ website::
 
@@ -57,7 +46,7 @@ You can then run this to get the Boost_ website::
 
 .. _Boost: http://www.boost.org/
 
-Diving into the Code
+Diving into the code
 ====================
 
 Since this is the first example, each line will be presented and

@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HTTP implementation &mdash; cpp-netlib v0.9 documentation</title>
+    <title>HTTP implementation &mdash; cpp-netlib v0.9.3 documentation</title>
     <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.9',
+        VERSION:     '0.9.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,10 +22,10 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.9 documentation" href="index.html" />
+    <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
     <link rel="up" title="An in-depth look at the cpp-netlib" href="in_depth.html" />
     <link rel="next" title="Techniques" href="techniques.html" />
-    <link rel="prev" title="The URI template" href="uri.html" />
+    <link rel="prev" title="The URI class" href="uri.html" />
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -46,11 +46,11 @@
     <div class="document">
   <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">cpp-netlib v0.9 documentation</a></h1>
+      <h1><a href="index.html">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
-    &laquo; <a href="uri.html" title="The URI template">previous</a>
+    &laquo; <a href="uri.html" title="The URI class">previous</a>
      |
-    <a href="in_depth.html" title="An in-depth look at the &lt;tt class=&#34;docutils literal docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;cpp-netlib&lt;/span&gt;&lt;/tt&gt;" accesskey="U">up</a>
+    <a href="in_depth.html" title="An in-depth look at the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;cpp-netlib&lt;/span&gt;&lt;/tt&gt;" accesskey="U">up</a>
    |
     <a href="techniques.html" title="Techniques">next</a> &raquo;</div>
     </div>
@@ -254,38 +254,6 @@ HTTP OK response (200). We are also printing the IP address from where the
 request came from. Notice that we are using a wrapper to access the source of
 the request.</p>
 </div>
-<div class="section" id="http-uri">
-<h2>HTTP URI<a class="headerlink" href="#http-uri" title="Permalink to this headline">¶</a></h2>
-<p><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> provides a specialization and <tt class="docutils literal"><span class="pre">typedef</span></tt> for an
-HTTP URI:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span class="k">namespace</span> <span class="n">http</span> <span class="p">{</span>
-<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">basic_uri</span><span class="p">;</span>
-<span class="k">typedef</span> <span class="n">basic_uri</span><span class="o">&lt;</span><span class="n">default_</span><span class="o">&gt;</span> <span class="n">uri</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p><tt class="docutils literal"><span class="pre">basic_uri</span></tt> provides a parser which breaks down a URI string passed
-to it&#8217;s constructor into different parts.</p>
-<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">uri</span><span class="p">;</span>
-<span class="n">http</span><span class="o">::</span><span class="n">uri</span> <span class="n">uri_</span><span class="p">(</span><span class="s">&quot;http://www.boost.org/&quot;</span><span class="p">);</span>
-<span class="n">assert</span><span class="p">(</span><span class="n">valid</span><span class="p">(</span><span class="n">uri_</span><span class="p">));</span>
-<span class="n">assert</span><span class="p">(</span><span class="n">scheme</span><span class="p">(</span><span class="n">uri_</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;http&quot;</span><span class="p">);</span>
-<span class="n">assert</span><span class="p">(</span><span class="n">host</span><span class="p">(</span><span class="n">uri_</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;www.boost.org&quot;</span><span class="p">)</span>
-<span class="n">assert</span><span class="p">(</span><span class="n">port</span><span class="p">(</span><span class="n">uri_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">80</span><span class="p">)</span>
-<span class="n">assert</span><span class="p">(</span><span class="n">path</span><span class="p">(</span><span class="n">uri_</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;/&quot;</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>The syntax of the HTTP URI are defined in RFC 1738 section 3.3 <a class="footnote-reference" href="#id3" id="id2">[1]</a>
-and the default URI provided with cpp-netlib conforms to this.  In
-such a way, specializations that conform to any URI scheme can be
-provided.</p>
-<table class="docutils footnote" frame="void" id="id3" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td><a class="reference external" href="http://tools.ietf.org/html/rfc1738">http://tools.ietf.org/html/rfc1738</a></td></tr>
-</tbody>
-</table>
-</div>
 </div>
 
 
@@ -302,7 +270,6 @@ provided.</p>
 <li><a class="reference internal" href="#">HTTP implementation</a><ul>
 <li><a class="reference internal" href="#http-client">HTTP client</a></li>
 <li><a class="reference internal" href="#http-server">HTTP server</a></li>
-<li><a class="reference internal" href="#http-uri">HTTP URI</a></li>
 </ul>
 </li>
 </ul>
@@ -310,7 +277,7 @@ provided.</p>
   <h3>Browse</h3>
   <ul>
     
-      <li>Prev: <a href="uri.html">The URI template</a></li>
+      <li>Prev: <a href="uri.html">The URI class</a></li>
     
     
       <li>Next: <a href="techniques.html">Techniques</a></li>
@@ -319,9 +286,9 @@ provided.</p>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">cpp-netlib v0.9 documentation</a>
+        <a href="index.html">cpp-netlib v0.9.3 documentation</a>
         
-          <ul><li><a href="in_depth.html">An in-depth look at the <tt class="docutils literal docutils literal"><span class="pre">cpp-netlib</span></tt></a>
+          <ul><li><a href="in_depth.html">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a>
         
         <ul><li>HTTP implementation</li></ul>
         </li></ul>
@@ -354,9 +321,9 @@ provided.</p>
 
     <div id="ft">
       <div class="nav">
-    &laquo; <a href="uri.html" title="The URI template">previous</a>
+    &laquo; <a href="uri.html" title="The URI class">previous</a>
      |
-    <a href="in_depth.html" title="An in-depth look at the &lt;tt class=&#34;docutils literal docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;cpp-netlib&lt;/span&gt;&lt;/tt&gt;" accesskey="U">up</a>
+    <a href="in_depth.html" title="An in-depth look at the &lt;tt class=&#34;docutils literal&#34;&gt;&lt;span class=&#34;pre&#34;&gt;cpp-netlib&lt;/span&gt;&lt;/tt&gt;" accesskey="U">up</a>
    |
     <a href="techniques.html" title="Techniques">next</a> &raquo;</div>
     </div>

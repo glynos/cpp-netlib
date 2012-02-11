@@ -7,13 +7,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>C++ Network Library &mdash; cpp-netlib v0.9 documentation</title>
+    <title>C++ Network Library &mdash; cpp-netlib v0.9.3 documentation</title>
     <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.9',
+        VERSION:     '0.9.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +22,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.9 documentation" href="#" />
+    <link rel="top" title="cpp-netlib v0.9.3 documentation" href="#" />
     <link rel="next" title="What’s New" href="whats_new.html" />
 <script type="text/javascript">
 
@@ -44,9 +44,9 @@
     <div class="document">
   <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="#">cpp-netlib v0.9 documentation</a></h1>
+      <h1><a href="#">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
-    <a title="cpp-netlib v0.9 documentation" href="#" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9.3 documentation" href="#" accesskey="U">up</a>
    |
     <a href="whats_new.html" title="What&amp;#8217;s New">next</a> &raquo;</div>
     </div>
@@ -58,7 +58,7 @@
             
   <div class="section" id="c-network-library">
 <h1>C++ Network Library<a class="headerlink" href="#c-network-library" title="Permalink to this headline">¶</a></h1>
-<img alt="_images/boost.png" class="align-right" src="_images/boost.png" />
+<img alt="_images/boost3.png" class="align-right" src="_images/boost3.png" />
 <div class="section" id="welcome">
 <h2>Welcome<a class="headerlink" href="#welcome" title="Permalink to this headline">¶</a></h2>
 <p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is a library that provides application layer
@@ -143,6 +143,8 @@ mailing list by joining via:</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="whats_new.html">What&#8217;s New</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="whats_new.html#cpp-netlib-0-9"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="whats_new.html#v0-9-3">v0.9.3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="whats_new.html#v0-9-2">v0.9.2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="whats_new.html#v0-9-1">v0.9.1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="whats_new.html#v0-9-0">v0.9.0</a></li>
 </ul>
@@ -169,8 +171,13 @@ mailing list by joining via:</p>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples_http.html">HTTP examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="http_client.html">HTTP client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="simple_wget.html">Simple <cite>wget</cite></a></li>
 <li class="toctree-l3"><a class="reference internal" href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hello_world_client.html">&#8220;Hello world&#8221; HTTP client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fileserver.html">Fileserver (HTTP)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atom_reader.html">Atom reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rss_reader.html">RSS reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twitter_search.html">Twitter search</a></li>
 </ul>
 </li>
 </ul>
@@ -182,16 +189,16 @@ mailing list by joining via:</p>
 <li class="toctree-l3"><a class="reference internal" href="message.html#basic-message"><tt class="docutils literal"><span class="pre">basic_message</span></tt></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="uri.html">The URI template</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="uri.html#generic-uri-syntax-overview">Generic URI Syntax Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="uri.html#basic-uri"><tt class="docutils literal"><span class="pre">basic_uri</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uri.html">The URI class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="uri.html#generic-uri-syntax-overview">Generic URI syntax overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uri.html#id1">The <tt class="docutils literal"><span class="pre">uri</span></tt> class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uri.html#the-uri-builder">The <tt class="docutils literal"><span class="pre">uri</span></tt> builder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="uri.html#uri-concept"><tt class="docutils literal"><span class="pre">URI</span> <span class="pre">Concept</span></tt></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="http.html">HTTP implementation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="http.html#http-client">HTTP client</a></li>
 <li class="toctree-l3"><a class="reference internal" href="http.html#http-server">HTTP server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="http.html#http-uri">HTTP URI</a></li>
 </ul>
 </li>
 </ul>
@@ -212,7 +219,6 @@ mailing list by joining via:</p>
 <li class="toctree-l2"><a class="reference internal" href="history.html#objectives">Objectives</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Full installation guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reference_http_client.html">HTTP Client API</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="reference_http_client.html#general">General</a></li>
@@ -286,7 +292,7 @@ mailing list by joining via:</p>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="#">cpp-netlib v0.9 documentation</a>
+        <a href="#">cpp-netlib v0.9.3 documentation</a>
         
         <ul><li>C++ Network Library</li></ul>
         
@@ -319,7 +325,7 @@ mailing list by joining via:</p>
 
     <div id="ft">
       <div class="nav">
-    <a title="cpp-netlib v0.9 documentation" href="#" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9.3 documentation" href="#" accesskey="U">up</a>
    |
     <a href="whats_new.html" title="What&amp;#8217;s New">next</a> &raquo;</div>
     </div>
