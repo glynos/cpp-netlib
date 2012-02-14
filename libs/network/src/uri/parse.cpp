@@ -169,8 +169,7 @@ struct uri_grammar : qi::grammar<
         // authority = [ userinfo "@" ] host [ ":" port ]
         hier_part %=
             (
-                "//"
-                >>  -(user_info >> '@')
+				(("//" >> user_info >> '@') | "//")
                 >>  host
                 >> -(':' >> port)
                 >>  path_abempty
