@@ -67,7 +67,7 @@ client side, we&#8217;ll see how we can then use the same abstractions on the se
 side. In this example we&#8217;re going to create a simple HTTP Server in C++ using
 <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>.</p>
 <div class="section" id="the-code">
-<h2>The Code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
+<h2>The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
 <p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> provides the framework to develop embedded HTTP
 servers.  For this example, the server is configured to return a
 simple response to any HTTP request.</p>
@@ -113,24 +113,20 @@ simple response to any HTTP request.</p>
 </div>
 <p>This is about a straightforward as server programming will get in C++.</p>
 </div>
-<div class="section" id="building-the-server">
-<h2>Building the server<a class="headerlink" href="#building-the-server" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="building-and-running-the-server">
+<h2>Building and running the server<a class="headerlink" href="#building-and-running-the-server" title="Permalink to this headline">¶</a></h2>
 <p>Just like with the HTTP client, we can build this example by doing the following
 on the shell:</p>
-<div class="highlight-python"><pre>$ cd ~/cpp-netlib
-$ g++ -o hello_world_server \
-&gt;     libs/network/example/http/hello_world_server.cpp \
-&gt;     -I$BOOST_ROOT                                    \
-&gt;     -I.                                              \
-&gt;     -L$BOOST_ROOT/stage/lib                          \
-&gt;     -lboost_system                                   \
-&gt;     -pthread</pre>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/cpp-netlib-build
+<span class="nv">$ </span>make hello_world_server
+</pre></div>
 </div>
 <p>The first two arguments to the <tt class="docutils literal"><span class="pre">server</span></tt> constructor are the host and
 the port on which the server will listen.  The third argument is the
 the handler object defined previously.  This example can be run from
 a command line as follows:</p>
-<div class="highlight-python"><pre>shell$ ./hello_world_server 0.0.0.0 8000</pre>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./example/hello_world_server 0.0.0.0 8000
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -200,8 +196,8 @@ are thread-safe.</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">&#8220;Hello world&#8221; HTTP server</a><ul>
-<li><a class="reference internal" href="#the-code">The Code</a></li>
-<li><a class="reference internal" href="#building-the-server">Building the server</a></li>
+<li><a class="reference internal" href="#the-code">The code</a></li>
+<li><a class="reference internal" href="#building-and-running-the-server">Building and running the server</a></li>
 <li><a class="reference internal" href="#diving-into-the-code">Diving into the code</a></li>
 </ul>
 </li>

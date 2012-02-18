@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
     <link rel="up" title="HTTP examples" href="examples_http.html" />
-    <link rel="next" title="Fileserver (HTTP)" href="fileserver.html" />
+    <link rel="next" title="Atom reader" href="atom_reader.html" />
     <link rel="prev" title="“Hello world” HTTP server" href="hello_world_server.html" />
 <script type="text/javascript">
 
@@ -52,7 +52,7 @@
      |
     <a href="examples.html" title="Examples" accesskey="U">up</a>
    |
-    <a href="fileserver.html" title="Fileserver (HTTP)">next</a> &raquo;</div>
+    <a href="atom_reader.html" title="Atom reader">next</a> &raquo;</div>
     </div>
 
     <div id="bd">
@@ -66,7 +66,7 @@
 access that server. This client will be similar to the HTTP client we made
 earlier in the documentation.</p>
 <div class="section" id="the-code">
-<h2>The Code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
+<h2>The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
 <p>We want to create a simple HTTP client that just makes a request to the HTTP
 server that we created earlier. This really simple client will look like this:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
@@ -99,22 +99,17 @@ server that we created earlier. This really simple client will look like this:</
 </pre></div>
 </div>
 </div>
-<div class="section" id="building-the-client">
-<h2>Building the Client<a class="headerlink" href="#building-the-client" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="building-and-running-the-client">
+<h2>Building and running the client<a class="headerlink" href="#building-and-running-the-client" title="Permalink to this headline">¶</a></h2>
 <p>Just like with the HTTP Server and HTTP client example before, we can build this
 example by doing the following on the shell:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/cpp-netlib
-<span class="nv">$ </span>g++ -o hello_world_client <span class="se">\</span>
-&gt;     libs/network/example/http/hello_world_client.cpp  <span class="se">\</span>
-&gt;     -I<span class="nv">$BOOST_ROOT</span>                                     <span class="se">\</span>
-&gt;     -I.                                               <span class="se">\</span>
-&gt;     -L<span class="nv">$BOOST_ROOT</span>/stage/lib                           <span class="se">\</span>
-&gt;     -lboost_system                                    <span class="se">\</span>
-&gt;     -pthread
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/cpp-netlib-build
+<span class="nv">$ </span>make hello_world_client
 </pre></div>
 </div>
 <p>This example can be run from the command line as follows:</p>
-<div class="highlight-python"><pre>$ ./hello_world_client 127.0.0.1 8000</pre>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./example/hello_world_client http://127.0.0.1:8000
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -143,6 +138,8 @@ perform the request via HTTP:</p>
 <span class="n">std</span><span class="o">::</span><span class="n">data</span> <span class="o">=</span> <span class="n">body</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
 </pre></div>
 </div>
+<p>The next set of examples show some more practical applications using
+the <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> HTTP client.</p>
 </div>
 </div>
 
@@ -158,8 +155,8 @@ perform the request via HTTP:</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">&#8220;Hello world&#8221; HTTP client</a><ul>
-<li><a class="reference internal" href="#the-code">The Code</a></li>
-<li><a class="reference internal" href="#building-the-client">Building the Client</a></li>
+<li><a class="reference internal" href="#the-code">The code</a></li>
+<li><a class="reference internal" href="#building-and-running-the-client">Building and running the client</a></li>
 <li><a class="reference internal" href="#diving-into-the-code">Diving into the code</a></li>
 </ul>
 </li>
@@ -171,7 +168,7 @@ perform the request via HTTP:</p>
       <li>Prev: <a href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a></li>
     
     
-      <li>Next: <a href="fileserver.html">Fileserver (HTTP)</a></li>
+      <li>Next: <a href="atom_reader.html">Atom reader</a></li>
     
   </ul>
   <h3>You are here:</h3>
@@ -218,7 +215,7 @@ perform the request via HTTP:</p>
      |
     <a href="examples.html" title="Examples" accesskey="U">up</a>
    |
-    <a href="fileserver.html" title="Fileserver (HTTP)">next</a> &raquo;</div>
+    <a href="atom_reader.html" title="Atom reader">next</a> &raquo;</div>
     </div>
   </div>
 

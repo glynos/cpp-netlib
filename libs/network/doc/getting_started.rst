@@ -144,7 +144,8 @@ the tests, you can run ``make`` in the same top-level directory of
 
    As a caveat, :mod:`cpp-netlib` is heavy on template metaprogramming and will
    require a lot of computing and memory resources to build the individual
-   tests. Do this at the risk of thrashing_ your system.
+   tests. Do this at the risk of thrashing_ your system.  However, this
+   compile-time burden is much reduced in recent versions.
 
 .. _thrashing: http://en.wikipedia.org/wiki/Thrashing_(computer_science)
 

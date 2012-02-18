@@ -9,7 +9,7 @@ client side, we'll see how we can then use the same abstractions on the server
 side. In this example we're going to create a simple HTTP Server in C++ using
 :mod:`cpp-netlib`.
 
-The Code
+The code
 ========
 
 The :mod:`cpp-netlib` provides the framework to develop embedded HTTP
@@ -59,29 +59,25 @@ simple response to any HTTP request.
 
 This is about a straightforward as server programming will get in C++.
 
-Building the server
-===================
+Building and running the server
+===============================
 
 Just like with the HTTP client, we can build this example by doing the following
-on the shell::
+on the shell:
 
-    $ cd ~/cpp-netlib
-    $ g++ -o hello_world_server \
-    >     libs/network/example/http/hello_world_server.cpp \
-    >     -I$BOOST_ROOT                                    \
-    >     -I.                                              \
-    >     -L$BOOST_ROOT/stage/lib                          \
-    >     -lboost_system                                   \
-    >     -pthread
+.. code-block:: bash
+
+    $ cd ~/cpp-netlib-build
+    $ make hello_world_server
 
 The first two arguments to the ``server`` constructor are the host and
 the port on which the server will listen.  The third argument is the
 the handler object defined previously.  This example can be run from
 a command line as follows:
 
-::
+.. code-block:: bash
 
-    shell$ ./hello_world_server 0.0.0.0 8000
+    $ ./example/hello_world_server 0.0.0.0 8000
 
 .. note:: If you're going to run the server on port 80, you may have to run it
    as an administrator.

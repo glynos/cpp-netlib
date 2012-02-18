@@ -15,7 +15,7 @@
 .. :Date: Nov 9, 2010
 .. :Version: 0.8
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
-.. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2011.
+.. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2012.
 ..             Distributed under the Boost Software License, Version
 ..             1.0. (See accompanying file LICENSE_1_0.txt or copy at
 ..             http://www.boost.org/LICENSE_1_0.txt)

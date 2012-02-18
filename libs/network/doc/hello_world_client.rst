@@ -8,7 +8,7 @@ Since we have a "Hello World" HTTP server, let's then create an HTTP client to
 access that server. This client will be similar to the HTTP client we made
 earlier in the documentation.
 
-The Code
+The code
 ========
 
 We want to create a simple HTTP client that just makes a request to the HTTP
@@ -44,28 +44,22 @@ server that we created earlier. This really simple client will look like this:
         return 0;
     }
 
-Building the Client
-===================
+Building and running the client
+===============================
 
 Just like with the HTTP Server and HTTP client example before, we can build this
 example by doing the following on the shell:
 
 .. code-block:: bash
 
-    $ cd ~/cpp-netlib
-    $ g++ -o hello_world_client \
-    >     libs/network/example/http/hello_world_client.cpp  \
-    >     -I$BOOST_ROOT                                     \
-    >     -I.                                               \
-    >     -L$BOOST_ROOT/stage/lib                           \
-    >     -lboost_system                                    \
-    >     -pthread
+    $ cd ~/cpp-netlib-build
+    $ make hello_world_client
 
 This example can be run from the command line as follows:
 
-::
+.. code-block:: bash
 
-    $ ./hello_world_client 127.0.0.1 8000
+    $ ./example/hello_world_client http://127.0.0.1:8000
 
 .. note:: This assumes that you have the ``hello_world_server`` running on
    localhost port 8000.
@@ -96,4 +90,5 @@ perform the request via HTTP:
         client.post(request, "application/xml", some_xml_string);
     std::data = body(response);
 
-
+The next set of examples show some more practical applications using
+the :mod:`cpp-netlib` HTTP client.

@@ -23,6 +23,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
+    <link rel="up" title="HTTP examples" href="examples_http.html" />
+    <link rel="next" title="Simple wget" href="simple_wget.html" />
+    <link rel="prev" title="HTTP examples" href="examples_http.html" />
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -45,7 +48,11 @@
     <div id="hd">
       <h1><a href="index.html">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
-    <a title="cpp-netlib v0.9.3 documentation" href="index.html" accesskey="U">up</a></div>
+    &laquo; <a href="examples_http.html" title="HTTP examples">previous</a>
+     |
+    <a href="examples.html" title="Examples" accesskey="U">up</a>
+   |
+    <a href="simple_wget.html" title="Simple &lt;cite&gt;wget&lt;/cite&gt;">next</a> &raquo;</div>
     </div>
 
     <div id="bd">
@@ -88,7 +95,18 @@ and printing the response body.</p>
 <div class="section" id="running-the-example">
 <h2>Running the example<a class="headerlink" href="#running-the-example" title="Permalink to this headline">¶</a></h2>
 <p>You can then run this to get the <a class="reference external" href="http://www.boost.org/">Boost</a> website:</p>
-<div class="highlight-python"><pre>$ ./http_client1 http://www.boost.org/</pre>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/cpp-netlib-build
+<span class="nv">$ </span>make http_client
+<span class="nv">$ </span>./example/http_client http://www.boost.org/
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The instructions for all these examples assume that
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is build outside the source tree,
+according to <a class="reference external" href="http://www.cmake.org/Wiki/CMake_FAQ#What_is_an_.22out-of-source.22_build.3F">CMake conventions</a>.  For the sake of
+consistency we assume that this is in the
+<tt class="docutils literal"><span class="pre">~/cpp-netlib-build</span></tt> directory.</p>
 </div>
 </div>
 <div class="section" id="diving-into-the-code">
@@ -135,8 +153,7 @@ compress this to a single line:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">body</span><span class="p">(</span><span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="p">().</span><span class="n">get</span><span class="p">(</span><span class="n">http</span><span class="o">::</span><span class="n">request</span><span class="p">(</span><span class="s">&quot;http://www.boost.org/&quot;</span><span class="p">)));</span>
 </pre></div>
 </div>
-<p>Next we&#8217;ll develop a simple client/server application using
-<tt class="docutils literal"><span class="pre">http::server</span></tt> and <tt class="docutils literal"><span class="pre">http::client</span></tt>.</p>
+<p>The next example will introduce the <tt class="docutils literal"><span class="pre">uri</span></tt> class.</p>
 </div>
 </div>
 
@@ -162,6 +179,10 @@ compress this to a single line:</p>
   <h3>Browse</h3>
   <ul>
     
+      <li>Prev: <a href="examples_http.html">HTTP examples</a></li>
+    
+    
+      <li>Next: <a href="simple_wget.html">Simple <cite>wget</cite></a></li>
     
   </ul>
   <h3>You are here:</h3>
@@ -169,8 +190,12 @@ compress this to a single line:</p>
       <li>
         <a href="index.html">cpp-netlib v0.9.3 documentation</a>
         
-        <ul><li>HTTP client</li></ul>
+          <ul><li><a href="examples.html">Examples</a>
         
+          <ul><li><a href="examples_http.html">HTTP examples</a>
+        
+        <ul><li>HTTP client</li></ul>
+        </li></ul></li></ul>
       </li>
   </ul>
 
@@ -200,7 +225,11 @@ compress this to a single line:</p>
 
     <div id="ft">
       <div class="nav">
-    <a title="cpp-netlib v0.9.3 documentation" href="index.html" accesskey="U">up</a></div>
+    &laquo; <a href="examples_http.html" title="HTTP examples">previous</a>
+     |
+    <a href="examples.html" title="Examples" accesskey="U">up</a>
+   |
+    <a href="simple_wget.html" title="Simple &lt;cite&gt;wget&lt;/cite&gt;">next</a> &raquo;</div>
     </div>
   </div>
 
