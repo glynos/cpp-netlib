@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,37 +7,46 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HTTP examples &mdash; The C++ Network Library v0.7 documentation</title>
-    <link rel="stylesheet" href="static/cpp-netlib.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <title>HTTP examples &mdash; cpp-netlib v0.9.3 documentation</title>
+    <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
-        VERSION:     '0.7',
-        COLLAPSE_MODINDEX: false,
+        URL_ROOT:    '',
+        VERSION:     '0.9.3',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="The C++ Network Library v0.7 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
     <link rel="up" title="Examples" href="examples.html" />
     <link rel="next" title="HTTP client" href="http_client.html" />
-    <link rel="prev" title="Examples" href="examples.html" /> 
+    <link rel="prev" title="Examples" href="examples.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
   </head>
   <body>
 
     <div class="document">
-  <div id="custom-doc" class="yui-t6">
+  <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">The C++ Network Library v0.7 documentation</a></h1>
-      <div id="global-nav">
-        <a title="Home page" href="index.html">Home</a>  |
-        <a title="Table of contents" href="contents.html">Table of contents</a>  |
-        <a title="Global index" href="genindex.html">Index</a>  |
-        <a title="Module index" href="modindex.html">Modules</a>
-      </div>
+      <h1><a href="index.html">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
     &laquo; <a href="examples.html" title="Examples">previous</a>
      |
@@ -51,14 +62,49 @@
             
   <div class="section" id="http-examples">
 <h1>HTTP examples<a class="headerlink" href="#http-examples" title="Permalink to this headline">¶</a></h1>
-<p>The HTTP component of the <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> contains a client and server.
+<p>The HTTP component of the <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> contains a client and server.
 The examples that follow show how to use both for programs that can be
 embedded into larger applications.</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="http_client.html">HTTP client</a></li>
-<li class="toctree-l1"><a class="reference external" href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a></li>
-<li class="toctree-l1"><a class="reference external" href="hello_world_client.html">&#8220;Hello world&#8221; HTTP client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="http_client.html">HTTP client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="http_client.html#the-code">The code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http_client.html#running-the-example">Running the example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="http_client.html#diving-into-the-code">Diving into the code</a></li>
 </ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="simple_wget.html">Simple <cite>wget</cite></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simple_wget.html#the-code">The code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_wget.html#running-the-example">Running the example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_wget.html#diving-into-the-code">Diving into the code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_server.html#the-code">The code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_server.html#building-and-running-the-server">Building and running the server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_server.html#diving-into-the-code">Diving into the code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hello_world_client.html">&#8220;Hello world&#8221; HTTP client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_client.html#the-code">The code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_client.html#building-and-running-the-client">Building and running the client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_client.html#diving-into-the-code">Diving into the code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="atom_reader.html">Atom reader</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="atom_reader.html#the-code">The code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atom_reader.html#building-and-running-atom-reader">Building and running <tt class="docutils literal"><span class="pre">atom_reader</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="atom_reader.html#diving-into-the-code">Diving into the code</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="twitter_search.html">Twitter search</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="twitter_search.html#the-code">The code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twitter_search.html#building-and-running-twitter-search">Building and running <tt class="docutils literal"><span class="pre">twitter_search</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="twitter_search.html#diving-into-the-code">Diving into the code</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 
 
@@ -66,9 +112,8 @@ embedded into larger applications.</p>
         </div>
       </div>
       
-        
-          <div class="yui-b" id="sidebar">
-            
+        <div class="yui-b" id="sidebar">
+          
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h3>Browse</h3>
@@ -83,7 +128,7 @@ embedded into larger applications.</p>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">The C++ Network Library v0.7 documentation</a>
+        <a href="index.html">cpp-netlib v0.9.3 documentation</a>
         
           <ul><li><a href="examples.html">Examples</a>
         
@@ -92,28 +137,27 @@ embedded into larger applications.</p>
       </li>
   </ul>
 
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="sources/examples_http.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples_http.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-          </div>
-        
+        </div>
       
     </div>
 
@@ -131,6 +175,7 @@ embedded into larger applications.</p>
     </div>
   <div class="footer">
       documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+      | background image attributed to <a href="http://www.flickr.com/photos/OrangeSmell">OrangeSmell</a>
   </div>
 
   </body>

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,40 +7,49 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Examples &mdash; The C++ Network Library v0.7 documentation</title>
-    <link rel="stylesheet" href="static/cpp-netlib.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <title>Examples &mdash; cpp-netlib v0.9.3 documentation</title>
+    <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
-        VERSION:     '0.7',
-        COLLAPSE_MODINDEX: false,
+        URL_ROOT:    '',
+        VERSION:     '0.9.3',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="The C++ Network Library v0.7 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
     <link rel="next" title="HTTP examples" href="examples_http.html" />
-    <link rel="prev" title="Getting started" href="getting_started.html" /> 
+    <link rel="prev" title="Getting Started" href="getting_started.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
   </head>
   <body>
 
     <div class="document">
-  <div id="custom-doc" class="yui-t6">
+  <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">The C++ Network Library v0.7 documentation</a></h1>
-      <div id="global-nav">
-        <a title="Home page" href="index.html">Home</a>  |
-        <a title="Table of contents" href="contents.html">Table of contents</a>  |
-        <a title="Global index" href="genindex.html">Index</a>  |
-        <a title="Module index" href="modindex.html">Modules</a>
-      </div>
+      <h1><a href="index.html">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
-    &laquo; <a href="getting_started.html" title="Getting started">previous</a>
+    &laquo; <a href="getting_started.html" title="Getting Started">previous</a>
      |
-    <a title="The C++ Network Library v0.7 documentation" href="index.html" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9.3 documentation" href="index.html" accesskey="U">up</a>
    |
     <a href="examples_http.html" title="HTTP examples">next</a> &raquo;</div>
     </div>
@@ -50,23 +61,24 @@
             
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
-<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> is a practical library that is designed to aid
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is a practical library that is designed to aid
 the development of applications for that need to communicate using
 common networking protocols.  The following set of examples describe a
-series of realistic examples that use the <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> for these
-kinds of application.</p>
-<div class="admonition-todo admonition " id="todo-1">
-<p class="first admonition-title">Todo</p>
-<p class="last">Make the examples more accessible.</p>
-</div>
+series of realistic examples that use the <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> for these
+kinds of application.  All examples are built using CMake.</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="examples_http.html">HTTP examples</a><ul>
-<li class="toctree-l2"><a class="reference external" href="http_client.html">HTTP client</a></li>
-<li class="toctree-l2"><a class="reference external" href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a></li>
-<li class="toctree-l2"><a class="reference external" href="hello_world_client.html">&#8220;Hello world&#8221; HTTP client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples_http.html">HTTP examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="http_client.html">HTTP client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_wget.html">Simple <cite>wget</cite></a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hello_world_client.html">&#8220;Hello world&#8221; HTTP client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atom_reader.html">Atom reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="twitter_search.html">Twitter search</a></li>
 </ul>
 </li>
 </ul>
+</div>
 </div>
 
 
@@ -74,15 +86,14 @@ kinds of application.</p>
         </div>
       </div>
       
-        
-          <div class="yui-b" id="sidebar">
-            
+        <div class="yui-b" id="sidebar">
+          
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h3>Browse</h3>
   <ul>
     
-      <li>Prev: <a href="getting_started.html">Getting started</a></li>
+      <li>Prev: <a href="getting_started.html">Getting Started</a></li>
     
     
       <li>Next: <a href="examples_http.html">HTTP examples</a></li>
@@ -91,43 +102,42 @@ kinds of application.</p>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">The C++ Network Library v0.7 documentation</a>
+        <a href="index.html">cpp-netlib v0.9.3 documentation</a>
         
         <ul><li>Examples</li></ul>
         
       </li>
   </ul>
 
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="sources/examples.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-          </div>
-        
+        </div>
       
     </div>
 
     <div id="ft">
       <div class="nav">
-    &laquo; <a href="getting_started.html" title="Getting started">previous</a>
+    &laquo; <a href="getting_started.html" title="Getting Started">previous</a>
      |
-    <a title="The C++ Network Library v0.7 documentation" href="index.html" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9.3 documentation" href="index.html" accesskey="U">up</a>
    |
     <a href="examples_http.html" title="HTTP examples">next</a> &raquo;</div>
     </div>
@@ -137,6 +147,7 @@ kinds of application.</p>
     </div>
   <div class="footer">
       documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+      | background image attributed to <a href="http://www.flickr.com/photos/OrangeSmell">OrangeSmell</a>
   </div>
 
   </body>

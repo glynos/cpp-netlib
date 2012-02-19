@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,42 +7,51 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>What’s New &mdash; The C++ Network Library v0.7 documentation</title>
-    <link rel="stylesheet" href="static/cpp-netlib.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <title>What’s New &mdash; cpp-netlib v0.9.3 documentation</title>
+    <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
-        VERSION:     '0.7',
-        COLLAPSE_MODINDEX: false,
+        URL_ROOT:    '',
+        VERSION:     '0.9.3',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="The C++ Network Library v0.7 documentation" href="index.html" />
-    <link rel="next" title="Getting started" href="getting_started.html" />
-    <link rel="prev" title="C++ Network Library" href="index.html" /> 
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" />
+    <link rel="prev" title="C++ Network Library" href="index.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
   </head>
   <body>
 
     <div class="document">
-  <div id="custom-doc" class="yui-t6">
+  <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">The C++ Network Library v0.7 documentation</a></h1>
-      <div id="global-nav">
-        <a title="Home page" href="index.html">Home</a>  |
-        <a title="Table of contents" href="contents.html">Table of contents</a>  |
-        <a title="Global index" href="genindex.html">Index</a>  |
-        <a title="Module index" href="modindex.html">Modules</a>
-      </div>
+      <h1><a href="index.html">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
     &laquo; <a href="index.html" title="C++ Network Library">previous</a>
      |
-    <a title="The C++ Network Library v0.7 documentation" href="index.html" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9.3 documentation" href="index.html" accesskey="U">up</a>
    |
-    <a href="getting_started.html" title="Getting started">next</a> &raquo;</div>
+    <a href="getting_started.html" title="Getting Started">next</a> &raquo;</div>
     </div>
 
     <div id="bd">
@@ -50,21 +61,94 @@
             
   <div class="section" id="what-s-new">
 <span id="whats-new"></span><h1>What&#8217;s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cpp-netlib-0-9">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9<a class="headerlink" href="#cpp-netlib-0-9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="v0-9-3">
+<h3>v0.9.3<a class="headerlink" href="#v0-9-3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Updated URI parser.</li>
+<li>A new URI builder.</li>
+<li>URI support for IPv6 RFC 2732.</li>
+<li>Fix issues #67, #72, #78, #79, #80, #81, #82, #83.</li>
+<li>New examples for the HTTP client, including an Atom feed, an RSS feed and a
+very simple client that uses the Twitter Search API.</li>
+</ul>
+</div>
+<div class="section" id="v0-9-2">
+<h3>v0.9.2<a class="headerlink" href="#v0-9-2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Critial bug fixes to v0.9.1.</li>
+</ul>
+</div>
+<div class="section" id="v0-9-1">
+<h3>v0.9.1<a class="headerlink" href="#v0-9-1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Introduced macro <tt class="docutils literal"><span class="pre">BOOST_NETWORK_DEFAULT_TAG</span></tt> to allow for programmatically
+defining the default flag to use throughout the compilation unit.</li>
+<li>Support for streaming body handlers when performing HTTP client operations.
+See documentation for HTTP client interface for more information.</li>
+<li>Numerous bug fixes from v0.9.0.</li>
+<li>Google, Inc. contributions.</li>
+</ul>
+</div>
+<div class="section" id="v0-9-0">
+<h3>v0.9.0<a class="headerlink" href="#v0-9-0" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>IMPORTANT BREAKING CHANGE</strong>: By default all compile-time heavy parser
+implementations are now compiled to external static libraries. In order to use
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> in header-only mode, users must define the preprocessor
+macro <tt class="docutils literal"><span class="pre">BOOST_NETWORK_NO_LIB</span></tt> before including any <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> header.
+This breaks code that relied on the version 0.8.x line where the library is
+strictly header-only.</li>
+<li>Fix issue #41: Introduce a macro <tt class="docutils literal"><span class="pre">BOOST_NETWORK_HTTP_CLIENT_DEFAULT_TAG</span></tt>
+which makes the default HTTP client use <tt class="docutils literal"><span class="pre">tags::http_async_8bit_udp_resolve</span></tt>
+as the tag.</li>
+<li>Fix issue #40: Write the status line and headers in a single buffer write
+instead of two writes.</li>
+<li>More consistent message API for client and server messages (request and
+response objects).</li>
+<li>Refactoring of internal implementations to allow better separation of concerns
+and more manageable coding/documentation.</li>
+<li>Client and server constructors that support Boost.Parameter named parameters.</li>
+<li>Client and server constructors now take in an optional reference to a Boost.Asio
+<tt class="docutils literal"><span class="pre">io_service</span></tt> to use internally.</li>
+<li>Documentation updates to reflect new APIs.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="cpp-netlib-0-8">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.8<a class="headerlink" href="#cpp-netlib-0-8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Updates to URI unit tests and documentation.</li>
+<li>More documentation, covering the HTTP Client and HTTP Server APIs</li>
+<li>Asynchronous HTTP Server that now supports running request handlers on a
+different thread pool.</li>
+<li>An initial thread pool implementation, using Boost.Asio underneath.</li>
+<li>Adding a ready(...) wrapper to check whether a response object returned by
+the asynchronous client in 0.7 already has all the parts available.</li>
+<li>Some attempts at lowering compile time costs.</li>
+</ul>
+</div>
 <div class="section" id="cpp-netlib-0-7">
-<h2><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7<a class="headerlink" href="#cpp-netlib-0-7" title="Permalink to this headline">¶</a></h2>
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7<a class="headerlink" href="#cpp-netlib-0-7" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Radical documentation overhaul</li>
-<li>Asynchronous HTPP client</li>
+<li>Asynchronous HTTP client</li>
+<li>Tag dispatch overhaul, using Boost.MPL</li>
+<li>HTTP Client Facade refactoring</li>
+<li>Bug fixes for HTTP 1.1 response parsing</li>
+<li>Minimized code repetition with some header macro&#8217;s</li>
+<li>Configurable HTTPS support in the library with <tt class="docutils literal"><span class="pre">BOOST_NETWORK_ENABLE_HTTPS</span></tt></li>
 </ul>
 </div>
 <div class="section" id="cpp-netlib-0-6">
-<h2><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6<a class="headerlink" href="#cpp-netlib-0-6" title="Permalink to this headline">¶</a></h2>
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6<a class="headerlink" href="#cpp-netlib-0-6" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Many fixes for MSVC compiler</li>
 </ul>
 </div>
 <div class="section" id="cpp-netlib-0-5">
-<h2><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> 0.5<a class="headerlink" href="#cpp-netlib-0-5" title="Permalink to this headline">¶</a></h2>
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.5<a class="headerlink" href="#cpp-netlib-0-5" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>An embeddable HTTP 1.1 server</li>
 <li>An HTTP 1.1 client upgraded to support HTTPS</li>
@@ -80,17 +164,24 @@
         </div>
       </div>
       
-        
-          <div class="yui-b" id="sidebar">
-            
+        <div class="yui-b" id="sidebar">
+          
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="index.html">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">What&#8217;s New</a><ul>
-<li><a class="reference external" href="#cpp-netlib-0-7"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7</a></li>
-<li><a class="reference external" href="#cpp-netlib-0-6"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6</a></li>
-<li><a class="reference external" href="#cpp-netlib-0-5"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.5</a></li>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">What&#8217;s New</a><ul>
+<li><a class="reference internal" href="#cpp-netlib-0-9"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9</a><ul>
+<li><a class="reference internal" href="#v0-9-3">v0.9.3</a></li>
+<li><a class="reference internal" href="#v0-9-2">v0.9.2</a></li>
+<li><a class="reference internal" href="#v0-9-1">v0.9.1</a></li>
+<li><a class="reference internal" href="#v0-9-0">v0.9.0</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cpp-netlib-0-8"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.8</a></li>
+<li><a class="reference internal" href="#cpp-netlib-0-7"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.7</a></li>
+<li><a class="reference internal" href="#cpp-netlib-0-6"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.6</a></li>
+<li><a class="reference internal" href="#cpp-netlib-0-5"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.5</a></li>
 </ul>
 </li>
 </ul>
@@ -101,41 +192,40 @@
       <li>Prev: <a href="index.html">C++ Network Library</a></li>
     
     
-      <li>Next: <a href="getting_started.html">Getting started</a></li>
+      <li>Next: <a href="getting_started.html">Getting Started</a></li>
     
   </ul>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">The C++ Network Library v0.7 documentation</a>
+        <a href="index.html">cpp-netlib v0.9.3 documentation</a>
         
         <ul><li>What&#8217;s New</li></ul>
         
       </li>
   </ul>
 
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="sources/whats_new.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/whats_new.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-          </div>
-        
+        </div>
       
     </div>
 
@@ -143,9 +233,9 @@
       <div class="nav">
     &laquo; <a href="index.html" title="C++ Network Library">previous</a>
      |
-    <a title="The C++ Network Library v0.7 documentation" href="index.html" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9.3 documentation" href="index.html" accesskey="U">up</a>
    |
-    <a href="getting_started.html" title="Getting started">next</a> &raquo;</div>
+    <a href="getting_started.html" title="Getting Started">next</a> &raquo;</div>
     </div>
   </div>
 
@@ -153,6 +243,7 @@
     </div>
   <div class="footer">
       documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+      | background image attributed to <a href="http://www.flickr.com/photos/OrangeSmell">OrangeSmell</a>
   </div>
 
   </body>

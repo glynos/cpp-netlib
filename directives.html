@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,37 +7,46 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Directives &mdash; The C++ Network Library v0.7 documentation</title>
-    <link rel="stylesheet" href="static/cpp-netlib.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <title>Directives &mdash; cpp-netlib v0.9.3 documentation</title>
+    <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
-        VERSION:     '0.7',
-        COLLAPSE_MODINDEX: false,
+        URL_ROOT:    '',
+        VERSION:     '0.9.3',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="The C++ Network Library v0.7 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
     <link rel="up" title="Techniques" href="techniques.html" />
     <link rel="next" title="Static and dynamic polymorphism" href="polymorphism.html" />
-    <link rel="prev" title="Tag metafunctions" href="tag_metafunctions.html" /> 
+    <link rel="prev" title="Tag metafunctions" href="tag_metafunctions.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
   </head>
   <body>
 
     <div class="document">
-  <div id="custom-doc" class="yui-t6">
+  <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">The C++ Network Library v0.7 documentation</a></h1>
-      <div id="global-nav">
-        <a title="Home page" href="index.html">Home</a>  |
-        <a title="Table of contents" href="contents.html">Table of contents</a>  |
-        <a title="Global index" href="genindex.html">Index</a>  |
-        <a title="Module index" href="modindex.html">Modules</a>
-      </div>
+      <h1><a href="index.html">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
     &laquo; <a href="tag_metafunctions.html" title="Tag metafunctions">previous</a>
      |
@@ -51,7 +62,7 @@
             
   <div class="section" id="directives">
 <h1>Directives<a class="headerlink" href="#directives" title="Permalink to this headline">¶</a></h1>
-<p>The <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> uses a technique for allowing message-passing
+<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> uses a technique for allowing message-passing
 semantics in a chainable fashion in the form of directives. The basic
 concept for directives is, in a general sense, an encapsulated
 transformation that can be applied to objects that abide by the
@@ -59,7 +70,7 @@ directive protocol.</p>
 <p>Using the object-oriented notion of message passing, where an object
 accepts a message (usually a function call) we define a simple DSEL in
 order for the protocol to be supported by certain object types. In the
-<tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> the protocol implemented is similar to that of the
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> the protocol implemented is similar to that of the
 standard iostream formatting system:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">object</span> <span class="o">&lt;&lt;</span> <span class="n">directive1</span><span class="p">(...)</span>
        <span class="o">&lt;&lt;</span> <span class="n">directive2</span><span class="p">(...)</span>
@@ -67,7 +78,7 @@ standard iostream formatting system:</p>
        <span class="o">&lt;&lt;</span> <span class="n">directiveN</span><span class="p">(...);</span>
 </pre></div>
 </div>
-<p>In <tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> the directives are simple function objects that
+<p>In <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> the directives are simple function objects that
 take a target object as reference and returns a reference to the same
 object as a result. In code the directive pattern looks like the
 following:</p>
@@ -97,13 +108,13 @@ to the specialization of the shift-left operator on the target type.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<div class="admonition-todo admonition " id="todo-0">
+<div class="admonition-todo admonition " id="index-0">
 <p class="first admonition-title">Todo</p>
 <p class="last">An example using a directive.</p>
 </div>
 <p>The rationale for implementing directives include the following:</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>Encapsulation</strong> - by moving logic into the directive types the
 target object&#8217;s interface can remain rudimentary and even hidden
 to the user&#8217;s immediate attention. Adding this layer of
@@ -125,7 +136,7 @@ by the directive.  Because the directives are self-contained
 objects, the state and other object references it keeps are only
 accessible to it and can be re-used in different contexts as well.</li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>Extending a system that uses directives is trivial in header-only
 systems because new directives are simply additive. The protocol is
 simple and can be applied to a broad class of situations.</p>
@@ -139,9 +150,8 @@ nesting of the directives can lead to prolonged compilation times.</p>
         </div>
       </div>
       
-        
-          <div class="yui-b" id="sidebar">
-            
+        <div class="yui-b" id="sidebar">
+          
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h3>Browse</h3>
@@ -156,7 +166,7 @@ nesting of the directives can lead to prolonged compilation times.</p>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">The C++ Network Library v0.7 documentation</a>
+        <a href="index.html">cpp-netlib v0.9.3 documentation</a>
         
           <ul><li><a href="techniques.html">Techniques</a>
         
@@ -165,28 +175,27 @@ nesting of the directives can lead to prolonged compilation times.</p>
       </li>
   </ul>
 
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="sources/directives.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/directives.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-          </div>
-        
+        </div>
       
     </div>
 
@@ -204,6 +213,7 @@ nesting of the directives can lead to prolonged compilation times.</p>
     </div>
   <div class="footer">
       documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+      | background image attributed to <a href="http://www.flickr.com/photos/OrangeSmell">OrangeSmell</a>
   </div>
 
   </body>

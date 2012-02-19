@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,43 +7,52 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HTTP client &mdash; The C++ Network Library v0.7 documentation</title>
-    <link rel="stylesheet" href="static/cpp-netlib.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <title>HTTP client &mdash; cpp-netlib v0.9.3 documentation</title>
+    <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
-        VERSION:     '0.7',
-        COLLAPSE_MODINDEX: false,
+        URL_ROOT:    '',
+        VERSION:     '0.9.3',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="The C++ Network Library v0.7 documentation" href="index.html" />
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.9.3 documentation" href="index.html" />
     <link rel="up" title="HTTP examples" href="examples_http.html" />
-    <link rel="next" title="“Hello world” HTTP server" href="hello_world_server.html" />
-    <link rel="prev" title="HTTP examples" href="examples_http.html" /> 
+    <link rel="next" title="Simple wget" href="simple_wget.html" />
+    <link rel="prev" title="HTTP examples" href="examples_http.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
   </head>
   <body>
 
     <div class="document">
-  <div id="custom-doc" class="yui-t6">
+  <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">The C++ Network Library v0.7 documentation</a></h1>
-      <div id="global-nav">
-        <a title="Home page" href="index.html">Home</a>  |
-        <a title="Table of contents" href="contents.html">Table of contents</a>  |
-        <a title="Global index" href="genindex.html">Index</a>  |
-        <a title="Module index" href="modindex.html">Modules</a>
-      </div>
+      <h1><a href="index.html">cpp-netlib v0.9.3 documentation</a></h1>
       <div class="nav">
     &laquo; <a href="examples_http.html" title="HTTP examples">previous</a>
      |
     <a href="examples.html" title="Examples" accesskey="U">up</a>
    |
-    <a href="hello_world_server.html" title="&amp;#8220;Hello world&amp;#8221; HTTP server">next</a> &raquo;</div>
+    <a href="simple_wget.html" title="Simple &lt;cite&gt;wget&lt;/cite&gt;">next</a> &raquo;</div>
     </div>
 
     <div id="bd">
@@ -51,21 +62,18 @@
             
   <div class="section" id="http-client">
 <span id="id1"></span><h1>HTTP client<a class="headerlink" href="#http-client" title="Permalink to this headline">¶</a></h1>
-<div class="admonition-todo admonition " id="todo-8">
-<p class="first admonition-title">Todo</p>
-<p class="last">Rewrite text, provide a CLI example.</p>
-</div>
 <p>The first code example is the simplest thing you can do with the
-<tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt>.  The application is a simple HTTP client, which can
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>.  The application is a simple HTTP client, which can
 be found in the subdirectory <tt class="docutils literal"><span class="pre">libs/network/example/http_client.cpp</span></tt>.
-All we are doing is creating and sending an HTTP request to a server
-and printing the response body.  Without further ado, the code to do
-this is as follows:</p>
+All this example doing is creating and sending an HTTP request to a server
+and printing the response body.</p>
+<div class="section" id="the-code">
+<h2>The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
+<p>Without further ado, the code to do this is as follows:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
 <span class="cp">#include &lt;iostream&gt;</span>
 
-<span class="kt">int</span>
-<span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
     <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
@@ -83,6 +91,26 @@ this is as follows:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="running-the-example">
+<h2>Running the example<a class="headerlink" href="#running-the-example" title="Permalink to this headline">¶</a></h2>
+<p>You can then run this to get the <a class="reference external" href="http://www.boost.org/">Boost</a> website:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/cpp-netlib-build
+<span class="nv">$ </span>make http_client
+<span class="nv">$ </span>./example/http_client http://www.boost.org/
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The instructions for all these examples assume that
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is build outside the source tree,
+according to <a class="reference external" href="http://www.cmake.org/Wiki/CMake_FAQ#What_is_an_.22out-of-source.22_build.3F">CMake conventions</a>.  For the sake of
+consistency we assume that this is in the
+<tt class="docutils literal"><span class="pre">~/cpp-netlib-build</span></tt> directory.</p>
+</div>
+</div>
+<div class="section" id="diving-into-the-code">
+<h2>Diving into the code<a class="headerlink" href="#diving-into-the-code" title="Permalink to this headline">¶</a></h2>
 <p>Since this is the first example, each line will be presented and
 explained in detail.</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
@@ -92,7 +120,7 @@ explained in detail.</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>First we create a <tt class="docutils literal"><span class="pre">client</span></tt> object.  The <tt class="docutils literal"><span class="pre">client</span></tt> contains all the
+<p>First we create a <tt class="docutils literal"><span class="pre">client</span></tt> object.  The <tt class="docutils literal"><span class="pre">client</span></tt> abstracts all the
 connection and protocol logic.  The default HTTP client is version
 1.1, as specified in <a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">RFC 2616</a>.</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
@@ -103,7 +131,7 @@ constructor argument.</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">header</span><span class="p">(</span><span class="s">&quot;Connection&quot;</span><span class="p">,</span> <span class="s">&quot;close&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
-<p><tt class="xref docutils literal"><span class="pre">cpp-netlib</span></tt> makes use of stream syntax and <em>directives</em> to allow
+<p><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> makes use of stream syntax and <em>directives</em> to allow
 developers to build complex message structures with greater
 flexibility and clarity.  Here, we add the HTTP header &#8220;Connection:
 close&#8221; to the request in order to signal that the connection will be
@@ -125,8 +153,8 @@ compress this to a single line:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">body</span><span class="p">(</span><span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="p">().</span><span class="n">get</span><span class="p">(</span><span class="n">http</span><span class="o">::</span><span class="n">request</span><span class="p">(</span><span class="s">&quot;http://www.boost.org/&quot;</span><span class="p">)));</span>
 </pre></div>
 </div>
-<p>Next we&#8217;ll develop a simple client/server application using
-<tt class="docutils literal"><span class="pre">http::server</span></tt> and <tt class="docutils literal"><span class="pre">http::client</span></tt>.</p>
+<p>The next example will introduce the <tt class="docutils literal"><span class="pre">uri</span></tt> class.</p>
+</div>
 </div>
 
 
@@ -134,24 +162,33 @@ compress this to a single line:</p>
         </div>
       </div>
       
-        
-          <div class="yui-b" id="sidebar">
-            
+        <div class="yui-b" id="sidebar">
+          
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">HTTP client</a><ul>
+<li><a class="reference internal" href="#the-code">The code</a></li>
+<li><a class="reference internal" href="#running-the-example">Running the example</a></li>
+<li><a class="reference internal" href="#diving-into-the-code">Diving into the code</a></li>
+</ul>
+</li>
+</ul>
+
   <h3>Browse</h3>
   <ul>
     
       <li>Prev: <a href="examples_http.html">HTTP examples</a></li>
     
     
-      <li>Next: <a href="hello_world_server.html">&#8220;Hello world&#8221; HTTP server</a></li>
+      <li>Next: <a href="simple_wget.html">Simple <cite>wget</cite></a></li>
     
   </ul>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">The C++ Network Library v0.7 documentation</a>
+        <a href="index.html">cpp-netlib v0.9.3 documentation</a>
         
           <ul><li><a href="examples.html">Examples</a>
         
@@ -162,28 +199,27 @@ compress this to a single line:</p>
       </li>
   </ul>
 
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="sources/http_client.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/http_client.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-          </div>
-        
+        </div>
       
     </div>
 
@@ -193,7 +229,7 @@ compress this to a single line:</p>
      |
     <a href="examples.html" title="Examples" accesskey="U">up</a>
    |
-    <a href="hello_world_server.html" title="&amp;#8220;Hello world&amp;#8221; HTTP server">next</a> &raquo;</div>
+    <a href="simple_wget.html" title="Simple &lt;cite&gt;wget&lt;/cite&gt;">next</a> &raquo;</div>
     </div>
   </div>
 
@@ -201,6 +237,7 @@ compress this to a single line:</p>
     </div>
   <div class="footer">
       documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+      | background image attributed to <a href="http://www.flickr.com/photos/OrangeSmell">OrangeSmell</a>
   </div>
 
   </body>
