@@ -145,18 +145,26 @@ the <tt class="docutils literal"><span class="pre">~/cpp-netlib</span></tt> dire
 build system to use our compiler of choice. This is done by running the
 <tt class="docutils literal"><span class="pre">cmake</span></tt> command at the top-level directory of <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> with
 additional parameters:</p>
-<div class="highlight-python"><pre>$ cd ~/cpp-netlib
+<div class="highlight-python"><pre>$ mkdir ~/cpp-netlib-build
+$ cd ~/cpp-netlib-build
 $ cmake -DCMAKE_BUILD_TYPE=Debug \
 &gt;       -DCMAKE_C_COMPILER=gcc   \
 &gt;       -DCMAKE_CXX_COMPILER=g++ \
-&gt;       .</pre>
+&gt;       ../cpp-netlib</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">While it&#8217;s not compulsory, it&#8217;s recommended that
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is built outside the source directory.
+For the purposes of documentation, we&#8217;ll assume that all
+builds are done in <tt class="docutils literal"><span class="pre">~/cpp-netlib-build</span></tt>.</p>
 </div>
 <div class="section" id="building-on-linux">
 <h3>Building on Linux<a class="headerlink" href="#building-on-linux" title="Permalink to this headline">¶</a></h3>
 <p>On Linux, this will generate the appropriate Makefiles that will enable you to
 build and run the tests and examples that come with <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>. To build
 the tests, you can run <tt class="docutils literal"><span class="pre">make</span></tt> in the same top-level directory of
-<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>:</p>
+<tt class="docutils literal"><span class="pre">~/cpp-netlib-build</span></tt>:</p>
 <div class="highlight-python"><pre>$ make</pre>
 </div>
 <div class="admonition note">
@@ -184,6 +192,23 @@ IDE and you would like to build cpp-netlib from within Visual Studio, you can
 look for the solution and project files as the artifacts of the call to
 <tt class="docutils literal"><span class="pre">cmake</span></tt> &#8211; the file should be named <tt class="docutils literal"><span class="pre">CPP-NETLIB.sln</span></tt> (the solution) along
 with a number of project files for Visual Studio.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>As of version 0.9.3, <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> produces three static
+libraries.  Using GCC on Linux these are:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">libcppnetlib</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">connections</span><span class="o">.</span><span class="n">a</span>
+<span class="n">libcppnetlib</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">parsers</span><span class="o">.</span><span class="n">a</span>
+<span class="n">libcppnetlib</span><span class="o">-</span><span class="n">uri</span><span class="o">.</span><span class="n">a</span>
+</pre></div>
+</div>
+<p>And using Visual C++ on Windows they are:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">cppnetlib</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">connections</span><span class="o">.</span><span class="n">lib</span>
+<span class="n">cppnetlib</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">parsers</span><span class="o">.</span><span class="n">lib</span>
+<span class="n">cppnetlib</span><span class="o">-</span><span class="n">uri</span><span class="o">.</span><span class="n">lib</span>
+</pre></div>
+</div>
+<p class="last">Users can find them in <tt class="docutils literal"><span class="pre">~/cpp-netlib-build/libs/network/src</span></tt>.</p>
+</div>
 </div>
 </div>
 <div class="section" id="reporting-issues-getting-support">

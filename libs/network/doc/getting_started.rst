@@ -119,11 +119,17 @@ build system to use our compiler of choice. This is done by running the
 ``cmake`` command at the top-level directory of :mod:`cpp-netlib` with
 additional parameters::
 
-    $ cd ~/cpp-netlib
+    $ mkdir ~/cpp-netlib-build
+    $ cd ~/cpp-netlib-build
     $ cmake -DCMAKE_BUILD_TYPE=Debug \
     >       -DCMAKE_C_COMPILER=gcc   \
     >       -DCMAKE_CXX_COMPILER=g++ \
-    >       .
+    >       ../cpp-netlib
+
+.. note:: While it's not compulsory, it's recommended that
+          :mod:`cpp-netlib` is built outside the source directory.
+          For the purposes of documentation, we'll assume that all
+          builds are done in ``~/cpp-netlib-build``.
 
 Building on Linux
 ~~~~~~~~~~~~~~~~~
@@ -131,7 +137,7 @@ Building on Linux
 On Linux, this will generate the appropriate Makefiles that will enable you to
 build and run the tests and examples that come with :mod:`cpp-netlib`. To build
 the tests, you can run ``make`` in the same top-level directory of
-:mod:`cpp-netlib`::
+``~/cpp-netlib-build``::
 
     $ make
 
@@ -161,6 +167,21 @@ IDE and you would like to build cpp-netlib from within Visual Studio, you can
 look for the solution and project files as the artifacts of the call to
 ``cmake`` -- the file should be named ``CPP-NETLIB.sln`` (the solution) along
 with a number of project files for Visual Studio.
+
+.. note:: As of version 0.9.3, :mod:`cpp-netlib` produces three static
+          libraries.  Using GCC on Linux these are::
+
+   	     libcppnetlib-client-connections.a
+	     libcppnetlib-server-parsers.a
+	     libcppnetlib-uri.a
+
+	  And using Visual C++ on Windows they are::
+
+   	     cppnetlib-client-connections.lib
+	     cppnetlib-server-parsers.lib
+	     cppnetlib-uri.lib
+
+	  Users can find them in ``~/cpp-netlib-build/libs/network/src``.
 
 Reporting Issues, Getting Support
 =================================
