@@ -1,3 +1,5 @@
+.. _examples:
+
 Examples
 ========
 
@@ -7,8 +9,4 @@ common networking protocols.  The following set of examples describe a
 series of realistic examples that use the :mod:`cpp-netlib` for these
 kinds of application.  All examples are built using CMake.
 
-.. toctree::
-   :maxdepth: 2
-
-   examples_http.rst
-
+.. include:: examples_http.rst

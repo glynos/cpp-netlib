@@ -30,27 +30,22 @@ Using the command line, the command to get the latest code is:
 
 ::
 
-    shell$ git clone git://github.com/mikhailberis/cpp-netlib.git
+    shell$ git clone git://github.com/cpp-netlib/cpp-netlib.git
 
 This should be enough information get to started.  To do more complex
 things with Git, such as pulling changes or checking out a new branch,
 refer to the `Git documentation`_.
 
-.. note:: If you look at the Git repository closely, this is the repository of
-   *mikhailberis* instead of *cpp-netlib*. The reason is that the main developer
-   and maintainer of the project is Dean Michael Berris, who goes by the alias
-   *mikhailberis* on the Internet.
-
-   Dean does the merging and maintenance of the whole library, similar to how
-   `Linus Torvalds`_ of the Linux project acts as the gatekeeper of the project.
-
-.. _`Linus Torvalds`: http://en.wikipedia.org/wiki/Linus_Torvalds
+.. note:: Previous versions of :mod:`cpp-netlib` referred to the
+   *mikhailberis* repository as the main development repository. This
+   account is still valid, but not always up-to-date. In interest of
+   consistency, the main repository has been changed to *cpp-netlib*.
 
 Windows users need to use msysGit_, and to invoke the command above
 from a shell.
 
 For fans of Subversion_, the same code can be checked out from
-http://svn.github.com/mikhailberis/cpp-netlib.git.
+http://svn.github.com/cpp-netlib/cpp-netlib.git.
 
 .. _Git: http://git-scm.com/
 .. _`Git documentation`: http://git-scm.com/documentation
