@@ -1,3 +1,5 @@
+.. _in_depth:
+
 An in-depth look at the :mod:`cpp-netlib`
 =========================================
 
@@ -8,6 +10,6 @@ different **protocol** implementations.
 .. toctree::
    :maxdepth: 2
 
-   message.rst
-   uri.rst
-   http.rst
+   in_depth/message
+   in_depth/uri
+   in_depth/http
