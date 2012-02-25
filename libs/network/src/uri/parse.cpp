@@ -11,22 +11,22 @@
 
 BOOST_FUSION_ADAPT_TPL_STRUCT
 (
-    (String),
-    (boost::network::uri::detail::hierarchical_part)(String),
-    (boost::optional<String>, user_info)
-    (boost::optional<String>, host)
-    (boost::optional<String>, port)
-    (boost::optional<String>, path)
+    (FwdIter),
+    (boost::network::uri::detail::hierarchical_part)(FwdIter),
+    (boost::optional<boost::iterator_range<FwdIter> >, user_info)
+    (boost::optional<boost::iterator_range<FwdIter> >, host)
+    (boost::optional<boost::iterator_range<FwdIter> >, port)
+    (boost::optional<boost::iterator_range<FwdIter> >, path)
     );
 
 BOOST_FUSION_ADAPT_TPL_STRUCT
 (
-    (String),
-    (boost::network::uri::detail::uri_parts)(String),
-    (String, scheme)
-    (boost::network::uri::detail::hierarchical_part<String>, hier_part)
-    (boost::optional<String>, query)
-    (boost::optional<String>, fragment)
+    (FwdIter),
+    (boost::network::uri::detail::uri_parts)(FwdIter),
+    (boost::iterator_range<FwdIter>, scheme)
+    (boost::network::uri::detail::hierarchical_part<FwdIter>, hier_part)
+    (boost::optional<boost::iterator_range<FwdIter> >, query)
+    (boost::optional<boost::iterator_range<FwdIter> >, fragment)
     );
 
 namespace boost {
@@ -40,7 +40,7 @@ template <
     >
 struct uri_grammar : qi::grammar<
     typename String::const_iterator
-  , detail::uri_parts<String>()> {
+    , detail::uri_parts<typename String::const_iterator>()> {
 
     typedef String string_type;
     typedef typename String::const_iterator const_iterator;
@@ -176,9 +176,9 @@ struct uri_grammar : qi::grammar<
                 )
             |
             (
-                    qi::attr(string_type())
-                >>  qi::attr(string_type())
-                >>  qi::attr(string_type())
+                    qi::attr(iterator_range<const_iterator>())
+                >>  qi::attr(iterator_range<const_iterator>())
+                >>  qi::attr(iterator_range<const_iterator>())
                 >>  (
                     path_absolute
                     |   path_rootless
@@ -195,14 +195,14 @@ struct uri_grammar : qi::grammar<
             ;
     }
 
-    qi::rule<const_iterator, typename string_type::value_type()>
+    qi::rule<const_iterator, typename iterator_range<const_iterator>::value_type()>
     gen_delims, sub_delims, reserved, unreserved;
     qi::rule<const_iterator, string_type()>
     pct_encoded, pchar;
 
     qi::rule<const_iterator, string_type()>
     segment, segment_nz, segment_nz_nc;
-    qi::rule<const_iterator, string_type()>
+    qi::rule<const_iterator, iterator_range<const_iterator>()>
     path_abempty, path_absolute, path_rootless, path_empty;
 
     qi::rule<const_iterator, string_type()>
@@ -211,23 +211,23 @@ struct uri_grammar : qi::grammar<
     qi::rule<const_iterator, string_type()>
     h16, ls32;
 
-    qi::rule<const_iterator, string_type()>
+    qi::rule<const_iterator, iterator_range<const_iterator>()>
     host, port;
 
-    qi::rule<const_iterator, string_type()>
+    qi::rule<const_iterator, iterator_range<const_iterator>()>
     scheme, user_info, query, fragment;
 
-    qi::rule<const_iterator, hierarchical_part<string_type>()>
+    qi::rule<const_iterator, hierarchical_part<const_iterator>()>
     hier_part;
 
     // actual uri parser
-    qi::rule<const_iterator, uri_parts<string_type>()> start;
+    qi::rule<const_iterator, uri_parts<const_iterator>()> start;
 
 };
 
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
-           uri_parts<std::string> &parts) {
+           uri_parts<std::string::const_iterator> &parts) {
     namespace qi = boost::spirit::qi;
     static detail::uri_grammar<std::string> grammar;
     bool is_valid = qi::parse(first, last, grammar, parts);

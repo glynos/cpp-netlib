@@ -7,6 +7,7 @@
 # define BOOST_NETWORK_URL_DETAIL_URL_PARTS_HPP_
 
 
+# include <boost/range/iterator_range.hpp>
 # include <boost/optional.hpp>
 
 
@@ -15,32 +16,32 @@ namespace network {
 namespace uri {
 namespace detail {
 template <
-    class String
+    class FwdIter
     >
 struct hierarchical_part {
-    boost::optional<String> user_info;
-    boost::optional<String> host;
-    boost::optional<String> port;
-    boost::optional<String> path;
+    optional<iterator_range<FwdIter> > user_info;
+    optional<iterator_range<FwdIter> > host;
+    optional<iterator_range<FwdIter> > port;
+    optional<iterator_range<FwdIter> > path;
 };
 
 template <
-    class String
+    class FwdIter
     >
 struct uri_parts {
-    String scheme;
-    hierarchical_part<String> hier_part;
-    boost::optional<String> query;
-    boost::optional<String> fragment;
+    iterator_range<FwdIter> scheme;
+    hierarchical_part<FwdIter> hier_part;
+    optional<iterator_range<FwdIter> > query;
+    optional<iterator_range<FwdIter> > fragment;
 
     void clear() {
-        scheme.clear();
-        hier_part.user_info = boost::optional<String>();
-        hier_part.host = boost::optional<String>();
-        hier_part.port = boost::optional<String>();
-        hier_part.path = boost::optional<String>();
-        query = boost::optional<String>();
-        fragment = boost::optional<String>();
+        scheme = iterator_range<FwdIter>();
+        hier_part.user_info = optional<iterator_range<FwdIter> >();
+        hier_part.host = optional<iterator_range<FwdIter> >();
+        hier_part.port = optional<iterator_range<FwdIter> >();
+        hier_part.path = optional<iterator_range<FwdIter> >();
+        query = optional<iterator_range<FwdIter> >();
+        fragment = optional<iterator_range<FwdIter> >();
     }
 };
 } // namespace detail
