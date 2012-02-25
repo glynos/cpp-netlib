@@ -38,7 +38,7 @@ refer to the `Git documentation`_.
 
 .. note:: Previous versions of :mod:`cpp-netlib` referred to the
    *mikhailberis* repository as the main development repository. This
-   account is still valid, but not always up-to-date. In interest of
+   account is still valid, but not always up-to-date. In the interest of
    consistency, the main repository has been changed to *cpp-netlib*.
 
 Windows users need to use msysGit_, and to invoke the command above

@@ -2,11 +2,10 @@
 
 html,body
 {
-    background-image: url('./orange-background.jpg');
     background-repeat: no-repeat;
     background-position: left top;
     background-attachment: fixed;
-    background-color: black;
+    background-color: #f80;
 }
 
 body
@@ -158,9 +157,9 @@ a.reference em
 div.nav
 {
     margin: 0;
-    font-size: 12px;
+    font-size: 14px;
     text-align: right;
-    color: #487858
+    color: #fff
 }
 
 div.nav a: link,div.nav a: visited
@@ -539,7 +538,7 @@ dt .literal,table .literal
 {
     padding: .8em 1em .8em;
     margin: 1em 0;
-    background-color: #E8FFE8;
+    background-color: #6ABDFB;
     -moz-border-radius: 3px;
     -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.3);
     -webkit-border-radius: 3px;
@@ -560,16 +559,16 @@ dt .literal,table .literal
     margin-bottom: 0 !important
 }
 
-div.admonition-philosophy
+.note
 {
-    padding-left: 65px;
-    background: url(docicons-philosophy.png) .8em .8em no-repeat
+    padding-left: 85px;
+    background: #6ABDFB url(Button-Info-icon.png) .8em .8em no-repeat
 }
 
-div.admonition-behind-the-scenes
+.warning
 {
-    padding-left: 65px;
-    background: url(docicons-behindscenes.png) .8em .8em no-repeat
+    padding-left: 85px;
+    background: #6ABDFB url(Button-Warning-icon.png) .8em .8em no-repeat
 }
 
 /*** versoinadded/changes ***/
@@ -671,7 +670,7 @@ img
 }
 
 #index #cpp-netlib-getting-cpp-netlib, #index #cpp-netlib-boost {
-    background:none repeat scroll 0 0 #E8FFE8;
+    background:none repeat scroll 0 0 #6ABDFB;
     margin: 2em 0 2em 2em;
 
     border-radius:6px 6px;

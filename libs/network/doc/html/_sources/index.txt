@@ -115,9 +115,11 @@ Want to learn more?
     * :ref:`Study the library in more depth <in_depth>`
     * :ref:`Discover more through the full reference <reference>`
 
-.. warning:: Be aware that not all features are stable.  The message
-   design is under review and the HTTP client implementation will
-   undergo a major refactoring.
+.. warning:: Be aware that not all features are stable.  The generic
+   	     message design is under review and the URI and HTTP
+   	     client implementation will continue to undergo
+   	     refactoring.  Future versions will include support for
+   	     other network protocols.
 
 
 .. _Boost: http://www.boost.org/

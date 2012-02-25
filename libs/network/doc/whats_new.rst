@@ -9,6 +9,7 @@
 
 v0.9.3
 ~~~~~~
+* URI, HTTP client and HTTP server are now built as static libraries.
 * Updated URI parser.
 * A new URI builder.
 * URI support for IPv6 RFC 2732.
