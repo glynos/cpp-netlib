@@ -56,7 +56,7 @@ struct query_key_query_directive {
         }
         else
         {
-            uri.append(";");
+            uri.append("&");
         }
         uri.append(key);
         uri.append("=");
