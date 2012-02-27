@@ -9,13 +9,22 @@
 
 v0.9.3
 ~~~~~~
-* URI, HTTP client and HTTP server are now built as static libraries.
+* URI, HTTP client and HTTP server are now built as static libraries (``libcppnetlib-uri.a``, ``libcppnetlib-client-connections.a`` and ``libcppnetlib-server-parsers.a`` on Linux and ``cppnetlib-uri.lib``, ``cppnetlib-client-connections.lib`` and ``cppnetlib-server-parsers.lib`` on Windows).
 * Updated URI parser.
 * A new URI builder.
 * URI support for IPv6 RFC 2732.
-* Fix issues #67, #72, #78, #79, #80, #81, #82, #83.
+* Fixed issues `#67`_, `#72`_, `#78`_, `#79`_, `#80`_, `#81`_, `#82`_, `#83`_.
 * New examples for the HTTP client, including an Atom feed, an RSS feed and a
   very simple client that uses the Twitter Search API.
+
+.. _`#67`: https://github.com/cpp-netlib/cpp-netlib/issues/67
+.. _`#72`: https://github.com/cpp-netlib/cpp-netlib/issues/72
+.. _`#78`: https://github.com/cpp-netlib/cpp-netlib/issues/78
+.. _`#79`: https://github.com/cpp-netlib/cpp-netlib/issues/79
+.. _`#80`: https://github.com/cpp-netlib/cpp-netlib/issues/80
+.. _`#81`: https://github.com/cpp-netlib/cpp-netlib/issues/81
+.. _`#82`: https://github.com/cpp-netlib/cpp-netlib/issues/82
+.. _`#83`: https://github.com/cpp-netlib/cpp-netlib/issues/83
 
 v0.9.2
 ~~~~~~
