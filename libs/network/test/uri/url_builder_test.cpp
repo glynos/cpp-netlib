@@ -129,15 +129,25 @@ BOOST_AUTO_TEST_CASE(from_root_test)
     BOOST_CHECK_EQUAL(uri::fragment(instance), "fragment");
 }
 
-//BOOST_AUTO_TEST_CASE(scheme_test)
-//{
-//    uri_type instance;
-//    instance << uri::schemes::http << uri::host("www.example.com") << uri::path("/");
-//    BOOST_REQUIRE(uri::valid(instance));
-//    BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
-//    BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
-//    BOOST_CHECK_EQUAL(uri::path(instance), "/");
-//}
+BOOST_AUTO_TEST_CASE(scheme_http_test)
+{
+    uri::uri instance;
+    instance << uri::schemes::http << uri::host("www.example.com") << uri::path("/");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
+    BOOST_CHECK_EQUAL(uri::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(scheme_https_test)
+{
+    uri::uri instance;
+    instance << uri::schemes::https << uri::host("www.example.com") << uri::path("/");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::scheme(instance), "https");
+    BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
+    BOOST_CHECK_EQUAL(uri::path(instance), "/");
+}
 
 BOOST_AUTO_TEST_CASE(encoded_null_char_test)
 {

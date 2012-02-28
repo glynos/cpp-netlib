@@ -37,6 +37,18 @@ inline
 scheme_directive scheme(const std::string &scheme) {
     return scheme_directive(scheme);
 }
+
+namespace schemes {
+inline
+uri &http(uri &uri_) {
+    return uri_ << scheme("http");
+}
+
+inline
+uri &https(uri &uri_) {
+    return uri_ << scheme("https");
+}
+} // namespace schemes
 } // namespace uri
 } // namespace network
 } // namespace boost
