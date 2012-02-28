@@ -21,19 +21,24 @@ project network_test :
         <variant>debug:<define>BOOST_NETWORK_DEBUG
     ;
 
-exe http_client : http_client.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+exe uri : uri.cpp /cpp-netlib//cppnetlib-uri ;
 
-# exe dispatch_table : dispatch_table.cpp ;
+exe http_client : http_client.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
 
-exe uri : uri.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+exe http_client1 : http_client1.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
 
-exe simple_wget : simple_wget.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+exe simple_wget : simple_wget.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
+
+exe atom_reader : atom/main.cpp atom/atom.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
+
+exe rss_reader : rss/main.cpp rss/rss.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
+
+exe twitter_search : twitter/search.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
 
 exe hello_world_server : http/hello_world_server.cpp /cpp-netlib//cppnetlib-server-parsers ;
 
-exe hello_world_client : http/hello_world_client.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+exe hello_world_client : http/hello_world_client.cpp /cpp-netlib//cppnetlib-uri ;
 
-exe one_liner : http/one_liner.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+exe one_liner : http/one_liner.cpp /cpp-netlib//cppnetlib-uri ;
 
 exe fileserver : http/fileserver.cpp /cpp-netlib//cppnetlib-server-parsers ;
-

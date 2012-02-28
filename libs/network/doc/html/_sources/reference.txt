@@ -1,3 +1,4 @@
+.. _reference:
 
 Reference Manual
 ================
@@ -8,8 +9,8 @@ to the different client and/or server implementations within :mod:`cpp-netlib`.
 .. toctree::
    :maxdepth: 2
 
-   reference_http_client.rst
-   reference_http_request.rst
-   reference_http_response.rst
-   reference_http_server.rst
+   reference/http_client
+   reference/http_request
+   reference/http_response
+   reference/http_server
 

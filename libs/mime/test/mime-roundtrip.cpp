@@ -87,7 +87,9 @@ init_unit_test_suite( int argc, char* argv[] )
     framework::master_test_suite().add ( BOOST_TEST_CASE( boost::bind ( test_roundtrip, "TestMessages/00000019" )));
     framework::master_test_suite().add ( BOOST_TEST_CASE( boost::bind ( test_roundtrip, "TestMessages/00000431" )));
     framework::master_test_suite().add ( BOOST_TEST_CASE( boost::bind ( test_roundtrip, "TestMessages/00000975" )));
-    framework::master_test_suite().add ( BOOST_TEST_CASE( boost::bind ( test_roundtrip, "TestMessages/00001136" )));
+
+// Following test is removed because the file it used often tripped false-positives when scanned by virus checkers.
+//    framework::master_test_suite().add ( BOOST_TEST_CASE( boost::bind ( test_roundtrip, "TestMessages/00001136" )));
 
 //	test cases that fail
 //  framework::master_test_suite().add ( BOOST_TEST_CASE( boost::bind ( test_roundtrip, "TestMessages/0019-NoBoundary" )));

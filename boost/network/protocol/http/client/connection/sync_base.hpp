@@ -130,8 +130,9 @@ namespace boost { namespace network { namespace http { namespace impl {
                 }
                 if (boost::iequals(boost::begin(transfer_encoding_range)->second, "chunked")) {
                     bool stopping = false;
-                    do { 
+                    do {
                         std::size_t chunk_size_line = read_until(socket_, response_buffer, "\r\n", error);
+                        std::size_t tooMuchRead = response_buffer.size() - chunk_size_line;
                         if ((chunk_size_line == 0) && (error != boost::asio::error::eof)) throw boost::system::system_error(error);
                         std::size_t chunk_size = 0;
                         string_type data;
@@ -148,7 +149,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                         } else {
                             bool stopping_inner = false;
                             do {
-                                std::size_t chunk_bytes_read = read(socket_, response_buffer, boost::asio::transfer_at_least(chunk_size + 2), error);
+                                assert( tooMuchRead <= chunk_size + 2 );
+                                std::size_t chunk_bytes_read = read(socket_, response_buffer, boost::asio::transfer_at_least(chunk_size + 2 - tooMuchRead), error);
                                 if (chunk_bytes_read == 0) {
                                     if (error != boost::asio::error::eof) throw boost::system::system_error(error);
                                     stopping_inner = true;
@@ -163,7 +165,7 @@ namespace boost { namespace network { namespace http { namespace impl {
 
                             if (chunk_size != 0)
                                 throw std::runtime_error("Size mismatch between tranfer encoding chunk data size and declared chunk size.");
-                        } 
+                        }
                     } while (!stopping);
                 } else throw std::runtime_error("Unsupported Transfer-Encoding.");
             } else {
@@ -177,7 +179,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 while ((bytes_read = boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error))) {
                     body_stream << &response_buffer;
                     length -= bytes_read;
-                    if ((length <= 0) or error)
+                    if ((length <= 0) || error)
                         break;
                 }
             }

@@ -658,7 +658,7 @@ private:
 	void check_subpart_index ( size_t idx ) const {
 		if ( get_part_kind () == simple_part )
 			throw std::runtime_error ( "Simple Mime parts don't have sub-parts" );
-		else if ( get_part_kind == multi_part ) {
+		else if ( get_part_kind () == multi_part ) {
 				if ( idx >= m_subparts.size ())
 					throw std::runtime_error ( 
 						str ( boost::format ( "Trying to access part %d (of %d) sub-part to a multipart/xxx mime part" ) % idx %  m_subparts.size ()));

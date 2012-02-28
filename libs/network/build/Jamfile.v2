@@ -18,13 +18,13 @@ project cpp-netlib :
 
 cpp-pch client : boost/network/include/http/client.hpp ;
 cpp-pch server : boost/network/include/http/server.hpp ;
-lib cppnetlib-uri-parsers : libs/network/src/parse_uri_impl.cpp ;
+lib cppnetlib-uri : libs/network/src/uri/parse.cpp ;
 lib cppnetlib-server-parsers : libs/network/src/server_request_parsers_impl.cpp ;
+lib cppnetlib-client-connections : libs/network/src/client.cpp ;
 
 install headers : client server
    : <location>../../../boost/network/include/http ;
 
-install libraries : cppnetlib-uri-parsers cppnetlib-server-parsers ;
+install libraries : cppnetlib-uri cppnetlib-server-parsers cppnetlib-client-connections ;
 
-alias all : headers ; 
-
+alias all : headers ;

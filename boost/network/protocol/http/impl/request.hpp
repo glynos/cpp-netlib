@@ -15,8 +15,9 @@
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
 
-#include <boost/network/uri/http/uri.hpp>
+#include <boost/network/uri/uri.hpp>
 #include <boost/network/traits/vector.hpp>
+#include <boost/network/constants.hpp>
 
 #include <boost/network/protocol/http/message/async_message.hpp>
 #include <boost/network/support/is_async.hpp>
@@ -50,7 +51,7 @@ namespace http {
     struct basic_request : public basic_message<Tag>
     {
 
-        mutable boost::network::uri::http::basic_uri<Tag> uri_;
+        mutable boost::network::uri::uri uri_;
         typedef basic_message<Tag> base_type;
 
     public:
@@ -62,7 +63,15 @@ namespace http {
         : uri_(uri_)
         { }
 
+        explicit basic_request(boost::network::uri::uri const & uri_)
+        : uri_(uri_)
+        { }
+
         void uri(string_type const & new_uri) {
+            uri_ = new_uri;
+        }
+
+        void uri(boost::network::uri::uri const & new_uri) {
             uri_ = new_uri;
         }
 
@@ -80,11 +89,10 @@ namespace http {
         }
 
         void swap(basic_request & other) {
-            using boost::network::uri::swap;
             base_type & base_ref(other);
             basic_request<Tag> & this_ref(*this);
             base_ref.swap(this_ref);
-            swap(other.uri_, this->uri_);
+            boost::swap(other.uri_, this->uri_);
         }
 
         string_type const host() const {
@@ -92,7 +100,14 @@ namespace http {
         }
 
         port_type port() const {
-            return uri::port_us(uri_);
+            boost::optional<port_type> port = uri::port_us(uri_);
+            if (!port)
+            {
+                typedef constants<Tag> consts;
+                return boost::iequals(uri_.scheme(),
+                                      string_type(consts::https()))? 443 : 80;
+            }
+            return *port;
         }
 
         string_type const path() const {
@@ -115,7 +130,7 @@ namespace http {
             uri_ = new_uri;
         }
 
-        boost::network::uri::http::basic_uri<Tag> const & uri() const {
+        boost::network::uri::uri const & uri() const {
             return uri_;
         }
 
