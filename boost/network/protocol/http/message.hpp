@@ -60,7 +60,7 @@ namespace boost { namespace network { namespace http {
              * @param output decoded string ( may include non-text chars)
              * @return true if successful, false if input string contains non-base64 symbols
              */
-            static bool const base64_decode(string_type const &input, string_type & output);
+            static bool base64_decode(string_type const &input, string_type & output);
         
             /** encodes strings using base64
              *
@@ -68,7 +68,7 @@ namespace boost { namespace network { namespace http {
              * @param output base64 encoded string
              * @return true if successful
              */
-            static bool const base64_encode(string_type const &input, string_type & output);
+            static bool base64_encode(string_type const &input, string_type & output);
 
     protected:
         mutable string_type version_;
@@ -100,7 +100,7 @@ namespace boost { namespace network { namespace http {
             status_ = status;
         }
 
-        boost::uint16_t const status() const {
+        boost::uint16_t status() const {
             return status_;
         }
 

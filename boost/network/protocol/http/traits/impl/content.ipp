@@ -13,22 +13,22 @@ namespace boost { namespace network { namespace http {
 
     template <>
         struct content<tags::http_default_8bit_tcp_resolve> {
-            static char const * const type_html() {
+            static char const * type_html() {
                 static char const * const TYPE_HTML = "text/html";
                 return TYPE_HTML;
             };
 
-            static char const * const type_text() {
+            static char const * type_text() {
                 static char const * const TYPE_TEXT = "text/plain";
                 return TYPE_TEXT;
             };
 
-            static char const * const type_xml() {
+            static char const * type_xml() {
                 static char const * const TYPE_XML = "text/xml";
                 return TYPE_XML;
             };
 
-            static char const * const type_urlencoded() {
+            static char const * type_urlencoded() {
                 static char const * const TYPE_URLENCODED = "application/x-www-form-urlencoded";
                 return TYPE_URLENCODED;
             };
