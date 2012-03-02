@@ -130,37 +130,37 @@ public:
 
     string_type scheme() const {
         const_range_type range = scheme_range();
-        return string_type(boost::begin(range), boost::end(range));
+        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type user_info() const {
         const_range_type range = user_info_range();
-        return string_type(boost::begin(range), boost::end(range));
+        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type host() const {
         const_range_type range = host_range();
-        return string_type(boost::begin(range), boost::end(range));
+        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type port() const {
         const_range_type range = port_range();
-        return string_type(boost::begin(range), boost::end(range));
+        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type path() const {
         const_range_type range = path_range();
-        return string_type(boost::begin(range), boost::end(range));
+        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type query() const {
         const_range_type range = query_range();
-        return string_type(boost::begin(range), boost::end(range));
+        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type fragment() const {
         const_range_type range = fragment_range();
-        return string_type(boost::begin(range), boost::end(range));
+        return range? string_type(boost::begin(range), boost::end(range)) : string_type();
     }
 
     string_type string() const {
