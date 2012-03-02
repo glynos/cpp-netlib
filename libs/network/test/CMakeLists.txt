@@ -16,8 +16,10 @@ if (Boost_FOUND)
         utils_thread_pool
         )
     foreach (test ${TESTS})
-        set_source_files_properties(${test}.cpp
+        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+          set_source_files_properties(${test}.cpp
             PROPERTIES COMPILE_FLAGS "-Wall")
+        endif()
         add_executable(cpp-netlib-${test} ${test}.cpp)
 	add_dependencies(cpp-netlib-${test} cppnetlib-uri)
         target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri)

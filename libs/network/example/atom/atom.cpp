@@ -14,9 +14,9 @@ namespace boost {
 namespace network {
 namespace atom {
 feed::feed(const http::client::response &response) {
-	std::string response_body = body(response);
+    std::string response_body = body(response);
     rapidxml::xml_document<> doc;
-	doc.parse<0>(const_cast<char *>(response_body.c_str()));
+    doc.parse<0>(const_cast<char *>(response_body.c_str()));
 
     rapidxml::xml_node<> *feed = doc.first_node("feed");
     if (!feed) {
@@ -51,7 +51,7 @@ feed::feed(const http::client::response &response) {
             author_ = atom::author(name->first_node()->value(), email->first_node()->value());
         }
         else if (name) {
-			author_ = atom::author(name->first_node()->value());
+            author_ = atom::author(name->first_node()->value());
         }
     }
 
@@ -89,7 +89,7 @@ feed::feed(const http::client::response &response) {
             entries_.back().set_content(content->first_node()->value());
         }
 
-		entry = entry->next_sibling();
+        entry = entry->next_sibling();
     }
 }
 } // namespace atom

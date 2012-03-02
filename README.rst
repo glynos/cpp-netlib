@@ -105,10 +105,9 @@ you will need. These are:
   * A build tool (CMake [#]_ recommended, Boost.Build also an option)
   * OpenSSL headers (optional)
 
-.. note:: This assumes that you have the cpp-netlib distribution package
-   unpacked somwhere in your home directory. This specifically assumes that you
-   have cpp-netlib at the toplevel of your home directory.
-.. [#] http://www.cmake.org/
+.. note:: This assumes that you have cpp-netlib at the top-level of
+          your home directory.
+  [#] http://www.cmake.org/
 
 Hacking on cpp-netlib
 ---------------------

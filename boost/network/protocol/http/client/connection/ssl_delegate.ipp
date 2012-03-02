@@ -33,7 +33,7 @@ void boost::network::http::impl::ssl_delegate::connect(
   socket_.reset(new asio::ssl::stream<asio::ip::tcp::socket>(service_, *context_));
   socket_->lowest_layer().async_connect(
       endpoint,
-      bind(&boost::network::http::impl::ssl_delegate::handle_connected,
+      ::boost::bind(&boost::network::http::impl::ssl_delegate::handle_connected,
            boost::network::http::impl::ssl_delegate::shared_from_this(),
            asio::placeholders::error,
            handler));

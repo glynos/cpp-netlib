@@ -15,7 +15,6 @@
 
 using namespace boost::network;
 
-BOOST_AUTO_TEST_CASE_EXPECTED_FAILURES(basic_uri_test, 1)
 BOOST_AUTO_TEST_CASE(basic_uri_test) {
     uri::uri instance("http://www.example.com/");
     BOOST_REQUIRE(uri::valid(instance));
@@ -26,6 +25,21 @@ BOOST_AUTO_TEST_CASE(basic_uri_test) {
     BOOST_CHECK_EQUAL(uri::path(instance), "/");
     BOOST_CHECK_EQUAL(uri::query(instance), "");
     BOOST_CHECK_EQUAL(uri::fragment(instance), "");
+}
+
+BOOST_AUTO_TEST_CASE(basic_uri_range_test) {
+    uri::uri instance("http://www.example.com/");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK(instance.scheme_range());
+    BOOST_CHECK(boost::equal(instance.scheme_range(), boost::as_literal("http")));
+    BOOST_CHECK(!instance.user_info_range());
+    BOOST_CHECK(instance.host_range());
+    BOOST_CHECK(boost::equal(instance.host_range(), boost::as_literal("www.example.com")));
+    BOOST_CHECK(!instance.port_range());
+    BOOST_CHECK(instance.path_range());
+    BOOST_CHECK(boost::equal(instance.path_range(), boost::as_literal("/")));
+    BOOST_CHECK(!instance.query_range());
+    BOOST_CHECK(!instance.fragment_range());
 }
 
 BOOST_AUTO_TEST_CASE(full_uri_test) {
@@ -40,6 +54,25 @@ BOOST_AUTO_TEST_CASE(full_uri_test) {
     BOOST_CHECK_EQUAL(uri::path(instance), "/path");
     BOOST_CHECK_EQUAL(uri::query(instance), "query");
     BOOST_CHECK_EQUAL(uri::fragment(instance), "fragment");
+}
+
+BOOST_AUTO_TEST_CASE(full_uri_range_test) {
+    uri::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK(instance.scheme_range());
+    BOOST_CHECK(boost::equal(instance.scheme_range(), boost::as_literal("http")));
+    BOOST_CHECK(instance.user_info_range());
+    BOOST_CHECK(boost::equal(instance.user_info_range(), boost::as_literal("user:password")));
+    BOOST_CHECK(instance.host_range());
+    BOOST_CHECK(boost::equal(instance.host_range(), boost::as_literal("www.example.com")));
+    BOOST_CHECK(instance.port_range());
+    BOOST_CHECK(boost::equal(instance.port_range(), boost::as_literal("80")));
+    BOOST_CHECK(instance.path_range());
+    BOOST_CHECK(boost::equal(instance.path_range(), boost::as_literal("/path")));
+    BOOST_CHECK(instance.query_range());
+    BOOST_CHECK(boost::equal(instance.query_range(), boost::as_literal("query")));
+    BOOST_CHECK(instance.fragment_range());
+    BOOST_CHECK(boost::equal(instance.fragment_range(), boost::as_literal("fragment")));
 }
 
 BOOST_AUTO_TEST_CASE(mailto_test) {

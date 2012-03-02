@@ -1,4 +1,4 @@
-// Copyright 2009, 2010, 2011 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
+// Copyright 2009, 2010, 2011, 2012 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -22,7 +22,7 @@ namespace uri {
 namespace detail {
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
-           uri_parts<std::string> &parts);
+           uri_parts<std::string::const_iterator> &parts);
 } // namespace detail
 
 
@@ -32,8 +32,8 @@ class uri
 public:
 
     typedef std::string string_type;
-    typedef string_type::iterator iterator;
     typedef string_type::const_iterator const_iterator;
+    typedef boost::iterator_range<std::string::const_iterator> const_range_type;
 
     uri()
         : is_valid_(false) {
@@ -80,60 +80,87 @@ public:
         parse();
     }
 
-    iterator begin() {
-        return uri_.begin();
-    }
-
     const_iterator begin() const {
         return uri_.begin();
-    }
-
-    iterator end() {
-        return uri_.end();
     }
 
     const_iterator end() const {
         return uri_.end();
     }
 
-    string_type scheme() const {
+    const_range_type scheme_range() const {
         return uri_parts_.scheme;
     }
 
-    string_type user_info() const {
+    const_range_type user_info_range() const {
         return uri_parts_.hier_part.user_info?
             uri_parts_.hier_part.user_info.get() :
-            string_type();
+            const_range_type();
+    }
+
+    const_range_type host_range() const {
+        return uri_parts_.hier_part.host?
+            uri_parts_.hier_part.host.get() :
+            const_range_type();
+    }
+
+    const_range_type port_range() const {
+        return uri_parts_.hier_part.port?
+            uri_parts_.hier_part.port.get() :
+            const_range_type();
+    }
+
+    const_range_type path_range() const {
+        return uri_parts_.hier_part.path?
+            uri_parts_.hier_part.path.get() :
+            const_range_type();
+    }
+
+    const_range_type query_range() const {
+        return uri_parts_.query ?
+            uri_parts_.query.get() :
+            const_range_type();
+    }
+
+    const_range_type fragment_range() const {
+        return uri_parts_.fragment?
+            uri_parts_.fragment.get() :
+            const_range_type();
+    }
+
+    string_type scheme() const {
+        const_range_type range = scheme_range();
+        return string_type(boost::begin(range), boost::end(range));
+    }
+
+    string_type user_info() const {
+        const_range_type range = user_info_range();
+        return string_type(boost::begin(range), boost::end(range));
     }
 
     string_type host() const {
-        return uri_parts_.hier_part.host?
-            uri_parts_.hier_part.host.get() :
-            string_type();
+        const_range_type range = host_range();
+        return string_type(boost::begin(range), boost::end(range));
     }
 
     string_type port() const {
-        return uri_parts_.hier_part.port?
-            uri_parts_.hier_part.port.get() :
-            string_type();
+        const_range_type range = port_range();
+        return string_type(boost::begin(range), boost::end(range));
     }
 
     string_type path() const {
-        return uri_parts_.hier_part.path?
-            uri_parts_.hier_part.path.get() :
-            string_type();
+        const_range_type range = path_range();
+        return string_type(boost::begin(range), boost::end(range));
     }
 
     string_type query() const {
-        return uri_parts_.query ?
-            uri_parts_.query.get() :
-            string_type();
+        const_range_type range = query_range();
+        return string_type(boost::begin(range), boost::end(range));
     }
 
     string_type fragment() const {
-        return uri_parts_.fragment?
-            uri_parts_.fragment.get() :
-            string_type();
+        const_range_type range = fragment_range();
+        return string_type(boost::begin(range), boost::end(range));
     }
 
     string_type string() const {
@@ -162,7 +189,7 @@ private:
     void parse();
 
     string_type uri_;
-    detail::uri_parts<std::string> uri_parts_;
+    detail::uri_parts<const_iterator> uri_parts_;
     bool is_valid_;
 
 };
