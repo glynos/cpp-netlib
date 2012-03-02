@@ -6,7 +6,6 @@
 #define BOOST_TEST_MODULE URI builder test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/uri.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/directives.hpp>
 #include <boost/network/uri/accessors.hpp>
@@ -103,7 +102,7 @@ BOOST_AUTO_TEST_CASE(query_2_test)
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
     BOOST_CHECK_EQUAL(uri::path(instance), "/");
-    BOOST_CHECK_EQUAL(uri::query(instance), "key1=value1;key2=value2");
+    BOOST_CHECK_EQUAL(uri::query(instance), "key1=value1&key2=value2");
 }
 
 BOOST_AUTO_TEST_CASE(fragment_test)

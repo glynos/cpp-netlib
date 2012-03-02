@@ -93,6 +93,13 @@ OutputIterator decode(const SinglePassRange &range,
                       const OutputIterator &out) {
     return decode(boost::begin(range), boost::end(range), out);
 }
+
+inline
+std::string decoded(const std::string &input) {
+    std::string decoded;
+    decode(input, std::back_inserter(decoded));
+    return decoded;
+}
 } // namespace uri
 } // namespace network
 } // namespace boost

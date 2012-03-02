@@ -45,7 +45,7 @@ template <
     >
 inline
 Map &query_map(const uri &uri_, Map &map) {
-    uri::const_range_type range = uri_.query_range();
+    const std::string range = uri_.query();
     details::key_value_sequence<Map> parser;
     spirit::qi::parse(boost::begin(range), boost::end(range), parser, map);
     return map;
@@ -53,50 +53,50 @@ Map &query_map(const uri &uri_, Map &map) {
 
 inline
 std::string username(const uri &uri_) {
-    uri::const_range_type user_info_range = uri_.user_info_range();
-    uri::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
+    const std::string user_info = uri_.user_info();
+    uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
     for (; it != end; ++it) {
         if (*it == ':') {
             break;
         }
     }
-    return std::string(boost::begin(user_info_range), it);
+    return std::string(boost::begin(user_info), it);
 }
 
 inline
 std::string password(const uri &uri_) {
-    uri::const_range_type user_info_range = uri_.user_info_range();
-    uri::const_iterator it(boost::begin(user_info_range)), end(boost::end(user_info_range));
+    const std::string user_info = uri_.user_info();
+    uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
     for (; it != end; ++it) {
         if (*it == ':') {
             ++it;
             break;
         }
     }
-    return std::string(it, boost::end(user_info_range));
+    return std::string(it, boost::end(user_info));
 }
 
 inline
 std::string decoded_path(const uri &uri_) {
-    uri::const_range_type path_range = uri_.path_range();
+    const std::string path = uri_.path();
     std::string decoded_path;
-    decode(path_range, std::back_inserter(decoded_path));
+    decode(path, std::back_inserter(decoded_path));
     return decoded_path;
 }
 
 inline
 std::string decoded_query(const uri &uri_) {
-    uri::const_range_type query_range = uri_.query_range();
+    const std::string query = uri_.query();
     std::string decoded_query;
-    decode(query_range, std::back_inserter(decoded_query));
+    decode(query, std::back_inserter(decoded_query));
     return decoded_query;
 }
 
 inline
 std::string decoded_fragment(const uri &uri_) {
-    uri::const_range_type fragment_range = uri_.fragment_range();
+    const std::string fragment = uri_.fragment();
     std::string decoded_fragment;
-    decode(fragment_range, std::back_inserter(decoded_fragment));
+    decode(fragment, std::back_inserter(decoded_fragment));
     return decoded_fragment;
 }
 } // namespace uri

@@ -1,4 +1,4 @@
-// Copyright 2009, 2010, 2011 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
+// Copyright 2009, 2010, 2011, 2012 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,7 +7,8 @@
 # define BOOST_NETWORK_URL_DETAIL_URL_PARTS_HPP_
 
 
-# include <boost/fusion/include/vector.hpp>
+# include <boost/range/iterator_range.hpp>
+# include <boost/optional.hpp>
 
 
 namespace boost {
@@ -15,32 +16,34 @@ namespace network {
 namespace uri {
 namespace detail {
 template <
-    class String
+    class FwdIter
     >
-struct iterator_range
-    : boost::fusion::vector<
-      typename String::const_iterator
-    , typename String::const_iterator
-    >
-{ };
-
+struct hierarchical_part {
+    optional<iterator_range<FwdIter> > user_info;
+    optional<iterator_range<FwdIter> > host;
+    optional<iterator_range<FwdIter> > port;
+    optional<iterator_range<FwdIter> > path;
+};
 
 template <
-    class String
+    class FwdIter
     >
-struct uri_parts
-    : boost::fusion::vector<
-      iterator_range<String>         // scheme
-    , boost::fusion::vector<
-            iterator_range<String>   // user_info
-          , iterator_range<String>   // host
-          , iterator_range<String>   // port
-          , iterator_range<String>   // path
-          >
-    , iterator_range<String>         // query
-    , iterator_range<String>         // fragment
-    >
-{ };
+struct uri_parts {
+    iterator_range<FwdIter> scheme;
+    hierarchical_part<FwdIter> hier_part;
+    optional<iterator_range<FwdIter> > query;
+    optional<iterator_range<FwdIter> > fragment;
+
+    void clear() {
+        scheme = iterator_range<FwdIter>();
+        hier_part.user_info = optional<iterator_range<FwdIter> >();
+        hier_part.host = optional<iterator_range<FwdIter> >();
+        hier_part.port = optional<iterator_range<FwdIter> >();
+        hier_part.path = optional<iterator_range<FwdIter> >();
+        query = optional<iterator_range<FwdIter> >();
+        fragment = optional<iterator_range<FwdIter> >();
+    }
+};
 } // namespace detail
 } // namespace uri
 } // namespace network

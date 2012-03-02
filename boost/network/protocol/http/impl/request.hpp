@@ -17,6 +17,7 @@
 
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/traits/vector.hpp>
+#include <boost/network/constants.hpp>
 
 #include <boost/network/protocol/http/message/async_message.hpp>
 #include <boost/network/support/is_async.hpp>
@@ -50,7 +51,7 @@ namespace http {
     struct basic_request : public basic_message<Tag>
     {
 
-        mutable boost::network::uri::basic_uri<typename string<Tag>::type> uri_;
+        mutable boost::network::uri::uri uri_;
         typedef basic_message<Tag> base_type;
 
     public:
@@ -62,7 +63,15 @@ namespace http {
         : uri_(uri_)
         { }
 
+        explicit basic_request(boost::network::uri::uri const & uri_)
+        : uri_(uri_)
+        { }
+
         void uri(string_type const & new_uri) {
+            uri_ = new_uri;
+        }
+
+        void uri(boost::network::uri::uri const & new_uri) {
             uri_ = new_uri;
         }
 
@@ -95,7 +104,7 @@ namespace http {
             if (!port)
             {
                 typedef constants<Tag> consts;
-                return boost::iequals(uri_.scheme_range(),
+                return boost::iequals(uri_.scheme(),
                                       string_type(consts::https()))? 443 : 80;
             }
             return *port;
@@ -121,7 +130,7 @@ namespace http {
             uri_ = new_uri;
         }
 
-        boost::network::uri::basic_uri<typename string<Tag>::type> const & uri() const {
+        boost::network::uri::uri const & uri() const {
             return uri_;
         }
 

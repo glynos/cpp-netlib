@@ -1,0 +1,481 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HTTP Request &mdash; cpp-netlib v0.9.3</title>
+    <link rel="stylesheet" href="../_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.9.3" href="../index.html" />
+    <link rel="up" title="Reference Manual" href="../reference.html" />
+    <link rel="next" title="HTTP Response" href="http_response.html" />
+    <link rel="prev" title="HTTP Client API" href="http_client.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </head>
+  <body>
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t4">
+    <div id="hd">
+      <h1><a href="../index.html">cpp-netlib v0.9.3</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">Home</a>  |
+        <a title="Table of contents" href="../contents.html">Table of contents</a> |
+	<a title="What's new" href="../whats_new.html">What's new</a> |
+	<a title="Getting started" href="../getting_started.html">Getting started</a> |
+	<a title="Examples" href="../examples.html">Examples</a> |
+	<a title="In depth" href="../in_depth.html">In depth</a> |
+	<a title="Reference" href="../reference.html">Reference</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="http_client.html" title="HTTP Client API">previous</a>
+     |
+    <a href="../reference.html" title="Reference Manual" accesskey="U">up</a>
+   |
+    <a href="http_response.html" title="HTTP Response">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="reference-http_request">
+            
+  <div class="section" id="cpp-netlib-http-request">
+<h1>HTTP Request<a class="headerlink" href="#cpp-netlib-http-request" title="Permalink to this headline">¶</a></h1>
+<p>This part of the documentation talks about the publicly accessible API of the
+HTTP Request objects. This section details the <a class="reference internal" href="#request-concepts">Request Concepts</a> requirements,
+the implemented and required <a class="reference internal" href="#directives">Directives</a>, <a class="reference internal" href="#modifiers">Modifiers</a>, and <a class="reference internal" href="#wrappers">Wrappers</a> that work
+with the HTTP Request objects.</p>
+<div class="section" id="cpp-netlib-request-concepts">
+<h2>Request Concepts<a class="headerlink" href="#cpp-netlib-request-concepts" title="Permalink to this headline">¶</a></h2>
+<p>There are two generally supported Request Concepts implemented in the library.
+The first of two is the <a class="reference internal" href="#normal-client-request-concept">Normal Client Request Concept</a> and the second is the
+<a class="reference internal" href="#pod-server-request-concept">Pod Server Request Concept</a>.</p>
+<p>The <a class="reference internal" href="#normal-client-request-concept">Normal Client Request Concept</a> is what the HTTP Client interface requires.
+All operations performed internally by the HTTP Client abide by the interface
+required by this concept definition.</p>
+<p>The <a class="reference internal" href="#pod-server-request-concept">Pod Server Request Concept</a> is as the name suggests what the HTTP Server
+implementation requires from Request Objects.</p>
+<p>Switching on whether the <cite>Request</cite> concept chooses either of the <a class="reference internal" href="#normal-client-request-concept">Normal Client
+Request Concept</a> or the <a class="reference internal" href="#pod-server-request-concept">Pod Server Request Concept</a> is done through the
+nested <tt class="docutils literal"><span class="pre">tag</span></tt> type and whether that tag derives from the root tag <tt class="docutils literal"><span class="pre">pod</span></tt>.
+Simply, if the Request type&#8217;s nested <tt class="docutils literal"><span class="pre">tag</span></tt> type derives from
+<tt class="docutils literal"><span class="pre">boost::network::tags::pod</span></tt> then it chooses to enforce the <a class="reference internal" href="#pod-server-request-concept">Pod Server Request
+Concept</a>, otherwise it chooses the <a class="reference internal" href="#normal-client-request-concept">Normal Client Request Concept</a>.</p>
+<div class="section" id="cpp-netlib-normal-client-request-concept">
+<h3>Normal Client Request Concept<a class="headerlink" href="#cpp-netlib-normal-client-request-concept" title="Permalink to this headline">¶</a></h3>
+<p>A type models the Normal Client Request Concept if it models the <a class="reference external" href="message.html#message-concept">Message
+Concept</a> and also supports the following constructs.</p>
+<p><strong>Legend</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">R:</th><td class="field-body">The request type.</td>
+</tr>
+<tr class="field"><th class="field-name">r:</th><td class="field-body">An instance of R.</td>
+</tr>
+<tr class="field"><th class="field-name">S:</th><td class="field-body">The string type.</td>
+</tr>
+<tr class="field"><th class="field-name">s:</th><td class="field-body">An instance of S.</td>
+</tr>
+<tr class="field"><th class="field-name">P:</th><td class="field-body">The port type.</td>
+</tr>
+<tr class="field"><th class="field-name">p:</th><td class="field-body">An instance of P.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="17%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Construct</th>
+<th class="head">Result</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal"><span class="pre">R::string_type</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>The nested <tt class="docutils literal"><span class="pre">string_type</span></tt> type.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">R::port_type</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">P</span></tt></td>
+<td>The nested <tt class="docutils literal"><span class="pre">port_type</span></tt> type.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">R</span> <span class="pre">r(s)</span></tt></td>
+<td><strong>NA</strong></td>
+<td>Construct a Request with an <tt class="docutils literal"><span class="pre">s</span></tt>
+provided. This treats <tt class="docutils literal"><span class="pre">s</span></tt> as the URI
+to where the request is destined for.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">host(request)</span></tt></td>
+<td>Convertible
+to <tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>Return the host to where the request
+is destined for.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">port(request)</span></tt></td>
+<td>Convertible
+to <tt class="docutils literal"><span class="pre">P</span></tt></td>
+<td>Return the port to where the request
+is destined for.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">path(request)</span></tt></td>
+<td>Convertible
+to <tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>Return the path included in the URI.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">query(request)</span></tt></td>
+<td>Convertible
+to <tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>Return the query part of the URI.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">anchor(request)</span></tt></td>
+<td>Convertible
+to <tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>Return the anchor part of the URI.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">protocol(request)</span></tt></td>
+<td>Convertible
+to <tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>Return the protocol/scheme part of the
+URI.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">r</span> <span class="pre">&lt;&lt;</span> <span class="pre">uri(s)</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">R&amp;</span></tt></td>
+<td>Set the URI of the request.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">uri(r,</span> <span class="pre">s)</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">void</span></tt></td>
+<td>Set the URI of the request.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="cpp-netlib-pod-server-request-concept">
+<h3>Pod Server Request Concept<a class="headerlink" href="#cpp-netlib-pod-server-request-concept" title="Permalink to this headline">¶</a></h3>
+<p>A type models the Pod Server Request Concept if it models the <a class="reference external" href="message.html#message-concept">Message Concept</a>
+and also supports the following constructs.</p>
+<p><strong>Legend</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">R:</th><td class="field-body">The request type.</td>
+</tr>
+<tr class="field"><th class="field-name">r:</th><td class="field-body">An instance of R.</td>
+</tr>
+<tr class="field"><th class="field-name">S:</th><td class="field-body">The string type.</td>
+</tr>
+<tr class="field"><th class="field-name">I:</th><td class="field-body">An unsigned 8 bit integer.</td>
+</tr>
+<tr class="field"><th class="field-name">V:</th><td class="field-body">The vector type for headers.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="41%" />
+<col width="11%" />
+<col width="49%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Construct</th>
+<th class="head">Result</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><tt class="docutils literal"><span class="pre">R::string_type</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>The nested <tt class="docutils literal"><span class="pre">string_type</span></tt> type.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">R::headers_container_type</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">V</span></tt></td>
+<td>The nested
+<tt class="docutils literal"><span class="pre">headers_container_type</span></tt> type.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">r.source</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>The nested source of the request.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">r.method</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>The method of the request.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">r.destination</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>The destination of the request.
+This is normally the URI of the
+request.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">r.version_major</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">I</span></tt></td>
+<td>The major version number part of
+the request.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">r.version_minor</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">I</span></tt></td>
+<td>The minor version number part of
+the request.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">r.headers</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">V</span></tt></td>
+<td>The vector of headers.</td>
+</tr>
+<tr><td><tt class="docutils literal"><span class="pre">r.body</span></tt></td>
+<td><tt class="docutils literal"><span class="pre">S</span></tt></td>
+<td>The body of the request.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="cpp-netlib-directives">
+<h2>Directives<a class="headerlink" href="#cpp-netlib-directives" title="Permalink to this headline">¶</a></h2>
+<p>This section details the provided directives that are provided by
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>. The section was written to assume that an appropriately
+constructed request instance is either of the following:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">basic_request</span><span class="o">&lt;</span>
+  <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">tags</span><span class="o">::</span><span class="n">http_default_8bit_udp_resolve</span>
+<span class="o">&gt;</span> <span class="n">request</span><span class="p">;</span>
+
+<span class="c1">// or</span>
+
+<span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">basic_request</span><span class="o">&lt;</span>
+  <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">tags</span><span class="o">::</span><span class="n">http_server</span>
+<span class="o">&gt;</span> <span class="n">request</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The section also assumes that there following using namespace declaration is in
+effect:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Directives are meant to be used in the following manner:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">directive</span><span class="p">(...);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>There are two versions of directives, those that are applicable to
+messages that support narrow strings (<tt class="docutils literal"><span class="pre">std::string</span></tt>) and those that are
+applicable to messages that support wide strings (<tt class="docutils literal"><span class="pre">std::wstring</span></tt>). The
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> implementation still does not convert wide strings into
+UTF-8 encoded narrow strings. This will be implemented in subsequent
+library releases.</p>
+<p class="last">For now all the implemented directives are listed, even if some of them still
+do not implement things correctly.</p>
+</div>
+<dl class="docutils">
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">source(std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">source_)</span></tt></dt>
+<dd>Create a source directive with a <tt class="docutils literal"><span class="pre">std::string</span></tt> as a parameter, to be set
+as the source of the request.</dd>
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">source(std::wstring</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">source_)</span></tt></dt>
+<dd>Create a source directive with a <tt class="docutils literal"><span class="pre">std::wstring</span></tt> as a parameter, to be set
+as the source of the request.</dd>
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">destination(std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">source_)</span></tt></dt>
+<dd>Create a destination directive with a <tt class="docutils literal"><span class="pre">std::string</span></tt> as a parameter, to be
+set as the destination of the request.</dd>
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">destination(std::wstring</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">source_)</span></tt></dt>
+<dd>Create a destination directive with a <tt class="docutils literal"><span class="pre">std::wstring</span></tt> as a parameter, to be
+set as the destination of the request.</dd>
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">header(std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">name,</span> <span class="pre">std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">value)</span></tt></dt>
+<dd>Create a header directive that will add the given name and value pair to the
+headers already associated with the request. In this case the name and
+values are both <tt class="docutils literal"><span class="pre">std::string</span></tt>.</dd>
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">header(std::wstring</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">name,</span> <span class="pre">std::wstring</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">value)</span></tt></dt>
+<dd>Create a header directive that will add the given name and value pair to the
+headers already associated with the request. In this case the name and
+values are both <tt class="docutils literal"><span class="pre">std::wstring</span></tt>.</dd>
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">remove_header(std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">name)</span></tt></dt>
+<dd>Create a remove_header directive that will remove all the occurences of the
+given name from the headers already associated with the request. In this
+case the name of the header is of type <tt class="docutils literal"><span class="pre">std::string</span></tt>.</dd>
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">remove_header(std::wstring</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">name)</span></tt></dt>
+<dd>Create a remove_header directive that will remove all the occurences of the
+given name from the headers already associated with the request. In this
+case the name of the header is of type <tt class="docutils literal"><span class="pre">std::wstring</span></tt>.</dd>
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">body(std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">body_)</span></tt></dt>
+<dd>Create a body directive that will set the request&#8217;s body to the given
+parameter. In this case the type of the body is an <tt class="docutils literal"><span class="pre">std::string</span></tt>.</dd>
+<dt><em>unspecified</em> <tt class="docutils literal"><span class="pre">body(std::wstring</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">body_)</span></tt></dt>
+<dd>Create a body directive that will set the request&#8217;s body to the given
+parameter. In this case the type of the body is an <tt class="docutils literal"><span class="pre">std::wstring</span></tt>.</dd>
+</dl>
+</div>
+<div class="section" id="cpp-netlib-modifiers">
+<h2>Modifiers<a class="headerlink" href="#cpp-netlib-modifiers" title="Permalink to this headline">¶</a></h2>
+<p>This section details the provided modifiers that are provided by
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span> <span class="pre">inline</span> <span class="pre">void</span> <span class="pre">source(basic_request&lt;Tag&gt;</span> <span class="pre">&amp;</span> <span class="pre">request,</span> <span class="pre">typename</span> <span class="pre">string&lt;Tag&gt;::type</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">source_)</span></tt></dt>
+<dd>Modifies the source of the given <tt class="docutils literal"><span class="pre">request</span></tt>. The type of <tt class="docutils literal"><span class="pre">source_</span></tt> is
+dependent on the <tt class="docutils literal"><span class="pre">Tag</span></tt> specialization of <tt class="docutils literal"><span class="pre">basic_request</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span> <span class="pre">inline</span> <span class="pre">void</span> <span class="pre">destination(basic_request&lt;Tag&gt;</span> <span class="pre">&amp;</span> <span class="pre">request,</span> <span class="pre">typename</span> <span class="pre">string&lt;Tag&gt;::type</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">destination_)</span></tt></dt>
+<dd>Modifies the destination of the given <tt class="docutils literal"><span class="pre">request</span></tt>. The type of <tt class="docutils literal"><span class="pre">destination_</span></tt> is
+dependent on the <tt class="docutils literal"><span class="pre">Tag</span></tt> specialization of <tt class="docutils literal"><span class="pre">basic_request</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span> <span class="pre">inline</span> <span class="pre">void</span> <span class="pre">add_header(basic_request&lt;Tag&gt;</span> <span class="pre">&amp;</span> <span class="pre">request,</span> <span class="pre">typename</span> <span class="pre">string&lt;Tag&gt;::type</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">name,</span> <span class="pre">typename</span> <span class="pre">string&lt;Tag&gt;::type</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">value)</span></tt></dt>
+<dd>Adds a header to the given <tt class="docutils literal"><span class="pre">request</span></tt>. The type of the <tt class="docutils literal"><span class="pre">name</span></tt> and
+<tt class="docutils literal"><span class="pre">value</span></tt> parameters are dependent on the <tt class="docutils literal"><span class="pre">Tag</span></tt> specialization of
+<tt class="docutils literal"><span class="pre">basic_request</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span> <span class="pre">inline</span> <span class="pre">void</span> <span class="pre">remove_header(basic_request&lt;Tag&gt;</span> <span class="pre">&amp;</span> <span class="pre">request,</span> <span class="pre">typename</span> <span class="pre">string&lt;Tag&gt;::type</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">name)</span></tt></dt>
+<dd>Removes a header from the given <tt class="docutils literal"><span class="pre">request</span></tt>. The type of the <tt class="docutils literal"><span class="pre">name</span></tt>
+parameter is dependent on the <tt class="docutils literal"><span class="pre">Tag</span></tt> specialization of <tt class="docutils literal"><span class="pre">basic_request</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span> <span class="pre">inline</span> <span class="pre">void</span> <span class="pre">clear_headers(basic_request&lt;Tag&gt;</span> <span class="pre">&amp;</span> <span class="pre">request)</span></tt></dt>
+<dd>Removes all headers from the given <tt class="docutils literal"><span class="pre">request</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span> <span class="pre">inline</span> <span class="pre">void</span> <span class="pre">body(basic_request&lt;Tag&gt;</span> <span class="pre">&amp;</span> <span class="pre">request,</span> <span class="pre">typename</span> <span class="pre">string&lt;Tag&gt;::type</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">body_)</span></tt></dt>
+<dd>Modifies the body of the given <tt class="docutils literal"><span class="pre">request</span></tt>. The type of <tt class="docutils literal"><span class="pre">body_</span></tt> is
+dependent on the <tt class="docutils literal"><span class="pre">Tag</span></tt> specialization of <tt class="docutils literal"><span class="pre">basic_request</span></tt>.</dd>
+</dl>
+</div>
+<div class="section" id="cpp-netlib-wrappers">
+<h2>Wrappers<a class="headerlink" href="#cpp-netlib-wrappers" title="Permalink to this headline">¶</a></h2>
+<p>This section details the provided request wrappers that come with
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>. Wrappers are used to convert a message into a different type,
+usually providing accessor operations to retrieve just part of the message. This
+section assumes that the following using namespace directives are in
+effect:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span></tt> <em>unspecified</em> <tt class="docutils literal"><span class="pre">source(basic_request&lt;Tag&gt;</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">request)</span></tt></dt>
+<dd>Returns a wrapper convertible to <tt class="docutils literal"><span class="pre">typename</span> <span class="pre">string&lt;Tag&gt;::type</span></tt> that
+provides the source of a given request.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span></tt> <em>unspecified</em> <tt class="docutils literal"><span class="pre">destination(basic_request&lt;Tag&gt;</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">request)</span></tt></dt>
+<dd>Returns a wrapper convertible to <tt class="docutils literal"><span class="pre">typename</span> <span class="pre">string&lt;Tag&gt;::type</span></tt> that
+provides the destination of a given request.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span></tt> <em>unspecified</em> <tt class="docutils literal"><span class="pre">headers(basic_request&lt;Tag&gt;</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">request)</span></tt></dt>
+<dd>Returns a wrapper convertible to <tt class="docutils literal"><span class="pre">typename</span> <span class="pre">headers_range&lt;basic_request&lt;Tag&gt;</span>
+<span class="pre">&gt;::type</span></tt> or <tt class="docutils literal"><span class="pre">typename</span> <span class="pre">basic_request&lt;Tag&gt;::headers_container_type</span></tt> that
+provides the headers of a given request.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">Tag&gt;</span></tt> <em>unspecified</em> <tt class="docutils literal"><span class="pre">body(basic_request&lt;Tag&gt;</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">request)</span></tt></dt>
+<dd>Returns a wrapper convertible to <tt class="docutils literal"><span class="pre">typename</span> <span class="pre">string&lt;Tag&gt;::type</span></tt> that
+provides the body of a given request.</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      
+        
+        <div class="yui-b" id="sidebar">
+          
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">HTTP Request</a><ul>
+<li><a class="reference internal" href="#request-concepts">Request Concepts</a><ul>
+<li><a class="reference internal" href="#normal-client-request-concept">Normal Client Request Concept</a></li>
+<li><a class="reference internal" href="#pod-server-request-concept">Pod Server Request Concept</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#directives">Directives</a></li>
+<li><a class="reference internal" href="#modifiers">Modifiers</a></li>
+<li><a class="reference internal" href="#wrappers">Wrappers</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+      <li>Prev: <a href="http_client.html">HTTP Client API</a></li>
+    
+    
+      <li>Next: <a href="http_response.html">HTTP Response</a></li>
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">cpp-netlib v0.9.3</a>
+        
+          <ul><li><a href="../reference.html">Reference Manual</a>
+        
+        <ul><li>HTTP Request</li></ul>
+        </li></ul>
+      </li>
+  </ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/http_request.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="http_client.html" title="HTTP Client API">previous</a>
+     |
+    <a href="../reference.html" title="Reference Manual" accesskey="U">up</a>
+   |
+    <a href="http_response.html" title="HTTP Response">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+      documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+  </div>
+
+  </body>
+</html>

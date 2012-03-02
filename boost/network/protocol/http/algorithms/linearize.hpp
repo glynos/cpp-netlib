@@ -151,4 +151,3 @@ namespace boost { namespace network { namespace http {
 } /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_ALGORITHMS_LINEARIZE_HPP_20101028 */
-

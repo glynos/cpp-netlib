@@ -161,6 +161,13 @@ OutputIterator encode(const SinglePassRange &range,
                       const OutputIterator &out) {
     return encode(boost::begin(range), boost::end(range), out);
 }
+
+inline
+std::string encoded(const std::string &input) {
+    std::string encoded;
+    encode(input, std::back_inserter(encoded));
+    return encoded;
+}
 } // namespace uri
 } // namespace network
 } // namespace boost

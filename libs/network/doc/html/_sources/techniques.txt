@@ -7,6 +7,6 @@ aims.  This chapter describes some of those techniques.
 .. toctree::
    :maxdepth: 1
 
-   tag_metafunctions.rst
-   directives.rst
-   polymorphism.rst
+   techniques/tag_metafunctions
+   techniques/directives
+   techniques/polymorphism

@@ -1,4 +1,4 @@
-// Copyright 2009, 2010, 2011 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
+// Copyright 2009, 2010, 2011, 2012 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,14 +7,11 @@
 #ifndef __BOOST_NETWORK_URI_INC__
 # define __BOOST_NETWORK_URI_INC__
 
-
 # include <boost/network/constants.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
-# include <boost/fusion/sequence/intrinsic/at_c.hpp>
-# include <boost/algorithm/string.hpp>
-# include <boost/range/iterator_range.hpp>
 # include <boost/operators.hpp>
 # include <boost/utility/swap.hpp>
+# include <boost/range/iterator_range.hpp>
 # include <boost/lexical_cast.hpp>
 # include <boost/optional.hpp>
 # include <algorithm>
@@ -26,7 +23,7 @@ namespace uri {
 namespace detail {
 bool parse(std::string::const_iterator first,
            std::string::const_iterator last,
-           uri_parts<std::string> &parts);
+           uri_parts<std::string::const_iterator> &parts);
 } // namespace detail
 
 
@@ -36,10 +33,8 @@ class uri
 public:
 
     typedef std::string string_type;
-    typedef string_type::iterator iterator;
-    typedef boost::iterator_range<iterator> range_type;
     typedef string_type::const_iterator const_iterator;
-    typedef boost::iterator_range<const_iterator> const_range_type;
+    typedef boost::iterator_range<std::string::const_iterator> const_range_type;
 
     uri()
         : is_valid_(false) {
@@ -86,16 +81,8 @@ public:
         parse();
     }
 
-    iterator begin() {
-        return uri_.begin();
-    }
-
     const_iterator begin() const {
         return uri_.begin();
-    }
-
-    iterator end() {
-        return uri_.end();
     }
 
     const_iterator end() const {
@@ -103,45 +90,43 @@ public:
     }
 
     const_range_type scheme_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<0>(uri_parts_)),
-                                at_c<1>(at_c<0>(uri_parts_)));
+        return uri_parts_.scheme;
     }
 
     const_range_type user_info_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<0>(at_c<1>(uri_parts_))),
-                                at_c<1>(at_c<0>(at_c<1>(uri_parts_))));
+        return uri_parts_.hier_part.user_info?
+            uri_parts_.hier_part.user_info.get() :
+            const_range_type();
     }
 
     const_range_type host_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<1>(at_c<1>(uri_parts_))),
-                                at_c<1>(at_c<1>(at_c<1>(uri_parts_))));
+        return uri_parts_.hier_part.host?
+            uri_parts_.hier_part.host.get() :
+            const_range_type();
     }
 
     const_range_type port_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<2>(at_c<1>(uri_parts_))),
-                                at_c<1>(at_c<2>(at_c<1>(uri_parts_))));
+        return uri_parts_.hier_part.port?
+            uri_parts_.hier_part.port.get() :
+            const_range_type();
     }
 
     const_range_type path_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<3>(at_c<1>(uri_parts_))),
-                                at_c<1>(at_c<3>(at_c<1>(uri_parts_))));
+        return uri_parts_.hier_part.path?
+            uri_parts_.hier_part.path.get() :
+            const_range_type();
     }
 
     const_range_type query_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<2>(uri_parts_)),
-                                at_c<1>(at_c<2>(uri_parts_)));
+        return uri_parts_.query ?
+            uri_parts_.query.get() :
+            const_range_type();
     }
 
     const_range_type fragment_range() const {
-        using boost::fusion::at_c;
-        return const_range_type(at_c<0>(at_c<3>(uri_parts_)),
-                                at_c<1>(at_c<3>(uri_parts_)));
+        return uri_parts_.fragment?
+            uri_parts_.fragment.get() :
+            const_range_type();
     }
 
     string_type scheme() const {
@@ -205,13 +190,14 @@ private:
     void parse();
 
     string_type uri_;
-    detail::uri_parts<std::string> uri_parts_;
+    detail::uri_parts<const_iterator> uri_parts_;
     bool is_valid_;
 
 };
 
 inline
 void uri::parse() {
+    uri_parts_.clear();
     const_iterator first(boost::begin(uri_)), last(boost::end(uri_));
     is_valid_ = detail::parse(first, last, uri_parts_);
 }
@@ -261,14 +247,25 @@ std::string fragment(const uri &uri_) {
 
 inline
 std::string authority(const uri &uri_) {
-    uri::const_range_type user_info(uri_.user_info_range());
-    uri::const_range_type port(uri_.port_range());
-    return std::string(user_info.begin(), port.end());
-}
-
-inline
-std::string netloc(const uri &uri_) {
-    return authority(uri_);
+    std::string user_info(uri_.user_info());
+	std::string host(uri_.host());
+    std::string port(uri_.port());
+	std::string authority;
+	if (!boost::empty(user_info))
+	{
+		std::copy(boost::begin(user_info), boost::end(user_info), std::back_inserter(authority));
+		authority.push_back('@');
+	}
+	if (!boost::empty(host))
+	{
+		std::copy(boost::begin(host), boost::end(host), std::back_inserter(authority));
+	}
+	if (!boost::empty(port))
+	{
+		authority.push_back(':');
+		std::copy(boost::begin(port), boost::end(port), std::back_inserter(authority));
+	}
+	return authority;
 }
 
 inline
@@ -282,49 +279,8 @@ bool is_valid(const uri &uri_) {
 }
 
 inline
-bool is_hierarchical(const uri &uri_) {
-    //uri::const_range_type scheme = uri_.scheme_range();
-    //uri::const_range_type user_info = uri_.user_info_range();
-    //return is_valid(uri_) &&
-    //    boost::equal(std::make_pair(boost::end(scheme),
-    //                                boost::begin(user_info)),
-    //                 boost::as_literal("://"));
-    return false;
-}
-
-inline
-bool is_opaque(const uri &uri_) {
-    return false;
-}
-
-inline
 bool operator == (const uri &lhs, const uri &rhs) {
     return std::equal(lhs.begin(), lhs.end(), rhs.begin());
-}
-
-inline
-network::uri::uri::iterator begin(network::uri::uri &uri_) {
-    return uri_.begin();
-}
-
-inline
-network::uri::uri::iterator end(network::uri::uri &uri_) {
-    return uri_.end();
-}
-
-inline
-network::uri::uri::const_iterator begin(const network::uri::uri &uri_) {
-    return uri_.begin();
-}
-
-inline
-network::uri::uri::const_iterator end(const network::uri::uri &uri_) {
-    return uri_.end();
-}
-
-inline
-void swap(network::uri::uri &lhs, network::uri::uri &rhs) {
-    lhs.swap(rhs);
 }
 
 } // namespace uri
