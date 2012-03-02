@@ -199,7 +199,7 @@ namespace boost { namespace network { namespace http { namespace impl {
     }
 
     void handle_received_data(state_t state, bool get_body, body_callback_function_type callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
-      if (!ec || ec == boost::asio::error::eof) {
+        if (!ec || ec == boost::asio::error::eof) {
         logic::tribool parsed_ok;
         size_t remainder;
         switch(state) {
