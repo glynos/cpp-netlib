@@ -279,7 +279,7 @@ bool is_valid(const uri &uri_) {
 
 inline
 bool operator == (const uri &lhs, const uri &rhs) {
-    return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+    return boost::equal(lhs, rhs);
 }
 } // namespace uri
 } // namespace network
