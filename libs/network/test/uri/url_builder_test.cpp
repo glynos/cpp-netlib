@@ -163,3 +163,12 @@ BOOST_AUTO_TEST_CASE(encoded_null_char_test)
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
     BOOST_CHECK_EQUAL(uri::path(instance), "/");
 }
+
+BOOST_AUTO_TEST_CASE(mailto_builder_test)
+{
+    uri::uri instance;
+    instance << uri::scheme("mailto") << uri::path("cpp-netlib@example.com");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::scheme(instance), "mailto");
+    BOOST_CHECK_EQUAL(uri::path(instance), "cpp-netlib@example.com");
+}

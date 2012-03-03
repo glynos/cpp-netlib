@@ -10,6 +10,7 @@
 
 # include <boost/range/begin.hpp>
 # include <boost/range/end.hpp>
+# include <boost/network/uri/schemes.hpp>
 
 
 namespace boost {
@@ -26,7 +27,12 @@ struct scheme_directive {
         >
     void operator () (Uri &uri) const {
         uri.append(scheme);
-        uri.append("://");
+        if (non_hierarchical_schemes::exists(scheme)) {
+            uri.append(":");
+        }
+        else {
+            uri.append("://");
+        }
     }
 
     std::string scheme;
