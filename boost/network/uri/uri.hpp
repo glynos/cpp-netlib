@@ -10,6 +10,7 @@
 # include <boost/network/uri/detail/uri_parts.hpp>
 # include <boost/operators.hpp>
 # include <boost/utility/swap.hpp>
+# include <boost/range/algorithm/equal.hpp>
 # include <boost/range/iterator_range.hpp>
 # include <boost/lexical_cast.hpp>
 # include <boost/optional.hpp>
@@ -270,6 +271,11 @@ std::string authority(const uri &uri_) {
 inline
 bool valid(const uri &uri_) {
     return uri_.is_valid();
+}
+
+inline
+bool is_absolute(const uri &uri_) {
+    return uri_.is_valid() && !boost::empty(uri_.scheme_range());
 }
 
 inline
