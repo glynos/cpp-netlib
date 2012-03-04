@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/client/base.hpp>
+#include <boost/network/protocol/http/client/options.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/thread/thread.hpp>
@@ -21,65 +22,50 @@ struct client_base_pimpl {
   typedef
     function<void(boost::iterator_range<char const *> const &, system::error_code const &)>
     body_callback_function_type;
-  client_base_pimpl(shared_ptr<connection_manager> connection_manager_);
-  client_base_pimpl(asio::io_service & service, shared_ptr<connection_manager> connection_manager_);
+  client_base_pimpl(client_options const &options);
   response const request_skeleton(request const & request_,
                                   std::string const & method,
                                   bool get_body,
-                                  body_callback_function_type callback);
+                                  body_callback_function_type callback,
+                                  request_options const &options);
   ~client_base_pimpl();
  private:
+  client_options options_;
   boost::asio::io_service * service_ptr;
-  boost::asio::io_service & service_;
   boost::shared_ptr<boost::asio::io_service::work> sentinel_;
   boost::shared_ptr<boost::thread> lifetime_thread_;
   shared_ptr<connection_manager> connection_manager_;
 };
 
-client_base::client_base(shared_ptr<connection_manager> connection_manager_)
-: pimpl(new (std::nothrow) client_base_pimpl(connection_manager_))
-{}
-
-client_base::client_base(asio::io_service & service,
-                         shared_ptr<connection_manager> connection_manager_)
-: pimpl(new (std::nothrow) client_base_pimpl(service, connection_manager_))
+client_base::client_base(client_options const &options)
+: pimpl(new (std::nothrow) client_base_pimpl(options))
 {}
 
 response const client_base::request_skeleton(request const & request_,
                                              std::string const & method,
                                              bool get_body,
-                                             body_callback_function_type callback) {
-  return pimpl->request_skeleton(request_, method, get_body, callback);
+                                             body_callback_function_type callback,
+                                             request_options const &options) {
+  return pimpl->request_skeleton(request_, method, get_body, callback, options);
 }
 
 client_base::~client_base() {
   delete pimpl;
 }
 
-client_base_pimpl::client_base_pimpl(shared_ptr<connection_manager> connection_manager)
-  : service_ptr(new (std::nothrow) boost::asio::io_service),
-  service_(*service_ptr),
-  sentinel_(new (std::nothrow) boost::asio::io_service::work(service_)),
-  connection_manager_(connection_manager)
+client_base_pimpl::client_base_pimpl(client_options const &options)
+  : options_(options),
+  service_ptr(options.io_service()),
+  sentinel_(new (std::nothrow) boost::asio::io_service::work(*service_ptr)),
+  connection_manager_(options.connection_manager())
 {
   lifetime_thread_.reset(new (std::nothrow) boost::thread(
     boost::bind(
       &boost::asio::io_service::run,
-      &service_
+      service_ptr
       )));
   if (!lifetime_thread_.get())
     BOOST_THROW_EXCEPTION(std::runtime_error("Cannot allocate client lifetime thread; not enough memory."));
-}
-
-client_base_pimpl::client_base_pimpl(boost::asio::io_service & service,
-             shared_ptr<connection_manager> connection_manager)
-  : service_ptr(0),
-  service_(service),
-  sentinel_(new (std::nothrow) boost::asio::io_service::work(service_)),
-  connection_manager_(connection_manager)
-{
-  if (!sentinel_.get())
-    BOOST_THROW_EXCEPTION(std::runtime_error("Cannot allocate sentinel; not enough memory."));
 }
 
 client_base_pimpl::~client_base_pimpl()
@@ -97,12 +83,13 @@ response const client_base_pimpl::request_skeleton(
   request const & request_,
   std::string const & method,
   bool get_body,
-  body_callback_function_type callback
+  body_callback_function_type callback,
+  request_options const &options
   )
 {
   shared_ptr<client_connection> connection_;
-  connection_ = connection_manager_->get_connection(service_, request_);
-  return connection_->send_request(method, request_, get_body, callback);
+  connection_ = connection_manager_->get_connection(*service_ptr, request_, options_);
+  return connection_->send_request(method, request_, get_body, callback, options);
 }
 
 } // namespace http

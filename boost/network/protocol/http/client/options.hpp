@@ -13,6 +13,7 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/network/protocol/http/client/connection/connection_factory.hpp>
 #include <boost/network/protocol/http/client/connection_manager.hpp>
+#include <boost/network/protocol/http/client/client_connection.hpp>
 
 namespace boost { namespace network { namespace http {
   

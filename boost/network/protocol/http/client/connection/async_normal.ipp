@@ -43,7 +43,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   response start(request const & request,
                  std::string const & method,
                  bool get_body,
-                 body_callback_function_type callback) {
+                 body_callback_function_type callback,
+                 request_options const &options) {
     response response_;
     this->init_response(response_);
     // Use HTTP/1.1 -- at some point we might want to implement a different
@@ -757,8 +758,9 @@ http_async_connection * http_async_connection::clone() const {
 response http_async_connection::send_request(std::string const & method,
                                              request const & request,
                                              bool get_body,
-                                             callback_type callback) {
-  return pimpl->start(request, method, get_body, callback);
+                                             callback_type callback,
+                                             request_options const &options) {
+  return pimpl->start(request, method, get_body, callback, options);
 }
 
 void http_async_connection::reset() {

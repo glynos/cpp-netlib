@@ -15,6 +15,8 @@
 
 namespace boost { namespace network { namespace http {
 
+class request_options;
+
 struct client_connection {
   typedef function<void(iterator_range<char const *> const &,
                         system::error_code const &)>
@@ -22,7 +24,8 @@ struct client_connection {
   virtual response send_request(std::string const & method,
                                 request const & request,
                                 bool get_body,
-                                callback_type callback) = 0;
+                                callback_type callback,
+                                request_options const &options) = 0;
   virtual client_connection * clone() const = 0;
   virtual void reset() = 0;
   virtual ~client_connection() = 0;

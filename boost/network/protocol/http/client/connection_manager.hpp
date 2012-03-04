@@ -14,10 +14,13 @@
 
 namespace boost { namespace network { namespace http {
 
+class client_options;
+
 struct connection_manager {
   virtual shared_ptr<client_connection> get_connection(
       asio::io_service & service,
-      request_base const & request) = 0;
+      request_base const & request,
+      client_options const & options) = 0;
   virtual void reset() = 0;
   virtual ~connection_manager() = 0;
 };

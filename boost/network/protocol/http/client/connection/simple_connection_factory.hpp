@@ -23,10 +23,7 @@ struct simple_connection_factory : connection_factory {
                             shared_ptr<resolver_delegate_factory> res_delegate_factory);
   virtual shared_ptr<client_connection> create_connection(asio::io_service & service,
                                                           request_base const & request,
-                                                          bool cache_resolved,
-                                                          bool follow_redirects,
-                                                          optional<std::string> openssl_certificate,
-                                                          optional<std::string> openssl_verify_path); // override
+                                                          client_options const & options); // override
   virtual ~simple_connection_factory();
  private:
   scoped_ptr<simple_connection_factory_pimpl> pimpl;

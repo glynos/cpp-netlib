@@ -10,7 +10,6 @@
 #include <boost/function.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/asio/io_service.hpp>
-#include <boost/network/protocol/http/client/connection_manager.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
 
@@ -18,19 +17,22 @@ namespace boost { namespace network { namespace http {
 
 struct client_base_pimpl;
 
+class request_options;
+
+class client_options;
+
 struct client_base {
   typedef
     function<void(boost::iterator_range<char const *> const &, system::error_code const &)>
     body_callback_function_type;
 
-  client_base(shared_ptr<connection_manager> connection_manager_);
-  client_base(asio::io_service & service,
-              shared_ptr<connection_manager> connection_manager_);
+  explicit client_base(client_options const &options);
   ~client_base();
   response const request_skeleton(request const & request_,
                                   std::string const & method,
                                   bool get_body,
-                                  body_callback_function_type callback);
+                                  body_callback_function_type callback,
+                                  request_options const &options);
   void clear_resolved_cache();
  private:
   client_base_pimpl * pimpl;

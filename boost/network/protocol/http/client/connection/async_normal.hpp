@@ -31,7 +31,8 @@ struct http_async_connection : client_connection
   virtual response send_request(std::string const & method,
                                 request const & request,
                                 bool get_body,
-                                callback_type callback);  // override
+                                callback_type callback,
+                                request_options const &options);  // override
   virtual void reset();  // override
   virtual ~http_async_connection();
  private:

@@ -12,18 +12,18 @@
 
 namespace boost { namespace network { namespace http {
 
+class client_options;
+
 struct connection_delegate_factory {
   typedef shared_ptr<connection_delegate> connection_delegate_ptr;
 
   connection_delegate_factory();
 
   // This is the factory method that actually returns the delegate instance.
-  // TODO Support passing in proxy settings when crafting connections.
   virtual connection_delegate_ptr create_connection_delegate(
       asio::io_service & service,
       bool https,
-      optional<std::string> certificate_filename,
-      optional<std::string> verify_path);
+      client_options const &options);
 
   virtual ~connection_delegate_factory();
 

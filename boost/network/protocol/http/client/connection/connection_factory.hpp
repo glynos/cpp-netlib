@@ -13,13 +13,14 @@
 
 namespace boost { namespace network { namespace http {
 
+class client_options;
+
+struct client_connection;
+
 struct connection_factory {
-  virtual shared_ptr<client_connection> create_connection(asio::io_service & service,
+  virtual shared_ptr<client_connection> create_connection(asio::io_service &service,
                                                           request_base const & request,
-                                                          bool cache_resolved,
-                                                          bool follow_redirects,
-                                                          optional<std::string> openssl_certificate,
-                                                          optional<std::string> openssl_verify_path) = 0;
+                                                          client_options const &options) = 0;
   virtual ~connection_factory() = 0; // pure virtual, interface only.
 };
   

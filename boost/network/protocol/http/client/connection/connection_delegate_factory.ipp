@@ -13,6 +13,7 @@
 #endif /* BOOST_NETWORK_ENABLE_HTTPS */
 
 #include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
+#include <boost/network/protocol/http/client/options.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -22,14 +23,12 @@ connection_delegate_factory::connection_delegate_ptr
 connection_delegate_factory::create_connection_delegate(
     asio::io_service & service,
     bool https,
-    optional<std::string> certificate_filename,
-    optional<std::string> verify_path) {
+    client_options const &options) {
   connection_delegate_ptr delegate;
   if (https) {
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
     delegate.reset(new ssl_delegate(service,
-                                    certificate_filename,
-                                    verify_path));
+                                    options));
 #else
     BOOST_THROW_EXCEPTION(std::runtime_error("HTTPS not supported."));
 #endif /* BOOST_NETWORK_ENABLE_HTTPS */

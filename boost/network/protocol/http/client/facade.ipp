@@ -31,7 +31,7 @@ response const basic_client_facade::post(request request,
             << boost::network::body(*body);
   }
 
-  std::multimap<std::string, std::string> content_type_headers =
+  headers_wrapper::range_type content_type_headers =
       headers(request)["Content-Type"];
   if (content_type) {
     if (!boost::empty(content_type_headers))
@@ -57,7 +57,7 @@ response const basic_client_facade::put(request request,
             << boost::network::body(*body);
   }
 
-  std::multimap<std::string, std::string> content_type_headers =
+  headers_wrapper::range_type content_type_headers =
       headers(request)["Content-Type"];
   if (content_type) {
     if (!boost::empty(content_type_headers))
@@ -69,13 +69,13 @@ response const basic_client_facade::put(request request,
       request << header("Content-Type", default_content_type);
     }
   }
-  return base->request_skeleton(request, "PUT", true, body_handler);
+  return base->request_skeleton(request, "PUT", true, body_handler, options);
 }
 
 response const basic_client_facade::delete_(request const & request,
                                             body_callback_function_type body_handler,
                                             request_options const & options) {
-  return base->request_skeleton(request, "DELETE", true, body_handler);
+  return base->request_skeleton(request, "DELETE", true, body_handler, options);
 }
 
 void basic_client_facade::clear_resolved_cache() {

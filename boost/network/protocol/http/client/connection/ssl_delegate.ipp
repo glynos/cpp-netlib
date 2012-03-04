@@ -7,15 +7,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/client/options.hpp>
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
 #include <boost/bind.hpp>
 
 boost::network::http::ssl_delegate::ssl_delegate(asio::io_service & service,
-                                         optional<std::string> certificate_filename,
-                                         optional<std::string> verify_path) :
+                                                 client_options const &options) :
   service_(service),
-  certificate_filename_(certificate_filename),
-  verify_path_(verify_path) {}
+  options_(options) {}
 
 void boost::network::http::ssl_delegate::connect(
     asio::ip::tcp::endpoint & endpoint,
@@ -23,13 +22,23 @@ void boost::network::http::ssl_delegate::connect(
   context_.reset(new asio::ssl::context(
       service_,
       asio::ssl::context::sslv23_client));
-  if (certificate_filename_ || verify_path_) {
-    context_->set_verify_mode(asio::ssl::context::verify_peer);
-    if (certificate_filename_) context_->load_verify_file(*certificate_filename_);
-    if (verify_path_) context_->add_verify_path(*verify_path_);
-  } else {
-    context_->set_verify_mode(asio::ssl::context::verify_none);
+  std::list<std::string> const & certificate_paths = 
+      options_.openssl_certificate_paths();
+  std::list<std::string> const & verifier_paths =
+      options_.openssl_verify_paths();
+  bool verify_peer = false;
+  for (std::list<std::string>::const_iterator it = certificate_paths.begin();
+       it != certificate_paths.end(); ++it) {
+    context_->load_verify_file(*it);
+    verify_peer = true;
   }
+  for (std::list<std::string>::const_iterator it = verifier_paths.begin();
+       it != verifier_paths.begin(); ++it) {
+    context_->add_verify_path(*it);
+    verify_peer = true;
+  }
+  if (verify_peer) context_->set_verify_mode(asio::ssl::context::verify_peer);
+  else context_->set_verify_mode(asio::ssl::context::verify_none);
   socket_.reset(new asio::ssl::stream<asio::ip::tcp::socket>(service_, *context_));
   socket_->lowest_layer().async_connect(
       endpoint,

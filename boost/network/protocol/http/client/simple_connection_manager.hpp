@@ -16,6 +16,9 @@ namespace boost { namespace network { namespace http {
 /// Forward declaration of simple_connection_manager_pimpl.
 struct simple_connection_manager_pimpl;
 
+/// Forward declaration of the client_options class.
+class client_options;
+
 /** simple_connection_manager
  *  
  *  This connection manager implementation doesn't do any connection tracking
@@ -25,46 +28,9 @@ struct simple_connection_manager : connection_manager {
   /** Constructor
    *
    *  Args:
-   *    bool cache_resolved: Indicate whether to cache resolved endpoints.
-   *    bool follow_redirects: Indicate whether to follow HTTP 301/302/304
-   *                           redirections.
-   *    optional<std::string> openssl_certificate: The filename for the
-   *                                               OpenSSL certificate to use.
-   *    optional<std::string> openssl_verify_path: The directory from which
-   *                                               OpenSSL certificates are
-   *                                               searched for when
-   *                                               verification is requested.
-   *    shared_ptr<connection_factory>: The connection factory that actually
-   *                                    creates the appropriate client
-   *                                    connection object.
+   *    options: A properly construction client_options instance.
    */
-  simple_connection_manager(bool cache_resolved,
-                            bool follow_redirects,
-                            optional<std::string> openssl_certificate,
-                            optional<std::string> openssl_verify_path,
-                            shared_ptr<connection_factory> connection_factory);
-
-  /** Constructor
-   *
-   *  Args:
-   *    bool cache_resolved: Indicate whether to cache resolved endpoints.
-   *    bool follow_redirects: Indicate whether to follow HTTP 301/302/304
-   *                           redirections.
-   *    std::string const & openssl_certificate: The filename for the
-   *                                             OpenSSL certificate to use.
-   *    std::string const & openssl_verify_path: The directory from which
-   *                                             OpenSSL certificates are
-   *                                             searched for when
-   *                                             verification is requested.
-   *    shared_ptr<connection_factory>: The connection factory that actually
-   *                                    creates the appropriate client
-   *                                    connection object.
-   */
-  simple_connection_manager(bool cache_resolved,
-                            bool follow_redirects,
-                            std::string const & openssl_certificate,
-                            std::string const & openssl_verify_path,
-                            shared_ptr<connection_factory> connection_factory);
+  explicit simple_connection_manager(client_options const &options);
 
   /** get_connection
    *
@@ -75,6 +41,8 @@ struct simple_connection_manager : connection_manager {
    *                               created objects).
    *   request_base const & request: The request object that includes the
    *                                 information required by the connection.
+   *   client_options const & options: The options relating to the client
+   *                                   options.
    *
    * Returns:
    *   shared_ptr<client_connection> -- either an already-generated object
@@ -82,7 +50,8 @@ struct simple_connection_manager : connection_manager {
    */
   virtual shared_ptr<client_connection> get_connection(
       asio::io_service & service,
-      request_base const & request);  // override
+      request_base const & request,
+      client_options const & options);  // override
 
   /** reset
    *

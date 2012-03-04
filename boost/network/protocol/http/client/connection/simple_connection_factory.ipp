@@ -11,6 +11,7 @@
 #include <boost/network/protocol/http/client/connection/resolver_delegate_factory.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
+#include <boost/network/protocol/http/client/options.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -24,19 +25,15 @@ struct simple_connection_factory_pimpl {
   shared_ptr<client_connection> create_connection(
       asio::io_service & service,
       request_base const & request,
-      bool cache_resolved,
-      bool follow_redirects,
-      optional<std::string> openssl_certificate,
-      optional<std::string> openssl_verify_path) {
+      client_options const & options) {
     ::boost::network::uri::uri uri_(destination(request));
     bool https = to_lower_copy(scheme(uri_)) == "https";
     shared_ptr<client_connection> conn_;
     conn_.reset(new (std::nothrow) http_async_connection(
-      res_delegate_factory_->create_resolver_delegate(service, cache_resolved),
-      conn_delegate_factory_->create_connection_delegate(
-        service, https, openssl_certificate, openssl_verify_path),
+      res_delegate_factory_->create_resolver_delegate(service, options.cache_resolved()),
+      conn_delegate_factory_->create_connection_delegate(service, https, options),
       service,
-      follow_redirects));
+      options.follow_redirects()));
     return conn_;
   }
 
@@ -62,12 +59,8 @@ simple_connection_factory::simple_connection_factory(shared_ptr<connection_deleg
 shared_ptr<client_connection>
 simple_connection_factory::create_connection(asio::io_service & service,
                                              request_base const & request,
-                                             bool cache_resolved,
-                                             bool follow_redirects,
-                                             optional<std::string> openssl_certificate,
-                                             optional<std::string> openssl_verify_path) {
-  return pimpl->create_connection(service, request, cache_resolved, follow_redirects,
-                                  openssl_certificate, openssl_verify_path);
+                                             client_options const &options) {
+  return pimpl->create_connection(service, request, options);
 }
 
 simple_connection_factory::~simple_connection_factory() {
