@@ -57,7 +57,7 @@ struct response : response_base {
   virtual ~response();
 
  private:
-  friend class impl::setter_access;  // Hide access through accessor class.
+  friend struct impl::setter_access;  // Hide access through accessor class.
   // These methods are unique to the response type which will allow for creating
   // promises that can be set appropriately.
   void set_version_promise(promise<std::string>&);

@@ -9,3 +9,5 @@
 #endif
 
 #include <boost/network/protocol/http/client/base.ipp>
+#include <boost/network/protocol/http/client/facade.ipp>
+#include <boost/network/protocol/http/client/options.ipp>

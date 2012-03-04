@@ -1,12 +1,14 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_20091215
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_20091215
 
-//          Copyright Dean Michael Berris 2007-2010.
+// Copyright 2012 Dean Michael Berris <dberris@google.com>.
+// Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/version.hpp>
+#include <boost/network/protocol/http/client/options.hpp>
 
 #include <boost/asio/io_service.hpp>
 #include <boost/network/protocol/http/client/facade.hpp>
@@ -27,43 +29,15 @@ struct client : basic_client_facade {
 
   // Constructor
   // =================================================================
-  // This is a Boost.Parameter-based constructor forwarder, whose
-  // implementation is actually forwarded to the base type.
+  // A client can be default constructed.
+  client();
+  // This is a simplified constructor that takes a reference to a const
+  // client_options instance. To find out what the supported options are
+  // see the boost/network/protocol/http/client/options.hpp file.
   //
-  // The supported parameters are:
-  //      _follow_redirects : bool -- whether to follow HTTP redirect
-  //                                  responses (default: false)
-  //      _cache_resolved   : bool -- whether to cache the resolved
-  //                                  endpoints (default: false)
-  //      _io_service       : boost::asio::io_service &
-  //                               -- supply an io_service to the
-  //                                  client
-  //      _openssl_certificate : string
-  //                               -- the name of the certificate file
-  //                                  to use
-  //      _openssl_verify_path : string
-  //                               -- the name of the directory from
-  //                                  which the certificate authority
-  //                                  files can be found
-  //      _connection_manager : shared_ptr<connection_manager>
-  //                              -- The connection manager to use for
-  //                                 this client.
-
-  BOOST_PARAMETER_CONSTRUCTOR(
-      client, (base_facade_type), tag,
-      (optional
-          (in_out(io_service), (boost::asio::io_service&))
-          (follow_redirects, (bool))
-          (cache_resolved, (bool))
-          (openssl_certificate, (std::string))
-          (openssl_verify_path, (std::string))
-          (connection_manager, (shared_ptr<connection_manager>))
-          (connection_factory, (shared_ptr<connection_factory>))
-          ))
-
+  explicit client(client_options const &options);
   //
   // =================================================================
-
 };
 
 } // namespace http
