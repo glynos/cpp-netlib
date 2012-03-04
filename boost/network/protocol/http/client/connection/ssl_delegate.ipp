@@ -26,19 +26,17 @@ void boost::network::http::ssl_delegate::connect(
       options_.openssl_certificate_paths();
   std::list<std::string> const & verifier_paths =
       options_.openssl_verify_paths();
-  bool verify_peer = false;
+  bool verify_peer = !certificate_paths.empty() || !verifier_paths.empty();
+  if (verify_peer) context_->set_verify_mode(asio::ssl::context::verify_peer);
+  else context_->set_verify_mode(asio::ssl::context::verify_none);
   for (std::list<std::string>::const_iterator it = certificate_paths.begin();
        it != certificate_paths.end(); ++it) {
     context_->load_verify_file(*it);
-    verify_peer = true;
   }
   for (std::list<std::string>::const_iterator it = verifier_paths.begin();
        it != verifier_paths.begin(); ++it) {
     context_->add_verify_path(*it);
-    verify_peer = true;
   }
-  if (verify_peer) context_->set_verify_mode(asio::ssl::context::verify_peer);
-  else context_->set_verify_mode(asio::ssl::context::verify_none);
   socket_.reset(new asio::ssl::stream<asio::ip::tcp::socket>(service_, *context_));
   socket_->lowest_layer().async_connect(
       endpoint,
