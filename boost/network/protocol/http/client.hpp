@@ -12,7 +12,6 @@
 
 #include <boost/asio/io_service.hpp>
 #include <boost/network/protocol/http/client/facade.hpp>
-#include <boost/network/protocol/http/client/parameters.hpp>
 #include <boost/network/protocol/http/client/macros.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
