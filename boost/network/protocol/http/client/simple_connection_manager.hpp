@@ -61,6 +61,12 @@ struct simple_connection_manager : connection_manager {
    */
   virtual void reset();  // override
 
+  /** clear_resolved_cache
+   *
+   * This function resets all the resolved endpoints that have been cached.
+   */
+  virtual void clear_resolved_cache();
+
   /** Destructor.
    */
   virtual ~simple_connection_manager();  // override

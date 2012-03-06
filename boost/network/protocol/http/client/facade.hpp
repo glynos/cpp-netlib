@@ -16,7 +16,8 @@ namespace boost { namespace network { namespace http {
 struct basic_client_facade {
   typedef client_base::body_callback_function_type body_callback_function_type;
 
-  basic_client_facade(client_options const &options);
+  basic_client_facade();
+  explicit basic_client_facade(client_options const &options);
 
   response const head(request const &request, request_options const&options=request_options());
   response const get(request const &request,

@@ -46,4 +46,8 @@ struct client : basic_client_facade {
 
 } // namespace boost
 
+#ifdef BOOST_NETWORK_NO_LIB
+#include <boost/network/protocol/http/client.ipp>
+#endif
+
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_20091215

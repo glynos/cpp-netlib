@@ -21,6 +21,7 @@ struct connection_manager {
       asio::io_service & service,
       request_base const & request,
       client_options const & options) = 0;
+  virtual void clear_resolved_cache() = 0;
   virtual void reset() = 0;
   virtual ~connection_manager() = 0;
 };

@@ -26,6 +26,7 @@ struct client_base {
     function<void(boost::iterator_range<char const *> const &, system::error_code const &)>
     body_callback_function_type;
 
+  client_base();
   explicit client_base(client_options const &options);
   ~client_base();
   response const request_skeleton(request const & request_,

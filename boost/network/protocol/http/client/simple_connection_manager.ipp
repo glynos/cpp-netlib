@@ -28,6 +28,10 @@ struct simple_connection_manager_pimpl {
     // do nothing here.
   }
 
+  void clear_resolved_cache() {
+    // TODO(deanberris): Make this happen!
+  }
+
   ~simple_connection_manager_pimpl() {
     // do nothing here.
   }
@@ -50,6 +54,10 @@ shared_ptr<client_connection> simple_connection_manager::get_connection(
 
 void simple_connection_manager::reset() {
   pimpl->reset();
+}
+
+void simple_connection_manager::clear_resolved_cache() {
+  pimpl->clear_resolved_cache();
 }
 
 simple_connection_manager::~simple_connection_manager() {

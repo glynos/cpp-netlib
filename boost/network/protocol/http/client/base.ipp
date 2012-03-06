@@ -28,6 +28,7 @@ struct client_base_pimpl {
                                   bool get_body,
                                   body_callback_function_type callback,
                                   request_options const &options);
+  void clear_resolved_cache();
   ~client_base_pimpl();
  private:
   client_options options_;
@@ -37,9 +38,17 @@ struct client_base_pimpl {
   shared_ptr<connection_manager> connection_manager_;
 };
 
+client_base::client_base()
+: pimpl(new (std::nothrow) client_base_pimpl(client_options()))
+{}
+
 client_base::client_base(client_options const &options)
 : pimpl(new (std::nothrow) client_base_pimpl(options))
 {}
+
+void client_base::clear_resolved_cache() {
+  pimpl->clear_resolved_cache();
+}
 
 response const client_base::request_skeleton(request const & request_,
                                              std::string const & method,
@@ -90,6 +99,10 @@ response const client_base_pimpl::request_skeleton(
   shared_ptr<client_connection> connection_;
   connection_ = connection_manager_->get_connection(*service_ptr, request_, options_);
   return connection_->send_request(method, request_, get_body, callback, options);
+}
+
+void client_base_pimpl::clear_resolved_cache() {
+  connection_manager_->clear_resolved_cache();
 }
 
 } // namespace http
