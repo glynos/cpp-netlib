@@ -192,6 +192,86 @@ shared_ptr<http::connection_factory> client_options::connection_factory() const 
   return pimpl->connection_factory();
 }
 
+// End of client_options.
+
+class request_options_pimpl {
+public:
+  request_options_pimpl()
+  : timeout_ms_(30 * 1000)
+  , max_redirects_(10)
+  {}
+
+  request_options_pimpl *clone() const {
+    return new (std::nothrow) request_options_pimpl(*this);
+  }
+
+  void timeout(uint64_t milliseconds) {
+    timeout_ms_ = milliseconds;
+  }
+
+  uint64_t timeout() const {
+    return timeout_ms_;
+  }
+
+  void max_redirects(int redirects) {
+    max_redirects_ = redirects;
+  }
+
+  int max_redirects() const {
+    return max_redirects_;
+  }
+
+private:
+  uint64_t timeout_ms_;
+  int max_redirects_;
+
+  request_options_pimpl(request_options_pimpl const &other)
+  : timeout_ms_(other.timeout_ms_)
+  , max_redirects_(other.max_redirects_)
+  {}
+
+  request_options_pimpl& operator=(request_options_pimpl);  // cannot be assigned.
+};
+
+request_options::request_options()
+: pimpl(new (std::nothrow) request_options_pimpl)
+{}
+
+request_options::request_options(request_options const &other)
+: pimpl(other.pimpl->clone())
+{}
+
+request_options& request_options::operator=(request_options rhs) {
+  rhs.swap(*this);
+  return *this;
+}
+
+void request_options::swap(request_options &other) {
+  std::swap(other.pimpl, this->pimpl);
+}
+
+request_options::~request_options() {
+  delete pimpl;
+}
+
+request_options& request_options::timeout(uint64_t milliseconds) {
+  pimpl->timeout(milliseconds);
+  return *this;
+}
+
+uint64_t request_options::timeout() const {
+  return pimpl->timeout();
+}
+
+request_options& request_options::max_redirects(int redirects) {
+  pimpl->max_redirects(redirects);
+  return *this;
+}
+
+int request_options::max_redirects() const {
+  return pimpl->max_redirects();
+}
+
 }  // namespace http
 }  // namespace network
 }  // namespace boost
