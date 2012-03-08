@@ -8,6 +8,8 @@
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_IPP
 
 #include <boost/network/protocol/http/client/options.hpp>
+#include <boost/network/protocol/http/client/simple_connection_manager.hpp>
+#include <boost/network/protocol/http/client/connection/simple_connection_factory.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -19,7 +21,10 @@ public:
   , cache_resolved_(false)
   , openssl_certificate_paths_()
   , openssl_verify_paths_()
-  {}
+  , connection_manager_()
+  , connection_factory_()
+  {
+  }
 
   client_options_pimpl *clone() const {
     return new (std::nothrow) client_options_pimpl(*this);
@@ -65,6 +70,22 @@ public:
     return openssl_verify_paths_;
   }
 
+  void connection_manager(shared_ptr<http::connection_manager> manager) {
+    connection_manager_ = manager;
+  }
+
+  shared_ptr<http::connection_manager> connection_manager() const {
+    return connection_manager_;
+  }
+
+  void connection_factory(shared_ptr<http::connection_factory> factory) {
+    connection_factory_ = factory;
+  }
+
+  shared_ptr<http::connection_factory> connection_factory() const {
+    return connection_factory_;
+  }
+
 private:
   client_options_pimpl(client_options_pimpl const &other)
   : io_service_(other.io_service_)
@@ -72,6 +93,8 @@ private:
   , cache_resolved_(other.cache_resolved_)
   , openssl_certificate_paths_(other.openssl_certificate_paths_)
   , openssl_verify_paths_(other.openssl_verify_paths_)
+  , connection_manager_(other.connection_manager_)
+  , connection_factory_(other.connection_factory_)
   {}
 
   client_options_pimpl& operator=(client_options_pimpl);  // cannot assign
@@ -80,6 +103,8 @@ private:
   asio::io_service *io_service_;
   bool follow_redirects_, cache_resolved_;
   std::list<std::string> openssl_certificate_paths_, openssl_verify_paths_;
+  shared_ptr<http::connection_manager> connection_manager_;
+  shared_ptr<http::connection_factory> connection_factory_;
 };
   
 client_options::client_options()
@@ -147,6 +172,24 @@ client_options& client_options::add_openssl_verify_path(std::string const &path)
 
 std::list<std::string> const & client_options::openssl_verify_paths() const {
   return pimpl->openssl_verify_paths();
+}
+
+client_options& client_options::connection_manager(shared_ptr<http::connection_manager> manager) {
+  pimpl->connection_manager(manager);
+  return *this;
+}
+
+shared_ptr<http::connection_manager> client_options::connection_manager() const {
+  return pimpl->connection_manager();
+}
+
+client_options& client_options::connection_factory(shared_ptr<http::connection_factory> factory) {
+  pimpl->connection_factory(factory);
+  return *this;
+}
+
+shared_ptr<http::connection_factory> client_options::connection_factory() const {
+  return pimpl->connection_factory();
 }
 
 }  // namespace http

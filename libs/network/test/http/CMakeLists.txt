@@ -30,6 +30,7 @@ if (Boost_FOUND)
             cppnetlib-uri
             cppnetlib-message
             cppnetlib-message-wrappers
+            cppnetlib-message-directives
             cppnetlib-http-message
             cppnetlib-http-client
             cppnetlib-http-client-connections)
@@ -40,6 +41,7 @@ if (Boost_FOUND)
             cppnetlib-uri
             cppnetlib-message
             cppnetlib-message-wrappers
+            cppnetlib-message-directives
             cppnetlib-http-message
             cppnetlib-http-client
             cppnetlib-http-client-connections)

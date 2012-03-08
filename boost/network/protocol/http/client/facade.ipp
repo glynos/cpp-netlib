@@ -5,6 +5,14 @@
 
 namespace boost { namespace network { namespace http {
 
+basic_client_facade::basic_client_facade()
+: base(new (std::nothrow) client_base())
+{}
+
+basic_client_facade::basic_client_facade(client_options const &options)
+: base(new (std::nothrow) client_base(options))
+{}
+
 response const basic_client_facade::head(request const &request,
                                          request_options const&options) {
   return base->request_skeleton(request,
