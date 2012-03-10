@@ -14,9 +14,6 @@ add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
 set(CPP-NETLIB_HTTP_SERVER_SRCS server_request_parsers_impl.cpp)
 add_library(cppnetlib-server-parsers ${CPP-NETLIB_HTTP_SERVER_SRCS})
 
-set(CPP-NETLIB_HTTP_CLIENT_SRCS client.cpp)
-add_library(cppnetlib-client-connections ${CPP-NETLIB_HTTP_CLIENT_SRCS})
-
 set(CPP-NETLIB_MESSAGE_SRCS message/message.cpp)
 add_library(cppnetlib-message ${CPP-NETLIB_MESSAGE_SRCS})
 

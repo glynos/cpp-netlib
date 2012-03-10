@@ -68,7 +68,7 @@ struct request : request_base {
 
   virtual ~request();
  private:
-  scoped_ptr<request_pimpl> pimpl_;
+  request_pimpl* pimpl_;
 };
 
 template <class Directive>
