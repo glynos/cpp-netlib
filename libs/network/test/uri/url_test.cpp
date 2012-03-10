@@ -221,3 +221,33 @@ BOOST_AUTO_TEST_CASE(issue_67_test)
     BOOST_CHECK(uri::is_valid(bar0));
     BOOST_CHECK(uri::is_valid(bar1));
 }
+
+BOOST_AUTO_TEST_CASE(from_parts_1)
+{
+    BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path?query#fragment"),
+                      uri::from_parts(uri::uri("http://www.example.com"), "/path", "query", "fragment"));
+}
+
+BOOST_AUTO_TEST_CASE(from_parts_2)
+{
+    BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path?query#fragment"),
+                      uri::from_parts("http://www.example.com", "/path", "query", "fragment"));
+}
+
+BOOST_AUTO_TEST_CASE(from_parts_3)
+{
+    BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path?query"),
+                      uri::from_parts("http://www.example.com", "/path", "query"));
+}
+
+BOOST_AUTO_TEST_CASE(from_parts_4)
+{
+    BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path"),
+                      uri::from_parts("http://www.example.com", "/path"));
+}
+
+BOOST_AUTO_TEST_CASE(from_file)
+{
+    boost::filesystem::path path("/a/path/to/a/file.txt");
+    BOOST_CHECK_EQUAL(uri::uri("file:///a/path/to/a/file.txt"), uri::from_file(path));
+}

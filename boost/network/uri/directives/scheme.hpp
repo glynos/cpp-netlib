@@ -54,6 +54,11 @@ inline
 uri &https(uri &uri_) {
     return uri_ << scheme("https");
 }
+
+inline
+uri &file(uri &uri_) {
+    return uri_ << scheme("file");
+}
 } // namespace schemes
 } // namespace uri
 } // namespace network

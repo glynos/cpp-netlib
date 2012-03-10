@@ -25,6 +25,10 @@ template <
 struct key_value_sequence
     : spirit::qi::grammar<uri::const_iterator, Map()>
 {
+    typedef typename Map::key_type key_type;
+    typedef typename Map::mapped_type mapped_type;
+    typedef std::pair<key_type, mapped_type> pair_type;
+
     key_value_sequence()
         : key_value_sequence::base_type(query)
     {
@@ -35,8 +39,9 @@ struct key_value_sequence
     }
 
     spirit::qi::rule<uri::const_iterator, Map()> query;
-    spirit::qi::rule<uri::const_iterator, std::pair<std::string, std::string>()> pair;
-    spirit::qi::rule<uri::const_iterator, typename std::string()> key, value;
+    spirit::qi::rule<uri::const_iterator, pair_type()> pair;
+    spirit::qi::rule<uri::const_iterator, key_type()> key;
+    spirit::qi::rule<uri::const_iterator, mapped_type()> value;
 };
 } // namespace details
 
@@ -45,27 +50,27 @@ template <
     >
 inline
 Map &query_map(const uri &uri_, Map &map) {
-    const std::string range = uri_.query();
+    const uri::string_type range = uri_.query();
     details::key_value_sequence<Map> parser;
     spirit::qi::parse(boost::begin(range), boost::end(range), parser, map);
     return map;
 }
 
 inline
-std::string username(const uri &uri_) {
-    const std::string user_info = uri_.user_info();
+uri::string_type username(const uri &uri_) {
+    const uri::string_type user_info = uri_.user_info();
     uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
     for (; it != end; ++it) {
         if (*it == ':') {
             break;
         }
     }
-    return std::string(boost::begin(user_info), it);
+    return uri::string_type(boost::begin(user_info), it);
 }
 
 inline
-std::string password(const uri &uri_) {
-    const std::string user_info = uri_.user_info();
+uri::string_type password(const uri &uri_) {
+    const uri::string_type user_info = uri_.user_info();
     uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
     for (; it != end; ++it) {
         if (*it == ':') {
@@ -73,29 +78,29 @@ std::string password(const uri &uri_) {
             break;
         }
     }
-    return std::string(it, boost::end(user_info));
+    return uri::string_type(it, boost::end(user_info));
 }
 
 inline
-std::string decoded_path(const uri &uri_) {
-    const std::string path = uri_.path();
-    std::string decoded_path;
+uri::string_type decoded_path(const uri &uri_) {
+    const uri::string_type path = uri_.path();
+    uri::string_type decoded_path;
     decode(path, std::back_inserter(decoded_path));
     return decoded_path;
 }
 
 inline
-std::string decoded_query(const uri &uri_) {
-    const std::string query = uri_.query();
-    std::string decoded_query;
+uri::string_type decoded_query(const uri &uri_) {
+    const uri::string_type query = uri_.query();
+    uri::string_type decoded_query;
     decode(query, std::back_inserter(decoded_query));
     return decoded_query;
 }
 
 inline
-std::string decoded_fragment(const uri &uri_) {
-    const std::string fragment = uri_.fragment();
-    std::string decoded_fragment;
+uri::string_type decoded_fragment(const uri &uri_) {
+    const uri::string_type fragment = uri_.fragment();
+    uri::string_type decoded_fragment;
     decode(fragment, std::back_inserter(decoded_fragment));
     return decoded_fragment;
 }

@@ -15,19 +15,27 @@
 namespace boost {
 namespace network {
 namespace uri {
-struct hierarchical_schemes {
+class hierarchical_schemes {
+
+public:
 
     static void register_(const std::string &scheme);
     static bool exists(const std::string &scheme);
+
+private:
 
     static boost::unordered_set<std::string> schemes_;
 
 };
 
-struct non_hierarchical_schemes {
+class non_hierarchical_schemes {
+
+public:
 
     static void register_(const std::string &scheme);
     static bool exists(const std::string &scheme);
+
+private:
 
     static boost::unordered_set<std::string> schemes_;
 
