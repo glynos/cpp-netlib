@@ -1,14 +1,13 @@
-// Copyright 2009, 2010, 2011 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
+//            Copyright (c) Glyn Matthews 2012.
 // Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt of copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_TEST_MODULE URL Test
+#define BOOST_TEST_MODULE Relative URL Test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/uri_io.hpp>
-
 
 using namespace boost::network;
 
