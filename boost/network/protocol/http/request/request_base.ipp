@@ -70,16 +70,19 @@ void request_storage_base_pimpl::append(char const *data, size_t size) {
         new (std::nothrow) char[chunk_size_], 0));
   }
   std::pair<char *, size_t> *chunk = &chunks_.back();
+  BOOST_ASSERT(chunk_size_ >= chunk->second);
   size_t remaining = chunk_size_ - chunk->second;
   while (remaining < size) {
-    std::memcpy(chunk->first + chunk->second, data, size - remaining);
-    chunk->second += size - remaining;
-    data += remaining;
-    size -= remaining;
+    size_t bytes_to_write = std::min(size - remaining, chunk_size_);
+    std::memcpy(chunk->first + chunk->second, data, bytes_to_write);
+    chunk->second += bytes_to_write;
+    BOOST_ASSERT(chunk->second <= chunk_size_);
+    data += bytes_to_write;
+    size -= bytes_to_write;
     chunks_.push_back(std::make_pair(
         new (std::nothrow) char[chunk_size_], 0));
     chunk = &chunks_.back();
-    remaining = chunk_size_ - chunk->second;
+    remaining = chunk_size_;
   }
   if (size > 0) {
     std::memcpy(chunk->first + chunk->second, data, size);
@@ -92,6 +95,7 @@ size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t
   // First we find which chunk we're going to read from using the provided
   // offset and some arithmetic to determine the correct one.
   size_t chunk_index = offset / chunk_size_;
+  offset = offset % chunk_size_;
 
   // Then we start copying up to size data either until we've reached the end
   // or we're 
@@ -99,9 +103,12 @@ size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t
   size_t read_count = 0;
   while (size > 0 && chunk_index < chunks_.size()) {
     size_t bytes_to_read = std::min(chunks_[chunk_index].second, size);
-    std::memcpy(destination + read_count, chunks_[chunk_index].first, bytes_to_read);
+    std::memcpy(destination + read_count,
+                chunks_[chunk_index].first + offset,
+                bytes_to_read);
     read_count += bytes_to_read;
     size -= bytes_to_read;
+    offset = 0;
     ++chunk_index;
   }
   return read_count;

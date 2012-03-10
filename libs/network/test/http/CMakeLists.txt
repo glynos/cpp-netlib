@@ -18,6 +18,8 @@ if (Boost_FOUND)
         ${Boost_LIBRARIES}
         cppnetlib-message
         cppnetlib-http-message)
+    set_target_properties(cpp-netlib-http-request_base_test
+        PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
     add_test(cpp-netlib-http-request_base_test
         ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-request_base_test)
 
