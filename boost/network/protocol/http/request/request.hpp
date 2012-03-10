@@ -53,7 +53,7 @@ struct request : request_base {
   virtual void set_method(std::string const & method);
   virtual void set_status(std::string const & status);
   virtual void set_status_message(std::string const & status_message);
-  virtual void set_body_stream(shared_ptr<body_stream> stream);
+  virtual void set_body_writer(function<void(char*, size_t)> writer);
   virtual void set_uri(std::string const &uri);
   virtual void set_uri(network::uri::uri const &uri);
 
@@ -63,7 +63,8 @@ struct request : request_base {
   virtual void get_method(std::string & method) const;
   virtual void get_status(std::string & status) const;
   virtual void get_status_message(std::string & status_message) const;
-  virtual void get_body_stream(body_stream & output_stream) const;
+  virtual void get_body(function<void(char*, size_t)> chunk_reader) const;
+  virtual void get_body(std::string const & body) const;
 
   virtual ~request();
  private:

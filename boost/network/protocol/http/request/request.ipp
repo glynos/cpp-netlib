@@ -21,7 +21,7 @@ struct request_pimpl {
 };
 
 request::~request() {
-  // Do nothing here.
+  // do nothing here
 }
 
 request::request(std::string const & url)

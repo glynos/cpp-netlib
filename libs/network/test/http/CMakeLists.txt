@@ -12,6 +12,15 @@ if (OPENSSL_FOUND)
 endif()
 
 if (Boost_FOUND)
+    # These are the internal (simple) tests.
+    add_executable(cpp-netlib-http-request_base_test request_base_test.cpp)
+    target_link_libraries(cpp-netlib-http-request_base_test
+        ${Boost_LIBRARIES}
+        cppnetlib-message
+        cppnetlib-http-message)
+    add_test(cpp-netlib-http-request_base_test
+        ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-request_base_test)
+
     set ( TESTS
         client_constructor_test
         client_get_test
@@ -25,15 +34,6 @@ if (Boost_FOUND)
                 PROPERTIES COMPILE_FLAGS "-Wall")
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
-        add_dependencies(cpp-netlib-http-${test}
-            cppnetlib-constants
-            cppnetlib-uri
-            cppnetlib-message
-            cppnetlib-message-wrappers
-            cppnetlib-message-directives
-            cppnetlib-http-message
-            cppnetlib-http-client
-            cppnetlib-http-client-connections)
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT}
