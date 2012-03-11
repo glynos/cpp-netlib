@@ -11,22 +11,17 @@
 
 namespace boost { namespace network { namespace http {
 
-namespace impl {
-
 struct status_wrapper {
-  explicit status_wrapper(response_base & response_);
-  operator std::string () const;
+  explicit status_wrapper(response_base & response);
   operator uint16_t () const;
  private:
   response_base & response_;
 };
 
-} // namespace impl
-
 inline
-impl::status_wrapper
+status_wrapper const
 status(response_base & response) {
-    return impl::status_wrapper(response);
+    return status_wrapper(response);
 }
 
 } // namespace http

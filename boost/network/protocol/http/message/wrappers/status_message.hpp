@@ -11,10 +11,8 @@
 
 namespace boost { namespace network { namespace http {
 
-namespace impl {
-
 struct status_message_wrapper {
-  explicit status_message_wrapper(response_base & response_);
+  explicit status_message_wrapper(response_base & response);
   operator std::string () const;
  private:
   response_base & response_;
@@ -25,12 +23,10 @@ inline std::ostream & operator<<(std::ostream & os, status_message_wrapper const
   return os << static_cast<std::string>(status_message);
 }
 
-} // namespace impl
-
 inline 
-impl::status_message_wrapper
+status_message_wrapper
 status_message(response_base & response) {
-    return impl::status_message_wrapper(response);
+    return status_message_wrapper(response);
 }
 
 } // namespace http
