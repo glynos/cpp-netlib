@@ -16,6 +16,7 @@ namespace impl {
 struct status_wrapper {
   explicit status_wrapper(response_base & response_);
   operator std::string () const;
+  operator uint16_t () const;
  private:
   response_base & response_;
 };

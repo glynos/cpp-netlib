@@ -7,7 +7,6 @@
 #include <boost/network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
 #include <iostream>
-#include "client_types.hpp"
 
 namespace net = boost::network;
 namespace http = boost::network::http;
@@ -26,23 +25,28 @@ struct body_handler {
 };
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_get_streaming_test, client, async_only_client_types) {
-    typename client::request request("http://www.boost.org");
-    typename client::response response;
-    typename client::string_type body_string;
-    typename client::string_type dummy_body;
-    body_handler handler_instance(body_string);
-    {
-        client client_;
-        BOOST_CHECK_NO_THROW( response = client_.get(request, http::_body_handler=handler_instance) );
-        typename net::headers_range<typename client::response>::type range = headers(response)["Content-Type"];
-        BOOST_CHECK ( !boost::empty(range) );
-        BOOST_CHECK_EQUAL ( body(response).size(), 0u );
-        BOOST_CHECK_EQUAL ( response.version().substr(0, 7), std::string("HTTP/1.") );
-        BOOST_CHECK_EQUAL ( response.status(), 200u );
-        BOOST_CHECK_EQUAL ( response.status_message(), std::string("OK") );
-        dummy_body = body(response);
-    }
-    BOOST_CHECK ( dummy_body == typename client::string_type() );
+BOOST_AUTO_TEST_CASE(http_client_get_streaming_test) {
+  http::client::request request("http://www.boost.org");
+  http::client::response response;
+  std::string body_string;
+  std::string dummy_body;
+  body_handler handler_instance(body_string);
+  {
+      http::client client_;
+      BOOST_CHECK_NO_THROW( response = client_.get(request, handler_instance) );
+      net::headers_wrapper::range_type range = headers(response)["Content-Type"];
+      BOOST_CHECK ( !boost::empty(range) );
+      BOOST_CHECK_EQUAL ( body(response).size(), 0u );
+      std::string version_, status_message_;
+      boost::uint16_t status_;
+      version_ = version(response);
+      status_ = status(response);
+      status_message_ = status_message(response);
+      BOOST_CHECK_EQUAL ( version_.substr(0, 7), std::string("HTTP/1.") );
+      BOOST_CHECK_EQUAL ( status_, 200u );
+      BOOST_CHECK_EQUAL ( status_message_, std::string("OK") );
+      dummy_body = body(response);
+  }
+  BOOST_CHECK ( dummy_body == std::string() );
 }
 

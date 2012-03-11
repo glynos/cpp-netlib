@@ -15,26 +15,16 @@
 
 namespace boost { namespace network { namespace http {
 
-template <class String>
 struct status_directive {
-
-  status_directive(String const & s)
-  : status_(s)
-  {}
-
-  void operator()(response_base & response) {
-    response.set_status(status_);
-  }
+  explicit status_directive(std::string const & s);
+  void operator()(response_base & response) const;
 
  protected:
-  
-  String status_;
-
+  std::string status_;
 };
 
-template <class String>
-inline status_directive<String> status(String const & response) {
-  return status_directive<String>(response);
+inline status_directive status(std::string const & response) {
+  return status_directive(response);
 }
 
 } // namespace http
