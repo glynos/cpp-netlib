@@ -306,10 +306,28 @@ BOOST_AUTO_TEST_CASE(username_test) {
     BOOST_CHECK_EQUAL(uri::password(instance), "password");
 }
 
+BOOST_AUTO_TEST_CASE(hierarchical_part_test) {
+    uri::uri instance("http://user:password@www.example.com:80/path?query#fragment");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::hierarchical_part(instance), "user:password@www.example.com:80/path");
+}
+
+BOOST_AUTO_TEST_CASE(partial_hierarchical_part_test) {
+    uri::uri instance("http://www.example.com?query#fragment");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::hierarchical_part(instance), "www.example.com");
+}
+
 BOOST_AUTO_TEST_CASE(authority_test) {
     uri::uri instance("http://user:password@www.example.com:80/path?query#fragment");
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::authority(instance), "user:password@www.example.com:80");
+}
+
+BOOST_AUTO_TEST_CASE(partial_authority_test) {
+    uri::uri instance("http://www.example.com/path?query#fragment");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::authority(instance), "www.example.com");
 }
 
 BOOST_AUTO_TEST_CASE(http_query_map_test) {
