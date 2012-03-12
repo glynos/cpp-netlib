@@ -27,7 +27,7 @@ public:
 
     builder &scheme(const string_type &scheme) {
         uri_.uri_.append(scheme);
-        if (non_hierarchical_schemes::exists(scheme)) {
+        if (opaque_schemes::exists(scheme)) {
             uri_.uri_.append(":");
         }
         else {

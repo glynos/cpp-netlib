@@ -285,8 +285,18 @@ bool is_absolute(const uri &uri_) {
 }
 
 inline
+bool is_relative(const uri &uri_) {
+    return uri_.is_valid() && boost::empty(uri_.scheme_range());
+}
+
+inline
 bool is_hierarchical(const uri &uri_) {
     return is_absolute(uri_) && hierarchical_schemes::exists(scheme(uri_));
+}
+
+inline
+bool is_opaque(const uri &uri_) {
+    return is_absolute(uri_) && opaque_schemes::exists(scheme(uri_));
 }
 
 inline

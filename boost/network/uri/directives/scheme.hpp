@@ -27,7 +27,7 @@ struct scheme_directive {
         >
     void operator () (Uri &uri) const {
         uri.append(scheme);
-        if (non_hierarchical_schemes::exists(scheme)) {
+        if (opaque_schemes::exists(scheme)) {
             uri.append(":");
         }
         else {

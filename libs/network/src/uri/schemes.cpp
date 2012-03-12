@@ -13,7 +13,7 @@ namespace network {
 namespace uri {
 namespace {
 static boost::unordered_set<std::string> hierarchical_schemes_;
-static boost::unordered_set<std::string> non_hierarchical_schemes_;
+static boost::unordered_set<std::string> opaque_schemes_;
 
 bool register_hierarchical_schemes() {
     hierarchical_schemes_.insert("http");
@@ -36,27 +36,27 @@ bool register_hierarchical_schemes() {
     return true;
 }
 
-bool register_non_hierarchical_schemes() {
-    non_hierarchical_schemes_.insert("mailto");
-    non_hierarchical_schemes_.insert("news");
-    non_hierarchical_schemes_.insert("im");
-    non_hierarchical_schemes_.insert("sip");
-    non_hierarchical_schemes_.insert("sms");
-    non_hierarchical_schemes_.insert("xmpp");
+bool register_opaque_schemes() {
+    opaque_schemes_.insert("mailto");
+    opaque_schemes_.insert("news");
+    opaque_schemes_.insert("im");
+    opaque_schemes_.insert("sip");
+    opaque_schemes_.insert("sms");
+    opaque_schemes_.insert("xmpp");
     return true;
 }
 
 
 static bool hierarchical = register_hierarchical_schemes();
-static bool non_hierarchical = register_non_hierarchical_schemes();
+static bool opaque = register_opaque_schemes();
 } // namespace
 
 bool hierarchical_schemes::exists(const std::string &scheme) {
     return hierarchical_schemes_.end() != hierarchical_schemes_.find(scheme);
 }
 
-bool non_hierarchical_schemes::exists(const std::string &scheme) {
-    return non_hierarchical_schemes_.end() != non_hierarchical_schemes_.find(scheme);
+bool opaque_schemes::exists(const std::string &scheme) {
+    return opaque_schemes_.end() != opaque_schemes_.find(scheme);
 }
 } // namespace uri
 } // namespace network
