@@ -254,24 +254,15 @@ uri::string_type fragment(const uri &uri_) {
 }
 
 inline
+uri::string_type hierarchical_part(const uri &uri_) {
+    return uri::string_type(boost::begin(uri_.user_info_range()),
+                            boost::end(uri_.path_range()));
+}
+
+inline
 uri::string_type authority(const uri &uri_) {
-    uri::string_type port(uri_.port());
-	uri::string_type authority;
-	if (uri_.user_info_range())
-	{
-		boost::copy(uri_.user_info_range(), std::back_inserter(authority));
-		authority.push_back('@');
-	}
-    if (uri_.host_range())
-	{
-		boost::copy(uri_.host(), std::back_inserter(authority));
-	}
-    if (uri_.port_range())
-	{
-		authority.push_back(':');
-		boost::copy(uri_.port_range(), std::back_inserter(authority));
-	}
-	return authority;
+    return uri::string_type(boost::begin(uri_.user_info_range()),
+                            boost::end(uri_.port_range()));
 }
 
 inline
