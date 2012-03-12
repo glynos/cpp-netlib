@@ -8,7 +8,6 @@
 # define __BOOST_NETWORK_URI_SCHEMES_INC__
 
 
-#include <boost/unordered_set.hpp>
 #include <string>
 
 
@@ -19,12 +18,7 @@ class hierarchical_schemes {
 
 public:
 
-    static void register_(const std::string &scheme);
     static bool exists(const std::string &scheme);
-
-private:
-
-    static boost::unordered_set<std::string> schemes_;
 
 };
 
@@ -32,12 +26,7 @@ class non_hierarchical_schemes {
 
 public:
 
-    static void register_(const std::string &scheme);
     static bool exists(const std::string &scheme);
-
-private:
-
-    static boost::unordered_set<std::string> schemes_;
 
 };
 } // namespace uri

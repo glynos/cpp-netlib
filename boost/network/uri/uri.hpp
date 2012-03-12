@@ -9,6 +9,7 @@
 
 # include <boost/network/uri/config.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
+# include <boost/network/uri/schemes.hpp>
 # include <boost/utility/swap.hpp>
 # include <boost/range/algorithm/equal.hpp>
 # include <boost/range/algorithm/copy.hpp>
@@ -198,9 +199,15 @@ private:
 
 inline
 void uri::parse() {
-    uri_parts_.clear();
     const_iterator first(boost::begin(uri_)), last(boost::end(uri_));
     is_valid_ = detail::parse(first, last, uri_parts_);
+    if (is_valid_) {
+        if (!uri_parts_.scheme) {
+            uri_parts_.scheme = const_range_type(boost::begin(uri_),
+                                                 boost::begin(uri_));
+        }
+        uri_parts_.update();
+    }
 }
 
 inline
@@ -277,10 +284,10 @@ bool is_absolute(const uri &uri_) {
     return uri_.is_valid() && !boost::empty(uri_.scheme_range());
 }
 
-//inline
-//bool is_hierarchical(const uri &uri_) {
-//    return is_absolute(uri_) && hierarchical_schemes::exists(scheme(uri_));
-//}
+inline
+bool is_hierarchical(const uri &uri_) {
+    return is_absolute(uri_) && hierarchical_schemes::exists(scheme(uri_));
+}
 
 inline
 bool is_valid(const uri &uri_) {
@@ -315,7 +322,8 @@ uri from_parts(const uri &base_uri,
                const uri::string_type &query_,
                const uri::string_type &fragment_) {
     uri uri_(base_uri);
-    return uri_ << path(path_) << query(query_) << fragment(fragment_);
+    builder(uri_).path(path_).query(query_).fragment(fragment_);
+    return uri_;
 }
 
 inline
@@ -323,14 +331,16 @@ uri from_parts(const uri &base_uri,
                const uri::string_type &path_,
                const uri::string_type &query_) {
     uri uri_(base_uri);
-    return uri_ << path(path_) << query(query_);
+    builder(uri_).path(path_).query(query_);
+    return uri_;
 }
 
 inline
 uri from_parts(const uri &base_uri,
                const uri::string_type &path_) {
     uri uri_(base_uri);
-    return uri_ << path(path_);
+    builder(uri_).path(path_);
+    return uri_;
 }
 
 inline
@@ -365,7 +375,8 @@ namespace uri {
 inline
 uri from_file(const filesystem::path &path_) {
     uri uri_;
-    return uri_ << schemes::file << path(path_.string());
+    builder(uri_).scheme("file").path(path_.string());
+    return uri_;
 }
 } // namespace uri
 } // namespace network
