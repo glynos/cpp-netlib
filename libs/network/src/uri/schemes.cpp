@@ -17,7 +17,7 @@ void hierarchical_schemes::register_(const std::string &scheme) {
 }
 
 bool hierarchical_schemes::exists(const std::string &scheme) {
-    schemes_.end() != schemes_.find(scheme);
+    return schemes_.end() != schemes_.find(scheme);
 }
 
 boost::unordered_set<std::string> non_hierarchical_schemes::schemes_;
@@ -27,7 +27,7 @@ void non_hierarchical_schemes::register_(const std::string &scheme) {
 }
 
 bool non_hierarchical_schemes::exists(const std::string &scheme) {
-    schemes_.end() != schemes_.find(scheme);
+    return schemes_.end() != schemes_.find(scheme);
 }
 
 namespace {
