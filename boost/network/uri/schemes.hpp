@@ -22,7 +22,7 @@ public:
 
 };
 
-class non_hierarchical_schemes {
+class opaque_schemes {
 
 public:
 

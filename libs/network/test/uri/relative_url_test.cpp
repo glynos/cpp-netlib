@@ -12,15 +12,7 @@
 using namespace boost::network;
 
 BOOST_AUTO_TEST_CASE(relative_uri_test) {
-    uri::uri instance("www.example.com/");
-    BOOST_REQUIRE(uri::valid(instance));
-    BOOST_CHECK(uri::is_absolute(instance));
-    BOOST_CHECK_EQUAL(uri::path(instance), "www.example.com/");
-}
-
-BOOST_AUTO_TEST_CASE(relative_uri_scheme_test) {
-    uri::uri instance("www.example.com/");
-    BOOST_REQUIRE(instance.scheme_range());
-    BOOST_CHECK(instance.begin() == boost::begin(instance.scheme_range()));
-    BOOST_CHECK(instance.begin() == boost::end(instance.scheme_range()));
+    // don't yet support relative URIs
+    uri::uri instance("example.com");
+    BOOST_REQUIRE(!uri::valid(instance));
 }
