@@ -5,60 +5,44 @@
 
 
 #include <boost/network/uri/schemes.hpp>
+#include <boost/unordered_set.hpp>
 
 
 namespace boost {
 namespace network {
 namespace uri {
-boost::unordered_set<std::string> hierarchical_schemes::schemes_;
-
-void hierarchical_schemes::register_(const std::string &scheme) {
-    schemes_.insert(scheme);
-}
-
-bool hierarchical_schemes::exists(const std::string &scheme) {
-    return schemes_.end() != schemes_.find(scheme);
-}
-
-boost::unordered_set<std::string> non_hierarchical_schemes::schemes_;
-
-void non_hierarchical_schemes::register_(const std::string &scheme) {
-    schemes_.insert(scheme);
-}
-
-bool non_hierarchical_schemes::exists(const std::string &scheme) {
-    return schemes_.end() != schemes_.find(scheme);
-}
-
 namespace {
+static boost::unordered_set<std::string> hierarchical_schemes_;
+static boost::unordered_set<std::string> non_hierarchical_schemes_;
+
 bool register_hierarchical_schemes() {
-    hierarchical_schemes::register_("http");
-    hierarchical_schemes::register_("https");
-    hierarchical_schemes::register_("shttp");
-    hierarchical_schemes::register_("ftp");
-    hierarchical_schemes::register_("file");
-    hierarchical_schemes::register_("dns");
-    hierarchical_schemes::register_("nfs");
-    hierarchical_schemes::register_("imap");
-    hierarchical_schemes::register_("nntp");
-    hierarchical_schemes::register_("pop");
-    hierarchical_schemes::register_("rsync");
-    hierarchical_schemes::register_("snmp");
-    hierarchical_schemes::register_("telnet");
-    hierarchical_schemes::register_("svn");
-    hierarchical_schemes::register_("svn+ssh");
-    hierarchical_schemes::register_("git");
-    hierarchical_schemes::register_("git+ssh");
+    hierarchical_schemes_.insert("http");
+    hierarchical_schemes_.insert("https");
+    hierarchical_schemes_.insert("shttp");
+    hierarchical_schemes_.insert("ftp");
+    hierarchical_schemes_.insert("file");
+    hierarchical_schemes_.insert("dns");
+    hierarchical_schemes_.insert("nfs");
+    hierarchical_schemes_.insert("imap");
+    hierarchical_schemes_.insert("nntp");
+    hierarchical_schemes_.insert("pop");
+    hierarchical_schemes_.insert("rsync");
+    hierarchical_schemes_.insert("snmp");
+    hierarchical_schemes_.insert("telnet");
+    hierarchical_schemes_.insert("svn");
+    hierarchical_schemes_.insert("svn+ssh");
+    hierarchical_schemes_.insert("git");
+    hierarchical_schemes_.insert("git+ssh");
     return true;
 }
 
 bool register_non_hierarchical_schemes() {
-    non_hierarchical_schemes::register_("mailto");
-    non_hierarchical_schemes::register_("news");
-    non_hierarchical_schemes::register_("im");
-    non_hierarchical_schemes::register_("sip");
-    non_hierarchical_schemes::register_("sms");
-    non_hierarchical_schemes::register_("xmpp");
+    non_hierarchical_schemes_.insert("mailto");
+    non_hierarchical_schemes_.insert("news");
+    non_hierarchical_schemes_.insert("im");
+    non_hierarchical_schemes_.insert("sip");
+    non_hierarchical_schemes_.insert("sms");
+    non_hierarchical_schemes_.insert("xmpp");
     return true;
 }
 
@@ -66,6 +50,14 @@ bool register_non_hierarchical_schemes() {
 static bool hierarchical = register_hierarchical_schemes();
 static bool non_hierarchical = register_non_hierarchical_schemes();
 } // namespace
+
+bool hierarchical_schemes::exists(const std::string &scheme) {
+    return hierarchical_schemes_.end() != hierarchical_schemes_.find(scheme);
+}
+
+bool non_hierarchical_schemes::exists(const std::string &scheme) {
+    return non_hierarchical_schemes_.end() != non_hierarchical_schemes_.find(scheme);
+}
 } // namespace uri
 } // namespace network
 } // namespace boost
