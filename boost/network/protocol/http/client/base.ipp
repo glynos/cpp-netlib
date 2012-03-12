@@ -14,6 +14,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
 #include <boost/network/protocol/http/client/connection_manager.hpp>
+#include <boost/network/protocol/http/client/simple_connection_manager.hpp>
 #include <boost/network/protocol/http/request.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -65,9 +66,14 @@ client_base::~client_base() {
 client_base_pimpl::client_base_pimpl(client_options const &options)
   : options_(options),
   service_ptr(options.io_service()),
-  sentinel_(new (std::nothrow) boost::asio::io_service::work(*service_ptr)),
+  sentinel_(),
   connection_manager_(options.connection_manager())
 {
+  if (service_ptr == 0) service_ptr = new(std::nothrow) asio::io_service;
+  if (!connection_manager_.get())
+    connection_manager_.reset(
+        new (std::nothrow) simple_connection_manager(options));
+  sentinel_.reset(new (std::nothrow) boost::asio::io_service::work(*service_ptr));
   lifetime_thread_.reset(new (std::nothrow) boost::thread(
     boost::bind(
       &boost::asio::io_service::run,
