@@ -17,13 +17,28 @@ BOOST_CONCEPT_ASSERT((boost::network::http::ClientRequest<boost::network::http::
 namespace boost { namespace network { namespace http {
 
 struct request_pimpl {
-  explicit request_pimpl(std::string const & url) {}
+  request_pimpl() {}
+
+  explicit request_pimpl(std::string const & url)
+  : uri_(url)
+  {}
+
   request_pimpl* clone() {
     return new (std::nothrow) request_pimpl(*this);
   }
 
+  void set_uri(std::string const & uri) {
+    uri_ = uri;
+  }
+
+  void get_uri(std::string &uri) {
+    uri = uri_.string();
+  }
+
  private:
+  uri::uri uri_;
   request_pimpl(request_pimpl const &other)
+  : uri_(other.uri_)
   {}
 };
 
@@ -31,8 +46,12 @@ request::~request() {
   // do nothing here
 }
 
+request::request()
+: pimpl_(new (std::nothrow) request_pimpl())
+{}
+
 request::request(std::string const & url)
-: pimpl_(new request_pimpl(url))
+: pimpl_(new (std::nothrow) request_pimpl(url))
 {}
 
 request::request(request const &other)
@@ -73,12 +92,18 @@ void request::set_method(std::string const & method){}
 void request::set_status(std::string const & status){}
 void request::set_status_message(std::string const & status_message){}
 void request::set_body_writer(function<void(char*, size_t)> writer){}
-void request::set_uri(std::string const &uri){}
+void request::set_uri(std::string const &uri) {
+  pimpl_->set_uri(uri);
+}
 void request::set_uri(network::uri::uri const &uri){}
 
 // Getters
 void request::get_uri(network::uri::uri &uri) const{}
-void request::get_uri(std::string &uri) const{}
+
+void request::get_uri(std::string &uri) const {
+  pimpl_->get_uri(uri);
+}
+
 void request::get_method(std::string & method) const{}
 void request::get_status(std::string & status) const{}
 void request::get_status_message(std::string & status_message) const{}

@@ -13,8 +13,7 @@
 namespace boost { namespace network { namespace http {
 
 client_connection::~client_connection() {
-  // For exposition only.
-  BOOST_ASSERT(false && "This should not ever be called.");
+  // Do nothing here.
 }
 
 client_connection * client_connection::clone() const {

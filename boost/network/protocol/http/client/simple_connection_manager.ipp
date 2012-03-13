@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/client/simple_connection_manager.hpp>
+#include <boost/network/protocol/http/client/connection/simple_connection_factory.hpp>
 #include <boost/network/protocol/http/client/options.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -16,7 +17,11 @@ struct simple_connection_manager_pimpl {
   simple_connection_manager_pimpl(client_options const &options)
   : options_(options)
   , connection_factory_(options.connection_factory())
-  {}
+  {
+    if (!connection_factory_.get())
+      connection_factory_.reset(
+          new (std::nothrow) simple_connection_factory());
+  }
 
   shared_ptr<client_connection> get_connection(asio::io_service & service,
                                                request_base const & request,

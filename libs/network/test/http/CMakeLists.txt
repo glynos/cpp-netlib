@@ -13,15 +13,26 @@ endif()
 
 if (Boost_FOUND)
     # These are the internal (simple) tests.
-    add_executable(cpp-netlib-http-request_base_test request_base_test.cpp)
-    target_link_libraries(cpp-netlib-http-request_base_test
-        ${Boost_LIBRARIES}
-        cppnetlib-message
-        cppnetlib-http-message)
-    set_target_properties(cpp-netlib-http-request_base_test
-        PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
-    add_test(cpp-netlib-http-request_base_test
-        ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-request_base_test)
+    set ( MESSAGE_TESTS
+        request_base_test
+        request_test
+        )
+    foreach ( test ${MESSAGE_TESTS} )
+        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+            set_source_files_properties(${test}.cpp
+                PROPERTIES COMPILE_FLAGS "-Wall")
+        endif()
+        add_executable(cpp-netlib-http-${test} ${test}.cpp)
+        target_link_libraries(cpp-netlib-http-${test}
+            ${Boost_LIBRARIES}
+            cppnetlib-message
+            cppnetlib-uri
+            cppnetlib-http-message)
+        set_target_properties(cpp-netlib-http-${test}
+            PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
+        add_test(cpp-netlib-http-${test}
+            ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
+    endforeach(test)
 
     set ( TESTS
         client_constructor_test
