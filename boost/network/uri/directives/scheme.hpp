@@ -10,6 +10,7 @@
 
 # include <boost/range/begin.hpp>
 # include <boost/range/end.hpp>
+# include <boost/network/uri/schemes.hpp>
 
 
 namespace boost {
@@ -26,7 +27,12 @@ struct scheme_directive {
         >
     void operator () (Uri &uri) const {
         uri.append(scheme);
-        uri.append("://");
+        if (opaque_schemes::exists(scheme)) {
+            uri.append(":");
+        }
+        else {
+            uri.append("://");
+        }
     }
 
     std::string scheme;
@@ -37,6 +43,23 @@ inline
 scheme_directive scheme(const std::string &scheme) {
     return scheme_directive(scheme);
 }
+
+namespace schemes {
+inline
+uri &http(uri &uri_) {
+    return uri_ << scheme("http");
+}
+
+inline
+uri &https(uri &uri_) {
+    return uri_ << scheme("https");
+}
+
+inline
+uri &file(uri &uri_) {
+    return uri_ << scheme("file");
+}
+} // namespace schemes
 } // namespace uri
 } // namespace network
 } // namespace boost

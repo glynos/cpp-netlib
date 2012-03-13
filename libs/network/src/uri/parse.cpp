@@ -188,7 +188,7 @@ struct uri_grammar : qi::grammar<
             ;
 
         start %=
-            scheme >> ':'
+            (scheme >> ':')
             >> hier_part
             >>  -('?' >> query)
             >>  -('#' >> fragment)
