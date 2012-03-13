@@ -20,8 +20,8 @@ request_base::~request_base() {
 struct request_storage_base_pimpl {
   request_storage_base_pimpl(size_t chunk_size);
   void append(char const *data, size_t size);
-  size_t read(char *destination, size_t offset, size_t size);
-  void flatten(std::string &destination);
+  size_t read(char *destination, size_t offset, size_t size) const;
+  void flatten(std::string &destination) const;
   void clear();
   request_storage_base_pimpl clone() const;
   ~request_storage_base_pimpl();
@@ -45,11 +45,11 @@ void request_storage_base::append(char const *data, size_t size) {
   pimpl_->append(data, size);
 }
 
-size_t request_storage_base::read(char *destination, size_t offset, size_t size) {
+size_t request_storage_base::read(char *destination, size_t offset, size_t size) const {
   return pimpl_->read(destination, offset, size);
 }
 
-void request_storage_base::flatten(std::string &destination) {
+void request_storage_base::flatten(std::string &destination) const {
   pimpl_->flatten(destination);
 }
 
@@ -90,7 +90,7 @@ void request_storage_base_pimpl::append(char const *data, size_t size) {
   }
 }
 
-size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t size) {
+size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t size) const {
   if (chunks_.empty()) return 0;
   // First we find which chunk we're going to read from using the provided
   // offset and some arithmetic to determine the correct one.
@@ -114,7 +114,7 @@ size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t
   return read_count;
 }
 
-void request_storage_base_pimpl::flatten(std::string &destination) {
+void request_storage_base_pimpl::flatten(std::string &destination) const {
   chunks_vector::const_iterator chunk_iterator = chunks_.begin();
   for (; chunk_iterator != chunks_.end(); ++chunk_iterator) {
     destination.append(chunk_iterator->first, chunk_iterator->second);

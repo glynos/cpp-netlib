@@ -27,8 +27,8 @@ struct request_storage_base {
  protected:
   request_storage_base(size_t chunk_size = BOOST_NETWORK_BUFFER_CHUNK);
   virtual void append(char const *data, size_t size);
-  virtual size_t read(char *destination, size_t offset, size_t size);
-  virtual void flatten(std::string &destination);
+  virtual size_t read(char *destination, size_t offset, size_t size) const;
+  virtual void flatten(std::string &destination) const;
   virtual void clear();
   virtual ~request_storage_base();
 

@@ -26,6 +26,7 @@ if (Boost_FOUND)
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
             cppnetlib-message
+            cppnetlib-message-wrappers
             cppnetlib-uri
             cppnetlib-http-message)
         set_target_properties(cpp-netlib-http-${test}
