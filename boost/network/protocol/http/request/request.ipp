@@ -144,6 +144,7 @@ bool request::equals(request const &other) const {
 
 void request::swap(request & other) {
   std::swap(this->pimpl_, other.pimpl_);
+  request_storage_base::swap(other);
 }
 
 // From message_base...

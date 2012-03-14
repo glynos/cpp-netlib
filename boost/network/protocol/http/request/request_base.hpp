@@ -32,6 +32,7 @@ struct request_storage_base {
   virtual void flatten(std::string &destination) const;
   virtual void clear();
   virtual bool equals(request_storage_base const &other) const;
+  virtual void swap(request_storage_base &other);
   virtual ~request_storage_base();
 
  private:

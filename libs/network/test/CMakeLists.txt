@@ -45,8 +45,6 @@ if (Boost_FOUND)
     set_source_files_properties(utils_thread_pool.cpp
       PROPERTIES COMPILE_FLAGS "-Wall")
     add_executable(cpp-netlib-utils_thread_pool utils_thread_pool.cpp)
-    add_dependencies(cpp-netlib-utils_thread_pool
-      cppnetlib-utils-thread_pool)
     target_link_libraries(cpp-netlib-utils_thread_pool
       cppnetlib-utils-thread_pool
       ${Boost_LIBRARIES}

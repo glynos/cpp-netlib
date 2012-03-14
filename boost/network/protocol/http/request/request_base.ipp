@@ -25,13 +25,14 @@ struct request_storage_base_pimpl {
   void flatten(std::string &destination) const;
   void clear();
   bool equals(request_storage_base_pimpl const &other) const;
+  void swap(request_storage_base_pimpl &other);
   ~request_storage_base_pimpl();
 
  private:
   size_t chunk_size_;
   typedef std::vector<std::pair<char *, size_t> > chunks_vector;
   chunks_vector chunks_;
-  mutex chunk_mutex;
+  mutable mutex chunk_mutex_;
 
   request_storage_base_pimpl(request_storage_base_pimpl const &other);
 };
@@ -68,6 +69,10 @@ bool request_storage_base::equals(request_storage_base const &other) const {
   return pimpl_->equals(*other.pimpl_);
 }
 
+void request_storage_base::swap(request_storage_base &other) {
+  return other.pimpl_->swap(*pimpl_);
+}
+
 request_storage_base_pimpl::request_storage_base_pimpl(size_t chunk_size)
 : chunk_size_(chunk_size)
 , chunks_()
@@ -78,6 +83,7 @@ request_storage_base_pimpl::request_storage_base_pimpl(size_t chunk_size)
 request_storage_base_pimpl::request_storage_base_pimpl(request_storage_base_pimpl const &other)
 : chunk_size_(other.chunk_size_)
 , chunks_(0) {
+  lock_guard<mutex> scoped_lock(other.chunk_mutex_);
   chunks_.reserve(other.chunks_.size());
   chunks_vector::const_iterator it = other.chunks_.begin();
   for (; it != other.chunks_.end(); ++it) {
@@ -95,6 +101,7 @@ request_storage_base_pimpl * request_storage_base_pimpl::clone() const {
 }
  
 void request_storage_base_pimpl::append(char const *data, size_t size) {
+  lock_guard<mutex> scoped_lock(chunk_mutex_);
   if (chunks_.empty()) {
     chunks_.push_back(std::make_pair(
         new (std::nothrow) char[chunk_size_], 0));
@@ -121,6 +128,7 @@ void request_storage_base_pimpl::append(char const *data, size_t size) {
 }
 
 size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t size) const {
+  lock_guard<mutex> scoped_lock(chunk_mutex_);
   if (chunks_.empty()) return 0;
   // First we find which chunk we're going to read from using the provided
   // offset and some arithmetic to determine the correct one.
@@ -145,6 +153,7 @@ size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t
 }
 
 void request_storage_base_pimpl::flatten(std::string &destination) const {
+  lock_guard<mutex> scpoped_lock(chunk_mutex_);
   chunks_vector::const_iterator chunk_iterator = chunks_.begin();
   for (; chunk_iterator != chunks_.end(); ++chunk_iterator) {
     destination.append(chunk_iterator->first, chunk_iterator->second);
@@ -152,6 +161,7 @@ void request_storage_base_pimpl::flatten(std::string &destination) const {
 }
 
 void request_storage_base_pimpl::clear() {
+  lock_guard<mutex> scoped_lock(chunk_mutex_);
   chunks_vector::const_iterator chunk_iterator = chunks_.begin();
   for (; chunk_iterator != chunks_.end(); ++chunk_iterator) {
     delete [] chunk_iterator->first;
@@ -160,16 +170,34 @@ void request_storage_base_pimpl::clear() {
 }
 
 bool request_storage_base_pimpl::equals(request_storage_base_pimpl const &other) const {
-  if (other.chunk_size_ != chunk_size_) return false;
-  if (other.chunks_.size() != chunks_.size()) return false;
+  lock(other.chunk_mutex_, this->chunk_mutex_);
+  if (other.chunk_size_ != chunk_size_ || other.chunks_.size() != chunks_.size()) {
+    other.chunk_mutex_.unlock();
+    this->chunk_mutex_.unlock();
+    return false;
+  }
   chunks_vector::const_iterator chunk_iterator = chunks_.begin();
   chunks_vector::const_iterator other_iterator = other.chunks_.begin();
   for (; chunk_iterator != chunks_.begin() && other_iterator != other.chunks_.end();
          ++chunk_iterator, ++other_iterator) {
-    if (chunk_iterator->second != other_iterator->second) return false;
-    if (strncmp(chunk_iterator->first, other_iterator->first, chunk_iterator->second)) return false;
+    if (chunk_iterator->second != other_iterator->second ||
+        strncmp(chunk_iterator->first, other_iterator->first, chunk_iterator->second)) {
+      other.chunk_mutex_.unlock();
+      this->chunk_mutex_.unlock();
+      return false;
+    }
   }
+  other.chunk_mutex_.unlock();
+  this->chunk_mutex_.unlock();
   return true;
+}
+
+void request_storage_base_pimpl::swap(request_storage_base_pimpl &other) {
+  lock(other.chunk_mutex_, this->chunk_mutex_);
+  std::swap(chunk_size_, other.chunk_size_);
+  std::swap(chunks_, other.chunks_);
+  other.chunk_mutex_.unlock();
+  this->chunk_mutex_.unlock();
 }
 
 request_storage_base_pimpl::~request_storage_base_pimpl() {
