@@ -57,6 +57,17 @@ BOOST_AUTO_TEST_CASE(basic_uri_fragment_test) {
     BOOST_CHECK_EQUAL(uri::fragment(instance), "");
 }
 
+BOOST_AUTO_TEST_CASE(basic_uri_value_semantics_test) {
+  uri::uri original;
+  uri::uri assigned;
+  assigned = original;
+  BOOST_CHECK(original == assigned);
+  assigned = "http://www.example.com/";
+  BOOST_CHECK(original != assigned);
+  uri::uri copy(assigned);
+  BOOST_CHECK(copy == assigned);
+}
+
 BOOST_AUTO_TEST_CASE(basic_uri_range_scheme_test) {
     uri::uri instance("http://www.example.com/");
     BOOST_REQUIRE(uri::valid(instance));
