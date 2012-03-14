@@ -18,8 +18,6 @@ namespace boost { namespace network { namespace http {
 struct request_pimpl;
 
 struct request : request_base {
-  // FIXME Implement all these!
-
   // We support full value semantics.
   request();
   explicit request(std::string const & url);
@@ -27,6 +25,7 @@ struct request : request_base {
   request(request const &);
   request& operator=(request);
   void swap(request & other);
+  bool equals(request const &other) const;
 
   // From message_base...
   // Mutators
@@ -80,6 +79,14 @@ request_base & operator<< (request_base & request,
 
 inline void swap(request &l, request &r) {
   l.swap(r);
+}
+
+inline bool operator==(request const &l, request const &r) {
+  return l.equals(r);
+}
+
+inline bool operator!=(request const &l, request const &r) {
+  return !l.equals(r);
 }
 
 } // namespace http

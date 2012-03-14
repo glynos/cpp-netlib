@@ -24,6 +24,7 @@ struct request_storage_base_pimpl {
   size_t read(char *destination, size_t offset, size_t size) const;
   void flatten(std::string &destination) const;
   void clear();
+  bool equals(request_storage_base_pimpl const &other) const;
   ~request_storage_base_pimpl();
 
  private:
@@ -61,6 +62,10 @@ void request_storage_base::flatten(std::string &destination) const {
 
 void request_storage_base::clear() {
   pimpl_->clear();
+}
+
+bool request_storage_base::equals(request_storage_base const &other) const {
+  return pimpl_->equals(*other.pimpl_);
 }
 
 request_storage_base_pimpl::request_storage_base_pimpl(size_t chunk_size)
@@ -152,6 +157,19 @@ void request_storage_base_pimpl::clear() {
     delete [] chunk_iterator->first;
   }
   chunks_vector().swap(chunks_);
+}
+
+bool request_storage_base_pimpl::equals(request_storage_base_pimpl const &other) const {
+  if (other.chunk_size_ != chunk_size_) return false;
+  if (other.chunks_.size() != chunks_.size()) return false;
+  chunks_vector::const_iterator chunk_iterator = chunks_.begin();
+  chunks_vector::const_iterator other_iterator = other.chunks_.begin();
+  for (; chunk_iterator != chunks_.begin() && other_iterator != other.chunks_.end();
+         ++chunk_iterator, ++other_iterator) {
+    if (chunk_iterator->second != other_iterator->second) return false;
+    if (strncmp(chunk_iterator->first, other_iterator->first, chunk_iterator->second)) return false;
+  }
+  return true;
 }
 
 request_storage_base_pimpl::~request_storage_base_pimpl() {

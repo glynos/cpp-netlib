@@ -27,7 +27,7 @@ struct request_pimpl {
   , headers_()
   {}
 
-  request_pimpl* clone() {
+  request_pimpl* clone() const {
     return new (std::nothrow) request_pimpl(*this);
   }
 
@@ -94,6 +94,13 @@ struct request_pimpl {
     read_offset_ += bytes;
   }
 
+  bool equals(request_pimpl const &other) const {
+    return uri_ == other.uri_ &&
+           read_offset_ == other.read_offset_ &&
+           source_ == other.source_ &&
+           headers_ == other.headers_;
+  }
+
  private:
   typedef std::multimap<std::string, std::string> headers_type;
 
@@ -128,6 +135,11 @@ request::request(request const &other)
 
 request& request::operator=(request rhs) {
   rhs.swap(*this);
+}
+
+bool request::equals(request const &other) const {
+  return pimpl_->equals(*other.pimpl_) &&
+         request_storage_base::equals(other);
 }
 
 void request::swap(request & other) {

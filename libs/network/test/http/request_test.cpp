@@ -18,6 +18,30 @@ BOOST_AUTO_TEST_CASE(request_construction) {
   http::request other(request);
 }
 
+BOOST_AUTO_TEST_CASE(request_value_semantics) {
+  // First let's default construct a request.
+  http::request original;
+  // Next let's copy the request.
+  http::request copy(original);
+  // Next let's compare the requests.
+  BOOST_CHECK(original == copy);
+  // Next let's assign the original to another request.
+  http::request assigned;
+  assigned = original;
+  // Next we modify the assigned object and make sure it's not the same as the
+  // original.
+  assigned.set_uri("http://www.google.com/");
+  std::string original_uri, assigned_uri;
+  original.get_uri(original_uri);
+  assigned.get_uri(assigned_uri);
+  BOOST_CHECK_NE(original_uri, assigned_uri);
+  BOOST_CHECK(original != assigned);
+  // Next we swap the assigned and copy.
+  std::swap(assigned, copy);
+  BOOST_CHECK(copy != assigned);
+  BOOST_CHECK(assigned == original);
+}
+
 BOOST_AUTO_TEST_CASE(request_uri_test) {
   http::request request;
   request.set_uri("http://www.google.com/");
