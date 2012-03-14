@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(request_basics_test) {
   http::request request;
   request.set_uri("http://www.google.com/");
   request.set_source("127.0.0.1");
-  request.set_destination("http://www.google.com/");
+  request.set_destination("destination!");
   request.append_header("X-Referer", "http://cpp-netlib.github.com/");
   request.append_header("Connection", "close");
   request.append_body("The quick brown fox jumps over the lazy dog!");
@@ -73,6 +73,7 @@ BOOST_AUTO_TEST_CASE(request_basics_test) {
 
   BOOST_CHECK_EQUAL(uri_.string(), std::string("http://www.google.com/"));
   BOOST_CHECK_EQUAL(source_, std::string("127.0.0.1"));
+  BOOST_CHECK_EQUAL(destination_, std::string("destination!"));
   BOOST_CHECK_EQUAL(body_, std::string("The quick brown fox jumps over the lazy dog!"));
   BOOST_CHECK(!boost::empty(headers_range));
 }

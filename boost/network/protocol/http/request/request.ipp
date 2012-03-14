@@ -24,6 +24,7 @@ struct request_pimpl {
   : uri_(url)
   , read_offset_(0)
   , source_()
+  , destination_()
   , headers_()
   {}
 
@@ -86,6 +87,14 @@ struct request_pimpl {
     source = source_;
   }
 
+  void set_destination(std::string const &destination) {
+    destination_ = destination;
+  }
+
+  void get_destination(std::string &destination) const {
+    destination = destination_;
+  }
+
   size_t read_offset() const {
     return read_offset_;
   }
@@ -98,6 +107,7 @@ struct request_pimpl {
     return uri_ == other.uri_ &&
            read_offset_ == other.read_offset_ &&
            source_ == other.source_ &&
+           destination_ == other.destination_ &&
            headers_ == other.headers_;
   }
 
@@ -106,13 +116,14 @@ struct request_pimpl {
 
   uri::uri uri_;
   size_t read_offset_;
-  std::string source_;
+  std::string source_, destination_;
   headers_type headers_;
 
   request_pimpl(request_pimpl const &other)
   : uri_(other.uri_)
   , read_offset_(other.read_offset_)
   , source_(other.source_)
+  , destination_(other.destination_)
   , headers_(other.headers_)
   {}
 };
@@ -150,6 +161,7 @@ void request::swap(request & other) {
 // From message_base...
 // Mutators
 void request::set_destination(std::string const & destination) {
+  pimpl_->set_destination(destination);
 }
 
 void request::set_source(std::string const & source) {
@@ -178,6 +190,7 @@ void request::append_body(std::string const & data) {
 
 // Retrievers
 void request::get_destination(std::string & destination) const {
+  pimpl_->get_destination(destination);
 }
 
 void request::get_source(std::string & source) const {
