@@ -37,6 +37,7 @@ struct client_base_pimpl {
   boost::shared_ptr<boost::asio::io_service::work> sentinel_;
   boost::shared_ptr<boost::thread> lifetime_thread_;
   shared_ptr<connection_manager> connection_manager_;
+  bool owned_service_;
 };
 
 client_base::client_base()
@@ -67,9 +68,12 @@ client_base_pimpl::client_base_pimpl(client_options const &options)
   : options_(options),
   service_ptr(options.io_service()),
   sentinel_(),
-  connection_manager_(options.connection_manager())
-{
-  if (service_ptr == 0) service_ptr = new(std::nothrow) asio::io_service;
+  connection_manager_(options.connection_manager()),
+  owned_service_(false) {
+  if (service_ptr == 0) {
+    service_ptr = new(std::nothrow) asio::io_service;
+    owned_service_ = true;
+  }
   if (!connection_manager_.get())
     connection_manager_.reset(
         new (std::nothrow) simple_connection_manager(options));
@@ -91,7 +95,7 @@ client_base_pimpl::~client_base_pimpl()
     lifetime_thread_->join();
     lifetime_thread_.reset();
   }
-  delete service_ptr;
+  if (owned_service_) delete service_ptr;
 }
 
 response const client_base_pimpl::request_skeleton(

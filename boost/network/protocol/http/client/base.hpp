@@ -45,8 +45,4 @@ struct client_base {
   
 } /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/base.ipp>
-#endif
-
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_BASE_HPP_20111008 */
