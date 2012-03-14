@@ -18,12 +18,12 @@ request_base::~request_base() {
 }
 
 struct request_storage_base_pimpl {
-  request_storage_base_pimpl(size_t chunk_size);
+  explicit request_storage_base_pimpl(size_t chunk_size);
+  request_storage_base_pimpl *clone() const;
   void append(char const *data, size_t size);
   size_t read(char *destination, size_t offset, size_t size) const;
   void flatten(std::string &destination) const;
   void clear();
-  request_storage_base_pimpl clone() const;
   ~request_storage_base_pimpl();
 
  private:
@@ -31,10 +31,16 @@ struct request_storage_base_pimpl {
   typedef std::vector<std::pair<char *, size_t> > chunks_vector;
   chunks_vector chunks_;
   mutex chunk_mutex;
+
+  request_storage_base_pimpl(request_storage_base_pimpl const &other);
 };
 
 request_storage_base::request_storage_base(size_t chunk_size)
 : pimpl_(new (std::nothrow) request_storage_base_pimpl(chunk_size))
+{}
+
+request_storage_base::request_storage_base(request_storage_base const &other)
+: pimpl_(other.pimpl_->clone())
 {}
 
 request_storage_base::~request_storage_base() {
@@ -64,6 +70,25 @@ request_storage_base_pimpl::request_storage_base_pimpl(size_t chunk_size)
   // do nothing here.
 }
 
+request_storage_base_pimpl::request_storage_base_pimpl(request_storage_base_pimpl const &other)
+: chunk_size_(other.chunk_size_)
+, chunks_(0) {
+  chunks_.reserve(other.chunks_.size());
+  chunks_vector::const_iterator it = other.chunks_.begin();
+  for (; it != other.chunks_.end(); ++it) {
+    chunks_vector::value_type pair =
+        std::make_pair(
+            new (std::nothrow) char[other.chunk_size_],
+            it->second);
+    std::memcpy(pair.first, it->first, it->second);
+    chunks_.push_back(pair);
+  }
+}
+
+request_storage_base_pimpl * request_storage_base_pimpl::clone() const {
+  return new(std::nothrow) request_storage_base_pimpl(*this);
+}
+ 
 void request_storage_base_pimpl::append(char const *data, size_t size) {
   if (chunks_.empty()) {
     chunks_.push_back(std::make_pair(
@@ -132,6 +157,7 @@ void request_storage_base_pimpl::clear() {
 request_storage_base_pimpl::~request_storage_base_pimpl() {
   clear();
 }
+
 
 } /* http */
 

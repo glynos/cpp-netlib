@@ -26,6 +26,7 @@ struct request_storage_base_pimpl;
 struct request_storage_base {
  protected:
   request_storage_base(size_t chunk_size = BOOST_NETWORK_BUFFER_CHUNK);
+  request_storage_base(request_storage_base const &other);
   virtual void append(char const *data, size_t size);
   virtual size_t read(char *destination, size_t offset, size_t size) const;
   virtual void flatten(std::string &destination) const;
@@ -61,9 +62,5 @@ struct request_base : message_base, request_storage_base {
 } /* network */
   
 } /* boost */
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/request/request_base.ipp>
-#endif
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008 */

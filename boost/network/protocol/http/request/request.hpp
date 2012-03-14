@@ -88,10 +88,6 @@ inline void swap(request &l, request &r) {
 
 } // namespace boost
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/request/request.ipp>
-#endif
-
 #include <boost/network/message/modifiers.hpp>
 #include <boost/network/message/wrappers.hpp>
 #include <boost/network/message/directives.hpp>
