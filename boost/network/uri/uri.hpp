@@ -280,7 +280,10 @@ bool is_valid(const uri &uri_) {
 
 inline
 bool operator == (const uri &lhs, const uri &rhs) {
-    return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+  if (boost::empty(lhs) && boost::empty(rhs)) return true;
+  if ((boost::empty(lhs) && !boost::empty(rhs)) ||
+      (boost::empty(rhs) && !boost::empty(lhs))) return false;
+  return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
 } // namespace uri
