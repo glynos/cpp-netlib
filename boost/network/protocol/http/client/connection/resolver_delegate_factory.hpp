@@ -28,8 +28,4 @@ struct resolver_delegate_factory {
 } /* network */
 } /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/resolver_deleagte_factory.ipp>
-#endif
-
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_RESOLVER_DELEGATE_FACTORY_HPP_20110930 */

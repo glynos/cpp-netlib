@@ -37,9 +37,5 @@ struct simple_connection_factory : connection_factory {
   
 } /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/simple_connection_factory.ipp>
-#endif
-
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SIMPLE_CONNECTION_FACTORY_20111112 */
 

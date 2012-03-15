@@ -10,10 +10,11 @@
 #include <boost/function.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/system/error_code.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/response.hpp>
 
 namespace boost { namespace network { namespace http {
+
+struct request;
+struct response;
 
 class request_options;
 

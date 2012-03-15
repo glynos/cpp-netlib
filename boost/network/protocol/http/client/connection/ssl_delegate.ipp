@@ -10,6 +10,7 @@
 #include <boost/network/protocol/http/client/options.hpp>
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
 #include <boost/bind.hpp>
+#include <boost/network/detail/debug.hpp>
 
 boost::network::http::ssl_delegate::ssl_delegate(asio::io_service & service,
                                                  client_options const &options) :
@@ -19,6 +20,7 @@ boost::network::http::ssl_delegate::ssl_delegate(asio::io_service & service,
 void boost::network::http::ssl_delegate::connect(
     asio::ip::tcp::endpoint & endpoint,
     function<void(system::error_code const &)> handler) {
+  BOOST_NETWORK_MESSAGE("ssl_delegate::connect(...)");
   context_.reset(new asio::ssl::context(
       service_,
       asio::ssl::context::sslv23_client));
@@ -27,6 +29,7 @@ void boost::network::http::ssl_delegate::connect(
   std::list<std::string> const & verifier_paths =
       options_.openssl_verify_paths();
   bool verify_peer = !certificate_paths.empty() || !verifier_paths.empty();
+  BOOST_NETWORK_MESSAGE("verify peer setting is: " << verify_peer);
   if (verify_peer) context_->set_verify_mode(asio::ssl::context::verify_peer);
   else context_->set_verify_mode(asio::ssl::context::verify_none);
   for (std::list<std::string>::const_iterator it = certificate_paths.begin();
@@ -38,6 +41,7 @@ void boost::network::http::ssl_delegate::connect(
     context_->add_verify_path(*it);
   }
   socket_.reset(new asio::ssl::stream<asio::ip::tcp::socket>(service_, *context_));
+  BOOST_NETWORK_MESSAGE("scheduling asynchronous connection...");
   socket_->lowest_layer().async_connect(
       endpoint,
       ::boost::bind(&boost::network::http::ssl_delegate::handle_connected,
@@ -48,9 +52,12 @@ void boost::network::http::ssl_delegate::connect(
 
 void boost::network::http::ssl_delegate::handle_connected(system::error_code const & ec,
                                            function<void(system::error_code const &)> handler) {
+  BOOST_NETWORK_MESSAGE("ssl_delegate::handle_connected(...)");
   if (!ec) {
+    BOOST_NETWORK_MESSAGE("connected to endpoint.");
     socket_->async_handshake(asio::ssl::stream_base::client, handler);
   } else {
+    BOOST_NETWORK_MESSAGE("encountered error: " << ec);
     handler(ec);
   }
 }
@@ -58,15 +65,21 @@ void boost::network::http::ssl_delegate::handle_connected(system::error_code con
 void boost::network::http::ssl_delegate::write(
     asio::streambuf & command_streambuf,
     function<void(system::error_code const &, size_t)> handler) {
+  BOOST_NETWORK_MESSAGE("ssl_delegate::write(...)");
+  BOOST_NETWORK_MESSAGE("scheduling asynchronous write...");
   asio::async_write(*socket_, command_streambuf, handler);
 }
 
 void boost::network::http::ssl_delegate::read_some(
     asio::mutable_buffers_1 const & read_buffer,
     function<void(system::error_code const &, size_t)> handler) {
+  BOOST_NETWORK_MESSAGE("ssl_delegate::read_some(...)");
+  BOOST_NETWORK_MESSAGE("scheduling asynchronous read_some...");
   socket_->async_read_some(read_buffer, handler);
 }
 
-boost::network::http::ssl_delegate::~ssl_delegate() {}
+boost::network::http::ssl_delegate::~ssl_delegate() {
+  BOOST_NETWORK_MESSAGE("ssl_delegate::~ssl_delegate()");
+}
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_IPP_20110819 */

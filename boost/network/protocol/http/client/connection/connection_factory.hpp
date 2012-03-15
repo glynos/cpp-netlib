@@ -8,14 +8,20 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/shared_ptr.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/network/protocol/http/client/client_connection.hpp>
+
+namespace boost { namespace asio {
+
+class io_service;
+
+}  // namespace asio
+
+}  // namespace boost
 
 namespace boost { namespace network { namespace http {
 
 class client_options;
-
 struct client_connection;
+struct request_base;
 
 struct connection_factory {
   virtual shared_ptr<client_connection> create_connection(asio::io_service &service,
@@ -29,9 +35,5 @@ struct connection_factory {
 } /* network */
   
 } /* boost */
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/connection_factory.ipp>
-#endif
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_CONNECTION_FACTORY_HPP_20111112 */

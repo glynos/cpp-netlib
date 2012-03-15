@@ -62,6 +62,15 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
 endif()
 endforeach(src_file)
 
+set(CPP-NETLIB_HTTP_MESSAGE_WRAPPERS_SRCS http/message/wrappers.cpp)
+add_library(cppnetlib-http-message-wrappers ${CPP-NETLIB_HTTP_MESSAGE_WRAPPERS_SRCS})
+foreach (src_file ${CPP-NETLIB_HTTP_MESSAGE_WRAPPERS_SRCS})
+if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS "-Wall -Werror")
+endif()
+endforeach(src_file)
+
 set(CPP-NETLIB_HTTP_CLIENT_CONNECTIONS_SRCS
     http/client_connections.cpp
     http/simple_connection_manager.cpp

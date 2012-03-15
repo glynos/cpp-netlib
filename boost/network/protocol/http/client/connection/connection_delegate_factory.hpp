@@ -36,8 +36,4 @@ struct connection_delegate_factory {
 } /* network */
 } /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/connection_delegate_factory.ipp>
-#endif
-
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_DELEGATE_FACTORY_HPP_20110819 */

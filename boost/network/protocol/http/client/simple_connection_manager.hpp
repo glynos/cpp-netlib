@@ -87,8 +87,4 @@ struct simple_connection_manager : connection_manager {
 
 } /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/simple_connection_manager.ipp>
-#endif
-
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SIMPLE_CONNECTION_MANAGER_HPP_20111105 */

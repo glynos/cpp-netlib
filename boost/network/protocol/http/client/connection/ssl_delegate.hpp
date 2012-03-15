@@ -47,8 +47,4 @@ struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate>
 
 } /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/ssl_delegate.ipp>
-#endif /* BOOST_NETWORK_NO_LIB */
-
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819 */

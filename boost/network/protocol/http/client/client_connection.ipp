@@ -9,14 +9,17 @@
 
 #include <boost/network/protocol/http/client/client_connection.hpp>
 #include <boost/assert.hpp>
+#include <boost/network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 
 client_connection::~client_connection() {
+  BOOST_NETWORK_MESSAGE("client_connection::~client_connection()");
   // Do nothing here.
 }
 
 client_connection * client_connection::clone() const {
+  BOOST_NETWORK_MESSAGE("client_connection::clone()");
   // For exposition only.
   BOOST_ASSERT(false && "This should not ever be called.");
 }

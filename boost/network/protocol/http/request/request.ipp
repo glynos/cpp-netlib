@@ -18,7 +18,13 @@ BOOST_CONCEPT_ASSERT((boost::network::http::ClientRequest<boost::network::http::
 namespace boost { namespace network { namespace http {
 
 struct request_pimpl {
-  request_pimpl() {}
+  request_pimpl()
+  : uri_()
+  , read_offset_(0)
+  , source_()
+  , destination_()
+  , headers_()
+  {}
 
   explicit request_pimpl(std::string const & url)
   : uri_(url)

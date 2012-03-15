@@ -38,8 +38,4 @@ struct normal_delegate : connection_delegate {
 
 } /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/normal_delegate.ipp>
-#endif /* BOOST_NETWORK_NO_LIB */
-
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819 */

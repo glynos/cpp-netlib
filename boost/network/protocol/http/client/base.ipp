@@ -16,6 +16,7 @@
 #include <boost/network/protocol/http/client/connection_manager.hpp>
 #include <boost/network/protocol/http/client/simple_connection_manager.hpp>
 #include <boost/network/protocol/http/request.hpp>
+#include <boost/network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -41,12 +42,14 @@ struct client_base_pimpl {
 };
 
 client_base::client_base()
-: pimpl(new (std::nothrow) client_base_pimpl(client_options()))
-{}
+: pimpl(new (std::nothrow) client_base_pimpl(client_options())) {
+  BOOST_NETWORK_MESSAGE("client_base::client_base()");
+}
 
 client_base::client_base(client_options const &options)
-: pimpl(new (std::nothrow) client_base_pimpl(options))
-{}
+: pimpl(new (std::nothrow) client_base_pimpl(options)) {
+  BOOST_NETWORK_MESSAGE("client_base::client_base(client_options const &)");
+}
 
 void client_base::clear_resolved_cache() {
   pimpl->clear_resolved_cache();
@@ -57,10 +60,12 @@ response const client_base::request_skeleton(request const & request_,
                                              bool get_body,
                                              body_callback_function_type callback,
                                              request_options const &options) {
+  BOOST_NETWORK_MESSAGE("client_base::request_skeleton(...)");
   return pimpl->request_skeleton(request_, method, get_body, callback, options);
 }
 
 client_base::~client_base() {
+  BOOST_NETWORK_MESSAGE("client_base::~client_base()");
   delete pimpl;
 }
 
@@ -70,13 +75,17 @@ client_base_pimpl::client_base_pimpl(client_options const &options)
   sentinel_(),
   connection_manager_(options.connection_manager()),
   owned_service_(false) {
+  BOOST_NETWORK_MESSAGE("client_base_pimpl::client_base_pimpl(client_options const &)");
   if (service_ptr == 0) {
+    BOOST_NETWORK_MESSAGE("creating owned io_service.");
     service_ptr = new(std::nothrow) asio::io_service;
     owned_service_ = true;
   }
-  if (!connection_manager_.get())
+  if (!connection_manager_.get()) {
+    BOOST_NETWORK_MESSAGE("creating owned simple_connection_manager");
     connection_manager_.reset(
         new (std::nothrow) simple_connection_manager(options));
+  }
   sentinel_.reset(new (std::nothrow) boost::asio::io_service::work(*service_ptr));
   lifetime_thread_.reset(new (std::nothrow) boost::thread(
     boost::bind(
@@ -89,6 +98,7 @@ client_base_pimpl::client_base_pimpl(client_options const &options)
 
 client_base_pimpl::~client_base_pimpl()
 {
+  BOOST_NETWORK_MESSAGE("client_base_pimpl::~client_base_pimpl()");
   sentinel_.reset();
   connection_manager_->reset();
   if (lifetime_thread_.get()) {
@@ -106,12 +116,14 @@ response const client_base_pimpl::request_skeleton(
   request_options const &options
   )
 {
+  BOOST_NETWORK_MESSAGE("client_base_pimpl::request_skeleton(...)");
   shared_ptr<client_connection> connection_;
   connection_ = connection_manager_->get_connection(*service_ptr, request_, options_);
   return connection_->send_request(method, request_, get_body, callback, options);
 }
 
 void client_base_pimpl::clear_resolved_cache() {
+  BOOST_NETWORK_MESSAGE("client_base_pimpl::clear_resolved_cache()");
   connection_manager_->clear_resolved_cache();
 }
 

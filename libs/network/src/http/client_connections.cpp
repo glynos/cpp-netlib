@@ -8,6 +8,9 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
+#include <boost/network/protocol/http/impl/access.hpp>
+#include <boost/network/protocol/http/response.hpp>
+#include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/client/connection_manager.ipp>
 #include <boost/network/protocol/http/client/client_connection.ipp>
 #include <boost/network/protocol/http/impl/access.ipp>

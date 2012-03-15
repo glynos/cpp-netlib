@@ -12,6 +12,12 @@
 #include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
 #include <boost/network/protocol/http/client/options.hpp>
+#include <boost/network/detail/debug.hpp>
+#ifdef BOOST_NETWORK_DEBUG
+#include <boost/network/uri/uri_io.hpp> 
+#endif
+
+#include <boost/network/protocol/http/message/wrappers/uri.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -19,14 +25,17 @@ struct simple_connection_factory_pimpl {
   simple_connection_factory_pimpl(shared_ptr<connection_delegate_factory> conn_delegate_factory,
                                   shared_ptr<resolver_delegate_factory> res_delegate_factory)
   : conn_delegate_factory_(conn_delegate_factory)
-  , res_delegate_factory_(res_delegate_factory)
-  {}
+  , res_delegate_factory_(res_delegate_factory) {
+    BOOST_NETWORK_MESSAGE("simple_connection_factory_pimpl::simple_connection_factory_pimpl(...)");
+  }
 
   shared_ptr<client_connection> create_connection(
       asio::io_service & service,
       request_base const & request,
       client_options const & options) {
-    ::boost::network::uri::uri uri_(destination(request));
+    BOOST_NETWORK_MESSAGE("simple_connection_factory_pimpl::create_connection(...)");
+    uri::uri uri_ = http::uri(request);
+    BOOST_NETWORK_MESSAGE("destination: " << uri_);
     bool https = to_lower_copy(scheme(uri_)) == "https";
     shared_ptr<client_connection> conn_;
     conn_.reset(new (std::nothrow) http_async_connection(
@@ -43,6 +52,7 @@ struct simple_connection_factory_pimpl {
 };
 
 simple_connection_factory::simple_connection_factory() {
+  BOOST_NETWORK_MESSAGE("simple_connection_factory::simple_connection_factory()");
   shared_ptr<connection_delegate_factory> connection_delegate_factory_;
   connection_delegate_factory_.reset(new (std::nothrow) connection_delegate_factory());
   shared_ptr<resolver_delegate_factory> resolver_delegate_factory_;
@@ -54,16 +64,20 @@ simple_connection_factory::simple_connection_factory() {
 simple_connection_factory::simple_connection_factory(shared_ptr<connection_delegate_factory> conn_delegate_factory,
                                                      shared_ptr<resolver_delegate_factory> res_delegate_factory)
 : pimpl(new (std::nothrow) simple_connection_factory_pimpl(conn_delegate_factory, res_delegate_factory))
-{}
+{
+  BOOST_NETWORK_MESSAGE("simple_connection_factory::simple_connection_factory(...)");
+}
 
 shared_ptr<client_connection>
 simple_connection_factory::create_connection(asio::io_service & service,
                                              request_base const & request,
                                              client_options const &options) {
+  BOOST_NETWORK_MESSAGE("simple_connection_factory::create_connection(...)");
   return pimpl->create_connection(service, request, options);
 }
 
 simple_connection_factory::~simple_connection_factory() {
+  BOOST_NETWORK_MESSAGE("simple_connection_factory::~simple_connection_factory()");
   // do nothing
 }
 

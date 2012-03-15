@@ -6,8 +6,10 @@
 
 #define BOOST_TEST_MODULE HTTP Request Test
 #include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/message/wrappers.hpp>
 #include <boost/network/message/wrappers.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost/network/uri/uri_io.hpp>
 
 namespace http = boost::network::http;
 namespace uri = boost::network::uri;
@@ -52,6 +54,20 @@ BOOST_AUTO_TEST_CASE(request_uri_test) {
   other.get_uri(copied);
   BOOST_CHECK_EQUAL(std::string("http://www.google.com/"), original);
   BOOST_CHECK_EQUAL(original, copied);
+}
+
+BOOST_AUTO_TEST_CASE(request_url_constructor_test) {
+  http::request request("http://www.google.com/");
+  http::request other;
+  other.set_uri("http://www.google.com/");
+  uri::uri original, other_uri;
+  request.get_uri(original);
+  other.get_uri(other_uri);
+  BOOST_CHECK_EQUAL(original, other_uri);
+
+  // Now test the directives..
+  uri::uri directive_original = http::uri(request);
+  BOOST_CHECK_EQUAL(original, directive_original);
 }
 
 BOOST_AUTO_TEST_CASE(request_basics_test) {

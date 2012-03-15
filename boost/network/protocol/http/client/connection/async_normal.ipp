@@ -35,7 +35,9 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
         follow_redirect_(follow_redirect),
         request_strand_(io_service),
         resolver_delegate_(resolver_delegate),
-        connection_delegate_(connection_delegate) {}
+        connection_delegate_(connection_delegate) {
+    BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::http_async_connection_pimpl(...)");
+  }
 
   // This is the main entry point for the connection/request pipeline. We're
   // overriding async_connection_base<...>::start(...) here which is called
@@ -45,6 +47,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                  bool get_body,
                  body_callback_function_type callback,
                  request_options const &options) {
+    BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::start(...)");
     response response_;
     this->init_response(response_);
     // Use HTTP/1.1 -- at some point we might want to implement a different
@@ -52,8 +55,17 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     // TODO: Implement a different connection type and factory for HTTP/1.0.
     linearize(request, method, 1, 1,
       std::ostreambuf_iterator<char>(&command_streambuf));
+#ifdef BOOST_NETWORK_DEBUG
+    {
+      std::ostringstream linearized;
+      linearized << &command_streambuf;
+      BOOST_NETWORK_MESSAGE("linearized request: ['" << linearized.str() << "']");
+    }
+#endif
     this->method = method;
+    BOOST_NETWORK_MESSAGE("method: " << this->method);
     boost::uint16_t port_ = port(request);
+    BOOST_NETWORK_MESSAGE("port: " << port_);
     resolver_delegate_->resolve(
         host(request),
         port_,
@@ -70,6 +82,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   }
 
   http_async_connection_pimpl * clone() {
+    BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::clone()");
     return new (std::nothrow) http_async_connection_pimpl(
         this->resolver_delegate_,
         this->connection_delegate_,
@@ -86,6 +99,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   http_async_connection_pimpl(http_async_connection_pimpl const &); // = delete
 
   void init_response(response &r) {
+    BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::init_response(...)");
     impl::setter_access accessor;
     accessor.set_source_promise(r, this->source_promise);
     accessor.set_destination_promise(r, this->destination_promise);
@@ -93,9 +107,12 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     accessor.set_body_promise(r, this->body_promise);
     accessor.set_version_promise(r, this->version_promise);
     accessor.set_status_message_promise(r, this->status_message_promise);
+    BOOST_NETWORK_MESSAGE("futures and promises lined up.");
   }
 
   void set_errors(boost::system::error_code const & ec) {
+    BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::set_errors(...)");
+    BOOST_NETWORK_MESSAGE("error: " << ec);
     boost::system::system_error error(ec);
     this->version_promise.set_exception(boost::copy_exception(error));
     this->status_promise.set_exception(boost::copy_exception(error));
@@ -104,6 +121,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     this->source_promise.set_exception(boost::copy_exception(error));
     this->destination_promise.set_exception(boost::copy_exception(error));
     this->body_promise.set_exception(boost::copy_exception(error));
+    BOOST_NETWORK_MESSAGE("promise+future exceptions set.");
   }
 
   void handle_resolved(boost::uint16_t port,
@@ -111,10 +129,13 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                        body_callback_function_type callback,
                        boost::system::error_code const & ec,
                        resolver_iterator_pair endpoint_range) {
+    BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::handle_resolved(...)");
     if (!ec && !boost::empty(endpoint_range)) {
-      // Here we deal with the case that there was an error encountered and
-      // that there's still more endpoints to try connecting to.
+      // Here we deal with the case that there was no error encountered.
+      BOOST_NETWORK_MESSAGE("resolved endpoint successfully");
       resolver_iterator iter = boost::begin(endpoint_range);
+      BOOST_NETWORK_MESSAGE("trying connection to: "
+                            << iter->endpoint().address() << ":" << port);
       asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
       connection_delegate_->connect(endpoint,
                          request_strand_.wrap(
@@ -128,6 +149,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                                 resolver_iterator()),
                                  placeholders::error)));
     } else {
+      BOOST_NETWORK_MESSAGE("error encountered while resolving.");
       set_errors(ec ? ec : boost::asio::error::host_not_found);
     }
   }
@@ -137,7 +159,9 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                         body_callback_function_type callback,
                         resolver_iterator_pair endpoint_range,
                         boost::system::error_code const & ec) {
+    BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::handle_connected(...)");
     if (!ec) {
+      BOOST_NETWORK_MESSAGE("connected successfully");
       BOOST_ASSERT(connection_delegate_.get() != 0);
       connection_delegate_->write(command_streambuf,
                        request_strand_.wrap(
@@ -149,8 +173,10 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                placeholders::error,
                                placeholders::bytes_transferred)));
     } else {
+      BOOST_NETWORK_MESSAGE("connection unsuccessful");
       if (!boost::empty(endpoint_range)) {
         resolver_iterator iter = boost::begin(endpoint_range);
+        BOOST_NETWORK_MESSAGE("trying: " << iter->endpoint().address() << ":" << port);
         asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
         connection_delegate_->connect(endpoint,
                            request_strand_.wrap(

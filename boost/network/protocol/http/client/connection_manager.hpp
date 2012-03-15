@@ -7,13 +7,20 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/client/client_connection.hpp>
-#include <boost/network/protocol/http/request/request_base.hpp>
-#include <boost/network/protocol/http/response/response_base.hpp>
-#include <boost/asio/io_service.hpp>
+#include <boost/shared_ptr.hpp>
+
+namespace boost { namespace asio {
+
+class io_service;
+
+}  // namespace asio
+
+}  // namespace boost
 
 namespace boost { namespace network { namespace http {
 
+struct client_connection;
+struct request_base;
 class client_options;
 
 struct connection_manager {

@@ -8,10 +8,12 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/client/connection_manager.hpp>
+#include <boost/network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 
 connection_manager::~connection_manager() {
+  BOOST_NETWORK_MESSAGE("connection_manager::~connection_manager()");
   // default implementation, for linkage only.
 }
 

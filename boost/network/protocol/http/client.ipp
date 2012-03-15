@@ -9,16 +9,20 @@
 
 #include <boost/network/protocol/http/client.hpp>
 #include <boost/network/protocol/http/client/options.hpp>
+#include <boost/network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 
 client::client()
-: base_facade_type()
-{}
+: base_facade_type() {
+  BOOST_NETWORK_MESSAGE("client::client()");
+}
 
 client::client(client_options const &options)
 : base_facade_type(options)
-{}
+{
+  BOOST_NETWORK_MESSAGE("client::client(client_options const &)");
+}
 
 }  // namespace http
 }  // namespace network

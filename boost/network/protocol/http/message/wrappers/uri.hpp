@@ -17,7 +17,7 @@ struct uri_wrapper {
   operator std::string() const;
   operator boost::network::uri::uri() const;
  private:
-  request_base & request_;
+  request_base const & request_;
 };
 
 inline

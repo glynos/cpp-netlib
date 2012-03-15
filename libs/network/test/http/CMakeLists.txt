@@ -16,6 +16,7 @@ if (Boost_FOUND)
     set ( MESSAGE_TESTS
         request_base_test
         request_test
+        request_linearize_test
         response_test
         )
     foreach ( test ${MESSAGE_TESTS} )
@@ -28,8 +29,11 @@ if (Boost_FOUND)
             ${Boost_LIBRARIES}
             cppnetlib-message
             cppnetlib-message-wrappers
+            cppnetlib-http-message
+            cppnetlib-http-message-wrappers
             cppnetlib-uri
-            cppnetlib-http-message)
+            cppnetlib-constants
+            )
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}
@@ -58,6 +62,7 @@ if (Boost_FOUND)
             cppnetlib-message-wrappers
             cppnetlib-message-directives
             cppnetlib-http-message
+            cppnetlib-http-message-wrappers
             cppnetlib-http-client
             cppnetlib-http-client-connections)
         if (OPENSSL_FOUND)
