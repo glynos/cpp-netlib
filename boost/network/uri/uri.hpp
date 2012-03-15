@@ -64,8 +64,9 @@ public:
 
     }
 
-    uri &operator = (const uri &other) {
-        uri(other).swap(*this);
+    uri &operator = (uri other) {
+        other.swap(*this);
+        parse();
         return *this;
     }
 
