@@ -8,8 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/response/response.hpp>
-#include <boost/optional/optional.hpp>
-#include <boost/utility/in_place_factory.hpp>
+#include <set>
 
 namespace boost { namespace network { namespace http {
 
@@ -52,19 +51,44 @@ struct response_pimpl {
 
   void append_header(std::string const & name,
                      std::string const & value) {
-    // FIXME do something!
+    added_headers_.insert(std::make_pair(name, value));
   }
 
   void remove_headers(std::string const &name) {
-    // FIXME do something!
+    removed_headers_.insert(name);
   }
 
   void remove_headers() {
-    // FIXME do something!
+    if (headers_future_.get_state() == future_state::uninitialized) {
+      promise<std::multimap<std::string, std::string> > headers_promise;
+      headers_promise.set_value(std::multimap<std::string, std::string>());
+      unique_future<std::multimap<std::string, std::string> > tmp =
+          headers_promise.get_future();
+      std::multimap<std::string, std::string>().swap(added_headers_);
+      std::set<std::string>().swap(removed_headers_);
+      headers_future_ = move(tmp);
+    }
   }
 
   void get_headers(
-      function<void(std::string const &, std::string const &)> inserter) { /* FIXME: Do something! */ }
+      function<void(std::string const &, std::string const &)> inserter) {
+    std::multimap<std::string, std::string>::const_iterator it;
+    if (headers_future_.get_state() == future_state::uninitialized) {
+      it = added_headers_.begin();
+      for (;it != added_headers_.end(); ++it) {
+        if (removed_headers_.find(it->first) == removed_headers_.end()) {
+          inserter(it->first, it->second);
+        }
+      }
+    } else {
+      it = headers_future_.get().begin();
+      for (;it != headers_future_.get().end(); ++it) {
+        if (removed_headers_.find(it->first) == removed_headers_.end()) {
+          inserter(it->first, it->second);
+        }
+      }
+    }
+  }
   void get_headers(
       std::string const & name,
       function<void(std::string const &, std::string const &)> inserter) { /* FIXME: Do something! */ }
@@ -237,6 +261,8 @@ struct response_pimpl {
       if (other.body_future_.get_state() != future_state::uninitialized)
         return false;
     }
+    if (other.added_headers_ != added_headers_ || other.removed_headers_ != removed_headers_)
+      return false;
     return true;
   }
 
@@ -249,6 +275,9 @@ struct response_pimpl {
   mutable shared_future<std::string> status_message_future_;
   mutable shared_future<std::string> version_future_;
   mutable shared_future<std::string> body_future_;
+  // TODO: use unordered_map and unordered_set here.
+  std::multimap<std::string, std::string> added_headers_;
+  std::set<std::string> removed_headers_;
 
   response_pimpl(response_pimpl const &other)
   : source_future_(other.source_future_)
@@ -258,6 +287,8 @@ struct response_pimpl {
   , status_message_future_(other.status_message_future_)
   , version_future_(other.version_future_)
   , body_future_(other.body_future_)
+  , added_headers_(other.added_headers_)
+  , removed_headers_(other.removed_headers_)
   {}
 };
 
