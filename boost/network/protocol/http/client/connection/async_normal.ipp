@@ -163,6 +163,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     if (!ec) {
       BOOST_NETWORK_MESSAGE("connected successfully");
       BOOST_ASSERT(connection_delegate_.get() != 0);
+      BOOST_NETWORK_MESSAGE("scheduling write...");
       connection_delegate_->write(command_streambuf,
                        request_strand_.wrap(
                            boost::bind(
@@ -203,7 +204,9 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                            body_callback_function_type callback,
                            boost::system::error_code const & ec,
                            std::size_t bytes_transferred) {
+    BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::handle_sent_request(...)");
     if (!ec) {
+      BOOST_NETWORK_MESSAGE("request sent successfuly; scheduling partial read...");
       connection_delegate_->read_some(
           boost::asio::mutable_buffers_1(this->part.c_array(),
                                          this->part.size()),
@@ -214,16 +217,20 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                           placeholders::error,
                           placeholders::bytes_transferred)));
     } else {
+      BOOST_NETWORK_MESSAGE("request sent unsuccessfully; setting errors");
       set_errors(ec);
     }
   }
 
   void handle_received_data(state_t state, bool get_body, body_callback_function_type callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+    BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::handle_received_data(...)");
     if (!ec || ec == boost::asio::error::eof) {
+      BOOST_NETWORK_MESSAGE("processing data chunk, no error encountered so far...");
       logic::tribool parsed_ok;
       size_t remainder;
       switch(state) {
         case version:
+          BOOST_NETWORK_MESSAGE("parsing version...");
           parsed_ok =
               this->parse_version(request_strand_.wrap(
                                       boost::bind(
@@ -235,6 +242,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                   bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status:
+          BOOST_NETWORK_MESSAGE("parsing status...");
           parsed_ok =
               this->parse_status(request_strand_.wrap(
                                      boost::bind(
@@ -246,6 +254,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                  bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status_message:
+          BOOST_NETWORK_MESSAGE("parsing status message...");
           parsed_ok =
             this->parse_status_message(
               request_strand_.wrap(
@@ -260,6 +269,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               );
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case headers:
+          BOOST_NETWORK_MESSAGE("parsing headers...");
           // In the following, remainder is the number of bytes that remain
           // in the buffer. We need this in the body processing to make sure
           // that the data remaining in the buffer is dealt with before
@@ -280,6 +290,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           if (!parsed_ok || indeterminate(parsed_ok)) return;
 
           if (!get_body) {
+            BOOST_NETWORK_MESSAGE("not getting body...");
             // We short-circuit here because the user does not
             // want to get the body (in the case of a HEAD
             // request).
@@ -288,10 +299,12 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
             this->source_promise.set_value("");
             this->part.assign('\0');
             this->response_parser_.reset();
+            BOOST_NETWORK_MESSAGE("processing done.");
             return;
           }
 
           if (callback) {
+            BOOST_NETWORK_MESSAGE("callback provided, processing body...");
             // Here we deal with the spill-over data from the
             // headers processing. This means the headers data
             // has already been parsed appropriately and we're
@@ -323,6 +336,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                 placeholders::error,
                                 placeholders::bytes_transferred)));
           } else {
+            BOOST_NETWORK_MESSAGE("no callback provided, appending to body...");
             // Here we handle the body data ourself and append to an
             // ever-growing string buffer.
             this->parse_body(
@@ -338,12 +352,15 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           }
           return;
         case body:
+          BOOST_NETWORK_MESSAGE("parsing body...");
           if (ec == boost::asio::error::eof) {
+            BOOST_NETWORK_MESSAGE("end of the line.");
             // Here we're handling the case when the connection has been
             // closed from the server side, or at least that the end of file
             // has been reached while reading the socket. This signals the end
             // of the body processing chain.
             if (callback) {
+              BOOST_NETWORK_MESSAGE("callback provided, invoking callback...");
               buffer_type::const_iterator begin =
                   this->part.begin(),
                   end = begin;
@@ -354,6 +371,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               // it appropriately.
               callback(make_iterator_range(begin, end), ec);
             } else {
+              BOOST_NETWORK_MESSAGE("no callback provided, appending to body...");
               std::string body_string;
               std::swap(body_string, this->partial_parsed);
               body_string.append(
@@ -368,9 +386,11 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
             this->part.assign('\0');
             this->response_parser_.reset();
           } else {
+            BOOST_NETWORK_MESSAGE("connection still active...");
             // This means the connection has not been closed yet and we want to get more
             // data.
             if (callback) {
+              BOOST_NETWORK_MESSAGE("callback provided, invoking callback...");
               // Here we have a body_handler callback. Let's invoke the
               // callback from here and make sure we're getting more data
               // right after.
@@ -392,6 +412,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                           placeholders::error,
                           placeholders::bytes_transferred)));
             } else {
+              BOOST_NETWORK_MESSAGE("no callback provided, appending to body...");
               // Here we don't have a body callback. Let's
               // make sure that we deal with the remainder
               // from the headers part in case we do have data

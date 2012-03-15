@@ -63,6 +63,8 @@ namespace boost { namespace network { namespace http {
             , accept_mime = consts::default_accept_mime()
             , accept_encoding = consts::accept_encoding()
             , default_accept_encoding = consts::default_accept_encoding()
+            , default_user_agent = consts::default_user_agent()
+            , user_agent = consts::user_agent()
             , crlf = consts::crlf()
             , host_const = consts::host()
             , connection = consts::connection()
@@ -124,11 +126,12 @@ namespace boost { namespace network { namespace http {
             boost::copy(default_accept_encoding, oi);
             boost::copy(crlf, oi);
         }
-        typedef headers_wrapper::range_type headers_range;
-        typedef typename range_iterator<headers_range>::type headers_iterator;
-        headers_range request_headers = boost::network::headers(request);
+        typedef headers_wrapper::container_type headers_container;
+        typedef headers_container::const_iterator headers_iterator;
+        headers_container const & request_headers = boost::network::headers(request);
         headers_iterator iterator = boost::begin(request_headers),
                          end = boost::end(request_headers);
+        bool has_user_agent = false;
         for (; iterator != end; ++iterator) {
             string_type header_name = name(*iterator),
                         header_value = value(*iterator);
@@ -137,6 +140,15 @@ namespace boost { namespace network { namespace http {
             *oi = consts::space_char();
             boost::copy(header_value, oi);
             boost::copy(crlf, oi);
+            boost::to_lower(header_name);
+            has_user_agent = has_user_agent || header_name == "user-agent";
+        }
+        if (!has_user_agent) {
+          boost::copy(user_agent, oi);
+          *oi = consts::colon_char();
+          *oi = consts::space_char();
+          boost::copy(default_user_agent, oi);
+          boost::copy(crlf, oi);
         }
         boost::copy(crlf, oi);
         boost::iterator_range<std::string::const_iterator> body_data =

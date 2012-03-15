@@ -8,23 +8,24 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/constants.hpp>
+#include <boost/network/version.hpp>
 
 namespace boost { namespace network {
 
 char const * constants::crlf() {
-  static char crlf_[] = { '\r', '\n', 0 };
+  static char crlf_[] = "\r\n";
   return crlf_;
 }
 
 char const * constants::dot() {
-  static char dot_[] = { '.', 0 };
+  static char dot_[] = ".";
   return dot_;
 }
 
 char constants::dot_char() { return '.'; }
 
 char const * constants::http_slash() {
-  static char http_slash_[] = { 'H', 'T', 'T', 'P', '/', 0 };
+  static char http_slash_[] = "HTTP/";
   return http_slash_;
 }
 
@@ -103,22 +104,23 @@ char constants::hash_char() {
 }
 
 char const * constants::connection() {
-  static char connection_[] = {
-      'C','o','n','n','e','c','t','i','o','n',0
-  };
+  static char connection_[] = "Connection";
   return connection_;
 }
 
 char const * constants::close() {
-  static char close_[] = {
-      'C','l','o','s','e', 0
-  };
+  static char close_[] = "close";
   return close_;
 }
 
 char const * constants::https() {
   static char https_[] = "https";
   return https_;
+}
+
+char const * constants::default_user_agent() {
+  static char user_agent_[] = "cpp-netlib/" BOOST_NETLIB_VERSION;
+  return user_agent_;
 }
 
 } /* network */

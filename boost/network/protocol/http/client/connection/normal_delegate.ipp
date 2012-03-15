@@ -13,6 +13,7 @@
 #include <boost/function.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/network/protocol/http/client/connection/normal_delegate.hpp>
+#include <boost/network/detail/debug.hpp>
 
 boost::network::http::normal_delegate::normal_delegate(asio::io_service & service)
   : service_(service)
@@ -34,6 +35,8 @@ void boost::network::http::normal_delegate::write(
 void boost::network::http::normal_delegate::read_some(
     asio::mutable_buffers_1 const & read_buffer,
     function<void(system::error_code const &, size_t)> handler) {
+  BOOST_NETWORK_MESSAGE("normal_delegate::read_some(...)");
+  BOOST_NETWORK_MESSAGE("scheduling asynchronous read some...");
   socket_->async_read_some(read_buffer, handler);
 }
 

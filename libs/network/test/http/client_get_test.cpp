@@ -11,7 +11,8 @@ namespace net = boost::network;
 namespace http = boost::network::http;
 
 BOOST_AUTO_TEST_CASE(http_client_get_test) {
-    http::client::request request("http://www.boost.org");
+    http::client::request request("http://www.google.com/");
+    request << net::header("Connection", "close");
     http::client client_;
     http::client::response response;
     BOOST_REQUIRE_NO_THROW ( response = client_.get(request) );

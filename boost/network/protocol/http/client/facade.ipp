@@ -46,16 +46,15 @@ response const basic_client_facade::post(request request,
             << boost::network::body(*body);
   }
 
-  headers_wrapper::range_type content_type_headers =
-      headers(request)["Content-Type"];
+  headers_wrapper::container_type const & headers_ =
+      headers(request);
   if (content_type) {
     BOOST_NETWORK_MESSAGE("using provided content type.");
-    if (!boost::empty(content_type_headers))
-      request << remove_header("Content-Type");
-    request << header("Content-Type", *content_type);
+    request << remove_header("Content-Type")
+            << header("Content-Type", *content_type);
   } else {
     BOOST_NETWORK_MESSAGE("using default content type.");
-    if (boost::empty(content_type_headers)) {
+    if (boost::empty(headers_.equal_range("Content-Type"))) {
       static char default_content_type[] = "x-application/octet-stream";
       request << header("Content-Type", default_content_type);
     }
@@ -76,16 +75,15 @@ response const basic_client_facade::put(request request,
             << boost::network::body(*body);
   }
 
-  headers_wrapper::range_type content_type_headers =
-      headers(request)["Content-Type"];
+  headers_wrapper::container_type const & headers_ =
+      headers(request);
   if (content_type) {
     BOOST_NETWORK_MESSAGE("using provided content type.");
-    if (!boost::empty(content_type_headers))
-      request << remove_header("Content-Type");
-    request << header("Content-Type", *content_type);
+    request << remove_header("Content-Type")
+            << header("Content-Type", *content_type);
   } else {
     BOOST_NETWORK_MESSAGE("using default content type.");
-    if (boost::empty(content_type_headers)) {
+    if (boost::empty(headers_.equal_range("Content-Type"))) {
       static char default_content_type[] = "x-application/octet-stream";
       request << header("Content-Type", default_content_type);
     }

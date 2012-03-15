@@ -4,16 +4,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
-#define __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
+#ifndef NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
+#define NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
 
 #include <map>
-#include <boost/shared_container_iterator.hpp>
-#include <boost/range/iterator_range.hpp>
-#include <boost/range/functions.hpp>
-#include <boost/network/message/message_base.hpp>
 
 namespace boost { namespace network {
+
+struct message_base;
 
 /** headers wrapper for messages.
  *
@@ -25,21 +23,10 @@ namespace boost { namespace network {
  */
 struct headers_wrapper {
   typedef std::multimap<std::string, std::string> container_type;
-  typedef shared_container_iterator<container_type> iterator;
-  typedef iterator_range<iterator> range_type;
-
   explicit headers_wrapper(message_base const & message);
-  range_type operator[] (std::string const & key) const;
-  operator range_type () const;
   operator container_type () const;
-  container_type::size_type count() const;
-  container_type::size_type count(std::string const &key) const;
-  iterator begin() const;
-  iterator end() const;
  private:
-  void init_cache_all() const;
   message_base const & message_;
-  mutable shared_ptr<container_type> cache_;
 };
 
 /// Factory method to create the right wrapper object
@@ -51,9 +38,5 @@ headers(message_base const & message_) {
 } // namespace network
 
 } // namespace boost
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/message/wrappers/headers.ipp>
-#endif
 
 #endif // __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__

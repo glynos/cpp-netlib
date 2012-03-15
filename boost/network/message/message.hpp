@@ -22,7 +22,7 @@ struct message_pimpl;
 struct message : message_base {
   // Nested types
   typedef iterator_range<
-    shared_container_iterator<std::multimap<std::string, std::string> > >
+    std::multimap<std::string, std::string>::const_iterator>
     headers_range;
 
   // Constructors

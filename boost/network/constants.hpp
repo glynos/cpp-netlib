@@ -25,6 +25,7 @@ struct constants {
   static char const * accept_encoding();
   static char const * default_accept_encoding();
   static char const * user_agent();
+  static char const * default_user_agent();
   static char const * cpp_netlib_slash();
   static char question_mark_char();
   static char hash_char();
@@ -32,10 +33,6 @@ struct constants {
   static char const * close();
   static char const * https();
 };
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/constants.ipp>
-#endif
 
 } // namespace network
 

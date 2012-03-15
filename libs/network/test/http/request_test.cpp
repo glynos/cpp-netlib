@@ -54,6 +54,16 @@ BOOST_AUTO_TEST_CASE(request_uri_test) {
   other.get_uri(copied);
   BOOST_CHECK_EQUAL(std::string("http://www.google.com/"), original);
   BOOST_CHECK_EQUAL(original, copied);
+
+  // Now we test the bare uri instance with accessing using the request
+  // convenience wrapper.
+  uri::uri uri_;
+  request.get_uri(uri_);
+  std::string host_ = http::host(request);
+  BOOST_CHECK(uri::valid(uri_));
+  BOOST_CHECK_EQUAL(std::string("www.google.com"), host_);
+  BOOST_CHECK_EQUAL(uri_.host(), host_);
+  BOOST_CHECK_EQUAL(std::string("www.google.com"), uri_.host());
 }
 
 BOOST_AUTO_TEST_CASE(request_url_constructor_test) {
@@ -81,7 +91,7 @@ BOOST_AUTO_TEST_CASE(request_basics_test) {
 
   uri::uri uri_;
   std::string source_, destination_, body_;
-  net::headers_wrapper::range_type headers_range = headers(request);
+  net::headers_wrapper::container_type const &headers_ = headers(request);
   request.get_uri(uri_);
   request.get_source(source_);
   request.get_destination(destination_);
@@ -91,5 +101,5 @@ BOOST_AUTO_TEST_CASE(request_basics_test) {
   BOOST_CHECK_EQUAL(source_, std::string("127.0.0.1"));
   BOOST_CHECK_EQUAL(destination_, std::string("destination!"));
   BOOST_CHECK_EQUAL(body_, std::string("The quick brown fox jumps over the lazy dog!"));
-  BOOST_CHECK(!boost::empty(headers_range));
+  BOOST_CHECK(!boost::empty(headers_));
 }

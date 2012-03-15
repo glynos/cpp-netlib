@@ -8,13 +8,15 @@
 #include <boost/network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
 
+namespace http = boost::network::http;
+namespace net = boost::network;
+
 BOOST_AUTO_TEST_CASE(http_get_test_different_port) {
-  using namespace boost::network::http;
-  request request_("http://www.boost.org:80/");
-  client client_;
-  response response_ = client_.get(request_);
-  boost::network::headers_wrapper::range_type headers_ = headers(response_)["Content-Type"];
-  BOOST_CHECK( boost::begin(headers_) != boost::end(headers_) );
+  http::request request_("http://www.boost.org:80/");
+  http::client client_;
+  http::response response_ = client_.get(request_);
+  net::headers_wrapper::container_type const &headers_ = headers(response_);
+  BOOST_CHECK( !headers_.empty() );
   BOOST_CHECK( body(response_).size() > 0 );
 }
 

@@ -21,8 +21,9 @@ BOOST_AUTO_TEST_CASE(copy_constructor_test) {
     message instance;
     instance << header("name", "value");
     message copy(instance);
-    BOOST_CHECK_EQUAL(headers(copy).count("name"), static_cast<std::size_t>(1));
-    message::headers_range range = headers(copy)["name"];
+    headers_wrapper::container_type const &headers_ = headers(copy);
+    BOOST_CHECK_EQUAL(headers_.count("name"), static_cast<std::size_t>(1));
+    message::headers_range range = headers_.equal_range("name");
     BOOST_CHECK (!boost::empty(range));
 }
 
@@ -31,15 +32,18 @@ BOOST_AUTO_TEST_CASE(swap_test) {
     instance << header("name", "value");
     message other;
     swap(instance, other);
-    BOOST_CHECK_EQUAL (headers(instance).count("name"), static_cast<std::size_t>(0));
-    BOOST_CHECK_EQUAL (headers(other).count("name"), static_cast<std::size_t>(1));
+    headers_wrapper::container_type const &instance_headers = headers(instance);
+    headers_wrapper::container_type const &other_headers = headers(other);
+    BOOST_CHECK_EQUAL (instance_headers.count("name"), static_cast<std::size_t>(0));
+    BOOST_CHECK_EQUAL (other_headers.count("name"), static_cast<std::size_t>(1));
 }
 
 BOOST_AUTO_TEST_CASE(headers_directive_test) {
     message instance;
     instance << header("name", "value");
-    BOOST_CHECK_EQUAL ( headers(instance).count("name"), static_cast<std::size_t>(1) );
-    message::headers_range range = headers(instance)["name"];
+    headers_wrapper::container_type const &instance_headers = headers(instance);
+    BOOST_CHECK_EQUAL ( instance_headers.count("name"), static_cast<std::size_t>(1) );
+    message::headers_range range = instance_headers.equal_range("name");
     BOOST_CHECK (boost::begin(range) != boost::end(range));
 }
 
@@ -68,6 +72,8 @@ BOOST_AUTO_TEST_CASE(remove_header_directive_test) {
     message instance;
     instance << header("name", "value")
         << remove_header("name");
-    message::headers_range range = headers(instance)["name"];
+    headers_wrapper::container_type const &instance_headers =
+        headers(instance);
+    message::headers_range range = instance_headers.equal_range("name");
     BOOST_CHECK ( boost::begin(range) == boost::end(range) );
 }
