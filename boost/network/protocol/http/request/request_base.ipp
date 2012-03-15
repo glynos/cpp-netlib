@@ -139,7 +139,7 @@ size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t
   // or we're 
   size_t chunks_count = chunks_.size();
   size_t read_count = 0;
-  while (size > 0 && chunk_index < chunks_.size()) {
+  while (size > 0 && chunk_index < chunks_count) {
     size_t bytes_to_read = std::min(chunks_[chunk_index].second, size);
     std::memcpy(destination + read_count,
                 chunks_[chunk_index].first + offset,

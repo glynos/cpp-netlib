@@ -15,45 +15,38 @@ namespace boost { namespace network { namespace http {
 
 struct response_pimpl {
   response_pimpl() {}
+
   response_pimpl * clone() {
-    response_pimpl * new_pimpl = new (std::nothrow) response_pimpl;
-    new_pimpl->source_future_ = source_future_;
-    new_pimpl->destination_future_ = destination_future_;
-    new_pimpl->headers_future_ = headers_future_;
-    new_pimpl->status_future_ = status_future_;
-    new_pimpl->status_message_future_ = status_message_future_;
-    new_pimpl->version_future_ = version_future_;
-    new_pimpl->body_future_ = body_future_;
-    return new_pimpl;
+    return new (std::nothrow) response_pimpl(*this);
   }
 
   void set_destination(std::string const &destination) {
     promise<std::string> destination_promise;
+    destination_promise.set_value(destination);
     unique_future<std::string> tmp_future = destination_promise.get_future();
     destination_future_ = move(tmp_future);
-    destination_promise.set_value(destination);
   }
 
   void get_destination(std::string &destination) {
-    if (!destination_future_) {
+    if (destination_future_.get_state() == future_state::uninitialized) {
       destination = "";
     } else {
-      destination = destination_future_->get();
+      destination = destination_future_.get();
     }
   }
 
   void set_source(std::string const &source) {
     promise<std::string> source_promise;
+    source_promise.set_value(source);
     unique_future<std::string> tmp_future = source_promise.get_future();
     source_future_ = move(tmp_future);
-    source_promise.set_value(source);
   }
 
   void get_source(std::string &source) {
-    if (!source_future_) {
+    if (source_future_.get_state() == future_state::uninitialized) {
       source = "";
     } else {
-      source = source_future_->get();
+      source = source_future_.get();
     }
   }
 
@@ -81,18 +74,18 @@ struct response_pimpl {
 
   void set_body(std::string const &body) {
     promise<std::string> body_promise;
+    body_promise.set_value(body);
     unique_future<std::string> tmp_future = body_promise.get_future();
     body_future_ = move(tmp_future);
-    body_promise.set_value(body);
   }
 
   void append_body(std::string const & data) { /* FIXME: Do something! */ }
 
   void get_body(std::string &body) {
-    if (!body_future_) {
+    if (body_future_.get_state() == future_state::uninitialized) {
       body = "";
     } else {
-      body = body_future_->get();
+      body = body_future_.get();
     }
   }
 
@@ -102,46 +95,46 @@ struct response_pimpl {
 
   void set_status(boost::uint16_t status) {
     promise<boost::uint16_t> status_promise;
+    status_promise.set_value(status);
     unique_future<boost::uint16_t> tmp_future = status_promise.get_future();
     status_future_ = move(tmp_future);
-    status_promise.set_value(status);
   }
 
   void get_status(boost::uint16_t &status) {
-    if (!status_future_) {
+    if (status_future_.get_state() == future_state::uninitialized) {
       status = 0u;
     } else {
-      status = status_future_->get();
+      status = status_future_.get();
     }
   }
 
   void set_status_message(std::string const &status_message) {
     promise<std::string> status_message_promise_;
+    status_message_promise_.set_value(status_message);
     unique_future<std::string> tmp_future = status_message_promise_.get_future();
     status_message_future_ = move(tmp_future);
-    status_message_promise_.set_value(status_message);
   }
 
   void get_status_message(std::string &status_message) {
-    if (!status_message_future_) {
+    if (status_message_future_.get_state() == future_state::uninitialized) {
       status_message = "";
     } else {
-      status_message = status_message_future_->get();
+      status_message = status_message_future_.get();
     }
   }
 
   void set_version(std::string const &version) {
     promise<std::string> version_promise;
+    version_promise.set_value(version);
     unique_future<std::string> tmp_future = version_promise.get_future();
     version_future_ = move(tmp_future);
-    version_promise.set_value(version);
   }
 
   void get_version(std::string &version) {
-    if (!version_future_) {
+    if (version_future_.get_state() == future_state::uninitialized) {
       version = "";
     } else {
-      version = version_future_->get();
+      version = version_future_.get();
     }
   }
 
@@ -180,15 +173,92 @@ struct response_pimpl {
     body_future_ = move(tmp_future);
   }
 
+  bool equals(response_pimpl const &other) {
+    if (source_future_.get_state() != future_state::uninitialized) {
+      if (other.source_future_.get_state() == future_state::uninitialized)
+        return false;
+      if (source_future_.get() != other.source_future_.get())
+        return false;
+    } else {
+      if (other.source_future_.get_state() != future_state::uninitialized)
+        return false;
+    }
+    if (destination_future_.get_state() != future_state::uninitialized) {
+      if (other.destination_future_.get_state() == future_state::uninitialized)
+        return false;
+      if (destination_future_.get() != other.destination_future_.get())
+        return false;
+    } else {
+      if (other.destination_future_.get_state() != future_state::uninitialized)
+        return false;
+    }
+    if (headers_future_.get_state() != future_state::uninitialized) {
+      if (other.headers_future_.get_state() == future_state::uninitialized)
+        return false;
+      if (headers_future_.get() != other.headers_future_.get())
+        return false;
+    } else {
+      if (other.headers_future_.get_state() != future_state::uninitialized)
+        return false;
+    }
+    if (status_future_.get_state() != future_state::uninitialized) {
+      if (other.status_future_.get_state() == future_state::uninitialized)
+        return false;
+      if (status_future_.get() != other.status_future_.get())
+        return false;
+    } else {
+      if (other.status_future_.get_state() != future_state::uninitialized)
+        return false;
+    }
+    if (status_message_future_.get_state() != future_state::uninitialized) {
+      if (other.status_message_future_.get_state() == future_state::uninitialized)
+        return false;
+      if (status_message_future_.get() != other.status_message_future_.get())
+        return false;
+    } else {
+      if (other.status_message_future_.get_state() != future_state::uninitialized)
+        return false;
+    }
+    if (version_future_.get_state() != future_state::uninitialized) {
+      if (other.version_future_.get_state() == future_state::uninitialized)
+        return false;
+      if (version_future_.get() != other.version_future_.get())
+        return false;
+    } else {
+      if (other.version_future_.get_state() != future_state::uninitialized)
+        return false;
+    }
+    if (body_future_.get_state() != future_state::uninitialized) {
+      if (other.body_future_.get_state() == future_state::uninitialized)
+        return false;
+      if (body_future_.get() != other.body_future_.get())
+        return false;
+    } else {
+      if (other.body_future_.get_state() != future_state::uninitialized)
+        return false;
+    }
+    return true;
+  }
+
  private:
-  optional<shared_future<std::string> > source_future_;
-  optional<shared_future<std::string> > destination_future_;
-  optional<shared_future<std::multimap<std::string, std::string> > >
+  mutable shared_future<std::string> source_future_;
+  mutable shared_future<std::string> destination_future_;
+  mutable shared_future<std::multimap<std::string, std::string> >
       headers_future_;
-  optional<shared_future<boost::uint16_t> > status_future_;
-  optional<shared_future<std::string> > status_message_future_;
-  optional<shared_future<std::string> > version_future_;
-  optional<shared_future<std::string> > body_future_;
+  mutable shared_future<boost::uint16_t> status_future_;
+  mutable shared_future<std::string> status_message_future_;
+  mutable shared_future<std::string> version_future_;
+  mutable shared_future<std::string> body_future_;
+
+  response_pimpl(response_pimpl const &other)
+  : source_future_(other.source_future_)
+  , destination_future_(other.destination_future_)
+  , headers_future_(other.headers_future_)
+  , status_future_(other.status_future_)
+  , status_message_future_(other.status_message_future_)
+  , version_future_(other.version_future_)
+  , body_future_(other.body_future_)
+  {}
 };
 
 response::response()
@@ -205,7 +275,11 @@ response& response::operator=(response rhs) {
 }
 
 void response::swap(response &other) {
-  other.pimpl_.swap(pimpl_);
+  std::swap(this->pimpl_, other.pimpl_);
+}
+
+bool response::equals(response const &other) const {
+  return other.pimpl_->equals(*pimpl_);
 }
 
 void response::set_destination(std::string const &destination) {
@@ -291,7 +365,9 @@ void response::get_version(std::string &version) const {
   pimpl_->get_version(version);
 }
 
-response::~response() {}
+response::~response() {
+  delete pimpl_;
+}
 
 void response::set_version_promise(promise<std::string> &promise) {
   return pimpl_->set_version_promise(promise);

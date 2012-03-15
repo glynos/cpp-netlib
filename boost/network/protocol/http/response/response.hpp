@@ -19,6 +19,7 @@ struct response : response_base {
   response(response const &);
   response& operator=(response);
   void swap(response &);
+  bool equals(response const &) const;
 
   // From message_base...
   // Mutators
@@ -68,11 +69,19 @@ struct response : response_base {
   void set_destination_promise(promise<std::string>&);
   void set_body_promise(promise<std::string>&);
 
-  scoped_ptr<response_pimpl> pimpl_;
+  response_pimpl *pimpl_;
 };
 
 inline void swap(response &l, response &r) {
   l.swap(r);
+}
+
+inline bool operator==(response const &l, response const &r) {
+  return l.equals(r);
+}
+
+inline bool operator!=(response const &l, response const &r) {
+  return !l.equals(r);
 }
 
 template <class Directive>

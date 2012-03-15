@@ -146,6 +146,7 @@ request::request(request const &other)
 
 request& request::operator=(request rhs) {
   rhs.swap(*this);
+  return *this;
 }
 
 bool request::equals(request const &other) const {
