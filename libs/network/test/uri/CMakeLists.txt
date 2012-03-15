@@ -10,7 +10,9 @@ if (Boost_FOUND)
         TESTS
         url_test
         url_builder_test
+        url_builder_stream_test
         url_encoding_test
+        relative_url_test
         )
     foreach (test ${TESTS})
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)

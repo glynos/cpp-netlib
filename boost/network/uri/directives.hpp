@@ -9,14 +9,6 @@
 
 
 # include <boost/network/uri/uri.hpp>
-# include <boost/network/uri/directives/scheme.hpp>
-# include <boost/network/uri/directives/user_info.hpp>
-# include <boost/network/uri/directives/host.hpp>
-# include <boost/network/uri/directives/port.hpp>
-# include <boost/network/uri/directives/authority.hpp>
-# include <boost/network/uri/directives/path.hpp>
-# include <boost/network/uri/directives/query.hpp>
-# include <boost/network/uri/directives/fragment.hpp>
 
 
 namespace boost {
@@ -41,6 +33,16 @@ uri &operator << (uri &uri_, const Directive &directive) {
 } // namespace uri
 } // namespace network
 } // namespace boost
+
+
+# include <boost/network/uri/directives/scheme.hpp>
+# include <boost/network/uri/directives/user_info.hpp>
+# include <boost/network/uri/directives/host.hpp>
+# include <boost/network/uri/directives/port.hpp>
+# include <boost/network/uri/directives/authority.hpp>
+# include <boost/network/uri/directives/path.hpp>
+# include <boost/network/uri/directives/query.hpp>
+# include <boost/network/uri/directives/fragment.hpp>
 
 
 #endif // __BOOST_NETWORK_URI_DIRECTIVES_INC__

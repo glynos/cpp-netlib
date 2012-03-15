@@ -18,7 +18,6 @@ add_executable(hello_world_client http/hello_world_client.cpp)
 if (UNIX)
   add_executable(fileserver http/fileserver.cpp)
 endif (UNIX)
-add_executable(uri uri.cpp)
 set(BOOST_CLIENT_LIBS
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${Boost_THREAD_LIBRARY}
@@ -96,7 +95,6 @@ if (UNIX)
     cppnetlib-server-parsers)
 endif (UNIX)
 
-target_link_libraries(uri cppnetlib-uri)
 set_target_properties(http_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(simple_wget PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(atom_reader PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
@@ -107,4 +105,3 @@ set_target_properties(hello_world_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${C
 if (UNIX)
   set_target_properties(fileserver PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 endif (UNIX)
-set_target_properties(uri PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)

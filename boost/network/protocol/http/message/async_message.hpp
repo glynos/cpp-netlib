@@ -70,7 +70,7 @@ namespace boost { namespace network { namespace http {
             version_ = future;
         }
 
-        boost::uint16_t const status() const {
+        boost::uint16_t status() const {
             return status_.get();
         }
 

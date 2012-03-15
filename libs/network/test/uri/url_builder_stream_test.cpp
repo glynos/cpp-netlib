@@ -1,15 +1,16 @@
-//            Copyright (c) Glyn Matthews 2012.
+//            Copyright (c) Glyn Matthews 2011.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_TEST_MODULE URI builder test
+#define BOOST_TEST_MODULE URI builder stream test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/directives.hpp>
 #include <boost/network/uri/accessors.hpp>
 #include <boost/network/uri/uri_io.hpp>
+#include <boost/network/tags.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/copy.hpp>
@@ -21,14 +22,8 @@ using namespace boost::network;
 BOOST_AUTO_TEST_CASE(builder_test)
 {
     uri::uri instance;
-    uri::builder builder(instance);
-    builder
-        .scheme("http")
-        .host("www.example.com")
-        .path("/")
-        ;
+    instance << uri::scheme("http") << uri::host("www.example.com") << uri::path("/");
     BOOST_REQUIRE(uri::valid(instance));
-    BOOST_CHECK_EQUAL("http://www.example.com/", instance.string());
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
     BOOST_CHECK_EQUAL(uri::path(instance), "/");
@@ -37,15 +32,13 @@ BOOST_AUTO_TEST_CASE(builder_test)
 BOOST_AUTO_TEST_CASE(full_uri_builder_test)
 {
     uri::uri instance;
-    uri::builder builder(instance);
-    builder
-        .scheme("http")
-        .user_info("user:password")
-        .host("www.example.com")
-        .port("80")
-        .path("/path")
-        .query("query")
-        .fragment("fragment")
+    instance << uri::scheme("http")
+             << uri::user_info("user:password")
+             << uri::host("www.example.com")
+             << uri::port("80")
+             << uri::path("/path")
+             << uri::query("query")
+             << uri::fragment("fragment")
         ;
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
@@ -62,7 +55,7 @@ BOOST_AUTO_TEST_CASE(full_uri_builder_test)
 BOOST_AUTO_TEST_CASE(port_test)
 {
     uri::uri instance;
-    uri::builder(instance).scheme("http").host("www.example.com").port(8000).path("/");
+    instance << uri::scheme("http") << uri::host("www.example.com") << uri::port(8000) << uri::path("/");
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
@@ -73,12 +66,11 @@ BOOST_AUTO_TEST_CASE(port_test)
 BOOST_AUTO_TEST_CASE(encoded_path_test)
 {
     uri::uri instance;
-    uri::builder builder(instance);
-    builder
-        .scheme("http")
-        .host("www.example.com")
-        .port(8000)
-        .encoded_path("/Path With (Some) Encoded Characters!")
+    instance << uri::scheme("http")
+             << uri::host("www.example.com")
+             << uri::port(8000)
+             << uri::encoded_path("/Path With (Some) Encoded Characters!")
+        ;
         ;
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
@@ -91,12 +83,8 @@ BOOST_AUTO_TEST_CASE(encoded_path_test)
 BOOST_AUTO_TEST_CASE(query_test)
 {
     uri::uri instance;
-    uri::builder builder(instance);
-    builder
-       .scheme("http")
-       .host("www.example.com")
-       .path("/")
-       .query("key", "value")
+    instance << uri::scheme("http") << uri::host("www.example.com") << uri::path("/")
+             << uri::query("key", "value")
         ;
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
@@ -108,13 +96,8 @@ BOOST_AUTO_TEST_CASE(query_test)
 BOOST_AUTO_TEST_CASE(query_2_test)
 {
     uri::uri instance;
-    uri::builder builder(instance);
-    builder
-       .scheme("http")
-       .host("www.example.com")
-       .path("/")
-       .query("key1", "value1")
-       .query("key2", "value2")
+    instance << uri::scheme("http") << uri::host("www.example.com") << uri::path("/")
+             << uri::query("key1", "value1") << uri::query("key2", "value2")
         ;
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
@@ -126,13 +109,7 @@ BOOST_AUTO_TEST_CASE(query_2_test)
 BOOST_AUTO_TEST_CASE(fragment_test)
 {
     uri::uri instance;
-    uri::builder builder(instance);
-    builder
-       .scheme("http")
-       .host("www.example.com")
-       .path("/")
-       .fragment("fragment")
-        ;
+    instance << uri::scheme("http") << uri::host("www.example.com") << uri::path("/") << uri::fragment("fragment");
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
@@ -143,12 +120,8 @@ BOOST_AUTO_TEST_CASE(fragment_test)
 BOOST_AUTO_TEST_CASE(from_base_test)
 {
     uri::uri base_uri("http://www.example.com");
-    uri::uri instance(base_uri);
-    uri::builder builder(instance);
-    builder
-        .path("/")
-        .fragment("fragment")
-        ;
+    uri::uri instance;
+    instance << base_uri << uri::path("/") << uri::fragment("fragment");
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
     BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
@@ -156,16 +129,34 @@ BOOST_AUTO_TEST_CASE(from_base_test)
     BOOST_CHECK_EQUAL(uri::fragment(instance), "fragment");
 }
 
+BOOST_AUTO_TEST_CASE(scheme_http_test)
+{
+    uri::uri instance;
+    instance << uri::schemes::http << uri::host("www.example.com") << uri::path("/");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
+    BOOST_CHECK_EQUAL(uri::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(scheme_https_test)
+{
+    uri::uri instance;
+    instance << uri::schemes::https << uri::host("www.example.com") << uri::path("/");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::scheme(instance), "https");
+    BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
+    BOOST_CHECK_EQUAL(uri::path(instance), "/");
+}
+
 BOOST_AUTO_TEST_CASE(encoded_null_char_test)
 {
     // there is a potential bug in the way we process ranges if the
     // strings are null terminated.
     uri::uri instance;
-    uri::builder builder(instance);
-    builder
-       .scheme("http")
-       .host("www.example.com")
-       .encoded_path("/")
+    instance << uri::scheme("http")
+             << uri::host("www.example.com")
+             << uri::encoded_path("/")
         ;
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
@@ -176,11 +167,7 @@ BOOST_AUTO_TEST_CASE(encoded_null_char_test)
 BOOST_AUTO_TEST_CASE(mailto_builder_test)
 {
     uri::uri instance;
-    uri::builder builder(instance);
-    builder
-       .scheme("mailto")
-       .path("cpp-netlib@example.com")
-        ;
+    instance << uri::scheme("mailto") << uri::path("cpp-netlib@example.com");
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::scheme(instance), "mailto");
     BOOST_CHECK_EQUAL(uri::path(instance), "cpp-netlib@example.com");

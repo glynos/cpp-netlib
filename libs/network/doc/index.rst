@@ -76,8 +76,8 @@ The client is as simple as this:
     client::request request_("http://127.0.0.1:8000/");
     request_ << header("Connection", "close");
     client client_;
-    client::response response_ = client_.get(request);
-    std::string body = body(response_);
+    client::response response_ = client_.get(request_);
+    std::string body_ = body(response_);
 
 And the corresponding server code is listed below:
 

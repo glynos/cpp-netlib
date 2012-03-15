@@ -42,5 +42,4 @@ inline void swap(thread_pool & l, thread_pool & r) {
 } // network
 
 } // boost
-
 #endif /* BOOST_NETWORK_UTILS_THREAD_POOL_HPP_20101020 */
