@@ -99,6 +99,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     accessor.set_headers_promise(r, this->headers_promise);
     accessor.set_body_promise(r, this->body_promise);
     accessor.set_version_promise(r, this->version_promise);
+    accessor.set_status_promise(r, this->status_promise);
     accessor.set_status_message_promise(r, this->status_message_promise);
     BOOST_NETWORK_MESSAGE("futures and promises lined up.");
   }
