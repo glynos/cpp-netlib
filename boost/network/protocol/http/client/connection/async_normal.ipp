@@ -55,13 +55,6 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     // TODO: Implement a different connection type and factory for HTTP/1.0.
     linearize(request, method, 1, 1,
       std::ostreambuf_iterator<char>(&command_streambuf));
-#ifdef BOOST_NETWORK_DEBUG
-    {
-      std::ostringstream linearized;
-      linearized << &command_streambuf;
-      BOOST_NETWORK_MESSAGE("linearized request: ['" << linearized.str() << "']");
-    }
-#endif
     this->method = method;
     BOOST_NETWORK_MESSAGE("method: " << this->method);
     boost::uint16_t port_ = port(request);

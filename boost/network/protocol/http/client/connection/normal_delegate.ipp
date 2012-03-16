@@ -29,6 +29,8 @@ void boost::network::http::normal_delegate::connect(
 void boost::network::http::normal_delegate::write(
     asio::streambuf & command_streambuf,
     function<void(system::error_code const &, size_t)> handler) {
+  BOOST_NETWORK_MESSAGE("normal_delegate::write(...)");
+  BOOST_NETWORK_MESSAGE("scheduling asynchronous write...");
   asio::async_write(*socket_, command_streambuf, handler);
 }
 
@@ -38,6 +40,7 @@ void boost::network::http::normal_delegate::read_some(
   BOOST_NETWORK_MESSAGE("normal_delegate::read_some(...)");
   BOOST_NETWORK_MESSAGE("scheduling asynchronous read some...");
   socket_->async_read_some(read_buffer, handler);
+  BOOST_NETWORK_MESSAGE("scheduled asynchronous read some...");
 }
 
 boost::network::http::normal_delegate::~normal_delegate() {}

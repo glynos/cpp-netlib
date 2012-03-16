@@ -81,8 +81,10 @@ struct response_pimpl {
         }
       }
     } else {
-      it = headers_future_.get().begin();
-      for (;it != headers_future_.get().end(); ++it) {
+      std::multimap<std::string, std::string> const & headers_ =
+          headers_future_.get();
+      it = headers_.begin();
+      for (;it != headers_.end(); ++it) {
         if (removed_headers_.find(it->first) == removed_headers_.end()) {
           inserter(it->first, it->second);
         }
