@@ -8,8 +8,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <utility>
-#include <boost/function.hpp>
 #include <boost/asio/ip/udp.hpp>
+#include <boost/function.hpp>
 
 namespace boost { namespace network { namespace http {
 

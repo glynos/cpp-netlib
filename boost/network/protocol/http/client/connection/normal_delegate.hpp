@@ -9,7 +9,14 @@
 
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <boost/asio/placeholders.hpp>
+
+namespace boost { namespace asio {
+
+class io_service;
+
+}  // namespace asio
+
+}  // namespace boost
 
 namespace boost { namespace network { namespace http {
 

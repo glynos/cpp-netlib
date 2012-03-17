@@ -38,8 +38,4 @@ struct client_connection {
   
 } /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/client_connection.ipp>
-#endif
-
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CLIENT_CONNECTION_HPP_20111103 */

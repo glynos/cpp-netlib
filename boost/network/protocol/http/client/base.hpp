@@ -9,13 +9,20 @@
 
 #include <boost/function.hpp>
 #include <boost/range/iterator_range.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/network/protocol/http/response.hpp>
-#include <boost/network/protocol/http/request.hpp>
+
+namespace boost { namespace asio {
+
+class io_service;
+
+}  // namespace asio
+
+}  // namespace boost
 
 namespace boost { namespace network { namespace http {
 
 struct client_base_pimpl;
+struct request;
+struct response;
 
 class request_options;
 

@@ -7,12 +7,18 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/asio/io_service.hpp>
 #include <boost/asio/ssl.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/network/protocol/http/client/options.hpp>
-#include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
+
+namespace boost { namespace asio {
+
+class io_service;
+
+}  // namespace asio
+
+}  // namespace boost
 
 namespace boost { namespace network { namespace http {
 

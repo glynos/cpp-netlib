@@ -9,6 +9,7 @@
 
 #include <boost/network/protocol/http/client/options.hpp>
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
+#include <boost/asio/placeholders.hpp>
 #include <boost/bind.hpp>
 #include <boost/network/detail/debug.hpp>
 
