@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE(http_client_get_test) {
 
 BOOST_AUTO_TEST_CASE(https_client_get_test) {
     http::client::request request("https://www.google.com");
+    request << net::header("Connection", "close");
     http::client client_;
     http::client::response response;
     BOOST_REQUIRE_NO_THROW ( response = client_.get(request) );
@@ -45,8 +46,8 @@ BOOST_AUTO_TEST_CASE(https_client_get_test) {
     response.get_status(status_);
     response.get_status_message(status_message_);
     BOOST_CHECK_EQUAL ( version_.substr(0,7), "HTTP/1.");
-    BOOST_CHECK_EQUAL ( status_, 200u );
-    BOOST_CHECK_EQUAL ( status_message_, std::string("OK") );
+    BOOST_CHECK_EQUAL ( status_, 302u );
+    BOOST_CHECK_EQUAL ( status_message_, std::string("Found") );
 }
 
 #endif

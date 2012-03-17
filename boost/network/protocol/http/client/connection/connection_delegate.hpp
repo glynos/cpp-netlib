@@ -15,6 +15,7 @@ namespace boost { namespace network { namespace http {
 
 struct connection_delegate {
   virtual void connect(asio::ip::tcp::endpoint & endpoint,
+                       std::string const & host,
                        function<void(system::error_code const &)> handler) = 0;
   virtual void write(asio::streambuf & command_streambuf,
                      function<void(system::error_code const &, size_t)> handler) = 0;

@@ -24,6 +24,7 @@ struct normal_delegate : connection_delegate {
   normal_delegate(asio::io_service & service);
 
   virtual void connect(asio::ip::tcp::endpoint & endpoint,
+                       std::string const &host,
                        function<void(system::error_code const &)> handler);
   virtual void write(asio::streambuf & command_streambuf,
                      function<void(system::error_code const &, size_t)> handler);

@@ -19,6 +19,14 @@ port_wrapper::operator boost::uint16_t () const {
   uri::uri uri_;
   request_.get_uri(uri_);
   optional<boost::uint16_t> optional_port = port_us(uri_);
+  if (!optional_port) {
+    std::string scheme_ = scheme(uri_);
+    if (scheme_ == "http") {
+      return 80u;
+    } else if (scheme_ == "https") {
+      return 443u;
+    }
+  }
   return optional_port ? *optional_port : 80u;
 }
 

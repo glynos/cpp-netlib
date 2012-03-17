@@ -21,6 +21,7 @@ boost::network::http::normal_delegate::normal_delegate(asio::io_service & servic
 
 void boost::network::http::normal_delegate::connect(
     asio::ip::tcp::endpoint & endpoint,
+    std::string const &host,
     function<void(system::error_code const &)> handler) {
   socket_.reset(new asio::ip::tcp::socket(service_));
   socket_->async_connect(endpoint, handler);

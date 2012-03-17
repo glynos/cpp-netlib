@@ -10,10 +10,16 @@
 #include <boost/asio/placeholders.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
 #include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/response.hpp>
+#include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
+#include <boost/network/protocol/http/client/connection/resolver_delegate.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/impl/access.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/network/detail/debug.hpp>
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
+#include <boost/asio/ssl/error.hpp>
+#endif
 
 namespace boost { namespace network { namespace http {
 
@@ -59,8 +65,9 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     BOOST_NETWORK_MESSAGE("method: " << this->method);
     boost::uint16_t port_ = port(request);
     BOOST_NETWORK_MESSAGE("port: " << port_);
+    this->host_ = host(request);
     resolver_delegate_->resolve(
-        host(request),
+        this->host_,
         port_,
         request_strand_.wrap(
             boost::bind(
@@ -131,17 +138,19 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       BOOST_NETWORK_MESSAGE("trying connection to: "
                             << iter->endpoint().address() << ":" << port);
       asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
-      connection_delegate_->connect(endpoint,
-                         request_strand_.wrap(
-                             boost::bind(
-                                 &this_type::handle_connected,
-                                 this_type::shared_from_this(),
-                                 port,
-                                 get_body,
-                                 callback,
-                                 std::make_pair(++iter,
-                                                resolver_iterator()),
-                                 placeholders::error)));
+      connection_delegate_->connect(
+          endpoint,
+          this->host_,
+          request_strand_.wrap(
+              boost::bind(
+                  &this_type::handle_connected,
+                  this_type::shared_from_this(),
+                  port,
+                  get_body,
+                  callback,
+                  std::make_pair(++iter,
+                                 resolver_iterator()),
+                  placeholders::error)));
     } else {
       BOOST_NETWORK_MESSAGE("error encountered while resolving.");
       set_errors(ec ? ec : boost::asio::error::host_not_found);
@@ -174,6 +183,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
         BOOST_NETWORK_MESSAGE("trying: " << iter->endpoint().address() << ":" << port);
         asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
         connection_delegate_->connect(endpoint,
+                           this->host_,
                            request_strand_.wrap(
                                boost::bind(
                                    &this_type::handle_connected,
@@ -218,7 +228,20 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
 
   void handle_received_data(state_t state, bool get_body, body_callback_function_type callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
     BOOST_NETWORK_MESSAGE("http_async_connection_pimpl::handle_received_data(...)");
-    if (!ec || ec == boost::asio::error::eof) {
+    // Okay, there's some weirdness with Boost.Asio's handling of SSL errors
+    // so we need to do some acrobatics to make sure that we're handling the
+    // short-read errors correctly. This is such a PITA that we have to deal
+    // with this here.
+    static long short_read_error = 335544539;
+    bool is_short_read_error =
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
+        ec.category() == asio::error::ssl_category &&
+        ec.value() == short_read_error
+#else
+        false
+#endif
+        ;
+    if (!ec || ec == boost::asio::error::eof || is_short_read_error) {
       BOOST_NETWORK_MESSAGE("processing data chunk, no error encountered so far...");
       logic::tribool parsed_ok;
       size_t remainder;
@@ -347,7 +370,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           return;
         case body:
           BOOST_NETWORK_MESSAGE("parsing body...");
-          if (ec == boost::asio::error::eof) {
+          if (ec == boost::asio::error::eof || is_short_read_error) {
             BOOST_NETWORK_MESSAGE("end of the line.");
             // Here we're handling the case when the connection has been
             // closed from the server side, or at least that the end of file
@@ -429,6 +452,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       }
     } else {
       boost::system::system_error error(ec);
+      BOOST_NETWORK_MESSAGE("error encountered: " << error.what() << " (" << ec << ")");
       this->source_promise.set_exception(boost::copy_exception(error));
       this->destination_promise.set_exception(boost::copy_exception(error));
       switch (state) {
@@ -773,6 +797,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   buffer_type part;
   buffer_type::const_iterator part_begin;
   std::string partial_parsed;
+  std::string host_;
 };
 
 // END OF PIMPL DEFINITION

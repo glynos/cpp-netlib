@@ -9,14 +9,23 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/client/client_connection.hpp>
-#include <boost/network/protocol/http/client/connection/resolver_delegate.hpp>
-#include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
+namespace boost { namespace asio {
+
+class io_service;
+
+}  // namespace asio
+
+}  // namespace boost
 
 namespace boost { namespace network { namespace http {
+
+struct request;
+struct response;
+struct resolver_delegate;
+struct connection_delegate;
 
 struct http_async_connection_pimpl;
 

@@ -23,7 +23,7 @@ struct response_pimpl {
     promise<std::string> destination_promise;
     destination_promise.set_value(destination);
     unique_future<std::string> tmp_future = destination_promise.get_future();
-    destination_future_ = move(tmp_future);
+    destination_future_ = boost::move(tmp_future);
   }
 
   void get_destination(std::string &destination) {
@@ -38,7 +38,7 @@ struct response_pimpl {
     promise<std::string> source_promise;
     source_promise.set_value(source);
     unique_future<std::string> tmp_future = source_promise.get_future();
-    source_future_ = move(tmp_future);
+    source_future_ = boost::move(tmp_future);
   }
 
   void get_source(std::string &source) {
@@ -66,7 +66,7 @@ struct response_pimpl {
           headers_promise.get_future();
       std::multimap<std::string, std::string>().swap(added_headers_);
       std::set<std::string>().swap(removed_headers_);
-      headers_future_ = move(tmp);
+      headers_future_ = boost::move(tmp);
     }
   }
 
@@ -102,7 +102,7 @@ struct response_pimpl {
     promise<std::string> body_promise;
     body_promise.set_value(body);
     unique_future<std::string> tmp_future = body_promise.get_future();
-    body_future_ = move(tmp_future);
+    body_future_ = boost::move(tmp_future);
   }
 
   void append_body(std::string const & data) { /* FIXME: Do something! */ }
@@ -123,7 +123,7 @@ struct response_pimpl {
     promise<boost::uint16_t> status_promise;
     status_promise.set_value(status);
     unique_future<boost::uint16_t> tmp_future = status_promise.get_future();
-    status_future_ = move(tmp_future);
+    status_future_ = boost::move(tmp_future);
   }
 
   void get_status(boost::uint16_t &status) {
@@ -138,7 +138,7 @@ struct response_pimpl {
     promise<std::string> status_message_promise_;
     status_message_promise_.set_value(status_message);
     unique_future<std::string> tmp_future = status_message_promise_.get_future();
-    status_message_future_ = move(tmp_future);
+    status_message_future_ = boost::move(tmp_future);
   }
 
   void get_status_message(std::string &status_message) {
@@ -153,7 +153,7 @@ struct response_pimpl {
     promise<std::string> version_promise;
     version_promise.set_value(version);
     unique_future<std::string> tmp_future = version_promise.get_future();
-    version_future_ = move(tmp_future);
+    version_future_ = boost::move(tmp_future);
   }
 
   void get_version(std::string &version) {
@@ -166,37 +166,37 @@ struct response_pimpl {
 
   void set_source_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
-    source_future_ = move(tmp_future);
+    source_future_ = boost::move(tmp_future);
   }
 
   void set_destination_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
-    destination_future_ = move(tmp_future);
+    destination_future_ = boost::move(tmp_future);
   }
 
   void set_headers_promise(promise<std::multimap<std::string, std::string> > &promise_) {
     unique_future<std::multimap<std::string, std::string> > tmp_future = promise_.get_future();
-    headers_future_ = move(tmp_future);
+    headers_future_ = boost::move(tmp_future);
   }
 
   void set_status_promise(promise<boost::uint16_t> &promise_) {
     unique_future<boost::uint16_t> tmp_future = promise_.get_future();
-    status_future_ = move(tmp_future);
+    status_future_ = boost::move(tmp_future);
   }
 
   void set_status_message_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
-    status_message_future_ = move(tmp_future);
+    status_message_future_ = boost::move(tmp_future);
   }
 
   void set_version_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
-    version_future_ = move(tmp_future);
+    version_future_ = boost::move(tmp_future);
   }
 
   void set_body_promise(promise<std::string> &promise_) {
     unique_future<std::string> tmp_future = promise_.get_future();
-    body_future_ = move(tmp_future);
+    body_future_ = boost::move(tmp_future);
   }
 
   bool equals(response_pimpl const &other) {

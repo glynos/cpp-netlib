@@ -27,6 +27,7 @@ struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate>
                client_options const &options);
 
   virtual void connect(asio::ip::tcp::endpoint & endpoint,
+                       std::string const &host,
                        function<void(system::error_code const &)> handler);
   virtual void write(asio::streambuf & command_streambuf,
                      function<void(system::error_code const &, size_t)> handler);
