@@ -35,15 +35,42 @@ target_link_libraries(http_client
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-constants
+    cppnetlib-http-client
     cppnetlib-http-client-connections)
 
 target_link_libraries(simple_wget
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-constants
+    cppnetlib-http-client
     cppnetlib-http-client-connections)
 
 target_link_libraries(atom_reader
+    ${BOOST_CLIENT_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT}
+    cppnetlib-uri
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-http-message-wrappers
+    cppnetlib-constants
+    cppnetlib-http-client
+    cppnetlib-http-client-connections)
+
+target_link_libraries(rss_reader
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
@@ -55,16 +82,17 @@ target_link_libraries(atom_reader
     cppnetlib-http-client
     cppnetlib-http-client-connections)
 
-target_link_libraries(rss_reader
-    ${BOOST_CLIENT_LIBS}
-    ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-uri
-    cppnetlib-http-client-connections)
-
 target_link_libraries(twitter_search
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-constants
+    cppnetlib-http-client
     cppnetlib-http-client-connections)
 
 target_link_libraries(hello_world_server
@@ -75,6 +103,13 @@ target_link_libraries(hello_world_client
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-constants
+    cppnetlib-http-client
     cppnetlib-http-client-connections)
 
 if (OPENSSL_FOUND)
