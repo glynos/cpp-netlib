@@ -74,21 +74,21 @@ if (Boost_FOUND)
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
     endforeach (test)
 
-#    set ( SERVER_API_TESTS
-#        server_constructor_test
-#        server_async_run_stop_concurrency
-#        )
-#    foreach ( test ${SERVER_API_TESTS} )
-#        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-#            set_source_files_properties(${test}.cpp
-#                PROPERTIES COMPILE_FLAGS "-Wall")
-#        endif()
-#        add_executable(cpp-netlib-http-${test} ${test}.cpp)
-#        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
-#        set_target_properties(cpp-netlib-http-${test}
-#            PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
-#        add_test(cpp-netlib-http-${test}
-#            ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
-#    endforeach (test)
+    set ( SERVER_API_TESTS
+        server_constructor_test
+        server_async_run_stop_concurrency
+        )
+    foreach ( test ${SERVER_API_TESTS} )
+        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+            set_source_files_properties(${test}.cpp
+                PROPERTIES COMPILE_FLAGS "-Wall")
+        endif()
+        add_executable(cpp-netlib-http-${test} ${test}.cpp)
+        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
+        set_target_properties(cpp-netlib-http-${test}
+            PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
+        add_test(cpp-netlib-http-${test}
+            ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
+    endforeach (test)
 
 endif()
