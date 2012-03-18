@@ -21,13 +21,13 @@ struct dummy_async_handler {
 
 int main(int argc, char * argv[]) {
     dummy_async_handler async_handler;
+    http::server_options options;
+    options.address("127.0.0.1")
+           .port("8007")
+           .reuse_address(true);
 
 #define ASYNC_SERVER_TEST_CONFIG  \
-  http::_address = "127.0.0.1",  \
-  http::_port = "8007",    \
-  http::_handler = async_handler,  \
-  http::_thread_pool = pool,    \
-  http::_reuse_address = true
+  options, async_handler, pool
 
 #define ASYNC_SERVER_SLEEP_TIME    \
   boost::posix_time::milliseconds(100)
