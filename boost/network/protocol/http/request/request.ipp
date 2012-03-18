@@ -117,6 +117,22 @@ struct request_pimpl {
            headers_ == other.headers_;
   }
 
+  void set_version_major(unsigned short major_version) {
+    version_major_ = major_version;
+  }
+
+  void set_version_minor(unsigned short minor_version) {
+    version_minor_ = minor_version;
+  }
+
+  void get_version_major(unsigned short &major_version) {
+    major_version = version_major_;
+  }
+
+  void get_version_minor(unsigned short &minor_version) {
+    minor_version = version_minor_;
+  }
+
  private:
   typedef std::multimap<std::string, std::string> headers_type;
 
@@ -124,6 +140,7 @@ struct request_pimpl {
   size_t read_offset_;
   std::string source_, destination_;
   headers_type headers_;
+  unsigned short version_major_, version_minor_;
 
   request_pimpl(request_pimpl const &other)
   : uri_(other.uri_)
@@ -253,6 +270,14 @@ void request::set_uri(network::uri::uri const &uri) {
   pimpl_->set_uri(uri);
 }
 
+void request::set_version_major(unsigned short major_version) {
+  pimpl_->set_version_major(major_version);
+}
+
+void request::set_version_minor(unsigned short minor_version) {
+  pimpl_->set_version_minor(minor_version);
+}
+
 // Getters
 void request::get_uri(network::uri::uri &uri) const {
   pimpl_->get_uri(uri);
@@ -260,6 +285,14 @@ void request::get_uri(network::uri::uri &uri) const {
 
 void request::get_uri(std::string &uri) const {
   pimpl_->get_uri(uri);
+}
+
+void request::get_version_major(unsigned short &major_version) {
+  pimpl_->get_version_major(major_version);
+}
+
+void request::get_version_minor(unsigned short &minor_version) {
+  pimpl_->get_version_minor(minor_version);
 }
 
 void request::get_method(std::string & method) const {

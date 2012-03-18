@@ -55,6 +55,8 @@ struct request : request_base {
   virtual void set_body_writer(function<void(char*, size_t)> writer);
   virtual void set_uri(std::string const &uri);
   virtual void set_uri(network::uri::uri const &uri);
+  virtual void set_version_major(unsigned short major_version);
+  virtual void set_version_minor(unsigned short minor_version);
 
   // Getters
   virtual void get_uri(network::uri::uri &uri) const;
@@ -64,6 +66,8 @@ struct request : request_base {
   virtual void get_status_message(std::string & status_message) const;
   virtual void get_body(function<void(char*, size_t)> chunk_reader) const;
   virtual void get_body(std::string const & body) const;
+  virtual void get_version_major(unsigned short &major_version);
+  virtual void get_version_minor(unsigned short &minor_version);
 
   virtual ~request();
  private:

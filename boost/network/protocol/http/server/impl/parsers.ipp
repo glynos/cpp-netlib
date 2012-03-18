@@ -9,6 +9,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/message/header.hpp>
+#include <boost/fusion/include/std_pair.hpp>
 #include <boost/fusion/tuple.hpp>
 
 #ifdef BOOST_NETWORK_NO_LIB
@@ -35,7 +36,7 @@ namespace boost { namespace network { namespace http {
             , version_pair);
     }
 
-    BOOST_NETWORK_INLINE void parse_headers(std::string const & input, std::vector<request_header> & container) {
+    BOOST_NETWORK_INLINE void parse_headers(std::string const & input, std::vector<std::pair<std::string, std::string> > & container) {
         using namespace boost::spirit::qi;
         parse(
             input.begin(), input.end(),

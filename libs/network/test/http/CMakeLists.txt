@@ -87,8 +87,13 @@ if (Boost_FOUND)
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-uri
+            cppnetlib-message
+            cppnetlib-http-message
             cppnetlib-http-servers
-            cppnetlib-http-server-parsers)
+            cppnetlib-http-server-parsers
+            cppnetlib-utils-thread_pool
+            )
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}

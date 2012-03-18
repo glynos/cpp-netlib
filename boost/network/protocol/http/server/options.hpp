@@ -27,6 +27,7 @@ class server_options {
   server_options(server_options const &other);
   void swap(server_options &other);
   server_options& operator=(server_options rhs);
+  ~server_options();
   
   server_options& address(std::string const &address);
   std::string const address() const;
@@ -68,7 +69,7 @@ class server_options {
   // Set the socket linger timeout. This is only relevant if linger is true
   // (see linger above). -1 means just use the default.
   server_options& linger_timeout(int setting);
-  int linger_timeout();
+  int linger_timeout() const;
 
  private:
   server_options_pimpl *pimpl_;

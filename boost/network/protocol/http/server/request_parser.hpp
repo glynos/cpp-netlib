@@ -14,7 +14,6 @@
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
     struct request_parser {
 
         enum state_t {
