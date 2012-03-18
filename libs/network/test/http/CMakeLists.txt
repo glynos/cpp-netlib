@@ -84,7 +84,11 @@ if (Boost_FOUND)
                 PROPERTIES COMPILE_FLAGS "-Wall")
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
-        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
+        target_link_libraries(cpp-netlib-http-${test}
+            ${Boost_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-http-servers
+            cppnetlib-http-server-parsers)
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}

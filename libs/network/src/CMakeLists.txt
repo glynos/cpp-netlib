@@ -17,8 +17,18 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
 endif()
 endforeach(src_file)
 
-set(CPP-NETLIB_HTTP_SERVER_SRCS server_request_parsers_impl.cpp)
-add_library(cppnetlib-server-parsers ${CPP-NETLIB_HTTP_SERVER_SRCS})
+set(CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS server_request_parsers_impl.cpp)
+add_library(cppnetlib-http-server-parsers ${CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS})
+foreach (src_file ${CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS})
+if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS "-Wall -Werror")
+endif()
+endforeach(src_file)
+
+set(CPP-NETLIB_HTTP_SERVER_SRCS
+    http/server_async_impl.cpp)
+add_library(cppnetlib-http-servers ${CPP-NETLIB_HTTP_SERVER_SRCS})
 foreach (src_file ${CPP-NETLIB_HTTP_SERVER_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set_source_files_properties(${src_file}

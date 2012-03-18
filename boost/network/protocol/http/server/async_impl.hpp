@@ -9,6 +9,9 @@
 
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/network/protocol/http/server/options.hpp>
 
 namespace boost { namespace network { namespace utils {
 
@@ -22,6 +25,8 @@ struct thread_pool;
 
 namespace boost { namespace network { namespace http {
 
+struct request;
+
 class async_server_connection;
 
 class async_server_impl {
@@ -30,6 +35,7 @@ class async_server_impl {
   async_server_impl(server_options const &options,
                     function<void(request const &, connection_ptr)> handler,
                     utils::thread_pool &thread_pool);
+  ~async_server_impl();
   void run();
   void stop();
   void listen();
@@ -40,10 +46,17 @@ class async_server_impl {
   asio::io_service *service_;
   asio::ip::tcp::acceptor *acceptor_;
   shared_ptr<async_server_connection> new_connection_;
-  mutex listening_mutex_;
-  bool listening_, owned_service_;
+  mutex listening_mutex_, stopping_mutex_;
   function<void(request const &, connection_ptr)> handler_;
   utils::thread_pool &pool_;
+  bool listening_, owned_service_, stopping_;
+
+  void handle_stop();
+  void start_listening();
+  void handle_accept(system::error_code const &ec);
+
+  void set_socket_options(asio::ip::tcp::socket &socket);
+  void set_acceptor_options(asio::ip::tcp::acceptor &acceptor);
 };
 
 }  // namespace http
