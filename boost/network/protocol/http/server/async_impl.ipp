@@ -90,7 +90,7 @@ void async_server_impl::handle_accept(boost::system::error_code const & ec) {
     if (stopping_) return;
   }
   if (!ec) {
-    set_socket_options(new_connection_->socket());
+    set_socket_options(options_, new_connection_->socket());
     new_connection_->start();
     new_connection_.reset(
         new async_server_connection(*service_, handler_, pool_));
@@ -122,7 +122,7 @@ void async_server_impl::start_listening() {
     BOOST_NETWORK_MESSAGE("error opening socket: " << address_ << ":" << port_);
     BOOST_THROW_EXCEPTION(std::runtime_error("Error opening socket."));
   }
-  set_acceptor_options(*acceptor_);
+  set_acceptor_options(options_, *acceptor_);
   acceptor_->bind(endpoint, error);
   if (error) {
     BOOST_NETWORK_MESSAGE("error binding socket: " << address_ << ":" << port_);
@@ -144,41 +144,6 @@ void async_server_impl::start_listening() {
   lock_guard<mutex> stopping_lock(stopping_mutex_);
   stopping_ = false; // if we were in the process of stopping, we revoke that command and continue listening
   BOOST_NETWORK_MESSAGE("now listening on '" << address_ << ":" << port_ << "'");
-}
-
-void async_server_impl::set_socket_options(asio::ip::tcp::socket &socket) {
-  system::error_code ignored;
-  socket.non_blocking(options_.non_blocking_io(), ignored);
-  if (options_.linger()) {
-    asio::ip::tcp::socket::linger linger(true, options_.linger_timeout());
-    socket.set_option(linger, ignored);
-  }
-  if (int buf_size = options_.receive_buffer_size() >= 0) {
-    asio::ip::tcp::socket::receive_buffer_size receive_buffer_size(buf_size);
-    socket.set_option(receive_buffer_size, ignored);
-  }
-  if (int buf_size = options_.send_buffer_size() >= 0) {
-    asio::ip::tcp::socket::send_buffer_size send_buffer_size(buf_size);
-    socket.set_option(send_buffer_size, ignored);
-  }
-  if (int buf_size = options_.receive_low_watermark() >= 0) {
-    asio::ip::tcp::socket::receive_low_watermark receive_low_watermark(buf_size);
-    socket.set_option(receive_low_watermark, ignored);
-  }
-  if (int buf_size = options_.send_low_watermark() >= 0) {
-    asio::ip::tcp::socket::send_low_watermark send_low_watermark(buf_size);
-    socket.set_option(send_low_watermark, ignored);
-  }
-}
-
-void async_server_impl::set_acceptor_options(asio::ip::tcp::acceptor &acceptor) {
-  system::error_code ignored;
-  acceptor.set_option(
-      asio::ip::tcp::acceptor::reuse_address(options_.reuse_address()),
-      ignored);
-  acceptor.set_option(
-      asio::ip::tcp::acceptor::enable_connection_aborted(options_.report_aborted()),
-      ignored);
 }
 
 }  // namespace http

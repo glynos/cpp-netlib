@@ -28,7 +28,10 @@ endforeach(src_file)
 
 set(CPP-NETLIB_HTTP_SERVER_SRCS
     http/server_async_impl.cpp
-    http/server_options.cpp)
+    http/server_options.cpp
+    http/server_socket_options_setter.cpp
+    http/server_sync_impl.cpp
+    )
 add_library(cppnetlib-http-servers ${CPP-NETLIB_HTTP_SERVER_SRCS})
 foreach (src_file ${CPP-NETLIB_HTTP_SERVER_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)

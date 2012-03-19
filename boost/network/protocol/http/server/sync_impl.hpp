@@ -11,6 +11,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/network/protocol/http/server/impl/socket_options_setter.hpp>
+#include <boost/network/protocol/http/server/options.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -35,6 +37,9 @@ class sync_server_impl {
   mutex listening_mutex_;
   bool listening_, owned_service_;
   function<void(request const &, response &)> handler_;
+
+  void start_listening();
+  void handle_accept(system::error_code const &ec);
 };
 
 }  // namespace http

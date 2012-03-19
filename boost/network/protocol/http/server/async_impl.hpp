@@ -12,6 +12,7 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/network/protocol/http/server/options.hpp>
+#include <boost/network/protocol/http/server/impl/socket_options_setter.hpp>
 
 namespace boost { namespace network { namespace utils {
 
@@ -29,7 +30,7 @@ struct request;
 
 class async_server_connection;
 
-class async_server_impl {
+class async_server_impl : protected socket_options_setter {
  public:
   typedef shared_ptr<async_server_connection> connection_ptr;
   async_server_impl(server_options const &options,
@@ -54,9 +55,6 @@ class async_server_impl {
   void handle_stop();
   void start_listening();
   void handle_accept(system::error_code const &ec);
-
-  void set_socket_options(asio::ip::tcp::socket &socket);
-  void set_acceptor_options(asio::ip::tcp::acceptor &acceptor);
 };
 
 }  // namespace http

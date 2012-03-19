@@ -9,11 +9,11 @@
 #define BOOST_NETWORK_HTTP_SERVER_SYNC_CONNECTION_HPP_
 
 #ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE
-#define BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE 1024uL
+#define BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE 4096uL
 #endif
 
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/network/protocol/http/request_parser.hpp>
+#include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/asio/ip/tcp.hpp>
@@ -29,10 +29,9 @@
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag, class Handler>
-    struct sync_connection : boost::enable_shared_from_this<sync_connection<Tag,Handler> > {
+    class sync_server_connection : public boost::enable_shared_from_this<sync_server_connection> {
 
-        sync_connection(boost::asio::io_service & service, Handler & handler)
+        sync_server_connection(boost::asio::io_service & service, function<void(request const &, response &)> handler)
         : service_(service)
         , handler_(handler)
         , socket_(service_)
@@ -58,8 +57,8 @@ namespace boost { namespace network { namespace http {
                 boost::asio::buffer(buffer_),
                 wrapper_.wrap(
                     boost::bind(
-                        &sync_connection<Tag,Handler>::handle_read_headers,
-                        sync_connection<Tag,Handler>::shared_from_this(),
+                        &sync_server_connection::handle_read_headers,
+                        sync_server_connection::shared_from_this(),
                         boost::asio::placeholders::error,
                         boost::asio::placeholders::bytes_transferred
                         )
@@ -92,14 +91,14 @@ namespace boost { namespace network { namespace http {
                                 is_content_length()
                                 );
                         if (it == request_.headers.end()) {
-                            response_= basic_response<Tag>::stock_reply(basic_response<Tag>::bad_request);
+                            response_= stock_reply(bad_request);
                             boost::asio::async_write(
                                 socket_,
                                 response_.to_buffers(),
                                 wrapper_.wrap(
                                     boost::bind(
-                                        &sync_connection<Tag,Handler>::handle_write,
-                                        sync_connection<Tag,Handler>::shared_from_this(),
+                                        &sync_server_connection::handle_write,
+                                        sync_server_connection::shared_from_this(),
                                         boost::asio::placeholders::error
                                         )
                                     )
@@ -112,14 +111,14 @@ namespace boost { namespace network { namespace http {
                         try {
                             content_length = boost::lexical_cast<size_t>(it->value);
                         } catch (...) {
-                            response_= basic_response<Tag>::stock_reply(basic_response<Tag>::bad_request);
+                            response_= stock_reply(bad_request);
                             boost::asio::async_write(
                                 socket_,
                                 response_.to_buffers(),
                                 wrapper_.wrap(
                                     boost::bind(
-                                        &sync_connection<Tag,Handler>::handle_write,
-                                        sync_connection<Tag,Handler>::shared_from_this(),
+                                        &sync_server_connection::handle_write,
+                                        sync_server_connection::shared_from_this(),
                                         boost::asio::placeholders::error
                                         )
                                     )
@@ -137,8 +136,8 @@ namespace boost { namespace network { namespace http {
                                     boost::asio::buffer(buffer_),
                                     wrapper_.wrap(
                                         boost::bind(
-                                            &sync_connection<Tag,Handler>::handle_read_body_contents,
-                                            sync_connection<Tag,Handler>::shared_from_this(),
+                                            &sync_server_connection::handle_read_body_contents,
+                                            sync_server_connection::shared_from_this(),
                                             boost::asio::placeholders::error,
                                             content_length,
                                             boost::asio::placeholders::bytes_transferred
@@ -155,8 +154,8 @@ namespace boost { namespace network { namespace http {
                             response_.to_buffers(),
                             wrapper_.wrap(
                                 boost::bind(
-                                    &sync_connection<Tag,Handler>::handle_write,
-                                    sync_connection<Tag,Handler>::shared_from_this(),
+                                    &sync_server_connection::handle_write,
+                                    sync_server_connection::shared_from_this(),
                                     boost::asio::placeholders::error
                                     )
                                 )
@@ -168,22 +167,22 @@ namespace boost { namespace network { namespace http {
                             response_.to_buffers(),
                             wrapper_.wrap(
                                 boost::bind(
-                                    &sync_connection<Tag,Handler>::handle_write,
-                                    sync_connection<Tag,Handler>::shared_from_this(),
+                                    &sync_server_connection::handle_write,
+                                    sync_server_connection::shared_from_this(),
                                     boost::asio::placeholders::error
                                     )
                                 )
                             );
                     }
                 } else if (!done) {
-                    response_= basic_response<Tag>::stock_reply(basic_response<Tag>::bad_request);
+                    response_= stock_reply(bad_request);
                     boost::asio::async_write(
                         socket_,
                         response_.to_buffers(),
                         wrapper_.wrap(
                             boost::bind(
-                                &sync_connection<Tag,Handler>::handle_write,
-                                sync_connection<Tag,Handler>::shared_from_this(),
+                                &sync_server_connection::handle_write,
+                                sync_server_connection::shared_from_this(),
                                 boost::asio::placeholders::error
                                 )
                             )
@@ -193,8 +192,8 @@ namespace boost { namespace network { namespace http {
                         boost::asio::buffer(buffer_),
                         wrapper_.wrap(
                             boost::bind(
-                                &sync_connection<Tag,Handler>::handle_read_headers,
-                                sync_connection<Tag,Handler>::shared_from_this(),
+                                &sync_server_connection::handle_read_headers,
+                                sync_server_connection::shared_from_this(),
                                 boost::asio::placeholders::error,
                                 boost::asio::placeholders::bytes_transferred
                                 )
@@ -219,8 +218,8 @@ namespace boost { namespace network { namespace http {
                         response_.to_buffers(),
                         wrapper_.wrap(
                             boost::bind(
-                                &sync_connection<Tag,Handler>::handle_write,
-                                sync_connection<Tag,Handler>::shared_from_this(),
+                                &sync_server_connection::handle_write,
+                                sync_server_connection::shared_from_this(),
                                 boost::asio::placeholders::error
                                 )
                             )
@@ -230,8 +229,8 @@ namespace boost { namespace network { namespace http {
                         boost::asio::buffer(buffer_),
                         wrapper_.wrap(
                             boost::bind(
-                                &sync_connection<Tag,Handler>::handle_read_body_contents,
-                                sync_connection<Tag,Handler>::shared_from_this(),
+                                &sync_server_connection::handle_read_body_contents,
+                                sync_server_connection::shared_from_this(),
                                 boost::asio::placeholders::error,
                                 difference,
                                 boost::asio::placeholders::bytes_transferred
@@ -252,16 +251,16 @@ namespace boost { namespace network { namespace http {
         }
 
         boost::asio::io_service & service_;
-        Handler & handler_;
+        function<void(request const &, response &)> handler_;
         boost::asio::ip::tcp::socket socket_;
         boost::asio::io_service::strand wrapper_;
 
         typedef boost::array<char,BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
         buffer_type buffer_;
-        typedef basic_request_parser<Tag> request_parser;
+        request_parser request_parser;
         request_parser parser_;
-        basic_request<Tag> request_;
-        basic_response<Tag> response_;
+        request request_;
+        response response_;
     };
 
 
