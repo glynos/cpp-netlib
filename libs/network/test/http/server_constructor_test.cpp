@@ -14,7 +14,7 @@ namespace util = boost::network::utils;
 
 struct dummy_sync_handler;
 struct dummy_async_handler;
-typedef http::server<dummy_sync_handler> sync_server;
+typedef http::sync_server<dummy_sync_handler> sync_server;
 typedef http::async_server<dummy_async_handler> async_server;
 
 struct dummy_sync_handler {
@@ -38,9 +38,12 @@ BOOST_AUTO_TEST_CASE(minimal_constructor) {
     dummy_sync_handler sync_handler;
     dummy_async_handler async_handler;
     util::thread_pool pool;
+    http::server_options options;
+    options.address("127.0.0.1")
+           .port("80");
 
-    BOOST_CHECK_NO_THROW(sync_server sync_instance("127.0.0.1", "80", sync_handler) );
-    BOOST_CHECK_NO_THROW(async_server async_instance("127.0.0.1", "80", async_handler, pool) );
+    BOOST_CHECK_NO_THROW(sync_server sync_instance(options, sync_handler) );
+    BOOST_CHECK_NO_THROW(async_server async_instance(options, async_handler, pool) );
 }
 
 BOOST_AUTO_TEST_CASE(with_io_service_parameter) {
@@ -48,37 +51,32 @@ BOOST_AUTO_TEST_CASE(with_io_service_parameter) {
     dummy_async_handler async_handler;
     util::thread_pool pool;
     boost::asio::io_service io_service;
+    http::server_options options;
+    options.address("127.0.0.1")
+           .port("80")
+           .io_service(&io_service);
 
-    BOOST_CHECK_NO_THROW(sync_server sync_instance("127.0.0.1", "80", sync_handler, io_service));
-    BOOST_CHECK_NO_THROW(async_server async_instance("127.0.0.1", "80", async_handler, pool, io_service));
+    BOOST_CHECK_NO_THROW(sync_server sync_instance(options, sync_handler));
+    BOOST_CHECK_NO_THROW(async_server async_instance(options, async_handler, pool));
 }
 
 BOOST_AUTO_TEST_CASE(with_socket_options_parameter) {
     dummy_sync_handler sync_handler;
     dummy_async_handler async_handler;
     util::thread_pool pool;
+    http::server_options options;
+    options.address("127.0.0.1")
+           .port("80")
+           .reuse_address(true)
+           .report_aborted(true)
+           .receive_buffer_size(4096)
+           .send_buffer_size(4096)
+           .receive_low_watermark(1024)
+           .send_low_watermark(1024)
+           .non_blocking_io(true)
+           .linger(true)
+           .linger_timeout(0);
 
-    BOOST_CHECK_NO_THROW(sync_server sync_instance("127.0.0.1", "80", sync_handler,
-        http::_reuse_address=true,
-        http::_report_aborted=true,
-        http::_receive_buffer_size=4096,
-        http::_send_buffer_size=4096,
-        http::_receive_low_watermark=1024,
-        http::_send_low_watermark=1024,
-        http::_non_blocking_io=true,
-        http::_linger=true,
-        http::_linger_timeout=0
-        ));
-    BOOST_CHECK_NO_THROW(async_server async_instance("127.0.0.1", "80", async_handler, pool,
-        http::_reuse_address=true,
-        http::_report_aborted=true,
-        http::_receive_buffer_size=4096,
-        http::_send_buffer_size=4096,
-        http::_receive_low_watermark=1024,
-        http::_send_low_watermark=1024,
-        http::_non_blocking_io=true,
-        http::_linger=true,
-        http::_linger_timeout=0
-        ));
-
+    BOOST_CHECK_NO_THROW(sync_server sync_instance(options, sync_handler));
+    BOOST_CHECK_NO_THROW(async_server async_instance(options, async_handler, pool));
 }
