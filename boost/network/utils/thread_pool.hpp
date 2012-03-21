@@ -68,7 +68,7 @@ namespace boost { namespace network { namespace utils {
             commit = true;
         }
 
-        std::size_t const thread_count() const {
+        std::size_t thread_count() const {
             return threads_;
         }
 

@@ -23,14 +23,16 @@ project network_test :
         <source>/boost//regex
         <source>/boost//thread
         <source>/boost//filesystem
-        <define>BOOST_NETWORK_ENABLE_HTTPS
         <variant>debug:<define>BOOST_NETWORK_DEBUG
+        <toolset>gcc:<define>BOOST_NETWORK_ENABLE_HTTPS
         <toolset>gcc:<linkflags>-lpthread
         <toolset>gcc:<linkflags>-lssl
         <toolset>gcc:<linkflags>-lcrypto
+        <toolset>darwin:<define>BOOST_NETWORK_ENABLE_HTTPS
         <toolset>darwin:<linkflags>-lpthread
         <toolset>darwin:<linkflags>-lssl
         <toolset>darwin:<linkflags>-lcrypto
+        <toolset>clang:<define>BOOST_NETWORK_ENABLE_HTTPS
         <toolset>clang:<linkflags>-lpthread
         <toolset>clang:<linkflags>-lssl
         <toolset>clang:<linkflags>-lcrypto
@@ -41,14 +43,13 @@ project network_test :
         <toolset>msvc:<define>BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+	<toolset>msvc:<define>_WIN32_WINNT=0x0501
         <c++-template-depth>256
         <link>static
     ;
 
 build-project http ;
+build-project uri ;
 
 run message_test.cpp ;
 run message_transform_test.cpp ;
-run url_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-run client_server_include_failure.cpp ;
-

@@ -30,7 +30,7 @@ namespace boost { namespace network { namespace http {
         typedef typename resolver_base::resolver_type resolver_type;
         typedef function<typename resolver_base::resolver_iterator_pair(resolver_type &, string_type const &, string_type const &)> resolver_function_type;
         typedef function<void(iterator_range<char const *> const &, system::error_code const &)> body_callback_function_type;
-        
+
         void cleanup() {
             host_connection_map().swap(host_connections);
         }
@@ -85,9 +85,9 @@ namespace boost { namespace network { namespace http {
                     pimpl->read_headers(response_, response_buffer);
 
                     if (
-                        get_body && response_.status() != 304 
+                        get_body && response_.status() != 304
                         && (response_.status() != 204)
-                        && not (response_.status() >= 100 && response_.status() <= 199)
+                        && !(response_.status() >= 100 && response_.status() <= 199)
                        ) {
                         pimpl->read_body(response_, response_buffer);
                     }
@@ -125,7 +125,7 @@ namespace boost { namespace network { namespace http {
         };
 
         typedef shared_ptr<connection_impl> connection_ptr;
-        
+
         typedef unordered_map<string_type, connection_ptr> host_connection_map;
         host_connection_map host_connections;
         bool follow_redirect_;
@@ -164,7 +164,7 @@ namespace boost { namespace network { namespace http {
 
         pooled_connection_policy(bool cache_resolved, bool follow_redirect)
         : resolver_base(cache_resolved), host_connections(), follow_redirect_(follow_redirect) {}
-        
+
     };
 
 } // namespace http

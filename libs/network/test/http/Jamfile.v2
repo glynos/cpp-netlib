@@ -15,21 +15,20 @@ project network_test/http :
         <variant>debug:<define>BOOST_NETWORK_DEBUG
     ;
 
-run client_constructor_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-run client_get_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-run client_get_different_port_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-run client_get_timeout_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-run client_include_inlined.cpp : <define>BOOST_NETWORK_NO_LIB ;
-run client_localhost_normal_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
-run client_localhost_ssl_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+run client_constructor_test.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
+run client_get_test.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
+run client_get_different_port_test.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
+run client_get_timeout_test.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
+#run client_include_inlined.cpp : <define>BOOST_NETWORK_NO_LIB ;
+run client_localhost_normal_test.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
+run client_localhost_ssl_test.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
 run message_async_ready_test.cpp ;
-run message_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+run message_test.cpp /cpp-netlib//cppnetlib-uri ;
 run request_incremental_parser_test.cpp ;
-run request_linearize_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+run request_linearize_test.cpp /cpp-netlib//cppnetlib-uri ;
 run response_incremental_parser_test.cpp /cpp-netlib//cppnetlib-server-parsers ;
 run server_constructor_test.cpp /cpp-netlib//cppnetlib-server-parsers ;
-run server_include_inlined.cpp : <define>BOOST_NETWORK_NO_LIB ;
-run url_test.cpp /cpp-netlib//cppnetlib-uri-parsers ;
+#run server_include_inlined.cpp : <define>BOOST_NETWORK_NO_LIB ;
 
 exe http_async_server : server_async.cpp /cpp-netlib//cppnetlib-server-parsers ;
 exe hello_world : server_hello_world.cpp /cpp-netlib//cppnetlib-server-parsers ;

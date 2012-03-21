@@ -1,2 +1,0 @@
-Full installation guide
-=======================

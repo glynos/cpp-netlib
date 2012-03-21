@@ -13,27 +13,27 @@ namespace boost { namespace network { namespace http {
 
     template <>
         struct request_methods<tags::http_default_8bit_tcp_resolve> {
-            static char const * const head() {
+            static char const * head() {
                 static char const * const HEAD = "HEAD";
                 return HEAD;
             };
             
-            static char const * const get() {
+            static char const * get() {
                 static char const * const GET = "GET";
                 return GET;
             };
 
-            static char const * const put() {
+            static char const * put() {
                 static char const * const PUT = "PUT";
                 return PUT;
             };
 
-            static char const * const post() {
+            static char const * post() {
                 static char const * const POST = "POST";
                 return POST;
             };
 
-            static char const * const delete_() {
+            static char const * delete_() {
                 static char const * const DELETE_ = "DELETE";
                 return DELETE_;
             };

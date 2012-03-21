@@ -38,8 +38,8 @@ namespace boost { namespace network { namespace http {
             typedef typename ostringstream<Tag>::type output_stream;
             typedef constants<Tag> consts;
             output_stream header_line;
-            header_line << name(header) 
-                << consts::colon() << consts::space() 
+            header_line << name(header)
+                << consts::colon() << consts::space()
                 << value(header) << consts::crlf();
             return header_line.str();
         }
@@ -50,17 +50,17 @@ namespace boost { namespace network { namespace http {
         ((ClientRequest<Request>)),
         (OutputIterator)
     ) linearize(
-        Request const & request, 
+        Request const & request,
         typename Request::string_type const & method,
-        unsigned version_major, 
-        unsigned version_minor, 
+        unsigned version_major,
+        unsigned version_minor,
         OutputIterator oi
-        ) 
+        )
     {
         typedef typename Request::tag Tag;
         typedef constants<Tag> consts;
         typedef typename string<Tag>::type string_type;
-        static string_type 
+        static string_type
             http_slash = consts::http_slash()
             , accept   = consts::accept()
             , accept_mime = consts::default_accept_mime()
@@ -73,7 +73,7 @@ namespace boost { namespace network { namespace http {
             ;
         boost::copy(method, oi);
         *oi = consts::space_char();
-        if (request.path().empty() || request.path()[0] != consts::slash_char()) 
+        if (request.path().empty() || request.path()[0] != consts::slash_char())
             *oi = consts::slash_char();
         boost::copy(request.path(), oi);
         if (!request.query().empty()) {
@@ -116,13 +116,11 @@ namespace boost { namespace network { namespace http {
             boost::copy(crlf, oi);
         }
         typedef typename headers_range<Request>::type headers_range;
-        typedef typename range_iterator<headers_range>::type headers_iterator;
-        headers_range request_headers = headers(request);
-        headers_iterator iterator = boost::begin(request_headers),
-                         end = boost::end(request_headers);
-        for (; iterator != end; ++iterator) {
-            string_type header_name = name(*iterator),
-                        header_value = value(*iterator);
+        typedef typename range_value<headers_range>::type headers_value;
+        BOOST_FOREACH(const headers_value &header, headers(request))
+        {
+            string_type header_name = name(header),
+                        header_value = value(header);
             boost::copy(header_name, oi);
             *oi = consts::colon_char();
             *oi = consts::space_char();
@@ -140,11 +138,11 @@ namespace boost { namespace network { namespace http {
         typename body_range<Request>::type body_data = body(request).range();
         return boost::copy(body_data, oi);
     }
-    
+
 } /* http */
-    
+
 } /* net */
-    
+
 } /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_ALGORITHMS_LINEARIZE_HPP_20101028 */

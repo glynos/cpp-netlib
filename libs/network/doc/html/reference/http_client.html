@@ -1,0 +1,568 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>HTTP Client API &mdash; cpp-netlib v0.9.3</title>
+    <link rel="stylesheet" href="../_static/cpp-netlib.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="cpp-netlib v0.9.3" href="../index.html" />
+    <link rel="up" title="Reference Manual" href="../reference.html" />
+    <link rel="next" title="HTTP Request" href="http_request.html" />
+    <link rel="prev" title="Reference Manual" href="../reference.html" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-19815738-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </head>
+  <body>
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t4">
+    <div id="hd">
+      <h1><a href="../index.html">cpp-netlib v0.9.3</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../index.html">Home</a>  |
+        <a title="Table of contents" href="../contents.html">Table of contents</a> |
+	<a title="What's new" href="../whats_new.html">What's new</a> |
+	<a title="Getting started" href="../getting_started.html">Getting started</a> |
+	<a title="Examples" href="../examples.html">Examples</a> |
+	<a title="In depth" href="../in_depth.html">In depth</a> |
+	<a title="Reference" href="../reference.html">Reference</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="../reference.html" title="Reference Manual">previous</a>
+     |
+    <a href="../reference.html" title="Reference Manual" accesskey="U">up</a>
+   |
+    <a href="http_request.html" title="HTTP Request">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="reference-http_client">
+            
+  <div class="section" id="cpp-netlib-http-client-api">
+<h1>HTTP Client API<a class="headerlink" href="#cpp-netlib-http-client-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cpp-netlib-general">
+<h2>General<a class="headerlink" href="#cpp-netlib-general" title="Permalink to this headline">¶</a></h2>
+<p><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> includes and implements a number of HTTP clients that you can
+use and embed in your own applications. All of the HTTP client implementations:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Cannot be copied.</strong> This means you may have to store instances of the
+clients in dynamic memory if you intend to use them as function parameters
+or pass them around in smart pointers or by reference.</li>
+<li><strong>Assume that requests made are independent of each other.</strong> There currently
+is no cookie or session management system built-in to cpp-netlib&#8217;s HTTP client
+implementations.</li>
+<li><strong>Are header-only and are compiled-into your application.</strong> Future releases in
+case you want to upgrade the implementation you are using in your application
+will be distributed as header-only implementations, which means you have to
+re-compile your application to use a newer version of the implementations.</li>
+</ul>
+</div></blockquote>
+<p>The HTTP clients all share the same API, but the internals are documented in
+terms of what is different and what to expect with the different
+implementations.</p>
+<p>As of 0.9.1 the default implementation for the <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> HTTP client is
+asynchronous.</p>
+</div>
+<div class="section" id="cpp-netlib-implementations">
+<h2>Implementations<a class="headerlink" href="#cpp-netlib-implementations" title="Permalink to this headline">¶</a></h2>
+<p>There is a single user-facing template class named <tt class="docutils literal"><span class="pre">basic_client</span></tt> which takes
+three template parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Tag</strong> - which static tag you choose that defines the behavior of the client.</li>
+<li><strong>http_version_major</strong> - an unsigned int that defines the HTTP major version
+number, this directly affects the HTTP messages sent by the client.</li>
+<li><strong>http_version_minor</strong> - an unsigned int that defines the HTTP minor version
+number.</li>
+</ul>
+</div></blockquote>
+<p>There are two major different class of implementations of the <tt class="docutils literal"><span class="pre">basic_client</span></tt>
+template that depend on which tag you choose: <a class="reference internal" href="#synchronous-clients">Synchronous Clients</a> and
+<a class="reference internal" href="#asynchronous-clients">Asynchronous Clients</a>. These two different classes are described in their own
+sections following this one. What follows is a table of all tags supported by
+the HTTP client implementation provided by <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>.</p>
+<hr class="docutils" />
+<table border="1" class="docutils">
+<colgroup>
+<col width="42%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Tag</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>http_default_8bit_tcp_resolve</td>
+<td>This is the default HTTP implementation tag
+that resolves addresses with a TCP resolver
+and provides a synchronous/blocking HTTP
+client interface.</td>
+</tr>
+<tr><td>http_default_8bit_udp_resolve</td>
+<td>This is similar to the above tag except that
+it specifies the HTTP client to use a UDP
+resolver. It also provides a synchronous/
+blocking HTTP client interface.</td>
+</tr>
+<tr><td>http_keepalive_8bit_tcp_resolve</td>
+<td>This tag specifies that the HTTP client by
+default will keep connections to the server
+alive. It only makes sense if the
+<tt class="docutils literal"><span class="pre">version_major</span></tt> and <tt class="docutils literal"><span class="pre">version_minor</span></tt> are
+both <tt class="docutils literal"><span class="pre">1</span></tt>, to indicate HTTP 1.1. This tag
+causes the HTTP client to resolve using a
+TCP resolver and provides a synchronous/
+blocking HTTP client interface.</td>
+</tr>
+<tr><td>http_keepalive_8bit_udp_resolve</td>
+<td>This is similar to the above tag except that
+it specifies the HTTP client to use a UDP
+resolver. It also provides a synchronous/
+blocking HTTP client interface.</td>
+</tr>
+<tr><td>http_async_8bit_tcp_resolve</td>
+<td>This tag provides an active HTTP client
+object implementation that uses a TCP
+resolver. Response objects returned will
+encapsulate a number of <a class="reference external" href="http://www.boost.org/libs/thread">Boost.Thread</a>
+shared futures to hold values. Users don&#8217;t
+have to see this as they are implementation
+details.</td>
+</tr>
+<tr><td>http_async_8bit_udp_resolve</td>
+<td>This is similar to the above tag except that
+specifies the HTTP client to use a UDP
+resolver.</td>
+</tr>
+</tbody>
+</table>
+<p>In the above table the tags follow a pattern for describing the behavior
+introduced by the tags. This pattern is shown below:</p>
+<blockquote>
+<div>&lt;protocol&gt;_&lt;modifier&gt;_&lt;character-width&gt;_&lt;resolve-strategy&gt;</div></blockquote>
+<p>For example, the tag <tt class="docutils literal"><span class="pre">http_default_8bit_tcp_resolve</span></tt> indicates the protocol
+<tt class="docutils literal"><span class="pre">http</span></tt>, a modifier <tt class="docutils literal"><span class="pre">default</span></tt>, a character width of <tt class="docutils literal"><span class="pre">8bit</span></tt>, and a resolve
+strategy of <tt class="docutils literal"><span class="pre">tcp_resolve</span></tt>.</p>
+<div class="section" id="cpp-netlib-synchronous-clients">
+<h3>Synchronous Clients<a class="headerlink" href="#cpp-netlib-synchronous-clients" title="Permalink to this headline">¶</a></h3>
+<p>Of the client tags shown in the table, the following makes the <tt class="docutils literal"><span class="pre">basic_client</span></tt>
+behave as a fully synchronous client.</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>http_default_8bit_tcp_resolve</strong></li>
+<li><strong>http_default_8bit_udp_resolve</strong></li>
+<li><strong>http_keepalive_8bit_tcp_resolve</strong></li>
+<li><strong>http_keepalive_8bit_udp_resolve</strong></li>
+</ul>
+</div></blockquote>
+<p>The synchronous client implements all the operations of the client underneath
+the interface all block to wait for I/O to finish. All the member methods are
+synchronous and will block until the response object is ready or throws if erros
+are encountered in the performance of the HTTP requests.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The synchronous clients are <strong>NOT</strong> thread safe. You will need to do
+external synchronization to use synchronous client implementations.</p>
+</div>
+</div>
+<div class="section" id="cpp-netlib-asynchronous-clients">
+<h3>Asynchronous Clients<a class="headerlink" href="#cpp-netlib-asynchronous-clients" title="Permalink to this headline">¶</a></h3>
+<p>The following tags specify the <tt class="docutils literal"><span class="pre">basic_client</span></tt> to behave in an asynchronous
+manner:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>http_async_8bit_tcp_resolve</strong></li>
+<li><strong>http_async_8bit_udp_resolve</strong></li>
+</ul>
+</div></blockquote>
+<p>An asynchronous client implementation means that``basic_client&lt;...&gt;`` is an
+<a class="reference external" href="http://en.wikipedia.org/wiki/Active_object">Active Object</a>. This means that the client has and manages its own lifetime
+thread, and returns values that are asynchronously filled in. The response
+object encapsulates <a class="reference external" href="http://www.boost.org/libs/thread">Boost.Thread</a> futures which get filled in once the values
+are available.</p>
+<p>The asynchronous clients implement all operations asynchronously which are hidden
+from the user. The interface is still synchronous but the fetching of data
+happens on a different thread.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The asynchronous clients are thread safe, and can be shared across
+many threads. Each request starts a sequence of asynchronous operations
+dedicated to that request. The client does not re-cycle connections and uses
+a one-request-one-connection model.</p>
+</div>
+</div>
+</div>
+<div class="section" id="cpp-netlib-member-functions">
+<h2>Member Functions<a class="headerlink" href="#cpp-netlib-member-functions" title="Permalink to this headline">¶</a></h2>
+<p>In this section we assume that the following typedef is in effect:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">basic_client</span><span class="o">&lt;</span>
+    <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">tags</span><span class="o">::</span><span class="n">http_default_8bit_udp_resolve</span>
+    <span class="p">,</span> <span class="mi">1</span>
+    <span class="p">,</span><span class="mi">1</span>
+    <span class="o">&gt;</span>
+    <span class="n">client</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Also, that code using the HTTP client will have use the following header:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/include/http/client.hpp&gt;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Starting version 0.9, cpp-netlib clients and server implementations
+by default now have an externally-linked component. This is a breaking change
+for code that used to rely on cpp-netlib being a header-only library, but can
+inhibited by defining the <tt class="docutils literal"><span class="pre">BOOST_NETWORK_NO_LIB</span></tt> preprocessor macro before
+including any cpp-netlib header.</p>
+</div>
+<div class="section" id="cpp-netlib-constructors">
+<h3>Constructors<a class="headerlink" href="#cpp-netlib-constructors" title="Permalink to this headline">¶</a></h3>
+<p>The client implementation can be default constructed, or customized at
+initialization.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">client()</span></tt></dt>
+<dd>Default constructor.</dd>
+<dt><tt class="docutils literal"><span class="pre">client(boost::asio::io_service</span> <span class="pre">&amp;</span> <span class="pre">io_service)</span></tt></dt>
+<dd>Construct a client to use an existing Boost.Asio <tt class="docutils literal"><span class="pre">io_service</span></tt> instance.</dd>
+<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">ArgPack&gt;</span> <span class="pre">client(ArgPack</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">args)</span></tt></dt>
+<dd>Pass in an argument pack. See supported parameters in the table below.</dd>
+</dl>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="40%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Parameter Name</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>_follow_redirects</td>
+<td><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+<td>Boolean to specify
+whether the client
+should follow HTTP
+redirects. Default is
+<tt class="docutils literal"><span class="pre">false</span></tt>.</td>
+</tr>
+<tr><td>_cache_resolved</td>
+<td><tt class="docutils literal"><span class="pre">bool</span></tt></td>
+<td>Boolean to specify
+whether the client
+should cache resolved
+endpoints. The default
+is <tt class="docutils literal"><span class="pre">false</span></tt>.</td>
+</tr>
+<tr><td>_io_service</td>
+<td><tt class="docutils literal"><span class="pre">boost::asio::io_service</span> <span class="pre">&amp;</span></tt></td>
+<td>Reference to an
+instance of a
+Boost.Asio
+<tt class="docutils literal"><span class="pre">io_service</span></tt>.</td>
+</tr>
+<tr><td>_openssl_certificate</td>
+<td>string</td>
+<td>The filename of the
+certificate to load for
+the SSL connection for
+verification.</td>
+</tr>
+<tr><td>_openssl_verify_path</td>
+<td>string</td>
+<td>The directory from
+which the certificate
+authority files are
+located.</td>
+</tr>
+</tbody>
+</table>
+<p>To use the above supported named parameters, you&#8217;ll have code that looks like
+the following:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span> <span class="c1">// parameters are in this namespace</span>
+<span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">io_service</span> <span class="n">my_io_service</span><span class="p">;</span>
+<span class="n">client</span> <span class="n">client_</span><span class="p">(</span><span class="n">_follow_redirects</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span> <span class="n">_cache_resolved</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span>
+               <span class="n">_io_service</span><span class="o">=</span><span class="n">my_io_service</span>
+               <span class="p">,</span> <span class="n">_openssl_certificate</span><span class="o">=</span><span class="s">&quot;/tmp/my-cert&quot;</span>
+               <span class="p">,</span> <span class="n">_openssl_verify_path</span><span class="o">=</span><span class="s">&quot;/tmp/ca-certs/&quot;</span><span class="p">);</span>
+<span class="c1">// use client_ as normal from here on out.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cpp-netlib-http-methods">
+<h3>HTTP Methods<a class="headerlink" href="#cpp-netlib-http-methods" title="Permalink to this headline">¶</a></h3>
+<p>The client implementation supports various HTTP methods. The following
+constructs assume that a client has been properly constructed named <tt class="docutils literal"><span class="pre">client_</span></tt>
+and that there is an appropriately constructed request object named <tt class="docutils literal"><span class="pre">request_</span></tt>
+and that there is an appropriately constructed response object named
+<tt class="docutils literal"><span class="pre">response_</span></tt> like the following:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>  <span class="c1">// parameters are here</span>
+<span class="n">client</span> <span class="n">client_</span><span class="p">();</span>
+<span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request_</span><span class="p">(</span><span class="s">&quot;http://cpp-netib.github.com/&quot;</span><span class="p">);</span>
+<span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response_</span><span class="p">;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.get(request_)</span></tt></dt>
+<dd>Perform an HTTP GET request.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.get(request_,</span> <span class="pre">_body_handler=callback)</span></tt></dt>
+<dd>Perform an HTTP GET request, and have the body chunks be handled by the
+<tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of <tt class="docutils literal"><span class="pre">callback</span></tt> should be the following:
+<tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span>
+<span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.head(request_)</span></tt></dt>
+<dd>Perform an HTTP HEAD request.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_)</span></tt></dt>
+<dd>Perform an HTTP POST, use the data already set in the request object which
+includes the headers, and the body.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">_body_handler=callback)</span></tt></dt>
+<dd>Perform an HTTP POST request, and have the body chunks be handled by the
+<tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of <tt class="docutils literal"><span class="pre">callback</span></tt> should be the following:
+<tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span>
+<span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">body)</span></tt></dt>
+<dd>Body is a string of type <tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt>
+is the HTTP Client&#8217;s <tt class="docutils literal"><span class="pre">Tag</span></tt>. The default content-type used is
+<tt class="docutils literal"><span class="pre">x-application/octet-stream</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">body,</span> <span class="pre">_body_handler=callback)</span></tt></dt>
+<dd>Body is a string of type <tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt>
+is the HTTP Client&#8217;s <tt class="docutils literal"><span class="pre">Tag</span></tt>. The default content-type used is
+<tt class="docutils literal"><span class="pre">x-application/octet-stream</span></tt>. Have the response body chunks be handled by
+the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of <tt class="docutils literal"><span class="pre">callback</span></tt> should be the
+following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
+<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">content_type,</span> <span class="pre">body)</span></tt></dt>
+<dd>The body and content_type parameters are of type
+<tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt> is the HTTP Client&#8217;s
+<tt class="docutils literal"><span class="pre">Tag</span></tt>. This uses the request object&#8217;s other headers.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">content_type,</span> <span class="pre">body,</span> <span class="pre">_body_handler=callback)</span></tt></dt>
+<dd>The body and content_type parameters are of type
+<tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt> is the HTTP Client&#8217;s
+<tt class="docutils literal"><span class="pre">Tag</span></tt>. This uses the request object&#8217;s other headers. Have the response
+body chunks be handled by the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of
+<tt class="docutils literal"><span class="pre">callback</span></tt> should be the following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
+<span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_)</span></tt></dt>
+<dd>Perform an HTTP PUT, use the data already set in the request object which
+includes the headers, and the body.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">_body_handler=callback)</span></tt></dt>
+<dd>Perform an HTTP PUT request, and have the body chunks be handled by the
+<tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of <tt class="docutils literal"><span class="pre">callback</span></tt> should be the following:
+<tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span>
+<span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body)</span></tt></dt>
+<dd>Body is a string of type <tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt>
+is the HTTP Client&#8217;s <tt class="docutils literal"><span class="pre">Tag</span></tt>. The default content-type used is
+<tt class="docutils literal"><span class="pre">x-application/octet-stream</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body,</span> <span class="pre">_body_handler=callback)</span></tt></dt>
+<dd>Body is a string of type <tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt>
+is the HTTP Client&#8217;s <tt class="docutils literal"><span class="pre">Tag</span></tt>. The default content-type used is
+<tt class="docutils literal"><span class="pre">x-application/octet-stream</span></tt>. Have the response body chunks be handled by
+the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of <tt class="docutils literal"><span class="pre">callback</span></tt> should be the
+following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
+<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">content_type,</span> <span class="pre">body)</span></tt></dt>
+<dd>The body and content_type parameters are of type
+<tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt> is the HTTP Client&#8217;s
+<tt class="docutils literal"><span class="pre">Tag</span></tt>. This uses the request object&#8217;s other headers.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">content_type,</span> <span class="pre">body,</span> <span class="pre">_body_handler=callback)</span></tt></dt>
+<dd>The body and content_type parameters are of type
+<tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt> is the HTTP Client&#8217;s
+<tt class="docutils literal"><span class="pre">Tag</span></tt>. This uses the request object&#8217;s other headers. Have the response
+body chunks be handled by the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of
+<tt class="docutils literal"><span class="pre">callback</span></tt> should be the following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
+<span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.delete_(request_)</span></tt></dt>
+<dd>Perform an HTTP DELETE request.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.delete_(request_,</span> <span class="pre">_body_handler=callback)</span></tt></dt>
+<dd>Perform an HTTP DELETE request, and have the response body chunks be handled
+by the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of <tt class="docutils literal"><span class="pre">callback</span></tt> should be the
+following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
+<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>.</dd>
+</dl>
+</div>
+<div class="section" id="cpp-netlib-client-specific">
+<h3>Client-Specific<a class="headerlink" href="#cpp-netlib-client-specific" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">client_.clear_resolved_cache()</span></tt></dt>
+<dd>Clear the cache of resolved endpoints.</dd>
+</dl>
+</div>
+<div class="section" id="cpp-netlib-streaming-body-handler">
+<h3>Streaming Body Handler<a class="headerlink" href="#cpp-netlib-streaming-body-handler" title="Permalink to this headline">¶</a></h3>
+<p>As of v0.9.1 the library now offers a way to support a streaming body callback
+function in all HTTP requests that expect a body part (GET, PUT, POST, DELETE).
+A convenience macro is also provided to make callback handlers easier to write.
+This macro is called <tt class="docutils literal"><span class="pre">BOOST_NETWORK_HTTP_BODY_CALLBACK</span></tt> which allows users to
+write the following code to easily create functions or function objects that
+are compatible with the callback function requirements.</p>
+<p>An example of how to use the macro is shown below:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">struct</span> <span class="n">body_handler</span> <span class="p">{</span>
+    <span class="k">explicit</span> <span class="n">body_handler</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">body</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">body</span><span class="p">(</span><span class="n">body</span><span class="p">)</span> <span class="p">{}</span>
+
+    <span class="n">BOOST_NETWORK_HTTP_BODY_CALLBACK</span><span class="p">(</span><span class="k">operator</span><span class="p">(),</span> <span class="n">range</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// in here, range is the Boost.Range iterator_range, and error is</span>
+        <span class="c1">// the Boost.System error code.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">error</span><span class="p">)</span>
+            <span class="n">body</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">begin</span><span class="p">(</span><span class="n">range</span><span class="p">),</span> <span class="n">boost</span><span class="o">::</span><span class="n">end</span><span class="p">(</span><span class="n">range</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span> <span class="n">body</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// somewhere else</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">some_string</span><span class="p">;</span>
+<span class="n">response_</span> <span class="o">=</span> <span class="n">client_</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">(</span><span class="s">&quot;http://cpp-netlib.github.com/&quot;</span><span class="p">),</span>
+                        <span class="n">_body_handler</span><span class="o">=</span><span class="n">body_handler</span><span class="p">(</span><span class="n">some_string</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>You can also use if for standalone functions instead if you don&#8217;t want or need
+to create a function object.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">BOOST_NETWORK_HTTP_BODY_CALLBACK</span><span class="p">(</span><span class="n">print_body</span><span class="p">,</span> <span class="n">range</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">error</span><span class="p">)</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Received &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">boost</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">range</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;bytes.&quot;</span>
+                  <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">else</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Error: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// somewhere else</span>
+<span class="n">response_</span> <span class="o">=</span> <span class="n">client_</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">(</span><span class="s">&quot;http://cpp-netlib.github.com/&quot;</span><span class="p">),</span>
+                        <span class="n">_body_handler</span><span class="o">=</span><span class="n">print_body</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">BOOST_NETWORK_HTTP_BODY_CALLBACK</span></tt> macro is defined in
+<tt class="docutils literal"><span class="pre">boost/network/protocol/http/client/macros.hpp</span></tt>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      
+        
+        <div class="yui-b" id="sidebar">
+          
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">HTTP Client API</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#implementations">Implementations</a><ul>
+<li><a class="reference internal" href="#synchronous-clients">Synchronous Clients</a></li>
+<li><a class="reference internal" href="#asynchronous-clients">Asynchronous Clients</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#member-functions">Member Functions</a><ul>
+<li><a class="reference internal" href="#constructors">Constructors</a></li>
+<li><a class="reference internal" href="#http-methods">HTTP Methods</a></li>
+<li><a class="reference internal" href="#client-specific">Client-Specific</a></li>
+<li><a class="reference internal" href="#streaming-body-handler">Streaming Body Handler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+      <li>Prev: <a href="../reference.html">Reference Manual</a></li>
+    
+    
+      <li>Next: <a href="http_request.html">HTTP Request</a></li>
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="../index.html">cpp-netlib v0.9.3</a>
+        
+          <ul><li><a href="../reference.html">Reference Manual</a>
+        
+        <ul><li>HTTP Client API</li></ul>
+        </li></ul>
+      </li>
+  </ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/reference/http_client.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="../reference.html" title="Reference Manual">previous</a>
+     |
+    <a href="../reference.html" title="Reference Manual" accesskey="U">up</a>
+   |
+    <a href="http_request.html" title="HTTP Request">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  <div class="footer">
+      documentation automatically generated by <a href="http://sphinx.pocoo.org">Sphinx</a> | style mostly stolen from <a href="http://lettuce.it">lettuce.it</a>
+  </div>
+
+  </body>
+</html>

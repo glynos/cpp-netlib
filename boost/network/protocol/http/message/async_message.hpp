@@ -11,6 +11,7 @@
 
 #include <boost/thread/future.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/optional.hpp>
 
 //FIXME move this out to a trait
 #include <set>
@@ -69,7 +70,7 @@ namespace boost { namespace network { namespace http {
             version_ = future;
         }
 
-        boost::uint16_t const status() const {
+        boost::uint16_t status() const {
             return status_.get();
         }
 

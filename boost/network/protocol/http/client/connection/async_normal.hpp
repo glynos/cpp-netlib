@@ -29,6 +29,8 @@
 #include <boost/bind/protect.hpp>
 #include <iterator>
 
+#include <boost/network/protocol/http/traits/delegate_factory.hpp>
+
 namespace boost { namespace network { namespace http { namespace impl {
 
   template <class Tag, unsigned version_major, unsigned version_minor>
@@ -53,16 +55,20 @@ namespace boost { namespace network { namespace http { namespace impl {
       typedef typename base::resolver_base::resolve_function resolve_function;
       typedef typename base::body_callback_function_type body_callback_function_type;
       typedef http_async_connection<Tag,version_major,version_minor> this_type;
+      typedef typename delegate_factory<Tag>::type delegate_factory_type;
+      typedef typename delegate_factory_type::connection_delegate_ptr
+          connection_delegate_ptr;
 
       http_async_connection(resolver_type & resolver,
                             resolve_function resolve,
-                            bool follow_redirect)
+                            bool follow_redirect,
+                            connection_delegate_ptr delegate)
           :
             follow_redirect_(follow_redirect),
             resolver_(resolver),
             resolve_(resolve),
-            request_strand_(resolver.get_io_service()) {}
-
+            request_strand_(resolver.get_io_service()),
+            delegate_(delegate) {}
 
       // This is the main entry point for the connection/request pipeline. We're
       // overriding async_connection_base<...>::start(...) here which is called
@@ -77,14 +83,17 @@ namespace boost { namespace network { namespace http { namespace impl {
           std::ostreambuf_iterator<typename char_<Tag>::type>(&command_streambuf));
         this->method = method;
         boost::uint16_t port_ = port(request);
-        resolve_(resolver_, host(request),
-          port_,
-          request_strand_.wrap(
-            boost::bind(
-            &this_type::handle_resolved,
-            this_type::shared_from_this(),
-            port_, get_body, callback,
-            _1, _2)));
+        resolve_(resolver_,
+                 host(request),
+                 port_,
+                 request_strand_.wrap(
+                     boost::bind(&this_type::handle_resolved,
+                                 this_type::shared_from_this(),
+                                 port_,
+                                 get_body,
+                                 callback,
+                                 _1,
+                                 _2)));
         return response_;
       }
 
@@ -108,26 +117,22 @@ namespace boost { namespace network { namespace http { namespace impl {
                          body_callback_function_type callback,
                          boost::system::error_code const & ec,
                          resolver_iterator_pair endpoint_range) {
-      resolver_iterator iter = boost::begin(endpoint_range);
       if (!ec && !boost::empty(endpoint_range)) {
         // Here we deal with the case that there was an error encountered and
         // that there's still more endpoints to try connecting to.
-        boost::asio::ip::tcp::endpoint endpoint(iter->endpoint().address(),
-                                                port);
-        socket_.reset(
-            new boost::asio::ip::tcp::socket(
-                resolver_.get_io_service()));
-        socket_->async_connect(endpoint,
-                               request_strand_.wrap(
-                                   boost::bind(
-                                       &this_type::handle_connected,
-                                       this_type::shared_from_this(),
-                                       port,
-                                       get_body,
-                                       callback,
-                                       std::make_pair(++iter,
-                                                      resolver_iterator()),
-                                       placeholders::error)));
+        resolver_iterator iter = boost::begin(endpoint_range);
+        asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
+        delegate_->connect(endpoint,
+                           request_strand_.wrap(
+                               boost::bind(
+                                   &this_type::handle_connected,
+                                   this_type::shared_from_this(),
+                                   port,
+                                   get_body,
+                                   callback,
+                                   std::make_pair(++iter,
+                                                  resolver_iterator()),
+                                   placeholders::error)));
       } else {
         set_errors(ec ? ec : boost::asio::error::host_not_found);
       }
@@ -139,35 +144,31 @@ namespace boost { namespace network { namespace http { namespace impl {
                           resolver_iterator_pair endpoint_range,
                           boost::system::error_code const & ec) {
       if (!ec) {
-        boost::asio::async_write(
-          *socket_
-          , command_streambuf
-          , request_strand_.wrap(
-            boost::bind(
-              &this_type::handle_sent_request,
-              this_type::shared_from_this(),
-              get_body, callback,
-              placeholders::error,
-              placeholders::bytes_transferred
-              )));
+        BOOST_ASSERT(delegate_.get() != 0);
+        delegate_->write(command_streambuf,
+                         request_strand_.wrap(
+                             boost::bind(
+                                 &this_type::handle_sent_request,
+                                 this_type::shared_from_this(),
+                                 get_body,
+                                 callback,
+                                 placeholders::error,
+                                 placeholders::bytes_transferred)));
       } else {
         if (!boost::empty(endpoint_range)) {
           resolver_iterator iter = boost::begin(endpoint_range);
-          boost::asio::ip::tcp::endpoint endpoint(
-            iter->endpoint().address(),
-            port
-            );
-          socket_.reset(new boost::asio::ip::tcp::socket(
-            resolver_.get_io_service()));
-          socket_->async_connect(
-            endpoint,
-            request_strand_.wrap(
-              boost::bind(
-                &this_type::handle_connected,
-                this_type::shared_from_this(),
-                port, get_body, callback, std::make_pair(++iter, resolver_iterator()),
-                placeholders::error
-                )));
+          asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
+          delegate_->connect(endpoint,
+                             request_strand_.wrap(
+                                 boost::bind(
+                                     &this_type::handle_connected,
+                                     this_type::shared_from_this(),
+                                     port,
+                                     get_body,
+                                     callback,
+                                     std::make_pair(++iter,
+                                                    resolver_iterator()),
+                                     placeholders::error)));
         } else {
           set_errors(ec ? ec : boost::asio::error::host_not_found);
         }
@@ -178,30 +179,33 @@ namespace boost { namespace network { namespace http { namespace impl {
       version, status, status_message, headers, body
     };
 
-    void handle_sent_request(bool get_body, body_callback_function_type callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+    void handle_sent_request(bool get_body,
+                             body_callback_function_type callback,
+                             boost::system::error_code const & ec,
+                             std::size_t bytes_transferred) {
       if (!ec) {
-        socket_->async_read_some(
-          boost::asio::mutable_buffers_1(this->part.c_array(), this->part.size()),
-          request_strand_.wrap(
-            boost::bind(
-              &this_type::handle_received_data,
-              this_type::shared_from_this(),
-              version, get_body, callback,
-              placeholders::error,
-              placeholders::bytes_transferred)));
+        delegate_->read_some(
+            boost::asio::mutable_buffers_1(this->part.c_array(),
+                                           this->part.size()),
+            request_strand_.wrap(
+                boost::bind(&this_type::handle_received_data,
+                            this_type::shared_from_this(),
+                            version, get_body, callback,
+                            placeholders::error,
+                            placeholders::bytes_transferred)));
       } else {
         set_errors(ec);
       }
     }
 
     void handle_received_data(state_t state, bool get_body, body_callback_function_type callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
-      if (!ec || ec == boost::asio::error::eof) {
+        if (!ec || ec == boost::asio::error::eof) {
         logic::tribool parsed_ok;
         size_t remainder;
         switch(state) {
           case version:
             parsed_ok =
-                this->parse_version(*socket_,
+                this->parse_version(delegate_,
                                     request_strand_.wrap(
                                         boost::bind(
                                             &this_type::handle_received_data,
@@ -213,7 +217,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             if (!parsed_ok || indeterminate(parsed_ok)) return;
           case status:
             parsed_ok =
-                this->parse_status(*socket_,
+                this->parse_status(delegate_,
                                    request_strand_.wrap(
                                        boost::bind(
                                            &this_type::handle_received_data,
@@ -225,7 +229,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             if (!parsed_ok || indeterminate(parsed_ok)) return;
           case status_message:
             parsed_ok =
-              this->parse_status_message(*socket_,
+              this->parse_status_message(delegate_,
                 request_strand_.wrap(
                   boost::bind(
                     &this_type::handle_received_data,
@@ -243,7 +247,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             // that the data remaining in the buffer is dealt with before
             // another call to get more data for the body is scheduled.
             fusion::tie(parsed_ok, remainder) =
-              this->parse_headers(*socket_,
+              this->parse_headers(delegate_,
                 request_strand_.wrap(
                   boost::bind(
                     &this_type::handle_received_data,
@@ -289,21 +293,22 @@ namespace boost { namespace network { namespace http { namespace impl {
               // wait before scheduling another read.
               callback(make_iterator_range(begin, end), ec);
 
-              socket_->async_read_some(
-                boost::asio::mutable_buffers_1(this->part.c_array(), this->part.size()),
-                request_strand_.wrap(
-                  boost::bind(
-                    &this_type::handle_received_data,
-                    this_type::shared_from_this(),
-                    body, get_body, callback,
-                    placeholders::error, placeholders::bytes_transferred)
-                )
-                );
+              delegate_->read_some(
+                  boost::asio::mutable_buffers_1(this->part.c_array(),
+                                                 this->part.size()),
+                  request_strand_.wrap(
+                      boost::bind(&this_type::handle_received_data,
+                                  this_type::shared_from_this(),
+                                  body,
+                                  get_body,
+                                  callback,
+                                  placeholders::error,
+                                  placeholders::bytes_transferred)));
             } else {
               // Here we handle the body data ourself and append to an
               // ever-growing string buffer.
               this->parse_body(
-                *socket_,
+                delegate_,
                 request_strand_.wrap(
                   boost::bind(
                     &this_type::handle_received_data,
@@ -356,7 +361,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 typename protocol_base::buffer_type::const_iterator end = begin;
                 std::advance(end, bytes_transferred);
                 callback(make_iterator_range(begin, end), ec);
-                socket_->async_read_some(
+                delegate_->read_some(
                     boost::asio::mutable_buffers_1(
                         this->part.c_array(),
                         this->part.size()),
@@ -374,7 +379,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 // make sure that we deal with the remainder
                 // from the headers part in case we do have data
                 // that's still in the buffer.
-                this->parse_body(*socket_,
+                this->parse_body(delegate_,
                                  request_strand_.wrap(
                                      boost::bind(
                                          &this_type::handle_received_data,
@@ -415,9 +420,9 @@ namespace boost { namespace network { namespace http { namespace impl {
 
     bool follow_redirect_;
     resolver_type & resolver_;
-    boost::shared_ptr<boost::asio::ip::tcp::socket> socket_;
     resolve_function resolve_;
     boost::asio::io_service::strand request_strand_;
+    connection_delegate_ptr delegate_;
     boost::asio::streambuf command_streambuf;
     string_type method;
   };
