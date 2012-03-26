@@ -26,242 +26,257 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/bind.hpp>
+#include <boost/network/protocol/http/algorithms/flatten.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    class sync_server_connection : public boost::enable_shared_from_this<sync_server_connection> {
+#ifndef BOOST_NETWORK_NO_LIB
+  extern void parse_version(std::string const & partial_parsed, fusion::tuple<uint8_t,uint8_t> & version_pair);
+  extern void parse_headers(std::string const & input, std::vector<std::pair<std::string,std::string> > & container);
+#endif
 
-        sync_server_connection(boost::asio::io_service & service, function<void(request const &, response &)> handler)
-        : service_(service)
-        , handler_(handler)
-        , socket_(service_)
-        , wrapper_(service_)
-        {
-        }
+class sync_server_connection : public boost::enable_shared_from_this<sync_server_connection> {
+ public:
+  sync_server_connection(boost::asio::io_service & service,
+             function<void(request const &, response &)> handler)
+  : service_(service)
+  , handler_(handler)
+  , socket_(service_)
+  , wrapper_(service_)
+  {
+  }
 
-        boost::asio::ip::tcp::socket & socket() {
-            return socket_;
-        }
+  boost::asio::ip::tcp::socket & socket() {
+    return socket_;
+  }
 
-        void start() {
-            // This is HTTP so we really want to just
-            // read and parse a request that's incoming
-            // and then pass that request object to the
-            // handler_ instance.
-            //
-            using boost::asio::ip::tcp;
-            boost::system::error_code option_error;
-            socket_.set_option(tcp::no_delay(true), option_error);
-            if (option_error) handler_.log(boost::system::system_error(option_error).what());
-            socket_.async_read_some(
-                boost::asio::buffer(buffer_),
+  void start() {
+    using boost::asio::ip::tcp;
+    boost::system::error_code option_error;
+    // TODO make no_delay an option in server_options.
+    socket_.set_option(tcp::no_delay(true), option_error);
+    std::ostringstream ip_stream;
+    ip_stream << socket_.remote_endpoint().address().to_string() << ':'
+      << socket_.remote_endpoint().port();
+    request_.set_source(ip_stream.str());
+    socket_.async_read_some(
+      boost::asio::buffer(read_buffer_),
+      wrapper_.wrap(
+        boost::bind(
+          &sync_server_connection::handle_read_data,
+          sync_server_connection::shared_from_this(),
+          method,
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred)));
+  }
+
+ private:
+  
+  enum state_t {
+      method, uri, version, headers, body
+  };
+
+
+  void handle_read_data(state_t state, boost::system::error_code const & ec, std::size_t bytes_transferred) {
+    if (!ec) {
+      logic::tribool parsed_ok;
+      iterator_range<buffer_type::iterator> result_range, input_range;
+      data_end = read_buffer_.begin();
+      std::advance(data_end, bytes_transferred);
+      switch (state) {
+        case method:
+          input_range = boost::make_iterator_range(
+            new_start, data_end);
+          fusion::tie(parsed_ok, result_range) = parser_.parse_until(
+            request_parser::method_done, input_range);
+          if (!parsed_ok) { 
+            client_error();
+            break;
+          } else if (parsed_ok == true) {
+            std::string method;
+            swap(partial_parsed, method);
+            method.append(boost::begin(result_range),
+                    boost::end(result_range));
+            trim(method);
+            request_.set_method(method);
+            new_start = boost::end(result_range);
+            // Determine whether we're going to need to parse the body of the
+            // request. All we do is peek at the first character of the method
+            // to determine whether it's a POST or a PUT.
+            read_body_ = method.size() ? method[0] == 'P' : false;
+          } else {
+            partial_parsed.append(
+              boost::begin(result_range),
+              boost::end(result_range));
+            new_start = read_buffer_.begin();
+            read_more(method);
+            break;
+          }
+        case uri:
+          input_range = boost::make_iterator_range(
+            new_start, data_end);
+          fusion::tie(parsed_ok, result_range) = parser_.parse_until(
+            request_parser::uri_done,
+            input_range);
+          if (!parsed_ok) {
+            client_error();
+            break;
+          } else if (parsed_ok == true) {
+            std::string destination;
+            swap(partial_parsed, destination);
+            destination.append(boost::begin(result_range),
+                       boost::end(result_range));
+            trim(destination);
+            request_.set_destination(destination);
+            new_start = boost::end(result_range);
+          } else {
+            partial_parsed.append(
+              boost::begin(result_range),
+              boost::end(result_range));
+            new_start = read_buffer_.begin();
+            read_more(uri);
+            break;
+          }
+        case version:
+          input_range = boost::make_iterator_range(
+            new_start, data_end);
+          fusion::tie(parsed_ok, result_range) = parser_.parse_until(
+            request_parser::version_done,
+            input_range);
+          if (!parsed_ok) {
+            client_error();
+            break;
+          } else if (parsed_ok == true) {
+            fusion::tuple<uint8_t, uint8_t> version_pair;
+            partial_parsed.append(boost::begin(result_range), boost::end(result_range));
+            parse_version(partial_parsed, version_pair);
+            request_.set_version_major(fusion::get<0>(version_pair));
+            request_.set_version_minor(fusion::get<1>(version_pair));
+            new_start = boost::end(result_range);
+            partial_parsed.clear();
+          } else {
+            partial_parsed.append(
+              boost::begin(result_range),
+              boost::end(result_range));
+            new_start = read_buffer_.begin();
+            read_more(version);
+            break;
+          }
+        case headers:
+          input_range = boost::make_iterator_range(
+            new_start, data_end);
+          fusion::tie(parsed_ok, result_range) = parser_.parse_until(
+            request_parser::headers_done,
+            input_range);
+          if (!parsed_ok) {
+            client_error();
+            break;
+          } else if (parsed_ok == true) {
+            partial_parsed.append(
+              boost::begin(result_range),
+              boost::end(result_range));
+            std::vector<std::pair<std::string, std::string> > headers;
+            parse_headers(partial_parsed, headers);
+            for (std::vector<std::pair<std::string, std::string> >::const_iterator it = headers.begin();
+               it != headers.end();
+               ++it) {
+            request_.append_header(it->first, it->second);
+            }
+            new_start = boost::end(result_range);
+            if (read_body_) {
+            } else {
+              response response_;
+              handler_(request_, response_);
+              std::vector<asio::const_buffer> response_buffers;
+              flatten(response_, response_buffers);
+              boost::asio::async_write(
+                socket_,
+                response_buffers,
                 wrapper_.wrap(
-                    boost::bind(
-                        &sync_server_connection::handle_read_headers,
-                        sync_server_connection::shared_from_this(),
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred
-                        )
-                    )
-                );
-        }
-
-        private:
-
-        struct is_content_length {
-            template <class Header>
-            bool operator()(Header const & header) {
-                return boost::to_lower_copy(header.name) == "content-length";
+                  boost::bind(
+                    &sync_server_connection::handle_write,
+                    sync_server_connection::shared_from_this(),
+                    boost::asio::placeholders::error)));
             }
-        };
+            return;
+          } else {
+            partial_parsed.append(
+              boost::begin(result_range),
+              boost::end(result_range));
+            new_start = read_buffer_.begin();
+            read_more(headers);
+            break;
+          }
+        default:
+          BOOST_ASSERT(false && "This is a bug, report to the cpp-netlib devel mailing list!");
+          std::abort();
+      }
+    } else {
+      error_encountered = in_place<boost::system::system_error>(ec);
+    }
+  }
 
-        void handle_read_headers(boost::system::error_code const &ec, size_t bytes_transferred) {
-            if (!ec) {
-                request_.source = socket_.remote_endpoint().address().to_string();
-                boost::tribool done;
-                buffer_type::iterator new_start;
-                tie(done,new_start) = parser_.parse_headers(request_, buffer_.data(), buffer_.data() + bytes_transferred);
-                if (done) {
-                    if (request_.method[0] == 'P') {
-                        // look for the content-length header
-                        typename std::vector<typename request_header<Tag>::type >::iterator it = 
-                            std::find_if(
-                                request_.headers.begin(), 
-                                request_.headers.end(),
-                                is_content_length()
-                                );
-                        if (it == request_.headers.end()) {
-                            response_= stock_reply(bad_request);
-                            boost::asio::async_write(
-                                socket_,
-                                response_.to_buffers(),
-                                wrapper_.wrap(
-                                    boost::bind(
-                                        &sync_server_connection::handle_write,
-                                        sync_server_connection::shared_from_this(),
-                                        boost::asio::placeholders::error
-                                        )
-                                    )
-                                );
-                            return;
-                        }
+  void handle_write(system::error_code const &ec) {
+    if (ec) {
+      // TODO maybe log the error here.
+    }
+  }
 
-                        size_t content_length = 0;
+  void client_error() {
+      static char const * bad_request = 
+          "HTTP/1.0 400 Bad Request\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
 
-                        try {
-                            content_length = boost::lexical_cast<size_t>(it->value);
-                        } catch (...) {
-                            response_= stock_reply(bad_request);
-                            boost::asio::async_write(
-                                socket_,
-                                response_.to_buffers(),
-                                wrapper_.wrap(
-                                    boost::bind(
-                                        &sync_server_connection::handle_write,
-                                        sync_server_connection::shared_from_this(),
-                                        boost::asio::placeholders::error
-                                        )
-                                    )
-                                );
-                            return;
-                        }
+      asio::async_write(
+          socket()
+          , asio::buffer(bad_request, strlen(bad_request))
+          , wrapper_.wrap(
+              boost::bind(
+                  &sync_server_connection::client_error_sent
+                  , sync_server_connection::shared_from_this()
+                  , asio::placeholders::error
+                  , asio::placeholders::bytes_transferred)));
+  }
 
-                        if (content_length != 0) {
-                            if (new_start != (buffer_.begin() + bytes_transferred)) {
-                                request_.body.append(new_start, buffer_.begin() + bytes_transferred);
-                                content_length -= std::distance(new_start, buffer_.begin() + bytes_transferred);
-                            }
-                            if (content_length > 0) {
-                                socket_.async_read_some(
-                                    boost::asio::buffer(buffer_),
-                                    wrapper_.wrap(
-                                        boost::bind(
-                                            &sync_server_connection::handle_read_body_contents,
-                                            sync_server_connection::shared_from_this(),
-                                            boost::asio::placeholders::error,
-                                            content_length,
-                                            boost::asio::placeholders::bytes_transferred
-                                            )
-                                        )
-                                    );
-                                return;
-                            }
-                        }
+  void client_error_sent(boost::system::error_code const & ec, std::size_t bytes_transferred) {
+      if (!ec) {
+          boost::system::error_code ignored;
+          socket().shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
+          socket().close(ignored);
+      } else {
+          error_encountered = in_place<boost::system::system_error>(ec);
+      }
+  }
 
-                        handler_(request_, response_);
-                        boost::asio::async_write(
-                            socket_,
-                            response_.to_buffers(),
-                            wrapper_.wrap(
-                                boost::bind(
-                                    &sync_server_connection::handle_write,
-                                    sync_server_connection::shared_from_this(),
-                                    boost::asio::placeholders::error
-                                    )
-                                )
-                            );
-                    } else {
-                        handler_(request_, response_);
-                        boost::asio::async_write(
-                            socket_,
-                            response_.to_buffers(),
-                            wrapper_.wrap(
-                                boost::bind(
-                                    &sync_server_connection::handle_write,
-                                    sync_server_connection::shared_from_this(),
-                                    boost::asio::placeholders::error
-                                    )
-                                )
-                            );
-                    }
-                } else if (!done) {
-                    response_= stock_reply(bad_request);
-                    boost::asio::async_write(
-                        socket_,
-                        response_.to_buffers(),
-                        wrapper_.wrap(
-                            boost::bind(
-                                &sync_server_connection::handle_write,
-                                sync_server_connection::shared_from_this(),
-                                boost::asio::placeholders::error
-                                )
-                            )
-                        );
-                } else {
-                    socket_.async_read_some(
-                        boost::asio::buffer(buffer_),
-                        wrapper_.wrap(
-                            boost::bind(
-                                &sync_server_connection::handle_read_headers,
-                                sync_server_connection::shared_from_this(),
-                                boost::asio::placeholders::error,
-                                boost::asio::placeholders::bytes_transferred
-                                )
-                            )
-                        );
-                }
-            }
-            // TODO Log the error?
-        }
+  void read_more(state_t state) {
+      socket_.async_read_some(
+          asio::buffer(read_buffer_)
+          , wrapper_.wrap(
+              boost::bind(
+                  &sync_server_connection::handle_read_data,
+                  sync_server_connection::shared_from_this(),
+                  state,
+                  boost::asio::placeholders::error,
+                  boost::asio::placeholders::bytes_transferred
+                  )
+              )
+          );
+  }
 
-        void handle_read_body_contents(boost::system::error_code const & ec, size_t bytes_to_read, size_t bytes_transferred) {
-            if (!ec) {
-                size_t difference = bytes_to_read - bytes_transferred;
-                buffer_type::iterator start = buffer_.begin(),
-                    past_end = start;
-                std::advance(past_end, (std::min)(bytes_to_read,bytes_transferred));
-                request_.body.append(buffer_.begin(), past_end);
-                if (difference == 0) {
-                    handler_(request_, response_);
-                    boost::asio::async_write(
-                        socket_,
-                        response_.to_buffers(),
-                        wrapper_.wrap(
-                            boost::bind(
-                                &sync_server_connection::handle_write,
-                                sync_server_connection::shared_from_this(),
-                                boost::asio::placeholders::error
-                                )
-                            )
-                        );
-                } else {
-                    socket_.async_read_some(
-                        boost::asio::buffer(buffer_),
-                        wrapper_.wrap(
-                            boost::bind(
-                                &sync_server_connection::handle_read_body_contents,
-                                sync_server_connection::shared_from_this(),
-                                boost::asio::placeholders::error,
-                                difference,
-                                boost::asio::placeholders::bytes_transferred
-                                )
-                            )
-                        );
-                }
-            }
-            // TODO Log the error?
-        }
+  boost::asio::io_service & service_;
+  function<void(request const &, response &)> handler_;
+  boost::asio::ip::tcp::socket socket_;
+  boost::asio::io_service::strand wrapper_;
 
-        void handle_write(boost::system::error_code const & ec) {
-            if (!ec) {
-                using boost::asio::ip::tcp;
-                boost::system::error_code ignored_ec;
-                socket_.shutdown(tcp::socket::shutdown_receive, ignored_ec);
-            }
-        }
-
-        boost::asio::io_service & service_;
-        function<void(request const &, response &)> handler_;
-        boost::asio::ip::tcp::socket socket_;
-        boost::asio::io_service::strand wrapper_;
-
-        typedef boost::array<char,BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
-        buffer_type buffer_;
-        request_parser request_parser;
-        request_parser parser_;
-        request request_;
-        response response_;
-    };
+  typedef boost::array<char,BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
+  buffer_type read_buffer_;
+  buffer_type::iterator new_start, data_end;
+  request_parser parser_;
+  request request_;
+  response response_;
+  std::string partial_parsed;
+  optional<system::system_error> error_encountered;
+  bool read_body_;
+};
 
 
 } // namespace http

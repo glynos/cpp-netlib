@@ -53,8 +53,8 @@ void sync_server_impl::handle_accept(system::error_code const &ec) {
   if (!ec) {
     set_socket_options(options_, new_connection_->socket());
     new_connection_->start();
-    new_connection.reset(new sync_server_connection(*service_, handler_));
-    aceptor_.async_accept(new_connection_->socket(),
+    new_connection_.reset(new sync_server_connection(*service_, handler_));
+    acceptor_->async_accept(new_connection_->socket(),
         bind(&sync_server_impl::handle_accept,
              this,
              asio::placeholders::error));
@@ -62,7 +62,7 @@ void sync_server_impl::handle_accept(system::error_code const &ec) {
     BOOST_NETWORK_MESSAGE("error accepting connection: " << ec);
     this->stop();
   }
-}  // namespace http
+}
 
 void sync_server_impl::start_listening() {
   using asio::ip::tcp;
@@ -74,7 +74,7 @@ void sync_server_impl::start_listening() {
     BOOST_NETWORK_MESSAGE("error resolving address: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
     BOOST_THROW_EXCEPTION(std::runtime_error("Error resolving provided address:port combination."));
   }
-  tcp::endpoint endpoint = *endpoint_iterator;
+  tcp::endpoint endpoint = *endpoint_;
   acceptor_->open(endpoint.protocol(), error);
   if (error) {
     BOOST_NETWORK_MESSAGE("error opening socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
@@ -86,7 +86,7 @@ void sync_server_impl::start_listening() {
     BOOST_NETWORK_MESSAGE("error binding to socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
     BOOST_THROW_EXCEPTION(std::runtime_error("Error binding to socket for acceptor."));
   }
-  acceptor_.listen(tcp::socket::max_connections, error);
+  acceptor_->listen(tcp::socket::max_connections, error);
   if (error) {
     BOOST_NETWORK_MESSAGE("error listening on socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
     BOOST_THROW_EXCEPTION(std::runtime_error("Error listening on socket for acceptor."));
@@ -98,6 +98,8 @@ void sync_server_impl::start_listening() {
                                asio::placeholders::error));
   listening_ = true;
 }
+
+}  // namespace http
 
 }  // namespace network
 

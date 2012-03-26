@@ -20,7 +20,7 @@ class sync_server_connection;
 struct request;
 struct response;
 
-class sync_server_impl {
+class sync_server_impl : protected socket_options_setter {
  public:
   sync_server_impl(server_options const &options,
                    function<void(request const &, response &)> handler);
