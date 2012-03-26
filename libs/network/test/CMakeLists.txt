@@ -13,7 +13,6 @@ if (Boost_FOUND)
         TESTS
         message_test
         message_transform_test
-        utils_thread_pool
         )
     foreach (test ${TESTS})
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
@@ -21,8 +20,19 @@ if (Boost_FOUND)
             PROPERTIES COMPILE_FLAGS "-Wall")
         endif()
         add_executable(cpp-netlib-${test} ${test}.cpp)
-	add_dependencies(cpp-netlib-${test} cppnetlib-uri)
-        target_link_libraries(cpp-netlib-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri)
+        add_dependencies(cpp-netlib-${test}
+            cppnetlib-uri
+            cppnetlib-message
+            cppnetlib-message-directives
+            cppnetlib-message-wrappers)
+
+        target_link_libraries(cpp-netlib-${test}
+            ${Boost_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-uri
+            cppnetlib-message
+            cppnetlib-message-directives
+            cppnetlib-message-wrappers)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
         endif()
@@ -31,6 +41,17 @@ if (Boost_FOUND)
         add_test(cpp-netlib-${test}
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
     endforeach (test)
+
+    set_source_files_properties(utils_thread_pool.cpp
+      PROPERTIES COMPILE_FLAGS "-Wall")
+    add_executable(cpp-netlib-utils_thread_pool utils_thread_pool.cpp)
+    target_link_libraries(cpp-netlib-utils_thread_pool
+      cppnetlib-utils-thread_pool
+      ${Boost_LIBRARIES}
+      ${CMAKE_THREAD_LIBS_INIT})
+    set_target_properties(cpp-netlib-utils_thread_pool
+      PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
+    add_test(cpp-netlib-utils_thread_pool ${CPP-NETLIB_BRINARY_DIR}/tests/cpp-netlib-utils_thread_pool)
 
 endif()
 

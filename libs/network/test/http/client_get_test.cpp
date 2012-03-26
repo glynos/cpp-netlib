@@ -6,33 +6,48 @@
 #define BOOST_TEST_MODULE HTTP 1.0 Get Test
 #include <boost/network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
-#include "client_types.hpp"
 
 namespace net = boost::network;
 namespace http = boost::network::http;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_get_test, client, client_types) {
-    typename client::request request("http://www.boost.org");
-    client client_;
-    typename client::response response;
+BOOST_AUTO_TEST_CASE(http_client_get_test) {
+    http::client::request request("http://www.google.com/");
+    request << net::header("Connection", "close");
+    http::client client_;
+    http::client::response response;
     BOOST_REQUIRE_NO_THROW ( response = client_.get(request) );
-    typename net::headers_range<typename client::response>::type range = headers(response)["Content-Type"];
-    BOOST_CHECK ( !boost::empty(range) );
+    std::multimap<std::string, std::string> headers_ = net::headers(response);
+    BOOST_CHECK ( !boost::empty(headers_) );
     BOOST_REQUIRE_NO_THROW ( BOOST_CHECK ( body(response).size() != 0 ) );
-    BOOST_CHECK_EQUAL ( response.version().substr(0,7), std::string("HTTP/1.") );
-    BOOST_CHECK_EQUAL ( response.status(), 200u );
-    BOOST_CHECK_EQUAL ( response.status_message(), std::string("OK") );
+    std::string version_, status_message_;
+    response.get_version(version_);
+    uint16_t status_;
+    response.get_status(status_);
+    response.get_status_message(status_message_);
+    BOOST_CHECK_EQUAL ( version_.substr(0,7), "HTTP/1.");
+    BOOST_CHECK_EQUAL ( status_, 302u );
+    BOOST_CHECK_EQUAL ( status_message_, std::string("Found") );
 }
 
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(https_client_get_test, client, client_types) {
-    typename client::request request("https://www.google.com/");
-    client client_;
-    typename client::response response_ = client_.get(request);
-    typename net::headers_range<typename client::response>::type range = headers(response_)["Content-Type"];
-    BOOST_CHECK ( boost::begin(range) != boost::end(range) );
-    BOOST_CHECK( body(response_).size() != 0 );
+BOOST_AUTO_TEST_CASE(https_client_get_test) {
+    http::client::request request("https://www.google.com");
+    request << net::header("Connection", "close");
+    http::client client_;
+    http::client::response response;
+    BOOST_REQUIRE_NO_THROW ( response = client_.get(request) );
+    std::multimap<std::string, std::string> headers_ = net::headers(response);
+    BOOST_CHECK ( !boost::empty(headers_) );
+    BOOST_REQUIRE_NO_THROW ( BOOST_CHECK ( body(response).size() != 0 ) );
+    std::string version_, status_message_;
+    response.get_version(version_);
+    uint16_t status_;
+    response.get_status(status_);
+    response.get_status_message(status_message_);
+    BOOST_CHECK_EQUAL ( version_.substr(0,7), "HTTP/1.");
+    BOOST_CHECK_EQUAL ( status_, 302u );
+    BOOST_CHECK_EQUAL ( status_message_, std::string("Found") );
 }
 
 #endif

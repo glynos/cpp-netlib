@@ -7,6 +7,7 @@
 #ifndef __BOOST_NETWORK_URI_INC__
 # define __BOOST_NETWORK_URI_INC__
 
+# include <boost/network/constants.hpp>
 # include <boost/network/uri/config.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
 # include <boost/network/uri/schemes.hpp>
@@ -63,8 +64,9 @@ public:
 
     }
 
-    uri &operator = (const uri &other) {
-        uri(other).swap(*this);
+    uri &operator = (uri other) {
+        other.swap(*this);
+        parse();
         return *this;
     }
 
@@ -304,6 +306,7 @@ inline
 bool operator != (const uri &lhs, const uri &rhs) {
     return !(lhs == rhs);
 }
+
 } // namespace uri
 } // namespace network
 } // namespace boost

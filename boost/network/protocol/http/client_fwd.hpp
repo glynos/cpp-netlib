@@ -8,15 +8,15 @@
 #define __NETWORK_PROTOCOL_HTTP_CLIENT_20080923_1_HPP__
 
 #include <boost/network/version.hpp>
-#include <boost/network/tags.hpp>
+#include <string>
 
 namespace boost { namespace network { namespace http {
 
-    //! Forward declaration of basic_client template.
-    template <class Tag, unsigned version_major, unsigned version_minor>
-        class basic_client;
+//! Forward declaration of basic_client template.
+template <class String>
+class basic_client;
 
-    typedef basic_client<tags::http_default_8bit_tcp_resolve, 1, 0> client;
+typedef basic_client<std::string> client;
 
 } // namespace http
 

@@ -7,32 +7,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_async.hpp>
-#include <boost/thread/future.hpp>
+#include <boost/network/protocol/http/response/response_base.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_response;
-
-    namespace impl {
-
-        template <class Tag, class T>
-        void status(basic_response<Tag> & response, T const & value, mpl::false_ const &) {
-            response << boost::network::http::status(value);
-        }
-
-        template <class Tag, class T>
-        void status(basic_response<Tag> & response, T const & future, mpl::true_ const &) {
-            response.status(future);
-        }
-
-    } // namespace impl
-
-    template <class Tag, class T>
-    void status(basic_response<Tag> & response, T const & value) {
-        impl::status(response, value, is_async<Tag>());
-    }
+inline void status(response_base & response, boost::uint16_t value) {
+  response.set_status(value);
+}
 
 } // namespace http
 

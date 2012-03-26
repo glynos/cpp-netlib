@@ -6,29 +6,20 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/support/is_server.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_request;
+struct major_version_directive {
+  boost::uint8_t major_version;
+  explicit major_version_directive(boost::uint8_t major_version);
+  void operator()(request_base &request) const;
+};
 
-    struct major_version_directive {
-        boost::uint8_t major_version;
-        explicit major_version_directive(boost::uint8_t major_version)
-        : major_version(major_version) {}
-        template <class Tag>
-        void operator()(basic_request<Tag> & request) const {
-            request.http_version_major = major_version;
-        }
-    };
-
-    inline major_version_directive
-    major_version(boost::uint8_t major_version_) {
-        return major_version_directive(major_version_);
-    }
+inline major_version_directive
+major_version(boost::uint8_t major_version_) {
+  return major_version_directive(major_version_);
+}
     
 } /* http */
     

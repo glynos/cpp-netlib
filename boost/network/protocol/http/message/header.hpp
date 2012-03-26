@@ -13,83 +13,32 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122
 
-#include <boost/network/traits/string.hpp>
+#include <string>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/assign/list_of.hpp>
-#include <boost/network/support/is_default_wstring.hpp>
-#include <boost/network/support/is_default_wstring.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct unsupported_tag;
-
-    struct request_header_narrow {
-        typedef std::string string_type;
+    struct request_header {
         std::string name, value;
     };
 
-    struct request_header_wide {
-        typedef std::wstring string_type;
-        std::wstring name, value;
-    };
-
-    template <class Tag>
-    struct request_header
-    : mpl::if_<
-        is_default_string<Tag>,
-        request_header_narrow,
-        typename mpl::if_<
-            is_default_wstring<Tag>,
-            request_header_wide,
-            unsupported_tag<Tag>
-        >::type
-    >
-    {};
-
-    inline void swap(request_header_narrow & l, request_header_narrow & r) {
+    inline void swap(request_header & l, request_header & r) {
         swap(l.name, r.name);
         swap(l.value, r.value);
     }
 
-    inline void swap(request_header_wide & l, request_header_wide & r) {
-        swap(l.name, r.name);
-        swap(l.value, r.value);
-    }
-
-    struct response_header_narrow {
-        typedef std::string string_type;
+    struct response_header {
         std::string name, value;
     };
 
-    struct response_header_wide {
-        typedef std::wstring string_type;
-        std::wstring name, value;
-    };
-
-    template <class Tag>
-    struct response_header
-    : mpl::if_<
-        is_default_string<Tag>,
-        response_header_narrow,
-        typename mpl::if_<
-            is_default_wstring<Tag>,
-            response_header_wide,
-            unsupported_tag<Tag>
-        >::type
-    >
-    {};
-
-    inline void swap(response_header_narrow & l, response_header_narrow & r) {
+    inline void swap(response_header & l, response_header & r) {
         std::swap(l.name, r.name);
         std::swap(l.value, r.value);
     }
 
-    inline void swap(response_header_wide & l, response_header_wide & r) {
-        std::swap(l.name, r.name);
-        std::swap(l.value, r.value);
-    }
-    
 } // namespace http
 
 } // namespace network
@@ -97,27 +46,15 @@ namespace boost { namespace network { namespace http {
 } // namespace boost
 
 BOOST_FUSION_ADAPT_STRUCT(
-    boost::network::http::request_header_narrow,
+    boost::network::http::request_header,
     (std::string, name)
     (std::string, value)
     )
 
 BOOST_FUSION_ADAPT_STRUCT(
-    boost::network::http::request_header_wide,
-    (std::wstring, name)
-    (std::wstring, value)
-    )
-
-BOOST_FUSION_ADAPT_STRUCT(
-    boost::network::http::response_header_narrow,
+    boost::network::http::response_header,
     (std::string, name)
     (std::string, value)
-    )
-
-BOOST_FUSION_ADAPT_STRUCT(
-    boost::network::http::response_header_wide,
-    (std::wstring, name)
-    (std::wstring, value)
     )
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122

@@ -2,9 +2,10 @@
 // request_parser.hpp
 // ~~~~~~~~~~~~~~~~~~
 //
-// Copyright (c) 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-// Copyright (c) 2009 Dean Michael Berris (mikhailberis at gmail dot com)
-// Copyright (c) 2009 Tarro, Inc.
+// Copyright 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+// Copyright 2009-2012 Dean Michael Berris <dberris@google.com>.
+// Copyright 2012 Google, Inc.
+// Copyright 2009 Tarroo, Inc.
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -26,12 +27,11 @@ namespace tag {
 }
 
 /// Parser for incoming requests.
-template <class Tag>
-class basic_request_parser
+class request_parser
 {
 public:
   /// Construct ready to parse the request method.
-  basic_request_parser() : state_(method_start) {}
+  request_parser() : state_(method_start) {}
 
   /// Reset to initial parser state.
   void reset() { state_ = method_start; }
@@ -41,7 +41,7 @@ public:
   /// data is required. The InputIterator return value indicates how much of the
   /// input has been consumed.
   template <typename InputIterator>
-  boost::tuple<boost::tribool, InputIterator> parse_headers(basic_request<Tag> & req,
+  boost::tuple<boost::tribool, InputIterator> parse_headers(request & req,
       InputIterator begin, InputIterator end)
   {
     while (begin != end)
@@ -56,7 +56,7 @@ public:
 
 private:
   /// Handle the next character of input.
-  boost::tribool consume(basic_request<Tag> & req, char input);
+  boost::tribool consume(request & req, char input);
 
   /// Check if a byte is an HTTP character.
   static bool is_char(int c);

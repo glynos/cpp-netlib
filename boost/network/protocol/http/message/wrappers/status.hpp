@@ -11,39 +11,18 @@
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_response;
+struct status_wrapper {
+  explicit status_wrapper(response_base & response);
+  operator uint16_t () const;
+ private:
+  response_base & response_;
+};
 
-    namespace impl {
-
-        template <class Tag>
-        struct status_wrapper {
-
-            basic_response<Tag> const & response_;
-
-            explicit status_wrapper(basic_response<Tag> const & response)
-                : response_(response) {}
-
-            status_wrapper(status_wrapper const & other)
-                : response_(other.response_) {}
-
-            operator boost::uint16_t () {
-                return response_.status();
-            }
-
-        };
-
-    } // namespace impl
-
-    template <class R>
-    struct Response;
-
-    template <class Tag>
-    inline
-    impl::status_wrapper<Tag>
-    status(basic_response<Tag> const & response) {
-        return impl::status_wrapper<Tag>(response);
-    }
+inline
+status_wrapper const
+status(response_base & response) {
+    return status_wrapper(response);
+}
 
 } // namespace http
 

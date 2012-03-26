@@ -18,11 +18,6 @@ add_executable(hello_world_client http/hello_world_client.cpp)
 if (UNIX)
   add_executable(fileserver http/fileserver.cpp)
 endif (UNIX)
-add_dependencies(http_client cppnetlib-uri cppnetlib-client-connections)
-add_dependencies(simple_wget cppnetlib-uri cppnetlib-client-connections)
-add_dependencies(atom_reader cppnetlib-uri cppnetlib-client-connections)
-add_dependencies(rss_reader cppnetlib-uri cppnetlib-client-connections)
-add_dependencies(twitter_search cppnetlib-uri cppnetlib-client-connections)
 set(BOOST_CLIENT_LIBS
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${Boost_THREAD_LIBRARY}
@@ -40,31 +35,65 @@ target_link_libraries(http_client
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
-    cppnetlib-client-connections)
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-constants
+    cppnetlib-http-client
+    cppnetlib-http-client-connections)
 
 target_link_libraries(simple_wget
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
-    cppnetlib-client-connections)
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-constants
+    cppnetlib-http-client
+    cppnetlib-http-client-connections)
 
 target_link_libraries(atom_reader
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
-    cppnetlib-client-connections)
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-http-message-wrappers
+    cppnetlib-constants
+    cppnetlib-http-client
+    cppnetlib-http-client-connections)
 
 target_link_libraries(rss_reader
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
-    cppnetlib-client-connections)
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-constants
+    cppnetlib-http-client
+    cppnetlib-http-client-connections)
 
 target_link_libraries(twitter_search
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
-    cppnetlib-client-connections)
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-constants
+    cppnetlib-http-client
+    cppnetlib-http-client-connections)
 
 target_link_libraries(hello_world_server
     ${BOOST_SERVER_LIBS}
@@ -74,7 +103,14 @@ target_link_libraries(hello_world_client
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
-    cppnetlib-client-connections)
+    cppnetlib-message
+    cppnetlib-message-directives
+    cppnetlib-message-wrappers
+    cppnetlib-http-message-wrappers
+    cppnetlib-http-message
+    cppnetlib-constants
+    cppnetlib-http-client
+    cppnetlib-http-client-connections)
 
 if (OPENSSL_FOUND)
   target_link_libraries(http_client ${OPENSSL_LIBRARIES})

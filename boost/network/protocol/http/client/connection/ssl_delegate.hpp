@@ -7,22 +7,27 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/asio/io_service.hpp>
 #include <boost/asio/ssl.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
-#include <boost/optional.hpp>
+#include <boost/network/protocol/http/client/options.hpp>
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/network/support/is_default_string.hpp>
-#include <boost/network/support/is_default_wstring.hpp>
 
-namespace boost { namespace network { namespace http { namespace impl {
+namespace boost { namespace asio {
+
+class io_service;
+
+}  // namespace asio
+
+}  // namespace boost
+
+namespace boost { namespace network { namespace http {
 
 struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate> {
   ssl_delegate(asio::io_service & service,
-                      optional<std::string> certificate_filename,
-                      optional<std::string> verify_path);
+               client_options const &options);
 
   virtual void connect(asio::ip::tcp::endpoint & endpoint,
+                       std::string const &host,
                        function<void(system::error_code const &)> handler);
   virtual void write(asio::streambuf & command_streambuf,
                      function<void(system::error_code const &, size_t)> handler);
@@ -32,7 +37,7 @@ struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate>
 
  private:
   asio::io_service & service_;
-  optional<std::string> certificate_filename_, verify_path_;
+  client_options options_;
   scoped_ptr<asio::ssl::context> context_;
   scoped_ptr<asio::ssl::stream<asio::ip::tcp::socket> > socket_;
 
@@ -43,16 +48,10 @@ struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate>
                         function<void(system::error_code const &)> handler);
 };
 
-} /* impl */
-
 } /* http */
 
 } /* network */
 
 } /* boost */
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/ssl_delegate.ipp>
-#endif /* BOOST_NETWORK_NO_LIB */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819 */

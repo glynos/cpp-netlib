@@ -1,46 +1,39 @@
+#ifndef BOOST_NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP_20111021
+#define BOOST_NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP_20111021
 
-//          Copyright Dean Michael Berris 2007.
+// Copyright 2011 Dean Michael Berris <dberris@google.com>.
+// Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP__
-#define __NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP__
-
-
-#include <boost/network/traits/string.hpp>
-
+#include <boost/network/message/message_base.hpp>
 
 namespace boost { namespace network {
 
-    namespace impl {
-        template <class Tag>
-            struct source_wrapper : public detail::wrapper_base<Tag, basic_message<Tag> > {
-                typedef Tag tag;
-                typedef basic_message<tag> message_type;
-                typedef typename string<tag>::type string_type;
-                typedef detail::wrapper_base<Tag, basic_message<Tag> > wrapper_base;
+struct source_wrapper {
+  explicit source_wrapper(message_base & message);
+  operator std::string () const;
+ private:
+  message_base & message_;
+  mutable boost::optional<std::string> cache_;
+};
 
-                explicit source_wrapper(basic_message<tag> & message_)
-                    : wrapper_base(message_)
-                { };
+inline source_wrapper const
+source(message_base & message_) {
+  return source_wrapper(message_);
+}
 
-                operator string_type () const {
-                    return string_type(wrapper_base::_message.source());
-                };
-            };
-    } // namespace impl
-
-    template <class Tag>
-        inline typename string<Tag>::type
-        source(basic_message<Tag> & message_) {
-            return impl::source_wrapper<Tag>(message_);
-        }
+inline std::ostream & operator<<(std::ostream &os, source_wrapper const &s) {
+  return os << static_cast<std::string>(s);
+}
 
 } // namespace network
 
 } // namespace boost
 
-#endif // __NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP__
+#ifdef BOOST_NETWORK_NO_LIB
+#include <boost/network/message/wrappers/source.ipp>
+#endif
 
-
+#endif // BOOST_NETWORK_MESSAGE_WRAPPERS_SOURCE_HPP_20111021

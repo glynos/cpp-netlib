@@ -7,14 +7,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
 #include <boost/network/message/directives/detail/string_directive.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    BOOST_NETWORK_STRING_DIRECTIVE(status_message, status_message_, 
-        message.status_message(status_message_),
-        message.status_message=status_message_);
+    BOOST_NETWORK_STRING_DIRECTIVE(status_message);
 
 } // namespace http
 

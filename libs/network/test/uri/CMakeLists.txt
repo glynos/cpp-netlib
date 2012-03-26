@@ -10,7 +10,7 @@ if (Boost_FOUND)
         TESTS
         url_test
         url_builder_test
-        url_builder_stream_test
+#        url_builder_stream_test
         url_encoding_test
         relative_url_test
         )
@@ -31,5 +31,4 @@ if (Boost_FOUND)
         add_test(cpp-netlib-${test}
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
     endforeach (test)
-
 endif()

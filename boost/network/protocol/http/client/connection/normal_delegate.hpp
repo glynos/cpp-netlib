@@ -9,14 +9,22 @@
 
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <boost/asio/placeholders.hpp>
 
-namespace boost { namespace network { namespace http { namespace impl {
+namespace boost { namespace asio {
+
+class io_service;
+
+}  // namespace asio
+
+}  // namespace boost
+
+namespace boost { namespace network { namespace http {
 
 struct normal_delegate : connection_delegate {
   normal_delegate(asio::io_service & service);
 
   virtual void connect(asio::ip::tcp::endpoint & endpoint,
+                       std::string const &host,
                        function<void(system::error_code const &)> handler);
   virtual void write(asio::streambuf & command_streambuf,
                      function<void(system::error_code const &, size_t)> handler);
@@ -32,16 +40,10 @@ struct normal_delegate : connection_delegate {
   normal_delegate& operator=(normal_delegate);  // = delete
 };
 
-} /* impl */
-
 } /* http */
 
 } /* network */
 
 } /* boost */
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/normal_delegate.ipp>
-#endif /* BOOST_NETWORK_NO_LIB */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819 */

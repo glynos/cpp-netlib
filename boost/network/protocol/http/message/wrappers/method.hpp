@@ -6,33 +6,21 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/utility/enable_if.hpp>
-#include <boost/network/protocol/http/support/is_server.hpp>
+#include <boost/network/protocol/http/request/request_base.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_request;
+struct method_wrapper {
+  explicit method_wrapper(request_base & message);
+  operator std::string () const;
+ private:
+  request_base & message_;
+};
 
-    template <class Tag>
-    struct method_wrapper {
-        explicit method_wrapper(basic_request<Tag> const & message)
-        : message_(message) {}
-
-        basic_request<Tag> const & message_;
-
-        typedef typename basic_request<Tag>::string_type string_type;
-
-        operator string_type() {
-            return message_.method;
-        }
-    };
-
-    template <class Tag>
-    inline typename enable_if<is_server<Tag>, typename string<Tag>::type >::type
-    method(basic_request<Tag> const & message) {
-        return method_wrapper<Tag>(message);
-    }
+inline method_wrapper const
+method(request_base & message) {
+  return method_wrapper(message);
+}
     
 } /* http */
     

@@ -8,33 +8,23 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/uri/uri.hpp>
+#include <boost/network/protocol/http/request/request_base.hpp>
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_request;
+struct uri_wrapper {
+  explicit uri_wrapper(request_base const & request_);
+  operator std::string() const;
+  operator boost::network::uri::uri() const;
+ private:
+  request_base const & request_;
+};
 
-    namespace impl {
-        template <class Tag>
-        struct uri_wrapper {
-            basic_request<Tag> const & message_;
-            uri_wrapper(basic_request<Tag> const & message)
-                : message_(message) {}
-            typedef typename basic_request<Tag>::string_type string_type;
-            operator string_type() {
-                return message_.uri().raw();
-            }
-            operator boost::network::uri::uri () {
-                return message_.uri();
-            }
-        };
-    }
-
-    template <class Tag> inline
-    impl::uri_wrapper<Tag>
-    uri(basic_request<Tag> const & request) {
-        return impl::uri_wrapper<Tag>(request);
-    }
+inline
+uri_wrapper const
+uri(request_base const & request) {
+    return uri_wrapper(request);
+}
 
 } // namespace http
 

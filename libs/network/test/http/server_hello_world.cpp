@@ -21,7 +21,7 @@ using std::cerr;
 using std::endl;
 
 struct hello_world;
-typedef http::server<hello_world> server;
+typedef http::sync_server<hello_world> server;
 
 struct hello_world {
 
@@ -45,7 +45,11 @@ int main(int argc, char * argv[]) {
     hello_world handler;
     std::string port = "8000";
     if (argc > 1) port = argv[1];
-    server server_("127.0.0.1", port, handler, http::_reuse_address=true);
+    http::server_options options;
+    options.address("127.0.0.1")
+           .port(port)
+           .reuse_address(true);
+    server server_(options, handler);
     server_.run();
     return EXIT_SUCCESS;
 }

@@ -6,25 +6,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/pod_or_normal.hpp>
-#include <boost/thread/future.hpp>
-
 namespace boost { namespace network {
 
-    template <class Tag, template <class> class Message, class ValueType>
-    inline void body_impl(Message<Tag> & message, ValueType const & body, tags::pod) {
-        message.body = body;
-    }
+inline void body(message_base & message, std::string const & body_) {
+  message.set_body(body_);
+}
 
-    template <class Tag, template <class> class Message, class ValueType>
-    inline void body_impl(Message<Tag> & message, ValueType const & body, tags::normal) {
-        message.body(body);
-    }
-
-    template <class Tag, template <class> class Message, class ValueType>
-    inline void body(Message<Tag> & message, ValueType const & body_) {
-        body_impl(message, body_, typename pod_or_normal<Tag>::type());
-    }
+inline void append_body(message_base & message, std::string const & data) {
+  message.append_body(data);
+}
 
 } // namespace network
 

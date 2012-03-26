@@ -46,7 +46,11 @@ int main(int argc, char * argv[]) {
     async_hello_world handler;
     std::string port = "8000";
     if (argc > 1) port = argv[1];
-    server instance("localhost", port, handler, thread_pool, http::_reuse_address=true);
+    http::server_options options;
+    options.port(port)
+           .address("localhost")
+           .reuse_address(true);
+    server instance(options, thread_pool, handler);
     instance.run();
     return 0;
 }

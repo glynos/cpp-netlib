@@ -1,56 +1,34 @@
+#ifndef BOOST_NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP_20111021
+#define BOOST_NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP_20111021
 
-//          Copyright Dean Michael Berris 2008.
+// Copyright 2011 Dean Michael Berris <dberris@google.com>.
+// Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
-
-#ifndef NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP
-#define NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP
-
-
-#include <boost/network/traits/string.hpp>
-
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 namespace boost { namespace network {
 
-    template <class Tag>
-    struct basic_message;
-
 namespace impl {
-template <
-    class T
-    >
+
 struct remove_header_directive {
-
-    explicit remove_header_directive(T header_name) : 
-        header_name_(header_name)
-    { };
-
-    template <class MessageTag>
-    void operator() (basic_message<MessageTag> & msg) const {
-        msg.headers().erase(header_name_);
-    }
-
-private:
-    mutable T header_name_;
+  explicit remove_header_directive(std::string const & header_name);
+  void operator() (message_base & msg) const;
+ private:
+  std::string const & header_name_;
 };
 
 } // namespace impl
 
-inline
-impl::remove_header_directive<std::string>
-remove_header(std::string header_name) {
-    return impl::remove_header_directive<std::string>(header_name);
-}
-
-inline
-impl::remove_header_directive<std::wstring>
-remove_header(std::wstring header_name) {
-    return impl::remove_header_directive<std::wstring>(header_name);
+inline impl::remove_header_directive const
+remove_header(std::string const & header_name) {
+    return impl::remove_header_directive(header_name);
 }
 } // namespace network
 } // namespace boost
 
+#ifdef BOOST_NETWORK_NO_LIB
+#undef BOOST_NETWORK_NO_LIB
+#endif
 
-#endif // NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP
-
+#endif // BOOST_NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP_20111021

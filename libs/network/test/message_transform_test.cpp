@@ -15,13 +15,17 @@ BOOST_AUTO_TEST_CASE ( message_transform_toupper ) {
 
     message msg;
     msg << source("me");
-    BOOST_CHECK_EQUAL ( source(msg), "me" );
+    std::string const & source_orig = source(msg);
+    BOOST_CHECK_EQUAL ( source_orig, "me" );
     msg << transform(to_upper_, source_);
-    BOOST_CHECK_EQUAL ( source(msg), "ME" );
+    std::string const & source_upper = source(msg);
+    BOOST_CHECK_EQUAL ( source_upper, "ME" );
     msg << destination("you");
-    BOOST_CHECK_EQUAL ( destination(msg), "you");
+    std::string const & destination_orig = destination(msg);
+    BOOST_CHECK_EQUAL ( destination_orig, "you");
     msg << transform(to_upper_, destination_);
-    BOOST_CHECK_EQUAL ( destination(msg), "YOU");
+    std::string const & destination_upper = destination(msg);
+    BOOST_CHECK_EQUAL ( destination_upper, "YOU");
 }
 
 BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
@@ -29,12 +33,16 @@ BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
 
     message msg;
     msg << source("ME");
-    BOOST_CHECK_EQUAL ( source(msg), "ME" );
+    std::string const & source_orig = source(msg);
+    BOOST_CHECK_EQUAL ( source_orig, "ME" );
     msg << transform(to_lower_, source_);
-    BOOST_CHECK_EQUAL ( source(msg), "me" );
+    std::string const & source_lower = source(msg);
+    BOOST_CHECK_EQUAL ( source_lower, "me" );
     msg << destination("YOU");
-    BOOST_CHECK_EQUAL ( destination(msg), "YOU" );
+    std::string const & destination_orig = destination(msg);
+    BOOST_CHECK_EQUAL ( destination_orig, "YOU" );
     msg << transform(to_lower_, destination_);
-    BOOST_CHECK_EQUAL ( destination(msg), "you" );
+    std::string const & destination_lower = destination(msg);
+    BOOST_CHECK_EQUAL ( destination_lower, "you" );
 }
 

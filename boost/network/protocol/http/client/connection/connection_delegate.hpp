@@ -7,10 +7,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-namespace boost { namespace network { namespace http { namespace impl {
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/streambuf.hpp>
+#include <boost/function.hpp>
+
+namespace boost { namespace network { namespace http {
 
 struct connection_delegate {
   virtual void connect(asio::ip::tcp::endpoint & endpoint,
+                       std::string const & host,
                        function<void(system::error_code const &)> handler) = 0;
   virtual void write(asio::streambuf & command_streambuf,
                      function<void(system::error_code const &, size_t)> handler) = 0;
@@ -18,8 +23,6 @@ struct connection_delegate {
                          function<void(system::error_code const &, size_t)> handler) = 0;
   virtual ~connection_delegate() {}
 };
-
-} /* impl */
 
 } /* http */
 

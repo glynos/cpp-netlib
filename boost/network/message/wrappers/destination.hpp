@@ -1,45 +1,39 @@
-
-//          Copyright Dean Michael Berris 2007.
-// Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
-
 #ifndef __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
 #define __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
 
+// Copyright 2011 Dean Michael Berris <dberris@google.com>.
+// Copyright 2011 Google, Inc.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/traits/string.hpp>
-
+#include <boost/network/message/message_base.hpp>
 
 namespace boost { namespace network {
 
-    namespace impl {
-        template <class Tag>
-            struct destination_wrapper : public detail::wrapper_base<Tag, basic_message<Tag> > {
-                typedef Tag tag;
-                typedef basic_message<tag> message_type;
-                typedef typename string<Tag>::type string_type;
-                typedef detail::wrapper_base<Tag, basic_message<Tag> > wrapper_base;
+struct destination_wrapper {
+  explicit destination_wrapper(message_base const & message);
+  operator std::string () const;
+ private:
+  message_base const & message_;
+  mutable optional<std::string> cache_;
+};
 
-                explicit destination_wrapper(message_type & message_)
-                    : wrapper_base(message_)
-                { };
+inline destination_wrapper const
+destination(message_base const & message_) {
+  return destination_wrapper(message_);
+}
 
-                operator string_type () const {
-                    return string_type(wrapper_base::_message.destination());
-                };
-            };
-    } // namespace impl
-
-    template <class Tag>
-        inline typename string<Tag>::type
-        destination(basic_message<Tag> & message_) {
-            return impl::destination_wrapper<Tag>(message_);
-        }
+inline std::ostream & operator<< (std::ostream &os, destination_wrapper const &d) {
+  return os << static_cast<std::string>(d);
+}
 
 } // namespace network
 
 } // namespace boost
 
-#endif // __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
+#ifdef BOOST_NETWORK_NO_LIB
+#include <boost/network/message/wrappers/destination.ipp>
+#endif
 
+#endif // __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__

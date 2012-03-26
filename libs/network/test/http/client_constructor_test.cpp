@@ -7,30 +7,22 @@
 #define BOOST_TEST_MODULE HTTP 1.0 Client Constructor Test
 #include <boost/network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
-#include "client_types.hpp"
 
 namespace http = boost::network::http;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_constructor_test, client, client_types) {
-    client instance;
-    boost::asio::io_service io_service;
-    client instance2(io_service);
-    client instance3(http::_io_service=io_service);
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_cient_constructor_params_test, client, client_types) {
-    client instance(
-        http::_follow_redirects=true,
-        http::_cache_resolved=true
-        );
-    boost::asio::io_service io_service;
-    client instance2(
-        http::_follow_redirects=true,
-        http::_io_service=io_service,
-        http::_cache_resolved=true
-        );
-    client instance3(
-        http::_openssl_certificate="foo",
-        http::_openssl_verify_path="bar"
-        );
+BOOST_AUTO_TEST_CASE(http_client_constructor_test) {
+  // Here's the simplest way to construct a client.
+  http::client instance;
+  
+  // The next way we're supporting is actually to construct an options object
+  // that allows you to set options. This class replaces the Boost.Parameter
+  // based approach to a much simpler model that scales better.
+  http::client_options options;
+  boost::asio::io_service io_service;
+  options.io_service(&io_service)
+         .follow_redirects()
+         .cache_resolved()
+         .add_openssl_certificate_path("/dev/zero")
+         .add_openssl_verify_path("/dev/null");
+  http::client instance2(options);
 }

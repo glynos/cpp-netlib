@@ -6,11 +6,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/traits/string.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
 #include <boost/network/protocol/http/message/header_concept.hpp>
-#include <boost/network/protocol/http/request_concept.hpp>
+#include <boost/network/protocol/http/request/request_concept.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/concept/requires.hpp>
 #include <boost/optional.hpp>
@@ -18,9 +17,8 @@
 
 namespace boost { namespace network { namespace http {
 
-    template <class Tag>
     struct linearize_header {
-        typedef typename string<Tag>::type string_type;
+        typedef std::string string_type;
 
         template <class Arguments>
         struct result;
@@ -35,11 +33,11 @@ namespace boost { namespace network { namespace http {
             ((Header<ValueType>)),
             (string_type)
         ) operator()(ValueType & header) {
-            typedef typename ostringstream<Tag>::type output_stream;
-            typedef constants<Tag> consts;
+            typedef std::ostringstream output_stream;
+            typedef constants consts;
             output_stream header_line;
-            header_line << name(header)
-                << consts::colon() << consts::space()
+            header_line << name(header) 
+                << consts::colon() << consts::space() 
                 << value(header) << consts::crlf();
             return header_line.str();
         }
@@ -50,39 +48,49 @@ namespace boost { namespace network { namespace http {
         ((ClientRequest<Request>)),
         (OutputIterator)
     ) linearize(
-        Request const & request,
-        typename Request::string_type const & method,
-        unsigned version_major,
-        unsigned version_minor,
+        Request const & request, 
+        std::string const & method,
+        unsigned version_major, 
+        unsigned version_minor, 
         OutputIterator oi
-        )
+        ) 
     {
-        typedef typename Request::tag Tag;
-        typedef constants<Tag> consts;
-        typedef typename string<Tag>::type string_type;
-        static string_type
+        typedef constants consts;
+        typedef std::string string_type;
+        static string_type 
             http_slash = consts::http_slash()
             , accept   = consts::accept()
             , accept_mime = consts::default_accept_mime()
             , accept_encoding = consts::accept_encoding()
             , default_accept_encoding = consts::default_accept_encoding()
+            , default_user_agent = consts::default_user_agent()
+            , user_agent = consts::user_agent()
             , crlf = consts::crlf()
-            , host = consts::host()
+            , host_const = consts::host()
             , connection = consts::connection()
             , close = consts::close()
             ;
         boost::copy(method, oi);
         *oi = consts::space_char();
-        if (request.path().empty() || request.path()[0] != consts::slash_char())
-            *oi = consts::slash_char();
-        boost::copy(request.path(), oi);
-        if (!request.query().empty()) {
-            *oi = consts::question_mark_char();
-            boost::copy(request.query(), oi);
+        {
+          std::string path_ = path(request);
+          if (path_.empty() || path_[0] != consts::slash_char()) 
+              *oi = consts::slash_char();
+          boost::copy(path_, oi);
         }
-        if (!request.anchor().empty()) {
+        {
+          std::string query_ = query(request);
+          if (!query_.empty()) {
+              *oi = consts::question_mark_char();
+              boost::copy(query_, oi);
+          }
+        }
+        {
+          std::string anchor_ = anchor(request);
+          if (!anchor_.empty()) {
             *oi = consts::hash_char();
-            boost::copy(request.anchor(), oi);
+            boost::copy(anchor_, oi);
+          }
         }
         *oi = consts::space_char();
         boost::copy(http_slash, oi);
@@ -92,10 +100,13 @@ namespace boost { namespace network { namespace http {
         *oi = consts::dot_char();
         boost::copy(version_minor_str, oi);
         boost::copy(crlf, oi);
-        boost::copy(host, oi);
+        boost::copy(host_const, oi);
         *oi = consts::colon_char();
         *oi = consts::space_char();
-        boost::copy(request.host(), oi);
+        {
+          std::string host_ = host(request);
+          boost::copy(host_, oi);
+        }
         boost::optional<boost::uint16_t> port_ = port(request);
         if (port_) {
             string_type port_str = boost::lexical_cast<string_type>(*port_);
@@ -115,35 +126,40 @@ namespace boost { namespace network { namespace http {
             boost::copy(default_accept_encoding, oi);
             boost::copy(crlf, oi);
         }
-        typedef typename headers_range<Request>::type headers_range;
-        typedef typename range_value<headers_range>::type headers_value;
-        BOOST_FOREACH(const headers_value &header, headers(request))
-        {
-            string_type header_name = name(header),
-                        header_value = value(header);
+        typedef headers_wrapper::container_type headers_container;
+        typedef headers_container::const_iterator headers_iterator;
+        headers_container const & request_headers = boost::network::headers(request);
+        headers_iterator iterator = boost::begin(request_headers),
+                         end = boost::end(request_headers);
+        bool has_user_agent = false;
+        for (; iterator != end; ++iterator) {
+            string_type header_name = name(*iterator),
+                        header_value = value(*iterator);
             boost::copy(header_name, oi);
             *oi = consts::colon_char();
             *oi = consts::space_char();
             boost::copy(header_value, oi);
             boost::copy(crlf, oi);
+            boost::to_lower(header_name);
+            has_user_agent = has_user_agent || header_name == "user-agent";
         }
-        if (!connection_keepalive<Tag>::value) {
-            boost::copy(connection, oi);
-            *oi = consts::colon_char();
-            *oi = consts::space_char();
-            boost::copy(close, oi);
-            boost::copy(crlf, oi);
+        if (!has_user_agent) {
+          boost::copy(user_agent, oi);
+          *oi = consts::colon_char();
+          *oi = consts::space_char();
+          boost::copy(default_user_agent, oi);
+          boost::copy(crlf, oi);
         }
         boost::copy(crlf, oi);
-        typename body_range<Request>::type body_data = body(request).range();
+        boost::iterator_range<std::string::const_iterator> body_data =
+          boost::network::body(request);
         return boost::copy(body_data, oi);
     }
-
+    
 } /* http */
-
+    
 } /* net */
-
+    
 } /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_ALGORITHMS_LINEARIZE_HPP_20101028 */
-

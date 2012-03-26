@@ -8,4 +8,6 @@ Testing
 *.gch
 libs/mime/test/mime-roundtrip
 *.a
+bin/
+tests/
 _build

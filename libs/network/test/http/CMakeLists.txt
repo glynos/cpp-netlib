@@ -12,6 +12,34 @@ if (OPENSSL_FOUND)
 endif()
 
 if (Boost_FOUND)
+    # These are the internal (simple) tests.
+    set ( MESSAGE_TESTS
+        request_base_test
+        request_test
+        request_linearize_test
+        response_test
+        )
+    foreach ( test ${MESSAGE_TESTS} )
+        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+            set_source_files_properties(${test}.cpp
+                PROPERTIES COMPILE_FLAGS "-Wall")
+        endif()
+        add_executable(cpp-netlib-http-${test} ${test}.cpp)
+        target_link_libraries(cpp-netlib-http-${test}
+            ${Boost_LIBRARIES}
+            cppnetlib-message
+            cppnetlib-message-wrappers
+            cppnetlib-http-message
+            cppnetlib-http-message-wrappers
+            cppnetlib-uri
+            cppnetlib-constants
+            )
+        set_target_properties(cpp-netlib-http-${test}
+            PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
+        add_test(cpp-netlib-http-${test}
+            ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
+    endforeach(test)
+
     set ( TESTS
         client_constructor_test
         client_get_test
@@ -25,13 +53,18 @@ if (Boost_FOUND)
                 PROPERTIES COMPILE_FLAGS "-Wall")
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
-        add_dependencies(cpp-netlib-http-${test}
-            cppnetlib-uri
-            cppnetlib-client-connections)
         target_link_libraries(cpp-netlib-http-${test}
-            ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}
+            ${Boost_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-constants
             cppnetlib-uri
-            cppnetlib-client-connections)
+            cppnetlib-message
+            cppnetlib-message-wrappers
+            cppnetlib-message-directives
+            cppnetlib-http-message
+            cppnetlib-http-message-wrappers
+            cppnetlib-http-client
+            cppnetlib-http-client-connections)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()
@@ -51,8 +84,16 @@ if (Boost_FOUND)
                 PROPERTIES COMPILE_FLAGS "-Wall")
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
-        add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
-        target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
+        target_link_libraries(cpp-netlib-http-${test}
+            ${Boost_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-uri
+            cppnetlib-message
+            cppnetlib-http-message
+            cppnetlib-http-servers
+            cppnetlib-http-server-parsers
+            cppnetlib-utils-thread_pool
+            )
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}
