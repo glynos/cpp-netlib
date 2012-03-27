@@ -25,7 +25,7 @@ public:
 
     }
 
-    builder &scheme(const string_type &scheme) {
+    builder &set_scheme(const string_type &scheme) {
         uri_.uri_.append(scheme);
         if (opaque_schemes::exists(scheme)) {
             uri_.uri_.append(":");
@@ -37,52 +37,70 @@ public:
         return *this;
     }
 
-    builder &user_info(const string_type &user_info) {
+    builder &scheme(const string_type &scheme) {
+        return set_scheme(scheme);
+    }
+
+    builder &set_user_info(const string_type &user_info) {
         uri_.uri_.append(user_info);
         uri_.uri_.append("@");
         uri_.parse();
         return *this;
     }
 
-    builder &host(const string_type &host) {
+    builder &user_info(const string_type &user_info) {
+        return set_user_info(user_info);
+    }
+
+    builder &set_host(const string_type &host) {
         uri_.uri_.append(host);
         uri_.parse();
         return *this;
     }
 
-    builder &port(const string_type &port) {
+    builder &host(const string_type &host) {
+        return set_host(host);
+    }
+
+    builder &set_port(const string_type &port) {
         uri_.uri_.append(":");
         uri_.uri_.append(port);
         uri_.parse();
         return *this;
     }
 
-    builder &port(uint16_t port) {
-        return this->port(boost::lexical_cast<string_type>(port));
+    builder &port(const string_type &port) {
+        return set_port(port);
     }
 
-    builder &path(const string_type &path) {
+    builder &port(uint16_t port) {
+        return set_port(boost::lexical_cast<string_type>(port));
+    }
+
+    builder &set_path(const string_type &path) {
         uri_.uri_.append(path);
         uri_.parse();
         return *this;
     }
 
+    builder &path(const string_type &path) {
+        return set_path(path);
+    }
+
     builder &encoded_path(const string_type &path) {
         string_type encoded_path;
         encode(path, std::back_inserter(encoded_path));
-        uri_.uri_.append(encoded_path);
-        uri_.parse();
-        return *this;
+        return set_path(encoded_path);
     }
 
-    builder &query(const string_type &query) {
+    builder &set_query(const string_type &query) {
         uri_.uri_.append("?");
         uri_.uri_.append(query);
         uri_.parse();
         return *this;
     }
 
-    builder &query(const string_type &key, const string_type &value) {
+    builder &set_query(const string_type &key, const string_type &value) {
         if (!uri_.query_range())
         {
             uri_.uri_.append("?");
@@ -98,11 +116,23 @@ public:
         return *this;
     }
 
-    builder &fragment(const string_type &fragment) {
+    builder &query(const string_type &query) {
+        return set_query(query);
+    }
+
+    builder &query(const string_type &key, const string_type &value) {
+        return set_query(key, value);
+    }
+
+    builder &set_fragment(const string_type &fragment) {
         uri_.uri_.append("#");
         uri_.uri_.append(fragment);
         uri_.parse();
         return *this;
+    }
+
+    builder &fragment(const string_type &fragment) {
+        return set_fragment(fragment);
     }
 
 private:
