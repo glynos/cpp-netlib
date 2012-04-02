@@ -310,10 +310,42 @@ BOOST_AUTO_TEST_CASE(assignment_test) {
     BOOST_CHECK_EQUAL(instance, copy);
 }
 
+BOOST_AUTO_TEST_CASE(swap_test) {
+    uri::uri instance("http://www.example.com/");
+    uri::uri copy("http://www.example.org/");
+    uri::swap(instance, copy);
+    BOOST_CHECK_EQUAL(instance.string(), "http://www.example.org/");
+    BOOST_CHECK_EQUAL(copy.string(), "http://www.example.com/");
+}
+
+BOOST_AUTO_TEST_CASE(equality_test) {
+    uri::uri uri_1("http://www.example.com/");
+    uri::uri uri_2("http://www.example.com/");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
+BOOST_AUTO_TEST_CASE(inequality_test) {
+    uri::uri uri_1("http://www.example.com/");
+    uri::uri uri_2("http://www.example.com/");
+    BOOST_CHECK(!(uri_1 != uri_2));
+}
+
+BOOST_AUTO_TEST_CASE(less_than_test) {
+    // uri_1 is lexicographically less than uri_2
+    uri::uri uri_1("http://www.example.com/");
+    uri::uri uri_2("http://www.example.org/");
+    BOOST_CHECK(uri_1 < uri_2);
+}
+
 BOOST_AUTO_TEST_CASE(username_test) {
-    uri::uri instance("ftp://john.doe:password@ftp.example.com/");
+    uri::uri instance("ftp://john.doe@ftp.example.com/");
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::username(instance), "john.doe");
+}
+
+BOOST_AUTO_TEST_CASE(pasword_test) {
+    uri::uri instance("ftp://john.doe:password@ftp.example.com/");
+    BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL(uri::password(instance), "password");
 }
 

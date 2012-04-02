@@ -7,6 +7,8 @@
 #ifndef __BOOST_NETWORK_URI_INC__
 # define __BOOST_NETWORK_URI_INC__
 
+# pragma once
+
 # include <boost/network/uri/config.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
 # include <boost/network/uri/schemes.hpp>
@@ -296,6 +298,11 @@ bool is_valid(const uri &uri_) {
 }
 
 inline
+void swap(uri &lhs, uri &rhs) {
+    lhs.swap(rhs);
+}
+
+inline
 bool operator == (const uri &lhs, const uri &rhs) {
     return boost::equal(lhs, rhs);
 }
@@ -303,6 +310,11 @@ bool operator == (const uri &lhs, const uri &rhs) {
 inline
 bool operator != (const uri &lhs, const uri &rhs) {
     return !(lhs == rhs);
+}
+
+inline
+bool operator < (const uri &lhs, const uri &rhs) {
+    return lhs.string() < rhs.string();
 }
 } // namespace uri
 } // namespace network
