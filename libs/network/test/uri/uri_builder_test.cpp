@@ -146,3 +146,29 @@ BOOST_AUTO_TEST_CASE(mailto_builder_test)
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK_EQUAL("mailto:cpp-netlib@example.com", instance.string());
 }
+
+BOOST_AUTO_TEST_CASE(ipv4_address) {
+    using namespace boost::asio::ip;
+    uri::uri instance;
+    uri::builder builder(instance);
+    builder
+        .scheme("http")
+        .host(address_v4::loopback())
+        .path("/")
+        ;
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL("http://127.0.0.1/", instance.string());
+}
+
+//BOOST_AUTO_TEST_CASE(ipv6_address) {
+//    using namespace boost::asio::ip;
+//    uri::uri instance;
+//    uri::builder builder(instance);
+//    builder
+//        .scheme("http")
+//        .host(address_v6::loopback())
+//        .path("/")
+//        ;
+//    BOOST_REQUIRE(uri::valid(instance));
+//    BOOST_CHECK_EQUAL("http://[::1]/", instance.string());
+//}

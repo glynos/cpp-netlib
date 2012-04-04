@@ -9,6 +9,7 @@
 
 
 # include <boost/network/uri/uri.hpp>
+# include <boost/asio/ip/address.hpp>
 
 
 namespace boost {
@@ -59,6 +60,38 @@ public:
     }
 
     builder &host(const string_type &host) {
+        return set_host(host);
+    }
+
+    builder &set_host(const asio::ip::address &address) {
+        uri_.uri_.append(address.to_string());
+        uri_.parse();
+        return *this;
+    }
+
+    builder &host(const asio::ip::address &host) {
+        return set_host(host);
+    }
+
+    builder &set_host(const asio::ip::address_v4 &address) {
+        uri_.uri_.append(address.to_string());
+        uri_.parse();
+        return *this;
+    }
+
+    builder &host(const asio::ip::address_v4 &host) {
+        return set_host(host);
+    }
+
+    builder &set_host(const asio::ip::address_v6 &address) {
+        uri_.uri_.append("[");
+        uri_.uri_.append(address.to_string());
+        uri_.uri_.append("]");
+        uri_.parse();
+        return *this;
+    }
+
+    builder &host(const asio::ip::address_v6 &host) {
         return set_host(host);
     }
 

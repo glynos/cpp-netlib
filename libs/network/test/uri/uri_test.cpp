@@ -249,6 +249,14 @@ BOOST_AUTO_TEST_CASE(ipv4_address_test) {
     BOOST_CHECK_EQUAL(uri::path(instance), "/");
 }
 
+BOOST_AUTO_TEST_CASE(ipv4_loopback_test) {
+    uri::uri instance("http://127.0.0.1/");
+    BOOST_REQUIRE(uri::valid(instance));
+    BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(uri::host(instance), "127.0.0.1");
+    BOOST_CHECK_EQUAL(uri::path(instance), "/");
+}
+
 BOOST_AUTO_TEST_CASE(ipv6_address_test_1) {
     uri::uri instance("http://[1080:0:0:0:8:800:200C:417A]/");
     BOOST_REQUIRE(uri::valid(instance));
@@ -264,6 +272,14 @@ BOOST_AUTO_TEST_CASE(ipv6_address_test_2) {
     BOOST_CHECK_EQUAL(uri::host(instance), "[2001:db8:85a3:8d3:1319:8a2e:370:7348]");
     BOOST_CHECK_EQUAL(uri::path(instance), "/");
 }
+
+//BOOST_AUTO_TEST_CASE(ipv6_loopback_test) {
+//    uri::uri instance("http://[::1]/");
+//    BOOST_REQUIRE(uri::valid(instance));
+//    BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
+//    BOOST_CHECK_EQUAL(uri::host(instance), "[::1]");
+//    BOOST_CHECK_EQUAL(uri::path(instance), "/");
+//}
 
 BOOST_AUTO_TEST_CASE(ftp_test) {
     uri::uri instance("ftp://john.doe@ftp.example.com/");
