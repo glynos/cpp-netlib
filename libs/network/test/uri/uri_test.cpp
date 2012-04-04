@@ -10,6 +10,7 @@
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/uri_io.hpp>
 #include <boost/range/algorithm/equal.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <map>
 
 
@@ -397,16 +398,15 @@ BOOST_AUTO_TEST_CASE(xmpp_query_map_test) {
     BOOST_CHECK_EQUAL((++queries.begin())->second, "Hello%20World");
 }
 
-BOOST_AUTO_TEST_CASE(range_test)
-{
+BOOST_AUTO_TEST_CASE(range_test) {
     const std::string url("http://www.example.com/");
     uri::uri instance(url);
     BOOST_REQUIRE(uri::valid(instance));
     BOOST_CHECK(boost::equal(instance, url));
 }
 
-BOOST_AUTO_TEST_CASE(issue_67_test)
-{
+BOOST_AUTO_TEST_CASE(issue_67_test) {
+	// https://github.com/cpp-netlib/cpp-netlib/issues/67
     const std::string site_name("http://www.google.com");
     uri::uri bar0;
     uri::uri bar1 = site_name;
@@ -415,32 +415,35 @@ BOOST_AUTO_TEST_CASE(issue_67_test)
     BOOST_CHECK(uri::is_valid(bar1));
 }
 
-BOOST_AUTO_TEST_CASE(from_parts_1)
-{
+BOOST_AUTO_TEST_CASE(from_parts_1) {
     BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path?query#fragment"),
                       uri::from_parts(uri::uri("http://www.example.com"), "/path", "query", "fragment"));
 }
 
-BOOST_AUTO_TEST_CASE(from_parts_2)
-{
+BOOST_AUTO_TEST_CASE(from_parts_2) {
     BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path?query#fragment"),
                       uri::from_parts("http://www.example.com", "/path", "query", "fragment"));
 }
 
-BOOST_AUTO_TEST_CASE(from_parts_3)
-{
+BOOST_AUTO_TEST_CASE(from_parts_3) {
     BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path?query"),
                       uri::from_parts("http://www.example.com", "/path", "query"));
 }
 
-BOOST_AUTO_TEST_CASE(from_parts_4)
-{
+BOOST_AUTO_TEST_CASE(from_parts_4) {
     BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path"),
                       uri::from_parts("http://www.example.com", "/path"));
 }
 
-BOOST_AUTO_TEST_CASE(from_file)
-{
+BOOST_AUTO_TEST_CASE(from_file) {
     boost::filesystem::path path("/a/path/to/a/file.txt");
     BOOST_CHECK_EQUAL(uri::uri("file:///a/path/to/a/file.txt"), uri::from_file(path));
+}
+
+BOOST_AUTO_TEST_CASE(issue_104_test) {
+	// https://github.com/cpp-netlib/cpp-netlib/issues/104
+	boost::scoped_ptr<uri::uri> instance(new uri::uri("http://www.example.com/"));
+	uri::uri copy = *instance;
+	instance.reset();
+	BOOST_CHECK_EQUAL(uri::scheme(copy), "http");
 }

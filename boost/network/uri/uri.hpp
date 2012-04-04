@@ -59,10 +59,8 @@ public:
     }
 
     uri(const uri &other)
-        : uri_(other.uri_),
-          uri_parts_(other.uri_parts_),
-          is_valid_(other.is_valid_) {
-
+        : uri_(other.uri_) {
+		parse();
     }
 
     uri &operator = (const uri &other) {
@@ -70,9 +68,8 @@ public:
         return *this;
     }
 
-    uri &operator = (const string_type &uri) {
-        uri_ = uri;
-        parse();
+    uri &operator = (const string_type &uri_string) {
+		uri(uri_string).swap(*this);
         return *this;
     }
 
@@ -82,7 +79,8 @@ public:
 
     void swap(uri &other) {
         boost::swap(uri_, other.uri_);
-        parse();
+        boost::swap(uri_parts_, other.uri_parts_);
+        boost::swap(is_valid_, other.is_valid_);
     }
 
     const_iterator begin() const {
