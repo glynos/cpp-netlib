@@ -18,6 +18,7 @@
 # include <boost/range/iterator_range.hpp>
 # include <boost/lexical_cast.hpp>
 # include <boost/optional.hpp>
+# include <boost/functional/hash_fwd.hpp>
 
 
 namespace boost {
@@ -301,6 +302,16 @@ void swap(uri &lhs, uri &rhs) {
 }
 
 inline
+std::size_t hash_value(const uri &uri_)
+{
+    std::size_t seed = 0;
+    for (uri::const_iterator it = begin(uri_); it != end(uri_); ++it) {
+        hash_combine(seed, *it);
+    }
+    return seed;
+}
+
+inline
 bool operator == (const uri &lhs, const uri &rhs) {
     return boost::equal(lhs, rhs);
 }
@@ -317,7 +328,6 @@ bool operator < (const uri &lhs, const uri &rhs) {
 } // namespace uri
 } // namespace network
 } // namespace boost
-
 
 # include <boost/network/uri/accessors.hpp>
 # include <boost/network/uri/directives.hpp>

@@ -12,6 +12,8 @@
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <map>
+#include <set>
+#include <boost/unordered_set.hpp>
 
 
 using namespace boost::network;
@@ -316,14 +318,13 @@ BOOST_AUTO_TEST_CASE(encoded_uri_test) {
 BOOST_AUTO_TEST_CASE(copy_constructor_test) {
     uri::uri instance("http://www.example.com/");
     uri::uri copy = instance;
-    BOOST_CHECK(instance == copy);
+    BOOST_CHECK_EQUAL(instance, copy);
 }
 
 BOOST_AUTO_TEST_CASE(assignment_test) {
     uri::uri instance("http://www.example.com/");
     uri::uri copy;
     copy = instance;
-    BOOST_CHECK_EQUAL(instance.string(), copy.string());
     BOOST_CHECK_EQUAL(instance, copy);
 }
 
@@ -462,4 +463,18 @@ BOOST_AUTO_TEST_CASE(issue_104_test) {
 	uri::uri copy = *instance;
 	instance.reset();
 	BOOST_CHECK_EQUAL(uri::scheme(copy), "http");
+}
+
+BOOST_AUTO_TEST_CASE(uri_set_test) {
+    std::set<uri::uri> uri_set;
+    uri_set.insert(uri::uri("http://www.example.com/"));
+    BOOST_REQUIRE(!uri_set.empty());
+    BOOST_CHECK_EQUAL((*uri_set.begin()), uri::uri("http://www.example.com/"));
+}
+
+BOOST_AUTO_TEST_CASE(uri_unordered_set_test) {
+    boost::unordered_set<uri::uri> uri_set;
+    uri_set.insert(uri::uri("http://www.example.com/"));
+    BOOST_REQUIRE(!uri_set.empty());
+    BOOST_CHECK_EQUAL((*uri_set.begin()), uri::uri("http://www.example.com/"));
 }
