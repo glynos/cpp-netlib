@@ -15,6 +15,7 @@
 # include <boost/utility/swap.hpp>
 # include <boost/range/algorithm/equal.hpp>
 # include <boost/range/algorithm/copy.hpp>
+# include <boost/range/as_literal.hpp>
 # include <boost/range/iterator_range.hpp>
 # include <boost/lexical_cast.hpp>
 # include <boost/optional.hpp>
@@ -38,12 +39,23 @@ class BOOST_URI_DECL uri {
 public:
 
     typedef std::string string_type;
+    typedef string_type::value_type value_type;
     typedef string_type::const_iterator const_iterator;
-    typedef boost::iterator_range<std::string::const_iterator> const_range_type;
+    typedef boost::iterator_range<const_iterator> const_range_type;
 
     uri()
         : is_valid_(false) {
 
+    }
+
+    //uri(const value_type *uri)
+    //    : uri_(uri), is_valid_(false) {
+    //    parse();
+    //}
+
+    uri(const string_type &uri)
+        : uri_(uri), is_valid_(false) {
+        parse();
     }
 
     template <
@@ -51,11 +63,6 @@ public:
         >
     uri(const FwdIter &first, const FwdIter &last)
         : uri_(first, last), is_valid_(false) {
-        parse();
-    }
-
-    uri(const string_type &uri)
-        : uri_(uri), is_valid_(false) {
         parse();
     }
 
@@ -314,6 +321,26 @@ std::size_t hash_value(const uri &uri_)
 inline
 bool operator == (const uri &lhs, const uri &rhs) {
     return boost::equal(lhs, rhs);
+}
+
+inline
+bool operator == (const uri &lhs, const uri::string_type &rhs) {
+    return boost::equal(lhs, rhs);
+}
+
+inline
+bool operator == (const uri::string_type &lhs, const uri &rhs) {
+    return boost::equal(lhs, rhs);
+}
+
+inline
+bool operator == (const uri &lhs, const uri::value_type *rhs) {
+    return boost::equal(lhs, boost::as_literal(rhs));
+}
+
+inline
+bool operator == (const uri::value_type *lhs, const uri &rhs) {
+    return boost::equal(boost::as_literal(lhs), rhs);
 }
 
 inline

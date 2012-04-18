@@ -342,6 +342,30 @@ BOOST_AUTO_TEST_CASE(equality_test) {
     BOOST_CHECK(uri_1 == uri_2);
 }
 
+BOOST_AUTO_TEST_CASE(equality_test_1) {
+    uri::uri uri_1("http://www.example.com/");
+    std::string uri_2("http://www.example.com/");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
+BOOST_AUTO_TEST_CASE(equality_test_2) {
+    std::string uri_1("http://www.example.com/");
+    uri::uri uri_2("http://www.example.com/");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
+BOOST_AUTO_TEST_CASE(equality_test_3) {
+    uri::uri uri_1("http://www.example.com/");
+    std::string uri_2("http://www.example.com/");
+    BOOST_CHECK(uri_1 == uri_2.c_str());
+}
+
+BOOST_AUTO_TEST_CASE(equality_test_4) {
+    std::string uri_1("http://www.example.com/");
+    uri::uri uri_2("http://www.example.com/");
+    BOOST_CHECK(uri_1.c_str() == uri_2);
+}
+
 BOOST_AUTO_TEST_CASE(inequality_test) {
     uri::uri uri_1("http://www.example.com/");
     uri::uri uri_2("http://www.example.com/");
