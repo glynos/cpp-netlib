@@ -1,4 +1,4 @@
-// Copyright 2009, 2010, 2011 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
+// Copyright 2009, 2010, 2011, 2012 Dean Michael Berris, Jeroen Habraken, Glyn Matthews, Fredrik Olofsson.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,7 @@
 #include <boost/network/uri.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/uri_io.hpp>
+#include <boost/network/uri/normalize.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <map>
@@ -462,4 +463,17 @@ BOOST_AUTO_TEST_CASE(issue_104_test) {
 	uri::uri copy = *instance;
 	instance.reset();
 	BOOST_CHECK_EQUAL(uri::scheme(copy), "http");
+}
+
+BOOST_AUTO_TEST_CASE(normalize_empty_string) {
+	BOOST_CHECK_EQUAL(uri::normalize(""), "/");
+}
+BOOST_AUTO_TEST_CASE(normalize_backslash_string) {
+	BOOST_CHECK_EQUAL(uri::normalize("../../../"), "/");
+}
+BOOST_AUTO_TEST_CASE(normalize_relative_string) {
+	BOOST_CHECK_EQUAL(uri::normalize("/test/test/test/../test2"), "/test/test/test2");
+}
+BOOST_AUTO_TEST_CASE(normalize_slashend_string) {
+	BOOST_CHECK_EQUAL(uri::normalize("/test/"), "/test");
 }
