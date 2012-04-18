@@ -447,7 +447,7 @@ namespace boost { namespace network { namespace http {
                             thread_pool().post(
                                 boost::bind(
                                     &Handler::operator(),
-                                    &handler,
+                                    handler,
                                     cref(request_),
                                     async_connection<Tag,Handler>::shared_from_this()));
                             return;
