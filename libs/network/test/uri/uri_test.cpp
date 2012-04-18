@@ -1,4 +1,5 @@
-// Copyright 2009, 2010, 2011, 2012 Dean Michael Berris, Jeroen Habraken, Glyn Matthews, Fredrik Olofsson.
+// Copyright 2009, 2010, 2011 Dean Michael Berris, Jeroen Habraken, Glyn Matthews
+// Copyright 2012 Fredrik Olofsson
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -468,9 +469,15 @@ BOOST_AUTO_TEST_CASE(issue_104_test) {
 BOOST_AUTO_TEST_CASE(normalize_empty_string) {
 	BOOST_CHECK_EQUAL(uri::normalize(""), "/");
 }
+
 BOOST_AUTO_TEST_CASE(normalize_backslash_string) {
 	BOOST_CHECK_EQUAL(uri::normalize("../../../"), "/");
 }
+
 BOOST_AUTO_TEST_CASE(normalize_relative_string) {
 	BOOST_CHECK_EQUAL(uri::normalize("/test/test/test/../test2"), "/test/test/test2");
+}
+
+BOOST_AUTO_TEST_CASE(normalize_slashend_string) {
+	BOOST_CHECK_EQUAL(uri::normalize("/test/"), "/test");
 }
