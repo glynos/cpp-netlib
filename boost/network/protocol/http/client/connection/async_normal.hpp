@@ -330,7 +330,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
             return;
           case body:
-            if (ec == boost::asio::error::eof) {
+            if (ec == boost::asio::error::eof || is_ssl_short_read_error) {
               // Here we're handling the case when the connection has been
               // closed from the server side, or at least that the end of file
               // has been reached while reading the socket. This signals the end
