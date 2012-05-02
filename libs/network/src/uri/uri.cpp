@@ -4,4 +4,4 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <boost/network/uri/uri.ipp>
+#include <network/uri/uri.ipp>

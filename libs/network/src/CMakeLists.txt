@@ -1,4 +1,4 @@
-# Copyright (c) Glyn Matthews 2011.
+# Copyright (c) Glyn Matthews 2011, 2012.
 # Copyright 2011 Dean Michael Berris (dberris@google.com)
 # Copyright 2011 Google, Inc.
 # Distributed under the Boost Software License, Version 1.0.
@@ -6,7 +6,7 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 
-include_directories(${CPP-NETLIB_SOURCE_DIR})
+include_directories(${CPP-NETLIB_SOURCE_DIR}/include)
 
 set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp)
 add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})

@@ -4,13 +4,11 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <boost/network/uri/schemes.hpp>
+#include <network/uri/schemes.hpp>
 #include <boost/unordered_set.hpp>
 
 
-namespace boost {
 namespace network {
-namespace uri {
 namespace {
 static boost::unordered_set<std::string> hierarchical_schemes_;
 static boost::unordered_set<std::string> opaque_schemes_;
@@ -58,6 +56,4 @@ bool hierarchical_schemes::exists(const std::string &scheme) {
 bool opaque_schemes::exists(const std::string &scheme) {
     return opaque_schemes_.end() != opaque_schemes_.find(scheme);
 }
-} // namespace uri
 } // namespace network
-} // namespace boost
