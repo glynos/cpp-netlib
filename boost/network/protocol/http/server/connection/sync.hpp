@@ -12,7 +12,10 @@
 #define BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE 4096uL
 #endif
 
+#include <utility>
+#include <iterator>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/network/constants.hpp>
 #include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
@@ -26,7 +29,6 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/bind.hpp>
-#include <boost/network/protocol/http/algorithms/flatten.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -187,8 +189,13 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
             } else {
               response response_;
               handler_(request_, response_);
-              std::vector<asio::const_buffer> response_buffers;
-              flatten(response_, response_buffers);
+              flatten_response();
+              std::vector<asio::const_buffer> response_buffers(output_buffers_.size());
+              std::transform(output_buffers_.begin(), output_buffers_.end(),
+                             response_buffers.begin(),
+                             [](buffer_type const &buffer) {
+                               return asio::const_buffer(buffer.data(), buffer.size());
+                             });
               boost::asio::async_write(
                 socket_,
                 response_buffers,
@@ -217,13 +224,15 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   }
 
   void handle_write(system::error_code const &ec) {
+    // First thing we do is clear out the output buffers.
+    output_buffers_.clear();
     if (ec) {
       // TODO maybe log the error here.
     }
   }
 
   void client_error() {
-      static char const * bad_request = 
+      static char const bad_request[] = 
           "HTTP/1.0 400 Bad Request\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
 
       asio::async_write(
@@ -262,6 +271,43 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
           );
   }
 
+  void flatten_response() {
+    uint16_t status = http::status(response_);
+    std::string status_message = http::status_message(response_);
+    headers_wrapper::container_type headers = network::headers(response_);
+    std::ostringstream status_line;
+    status_line << status << constants::space() << status_message << constants::space()
+                << constants::http_slash()
+                << "1.1" // TODO: make this a constant
+                << constants::crlf();
+    segmented_write(status_line.str());
+    std::ostringstream header_stream;
+    for (decltype(headers)::value_type const &header : headers) {
+      header_stream << header.first << constants::colon() << constants::space()
+                    << header.second << constants::crlf();
+    }
+    header_stream << constants::crlf();
+    segmented_write(header_stream.str());
+    bool done = false;
+    while (!done) {
+      buffer_type buffer;
+      response_.get_body([&done, &buffer](iterator_range<char const *> data) {
+        if (boost::empty(data)) done = true;
+        else std::copy(begin(data), end(data), buffer.begin());
+      }, buffer.size());
+      if (!done) output_buffers_.emplace_back(std::move(buffer));
+    }
+  }
+
+  void segmented_write(std::string data) {
+    while (!boost::empty(data)) {
+      buffer_type buffer;
+      auto end = std::copy_n(boost::begin(data), buffer.size(), buffer.begin());
+      data.erase(0, std::distance(buffer.begin(), end));
+      output_buffers_.emplace_back(std::move(buffer));
+    }
+  }
+
   boost::asio::io_service & service_;
   function<void(request const &, response &)> handler_;
   boost::asio::ip::tcp::socket socket_;
@@ -273,6 +319,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   request_parser parser_;
   request request_;
   response response_;
+  std::list<buffer_type> output_buffers_;
   std::string partial_parsed;
   optional<system::system_error> error_encountered;
   bool read_body_;

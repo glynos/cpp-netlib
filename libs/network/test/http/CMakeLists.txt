@@ -87,8 +87,10 @@ if (Boost_FOUND)
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT}
+            cppnetlib-constants
             cppnetlib-uri
             cppnetlib-message
+            cppnetlib-message-wrappers
             cppnetlib-http-message
             cppnetlib-http-servers
             cppnetlib-http-server-parsers

@@ -13,14 +13,6 @@ namespace boost { namespace network {
 
 struct message_base;
 
-/** headers wrapper for messages.
- *
- * This exposes an interface similar to a map, indexable
- * using operator[] taking a string as the index and returns
- * a range of iterators (std::pair<iterator, iterator>)
- * whose keys are all equal to the index string.
- *
- */
 struct headers_wrapper {
   typedef std::multimap<std::string, std::string> container_type;
   explicit headers_wrapper(message_base const & message);
