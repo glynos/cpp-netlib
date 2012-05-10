@@ -7,6 +7,15 @@
 :mod:`cpp-netlib` 0.9
 ---------------------
 
+v0.9.4
+~~~~~~
+* Lots of URI fixes.
+* Fixed async_server's request handler so it doesn't make copies of the supplied handler.
+* Fix for issue `#73`_ regarding SSL connections ending in short read errors.
+* Final C++03-only release.
+
+.. _`#73`: https://github.com/cpp-netlib/cpp-netlib/issues/73
+
 v0.9.3
 ~~~~~~
 * URI, HTTP client and HTTP server are now built as static libraries (``libcppnetlib-uri.a``, ``libcppnetlib-client-connections.a`` and ``libcppnetlib-server-parsers.a`` on Linux and ``cppnetlib-uri.lib``, ``cppnetlib-client-connections.lib`` and ``cppnetlib-server-parsers.lib`` on Windows).

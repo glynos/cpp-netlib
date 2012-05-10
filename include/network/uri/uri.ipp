@@ -1,10 +1,10 @@
-// Copyright 2009, 2010, 2011 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
+// Copyright 2009-2012 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <boost/network/uri/detail/uri_parts.hpp>
+#include <network/uri/detail/uri_parts.hpp>
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/home/qi.hpp>
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>
@@ -12,7 +12,7 @@
 BOOST_FUSION_ADAPT_TPL_STRUCT
 (
     (FwdIter),
-    (boost::network::uri::detail::hierarchical_part)(FwdIter),
+    (network::detail::hierarchical_part)(FwdIter),
     (boost::optional<boost::iterator_range<FwdIter> >, user_info)
     (boost::optional<boost::iterator_range<FwdIter> >, host)
     (boost::optional<boost::iterator_range<FwdIter> >, port)
@@ -22,16 +22,14 @@ BOOST_FUSION_ADAPT_TPL_STRUCT
 BOOST_FUSION_ADAPT_TPL_STRUCT
 (
     (FwdIter),
-    (boost::network::uri::detail::uri_parts)(FwdIter),
+    (network::detail::uri_parts)(FwdIter),
     (boost::iterator_range<FwdIter>, scheme)
-    (boost::network::uri::detail::hierarchical_part<FwdIter>, hier_part)
+    (network::detail::hierarchical_part<FwdIter>, hier_part)
     (boost::optional<boost::iterator_range<FwdIter> >, query)
     (boost::optional<boost::iterator_range<FwdIter> >, fragment)
     );
 
-namespace boost {
 namespace network {
-namespace uri {
 namespace detail {
 namespace qi = boost::spirit::qi;
 
@@ -176,9 +174,9 @@ struct uri_grammar : qi::grammar<
                 )
             |
             (
-                    qi::attr(iterator_range<const_iterator>())
-                >>  qi::attr(iterator_range<const_iterator>())
-                >>  qi::attr(iterator_range<const_iterator>())
+                    qi::attr(boost::iterator_range<const_iterator>())
+                >>  qi::attr(boost::iterator_range<const_iterator>())
+                >>  qi::attr(boost::iterator_range<const_iterator>())
                 >>  (
                     path_absolute
                     |   path_rootless
@@ -195,14 +193,14 @@ struct uri_grammar : qi::grammar<
             ;
     }
 
-    qi::rule<const_iterator, typename iterator_range<const_iterator>::value_type()>
+    qi::rule<const_iterator, typename boost::iterator_range<const_iterator>::value_type()>
     gen_delims, sub_delims, reserved, unreserved;
     qi::rule<const_iterator, string_type()>
     pct_encoded, pchar;
 
     qi::rule<const_iterator, string_type()>
     segment, segment_nz, segment_nz_nc;
-    qi::rule<const_iterator, iterator_range<const_iterator>()>
+    qi::rule<const_iterator, boost::iterator_range<const_iterator>()>
     path_abempty, path_absolute, path_rootless, path_empty;
 
     qi::rule<const_iterator, string_type()>
@@ -211,10 +209,10 @@ struct uri_grammar : qi::grammar<
     qi::rule<const_iterator, string_type()>
     h16, ls32;
 
-    qi::rule<const_iterator, iterator_range<const_iterator>()>
+    qi::rule<const_iterator, boost::iterator_range<const_iterator>()>
     host, port;
 
-    qi::rule<const_iterator, iterator_range<const_iterator>()>
+    qi::rule<const_iterator, boost::iterator_range<const_iterator>()>
     scheme, user_info, query, fragment;
 
     qi::rule<const_iterator, hierarchical_part<const_iterator>()>
@@ -234,6 +232,4 @@ bool parse(std::string::const_iterator first,
     return is_valid && (first == last);
 }
 } // namespace detail
-} // namespace uri
 } // namespace network
-} // namespace boost

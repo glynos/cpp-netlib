@@ -4,7 +4,7 @@
 .. :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 .. 	  Dean Michael Berris <mikhailberis@gmail.com>
 .. :Date: Feb 22, 2012
-.. :Version: 0.9.3
+.. :Version: 0.9.4
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 .. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2012.
 ..             Distributed under the Boost Software License, Version

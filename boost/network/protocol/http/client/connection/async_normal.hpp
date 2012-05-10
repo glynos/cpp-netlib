@@ -1,6 +1,8 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_CONNECTION_HPP_20100601
 #define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_CONNECTION_HPP_20100601
 
+// Copyright 2010 (C) Dean Michael Berris
+// Copyright 2010 (C) Sinefunc, Inc.
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google,Inc.
 // Distributed under the Boost Software License, Version 1.0.

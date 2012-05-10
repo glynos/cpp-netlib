@@ -7,16 +7,19 @@
 #ifndef __BOOST_NETWORK_URI_INC__
 # define __BOOST_NETWORK_URI_INC__
 
-# include <boost/network/constants.hpp>
+# pragma once
+
 # include <boost/network/uri/config.hpp>
 # include <boost/network/uri/detail/uri_parts.hpp>
 # include <boost/network/uri/schemes.hpp>
 # include <boost/utility/swap.hpp>
 # include <boost/range/algorithm/equal.hpp>
 # include <boost/range/algorithm/copy.hpp>
+# include <boost/range/as_literal.hpp>
 # include <boost/range/iterator_range.hpp>
 # include <boost/lexical_cast.hpp>
 # include <boost/optional.hpp>
+# include <boost/functional/hash_fwd.hpp>
 
 
 namespace boost {
@@ -36,12 +39,23 @@ class BOOST_URI_DECL uri {
 public:
 
     typedef std::string string_type;
+    typedef string_type::value_type value_type;
     typedef string_type::const_iterator const_iterator;
-    typedef boost::iterator_range<std::string::const_iterator> const_range_type;
+    typedef boost::iterator_range<const_iterator> const_range_type;
 
     uri()
         : is_valid_(false) {
 
+    }
+
+    //uri(const value_type *uri)
+    //    : uri_(uri), is_valid_(false) {
+    //    parse();
+    //}
+
+    uri(const string_type &uri)
+        : uri_(uri), is_valid_(false) {
+        parse();
     }
 
     template <
@@ -52,16 +66,9 @@ public:
         parse();
     }
 
-    uri(const string_type &uri)
-        : uri_(uri), is_valid_(false) {
-        parse();
-    }
-
     uri(const uri &other)
-        : uri_(other.uri_),
-          uri_parts_(other.uri_parts_),
-          is_valid_(other.is_valid_) {
-
+        : uri_(other.uri_) {
+		parse();
     }
 
     uri &operator = (uri other) {
@@ -70,9 +77,8 @@ public:
         return *this;
     }
 
-    uri &operator = (const string_type &uri) {
-        uri_ = uri;
-        parse();
+    uri &operator = (const string_type &uri_string) {
+		uri(uri_string).swap(*this);
         return *this;
     }
 
@@ -82,7 +88,8 @@ public:
 
     void swap(uri &other) {
         boost::swap(uri_, other.uri_);
-        parse();
+        boost::swap(uri_parts_, other.uri_parts_);
+        boost::swap(is_valid_, other.is_valid_);
     }
 
     const_iterator begin() const {
@@ -298,8 +305,43 @@ bool is_valid(const uri &uri_) {
 }
 
 inline
+void swap(uri &lhs, uri &rhs) {
+    lhs.swap(rhs);
+}
+
+inline
+std::size_t hash_value(const uri &uri_)
+{
+    std::size_t seed = 0;
+    for (uri::const_iterator it = begin(uri_); it != end(uri_); ++it) {
+        hash_combine(seed, *it);
+    }
+    return seed;
+}
+
+inline
 bool operator == (const uri &lhs, const uri &rhs) {
     return boost::equal(lhs, rhs);
+}
+
+inline
+bool operator == (const uri &lhs, const uri::string_type &rhs) {
+    return boost::equal(lhs, rhs);
+}
+
+inline
+bool operator == (const uri::string_type &lhs, const uri &rhs) {
+    return boost::equal(lhs, rhs);
+}
+
+inline
+bool operator == (const uri &lhs, const uri::value_type *rhs) {
+    return boost::equal(lhs, boost::as_literal(rhs));
+}
+
+inline
+bool operator == (const uri::value_type *lhs, const uri &rhs) {
+    return boost::equal(boost::as_literal(lhs), rhs);
 }
 
 inline
@@ -307,10 +349,13 @@ bool operator != (const uri &lhs, const uri &rhs) {
     return !(lhs == rhs);
 }
 
+inline
+bool operator < (const uri &lhs, const uri &rhs) {
+    return lhs.string() < rhs.string();
+}
 } // namespace uri
 } // namespace network
 } // namespace boost
-
 
 # include <boost/network/uri/accessors.hpp>
 # include <boost/network/uri/directives.hpp>
