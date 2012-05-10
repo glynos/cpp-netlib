@@ -7,6 +7,7 @@
 
 
 include_directories(${CPP-NETLIB_SOURCE_DIR}/include)
+include_directories(${CPP-NETLIB_SOURCE_DIR})
 
 set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp)
 add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
