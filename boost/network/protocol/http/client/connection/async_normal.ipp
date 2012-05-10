@@ -329,7 +329,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
             // buffer.
             buffer_type::const_iterator begin = this->part_begin;
             buffer_type::const_iterator end = begin;
-            std::advance(end, remainder);
+            std::advance(end, std::min(bytes_transferred, remainder));
 
             // We're setting the body promise here to an empty string because
             // this can be used as a signaling mechanism for the user to

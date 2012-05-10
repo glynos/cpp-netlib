@@ -12,7 +12,7 @@
 namespace boost { namespace network { namespace http {
 
 status_wrapper::status_wrapper(response_base &response)
-: response_(response_)
+: response_(response)
 {}
 
 status_wrapper::operator uint16_t () const {
