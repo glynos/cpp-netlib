@@ -8,7 +8,6 @@
 # define __BOOST_NETWORK_URI_DIRECTIVES_QUERY_INC__
 
 
-# include <boost/network/uri/encode.hpp>
 # include <boost/range/begin.hpp>
 # include <boost/range/end.hpp>
 

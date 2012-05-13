@@ -9,7 +9,7 @@
 #include <boost/network/protocol/http/message/wrappers.hpp>
 #include <boost/network/message/wrappers.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/uri/uri_io.hpp>
+#include <network/uri/uri_io.hpp>
 
 namespace http = boost::network::http;
 namespace net = boost::network;

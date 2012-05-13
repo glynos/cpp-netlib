@@ -51,7 +51,7 @@ if (Boost_FOUND)
       ${CMAKE_THREAD_LIBS_INIT})
     set_target_properties(cpp-netlib-utils_thread_pool
       PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
-    add_test(cpp-netlib-utils_thread_pool ${CPP-NETLIB_BRINARY_DIR}/tests/cpp-netlib-utils_thread_pool)
+    add_test(cpp-netlib-utils_thread_pool ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-utils_thread_pool)
 
 endif()
 
