@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/uri/uri.hpp>
+#include <network/uri/uri.hpp>
 #include <boost/network/protocol/http/request/request_base.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -15,7 +15,7 @@ namespace boost { namespace network { namespace http {
 struct uri_wrapper {
   explicit uri_wrapper(request_base const & request_);
   operator std::string() const;
-  operator boost::network::uri::uri() const;
+  operator ::network::uri() const;
  private:
   request_base const & request_;
 };

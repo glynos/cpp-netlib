@@ -8,7 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/message/wrappers/host.hpp>
-#include <boost/network/uri/uri.hpp>
+#include <network/uri.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -16,7 +16,7 @@ host_wrapper::host_wrapper(request_base const & request)
 : request_(request) {}
 
 host_wrapper::operator std::string () const {
-  uri::uri uri_;
+  ::network::uri uri_;
   request_.get_uri(uri_);
   return host(uri_);
 }

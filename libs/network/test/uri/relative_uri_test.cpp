@@ -6,13 +6,11 @@
 #define BOOST_TEST_MODULE Relative URL Test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/uri/uri.hpp>
-#include <boost/network/uri/uri_io.hpp>
-
-using namespace boost::network;
+#include <network/uri/uri.hpp>
+#include <network/uri/uri_io.hpp>
 
 BOOST_AUTO_TEST_CASE(relative_uri_test) {
     // don't yet support relative URIs
-    uri::uri instance("example.com");
-    BOOST_REQUIRE(!uri::valid(instance));
+    network::uri instance("example.com");
+    BOOST_REQUIRE(!network::valid(instance));
 }

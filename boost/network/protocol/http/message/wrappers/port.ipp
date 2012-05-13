@@ -8,7 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/message/wrappers/port.hpp>
-#include <boost/network/uri/uri.hpp>
+#include <network/uri.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -16,7 +16,7 @@ port_wrapper::port_wrapper(request_base const & request)
 : request_(request) {}
 
 port_wrapper::operator boost::uint16_t () const {
-  uri::uri uri_;
+  ::network::uri uri_;
   request_.get_uri(uri_);
   optional<boost::uint16_t> optional_port = port_us(uri_);
   if (!optional_port) {
@@ -31,7 +31,7 @@ port_wrapper::operator boost::uint16_t () const {
 }
 
 port_wrapper::operator optional<boost::uint16_t> () const {
-  uri::uri uri_;
+  ::network::uri uri_;
   request_.get_uri(uri_);
   return port_us(uri_);
 }

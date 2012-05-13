@@ -20,7 +20,7 @@ namespace http = boost::network::http;
 
 /*<< Defines the server. >>*/
 struct hello_world;
-typedef http::server<hello_world> server;
+typedef http::sync_server<hello_world> server;
 
 /*<< Defines the request handler.  It's a class that defines two
      functions, `operator()` and `log()` >>*/
@@ -28,11 +28,11 @@ struct hello_world {
     /*<< This is the function that handles the incoming request. >>*/
     void operator() (server::request const &request,
                      server::response &response) {
-        server::string_type ip = source(request);
-        std::ostringstream data;
-        data << "Hello, " << ip << "!";
-        response = server::response::stock_reply(
-            server::response::ok, data.str());
+        //server::string_type ip = source(request);
+        //std::ostringstream data;
+        //data << "Hello, " << ip << "!";
+        //response = server::response::stock_reply(
+        //    server::response::ok, data.str());
     }
     /*<< It's necessary to define a log function, but it's ignored in
          this example. >>*/
@@ -43,7 +43,7 @@ struct hello_world {
 
 
 int main(int argc, char * argv[]) {
-    
+
     if (argc != 3) {
         std::cerr << "Usage: " << argv[0] << " address port" << std::endl;
         return 1;
@@ -53,7 +53,8 @@ int main(int argc, char * argv[]) {
         /*<< Creates the request handler. >>*/
         hello_world handler;
         /*<< Creates the server. >>*/
-        server server_(argv[1], argv[2], handler);
+        http::server_options options;
+        server server_(options.address(argv[1]).port(argv[2]), handler);
         /*<< Runs the server. >>*/
         server_.run();
     }
@@ -61,7 +62,7 @@ int main(int argc, char * argv[]) {
         std::cerr << e.what() << std::endl;
         return 1;
     }
-    
+
     return 0;
 }
 //]

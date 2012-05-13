@@ -1,4 +1,4 @@
-//            Copyright (c) Glyn Matthews 2009, 2010.
+//            Copyright (c) Glyn Matthews 2009-2012.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -15,19 +15,18 @@
 
 
 #include <boost/network/protocol/http/client.hpp>
-#include <boost/network/uri.hpp>
+#include <network/uri.hpp>
 #include <string>
 #include <fstream>
 #include <iostream>
 
 
 namespace http = boost::network::http;
-namespace uri = boost::network::uri;
 
 
 namespace {
-std::string get_filename(const uri::uri &url) {
-    std::string path = uri::path(url);
+std::string get_filename(const network::uri &url) {
+    std::string path = network::path(url);
     std::size_t index = path.find_last_of('/');
     std::string filename = path.substr(index + 1);
     return filename.empty()? "index.html" : filename;
@@ -48,7 +47,9 @@ main(int argc, char *argv[]) {
         http::client::request request(argv[1]);
         http::client::response response = client.get(request);
 
-        std::string filename = get_filename(request.uri());
+        network::uri uri;
+        request.get_uri(uri);
+        std::string filename = get_filename(uri);
         std::cout << "Saving to: " << filename << std::endl;
         std::ofstream ofs(filename.c_str());
         ofs << static_cast<std::string>(body(response)) << std::endl;

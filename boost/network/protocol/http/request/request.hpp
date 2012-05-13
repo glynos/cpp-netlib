@@ -8,7 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/request/request_base.hpp>
-#include <boost/network/uri/uri.hpp>
+#include <network/uri.hpp>
 #include <boost/network/protocol/http/message/directives/major_version.hpp>
 #include <boost/network/protocol/http/message/directives/minor_version.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -21,7 +21,7 @@ struct request : request_base {
   // We support full value semantics.
   request();
   explicit request(std::string const & url);
-  explicit request(uri::uri const & url);
+  explicit request(::network::uri const & url);
   request(request const &);
   request& operator=(request);
   void swap(request & other);
@@ -54,12 +54,12 @@ struct request : request_base {
   virtual void set_status_message(std::string const & status_message);
   virtual void set_body_writer(function<void(char*, size_t)> writer);
   virtual void set_uri(std::string const &uri);
-  virtual void set_uri(network::uri::uri const &uri);
+  virtual void set_uri(::network::uri const &uri);
   virtual void set_version_major(unsigned short major_version);
   virtual void set_version_minor(unsigned short minor_version);
 
   // Getters
-  virtual void get_uri(network::uri::uri &uri) const;
+  virtual void get_uri(::network::uri &uri) const;
   virtual void get_uri(std::string &uri) const;
   virtual void get_method(std::string & method) const;
   virtual void get_status(std::string & status) const;

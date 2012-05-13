@@ -34,6 +34,14 @@ struct request_pimpl {
   , headers_()
   {}
 
+  explicit request_pimpl(::network::uri const & url)
+  : uri_(url)
+  , read_offset_(0)
+  , source_()
+  , destination_()
+  , headers_()
+  {}
+
   request_pimpl* clone() const {
     return new (std::nothrow) request_pimpl(*this);
   }
@@ -42,7 +50,7 @@ struct request_pimpl {
     uri_ = uri;
   }
 
-  void set_uri(uri::uri const & uri) {
+  void set_uri(::network::uri const & uri) {
     uri_ = uri;
   }
 
@@ -50,7 +58,7 @@ struct request_pimpl {
     uri = uri_.string();
   }
 
-  void get_uri(uri::uri &uri) {
+  void get_uri(::network::uri &uri) {
     uri = uri_;
   }
 
@@ -136,7 +144,7 @@ struct request_pimpl {
  private:
   typedef std::multimap<std::string, std::string> headers_type;
 
-  uri::uri uri_;
+  ::network::uri uri_;
   size_t read_offset_;
   std::string source_, destination_;
   headers_type headers_;
@@ -160,6 +168,10 @@ request::request()
 {}
 
 request::request(std::string const & url)
+: pimpl_(new (std::nothrow) request_pimpl(url))
+{}
+
+request::request(::network::uri const & url)
 : pimpl_(new (std::nothrow) request_pimpl(url))
 {}
 
@@ -266,7 +278,7 @@ void request::set_uri(std::string const &uri) {
   pimpl_->set_uri(uri);
 }
 
-void request::set_uri(network::uri::uri const &uri) {
+void request::set_uri(::network::uri const &uri) {
   pimpl_->set_uri(uri);
 }
 
@@ -279,7 +291,7 @@ void request::set_version_minor(unsigned short minor_version) {
 }
 
 // Getters
-void request::get_uri(network::uri::uri &uri) const {
+void request::get_uri(::network::uri &uri) const {
   pimpl_->get_uri(uri);
 }
 

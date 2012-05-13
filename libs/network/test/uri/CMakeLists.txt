@@ -4,6 +4,7 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
+include_directories(${CPP-NETLIB_SOURCE_DIR}/include)
 include_directories(${CPP-NETLIB_SOURCE_DIR})
 
 if (Boost_FOUND)

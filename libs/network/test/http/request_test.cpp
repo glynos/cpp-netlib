@@ -12,7 +12,6 @@
 #include <boost/network/uri/uri_io.hpp>
 
 namespace http = boost::network::http;
-namespace uri = boost::network::uri;
 namespace net = boost::network;
 
 BOOST_AUTO_TEST_CASE(request_construction) {
@@ -57,10 +56,10 @@ BOOST_AUTO_TEST_CASE(request_uri_test) {
 
   // Now we test the bare uri instance with accessing using the request
   // convenience wrapper.
-  uri::uri uri_;
+  network::uri uri_;
   request.get_uri(uri_);
   std::string host_ = http::host(request);
-  BOOST_CHECK(uri::valid(uri_));
+  BOOST_CHECK(network::valid(uri_));
   BOOST_CHECK_EQUAL(std::string("www.google.com"), host_);
   BOOST_CHECK_EQUAL(uri_.host(), host_);
   BOOST_CHECK_EQUAL(std::string("www.google.com"), uri_.host());
@@ -70,13 +69,13 @@ BOOST_AUTO_TEST_CASE(request_url_constructor_test) {
   http::request request("http://www.google.com/");
   http::request other;
   other.set_uri("http://www.google.com/");
-  uri::uri original, other_uri;
+  network::uri original, other_uri;
   request.get_uri(original);
   other.get_uri(other_uri);
   BOOST_CHECK_EQUAL(original, other_uri);
 
   // Now test the directives..
-  uri::uri directive_original = http::uri(request);
+  network::uri directive_original = http::uri(request);
   BOOST_CHECK_EQUAL(original, directive_original);
 }
 
@@ -89,7 +88,7 @@ BOOST_AUTO_TEST_CASE(request_basics_test) {
   request.append_header("Connection", "close");
   request.append_body("The quick brown fox jumps over the lazy dog!");
 
-  uri::uri uri_;
+  network::uri uri_;
   std::string source_, destination_, body_;
   net::headers_wrapper::container_type const &headers_ = headers(request);
   request.get_uri(uri_);

@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-
+#include <network/uri/uri.hpp>
 #include <boost/network/protocol/http/client.hpp>
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/document.h"
@@ -14,7 +14,7 @@
 // https://dev.twitter.com/docs/using-search
 
 int main(int argc, char *argv[]) {
-    using namespace boost::network;
+    namespace http = boost::network::http;
     using namespace rapidjson;
 
     if (argc != 2) {
@@ -25,16 +25,18 @@ int main(int argc, char *argv[]) {
     try {
         http::client client;
 
-        uri::uri base_uri("http://search.twitter.com/search.json");
+        network::uri base_uri("http://search.twitter.com/search.json");
 
         std::cout << "Searching Twitter for query: " << argv[1] << std::endl;
-        uri::uri search;
-        search << base_uri << uri::query("q", uri::encoded(argv[1]));
+        network::uri search;
+        search << base_uri << network::query("q", network::encoded(argv[1]));
         http::client::request request(search);
         http::client::response response = client.get(request);
 
         Document d;
-        if (!d.Parse<0>(response.body().c_str()).HasParseError()) {
+        std::string body;
+        response.get_body(body);
+        if (!d.Parse<0>(body.c_str()).HasParseError()) {
 			const Value &results = d["results"];
 			for (SizeType i = 0; i < results.Size(); ++i)
 			{

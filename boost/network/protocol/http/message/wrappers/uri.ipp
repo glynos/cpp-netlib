@@ -22,8 +22,8 @@ uri_wrapper::operator std::string() const {
   return uri;
 }
 
-uri_wrapper::operator boost::network::uri::uri() const {
-  boost::network::uri::uri uri;
+uri_wrapper::operator ::network::uri() const {
+  ::network::uri uri;
   request_.get_uri(uri);
   return uri;
 }

@@ -4,6 +4,7 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+include_directories(${CPP-NETLIB_SOURCE_DIR}/include)
 include_directories(${CPP-NETLIB_SOURCE_DIR})
 
 if (OPENSSL_FOUND)
@@ -25,8 +26,17 @@ if (Boost_FOUND)
                 PROPERTIES COMPILE_FLAGS "-Wall")
         endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
+        add_dependencies(cpp-netlib-http-${test}
+            cppnetlib-message
+            cppnetlib-message-wrappers
+            cppnetlib-http-message
+            cppnetlib-http-message-wrappers
+            cppnetlib-uri
+            cppnetlib-constants
+	  )
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
+	    ${CMAKE_THREAD_LIBS_INIT}
             cppnetlib-message
             cppnetlib-message-wrappers
             cppnetlib-http-message
@@ -92,7 +102,7 @@ if (Boost_FOUND)
             cppnetlib-message
             cppnetlib-message-wrappers
             cppnetlib-http-message
-            cppnetlib-http-servers
+            cppnetlib-http-server
             cppnetlib-http-server-parsers
             cppnetlib-utils-thread_pool
             )

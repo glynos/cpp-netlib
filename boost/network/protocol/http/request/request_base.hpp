@@ -12,7 +12,7 @@
 #endif
 
 #include <boost/network/message/message_base.hpp>
-#include <boost/network/uri/uri.hpp>
+#include <network/uri.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -46,10 +46,10 @@ struct request_base : message_base, request_storage_base {
   virtual void set_status_message(std::string const & status_message) = 0;
   virtual void set_body_writer(function<void(char*, size_t)> writer) = 0;
   virtual void set_uri(std::string const &uri) = 0;
-  virtual void set_uri(network::uri::uri const &uri) = 0;
+  virtual void set_uri(::network::uri const &uri) = 0;
 
   // Getters
-  virtual void get_uri(network::uri::uri &uri) const = 0;
+  virtual void get_uri(::network::uri &uri) const = 0;
   virtual void get_uri(std::string &uri) const = 0;
   virtual void get_method(std::string & method) const = 0;
   virtual void get_status(std::string & status) const = 0;
@@ -60,9 +60,9 @@ struct request_base : message_base, request_storage_base {
 };
 
 } /* http */
-  
+
 } /* network */
-  
+
 } /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008 */

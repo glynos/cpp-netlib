@@ -16,7 +16,7 @@ inline void uri(request_base & request, std::string const & value) {
   request.set_uri(value);
 }
 
-inline void uri(request_base & request, uri::uri const & value) {
+inline void uri(request_base & request, ::network::uri const & value) {
   request.set_uri(value);
 }
 

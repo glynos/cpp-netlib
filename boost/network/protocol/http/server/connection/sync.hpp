@@ -73,7 +73,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   }
 
  private:
-  
+
   enum state_t {
       method, uri, version, headers, body
   };
@@ -91,7 +91,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
             new_start, data_end);
           fusion::tie(parsed_ok, result_range) = parser_.parse_until(
             request_parser::method_done, input_range);
-          if (!parsed_ok) { 
+          if (!parsed_ok) {
             client_error();
             break;
           } else if (parsed_ok == true) {
@@ -232,7 +232,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   }
 
   void client_error() {
-      static char const bad_request[] = 
+      static char const bad_request[] =
           "HTTP/1.0 400 Bad Request\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
 
       asio::async_write(
@@ -282,7 +282,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
                 << constants::crlf();
     segmented_write(status_line.str());
     std::ostringstream header_stream;
-    for (decltype(headers)::value_type const &header : headers) {
+    for (auto const &header : headers) {
       header_stream << header.first << constants::colon() << constants::space()
                     << header.second << constants::crlf();
     }

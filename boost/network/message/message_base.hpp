@@ -40,8 +40,4 @@ struct message_base {
 
 } /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/message_base.ipp>
-#endif
-
 #endif /* BOOST_NETWORK_MESSAGE_BASE_HPP_20110910 */

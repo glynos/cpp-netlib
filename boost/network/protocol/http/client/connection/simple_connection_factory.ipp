@@ -14,7 +14,7 @@
 #include <boost/network/protocol/http/client/options.hpp>
 #include <boost/network/detail/debug.hpp>
 #ifdef BOOST_NETWORK_DEBUG
-#include <boost/network/uri/uri_io.hpp> 
+#include <network/uri_io.hpp>
 #endif
 #include <boost/algorithm/string/case_conv.hpp>
 
@@ -35,9 +35,9 @@ struct simple_connection_factory_pimpl {
       request_base const & request,
       client_options const & options) {
     BOOST_NETWORK_MESSAGE("simple_connection_factory_pimpl::create_connection(...)");
-    uri::uri uri_ = http::uri(request);
+    ::network::uri uri_ = http::uri(request);
     BOOST_NETWORK_MESSAGE("destination: " << uri_);
-    bool https = to_lower_copy(scheme(uri_)) == "https";
+    bool https = to_lower_copy(::network::scheme(uri_)) == "https";
     shared_ptr<client_connection> conn_;
     conn_.reset(new (std::nothrow) http_async_connection(
       res_delegate_factory_->create_resolver_delegate(service, options.cache_resolved()),
@@ -83,9 +83,9 @@ simple_connection_factory::~simple_connection_factory() {
 }
 
 } /* http */
-  
+
 } /* network */
-  
+
 } /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SIMPLE_CONNECTION_FACTORY_20111120 */

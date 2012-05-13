@@ -20,6 +20,18 @@ if (OPENSSL_FOUND)
     add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
 endif()
 
+if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+  INCLUDE(CheckCXXCompilerFlag)
+  CHECK_CXX_COMPILER_FLAG(-std=c++0x HAVE_STD0X)
+  CHECK_CXX_COMPILER_FLAG(-std=c++11 HAVE_STD11)
+
+  if (NOT HAVE_STD0X)
+    if (NOT HAVE_STD11)
+      message(FATAL_ERROR "No advanced standard C++ support (-std=c++0x and -std=c++11 not defined).")
+    endif()
+  endif()
+endif()
+
 if (Boost_FOUND)
     if (MSVC)
       add_definitions(-D_SCL_SECURE_NO_WARNINGS)
