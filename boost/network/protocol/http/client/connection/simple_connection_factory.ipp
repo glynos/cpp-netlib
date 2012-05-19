@@ -14,7 +14,7 @@
 #include <boost/network/protocol/http/client/options.hpp>
 #include <boost/network/detail/debug.hpp>
 #ifdef BOOST_NETWORK_DEBUG
-#include <network/uri_io.hpp>
+#include <network/uri/uri_io.hpp>
 #endif
 #include <boost/algorithm/string/case_conv.hpp>
 
