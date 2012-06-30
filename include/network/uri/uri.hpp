@@ -45,11 +45,6 @@ public:
 
     }
 
-    //uri(const value_type *uri)
-    //    : uri_(uri), is_valid_(false) {
-    //    parse();
-    //}
-
     uri(const string_type &uri)
         : uri_(uri), is_valid_(false) {
         parse();
@@ -69,13 +64,15 @@ public:
     }
 
     uri &operator = (const uri &other) {
-        uri(other).swap(*this);
+		uri_ = other.uri_;
+		parse();
         return *this;
     }
 
     uri &operator = (const string_type &uri_string) {
-		uri(uri_string).swap(*this);
-        return *this;
+		uri_ = uri_string;
+		parse();
+		return *this;
     }
 
     ~uri() {

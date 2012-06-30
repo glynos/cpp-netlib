@@ -121,8 +121,8 @@ target_link_libraries(hello_world_client
     cppnetlib-http-client
     cppnetlib-http-client-connections)
 
-target_link_libraries(uri_builder ${OPENSSL_LIBRARIES})
 if (OPENSSL_FOUND)
+  target_link_libraries(uri_builder ${OPENSSL_LIBRARIES})
   #target_link_libraries(http_client ${OPENSSL_LIBRARIES})
   target_link_libraries(simple_wget ${OPENSSL_LIBRARIES})
   target_link_libraries(atom_reader ${OPENSSL_LIBRARIES})
