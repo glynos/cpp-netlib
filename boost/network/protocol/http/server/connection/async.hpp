@@ -29,6 +29,7 @@
 #include <boost/thread/locks.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <list>
 #include <vector>
 #include <iterator>

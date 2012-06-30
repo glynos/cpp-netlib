@@ -23,12 +23,15 @@ add_executable(hello_world_client http/hello_world_client.cpp)
 set(BOOST_CLIENT_LIBS
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${Boost_THREAD_LIBRARY}
+    ${Boost_CHRONO_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
     ${Boost_REGEX_LIBRARY}
+	${Boost_FILESYSTEM_LIBRARY}
     ${Boost_SYSTEM_LIBRARY})
 
 set(BOOST_SERVER_LIBS
     ${Boost_THREAD_LIBRARY}
+    ${Boost_CHRONO_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY})
