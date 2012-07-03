@@ -233,11 +233,11 @@ and that there is an appropriately constructed response object named
     the ``callback`` parameter. The signature of ``callback`` should be the
     following: ``void(iterator_range<char const *> const &,
     boost::system::error_code const &)``.
-``response_ = client_.post(request_, content_type, body)``
+``response_ = client_.post(request_, body, content_type)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers.
-``response_ = client_.post(request_, content_type, body, _body_handler=callback)``
+``response_ = client_.post(request_, body, content_type, _body_handler=callback)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers. Have the response
@@ -263,11 +263,11 @@ and that there is an appropriately constructed response object named
     the ``callback`` parameter. The signature of ``callback`` should be the
     following: ``void(iterator_range<char const *> const &,
     boost::system::error_code const &)``.
-``response_ = client_.put(request_, content_type, body)``
+``response_ = client_.put(request_, body, content_type)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers.
-``response_ = client_.put(request_, content_type, body, _body_handler=callback)``
+``response_ = client_.put(request_, body, content_type, _body_handler=callback)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers. Have the response
