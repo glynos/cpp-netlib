@@ -9,10 +9,9 @@
 
 # include <string>
 # include <vector>
-# include <boost/network/protocol/http.hpp>
+# include <network/http/client.hpp>
 
 
-namespace boost {
 namespace network {
 namespace rss {
 class item {
@@ -107,6 +106,5 @@ private:
 };
 } // namespace rss
 } // namespace network
-} // namespace boost
 
 #endif // ___RSS_INC__

@@ -9,8 +9,6 @@
 #include <stdexcept>
 #include <cassert>
 
-
-namespace boost {
 namespace network {
 namespace atom {
 feed::feed(const http::client::response &response) {
@@ -94,4 +92,3 @@ feed::feed(const http::client::response &response) {
 }
 } // namespace atom
 } // namespace network
-} // namespace boost

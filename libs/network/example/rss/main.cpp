@@ -5,12 +5,13 @@
 
 
 #include "rss.hpp"
-#include <boost/network/protocol/http/client.hpp>
+#include <network/http/client.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
 
 int main(int argc, char * argv[]) {
-    using namespace boost::network;
+    namespace http = network::http;
+	namespace rss = network::rss;
 
     if (argc != 2) {
         std::cout << "Usage: " << argv[0] << " <url>" << std::endl;
@@ -20,7 +21,7 @@ int main(int argc, char * argv[]) {
     try {
         http::client client;
         http::client::request request(argv[1]);
-        request << header("Connection", "close");
+        request << network::header("Connection", "close");
         http::client::response response = client.get(request);
         rss::channel channel(response);
 

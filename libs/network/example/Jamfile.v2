@@ -23,9 +23,6 @@ project network_test :
 
 exe uri : uri.cpp /cpp-netlib//cppnetlib-uri ;
 
-exe http_client : http_client.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
-
-exe http_client1 : http_client1.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
 
 exe simple_wget : simple_wget.cpp /cpp-netlib//cppnetlib-uri /cpp-netlib//cppnetlib-client-connections ;
 

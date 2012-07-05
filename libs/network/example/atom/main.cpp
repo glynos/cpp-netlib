@@ -1,16 +1,17 @@
-//            Copyright (c) Glyn Matthews 2011.
+//            Copyright (c) Glyn Matthews 2011, 2012.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 
 #include "atom.hpp"
-#include <boost/network/protocol/http/client.hpp>
+#include <network/http/client.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
 
 int main(int argc, char * argv[]) {
-    using namespace boost::network;
+    namespace http = network::http;
+	namespace atom = network::atom;
 
     if (argc != 2) {
         std::cout << "Usage: " << argv[0] << " <url>" << std::endl;
@@ -20,7 +21,7 @@ int main(int argc, char * argv[]) {
     try {
         http::client client;
         http::client::request request(argv[1]);
-        request << header("Connection", "close");
+        request << network::header("Connection", "close");
         http::client::response response = client.get(request);
         atom::feed feed(response);
 
