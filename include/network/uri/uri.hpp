@@ -312,29 +312,31 @@ std::size_t hash_value(const uri &uri_)
     return seed;
 }
 
-inline
-bool operator == (const uri &lhs, const uri &rhs) {
-    return boost::equal(lhs, rhs);
-}
+//inline
+//bool operator == (const uri &lhs, const uri &rhs) {
+//    return boost::equal(lhs, rhs);
+//}
+
+bool operator == (const uri &lhs, const uri &rhs);
 
 inline
 bool operator == (const uri &lhs, const uri::string_type &rhs) {
-    return boost::equal(lhs, rhs);
+	return lhs == uri(rhs);
 }
 
 inline
 bool operator == (const uri::string_type &lhs, const uri &rhs) {
-    return boost::equal(lhs, rhs);
+	return uri(lhs) == rhs;
 }
 
 inline
 bool operator == (const uri &lhs, const uri::value_type *rhs) {
-    return boost::equal(lhs, boost::as_literal(rhs));
+	return lhs == uri(rhs);
 }
 
 inline
 bool operator == (const uri::value_type *lhs, const uri &rhs) {
-    return boost::equal(boost::as_literal(lhs), rhs);
+	return uri(lhs) == rhs;
 }
 
 inline

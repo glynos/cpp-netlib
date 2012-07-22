@@ -363,6 +363,12 @@ BOOST_AUTO_TEST_CASE(equality_test_4) {
     BOOST_CHECK(uri_1.c_str() == uri_2);
 }
 
+BOOST_AUTO_TEST_CASE(equality_test_reordered_query) {
+	network::uri uri_1("http://www.example.com/?a=1&b=2");
+	network::uri uri_2("http://www.example.com/?b=2&a=1");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
 BOOST_AUTO_TEST_CASE(inequality_test) {
     network::uri uri_1("http://www.example.com/");
     network::uri uri_2("http://www.example.com/");
@@ -454,6 +460,7 @@ BOOST_AUTO_TEST_CASE(issue_67_test) {
 }
 
 BOOST_AUTO_TEST_CASE(from_parts_1) {
+	std::cout << __FUNCTION__ << std::endl;
     BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path?query#fragment"),
                       network::from_parts(network::uri("http://www.example.com"), "/path", "query", "fragment"));
 }
