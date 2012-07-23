@@ -7,9 +7,8 @@
 #ifndef __BOOST_NETWORK_URI_SCHEMES_INC__
 # define __BOOST_NETWORK_URI_SCHEMES_INC__
 
-
 #include <string>
-
+#include <boost/optional.hpp>
 
 namespace network {
 class hierarchical_schemes {
@@ -27,6 +26,8 @@ public:
     static bool exists(const std::string &scheme);
 
 };
+
+boost::optional<std::string> default_port(const std::string &scheme);
 } // namespace network
 
 

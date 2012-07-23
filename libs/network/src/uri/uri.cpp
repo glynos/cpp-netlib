@@ -6,6 +6,7 @@
 
 #include <network/uri/uri.ipp>
 #include <network/uri/uri.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <map>
 
 #include <iterator>
@@ -13,20 +14,41 @@
 
 namespace network {
 bool operator == (const uri &lhs, const uri &rhs) {
-	bool equal = boost::equal(
-		std::make_pair(std::begin(lhs.scheme_range()), std::begin(lhs.path_range())),
-		std::make_pair(std::begin(rhs.scheme_range()), std::begin(rhs.path_range())));
+	// the scheme can be compared insensitive to case
+	bool equal = boost::iequals(lhs.scheme_range(), rhs.scheme_range());
 	if (equal)
 	{
-		// TODO: test normalized paths
-		equal = boost::equal(lhs.path_range(), rhs.path_range());
+		// the user info must be case sensitive
+		equal = boost::equals(lhs.user_info_range(), rhs.user_info_range());
 	}
 
 	if (equal)
 	{
-		// test query order
+		// the host can be compared insensitive to case
+		equal = boost::iequals(
+			std::make_pair(std::begin(lhs.host_range()), std::end(lhs.host_range())),
+			std::make_pair(std::begin(rhs.host_range()), std::end(rhs.host_range())));
+	}
+
+	if (equal)
+	{
+		// TODO: test default ports according to scheme
+		equal = boost::equals(
+			std::make_pair(std::begin(lhs.port_range()), std::end(lhs.port_range())),
+			std::make_pair(std::begin(rhs.port_range()), std::end(rhs.port_range())));
+	}
+
+	if (equal)
+	{
+		// TODO: test normalized paths
+		equal = boost::iequals(lhs.path_range(), rhs.path_range());
+	}
+
+	if (equal)
+	{
+		// test query, independent of order
 		std::map<uri::string_type, uri::string_type> lhs_query_params, rhs_query_params;
-		equal = (query_map(lhs, lhs_query_params) ==	query_map(rhs, rhs_query_params));
+		equal = (query_map(lhs, lhs_query_params) == query_map(rhs, rhs_query_params));
 	}
 
 	return equal;

@@ -369,6 +369,24 @@ BOOST_AUTO_TEST_CASE(equality_test_reordered_query) {
     BOOST_CHECK(uri_1 == uri_2);
 }
 
+BOOST_AUTO_TEST_CASE(equality_test_capitalized_scheme) {
+	network::uri uri_1("http://www.example.com/");
+	network::uri uri_2("HTTP://www.example.com/");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
+BOOST_AUTO_TEST_CASE(equality_test_capitalized_host) {
+	network::uri uri_1("http://www.example.com/");
+	network::uri uri_2("http://WWW.EXAMPLE.COM/");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
+BOOST_AUTO_TEST_CASE(equality_test_user_info) {
+    network::uri uri_1("ftp://john.doe@ftp.example.com/");
+    network::uri uri_2("ftp://JOHN.DOE@ftp.example.com/");
+    BOOST_CHECK(uri_1 != uri_2);
+}
+
 BOOST_AUTO_TEST_CASE(inequality_test) {
     network::uri uri_1("http://www.example.com/");
     network::uri uri_2("http://www.example.com/");
@@ -460,7 +478,6 @@ BOOST_AUTO_TEST_CASE(issue_67_test) {
 }
 
 BOOST_AUTO_TEST_CASE(from_parts_1) {
-	std::cout << __FUNCTION__ << std::endl;
     BOOST_CHECK_EQUAL(network::uri("http://www.example.com/path?query#fragment"),
                       network::from_parts(network::uri("http://www.example.com"), "/path", "query", "fragment"));
 }
