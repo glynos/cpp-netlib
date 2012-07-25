@@ -16,36 +16,40 @@ namespace network {
 bool operator == (const uri &lhs, const uri &rhs) {
 	// the scheme can be compared insensitive to case
 	bool equal = boost::iequals(lhs.scheme_range(), rhs.scheme_range());
-	if (equal)
-	{
+	if (equal) {
 		// the user info must be case sensitive
 		equal = boost::equals(lhs.user_info_range(), rhs.user_info_range());
 	}
 
-	if (equal)
-	{
+	if (equal)	{
 		// the host can be compared insensitive to case
-		equal = boost::iequals(
-			std::make_pair(std::begin(lhs.host_range()), std::end(lhs.host_range())),
-			std::make_pair(std::begin(rhs.host_range()), std::end(rhs.host_range())));
+		equal = boost::iequals(lhs.host_range(), rhs.host_range());
 	}
 
-	if (equal)
-	{
-		// TODO: test default ports according to scheme
-		equal = boost::equals(
-			std::make_pair(std::begin(lhs.port_range()), std::end(lhs.port_range())),
-			std::make_pair(std::begin(rhs.port_range()), std::end(rhs.port_range())));
+	if (equal) {
+		if (lhs.port_range() && rhs.port_range()) {
+			equal = boost::equals(lhs.port_range(), rhs.port_range());
+		}
+		else if (!lhs.port_range() && rhs.port_range()) {
+			auto port = default_port(lhs.scheme());
+			if (port) {
+				equal = boost::equals(*port, rhs.port_range());
+			}
+		}
+		else if (lhs.port_range() && !rhs.port_range()) {
+			auto port = default_port(rhs.scheme());
+			if (port) {
+				equal = boost::equals(lhs.port_range(), *port);
+			}
+		}
 	}
 
-	if (equal)
-	{
+	if (equal) {
 		// TODO: test normalized paths
 		equal = boost::iequals(lhs.path_range(), rhs.path_range());
 	}
 
-	if (equal)
-	{
+	if (equal) {
 		// test query, independent of order
 		std::map<uri::string_type, uri::string_type> lhs_query_params, rhs_query_params;
 		equal = (query_map(lhs, lhs_query_params) == query_map(rhs, rhs_query_params));

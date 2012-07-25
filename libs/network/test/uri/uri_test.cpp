@@ -387,6 +387,30 @@ BOOST_AUTO_TEST_CASE(equality_test_user_info) {
     BOOST_CHECK(uri_1 != uri_2);
 }
 
+BOOST_AUTO_TEST_CASE(equality_test_default_http_port) {
+	network::uri uri_1("http://www.example.com/");
+	network::uri uri_2("http://www.example.com:80/");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
+BOOST_AUTO_TEST_CASE(equality_test_default_http_port_2) {
+	network::uri uri_1("http://www.example.com:80/");
+	network::uri uri_2("http://www.example.com/");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
+BOOST_AUTO_TEST_CASE(equality_test_default_https_port) {
+	network::uri uri_1("https://www.example.com/");
+	network::uri uri_2("https://www.example.com:443/");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
+BOOST_AUTO_TEST_CASE(equality_test_default_https_port_2) {
+	network::uri uri_1("https://www.example.com:443/");
+	network::uri uri_2("https://www.example.com/");
+    BOOST_CHECK(uri_1 == uri_2);
+}
+
 BOOST_AUTO_TEST_CASE(inequality_test) {
     network::uri uri_1("http://www.example.com/");
     network::uri uri_2("http://www.example.com/");
