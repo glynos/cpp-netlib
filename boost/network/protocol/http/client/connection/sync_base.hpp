@@ -147,14 +147,20 @@ namespace boost { namespace network { namespace http { namespace impl {
                                 throw boost::system::system_error(error);
                         } else {
                             bool stopping_inner = false;
+                            std::istreambuf_iterator<char> eos;
+                            std::istreambuf_iterator<char> stream_iterator0(&response_buffer);
+                            for (; chunk_size > 0 && stream_iterator0 != eos; --chunk_size)
+                                body_stream << *stream_iterator0++;
+
                             do {
-                                std::size_t chunk_bytes_read = read(socket_, response_buffer, boost::asio::transfer_at_least(chunk_size), error);
-                                if (chunk_bytes_read == 0) {
-                                    if (error != boost::asio::error::eof) throw boost::system::system_error(error);
-                                    stopping_inner = true;
+                                if (chunk_size != 0) {
+                                    std::size_t chunk_bytes_read = read(socket_, response_buffer, boost::asio::transfer_at_least(chunk_size), error);
+                                    if (chunk_bytes_read == 0) {
+                                        if (error != boost::asio::error::eof) throw boost::system::system_error(error);
+                                        stopping_inner = true;
+                                    }
                                 }
 
-                                std::istreambuf_iterator<char> eos;
                                 std::istreambuf_iterator<char> stream_iterator(&response_buffer);
                                 for (; chunk_size > 0 && stream_iterator != eos; --chunk_size)
                                     body_stream << *stream_iterator++;
