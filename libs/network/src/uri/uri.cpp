@@ -6,6 +6,7 @@
 
 #include <network/uri/uri.ipp>
 #include <network/uri/uri.hpp>
+#include <network/uri/normalize.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <map>
 
@@ -46,7 +47,7 @@ bool operator == (const uri &lhs, const uri &rhs) {
 
 	if (equal) {
 		// TODO: test normalized paths
-		equal = boost::iequals(lhs.path_range(), rhs.path_range());
+		equal = boost::iequals(normalize_path(lhs.path_range()), normalize_path(rhs.path_range()));
 	}
 
 	if (equal) {

@@ -17,7 +17,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   endif()
 endif()
 
-set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp)
+set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp uri/normalize.cpp)
 add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
 foreach (src_file ${CPP-NETLIB_URI_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
