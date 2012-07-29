@@ -10,11 +10,18 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <map>
 
-#include <iterator>
-#include <iostream>
-
 namespace network {
 bool operator == (const uri &lhs, const uri &rhs) {
+
+	// if both URIs are empty, then we should define them as equal even though they're still invalid.
+	if (boost::empty(lhs) && boost::empty(rhs)) {
+		return true;
+	}
+
+	if (!valid(lhs) || !valid(rhs)) {
+		return false;
+	}
+
 	// the scheme can be compared insensitive to case
 	bool equal = boost::iequals(lhs.scheme_range(), rhs.scheme_range());
 	if (equal) {
@@ -46,7 +53,7 @@ bool operator == (const uri &lhs, const uri &rhs) {
 	}
 
 	if (equal) {
-		// TODO: test normalized paths
+		// test normalized paths
 		equal = boost::iequals(normalize_path(lhs.path_range()), normalize_path(rhs.path_range()));
 	}
 

@@ -30,7 +30,7 @@ uri::string_type normalize_path(const uri::const_range_type &path) {
 
 	// remove single dot segments
 	remove_erase_if(path_segments, [] (const uri::string_type &s) {
-			return equal(s, as_literal("."));
+			return equal(s, boost::as_literal("."));
 		});
 
 	// remove double dot segments
@@ -38,7 +38,7 @@ uri::string_type normalize_path(const uri::const_range_type &path) {
 	auto depth = 0;
 	for_each(path_segments, [&normalized_segments, &depth] (const uri::string_type &s) {
 			assert(depth >= 0);
-			if (equal(s, as_literal(".."))) {
+			if (equal(s, boost::as_literal(".."))) {
 				normalized_segments.pop_back();
 			}
 			else {
