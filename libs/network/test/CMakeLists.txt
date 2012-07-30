@@ -34,6 +34,7 @@ if (Boost_FOUND)
             cppnetlib-message-directives
             cppnetlib-message-wrappers)
         if (OPENSSL_FOUND)
+			include_directories(${OPENSSL_INCLUDE_DIR})
             target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
         endif()
         set_target_properties(cpp-netlib-${test}

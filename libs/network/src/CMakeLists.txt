@@ -8,6 +8,9 @@
 
 include_directories(${CPP-NETLIB_SOURCE_DIR}/include)
 include_directories(${CPP-NETLIB_SOURCE_DIR})
+if (OPENSSL_FOUND)
+include_directories(${OPENSSL_INCLUDE_DIR})
+endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   if (HAVE_STD11)
