@@ -15,6 +15,7 @@ if (Boost_FOUND)
         uri_builder_stream_test
         uri_encoding_test
         relative_uri_test
+	scheme_tests
         )
     foreach (test ${TESTS})
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)

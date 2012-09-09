@@ -46,11 +46,6 @@ public:
 
     }
 
-    //uri(const value_type *uri)
-    //    : uri_(uri), is_valid_(false) {
-    //    parse();
-    //}
-
     uri(const string_type &uri)
         : uri_(uri), is_valid_(false) {
         parse();
@@ -70,13 +65,15 @@ public:
     }
 
     uri &operator = (const uri &other) {
-        uri(other).swap(*this);
+		uri_ = other.uri_;
+		parse();
         return *this;
     }
 
     uri &operator = (const string_type &uri_string) {
-		uri(uri_string).swap(*this);
-        return *this;
+		uri_ = uri_string;
+		parse();
+		return *this;
     }
 
     ~uri() {
@@ -316,29 +313,31 @@ std::size_t hash_value(const uri &uri_)
     return seed;
 }
 
-inline
-bool operator == (const uri &lhs, const uri &rhs) {
-    return boost::equal(lhs, rhs);
-}
+//inline
+//bool operator == (const uri &lhs, const uri &rhs) {
+//    return boost::equal(lhs, rhs);
+//}
+
+bool operator == (const uri &lhs, const uri &rhs);
 
 inline
 bool operator == (const uri &lhs, const uri::string_type &rhs) {
-    return boost::equal(lhs, rhs);
+	return lhs == uri(rhs);
 }
 
 inline
 bool operator == (const uri::string_type &lhs, const uri &rhs) {
-    return boost::equal(lhs, rhs);
+	return uri(lhs) == rhs;
 }
 
 inline
 bool operator == (const uri &lhs, const uri::value_type *rhs) {
-    return boost::equal(lhs, boost::as_literal(rhs));
+	return lhs == uri(rhs);
 }
 
 inline
 bool operator == (const uri::value_type *lhs, const uri &rhs) {
-    return boost::equal(boost::as_literal(lhs), rhs);
+	return uri(lhs) == rhs;
 }
 
 inline

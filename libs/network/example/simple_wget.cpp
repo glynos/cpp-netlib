@@ -15,14 +15,14 @@
 */
 
 
-#include <network/protocol/http/client.hpp>
+#include <network/http/client.hpp>
 #include <network/uri.hpp>
 #include <string>
 #include <fstream>
 #include <iostream>
 
 
-namespace http = boost::network::http;
+namespace http = network::http;
 
 
 namespace {

@@ -152,9 +152,8 @@ namespace boost { namespace network { namespace http {
           boost::copy(crlf, oi);
         }
         boost::copy(crlf, oi);
-        boost::iterator_range<std::string::const_iterator> body_data =
-          boost::network::body(request);
-        return boost::copy(body_data, oi);
+        auto body_data = boost::network::body(request);
+        return std::copy(body_data.begin(), body_data.end(), oi);
     }
     
 } /* http */

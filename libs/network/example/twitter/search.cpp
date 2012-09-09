@@ -5,7 +5,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <network/uri/uri.hpp>
-#include <network/protocol/http/client.hpp>
+#include <network/http/client.hpp>
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/document.h"
 #include <iostream>
@@ -15,7 +15,7 @@
 // https://dev.twitter.com/docs/using-search
 
 int main(int argc, char *argv[]) {
-    namespace http = boost::network::http;
+    namespace http = network::http;
     using namespace rapidjson;
 
     if (argc != 2) {

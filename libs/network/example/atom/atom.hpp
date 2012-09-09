@@ -10,10 +10,9 @@
 
 # include <string>
 # include <vector>
-# include <network/protocol/http.hpp>
+# include <network/http/client.hpp>
 
 
-namespace boost {
 namespace network {
 namespace atom {
 class entry {
@@ -173,6 +172,5 @@ private:
 };
 } // namespace atom
 } // namespace network
-} // namespace boost
 
 #endif // ___ATOM_INC__

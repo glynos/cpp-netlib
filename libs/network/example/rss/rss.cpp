@@ -10,8 +10,6 @@
 #include <stdexcept>
 #include <cassert>
 
-
-namespace boost {
 namespace network {
 namespace rss {
 channel::channel(const http::client::response &response) {
@@ -73,4 +71,3 @@ channel::channel(const http::client::response &response) {
 }
 } // namespace rss
 } // namespace network
-} // namespace boost

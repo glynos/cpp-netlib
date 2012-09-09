@@ -8,6 +8,9 @@
 
 include_directories(${CPP-NETLIB_SOURCE_DIR}/include)
 include_directories(${CPP-NETLIB_SOURCE_DIR})
+if (OPENSSL_FOUND)
+include_directories(${OPENSSL_INCLUDE_DIR})
+endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   if (HAVE_STD11)
@@ -17,7 +20,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   endif()
 endif()
 
-set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp)
+set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp uri/normalize.cpp)
 add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
 foreach (src_file ${CPP-NETLIB_URI_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)

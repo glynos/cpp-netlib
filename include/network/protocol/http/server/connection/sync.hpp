@@ -282,7 +282,10 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
                 << constants::crlf();
     segmented_write(status_line.str());
     std::ostringstream header_stream;
-    for (auto const &header : headers) {
+	auto it = std::begin(headers), end = std::end(headers);
+	for (; it != end; ++it) {
+		const auto &header = *it;
+    //for (auto const &header : headers) {
       header_stream << header.first << constants::colon() << constants::space()
                     << header.second << constants::crlf();
     }
@@ -293,7 +296,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
       buffer_type buffer;
       response_.get_body([&done, &buffer](iterator_range<char const *> data) {
         if (boost::empty(data)) done = true;
-        else std::copy(begin(data), end(data), buffer.begin());
+        else std::copy(std::begin(data), std::end(data), buffer.begin());
       }, buffer.size());
       if (!done) output_buffers_.emplace_back(std::move(buffer));
     }
