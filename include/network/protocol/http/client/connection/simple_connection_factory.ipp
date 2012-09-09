@@ -7,18 +7,18 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/client/connection/simple_connection_factory.hpp>
-#include <boost/network/protocol/http/client/connection/resolver_delegate_factory.hpp>
-#include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
-#include <boost/network/protocol/http/client/connection/async_normal.hpp>
-#include <boost/network/protocol/http/client/options.hpp>
-#include <boost/network/detail/debug.hpp>
+#include <network/protocol/http/client/connection/simple_connection_factory.hpp>
+#include <network/protocol/http/client/connection/resolver_delegate_factory.hpp>
+#include <network/protocol/http/client/connection/connection_delegate_factory.hpp>
+#include <network/protocol/http/client/connection/async_normal.hpp>
+#include <network/protocol/http/client/options.hpp>
+#include <network/detail/debug.hpp>
 #ifdef BOOST_NETWORK_DEBUG
 #include <network/uri/uri_io.hpp>
 #endif
 #include <boost/algorithm/string/case_conv.hpp>
 
-#include <boost/network/protocol/http/message/wrappers/uri.hpp>
+#include <network/protocol/http/message/wrappers/uri.hpp>
 
 namespace boost { namespace network { namespace http {
 

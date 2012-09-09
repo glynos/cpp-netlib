@@ -11,8 +11,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/thread/mutex.hpp>
-#include <boost/network/protocol/http/server/options.hpp>
-#include <boost/network/protocol/http/server/impl/socket_options_setter.hpp>
+#include <network/protocol/http/server/options.hpp>
+#include <network/protocol/http/server/impl/socket_options_setter.hpp>
 
 namespace boost { namespace network { namespace utils {
 

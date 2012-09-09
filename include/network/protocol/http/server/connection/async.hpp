@@ -9,9 +9,9 @@
 
 #include <boost/throw_exception.hpp>
 #include <boost/scope_exit.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/algorithms/linearize.hpp>
-#include <boost/network/utils/thread_pool.hpp>
+#include <network/protocol/http/request.hpp>
+#include <network/protocol/http/algorithms/linearize.hpp>
+#include <network/utils/thread_pool.hpp>
 #include <boost/range/adaptor/sliced.hpp>
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/range/algorithm/copy.hpp>
@@ -22,7 +22,7 @@
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/network/protocol/http/server/request_parser.hpp>
+#include <network/protocol/http/server/request_parser.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility/typed_in_place_factory.hpp>
@@ -33,9 +33,9 @@
 #include <vector>
 #include <iterator>
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/server/impl/parsers.ipp>
+#include <network/protocol/http/server/impl/parsers.ipp>
 #endif
-#include <boost/network/constants.hpp>
+#include <network/constants.hpp>
 
 #ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE
 /** Here we define a page's worth of header connection buffer data.

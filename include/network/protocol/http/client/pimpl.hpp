@@ -11,8 +11,8 @@
 #include <boost/mpl/if.hpp>
 #include <boost/static_assert.hpp>
 
-#include <boost/network/protocol/http/client/async_impl.hpp>
-#include <boost/network/protocol/http/client/sync_impl.hpp>
+#include <network/protocol/http/client/async_impl.hpp>
+#include <network/protocol/http/client/sync_impl.hpp>
 
 namespace boost { namespace network { namespace http {
 

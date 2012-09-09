@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/message/message_base.hpp>
+#include <network/message/message_base.hpp>
 
 namespace boost { namespace network {
 
@@ -33,7 +33,7 @@ inline std::ostream & operator<< (std::ostream &os, destination_wrapper const &d
 } // namespace boost
 
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/message/wrappers/destination.ipp>
+#include <network/message/wrappers/destination.ipp>
 #endif
 
 #endif // __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__

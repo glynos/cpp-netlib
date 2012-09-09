@@ -11,10 +11,10 @@
  *
  * Pulls in all the transformers files.
  */
-#include <boost/network/message/transformers/selectors.hpp>
-#include <boost/network/message/transformers/to_upper.hpp>
-#include <boost/network/message/transformers/to_lower.hpp>
-#include <boost/network/message/message_base.hpp>
+#include <network/message/transformers/selectors.hpp>
+#include <network/message/transformers/to_upper.hpp>
+#include <network/message/transformers/to_lower.hpp>
+#include <network/message/message_base.hpp>
 #include <boost/type_traits.hpp>
 
 namespace boost { namespace network {

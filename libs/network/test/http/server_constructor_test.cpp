@@ -6,7 +6,7 @@
 
 #define BOOST_TEST_MODULE HTTP Server Construtor Tests
 
-#include <boost/network/include/http/server.hpp>
+#include <network/include/http/server.hpp>
 #include <boost/test/unit_test.hpp>
 
 namespace http = boost::network::http;

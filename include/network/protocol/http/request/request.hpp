@@ -7,10 +7,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/request/request_base.hpp>
+#include <network/protocol/http/request/request_base.hpp>
 #include <network/uri.hpp>
-#include <boost/network/protocol/http/message/directives/major_version.hpp>
-#include <boost/network/protocol/http/message/directives/minor_version.hpp>
+#include <network/protocol/http/message/directives/major_version.hpp>
+#include <network/protocol/http/message/directives/minor_version.hpp>
 #include <boost/scoped_ptr.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -99,11 +99,11 @@ inline bool operator!=(request const &l, request const &r) {
 
 } // namespace boost
 
-#include <boost/network/message/modifiers.hpp>
-#include <boost/network/message/wrappers.hpp>
-#include <boost/network/message/directives.hpp>
-#include <boost/network/protocol/http/message/directives.hpp>
-#include <boost/network/protocol/http/message/modifiers.hpp>
-#include <boost/network/protocol/http/message/wrappers.hpp>
+#include <network/message/modifiers.hpp>
+#include <network/message/wrappers.hpp>
+#include <network/message/directives.hpp>
+#include <network/protocol/http/message/directives.hpp>
+#include <network/protocol/http/message/modifiers.hpp>
+#include <network/protocol/http/message/wrappers.hpp>
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021 */

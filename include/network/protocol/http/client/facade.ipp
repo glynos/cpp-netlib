@@ -1,8 +1,8 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_FACADE_IPP_20120303
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_FACADE_IPP_20120303
 
-#include <boost/network/protocol/http/client/facade.hpp>
-#include <boost/network/detail/debug.hpp>
+#include <network/protocol/http/client/facade.hpp>
+#include <network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 

@@ -11,7 +11,7 @@
   to the `hello_world_server`, then the output is simply "Hello,
   World!".
  */
-#include <boost/network/protocol/http/client.hpp>
+#include <network/protocol/http/client.hpp>
 #include <iostream>
 
 

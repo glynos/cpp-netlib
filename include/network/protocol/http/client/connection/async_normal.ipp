@@ -8,15 +8,15 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/asio/placeholders.hpp>
-#include <boost/network/protocol/http/client/connection/async_normal.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/response.hpp>
-#include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
-#include <boost/network/protocol/http/client/connection/resolver_delegate.hpp>
-#include <boost/network/protocol/http/algorithms/linearize.hpp>
-#include <boost/network/protocol/http/impl/access.hpp>
+#include <network/protocol/http/client/connection/async_normal.hpp>
+#include <network/protocol/http/request.hpp>
+#include <network/protocol/http/response.hpp>
+#include <network/protocol/http/client/connection/connection_delegate.hpp>
+#include <network/protocol/http/client/connection/resolver_delegate.hpp>
+#include <network/protocol/http/algorithms/linearize.hpp>
+#include <network/protocol/http/impl/access.hpp>
 #include <boost/asio/strand.hpp>
-#include <boost/network/detail/debug.hpp>
+#include <network/detail/debug.hpp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
 #include <boost/asio/ssl/error.hpp>
 #endif

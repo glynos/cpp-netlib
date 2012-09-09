@@ -7,7 +7,7 @@
 #define BOOST_TEST_MODULE utils thread pool test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/utils/thread_pool.hpp>
+#include <network/utils/thread_pool.hpp>
 #include <boost/bind.hpp>
 
 using namespace boost::network;

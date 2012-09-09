@@ -8,7 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/throw_exception.hpp>
-#include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
+#include <network/protocol/http/client/connection/connection_delegate.hpp>
 
 namespace boost { namespace network { namespace http {
 

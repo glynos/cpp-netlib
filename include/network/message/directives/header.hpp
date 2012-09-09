@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/message/message_base.hpp>
+#include <network/message/message_base.hpp>
 
 namespace boost { namespace network {
 
@@ -32,7 +32,7 @@ header(std::string const & header_name, std::string const & header_value) {
 } // namespace boost
 
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/message/directives/header.ipp>
+#include <network/message/directives/header.ipp>
 #endif
 
 #endif // __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__

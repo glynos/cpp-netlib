@@ -8,4 +8,4 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/protocol/http/client/connection/connection_delegate_factory.ipp>
+#include <network/protocol/http/client/connection/connection_delegate_factory.ipp>

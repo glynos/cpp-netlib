@@ -4,7 +4,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include <boost/network/protocol/http/client.hpp>
+#include <network/protocol/http/client.hpp>
 #include <iostream>
 
 int main(int argc, char * argv[]) {

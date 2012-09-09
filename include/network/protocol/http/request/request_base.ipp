@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/request/request_base.hpp>
+#include <network/protocol/http/request/request_base.hpp>
 #include <boost/thread/mutex.hpp>
 #include <cstring>
 

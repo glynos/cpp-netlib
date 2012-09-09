@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/include/http/server.hpp>
+#include <network/include/http/server.hpp>
 #include <boost/thread.hpp>
 #include <boost/lexical_cast.hpp>
 #include <sys/mman.h>

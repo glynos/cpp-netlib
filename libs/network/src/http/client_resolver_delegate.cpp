@@ -8,4 +8,4 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/protocol/http/client/connection/resolver_delegate.ipp>
+#include <network/protocol/http/client/connection/resolver_delegate.ipp>

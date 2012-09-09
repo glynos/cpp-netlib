@@ -12,8 +12,8 @@
 #include <boost/asio/write.hpp>
 #include <boost/function.hpp>
 #include <boost/asio/buffer.hpp>
-#include <boost/network/protocol/http/client/connection/normal_delegate.hpp>
-#include <boost/network/detail/debug.hpp>
+#include <network/protocol/http/client/connection/normal_delegate.hpp>
+#include <network/detail/debug.hpp>
 
 boost::network::http::normal_delegate::normal_delegate(asio::io_service & service)
   : service_(service)

@@ -21,7 +21,7 @@
 #include <boost/fusion/tuple.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <boost/network/protocol/http/client/connection/async_resolver.hpp>
+#include <network/protocol/http/client/connection/async_resolver.hpp>
 
 namespace boost { namespace network { namespace http {
 struct async_resolver_pimpl : enable_shared_from_this<async_resolver_pimpl> {

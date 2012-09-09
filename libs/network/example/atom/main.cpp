@@ -5,7 +5,7 @@
 
 
 #include "atom.hpp"
-#include <boost/network/protocol/http/client.hpp>
+#include <network/protocol/http/client.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
 

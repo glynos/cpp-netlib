@@ -8,9 +8,9 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/protocol/http/response/response_base.ipp>
-#include <boost/network/protocol/http/response/response.ipp>
+#include <network/protocol/http/response/response_base.ipp>
+#include <network/protocol/http/response/response.ipp>
 
-#include <boost/network/protocol/http/message/wrappers/status.ipp>
-#include <boost/network/protocol/http/message/wrappers/status_message.ipp>
-#include <boost/network/protocol/http/message/wrappers/version.ipp>
+#include <network/protocol/http/message/wrappers/status.ipp>
+#include <network/protocol/http/message/wrappers/status_message.ipp>
+#include <network/protocol/http/message/wrappers/version.ipp>

@@ -10,9 +10,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/concept_check.hpp>
-#include <boost/network/message/wrappers.hpp>
-#include <boost/network/message/transformers.hpp>
-#include <boost/network/message/directives.hpp>
+#include <network/message/wrappers.hpp>
+#include <network/message/transformers.hpp>
+#include <network/message/directives.hpp>
 #include <map>
 
 namespace boost { namespace network {

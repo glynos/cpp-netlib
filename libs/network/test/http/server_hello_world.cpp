@@ -7,7 +7,7 @@
 
 #include <cstdlib>
 #include <boost/config/warning_disable.hpp>
-#include <boost/network/protocol/http/server.hpp>
+#include <network/protocol/http/server.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/lexical_cast.hpp>
 #include <string>

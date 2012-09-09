@@ -11,8 +11,8 @@
 // Author: Dean Michael Berris
 // Date: May 20, 2007
 
-#include <boost/network/message.hpp> // message type implementation
-#include <boost/network/protocol.hpp> // protocols implementation
+#include <network/message.hpp> // message type implementation
+#include <network/protocol.hpp> // protocols implementation
 
 #endif // __NETWORK_HPP__
 

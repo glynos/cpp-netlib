@@ -1,7 +1,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ACCESS_IPP_20111202
 #define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ACCESS_IPP_20111202
 
-#include <boost/network/protocol/http/request.hpp>
+#include <network/protocol/http/request.hpp>
 
 namespace boost { namespace network { namespace http { namespace impl {
 

@@ -8,7 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/concept_check.hpp>
-#include <boost/network/message/message_concept.hpp>
+#include <network/message/message_concept.hpp>
 #include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace http {

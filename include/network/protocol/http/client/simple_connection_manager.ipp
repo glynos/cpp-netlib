@@ -7,10 +7,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/client/simple_connection_manager.hpp>
-#include <boost/network/protocol/http/client/connection/simple_connection_factory.hpp>
-#include <boost/network/protocol/http/client/options.hpp>
-#include <boost/network/detail/debug.hpp>
+#include <network/protocol/http/client/simple_connection_manager.hpp>
+#include <network/protocol/http/client/connection/simple_connection_factory.hpp>
+#include <network/protocol/http/client/options.hpp>
+#include <network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 

@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_TEST_MODULE HTTP 1.0 Get Test
-#include <boost/network/include/http/client.hpp>
+#include <network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
 
 namespace net = boost::network;

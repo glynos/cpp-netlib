@@ -7,9 +7,9 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_IPP
 
-#include <boost/network/protocol/http/client/options.hpp>
-#include <boost/network/protocol/http/client/simple_connection_manager.hpp>
-#include <boost/network/protocol/http/client/connection/simple_connection_factory.hpp>
+#include <network/protocol/http/client/options.hpp>
+#include <network/protocol/http/client/simple_connection_manager.hpp>
+#include <network/protocol/http/client/connection/simple_connection_factory.hpp>
 
 namespace boost { namespace network { namespace http {
 

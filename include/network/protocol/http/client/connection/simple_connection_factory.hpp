@@ -9,9 +9,9 @@
 
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/network/protocol/http/client/connection/connection_factory.hpp>
-#include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
-#include <boost/network/protocol/http/client/connection/resolver_delegate_factory.hpp>
+#include <network/protocol/http/client/connection/connection_factory.hpp>
+#include <network/protocol/http/client/connection/connection_delegate_factory.hpp>
+#include <network/protocol/http/client/connection/resolver_delegate_factory.hpp>
 
 namespace boost { namespace network { namespace http {
 

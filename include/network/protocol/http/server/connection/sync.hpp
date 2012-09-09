@@ -15,10 +15,10 @@
 #include <utility>
 #include <iterator>
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/network/constants.hpp>
-#include <boost/network/protocol/http/server/request_parser.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/response.hpp>
+#include <network/constants.hpp>
+#include <network/protocol/http/server/request_parser.hpp>
+#include <network/protocol/http/request.hpp>
+#include <network/protocol/http/response.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/write.hpp>

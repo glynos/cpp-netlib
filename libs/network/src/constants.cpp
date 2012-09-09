@@ -8,4 +8,4 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/constants.ipp>
+#include <network/constants.ipp>

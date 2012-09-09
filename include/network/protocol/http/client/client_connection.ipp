@@ -7,9 +7,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/client/client_connection.hpp>
+#include <network/protocol/http/client/client_connection.hpp>
 #include <boost/assert.hpp>
-#include <boost/network/detail/debug.hpp>
+#include <network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 

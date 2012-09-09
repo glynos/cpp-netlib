@@ -14,8 +14,8 @@
 // these two files, and instantiating a client.  It's described at
 // http://github.com/cpp-netlib/cpp-netlib/issues#issue/13
 //
-# include <boost/network/protocol/http/client.hpp>
-# include <boost/network/protocol/http/server.hpp>
+# include <network/protocol/http/client.hpp>
+# include <network/protocol/http/server.hpp>
 
 
 BOOST_AUTO_TEST_CASE(test1) {

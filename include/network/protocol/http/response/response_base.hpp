@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/message/message_base.hpp>
+#include <network/message/message_base.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -28,7 +28,7 @@ struct response_base : message_base {
 } /* boost */
 
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/response/response_base.ipp>
+#include <network/protocol/http/response/response_base.ipp>
 #endif
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_BASE_HPP_20110930 */

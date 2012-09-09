@@ -11,5 +11,5 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/message/directives/header.ipp>
-#include <boost/network/message/directives/remove_header.ipp>
+#include <network/message/directives/header.ipp>
+#include <network/message/directives/remove_header.ipp>

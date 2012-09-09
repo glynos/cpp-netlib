@@ -15,7 +15,7 @@
 #ifndef BOOST_NETWORK_HTTP_REQUEST_PARSER_IPP
 #define BOOST_NETWORK_HTTP_REQUEST_PARSER_IPP
 
-#include <boost/network/protocol/http/request.hpp>
+#include <network/protocol/http/request.hpp>
 
 namespace boost { namespace network { namespace http {
 

@@ -7,14 +7,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/version.hpp>
-#include <boost/network/protocol/http/client/options.hpp>
+#include <network/version.hpp>
+#include <network/protocol/http/client/options.hpp>
 
 #include <boost/asio/io_service.hpp>
-#include <boost/network/protocol/http/client/facade.hpp>
-#include <boost/network/protocol/http/client/macros.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/response.hpp>
+#include <network/protocol/http/client/facade.hpp>
+#include <network/protocol/http/client/macros.hpp>
+#include <network/protocol/http/request.hpp>
+#include <network/protocol/http/response.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -46,7 +46,7 @@ struct client : basic_client_facade {
 } // namespace boost
 
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client.ipp>
+#include <network/protocol/http/client.ipp>
 #endif
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_20091215

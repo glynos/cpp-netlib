@@ -7,13 +7,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/server/async_impl.hpp>
-#include <boost/network/protocol/http/server/connection/async.hpp>
+#include <network/protocol/http/server/async_impl.hpp>
+#include <network/protocol/http/server/connection/async.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/bind.hpp>
-#include <boost/network/detail/debug.hpp>
+#include <network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 

@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
+#include <network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/scoped_ptr.hpp>
 
 namespace boost { namespace asio {

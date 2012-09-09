@@ -8,17 +8,17 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 #define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 
-#include <boost/network/detail/debug.hpp>
+#include <network/detail/debug.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/network/protocol/http/response.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/server/sync_connection.hpp>
-#include <boost/network/protocol/http/server/parameters.hpp>
-#include <boost/network/protocol/http/server/storage_base.hpp>
-#include <boost/network/protocol/http/server/socket_options_base.hpp>
-#include <boost/network/traits/string.hpp>
+#include <network/protocol/http/response.hpp>
+#include <network/protocol/http/request.hpp>
+#include <network/protocol/http/server/sync_connection.hpp>
+#include <network/protocol/http/server/parameters.hpp>
+#include <network/protocol/http/server/storage_base.hpp>
+#include <network/protocol/http/server/socket_options_base.hpp>
+#include <network/traits/string.hpp>
 #include <boost/thread/mutex.hpp>
 
 namespace boost { namespace network { namespace http {

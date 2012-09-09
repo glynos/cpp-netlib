@@ -10,7 +10,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_IPP
 
-#include <boost/network/protocol/http/message.hpp>
+#include <network/protocol/http/message.hpp>
 #include <boost/lexical_cast.hpp>
 #include <cstdlib>
 #include <cstdio>

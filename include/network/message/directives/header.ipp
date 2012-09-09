@@ -8,7 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <string>
-#include <boost/network/message/directives/header.hpp>
+#include <network/message/directives/header.hpp>
 
 namespace boost { namespace network { namespace impl {
 

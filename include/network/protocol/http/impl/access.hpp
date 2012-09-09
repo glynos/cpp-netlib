@@ -34,7 +34,7 @@ struct setter_access {
 }  // namespace boost
 
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/impl/access.ipp>
+#include <network/protocol/http/impl/access.ipp>
 #endif
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ACCESS_HPP_20111202

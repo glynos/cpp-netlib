@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/message/wrappers/source.hpp>
+#include <network/message/wrappers/source.hpp>
 
 namespace boost { namespace network {
 

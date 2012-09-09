@@ -9,7 +9,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/version.hpp>
+#include <network/version.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/cstdint.hpp>
@@ -18,7 +18,7 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/network/protocol/http/client/connection/resolver_delegate.hpp>
+#include <network/protocol/http/client/connection/resolver_delegate.hpp>
 #include <boost/unordered_map.hpp>
 
 namespace boost { namespace network { namespace http {

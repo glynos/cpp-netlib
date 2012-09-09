@@ -11,7 +11,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <boost/network/protocol/http/client/client_connection.hpp>
+#include <network/protocol/http/client/client_connection.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 namespace boost { namespace asio {

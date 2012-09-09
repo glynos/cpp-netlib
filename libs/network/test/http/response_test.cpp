@@ -5,7 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_TEST_MODULE HTTP Client Response Test
-#include <boost/network/protocol/http/response.hpp>
+#include <network/protocol/http/response.hpp>
 #include <boost/test/unit_test.hpp>
 
 namespace http = boost::network::http;

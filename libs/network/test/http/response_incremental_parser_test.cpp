@@ -7,7 +7,7 @@
 #define BOOST_TEST_MODULE HTTP Incremental Parser Test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/protocol/http/parser/incremental.hpp>
+#include <network/protocol/http/parser/incremental.hpp>
 #include <boost/range.hpp>
 #include <boost/logic/tribool.hpp>
 #include <string>

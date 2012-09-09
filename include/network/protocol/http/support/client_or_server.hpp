@@ -6,8 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/support/is_server.hpp>
-#include <boost/network/protocol/http/support/is_client.hpp>
+#include <network/protocol/http/support/is_server.hpp>
+#include <network/protocol/http/support/is_client.hpp>
 #include <boost/mpl/if.hpp>
 
 namespace boost { namespace network { namespace http {

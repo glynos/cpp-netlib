@@ -8,8 +8,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/asio/ssl.hpp>
-#include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
-#include <boost/network/protocol/http/client/options.hpp>
+#include <network/protocol/http/client/connection/connection_delegate.hpp>
+#include <network/protocol/http/client/options.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
 namespace boost { namespace asio {

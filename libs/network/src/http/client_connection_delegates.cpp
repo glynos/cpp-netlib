@@ -8,7 +8,7 @@
 #undef BOOST_NETWORK_NO_LIB 
 #endif
 
-#include <boost/network/protocol/http/client/connection/normal_delegate.ipp>
+#include <network/protocol/http/client/connection/normal_delegate.ipp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-#include <boost/network/protocol/http/client/connection/ssl_delegate.ipp>
+#include <network/protocol/http/client/connection/ssl_delegate.ipp>
 #endif

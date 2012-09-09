@@ -6,7 +6,7 @@
 
 #define BOOST_TEST_MODULE HTTP Async Response Test
 #include <boost/test/unit_test.hpp>
-#include <boost/network/include/http/client.hpp>
+#include <network/include/http/client.hpp>
 
 namespace http = boost::network::http;
 

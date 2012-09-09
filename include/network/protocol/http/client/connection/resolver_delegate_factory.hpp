@@ -8,8 +8,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/shared_ptr.hpp>
-#include <boost/network/protocol/http/request/request_base.hpp>
-#include <boost/network/protocol/http/client/connection/resolver_delegate.hpp>
+#include <network/protocol/http/request/request_base.hpp>
+#include <network/protocol/http/client/connection/resolver_delegate.hpp>
 
 namespace boost { namespace network { namespace http {
 

@@ -10,9 +10,9 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_PARSER_HPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_HPP
 
-#include <boost/network/protocol/http/traits.hpp>
-#include <boost/network/traits/string.hpp>
-#include <boost/network/message.hpp>
+#include <network/protocol/http/traits.hpp>
+#include <network/traits/string.hpp>
+#include <network/message.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/noncopyable.hpp>
@@ -309,6 +309,6 @@ namespace boost { namespace network { namespace http {
 }; // namespace boost
 
 // import implementation file
-#include <boost/network/protocol/http/impl/parser.ipp>
+#include <network/protocol/http/impl/parser.ipp>
 
 #endif // BOOST_NETWORK_PROTOCOL_HTTP_PARSER_HPP

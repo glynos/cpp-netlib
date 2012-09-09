@@ -10,7 +10,7 @@
 #include <string>
 #include <map>
 #include <boost/function.hpp>
-#include <boost/network/message/message_base.hpp>
+#include <network/message/message_base.hpp>
 #include <boost/shared_container_iterator.hpp>
 
 namespace boost { namespace network {
@@ -81,7 +81,7 @@ message_base & operator<< (message_base & msg, Directive directive) {
 } /* boost */
 
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/message/message.ipp>
+#include <network/message/message.ipp>
 #endif
 
 #endif /* BOOST_NETWORK_MESSAGE_MESSAGE_HPP_20111021 */

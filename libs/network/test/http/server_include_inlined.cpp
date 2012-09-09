@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <boost/config/warning_disable.hpp>
 #define BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/server.hpp>
+#include <network/protocol/http/server.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/lexical_cast.hpp>

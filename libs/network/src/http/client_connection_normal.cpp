@@ -8,4 +8,4 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/protocol/http/client/connection/async_normal.ipp>
+#include <network/protocol/http/client/connection/async_normal.ipp>

@@ -4,4 +4,4 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/server/impl/socket_options_setter.ipp>
+#include <network/protocol/http/server/impl/socket_options_setter.ipp>

@@ -9,7 +9,7 @@
 
 #include <boost/range/iterator.hpp>
 #include <boost/optional.hpp>
-#include <boost/network/message/message_base.hpp>
+#include <network/message/message_base.hpp>
 
 namespace boost { namespace network {
 
@@ -40,7 +40,7 @@ body(message_base const & message_) {
 } // namespace boost
 
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/message/wrappers/body.ipp>
+#include <network/message/wrappers/body.ipp>
 #endif
 
 #endif // __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__

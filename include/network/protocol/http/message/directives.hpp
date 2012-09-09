@@ -7,10 +7,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/message/directives/method.hpp>
-#include <boost/network/protocol/http/message/directives/status.hpp>
-#include <boost/network/protocol/http/message/directives/status_message.hpp>
-#include <boost/network/protocol/http/message/directives/uri.hpp>
-#include <boost/network/protocol/http/message/directives/version.hpp>
+#include <network/protocol/http/message/directives/method.hpp>
+#include <network/protocol/http/message/directives/status.hpp>
+#include <network/protocol/http/message/directives/status_message.hpp>
+#include <network/protocol/http/message/directives/uri.hpp>
+#include <network/protocol/http/message/directives/version.hpp>
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_HPP_20111201

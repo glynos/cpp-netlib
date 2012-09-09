@@ -14,7 +14,7 @@
 */
 
 
-#include <boost/network/protocol/http/client.hpp>
+#include <network/protocol/http/client.hpp>
 #include <network/uri.hpp>
 #include <string>
 #include <fstream>

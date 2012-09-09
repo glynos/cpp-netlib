@@ -11,9 +11,9 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/asio/io_service.hpp>
-#include <boost/network/protocol/http/client/connection/connection_factory.hpp>
-#include <boost/network/protocol/http/client/connection_manager.hpp>
-#include <boost/network/protocol/http/client/client_connection.hpp>
+#include <network/protocol/http/client/connection/connection_factory.hpp>
+#include <network/protocol/http/client/connection_manager.hpp>
+#include <network/protocol/http/client/client_connection.hpp>
 
 namespace boost { namespace network { namespace http {
   

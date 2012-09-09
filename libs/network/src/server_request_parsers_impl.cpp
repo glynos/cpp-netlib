@@ -7,5 +7,5 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/protocol/http/server/impl/parsers.ipp>
+#include <network/protocol/http/server/impl/parsers.ipp>
 

@@ -16,7 +16,7 @@
 
 #include <boost/asio/buffer.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/network/protocol/http/message/header.hpp>
+#include <network/protocol/http/message/header.hpp>
 
 namespace boost { namespace network { namespace http {
     

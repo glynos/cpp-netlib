@@ -6,19 +6,19 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/network/traits/ostringstream.hpp>
-#include <boost/network/traits/istringstream.hpp>
+#include <network/protocol/http/traits/resolver_policy.hpp>
+#include <network/traits/ostringstream.hpp>
+#include <network/traits/istringstream.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <boost/asio/read.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/asio/read_until.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/network/protocol/http/response.hpp>
+#include <network/protocol/http/response.hpp>
 
-#include <boost/network/protocol/http/client/connection/sync_normal.hpp>
+#include <network/protocol/http/client/connection/sync_normal.hpp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-#include <boost/network/protocol/http/client/connection/sync_ssl.hpp>
+#include <network/protocol/http/client/connection/sync_ssl.hpp>
 #endif
 
 namespace boost { namespace network { namespace http { namespace impl {

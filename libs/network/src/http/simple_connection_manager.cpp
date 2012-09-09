@@ -8,4 +8,4 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/protocol/http/client/simple_connection_manager.ipp>
+#include <network/protocol/http/client/simple_connection_manager.ipp>

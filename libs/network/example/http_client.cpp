@@ -10,7 +10,7 @@
   the resource to the console.
 */
 #include <boost/program_options.hpp>
-#include <boost/network/protocol/http.hpp>
+#include <network/protocol/http.hpp>
 #include <string>
 #include <utility>
 #include <iostream>

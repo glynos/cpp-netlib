@@ -8,7 +8,7 @@
 #define __NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__
 
 #include <boost/algorithm/string.hpp>
-#include <boost/network/message/message_base.hpp>
+#include <network/message/message_base.hpp>
 
 /** to_lower.hpp
  *

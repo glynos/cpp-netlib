@@ -7,9 +7,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/server/options.hpp>
-#include <boost/network/protocol/http/server/sync_impl.hpp>
-#include <boost/network/protocol/http/server/async_impl.hpp>
+#include <network/protocol/http/server/options.hpp>
+#include <network/protocol/http/server/sync_impl.hpp>
+#include <network/protocol/http/server/async_impl.hpp>
 
 namespace boost { namespace network { namespace http {
 

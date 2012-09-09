@@ -8,8 +8,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/scoped_ptr.hpp>
-#include <boost/network/protocol/http/client/connection_manager.hpp>
-#include <boost/network/protocol/http/client/connection/connection_factory.hpp>
+#include <network/protocol/http/client/connection_manager.hpp>
+#include <network/protocol/http/client/connection/connection_factory.hpp>
 
 namespace boost { namespace network { namespace http {
 

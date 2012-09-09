@@ -16,7 +16,7 @@
 //FIXME move this out to a trait
 #include <set>
 #include <boost/foreach.hpp>
-#include <boost/network/detail/wrapper_base.hpp>
+#include <network/detail/wrapper_base.hpp>
 
 namespace boost { namespace network { namespace http {
 

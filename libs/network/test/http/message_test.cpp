@@ -7,8 +7,8 @@
 #define BOOST_TEST_MODULE HTTP message test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/protocol/http/response.hpp>
-#include <boost/network/protocol/http/request.hpp>
+#include <network/protocol/http/response.hpp>
+#include <network/protocol/http/request.hpp>
 #include <boost/mpl/list.hpp>
 #include <algorithm>
 

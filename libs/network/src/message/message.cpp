@@ -11,5 +11,5 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/message/message.ipp>
-#include <boost/network/message/message_base.ipp>
+#include <network/message/message.ipp>
+#include <network/message/message_base.ipp>

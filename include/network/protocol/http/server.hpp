@@ -74,7 +74,7 @@ class async_server {
 
 // We're hiding the implementation from here, but still explicitly including
 // it here. This is mostly a style point, to keep this header clean.
-#include <boost/network/protocol/http/server/server.ipp>
+#include <network/protocol/http/server/server.ipp>
 
 #endif // BOOST_NETWORK_HTTP_SERVER_HPP_
 

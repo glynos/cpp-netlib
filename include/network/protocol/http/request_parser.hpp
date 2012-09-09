@@ -18,7 +18,7 @@
 
 #include <boost/logic/tribool.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/network/protocol/http/request.hpp>
+#include <network/protocol/http/request.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -103,6 +103,6 @@ private:
 
 } // namespace boost
 
-#include <boost/network/protocol/http/impl/request_parser.ipp>
+#include <network/protocol/http/impl/request_parser.ipp>
 
 #endif // HTTP_SERVER3_REQUEST_PARSER_HPP

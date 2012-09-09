@@ -40,7 +40,7 @@ struct connection_manager {
 } /* boost */
 
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection_manager.ipp>
+#include <network/protocol/http/client/connection_manager.ipp>
 #endif
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_MANAGER_HPP_20110930 */

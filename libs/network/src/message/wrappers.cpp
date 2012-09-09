@@ -7,7 +7,7 @@
 // This file conglomerates all the standard wrappers that come with cpp-netlib.
 // It just includes all the implementation files that get turned into a library.
 
-#include <boost/network/message/wrappers/body.ipp>
-#include <boost/network/message/wrappers/destination.ipp>
-#include <boost/network/message/wrappers/headers.ipp>
-#include <boost/network/message/wrappers/source.ipp>
+#include <network/message/wrappers/body.ipp>
+#include <network/message/wrappers/destination.ipp>
+#include <network/message/wrappers/headers.ipp>
+#include <network/message/wrappers/source.ipp>

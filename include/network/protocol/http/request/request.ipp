@@ -7,8 +7,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/request/request.hpp>
-#include <boost/network/protocol/http/request/request_concept.hpp>
+#include <network/protocol/http/request/request.hpp>
+#include <network/protocol/http/request/request_concept.hpp>
 #include <boost/scoped_array.hpp>
 
 #ifdef BOOST_NETWORK_DEBUG

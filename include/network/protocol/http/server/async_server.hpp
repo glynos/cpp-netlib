@@ -6,12 +6,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/detail/debug.hpp>
-#include <boost/network/protocol/http/server/async_connection.hpp>
+#include <network/detail/debug.hpp>
+#include <network/protocol/http/server/async_connection.hpp>
 #include <boost/thread/mutex.hpp>
-#include <boost/network/protocol/http/server/storage_base.hpp>
-#include <boost/network/protocol/http/server/socket_options_base.hpp>
-#include <boost/network/utils/thread_pool.hpp>
+#include <network/protocol/http/server/storage_base.hpp>
+#include <network/protocol/http/server/socket_options_base.hpp>
+#include <network/utils/thread_pool.hpp>
 
 namespace boost { namespace network { namespace http {
     

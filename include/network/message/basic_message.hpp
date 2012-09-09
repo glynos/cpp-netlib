@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/message_base.hpp>
+#include <network/message_base.hpp>
 #include <boost/scoped_ptr.hpp>
 
 namespace boost { namespace network {
@@ -46,7 +46,7 @@ void swap(basic_storage_base & l, basic_storage_base & r);
 } /* boost */
 
 #ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/message/basic_message.ipp>
+#include <network/message/basic_message.ipp>
 #endif
 
 #endif /* BOOST_NETWORK_MESSAGE_BASIC_MESSAGE_HPP_20110911 */

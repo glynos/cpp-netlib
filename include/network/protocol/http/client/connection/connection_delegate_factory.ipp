@@ -7,14 +7,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/client/connection/normal_delegate.hpp>
+#include <network/protocol/http/client/connection/normal_delegate.hpp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-#include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
+#include <network/protocol/http/client/connection/ssl_delegate.hpp>
 #endif /* BOOST_NETWORK_ENABLE_HTTPS */
 
-#include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
-#include <boost/network/protocol/http/client/options.hpp>
-#include <boost/network/detail/debug.hpp>
+#include <network/protocol/http/client/connection/connection_delegate_factory.hpp>
+#include <network/protocol/http/client/options.hpp>
+#include <network/detail/debug.hpp>
 
 namespace boost { namespace network { namespace http {
 

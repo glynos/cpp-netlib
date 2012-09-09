@@ -4,7 +4,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <network/uri/uri.hpp>
-#include <boost/network/protocol/http/client.hpp>
+#include <network/protocol/http/client.hpp>
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/document.h"
 #include <iostream>

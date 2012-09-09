@@ -7,10 +7,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/message/modifiers/method.hpp>
-#include <boost/network/protocol/http/message/modifiers/status.hpp>
-#include <boost/network/protocol/http/message/modifiers/status_message.hpp>
-#include <boost/network/protocol/http/message/modifiers/uri.hpp>
-#include <boost/network/protocol/http/message/modifiers/version.hpp>
+#include <network/protocol/http/message/modifiers/method.hpp>
+#include <network/protocol/http/message/modifiers/status.hpp>
+#include <network/protocol/http/message/modifiers/status_message.hpp>
+#include <network/protocol/http/message/modifiers/uri.hpp>
+#include <network/protocol/http/message/modifiers/version.hpp>
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_HPP_20111201

@@ -10,8 +10,8 @@
 // This is the modular include file for using the HTTP Client
 
 #include <boost/asio/io_service.hpp>
-#include <boost/network/protocol/http/server.hpp>
-#include <boost/network/utils/thread_pool.hpp>
-#include <boost/network/detail/debug.hpp>
+#include <network/protocol/http/server.hpp>
+#include <network/utils/thread_pool.hpp>
+#include <network/detail/debug.hpp>
 
 #endif

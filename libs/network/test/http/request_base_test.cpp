@@ -5,7 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_TEST_MODULE HTTP Request Storage Base Test
-#include <boost/network/protocol/http/request/request_base.hpp>
+#include <network/protocol/http/request/request_base.hpp>
 #include <boost/test/unit_test.hpp>
 
 namespace http = boost::network::http;

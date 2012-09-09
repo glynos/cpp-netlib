@@ -7,7 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/network/protocol/http/support/is_server.hpp>
+#include <network/protocol/http/support/is_server.hpp>
 #include <boost/cstdint.hpp>
 
 namespace boost { namespace network { namespace http {

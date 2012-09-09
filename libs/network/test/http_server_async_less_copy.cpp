@@ -9,8 +9,8 @@
 #include <vector>
 
 #include <boost/config/warning_disable.hpp>
-#include <boost/network/include/http/server.hpp>
-#include <boost/network/utils/thread_pool.hpp>
+#include <network/include/http/server.hpp>
+#include <network/utils/thread_pool.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 
 namespace net = boost::network;

@@ -8,8 +8,8 @@
 #undef BOOST_NETWORK_NO_LIB
 #endif
 
-#include <boost/network/protocol/http/client.ipp>
-#include <boost/network/protocol/http/client/base.ipp>
-#include <boost/network/protocol/http/client/facade.ipp>
-#include <boost/network/protocol/http/client/options.ipp>
+#include <network/protocol/http/client.ipp>
+#include <network/protocol/http/client/base.ipp>
+#include <network/protocol/http/client/facade.ipp>
+#include <network/protocol/http/client/options.ipp>
 

@@ -12,7 +12,7 @@
 #include <boost/config/warning_disable.hpp>
 #include <boost/config.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/network/protocol/http/client.hpp>
+#include <network/protocol/http/client.hpp>
 #include <boost/cast.hpp>
 #include <string>
 #include <fstream>

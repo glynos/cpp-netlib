@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_NETWORK_NO_LIB
-#include <boost/network/include/http/client.hpp>
+#include <network/include/http/client.hpp>
 
 int main(int argc, char * argv[]) {
     using namespace boost;

@@ -7,9 +7,9 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_HPP__
 
-#include <boost/network/message/directives/detail/string_directive.hpp>
-#include <boost/network/message/directives/header.hpp>
-#include <boost/network/message/directives/remove_header.hpp>
+#include <network/message/directives/detail/string_directive.hpp>
+#include <network/message/directives/header.hpp>
+#include <network/message/directives/remove_header.hpp>
 
 namespace boost { namespace network {
 

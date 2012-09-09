@@ -5,9 +5,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_TEST_MODULE HTTP Request Test
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/message/wrappers.hpp>
-#include <boost/network/message/wrappers.hpp>
+#include <network/protocol/http/request.hpp>
+#include <network/protocol/http/message/wrappers.hpp>
+#include <network/message/wrappers.hpp>
 #include <boost/test/unit_test.hpp>
 #include <network/uri/uri_io.hpp>
 

@@ -7,8 +7,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/client/connection/resolver_delegate_factory.hpp>
-#include <boost/network/protocol/http/client/connection/async_resolver.hpp>
+#include <network/protocol/http/client/connection/resolver_delegate_factory.hpp>
+#include <network/protocol/http/client/connection/async_resolver.hpp>
 
 namespace boost { namespace network { namespace http {
 
