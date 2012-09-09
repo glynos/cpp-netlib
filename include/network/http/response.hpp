@@ -6,7 +6,7 @@
 #ifndef __NETWORK_HTTP_RESPONSE_INC__
 # define __NETWORK_HTTP_RESPONSE_INC__
 
-# include <boost/network/protocol/http/response.hpp>
+# include <network/protocol/http/response.hpp>
 
 namespace network {
 namespace http {

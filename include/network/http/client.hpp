@@ -6,7 +6,7 @@
 #ifndef __NETWORK_HTTP_CLIENT_INC__
 # define __NETWORK_HTTP_CLIENT_INC__
 
-# include <boost/network/protocol/http/client.hpp>
+# include <network/protocol/http/client.hpp>
 # include <network/http/request.hpp>
 # include <network/http/response.hpp>
 # include <network/http/errors.hpp>

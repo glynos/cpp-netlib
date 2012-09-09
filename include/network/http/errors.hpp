@@ -6,7 +6,7 @@
 #ifndef __NETWORK_HTTP_ERRORS_INC__
 # define __NETWORK_HTTP_ERRORS_INC__
 
-# include <boost/network/protocol/http/errors.hpp>
+# include <network/protocol/http/errors.hpp>
 
 namespace network {
 namespace http {

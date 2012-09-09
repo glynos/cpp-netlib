@@ -6,7 +6,7 @@
 #ifndef __NETWORK_HTTP_REQUEST_INC__
 # define __NETWORK_HTTP_REQUEST_INC__
 
-# include <boost/network/protocol/http/request.hpp>
+# include <network/protocol/http/request.hpp>
 
 namespace network {
 namespace http {
