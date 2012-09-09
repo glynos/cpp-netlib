@@ -5,7 +5,7 @@
 // Implementation file for the header-only version of the request_parser.
 //
 // Copyright (c) 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-// Copyright (c) 2009 Dean Michael Berris (mikhailberis@gmail.com)
+// Copyright (c) 2009 Dean Michael Berris (dberris@google.com)
 // Copyright (c) 2009 Tarroo, Inc.
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying

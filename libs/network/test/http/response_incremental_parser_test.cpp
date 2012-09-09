@@ -45,7 +45,7 @@
  * semantics are according to expectations.
  *
  * Date: September 9, 2010
- * Author: Dean Michael Berris <mikhailberis@gmail.com>
+ * Author: Dean Michael Berris <dberris@google.com>
  */
 
 namespace tags = boost::network::tags;

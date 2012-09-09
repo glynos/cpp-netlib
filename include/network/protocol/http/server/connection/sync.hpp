@@ -1,4 +1,4 @@
-// Copyright 2009 (c) Dean Michael Berris <mikhailberis@gmail.com>
+// Copyright 2009 (c) Dean Michael Berris <dberris@google.com>
 // Copyright 2009 (c) Tarroo, Inc.
 // Adapted from Christopher Kholhoff's Boost.Asio Example, released under
 // the Boost Software License, Version 1.0. (See acccompanying file LICENSE_1_0.txt

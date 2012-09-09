@@ -1,7 +1,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_MACROS_HPP_20110430
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_MACROS_HPP_20110430
 
-// Copyright 2011 Dean Michael Berris <mikhailberis@gmail.com>. 
+// Copyright 2011 Dean Michael Berris <dberris@google.com>. 
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
