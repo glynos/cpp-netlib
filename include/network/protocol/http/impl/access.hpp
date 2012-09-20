@@ -1,15 +1,16 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ACCESS_HPP_20111202
-#define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ACCESS_HPP_20111202
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_IMPL_ACCESS_HPP_20111202
+#define NETWORK_PROTOCOL_HTTP_IMPL_ACCESS_HPP_20111202
+
 #include <boost/thread/future.hpp>
 
-namespace boost { namespace network { namespace http { 
+namespace network {
+namespace http { 
 
 struct response;
 
@@ -31,10 +32,4 @@ struct setter_access {
 
 }  // namespace network
 
-}  // namespace boost
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <network/protocol/http/impl/access.ipp>
-#endif
-
-#endif  // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ACCESS_HPP_20111202
+#endif  // NETWORK_PROTOCOL_HTTP_IMPL_ACCESS_HPP_20111202

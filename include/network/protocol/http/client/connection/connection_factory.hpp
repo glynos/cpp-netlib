@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_CONNECTION_FACTORY_HPP_20111112
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_CONNECTION_FACTORY_HPP_20111112
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_CONNECTION_FACTORY_HPP_20111112
+#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_CONNECTION_FACTORY_HPP_20111112
 
 #include <boost/shared_ptr.hpp>
 
@@ -17,7 +17,7 @@ class io_service;
 
 }  // namespace boost
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 class client_options;
 struct client_connection;
@@ -30,10 +30,7 @@ struct connection_factory {
   virtual ~connection_factory() = 0; // pure virtual, interface only.
 };
   
-} /* http */
-  
-} /* network */
-  
-} /* boost */
+}  // namespace http
+}  // namespace network
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_CONNECTION_FACTORY_HPP_20111112 */

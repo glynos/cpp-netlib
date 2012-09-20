@@ -1,12 +1,12 @@
 
-//          Copyright Dean Michael Berris 2007.
+// Copyright Dean Michael Berris 2007.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__
-#define __NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__
+#ifndef NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP
+#define NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP
 
 #include <boost/algorithm/string.hpp>
 #include <network/message/message_base.hpp>
@@ -20,10 +20,11 @@
  * This defines a type, to be applied using template
  * metaprogramming on the selected string target.
  */
-namespace boost { namespace network { namespace impl {
+namespace network {
+namespace impl {
 
 template <class Selector>
-struct to_lower_transformer { };
+struct to_lower_transformer {};
 
 template <>
 struct to_lower_transformer<selectors::source_selector> {
@@ -54,8 +55,8 @@ struct to_lower_transformer<selectors::destination_selector> {
 } // namespace impl
 
 namespace detail {
-  struct to_lower_placeholder_helper;
-}
+struct to_lower_placeholder_helper;
+}  // namespace detail
 
 detail::to_lower_placeholder_helper to_lower_(detail::to_lower_placeholder_helper);
 
@@ -70,7 +71,7 @@ struct to_lower_placeholder_helper {
   friend to_lower_placeholder_helper boost::network::to_lower_(to_lower_placeholder_helper);
 };
 
-}
+}  // namespace detail
 
 typedef detail::to_lower_placeholder_helper (*to_lower_placeholder)(detail::to_lower_placeholder_helper);
 
@@ -80,7 +81,4 @@ inline detail::to_lower_placeholder_helper to_lower_(detail::to_lower_placeholde
 
 } // namespace network
 
-} // namespace boost
-
-#endif // __NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__
-
+#endif // NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP

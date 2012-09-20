@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_MANAGER_HPP_20110930
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_MANAGER_HPP_20110930
-
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_MANAGER_HPP_20110930
+#define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_MANAGER_HPP_20110930
 
 #include <boost/shared_ptr.hpp>
 
@@ -17,7 +17,8 @@ class io_service;
 
 }  // namespace boost
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
 struct client_connection;
 struct request_base;
@@ -33,14 +34,7 @@ struct connection_manager {
   virtual ~connection_manager() = 0;
 };
 
-} /* http */
+}  // namespace http
+}  // namespace network
 
-} /* network */
-
-} /* boost */
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <network/protocol/http/client/connection_manager.ipp>
-#endif
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_MANAGER_HPP_20110930 */
+#endif /* NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_MANAGER_HPP_20110930 */

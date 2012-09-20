@@ -5,11 +5,11 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_NETWORK_HTTP_SERVER_SYNC_CONNECTION_HPP_
-#define BOOST_NETWORK_HTTP_SERVER_SYNC_CONNECTION_HPP_
+#ifndef NETWORK_HTTP_SERVER_SYNC_CONNECTION_HPP_
+#define NETWORK_HTTP_SERVER_SYNC_CONNECTION_HPP_
 
-#ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE
-#define BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE 4096uL
+#ifndef NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE
+#define NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE 4096uL
 #endif
 
 #include <utility>
@@ -30,9 +30,9 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/bind.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
-#ifndef BOOST_NETWORK_NO_LIB
+#ifndef NETWORK_NO_LIB
   extern void parse_version(std::string const & partial_parsed, fusion::tuple<uint8_t,uint8_t> & version_pair);
   extern void parse_headers(std::string const & input, std::vector<std::pair<std::string,std::string> > & container);
 #endif
@@ -316,7 +316,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   boost::asio::ip::tcp::socket socket_;
   boost::asio::io_service::strand wrapper_;
 
-  typedef boost::array<char,BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
+  typedef boost::array<char,NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
   buffer_type read_buffer_;
   buffer_type::iterator new_start, data_end;
   request_parser parser_;
@@ -330,10 +330,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
 
 
 } // namespace http
-
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_HTTP_SERVER_SYNC_CONNECTION_HPP_
+#endif // NETWORK_HTTP_SERVER_SYNC_CONNECTION_HPP_
 

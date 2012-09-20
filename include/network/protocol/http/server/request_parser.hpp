@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_REQUEST_PARSER_HPP_20101005
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_REQUEST_PARSER_HPP_20101005
-
 // Copyright 2010 Dean Michael Berris. 
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_SERVER_REQUEST_PARSER_HPP_20101005
+#define NETWORK_PROTOCOL_HTTP_SERVER_REQUEST_PARSER_HPP_20101005
 
 #include <utility>
 #include <boost/range/iterator_range.hpp>
@@ -13,7 +13,7 @@
 #include <boost/fusion/tuple.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
     struct request_parser {
 
@@ -181,10 +181,7 @@ namespace boost { namespace network { namespace http {
 
     };
     
-} /* http */
+}  // namespace http
+}  // namespace network
     
-} /* network */
-    
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_SERVER_REQUEST_PARSER_HPP_20101005 */
+#endif /* NETWORK_PROTOCOL_HTTP_SERVER_REQUEST_PARSER_HPP_20101005 */

@@ -1,17 +1,17 @@
-#ifndef BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
-#define BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
+#define NETWORK_MESSAGE_WRAPPERS_BODY_HPP_20110930
+
 #include <boost/range/iterator.hpp>
 #include <boost/optional.hpp>
 #include <network/message/message_base.hpp>
 
-namespace boost { namespace network {
+namespace network {
 
 struct body_wrapper {
   explicit body_wrapper(message_base const & message);
@@ -37,10 +37,4 @@ body(message_base const & message_) {
 
 } // namespace network
 
-} // namespace boost
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <network/message/wrappers/body.ipp>
-#endif
-
-#endif // __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
+#endif // NETWORK_MESSAGE_WRAPPERS_BODY_HPP

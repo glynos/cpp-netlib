@@ -1,6 +1,3 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_STATUS_MESSAGE_HPP_20100603
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_STATUS_MESSAGE_HPP_20100603
-
 // Copyright 2010 (c) Dean Michael Berris
 // Copyright 2010 (c) Sinefunc, Inc.
 // Copyright 2012 Google, Inc.
@@ -8,11 +5,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_STATUS_MESSAGE_HPP_20100603
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_STATUS_MESSAGE_HPP_20100603
+
 #include <boost/optional.hpp>
 #include <network/protocol/http/response/response_base.hpp>
 #include <network/protocol/http/response/response_base.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
 struct status_message_wrapper {
   explicit status_message_wrapper(response_base & response);
@@ -33,9 +34,6 @@ status_message(response_base & response) {
 }
 
 } // namespace http
-
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPER_STATUS_MESSAGE_HPP_20100603
+#endif // NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPER_STATUS_MESSAGE_HPP_20100603

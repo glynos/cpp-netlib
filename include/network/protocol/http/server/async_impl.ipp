@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_IMPL_IPP_20120318
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_IMPL_IPP_20120318
-
 // Copyright 2012 Dean Michael Berris <dberris@google.com>.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_IMPL_IPP_20120318
+#define NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_IMPL_IPP_20120318
 
 #include <network/protocol/http/server/async_impl.hpp>
 #include <network/protocol/http/server/connection/async.hpp>
@@ -15,7 +15,7 @@
 #include <boost/bind.hpp>
 #include <network/detail/debug.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 async_server_impl::async_server_impl(server_options const &options,
                                      function<void(request const &, connection_ptr)> handler,
@@ -67,10 +67,10 @@ void async_server_impl::stop() {
 
 void async_server_impl::listen() {
   lock_guard<mutex> listening_lock(listening_mutex_);
-  BOOST_NETWORK_MESSAGE("listening on " << address_ << ':' << port_);
+  NETWORK_MESSAGE("listening on " << address_ << ':' << port_);
   if (!listening_) start_listening();
   if (!listening_) {
-    BOOST_NETWORK_MESSAGE("error listening on " << address_ << ':' << port_);
+    NETWORK_MESSAGE("error listening on " << address_ << ':' << port_);
     BOOST_THROW_EXCEPTION(std::runtime_error("Error listening on provided address:port."));
   }
 }
@@ -101,7 +101,7 @@ void async_server_impl::handle_accept(boost::system::error_code const & ec) {
             this,
             asio::placeholders::error));
   } else {
-    BOOST_NETWORK_MESSAGE("Error accepting connection, reason: " << ec);
+    NETWORK_MESSAGE("Error accepting connection, reason: " << ec);
   }
 }
 
@@ -113,24 +113,24 @@ void async_server_impl::start_listening() {
   tcp::resolver::query query(address_, port_);
   tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
   if (error) {
-    BOOST_NETWORK_MESSAGE("error resolving '" << address_ << ':' << port_);
+    NETWORK_MESSAGE("error resolving '" << address_ << ':' << port_);
     BOOST_THROW_EXCEPTION(std::runtime_error("Error resolving address:port combination."));
   }
   tcp::endpoint endpoint = *endpoint_iterator;
   acceptor_->open(endpoint.protocol(), error);
   if (error) {
-    BOOST_NETWORK_MESSAGE("error opening socket: " << address_ << ":" << port_);
+    NETWORK_MESSAGE("error opening socket: " << address_ << ":" << port_);
     BOOST_THROW_EXCEPTION(std::runtime_error("Error opening socket."));
   }
   set_acceptor_options(options_, *acceptor_);
   acceptor_->bind(endpoint, error);
   if (error) {
-    BOOST_NETWORK_MESSAGE("error binding socket: " << address_ << ":" << port_);
+    NETWORK_MESSAGE("error binding socket: " << address_ << ":" << port_);
     BOOST_THROW_EXCEPTION(std::runtime_error("Error binding socket."));
   }
   acceptor_->listen(asio::socket_base::max_connections, error);
   if (error) {
-    BOOST_NETWORK_MESSAGE("error listening on socket: '" << error << "' on " << address_ << ":" << port_);
+    NETWORK_MESSAGE("error listening on socket: '" << error << "' on " << address_ << ":" << port_);
     BOOST_THROW_EXCEPTION(std::runtime_error("Error listening on socket."));
   }
   new_connection_.reset(new async_server_connection(*service_, handler_, pool_));
@@ -143,13 +143,11 @@ void async_server_impl::start_listening() {
   listening_ = true;
   lock_guard<mutex> stopping_lock(stopping_mutex_);
   stopping_ = false; // if we were in the process of stopping, we revoke that command and continue listening
-  BOOST_NETWORK_MESSAGE("now listening on '" << address_ << ":" << port_ << "'");
+  NETWORK_MESSAGE("now listening on '" << address_ << ":" << port_ << "'");
 }
 
 }  // namespace http
 
 }  // namespace network
 
-}  // namespace boost
-
-#endif  // BOOST_NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_IMPL_IPP_20120318
+#endif  // NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_IMPL_IPP_20120318

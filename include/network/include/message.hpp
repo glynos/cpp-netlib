@@ -1,6 +1,3 @@
-#ifndef BOOST_NETWORK_INCLUDE_MESSAGE_HPP_
-#define BOOST_NETWORK_INCLUDE_MESSAGE_HPP_
-
 // Copyright 2009 Dean Michael Berris
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
@@ -9,7 +6,10 @@
 //
 // This is the modular include file for using the basic message type
 
+#ifndef NETWORK_INCLUDE_MESSAGE_HPP_
+#define NETWORK_INCLUDE_MESSAGE_HPP_
+
 #include <network/message.hpp>
 
-#endif // BOOST_NETWORK_INCLUDE_MESSAGE_HPP_
+#endif // NETWORK_INCLUDE_MESSAGE_HPP_
 

@@ -1,20 +1,18 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_METHOD_HPP_20101120
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_METHOD_HPP_20101120
-
 // Copyright 2010 Dean Michael Berris.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-namespace boost { namespace network { namespace http {
-    
-    BOOST_NETWORK_STRING_DIRECTIVE(method);
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_METHOD_HPP_20101120
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_METHOD_HPP_20101120
 
-} /* http */
+namespace network {
+namespace http {
     
-} /* network */
-    
-} /* booet */
+NETWORK_STRING_DIRECTIVE(method);
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_METHOD_HPP_20101120 */
+}  // namespace http
+}  // namespace network
+    
+#endif /* NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_METHOD_HPP_20101120 */

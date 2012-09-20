@@ -1,12 +1,12 @@
 
-//          Copyright Dean Michael Berris 2007.
+// Copyright Dean Michael Berris 2007.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_TRANSFORMERS_TO_UPPER_HPP__
-#define __NETWORK_MESSAGE_TRANSFORMERS_TO_UPPER_HPP__
+#ifndef NETWORK_MESSAGE_TRANSFORMERS_TO_UPPER_HPP
+#define NETWORK_MESSAGE_TRANSFORMERS_TO_UPPER_HPP
 
 #include <boost/algorithm/string.hpp>
 #include <network/message/message_base.hpp>
@@ -20,10 +20,11 @@
  * This defines a type, to be applied using template
  * metaprogramming on the selected string target.
  */
-namespace boost { namespace network { namespace impl {
+namespace network {
+namespace impl {
 
 template <class Selector>
-struct to_upper_transformer { };
+struct to_upper_transformer {};
 
 template <>
 struct to_upper_transformer<selectors::source_selector> {
@@ -35,7 +36,7 @@ struct to_upper_transformer<selectors::source_selector> {
   }
 
  protected:
-  ~to_upper_transformer() { };
+  ~to_upper_transformer() {};
 };
 
 template <>
@@ -48,14 +49,14 @@ struct to_upper_transformer<selectors::destination_selector> {
   }
 
  protected:
-  ~to_upper_transformer() { };
+  ~to_upper_transformer() {};
 };
 
 } // namespace impl
 
 namespace detail {
   struct to_upper_placeholder_helper;
-}
+}  // namespace detail
 
 detail::to_upper_placeholder_helper to_upper_(detail::to_upper_placeholder_helper);
 
@@ -71,7 +72,7 @@ struct to_upper_placeholder_helper {
   friend to_upper_placeholder_helper boost::network::to_upper_(to_upper_placeholder_helper);
 };
 
-}
+}  // namespace detail
 
 typedef detail::to_upper_placeholder_helper (*to_upper_placeholder)(detail::to_upper_placeholder_helper);
 
@@ -81,7 +82,4 @@ inline detail::to_upper_placeholder_helper to_upper_(detail::to_upper_placeholde
 
 } // namespace network
 
-} // namespace boost
-
-#endif // __NETWORK_MESSAGE_TRANSFORMERS_TO_UPPER_HPP__
-
+#endif // NETWORK_MESSAGE_TRANSFORMERS_TO_UPPER_HPP

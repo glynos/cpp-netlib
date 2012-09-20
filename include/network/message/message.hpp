@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_MESSAGE_MESSAGE_HPP_20111021
-#define BOOST_NETWORK_MESSAGE_MESSAGE_HPP_20111021
-
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_MESSAGE_MESSAGE_HPP_20111021
+#define NETWORK_MESSAGE_MESSAGE_HPP_20111021
 
 #include <string>
 #include <map>
@@ -13,12 +13,11 @@
 #include <network/message/message_base.hpp>
 #include <boost/shared_container_iterator.hpp>
 
-namespace boost { namespace network {
+namespace network {
 
 struct message_pimpl;
 
-/** The common message type.
- */
+// The common message type.
 struct message : message_base {
   // Nested types
   typedef iterator_range<
@@ -76,12 +75,6 @@ message_base & operator<< (message_base & msg, Directive directive) {
   return msg;
 }
 
-} /* network */
+}  // namespace network
 
-} /* boost */
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <network/message/message.ipp>
-#endif
-
-#endif /* BOOST_NETWORK_MESSAGE_MESSAGE_HPP_20111021 */
+#endif /* NETWORK_MESSAGE_MESSAGE_HPP_20111021 */

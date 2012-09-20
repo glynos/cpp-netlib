@@ -1,12 +1,12 @@
-//          Copyright Dean Michael Berris 2007.
-//          Copyright Michael Dickey 2008.
+// Copyright Dean Michael Berris 2007.
+// Copyright Michael Dickey 2008.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
-#define BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
+#ifndef NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
+#define NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
 
 #include <boost/cstdint.hpp>
 
@@ -29,4 +29,4 @@
 #include <network/protocol/http/response/response.hpp>
 #include <network/protocol/http/response/response_concept.hpp>
 
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
+#endif // NETWORK_PROTOCOL_HTTP_RESPONSE_HPP

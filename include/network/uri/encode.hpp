@@ -1,20 +1,18 @@
-//            Copyright (c) Glyn Matthews 2011, 2012.
+// Copyright (c) Glyn Matthews 2011, 2012.
+// Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_URI_ENCODE_INC
+#define NETWORK_URI_ENCODE_INC
 
-#ifndef __BOOST_NETWORK_URI_ENCODE_INC__
-# define __BOOST_NETWORK_URI_ENCODE_INC__
-
-
-# include <boost/iterator/iterator_traits.hpp>
-# include <boost/iterator/transform_iterator.hpp>
-# include <boost/range/begin.hpp>
-# include <boost/range/end.hpp>
-# include <cassert>
-
+#include <boost/iterator/iterator_traits.hpp>
+#include <boost/iterator/transform_iterator.hpp>
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <cassert>
 
 namespace network {
 namespace detail {
@@ -169,5 +167,4 @@ std::string encoded(const std::string &input) {
 }
 } // namespace network
 
-
-#endif // __BOOST_NETWORK_URI_ENCODE_INC__
+#endif // NETWORK_URI_ENCODE_INC

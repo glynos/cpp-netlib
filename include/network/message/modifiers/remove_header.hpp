@@ -1,17 +1,16 @@
-
-#ifndef BOOST_NETWORK_MESSAGE_MODIFIER_REMOVE_HEADER_HPP_20100824
-#define BOOST_NETWORK_MESSAGE_MODIFIER_REMOVE_HEADER_HPP_20100824
-
 // Copyright 2010 (c) Dean Michael Berris
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_MESSAGE_MODIFIER_REMOVE_HEADER_HPP_20100824
+#define NETWORK_MESSAGE_MODIFIER_REMOVE_HEADER_HPP_20100824
+
 #include <string>
 #include <network/message/message_base.hpp>
 
-namespace boost { namespace network {
+namespace network {
 
 inline
 void remove_header(message_base & message, std::string const & key) {
@@ -20,6 +19,4 @@ void remove_header(message_base & message, std::string const & key) {
 
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_MESSAGE_MODIFIER_REMOVE_HEADER_HPP_20100824
+#endif // NETWORK_MESSAGE_MODIFIER_REMOVE_HEADER_HPP_20100824

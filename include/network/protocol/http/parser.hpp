@@ -5,11 +5,11 @@
 //
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_PARSER_HPP
-#define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_HPP
+#ifndef NETWORK_PROTOCOL_HTTP_PARSER_HPP
+#define NETWORK_PROTOCOL_HTTP_PARSER_HPP
 
 #include <network/protocol/http/traits.hpp>
 #include <network/traits/string.hpp>
@@ -19,7 +19,7 @@
 #include <boost/noncopyable.hpp>
 #include <string>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
     
     // forward declarations used to finish HTTP requests
     template <typename Tag>
@@ -303,13 +303,10 @@ namespace boost { namespace network { namespace http {
     /// typedef for the default HTTP protocol parser implementation
     typedef basic_parser<tags::default_>    parser;
 
-}; // namespace http
-
-}; // namespace network
-
-}; // namespace boost
+}  // namespace http
+}  // namespace network
 
 // import implementation file
 #include <network/protocol/http/impl/parser.ipp>
 
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_PARSER_HPP
+#endif // NETWORK_PROTOCOL_HTTP_PARSER_HPP

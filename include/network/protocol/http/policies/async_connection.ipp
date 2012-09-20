@@ -1,13 +1,13 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_CONNECTION_IPP_20110930
-#define BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_CONNECTION_IPP_20110930
-
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-namespace boost { namespace network { namespace http {
+#ifndef NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_CONNECTION_IPP_20110930
+#define NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_CONNECTION_IPP_20110930
+
+namespace network { namespace http {
 
 struct simple_async_client_connection : client_connection {
   simple_async_client_connection(bool follow_redirects,
@@ -57,11 +57,10 @@ void simple_async_client_connection::reset() {
 
 simple_async_client_connection::~simple_async_client_connection() {}
 
-} /* http */
-} /* network */
-} /* boost */
+}  // namespace http
+}  // namespace network
 
-boost::network::http::simple_async_connection_manager(bool cache_resolved,
+network::http::simple_async_connection_manager(bool cache_resolved,
                                                       bool follow_redirects,
                                                       boost::optional<std::string> openssl_certificate,
                                                       boost::optional<std::string> openssl_verify_path)
@@ -71,8 +70,8 @@ boost::network::http::simple_async_connection_manager(bool cache_resolved,
   openssl_verify_path_(openssl_verify_path),
 {}
 
-boost::shared_ptr<boost::network::http::client_connection>
-boost::network::http::simple_async_connection_manager::get_connection(
+boost::shared_ptr<network::http::client_connection>
+network::http::simple_async_connection_manager::get_connection(
     boost::asio::io_service & service,
     request_base const & request) {
   // TODO move out calls to new to a factory, taken as a parameter at
@@ -107,14 +106,14 @@ boost::network::http::simple_async_connection_manager::get_connection(
   return connection;
 }
 
-void boost::network::http::simple_async_connection_manager::reset() {
+void network::http::simple_async_connection_manager::reset() {
   if (cache_resolved_) {
     scoped_lock delegate_lock(this->resolver_mutex);
     this->shared_resolver_delegate.reset();
   }
 }
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 struct http_1_1_async_connection : client_connection {
   http_1_1_async_connection(bool follow_redirects,
@@ -165,8 +164,7 @@ void http_1_1_async_connection::reset() {
 http_1_1_async_connection::~http_1_1_async_connection()
 {}
 
-} /* http */
-} /* network */
-} /* boost */
+}  // namespace http
+}  // namespace network
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_CONNECTION_IPP_20110930 */
+#endif /* NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_CONNECTION_IPP_20110930 */

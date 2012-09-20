@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_20091215
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_20091215
-
 // Copyright 2012 Dean Michael Berris <dberris@google.com>.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_20091215
+#define NETWORK_PROTOCOL_HTTP_CLIENT_20091215
 
 #include <network/version.hpp>
 #include <network/protocol/http/client/options.hpp>
@@ -16,7 +16,8 @@
 #include <network/protocol/http/request.hpp>
 #include <network/protocol/http/response.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
 struct client : basic_client_facade {
  private:
@@ -40,13 +41,6 @@ struct client : basic_client_facade {
 };
 
 } // namespace http
-
 } // namespace network
 
-} // namespace boost
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <network/protocol/http/client.ipp>
-#endif
-
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_20091215
+#endif // NETWORK_PROTOCOL_HTTP_CLIENT_20091215

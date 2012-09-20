@@ -1,31 +1,30 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_PARAMETERS_HPP_2010127
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_PARAMETERS_HPP_2010127
-
 // Copyright 2010 Dean Michael Berris. 
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_PARAMETERS_HPP_2010127
+#define NETWORK_PROTOCOL_HTTP_CLIENT_PARAMETERS_HPP_2010127
+
 #include <network/protocol/http/parameters.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
-    BOOST_PARAMETER_NAME(follow_redirects)
-    BOOST_PARAMETER_NAME(cache_resolved)
-    BOOST_PARAMETER_NAME(openssl_certificate)
-    BOOST_PARAMETER_NAME(openssl_verify_path)
+    PARAMETER_NAME(follow_redirects)
+    PARAMETER_NAME(cache_resolved)
+    PARAMETER_NAME(openssl_certificate)
+    PARAMETER_NAME(openssl_verify_path)
 
-    BOOST_PARAMETER_NAME(request)
-    BOOST_PARAMETER_NAME(body)
-    BOOST_PARAMETER_NAME(content_type)
-    BOOST_PARAMETER_NAME(body_handler)
+    PARAMETER_NAME(request)
+    PARAMETER_NAME(body)
+    PARAMETER_NAME(content_type)
+    PARAMETER_NAME(body_handler)
 
-    BOOST_PARAMETER_NAME(connection_manager)
-    BOOST_PARAMETER_NAME(connection_factory)
+    PARAMETER_NAME(connection_manager)
+    PARAMETER_NAME(connection_factory)
 
-} /* http */
-} /* network */
-} /* boost */
+}  // namespace http
+}  // namespace network
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_PARAMETERS_HPP_2010127 */
+#endif /* NETWORK_PROTOCOL_HTTP_CLIENT_PARAMETERS_HPP_2010127 */

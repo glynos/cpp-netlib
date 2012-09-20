@@ -11,15 +11,15 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_NETWORK_HTTP_REQUEST_HPP
-#define BOOST_NETWORK_HTTP_REQUEST_HPP
+#ifndef NETWORK_HTTP_REQUEST_HPP
+#define NETWORK_HTTP_REQUEST_HPP
 
 #include <string>
 #include <vector>
 #include <algorithm>
 #include "header.hpp"
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
     /// A request received from a client.
     struct request
@@ -43,10 +43,7 @@ namespace boost { namespace network { namespace http {
     }
 
 } // namespace http
-
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_HTTP_REQUEST_HPP
+#endif // NETWORK_HTTP_REQUEST_HPP
 

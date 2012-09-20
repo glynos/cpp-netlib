@@ -1,16 +1,15 @@
-//            Copyright (c) Glyn Matthews 2012.
+// Copyright (c) Glyn Matthews 2012.
+// Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef __BOOST_NETWORK_URI_BUILDER_INC__
-# define __BOOST_NETWORK_URI_BUILDER_INC__
+#ifndef NETWORK_URI_BUILDER_INC
+#define NETWORK_URI_BUILDER_INC
 
-
-# include <boost/asio/ip/address.hpp>
-
+#include <boost/asio/ip/address.hpp>
 
 namespace network {
 class builder {
@@ -130,4 +129,4 @@ private:
 } // namespace network
 
 
-#endif // __BOOST_NETWORK_URI_BUILDER_INC__
+#endif // NETWORK_URI_BUILDER_INC

@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_IMPL_HPP_20120318
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_IMPL_HPP_20120318
-
 // Copyright 2012 Dean Michael Berris <dberris@google.com>.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_SERVER_IMPL_HPP_20120318
+#define NETWORK_PROTOCOL_HTTP_SERVER_IMPL_HPP_20120318
 
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
@@ -14,7 +14,7 @@
 #include <network/protocol/http/server/impl/socket_options_setter.hpp>
 #include <network/protocol/http/server/options.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 class sync_server_connection;
 struct request;
@@ -43,9 +43,6 @@ class sync_server_impl : protected socket_options_setter {
 };
 
 }  // namespace http
-
 }  // namespace network
 
-}  // namespace boost
-
-#endif  // BOOST_NETWORK_PROTOCOL_HTTP_SERVER_IMPL_HPP_20120318
+#endif  // NETWORK_PROTOCOL_HTTP_SERVER_IMPL_HPP_20120318

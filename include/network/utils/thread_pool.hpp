@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_UTILS_THREAD_POOL_HPP_20101020
-#define BOOST_NETWORK_UTILS_THREAD_POOL_HPP_20101020
-
 // Copyright 2010 Dean Michael Berris. 
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_UTILS_THREAD_POOL_HPP_20101020
+#define NETWORK_UTILS_THREAD_POOL_HPP_20101020
 
 #include <cstddef>
 #include <boost/thread/thread.hpp>
@@ -14,7 +14,7 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/scope_exit.hpp>
 
-namespace boost { namespace network { namespace utils {
+namespace network { namespace utils {
 
 typedef boost::shared_ptr<boost::asio::io_service> io_service_ptr;
 typedef boost::shared_ptr<boost::thread_group> worker_threads_ptr;
@@ -38,9 +38,7 @@ inline void swap(thread_pool & l, thread_pool & r) {
   l.swap(r);
 }
 
-} // utils
+}  // namespace utils
+}  // namespace network
 
-} // network
-
-} // boost
-#endif /* BOOST_NETWORK_UTILS_THREAD_POOL_HPP_20101020 */
+#endif /* NETWORK_UTILS_THREAD_POOL_HPP_20101020 */

@@ -1,16 +1,16 @@
-#ifndef BOOST_NETWORK_MESSAGE_BASE_HPP_20110910
-#define BOOST_NETWORK_MESSAGE_BASE_HPP_20110910
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_MESSAGE_BASE_HPP_20110910
+#define NETWORK_MESSAGE_BASE_HPP_20110910
+
 #include <boost/function.hpp>
 #include <boost/range/iterator_range.hpp>
 
-namespace boost { namespace network {
+namespace network {
 
 struct message_base {
   // Mutators
@@ -36,8 +36,6 @@ struct message_base {
   virtual ~message_base() = 0;  // pure virtual
 };
 
-} /* network */
+}  // namespace network
 
-} /* boost */
-
-#endif /* BOOST_NETWORK_MESSAGE_BASE_HPP_20110910 */
+#endif /* NETWORK_MESSAGE_BASE_HPP_20110910 */

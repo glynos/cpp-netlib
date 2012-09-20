@@ -1,17 +1,17 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SUPPORT_CLIENT_OR_SERVER_HPP_20101127
-#define BOOST_NETWORK_PROTOCOL_HTTP_SUPPORT_CLIENT_OR_SERVER_HPP_20101127
-
 // Copyright 2010 Dean Michael Berris. 
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_SUPPORT_CLIENT_OR_SERVER_HPP_20101127
+#define NETWORK_PROTOCOL_HTTP_SUPPORT_CLIENT_OR_SERVER_HPP_20101127
+
 #include <network/protocol/http/support/is_server.hpp>
 #include <network/protocol/http/support/is_client.hpp>
 #include <boost/mpl/if.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
     
     template <class Tag>
     struct unsupported_tag;
@@ -34,10 +34,7 @@ namespace boost { namespace network { namespace http {
         typedef tags::client type;
     };
     
-} /* http */
+}  // namespace http
+}  // namespace network
     
-} /* network */
-    
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_SUPPORT_CLIENT_OR_SERVER_HPP_20101127 */
+#endif /* NETWORK_PROTOCOL_HTTP_SUPPORT_CLIENT_OR_SERVER_HPP_20101127 */

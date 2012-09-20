@@ -1,21 +1,21 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IPP_20110910
-#define BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IPP_20110910
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_REQUEST_IPP_20110910
+#define NETWORK_PROTOCOL_HTTP_REQUEST_IPP_20110910
+
 #include <network/protocol/http/request/request.hpp>
 #include <network/protocol/http/request/request_concept.hpp>
 #include <boost/scoped_array.hpp>
 
-#ifdef BOOST_NETWORK_DEBUG
+#ifdef NETWORK_DEBUG
 BOOST_CONCEPT_ASSERT((boost::network::http::ClientRequest<boost::network::http::request>));
 #endif
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 struct request_pimpl {
   request_pimpl()
@@ -326,6 +326,4 @@ void request::get_body(std::string const & body) const {
 
 }  // namespace network
 
-}  // namespace boost
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IPP_20110910 */
+#endif /* NETWORK_PROTOCOL_HTTP_REQUEST_IPP_20110910 */

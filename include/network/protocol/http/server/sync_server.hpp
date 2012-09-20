@@ -1,4 +1,3 @@
-
 // Copyright 2010 Dean Michael Berris. 
 // Copyright 2010 Glyn Matthews.
 // Copyright 2012 Google, Inc.
@@ -6,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
+#ifndef NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
+#define NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 
 #include <network/detail/debug.hpp>
 #include <boost/shared_ptr.hpp>
@@ -22,7 +21,7 @@
 #include <network/traits/string.hpp>
 #include <boost/thread/mutex.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
     template <class Tag, class Handler>
     struct sync_server_base : server_storage_base, socket_options_base {
@@ -96,24 +95,24 @@ namespace boost { namespace network { namespace http {
             tcp::resolver::query query(address_, port_);
             tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
             if (error) {
-                BOOST_NETWORK_MESSAGE("Error resolving address: " << address_ << ':' << port_);
+                NETWORK_MESSAGE("Error resolving address: " << address_ << ':' << port_);
                 return;
             }
             tcp::endpoint endpoint = *endpoint_iterator;
             acceptor_.open(endpoint.protocol(), error);
             if (error) {
-                BOOST_NETWORK_MESSAGE("Error opening socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
+                NETWORK_MESSAGE("Error opening socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
                 return;
             }
             socket_options_base::acceptor_options(acceptor_);
             acceptor_.bind(endpoint, error);
             if (error) {
-                BOOST_NETWORK_MESSAGE("Error binding to socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
+                NETWORK_MESSAGE("Error binding to socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
                 return;
             }
             acceptor_.listen(tcp::socket::max_connections, error);
             if (error) {
-                BOOST_NETWORK_MESSAGE("Error listening on socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
+                NETWORK_MESSAGE("Error listening on socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
                 return;
             }
             new_connection.reset(new sync_connection<Tag,Handler>(service_, handler_));
@@ -124,10 +123,7 @@ namespace boost { namespace network { namespace http {
         }
     };
 
-} /* http */
+}  // namespace http
+}  // namespace network
     
-} /* network */
-    
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025 */
+#endif /* NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025 */

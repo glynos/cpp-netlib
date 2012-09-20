@@ -1,17 +1,18 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SIMPLE_CONNECTION_MANAGER_HPP_20111105
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SIMPLE_CONNECTION_MANAGER_HPP_20111105
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_SIMPLE_CONNECTION_MANAGER_HPP_20111105
+#define NETWORK_PROTOCOL_HTTP_CLIENT_SIMPLE_CONNECTION_MANAGER_HPP_20111105
+
 #include <boost/scoped_ptr.hpp>
 #include <network/protocol/http/client/connection_manager.hpp>
 #include <network/protocol/http/client/connection/connection_factory.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
 /// Forward declaration of simple_connection_manager_pimpl.
 struct simple_connection_manager_pimpl;
@@ -81,10 +82,7 @@ struct simple_connection_manager : connection_manager {
   simple_connection_manager & operator=(simple_connection_manager); // = delete
 };
 
-} /* http */
+}  // namespace http
+}  // namespace network
 
-} /* network */
-
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SIMPLE_CONNECTION_MANAGER_HPP_20111105 */
+#endif /* NETWORK_PROTOCOL_HTTP_CLIENT_SIMPLE_CONNECTION_MANAGER_HPP_20111105 */

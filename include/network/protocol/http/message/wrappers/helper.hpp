@@ -1,16 +1,16 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_HELPER_20101013
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_HELPER_20101013
-
 // Copyright 2010 (c) Dean Michael Berris
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_HELPER_20101013
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_HELPER_20101013
+
 #include <boost/mpl/if.hpp>
 
-#ifndef BOOST_NETWORK_DEFINE_HTTP_WRAPPER
-#define BOOST_NETWORK_DEFINE_HTTP_WRAPPER(name, accessor, pod_field)    \
+#ifndef NETWORK_DEFINE_HTTP_WRAPPER
+#define NETWORK_DEFINE_HTTP_WRAPPER(name, accessor, pod_field)    \
     struct name##_pod_accessor {                                        \
     protected:                                                          \
         template <class Message>                                        \
@@ -67,7 +67,7 @@
         return name##_wrapper<basic_request<Tag> >(message);            \
     }
 
-#endif /* BOOST_NETWORK_DEFINE_HTTP_WRAPPER */
+#endif /* NETWORK_DEFINE_HTTP_WRAPPER */
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_HELPER_20101013 */
+#endif /* NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_HELPER_20101013 */
 

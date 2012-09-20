@@ -1,5 +1,5 @@
-#ifndef BOOST_NETWORK_CONSTANTS_HPP_20111008
-#define BOOST_NETWORK_CONSTANTS_HPP_20111008
+#ifndef NETWORK_CONSTANTS_HPP_20111008
+#define NETWORK_CONSTANTS_HPP_20111008
 
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
@@ -10,7 +10,7 @@
 #include <network/constants.hpp>
 #include <network/version.hpp>
 
-namespace boost { namespace network {
+namespace network {
 
 char const * constants::crlf() {
   static char crlf_[] = "\r\n";
@@ -119,12 +119,10 @@ char const * constants::https() {
 }
 
 char const * constants::default_user_agent() {
-  static char user_agent_[] = "cpp-netlib/" BOOST_NETLIB_VERSION;
+  static char user_agent_[] = "cpp-netlib/" NETLIB_VERSION;
   return user_agent_;
 }
 
-} /* network */
+}  // namespace network
 
-} /* boost */
-
-#endif /* BOOST_NETWORK_CONSTANTS_HPP_20111008 */
+#endif /* NETWORK_CONSTANTS_HPP_20111008 */

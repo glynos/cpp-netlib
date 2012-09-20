@@ -1,16 +1,16 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_RESPONSE_HPP_20111021
-#define BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_RESPONSE_HPP_20111021
-
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_RESPONSE_RESPONSE_HPP_20111021
+#define NETWORK_PROTOCOL_HTTP_RESPONSE_RESPONSE_HPP_20111021
+
 #include <network/protocol/http/impl/access.hpp>
 #include <network/protocol/http/parser/incremental.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 struct response_pimpl;
 
@@ -95,9 +95,6 @@ response & operator<<(
 }
 
 } // namespace http
-
 } // namespace network
 
-} // namespace boost
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_RESPONSE_HPP_20111021 */
+#endif /* NETWORK_PROTOCOL_HTTP_RESPONSE_RESPONSE_HPP_20111021 */

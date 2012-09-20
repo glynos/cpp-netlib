@@ -4,14 +4,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_IPP
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_IPP
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_IPP
+#define NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_IPP
 
 #include <network/protocol/http/client/options.hpp>
 #include <network/protocol/http/client/simple_connection_manager.hpp>
 #include <network/protocol/http/client/connection/simple_connection_factory.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
 class client_options_pimpl {
 public:
@@ -274,7 +275,5 @@ int request_options::max_redirects() const {
 
 }  // namespace http
 }  // namespace network
-}  // namespace boost
-
 
 #endif

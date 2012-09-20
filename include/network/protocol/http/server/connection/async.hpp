@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_CONNECTION_ASYNC_HPP_20101027
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_CONNECTION_ASYNC_HPP_20101027
-
 // Copyright 2010-2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_SERVER_CONNECTION_ASYNC_HPP_20101027
+#define NETWORK_PROTOCOL_HTTP_SERVER_CONNECTION_ASYNC_HPP_20101027
 
 #include <boost/throw_exception.hpp>
 #include <boost/scope_exit.hpp>
@@ -33,12 +33,9 @@
 #include <list>
 #include <vector>
 #include <iterator>
-#ifdef BOOST_NETWORK_NO_LIB
-#include <network/protocol/http/server/impl/parsers.ipp>
-#endif
 #include <network/constants.hpp>
 
-#ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE
+#ifndef NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE
 /** Here we define a page's worth of header connection buffer data.
  *  This can be tuned to reduce the memory cost of connections, but this 
  *  default size is set to be friendly to typical service applications.
@@ -50,23 +47,21 @@
  *  the default allocator with the static buffers, it's not guaranteed that
  *  the static buffers will be page-aligned when they are allocated.
  */
-#define BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE 4096
-#endif /* BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE */
+#define NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE 4096
+#endif /* NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE */
 
-#ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE
+#ifndef NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE
 /** Here we're making the assumption again that the page size of the system
  *  is 4096 and that it's better to have page-aligned chunks when creating
  *  buffers for memory use efficiency.
  */
-#define BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE 4096uL
+#define NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE 4096uL
 #endif
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
-#ifndef BOOST_NETWORK_NO_LIB
   extern void parse_version(std::string const & partial_parsed, fusion::tuple<uint8_t,uint8_t> & version_pair);
   extern void parse_headers(std::string const & input, std::vector<std::pair<std::string,std::string> > & container);
-#endif
 
   class async_server_connection : public boost::enable_shared_from_this<async_server_connection> {
    public:
@@ -153,7 +148,7 @@ namespace boost { namespace network { namespace http {
       , thread_pool_(thread_pool)
       , headers_already_sent(false)
       , headers_in_progress(false)
-      , headers_buffer(BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE)
+      , headers_buffer(NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE)
       {
           new_start = read_buffer_.begin();
       }
@@ -247,7 +242,7 @@ namespace boost { namespace network { namespace http {
       }
 
   private:
-      typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
+      typedef boost::array<char, NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
 
   public:
       typedef iterator_range<buffer_type::const_iterator> input_range;
@@ -306,7 +301,7 @@ namespace boost { namespace network { namespace http {
           error_encountered = in_place<boost::system::system_error>(ec);
       }
 
-      typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> array;
+      typedef boost::array<char, NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> array;
       typedef std::list<shared_ptr<array> > array_list;
       typedef boost::shared_ptr<array_list> shared_array_list;
       typedef boost::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
@@ -570,7 +565,7 @@ namespace boost { namespace network { namespace http {
           //
 
           static std::size_t const connection_buffer_size =
-              BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
+              NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
           shared_array_list temporaries = 
               boost::make_shared<array_list>();
           shared_buffers buffers = 
@@ -648,11 +643,7 @@ namespace boost { namespace network { namespace http {
       }
   };
   
-} /* http */
+}  // namespace http
+}  // namespace network
   
-} /* network */
-  
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_SERVER_CONNECTION_HPP_20101027 */
-
+#endif /* NETWORK_PROTOCOL_HTTP_SERVER_CONNECTION_HPP_20101027 */

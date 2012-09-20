@@ -1,5 +1,5 @@
-#ifndef BOOST_NETWORK_MESSAGE_MODIFIER_CLEAR_HEADERS_HPP_20100824
-#define BOOST_NETWORK_MESSAGE_MODIFIER_CLEAR_HEADERS_HPP_20100824
+#ifndef NETWORK_MESSAGE_MODIFIER_CLEAR_HEADERS_HPP_20100824
+#define NETWORK_MESSAGE_MODIFIER_CLEAR_HEADERS_HPP_20100824
 
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
@@ -9,7 +9,7 @@
 
 #include <network/message/message_base.hpp>
 
-namespace boost { namespace network {
+namespace network {
 
 inline void clear_headers(message_base & message) {
   message.remove_headers();
@@ -17,6 +17,4 @@ inline void clear_headers(message_base & message) {
 
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_MESSAGE_MODIFIER_CLEAR_HEADERS_HPP_20100824
+#endif // NETWORK_MESSAGE_MODIFIER_CLEAR_HEADERS_HPP_20100824

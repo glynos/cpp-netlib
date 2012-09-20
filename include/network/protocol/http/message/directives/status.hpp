@@ -1,6 +1,3 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_STATUS_HPP_20100603
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_STATUS_HPP_20100603
-
 // Copyright 2010 (c) Sinefunc, Inc.
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
@@ -8,12 +5,16 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_STATUS_HPP_20100603
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_STATUS_HPP_20100603
+
 #include <boost/thread/future.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/cstdint.hpp>
 #include <network/protocol/http/response/response_base.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
 struct status_directive {
   explicit status_directive(std::string const & s);
@@ -27,10 +28,7 @@ inline status_directive status(std::string const & response) {
   return status_directive(response);
 }
 
-} // namespace http
+}  // namespace http
+}  // namespace network
 
-} // namespace network
-
-} // namespace boost
-
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_STATUS_HPP_20100603
+#endif // NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_STATUS_HPP_20100603

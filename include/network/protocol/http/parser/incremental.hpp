@@ -1,6 +1,3 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_PARSER_INCREMENTAL_HPP_20100909
-#define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_INCREMENTAL_HPP_20100909
-
 // Copyright Dean Michael Berris 2010.
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google, Inc.
@@ -8,13 +5,16 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_PARSER_INCREMENTAL_HPP_20100909
+#define NETWORK_PROTOCOL_HTTP_PARSER_INCREMENTAL_HPP_20100909
+
 #include <boost/range.hpp>
 #include <boost/fusion/tuple.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <utility>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 struct response_parser {
 
@@ -279,10 +279,7 @@ struct response_parser {
 };
 
 
-} /* http */
-
-} /* network */
-
-} /* boost */
+}  // namespace http
+}  // namespace network
 
 #endif

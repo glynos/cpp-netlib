@@ -1,17 +1,17 @@
-#ifndef BOOST_NETWORK_MESSAGE_WRAPPERS_HEADERS_IPP_20110911
-#define BOOST_NETWORK_MESSAGE_WRAPPERS_HEADERS_IPP_20110911
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_MESSAGE_WRAPPERS_HEADERS_IPP_20110911
+#define NETWORK_MESSAGE_WRAPPERS_HEADERS_IPP_20110911
+
 #include <network/message/wrappers/headers.hpp>
 #include <network/message/message_base.hpp>
 #include <boost/function.hpp>
 
-namespace boost { namespace network {
+namespace network {
 
 headers_wrapper::headers_wrapper(message_base const & message)
 : message_(message)
@@ -37,6 +37,4 @@ headers_wrapper::operator headers_wrapper::container_type () const {
 
 } /* network */
 
-} /* boost */
-
-#endif /* BOOST_NETWORK_MESSAGE_WRAPPERS_HEADERS_IPP_20110911 */
+#endif /* NETWORK_MESSAGE_WRAPPERS_HEADERS_IPP_20110911 */

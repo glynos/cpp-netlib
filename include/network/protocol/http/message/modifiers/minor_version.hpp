@@ -1,32 +1,29 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_MINOR_VERSION_HPP_20101120
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_MINOR_VERSION_HPP_20101120
-
 // Copyright 2010 Dean Michael Berris. 
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_MINOR_VERSION_HPP_20101120
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_MINOR_VERSION_HPP_20101120
+
 #include <network/protocol/http/support/is_server.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/cstdint.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
-    template <class Tag>
-    struct basic_request;
+template <class Tag>
+struct basic_request;
 
-    template <class Tag>
-    inline typename enable_if<is_server<Tag>, void>::type
-    minor_version(basic_request<Tag> & request, boost::uint8_t minor_version_) {
-        request.http_version_minor = minor_version_;
-    }
-    
-} /* http */
-    
-} /* network */
-    
-} /* boost */
+template <class Tag>
+inline typename enable_if<is_server<Tag>, void>::type
+minor_version(basic_request<Tag> & request, boost::uint8_t minor_version_) {
+    request.http_version_minor = minor_version_;
+}
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_MINOR_VERSION_HPP_20101120 */
+}  // namespace http
+}  // namespace network
+
+#endif /* NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_MINOR_VERSION_HPP_20101120 */
 

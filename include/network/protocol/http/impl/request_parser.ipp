@@ -13,12 +13,12 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_NETWORK_HTTP_REQUEST_PARSER_IPP
-#define BOOST_NETWORK_HTTP_REQUEST_PARSER_IPP
+#ifndef NETWORK_HTTP_REQUEST_PARSER_IPP
+#define NETWORK_HTTP_REQUEST_PARSER_IPP
 
 #include <network/protocol/http/request.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 template <class Tag>
 boost::tribool basic_request_parser<Tag>::consume(basic_request<Tag> & req, char input)
@@ -323,11 +323,8 @@ bool basic_request_parser<Tag>::is_digit(int c)
   return c >= '0' && c <= '9';
 }
 
-} // namespace http
+}  // namespace http
+}  // namespace network
 
-} // namespace network
-
-} // namespace boost
-
-#endif //BOOST_NETWORK_HTTP_REQUEST_PARSER_IPP
+#endif //NETWORK_HTTP_REQUEST_PARSER_IPP
 

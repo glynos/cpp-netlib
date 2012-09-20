@@ -1,18 +1,19 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_FACADE_HPP_20100623
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_FACADE_HPP_20100623
-
 // Copyright Dean Michael Berris 2010.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_FACADE_HPP_20100623
+#define NETWORK_PROTOCOL_HTTP_CLIENT_FACADE_HPP_20100623
+
 #include <network/protocol/http/request.hpp>
 #include <network/protocol/http/response.hpp>
 #include <network/protocol/http/client/base.hpp>
 #include <network/protocol/http/client/options.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
 struct basic_client_facade {
   typedef client_base::body_callback_function_type body_callback_function_type;
@@ -45,9 +46,6 @@ struct basic_client_facade {
 };
 
 } // namespace http
+}  // namespace network
 
-} // namespace network
-
-} // namespace boost
-
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_FACADE_HPP_20100623
+#endif // NETWORK_PROTOCOL_HTTP_CLIENT_FACADE_HPP_20100623

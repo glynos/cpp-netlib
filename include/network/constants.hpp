@@ -1,5 +1,5 @@
-#ifndef BOOST_NETWORK_CONSTANTS_HPP_20100808
-#define BOOST_NETWORK_CONSTANTS_HPP_20100808
+#ifndef NETWORK_CONSTANTS_HPP_20100808
+#define NETWORK_CONSTANTS_HPP_20100808
 
 // Copyright 2010 (C) Dean Michael Berris
 // Copyright 2012 Google, Inc.
@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-namespace boost { namespace network {
+namespace network {
 
 struct constants {
   static char const * crlf();
@@ -37,6 +37,4 @@ struct constants {
 
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_CONSTANTS_HPP_20100808
+#endif // NETWORK_CONSTANTS_HPP_20100808

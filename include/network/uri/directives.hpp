@@ -1,16 +1,14 @@
-//            Copyright (c) Glyn Matthews 2011, 2012.
+// Copyright (c) Glyn Matthews 2011, 2012.
+// Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_URI_DIRECTIVES_INC
+#define NETWORK_URI_DIRECTIVES_INC
 
-#ifndef __BOOST_NETWORK_URI_DIRECTIVES_INC__
-# define __BOOST_NETWORK_URI_DIRECTIVES_INC__
-
-
-# include <network/uri/uri.hpp>
-
+#include <network/uri/uri.hpp>
 
 namespace network {
 inline
@@ -31,15 +29,13 @@ uri &operator << (uri &uri_, const Directive &directive) {
 }
 } // namespace network
 
+#include <network/uri/directives/scheme.hpp>
+#include <network/uri/directives/user_info.hpp>
+#include <network/uri/directives/host.hpp>
+#include <network/uri/directives/port.hpp>
+#include <network/uri/directives/authority.hpp>
+#include <network/uri/directives/path.hpp>
+#include <network/uri/directives/query.hpp>
+#include <network/uri/directives/fragment.hpp>
 
-# include <network/uri/directives/scheme.hpp>
-# include <network/uri/directives/user_info.hpp>
-# include <network/uri/directives/host.hpp>
-# include <network/uri/directives/port.hpp>
-# include <network/uri/directives/authority.hpp>
-# include <network/uri/directives/path.hpp>
-# include <network/uri/directives/query.hpp>
-# include <network/uri/directives/fragment.hpp>
-
-
-#endif // __BOOST_NETWORK_URI_DIRECTIVES_INC__
+#endif // NETWORK_URI_DIRECTIVES_INC

@@ -1,16 +1,16 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SUPPORT_SYNC_ONLY_HPP_20100927
-#define BOOST_NETWORK_PROTOCOL_HTTP_SUPPORT_SYNC_ONLY_HPP_20100927
-
-//          Copyright Dean Michael Berris 2010.
+// Copyright Dean Michael Berris 2010.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_SUPPORT_SYNC_ONLY_HPP_20100927
+#define NETWORK_PROTOCOL_HTTP_SUPPORT_SYNC_ONLY_HPP_20100927
 
 #include <network/protocol/http/tags.hpp>
 #include <network/support/sync_only.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
     template <class Tag>
     struct sync_only :
@@ -24,10 +24,8 @@ namespace boost { namespace network { namespace http {
         >
     {};
 
-} /* http */
+}  // namespace http
     
-} /* network */
+}  // namespace network
     
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_SUPPORT_SYNC_ONLY_HPP_20100927 */
+#endif /* NETWORK_PROTOCOL_HTTP_SUPPORT_SYNC_ONLY_HPP_20100927 */

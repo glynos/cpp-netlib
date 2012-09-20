@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021
-#define BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021
-
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021
+#define NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021
 
 #include <network/protocol/http/request/request_base.hpp>
 #include <network/uri.hpp>
@@ -13,7 +13,7 @@
 #include <network/protocol/http/message/directives/minor_version.hpp>
 #include <boost/scoped_ptr.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 struct request_pimpl;
 
@@ -94,10 +94,7 @@ inline bool operator!=(request const &l, request const &r) {
 }
 
 } // namespace http
-
 } // namespace network
-
-} // namespace boost
 
 #include <network/message/modifiers.hpp>
 #include <network/message/wrappers.hpp>
@@ -106,4 +103,4 @@ inline bool operator!=(request const &l, request const &r) {
 #include <network/protocol/http/message/modifiers.hpp>
 #include <network/protocol/http/message/wrappers.hpp>
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021 */
+#endif /* NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021 */

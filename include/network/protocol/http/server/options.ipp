@@ -1,16 +1,16 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
-
 // Copyright 2012 Dean Michael Berris <dberris@google.com>.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
+#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
+
 #include <network/protocol/http/server/options.hpp>
 #include <boost/asio/io_service.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 class server_options_pimpl {
  public:
@@ -286,7 +286,5 @@ int server_options::linger_timeout() const {
 }  // namespace http
 
 }  // namespace network
-
-}  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318

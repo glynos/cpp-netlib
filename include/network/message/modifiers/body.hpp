@@ -1,5 +1,5 @@
-#ifndef BOOST_NETWORK_MODIFIERS_BODY_HPP_20100824
-#define BOOST_NETWORK_MODIFIERS_BODY_HPP_20100824
+#ifndef NETWORK_MODIFIERS_BODY_HPP_20100824
+#define NETWORK_MODIFIERS_BODY_HPP_20100824
 
 // Copyright 2010 (c) Dean Michael Berris
 // Copyright 2012 Google, Inc.
@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-namespace boost { namespace network {
+namespace network {
 
 inline void body(message_base & message, std::string const & body_) {
   message.set_body(body_);
@@ -19,6 +19,4 @@ inline void append_body(message_base & message, std::string const & data) {
 
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_MODIFIERS_BODY_HPP_20100824
+#endif // NETWORK_MODIFIERS_BODY_HPP_20100824

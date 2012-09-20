@@ -1,13 +1,13 @@
-#ifndef BOOST_NETWORK_MESSAGE_BASIC_MESSAGE_IPP_20110911
-#define BOOST_NETWORK_MESSAGE_BASIC_MESSAGE_IPP_20110911
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-namespace boost { namespace network {
+#ifndef NETWORK_MESSAGE_BASIC_MESSAGE_IPP_20110911
+#define NETWORK_MESSAGE_BASIC_MESSAGE_IPP_20110911
+
+namespace network {
 
 struct basic_storage_pimpl {
   basic_storage_pimpl();
@@ -107,6 +107,4 @@ void swap(basic_storage_base & l, basic_storage_base & r) {
 
 } /* network */
   
-} /* boost */
-
-#endif /* BOOST_NETWORK_MESSAGE_BASIC_MESSAGE_IPP_20110911 */
+#endif /* NETWORK_MESSAGE_BASIC_MESSAGE_IPP_20110911 */

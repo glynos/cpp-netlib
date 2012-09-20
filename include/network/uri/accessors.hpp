@@ -1,20 +1,19 @@
-//            Copyright (c) Glyn Matthews 2011, 2012.
+// Copyright (c) Glyn Matthews 2011, 2012.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
-# define __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
+#ifndef NETWORK_URI_URI_ACCESSORS_INC
+#define NETWORK_URI_URI_ACCESSORS_INC
 
 
-# include <network/uri/uri.hpp>
-# include <network/uri/encode.hpp>
-# include <network/uri/decode.hpp>
-# include <boost/spirit/include/qi.hpp>
-# include <boost/fusion/include/std_pair.hpp>
-
+#include <network/uri/uri.hpp>
+#include <network/uri/encode.hpp>
+#include <network/uri/decode.hpp>
+#include <boost/spirit/include/qi.hpp>
+#include <boost/fusion/include/std_pair.hpp>
 
 namespace network {
 namespace details {
@@ -105,5 +104,4 @@ uri::string_type decoded_fragment(const uri &uri_) {
 }
 } // namespace network
 
-
-#endif // __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
+#endif // NETWORK_URI_URI_ACCESSORS_INC

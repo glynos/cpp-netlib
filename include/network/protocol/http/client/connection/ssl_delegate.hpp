@@ -1,26 +1,25 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819
-
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819
+#define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819
+
 #include <boost/asio/ssl.hpp>
 #include <network/protocol/http/client/connection/connection_delegate.hpp>
 #include <network/protocol/http/client/options.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-namespace boost { namespace asio {
-
+namespace boost {
+namespace asio {
 class io_service;
-
 }  // namespace asio
-
 }  // namespace boost
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
 struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate> {
   ssl_delegate(asio::io_service & service,
@@ -48,10 +47,8 @@ struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate>
                         function<void(system::error_code const &)> handler);
 };
 
-} /* http */
+}  // namespace http
+}  // namespace network
+}  // namespace boost
 
-} /* network */
-
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819 */
+#endif /* NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819 */

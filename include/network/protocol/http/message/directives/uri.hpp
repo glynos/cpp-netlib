@@ -1,6 +1,3 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_URI_HPP_20100620
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_URI_HPP_20100620
-
 // Copyright 2010 (c) Dean Michael Berris
 // Copyright 2010 (c) Sinefunc, Inc.
 // Copyright 2012 Google, Inc.
@@ -8,16 +5,17 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_URI_HPP_20100620
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_URI_HPP_20100620
+
 #include <network/message/directives/detail/string_directive.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
-    BOOST_NETWORK_STRING_DIRECTIVE(uri);
+NETWORK_STRING_DIRECTIVE(uri);
 
 } // namespace http
-
 } // namespace network 
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_URI_HPP_20100620
+#endif // NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_URI_HPP_20100620

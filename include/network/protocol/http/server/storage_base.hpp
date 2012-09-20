@@ -1,15 +1,15 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_STORAGE_BASE_HPP_20101210
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_STORAGE_BASE_HPP_20101210
-
 // Copyright 2010 Dean Michael Berris.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_SERVER_STORAGE_BASE_HPP_20101210
+#define NETWORK_PROTOCOL_HTTP_SERVER_STORAGE_BASE_HPP_20101210
+
 #include <network/protocol/http/server/parameters.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
     struct server_storage_base {
         struct no_io_service {};
@@ -37,10 +37,8 @@ namespace boost { namespace network { namespace http {
     };
     
     
-} /* http */
+}  // namespace http
     
-} /* network */
+}  // namespace network
     
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_SERVER_STORAGE_BASE_HPP_20101210 */
+#endif /* NETWORK_PROTOCOL_HTTP_SERVER_STORAGE_BASE_HPP_20101210 */

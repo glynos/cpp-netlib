@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_SERVER_HPP_20101025
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_SERVER_HPP_20101025
-
 // Copyright 2010 Dean Michael Berris. 
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_SERVER_HPP_20101025
+#define NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_SERVER_HPP_20101025
 
 #include <network/detail/debug.hpp>
 #include <network/protocol/http/server/async_connection.hpp>
@@ -14,7 +14,7 @@
 #include <network/protocol/http/server/socket_options_base.hpp>
 #include <network/utils/thread_pool.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
     
     template <class Tag, class Handler>
     struct async_server_base : server_storage_base, socket_options_base {
@@ -71,10 +71,10 @@ namespace boost { namespace network { namespace http {
 
         void listen() {
 			scoped_mutex_lock listening_lock(listening_mutex_);
-            BOOST_NETWORK_MESSAGE("Listening on " << address_ << ':' << port_);
+            NETWORK_MESSAGE("Listening on " << address_ << ':' << port_);
             if (!listening) start_listening(); // we only initialize our acceptor/sockets if we arent already listening
             if (!listening) {
-                BOOST_NETWORK_MESSAGE("Error listening on " << address_ << ':' << port_);
+                NETWORK_MESSAGE("Error listening on " << address_ << ':' << port_);
                 boost::throw_exception(std::runtime_error("Error listening on provided port."));
             }
         }
@@ -118,7 +118,7 @@ namespace boost { namespace network { namespace http {
 						)
 					);
             } else {
-                BOOST_NETWORK_MESSAGE("Error accepting connection, reason: " << ec);
+                NETWORK_MESSAGE("Error accepting connection, reason: " << ec);
             }
         }
         
@@ -133,24 +133,24 @@ namespace boost { namespace network { namespace http {
             tcp::resolver::query query(address_, port_);
             tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
             if (error) {
-                BOOST_NETWORK_MESSAGE("Error resolving '" << address_ << ':' << port_);
+                NETWORK_MESSAGE("Error resolving '" << address_ << ':' << port_);
                 return;
             }
             tcp::endpoint endpoint = *endpoint_iterator;
             acceptor.open(endpoint.protocol(), error);
             if (error) {
-                BOOST_NETWORK_MESSAGE("Error opening socket: " << address_ << ":" << port_);
+                NETWORK_MESSAGE("Error opening socket: " << address_ << ":" << port_);
                 return;
             }
             socket_options_base::acceptor_options(acceptor);
             acceptor.bind(endpoint, error);
             if (error) {
-                BOOST_NETWORK_MESSAGE("Error binding socket: " << address_ << ":" << port_);
+                NETWORK_MESSAGE("Error binding socket: " << address_ << ":" << port_);
                 return;
             }
             acceptor.listen(asio::socket_base::max_connections, error);
             if (error) {
-                BOOST_NETWORK_MESSAGE("Error listening on socket: '" << error << "' on " << address_ << ":" << port_);
+                NETWORK_MESSAGE("Error listening on socket: '" << error << "' on " << address_ << ":" << port_);
                 return;
             }
             new_connection.reset(new connection(service_, handler, thread_pool));
@@ -162,14 +162,11 @@ namespace boost { namespace network { namespace http {
             listening = true;
 			scoped_mutex_lock stopping_lock(stopping_mutex_);
 			stopping = false; // if we were in the process of stopping, we revoke that command and continue listening
-            BOOST_NETWORK_MESSAGE("Now listening on socket: '" << address_ << ":" << port_ << "'");
+            NETWORK_MESSAGE("Now listening on socket: '" << address_ << ":" << port_ << "'");
         }
     };
     
-} /* http */
+}  // namespace http
+}  // namespace network
     
-} /* network */
-    
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_SERVER_HPP_20101025 */
+#endif /* NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_SERVER_HPP_20101025 */

@@ -1,7 +1,3 @@
-
-#ifndef BOOST_NETWORK_MESSAGE_MESSAGE_CONCEPT_HPP_20100903
-#define BOOST_NETWORK_MESSAGE_MESSAGE_CONCEPT_HPP_20100903
-
 // Copyright (c) Glyn Matthews 2010.
 // Copyright 2010 (c) Dean Michael Berris.
 // Copyright 2010 (c) Sinefunc, Inc.
@@ -10,19 +6,22 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_MESSAGE_MESSAGE_CONCEPT_HPP_20100903
+#define NETWORK_MESSAGE_MESSAGE_CONCEPT_HPP_20100903
+
 #include <boost/concept_check.hpp>
 #include <network/message/wrappers.hpp>
 #include <network/message/transformers.hpp>
 #include <network/message/directives.hpp>
 #include <map>
 
-namespace boost { namespace network {
+namespace network {
     
     template <class M>
     struct Message 
         : DefaultConstructible<M>, CopyConstructible<M>, Assignable<M> {
 
-        BOOST_CONCEPT_USAGE(Message) {
+        CONCEPT_USAGE(Message) {
             M message_;
             swap(message, message_);
             typedef std::string source_type;
@@ -61,7 +60,4 @@ namespace boost { namespace network {
 
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_MESSAGE_MESSAGE_CONCEPT_HPP_20100903
-
+#endif // NETWORK_MESSAGE_MESSAGE_CONCEPT_HPP_20100903

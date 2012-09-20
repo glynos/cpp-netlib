@@ -4,8 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP
+#define NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP
 
 #include <list>
 #include <string>
@@ -15,7 +15,8 @@
 #include <network/protocol/http/client/connection_manager.hpp>
 #include <network/protocol/http/client/client_connection.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
   
   // Forward-declare the pimpl.
   class client_options_pimpl;
@@ -143,6 +144,5 @@ namespace boost { namespace network { namespace http {
   
 } // namespace http
 } // namespace network
-} // namespace boost
 
-#endif  // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP
+#endif  // NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP

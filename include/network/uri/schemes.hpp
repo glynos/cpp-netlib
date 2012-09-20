@@ -1,12 +1,12 @@
-//              Copyright 2012 Glyn Matthews.
+// Copyright 2012 Glyn Matthews.
+// Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-
-#ifndef __BOOST_NETWORK_URI_SCHEMES_INC__
-# define __BOOST_NETWORK_URI_SCHEMES_INC__
+#ifndef NETWORK_URI_SCHEMES_INC
+#define NETWORK_URI_SCHEMES_INC
 
 #include <string>
 #include <boost/optional.hpp>
@@ -31,5 +31,4 @@ public:
 boost::optional<std::string> default_port(const std::string &scheme);
 } // namespace network
 
-
-#endif // __BOOST_NETWORK_URI_SCHEMES_INC__
+#endif // NETWORK_URI_SCHEMES_INC

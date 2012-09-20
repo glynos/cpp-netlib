@@ -1,17 +1,17 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SERVER_IPP_20120318
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SERVER_IPP_20120318
-
 // Copyright 2012 Dean Michael Berris <dberris@google.com>.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_SERVER_SERVER_IPP_20120318
+#define NETWORK_PROTOCOL_HTTP_SERVER_SERVER_IPP_20120318
+
 #include <network/protocol/http/server/options.hpp>
 #include <network/protocol/http/server/sync_impl.hpp>
 #include <network/protocol/http/server/async_impl.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 template <class SyncHandler>
 sync_server<SyncHandler>::sync_server(server_options const &options, SyncHandler &handler)
@@ -67,6 +67,4 @@ async_server<SyncHandler>::~async_server() {
 
 }  // namespace network
 
-}  // namespace boost
-
-#endif  // BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SERVER_IPP_20120318
+#endif  // NETWORK_PROTOCOL_HTTP_SERVER_SERVER_IPP_20120318

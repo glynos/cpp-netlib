@@ -7,12 +7,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_HTTP_SERVER_HPP_
-#define BOOST_NETWORK_HTTP_SERVER_HPP_
+#ifndef NETWORK_HTTP_SERVER_HPP_
+#define NETWORK_HTTP_SERVER_HPP_
 
 #include <boost/shared_ptr.hpp>
 
-namespace boost { namespace network { namespace utils {
+namespace network { namespace utils {
 
 struct thread_pool;
 
@@ -20,9 +20,7 @@ struct thread_pool;
 
 }  // namespace network
 
-}  // namespace boost
-
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 class server_options;
 class sync_server_impl;
@@ -70,11 +68,9 @@ class async_server {
 
 } // namespace network
 
-} // namespace boost
-
 // We're hiding the implementation from here, but still explicitly including
 // it here. This is mostly a style point, to keep this header clean.
 #include <network/protocol/http/server/server.ipp>
 
-#endif // BOOST_NETWORK_HTTP_SERVER_HPP_
+#endif // NETWORK_HTTP_SERVER_HPP_
 

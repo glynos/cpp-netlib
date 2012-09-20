@@ -1,6 +1,3 @@
-#ifndef BOOST_NETWORK_POLICY_ASYNC_CONNECTION_HPP_20100529
-#define BOOST_NETWORK_POLICY_ASYNC_CONNECTION_HPP_20100529
-
 // Copyright 2010 (C) Dean Michael Berris
 // Copyright 2010 (C) Sinefunc, Inc.
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
@@ -8,6 +5,9 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_POLICY_ASYNC_CONNECTION_HPP_20100529
+#define NETWORK_POLICY_ASYNC_CONNECTION_HPP_20100529
 
 #include <network/version.hpp>
 #include <boost/shared_ptr.hpp>
@@ -21,7 +21,7 @@
 #include <network/protocol/http/client/connection/resolver_delegate.hpp>
 #include <boost/unordered_map.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 struct simple_async_connection_manager : connection_manager {
   simple_async_connection_manager(bool cache_resolved,
@@ -71,9 +71,6 @@ struct http_1_1_async_connection_manager : connection_manager, enable_shared_fro
 };
 
 } // namespace http
-
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_POLICY_ASYNC_CONNECTION_HPP_
+#endif // NETWORK_POLICY_ASYNC_CONNECTION_HPP_

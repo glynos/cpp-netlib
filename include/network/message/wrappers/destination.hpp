@@ -1,15 +1,15 @@
-#ifndef __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
-#define __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP
+#define NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP
+
 #include <network/message/message_base.hpp>
 
-namespace boost { namespace network {
+namespace network {
 
 struct destination_wrapper {
   explicit destination_wrapper(message_base const & message);
@@ -30,10 +30,4 @@ inline std::ostream & operator<< (std::ostream &os, destination_wrapper const &d
 
 } // namespace network
 
-} // namespace boost
-
-#ifdef BOOST_NETWORK_NO_LIB
-#include <network/message/wrappers/destination.ipp>
-#endif
-
-#endif // __NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP__
+#endif // NETWORK_MESSAGE_WRAPPERS_DESTINATION_HPP

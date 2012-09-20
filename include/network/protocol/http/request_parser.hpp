@@ -20,7 +20,7 @@
 #include <boost/tuple/tuple.hpp>
 #include <network/protocol/http/request.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 namespace tag {
     struct default_;
@@ -98,10 +98,7 @@ private:
 };
 
 } // namespace http
-
 } // namespace network
-
-} // namespace boost
 
 #include <network/protocol/http/impl/request_parser.ipp>
 

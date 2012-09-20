@@ -1,26 +1,24 @@
 // Copyright 2009-2012 Dean Michael Berris, Jeroen Habraken, Glyn Matthews.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef __BOOST_NETWORK_URI_INC__
-# define __BOOST_NETWORK_URI_INC__
+#ifndef NETWORK_URI_INC
+#define NETWORK_URI_INC
 
-# pragma once
-
-# include <network/uri/config.hpp>
-# include <network/uri/detail/uri_parts.hpp>
-# include <network/uri/schemes.hpp>
-# include <boost/utility/swap.hpp>
-# include <boost/range/algorithm/equal.hpp>
-# include <boost/range/algorithm/copy.hpp>
-# include <boost/range/as_literal.hpp>
-# include <boost/range/iterator_range.hpp>
-# include <boost/lexical_cast.hpp>
-# include <boost/optional.hpp>
-# include <boost/functional/hash_fwd.hpp>
+#include <network/uri/config.hpp>
+#include <network/uri/detail/uri_parts.hpp>
+#include <network/uri/schemes.hpp>
+#include <boost/utility/swap.hpp>
+#include <boost/range/algorithm/equal.hpp>
+#include <boost/range/algorithm/copy.hpp>
+#include <boost/range/as_literal.hpp>
+#include <boost/range/iterator_range.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/optional.hpp>
+#include <boost/functional/hash_fwd.hpp>
 
 namespace network {
 namespace detail {
@@ -351,9 +349,9 @@ bool operator < (const uri &lhs, const uri &rhs) {
 }
 } // namespace network
 
-# include <network/uri/accessors.hpp>
-# include <network/uri/directives.hpp>
-# include <network/uri/builder.hpp>
+#include <network/uri/accessors.hpp>
+#include <network/uri/directives.hpp>
+#include <network/uri/builder.hpp>
 
 
 namespace network {
@@ -406,7 +404,7 @@ uri from_parts(const uri::string_type &base_uri,
 }
 } // namespace network
 
-# include <boost/filesystem/path.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace network {
 inline
@@ -418,4 +416,4 @@ uri from_file(const boost::filesystem::path &path_) {
 } // namespace network
 
 
-#endif // __BOOST_NETWORK_URI_INC__
+#endif // NETWORK_URI_INC

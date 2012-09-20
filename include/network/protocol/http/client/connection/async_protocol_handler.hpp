@@ -1,6 +1,3 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_
-#define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_
-
 // Copyright 2010 (C) Dean Michael Berris
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google, Inc.
@@ -8,15 +5,20 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_
+#define NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_
+
 #include <network/detail/debug.hpp>
 #include <network/protocol/http/algorithms/linearize.hpp>
 
-namespace boost { namespace network { namespace http { namespace impl {
+namespace network {
+namespace http {
+namespace impl {
 
   struct http_async_protocol_handler {
   protected:
 
-#ifdef BOOST_NETWORK_DEBUG
+#ifdef NETWORK_DEBUG
     struct debug_escaper {
       std::string & string;
       explicit debug_escaper(std::string & string_)
@@ -101,11 +103,11 @@ namespace boost { namespace network { namespace http { namespace impl {
         version_promise.set_value(version);
         part_begin = boost::end(result_range);
       } else if (parsed_ok == false) {
-#ifdef BOOST_NETWORK_DEBUG
+#ifdef NETWORK_DEBUG
         std::string escaped;
         debug_escaper escaper(escaped);
         std::for_each(part_begin, part_end, escaper);
-        BOOST_NETWORK_MESSAGE("[parser:"
+        NETWORK_MESSAGE("[parser:"
                     << response_parser_.state()
                     << "] buffer contents: \""
                     << escaped
@@ -158,11 +160,11 @@ namespace boost { namespace network { namespace http { namespace impl {
         status_promise.set_value(status_int);
         part_begin = boost::end(result_range);
       } else if (parsed_ok == false) {
-#ifdef BOOST_NETWORK_DEBUG
+#ifdef NETWORK_DEBUG
         std::string escaped;
         debug_escaper escaper(escaped);
         std::for_each(part_begin, part_end, escaper);
-        BOOST_NETWORK_MESSAGE("[parser:"
+        NETWORK_MESSAGE("[parser:"
                     << response_parser_.state()
                     << "] buffer contents: \""
                     << escaped
@@ -212,11 +214,11 @@ namespace boost { namespace network { namespace http { namespace impl {
         status_message_promise.set_value(status_message);
         part_begin = boost::end(result_range);
       } else if (parsed_ok == false) {
-#ifdef BOOST_NETWORK_DEBUG
+#ifdef NETWORK_DEBUG
         std::string escaped;
         debug_escaper escaper(escaped);
         std::for_each(part_begin, part_end, escaper);
-        BOOST_NETWORK_MESSAGE("[parser:"
+        NETWORK_MESSAGE("[parser:"
                     << response_parser_.state()
                     << "] buffer contents: \""
                     << escaped
@@ -305,11 +307,11 @@ namespace boost { namespace network { namespace http { namespace impl {
       } else if (parsed_ok == false) {
         // We want to output the contents of the buffer that caused
         // the error in debug builds.
-#ifdef BOOST_NETWORK_DEBUG
+#ifdef NETWORK_DEBUG
         std::string escaped;
         debug_escaper escaper(escaped);
         std::for_each(part_begin, part_end, escaper);
-        BOOST_NETWORK_MESSAGE("[parser:"
+        NETWORK_MESSAGE("[parser:"
                     << response_parser_.state()
                     << "] buffer contents: \""
                     << escaped
@@ -359,19 +361,15 @@ namespace boost { namespace network { namespace http { namespace impl {
     boost::promise<std::string> source_promise;
     boost::promise<std::string> destination_promise;
     boost::promise<std::string> body_promise;
-    typedef boost::array<char, BOOST_NETWORK_BUFFER_CHUNK> buffer_type;
+    typedef boost::array<char, NETWORK_BUFFER_CHUNK> buffer_type;
     buffer_type part;
      buffer_type::const_iterator part_begin;
     std::string partial_parsed;
   };
 
 
-} /* impl */
+}  // namespace impl
+}  // namespace http
+}  // namespace network
 
-} /* http */
-
-} /* network */
-
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_20101015 */
+#endif /* NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_20101015 */

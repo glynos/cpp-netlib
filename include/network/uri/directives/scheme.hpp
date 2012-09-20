@@ -1,18 +1,16 @@
-//            Copyright (c) Glyn Matthews 2011, 2012.
+// Copyright (c) Glyn Matthews 2011, 2012.
+// Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_URI_DIRECTIVES_SCHEME_INC
+#define NETWORK_URI_DIRECTIVES_SCHEME_INC
 
-#ifndef __BOOST_NETWORK_URI_DIRECTIVES_SCHEME_INC__
-# define __BOOST_NETWORK_URI_DIRECTIVES_SCHEME_INC__
-
-
-# include <boost/range/begin.hpp>
-# include <boost/range/end.hpp>
-# include <network/uri/schemes.hpp>
-
+#include <boost/range/begin.hpp>
+#include <boost/range/end.hpp>
+#include <network/uri/schemes.hpp>
 
 namespace network {
 struct scheme_directive {
@@ -61,5 +59,4 @@ uri &file(uri &uri_) {
 } // namespace schemes
 } // namespace network
 
-
-#endif // __BOOST_NETWORK_URI_DIRECTIVES_SCHEME_INC__
+#endif // NETWORK_URI_DIRECTIVES_SCHEME_INC

@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819
-
 // Copyright 2011 Dean Michael Berris (dberris@google.com).
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819
+#define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819
 
 #include <network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -18,7 +18,8 @@ class io_service;
 
 }  // namespace boost
 
-namespace boost { namespace network { namespace http {
+namespace network {
+namespace http {
 
 struct normal_delegate : connection_delegate {
   normal_delegate(asio::io_service & service);
@@ -40,10 +41,7 @@ struct normal_delegate : connection_delegate {
   normal_delegate& operator=(normal_delegate);  // = delete
 };
 
-} /* http */
+}  // namespace http
+}  // namespace network
 
-} /* network */
-
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819 */
+#endif /* NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819 */

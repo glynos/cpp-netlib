@@ -1,6 +1,3 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_CONCEPT_HPP_20100603
-#define BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_CONCEPT_HPP_20100603
-
 // Copyright 2010 (c) Dean Michael Berris.
 // Copyright 2010 (c) Sinefunc, Inc.
 // Copyright 2012 Google, Inc.
@@ -8,11 +5,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_RESPONSE_CONCEPT_HPP_20100603
+#define NETWORK_PROTOCOL_HTTP_RESPONSE_CONCEPT_HPP_20100603
+
 #include <boost/concept_check.hpp>
 #include <network/message/message_concept.hpp>
 #include <boost/cstdint.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
     template <class R>
     struct Response
@@ -51,9 +51,6 @@ namespace boost { namespace network { namespace http {
     };
 
 } // namespace http
-
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_CONCEPT_HPP_20100603
+#endif // NETWORK_PROTOCOL_HTTP_RESPONSE_CONCEPT_HPP_20100603

@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_SYNC_CONNECTION_BASE_20091217
-#define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_SYNC_CONNECTION_BASE_20091217
-
-//          Copyright Dean Michael Berris 2009.
+// Copyright Dean Michael Berris 2009.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef NETWORK_PROTOCOL_HTTP_IMPL_SYNC_CONNECTION_BASE_20091217
+#define NETWORK_PROTOCOL_HTTP_IMPL_SYNC_CONNECTION_BASE_20091217
 
 #include <network/protocol/http/traits/resolver_policy.hpp>
 #include <network/traits/ostringstream.hpp>
@@ -18,11 +18,11 @@
 #include <network/protocol/http/response.hpp>
 
 #include <network/protocol/http/client/connection/sync_normal.hpp>
-#ifdef BOOST_NETWORK_ENABLE_HTTPS
+#ifdef NETWORK_ENABLE_HTTPS
 #include <network/protocol/http/client/connection/sync_ssl.hpp>
 #endif
 
-namespace boost { namespace network { namespace http { namespace impl {
+namespace network { namespace http { namespace impl {
 
     template <class Tag, unsigned version_major, unsigned version_minor>
     struct sync_connection_base_impl {
@@ -220,7 +220,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         // FIXME make the certificate filename and verify path parameters be optional ranges
         static sync_connection_base<Tag,version_major,version_minor> * new_connection(resolver_type & resolver, resolver_function_type resolve, bool https, optional<string_type> const & cert_filename = optional<string_type>(), optional<string_type> const & verify_path = optional<string_type>()) {
             if (https) {
-#ifdef BOOST_NETWORK_ENABLE_HTTPS
+#ifdef NETWORK_ENABLE_HTTPS
                 return dynamic_cast<sync_connection_base<Tag,version_major,version_minor>*>(new https_sync_connection<Tag,version_major,version_minor>(resolver, resolve, cert_filename, verify_path));
 #else
                 throw std::runtime_error("HTTPS not supported.");
@@ -241,13 +241,9 @@ namespace boost { namespace network { namespace http { namespace impl {
         sync_connection_base() {}
     };
 
-} // namespace impl
+}  // namespace impl
+}  // namespace http
+}  // namespace network
 
-} // namespace http
-
-} // namespace network
-
-} // namespace boost
-
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_SYNC_CONNECTION_BASE_20091217
+#endif // NETWORK_PROTOCOL_HTTP_IMPL_SYNC_CONNECTION_BASE_20091217
 

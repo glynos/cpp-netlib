@@ -1,17 +1,17 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CLIENT_CONNECTION_HPP_20111103
-#define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CLIENT_CONNECTION_HPP_20111103
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CLIENT_CONNECTION_HPP_20111103
+#define NETWORK_PROTOCOL_HTTP_CLIENT_CLIENT_CONNECTION_HPP_20111103
+
 #include <boost/function.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/system/error_code.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 struct request;
 struct response;
@@ -36,6 +36,4 @@ struct client_connection {
   
 } /* network */
   
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CLIENT_CONNECTION_HPP_20111103 */
+#endif /* NETWORK_PROTOCOL_HTTP_CLIENT_CLIENT_CONNECTION_HPP_20111103 */

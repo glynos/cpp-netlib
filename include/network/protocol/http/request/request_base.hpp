@@ -1,11 +1,11 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008
-#define BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008
-
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008
+#define BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008
 
 #ifndef BOOST_NETWORK_BUFFER_CHUNK
 #define BOOST_NETWORK_BUFFER_CHUNK 1024  // We want 1KiB worth of data at least.
@@ -14,7 +14,7 @@
 #include <network/message/message_base.hpp>
 #include <network/uri.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
 struct body_source : iostreams::source {
   virtual std::streamsize read(char * buffer, std::streamsize size);
@@ -59,10 +59,7 @@ struct request_base : message_base, request_storage_base {
   virtual ~request_base() = 0;
 };
 
-} /* http */
-
-} /* network */
-
-} /* boost */
+}  // namespace http
+}  // namespace network
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008 */

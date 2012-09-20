@@ -1,15 +1,15 @@
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_READY_HPP_20100618
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_READY_HPP_20100618
-
 // Copyright 2010 Dean Michael Berris. 
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_READY_HPP_20100618
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_READY_HPP_20100618
+
 #include <network/detail/wrapper_base.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace network { namespace http {
 
     template <class Tag>
     struct async_message;
@@ -37,10 +37,7 @@ namespace boost { namespace network { namespace http {
         return impl::ready_wrapper<Tag>(message);
     }
     
-} /* http */
-    
-} /* network */
-    
-} /* boost */
+}  // namespace http
+}  // namespace network
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_READY_HPP_20100618 */
+#endif /* NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_READY_HPP_20100618 */

@@ -1,5 +1,5 @@
-#ifndef BOOST_NETWORK_MESSAGE_MODIFIER_ADD_HEADER_HPP_20100824
-#define BOOST_NETWORK_MESSAGE_MODIFIER_ADD_HEADER_HPP_20100824
+#ifndef NETWORK_MESSAGE_MODIFIER_ADD_HEADER_HPP_20100824
+#define NETWORK_MESSAGE_MODIFIER_ADD_HEADER_HPP_20100824
 
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
@@ -11,15 +11,14 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 
-namespace boost { namespace network {
+namespace network {
 
-inline
-void add_header(message_base & message, std::string const & key, std::string const & value) {
+inline void add_header(message_base & message,
+                       std::string const & key,
+                       std::string const & value) {
   message.append_header(key, value);
 }
 
 } // namespace network
 
-} // namespace boost
-
-#endif // BOOST_NETWORK_MESSAGE_MODIFIER_ADD_HEADER_HPP_20100824
+#endif // NETWORK_MESSAGE_MODIFIER_ADD_HEADER_HPP_20100824
