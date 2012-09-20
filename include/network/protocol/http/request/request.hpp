@@ -41,18 +41,18 @@ struct request : request_base {
   // Retrievers
   virtual void get_destination(std::string & destination) const;
   virtual void get_source(std::string & source) const;
-  virtual void get_headers(function<void(std::string const &, std::string const &)> inserter) const;
-  virtual void get_headers(std::string const & name, function<void(std::string const &, std::string const &)> inserter) const;
-  virtual void get_headers(function<bool(std::string const &, std::string const &)> predicate, function<void(std::string const &, std::string const &)> inserter) const;
+  virtual void get_headers(boost::function<void(std::string const &, std::string const &)> inserter) const;
+  virtual void get_headers(std::string const & name, boost::function<void(std::string const &, std::string const &)> inserter) const;
+  virtual void get_headers(boost::function<bool(std::string const &, std::string const &)> predicate, boost::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_body(std::string & body) const;
-  virtual void get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) const;
+  virtual void get_body(boost::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const;
 
   // From request_base...
   // Setters
   virtual void set_method(std::string const & method);
   virtual void set_status(std::string const & status);
   virtual void set_status_message(std::string const & status_message);
-  virtual void set_body_writer(function<void(char*, size_t)> writer);
+  virtual void set_body_writer(boost::function<void(char*, size_t)> writer);
   virtual void set_uri(std::string const &uri);
   virtual void set_uri(::network::uri const &uri);
   virtual void set_version_major(unsigned short major_version);
@@ -64,7 +64,7 @@ struct request : request_base {
   virtual void get_method(std::string & method) const;
   virtual void get_status(std::string & status) const;
   virtual void get_status_message(std::string & status_message) const;
-  virtual void get_body(function<void(char*, size_t)> chunk_reader) const;
+  virtual void get_body(boost::function<void(char*, size_t)> chunk_reader) const;
   virtual void get_body(std::string const & body) const;
   virtual void get_version_major(unsigned short &major_version);
   virtual void get_version_minor(unsigned short &minor_version);

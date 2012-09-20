@@ -22,14 +22,14 @@ struct source_selector {
  private:
   source_selector() {};
   source_selector(source_selector const &) {};
-  friend source_selector boost::network::source_(source_selector);
+  friend source_selector network::source_(source_selector);
 };
 
 struct destination_selector {
  private:
   destination_selector() {};
   destination_selector(destination_selector const &) {};
-  friend destination_selector boost::network::destination_(destination_selector);
+  friend destination_selector network::destination_(destination_selector);
 };
 
 } // namespace selectors

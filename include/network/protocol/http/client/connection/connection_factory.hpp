@@ -24,9 +24,10 @@ struct client_connection;
 struct request_base;
 
 struct connection_factory {
-  virtual shared_ptr<client_connection> create_connection(asio::io_service &service,
-                                                          request_base const & request,
-                                                          client_options const &options) = 0;
+  virtual boost::shared_ptr<client_connection> create_connection(
+      boost::asio::io_service &service,
+      request_base const & request,
+      client_options const &options) = 0;
   virtual ~connection_factory() = 0; // pure virtual, interface only.
 };
   

@@ -25,8 +25,8 @@ struct request_base;
 class client_options;
 
 struct connection_manager {
-  virtual shared_ptr<client_connection> get_connection(
-      asio::io_service & service,
+  virtual boost::shared_ptr<client_connection> get_connection(
+      boost::asio::io_service & service,
       request_base const & request,
       client_options const & options) = 0;
   virtual void clear_resolved_cache() = 0;

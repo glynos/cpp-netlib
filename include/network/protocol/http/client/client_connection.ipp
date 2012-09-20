@@ -21,7 +21,7 @@ client_connection::~client_connection() {
 client_connection * client_connection::clone() const {
   NETWORK_MESSAGE("client_connection::clone()");
   // For exposition only.
-  ASSERT(false && "This should not ever be called.");
+  BOOST_ASSERT(false && "This should not ever be called.");
   return 0;
 }
 

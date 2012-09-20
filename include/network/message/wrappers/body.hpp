@@ -17,12 +17,12 @@ struct body_wrapper {
   explicit body_wrapper(message_base const & message);
   operator std::string () const;
   std::size_t size() const;
-  operator iterator_range<std::string::const_iterator> () const;
+  operator boost::iterator_range<std::string::const_iterator> () const;
   std::string::const_iterator begin() const;
   std::string::const_iterator end() const;
  private:
   message_base const & message_;
-  mutable optional<std::string> cache_;
+  mutable boost::optional<std::string> cache_;
 };
 
 inline std::ostream & operator<<(std::ostream & os, body_wrapper const & body) {

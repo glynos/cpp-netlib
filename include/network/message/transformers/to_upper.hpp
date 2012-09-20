@@ -69,7 +69,7 @@ struct to_upper_placeholder_helper {
  private:
   to_upper_placeholder_helper() {}
   to_upper_placeholder_helper(to_upper_placeholder_helper const &) {}
-  friend to_upper_placeholder_helper boost::network::to_upper_(to_upper_placeholder_helper);
+  friend to_upper_placeholder_helper network::to_upper_(to_upper_placeholder_helper);
 };
 
 }  // namespace detail

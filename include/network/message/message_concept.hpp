@@ -19,9 +19,11 @@ namespace network {
     
     template <class M>
     struct Message 
-        : DefaultConstructible<M>, CopyConstructible<M>, Assignable<M> {
+        : boost::DefaultConstructible<M>,
+          boost::CopyConstructible<M>,
+          boost::Assignable<M> {
 
-        CONCEPT_USAGE(Message) {
+        BOOST_CONCEPT_USAGE(Message) {
             M message_;
             swap(message, message_);
             typedef std::string source_type;

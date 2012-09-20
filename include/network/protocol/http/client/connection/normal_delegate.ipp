@@ -15,29 +15,29 @@
 #include <network/protocol/http/client/connection/normal_delegate.hpp>
 #include <network/detail/debug.hpp>
 
-network::http::normal_delegate::normal_delegate(asio::io_service & service)
+network::http::normal_delegate::normal_delegate(boost::asio::io_service & service)
   : service_(service)
 {}
 
 void network::http::normal_delegate::connect(
-    asio::ip::tcp::endpoint & endpoint,
+    boost::asio::ip::tcp::endpoint & endpoint,
     std::string const &host,
-    function<void(system::error_code const &)> handler) {
-  socket_.reset(new asio::ip::tcp::socket(service_));
+    boost::function<void(boost::system::error_code const &)> handler) {
+  socket_.reset(new boost::asio::ip::tcp::socket(service_));
   socket_->async_connect(endpoint, handler);
 }
 
 void network::http::normal_delegate::write(
-    asio::streambuf & command_streambuf,
-    function<void(system::error_code const &, size_t)> handler) {
+    boost::asio::streambuf & command_streambuf,
+    boost::function<void(boost::system::error_code const &, size_t)> handler) {
   NETWORK_MESSAGE("normal_delegate::write(...)");
   NETWORK_MESSAGE("scheduling asynchronous write...");
-  asio::async_write(*socket_, command_streambuf, handler);
+  boost::asio::async_write(*socket_, command_streambuf, handler);
 }
 
 void network::http::normal_delegate::read_some(
-    asio::mutable_buffers_1 const & read_buffer,
-    function<void(system::error_code const &, size_t)> handler) {
+    boost::asio::mutable_buffers_1 const & read_buffer,
+    boost::function<void(boost::system::error_code const &, size_t)> handler) {
   NETWORK_MESSAGE("normal_delegate::read_some(...)");
   NETWORK_MESSAGE("scheduling asynchronous read some...");
   socket_->async_read_some(read_buffer, handler);

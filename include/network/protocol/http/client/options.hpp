@@ -51,8 +51,8 @@ namespace http {
     // The default setting when un-set is nullptr, meaning it signals the client
     // implementation that the user doesn't want to use his own io_service
     // instance.
-    client_options& io_service(asio::io_service *io_service);
-    asio::io_service* io_service() const;
+    client_options& io_service(boost::asio::io_service *io_service);
+    boost::asio::io_service* io_service() const;
     
     // The following option determines whether the client should follow
     // HTTP redirects when the implementation encounters them. The default
@@ -83,13 +83,13 @@ namespace http {
 
     // The following options provide the connection manager shared pointer that
     // is what the client will use to manage connections.
-    client_options& connection_manager(shared_ptr<http::connection_manager> manager);
-    shared_ptr<http::connection_manager> connection_manager() const;
+    client_options& connection_manager(boost::shared_ptr<http::connection_manager> manager);
+    boost::shared_ptr<http::connection_manager> connection_manager() const;
 
     // The following supports providing the connection factory instance responsible
     // for creating the correct instances of the appropriate connection.
-    client_options& connection_factory(shared_ptr<http::connection_factory> factory);
-    shared_ptr<http::connection_factory> connection_factory() const;
+    client_options& connection_factory(boost::shared_ptr<http::connection_factory> factory);
+    boost::shared_ptr<http::connection_factory> connection_factory() const;
     
     // More options go here...
     

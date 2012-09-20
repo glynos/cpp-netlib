@@ -16,7 +16,7 @@ namespace network { namespace http {
 
     template <class R>
     struct Response
-        : boost::network::Message<R>
+        : network::Message<R>
     {
         typedef typename R::string_type string_type;
         

@@ -15,13 +15,13 @@ namespace network {
 namespace http {
 
 struct connection_delegate {
-  virtual void connect(asio::ip::tcp::endpoint & endpoint,
+  virtual void connect(boost::asio::ip::tcp::endpoint & endpoint,
                        std::string const & host,
-                       function<void(system::error_code const &)> handler) = 0;
-  virtual void write(asio::streambuf & command_streambuf,
-                     function<void(system::error_code const &, size_t)> handler) = 0;
-  virtual void read_some(asio::mutable_buffers_1 const & read_buffer,
-                         function<void(system::error_code const &, size_t)> handler) = 0;
+                       boost::function<void(boost::system::error_code const &)> handler) = 0;
+  virtual void write(boost::asio::streambuf & command_streambuf,
+                     boost::function<void(boost::system::error_code const &, size_t)> handler) = 0;
+  virtual void read_some(boost::asio::mutable_buffers_1 const & read_buffer,
+                         boost::function<void(boost::system::error_code const &, size_t)> handler) = 0;
   virtual ~connection_delegate() {}
 };
 

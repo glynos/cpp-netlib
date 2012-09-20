@@ -24,7 +24,6 @@
 #include <network/protocol/http/message/wrappers/version.hpp>
 #include <network/protocol/http/message/wrappers/status.hpp>
 #include <network/protocol/http/message/wrappers/status_message.hpp>
-#include <network/protocol/http/message/wrappers/ready.hpp>
 
 #include <network/protocol/http/response/response.hpp>
 #include <network/protocol/http/response/response_concept.hpp>

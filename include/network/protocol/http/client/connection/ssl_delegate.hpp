@@ -21,34 +21,33 @@ class io_service;
 namespace network {
 namespace http {
 
-struct ssl_delegate : connection_delegate, enable_shared_from_this<ssl_delegate> {
-  ssl_delegate(asio::io_service & service,
+struct ssl_delegate : connection_delegate, boost::enable_shared_from_this<ssl_delegate> {
+  ssl_delegate(boost::asio::io_service & service,
                client_options const &options);
 
-  virtual void connect(asio::ip::tcp::endpoint & endpoint,
+  virtual void connect(boost::asio::ip::tcp::endpoint & endpoint,
                        std::string const &host,
-                       function<void(system::error_code const &)> handler);
-  virtual void write(asio::streambuf & command_streambuf,
-                     function<void(system::error_code const &, size_t)> handler);
-  virtual void read_some(asio::mutable_buffers_1 const & read_buffer,
-                         function<void(system::error_code const &, size_t)> handler);
+                       boost::function<void(boost::system::error_code const &)> handler);
+  virtual void write(boost::asio::streambuf & command_streambuf,
+                     boost::function<void(boost::system::error_code const &, size_t)> handler);
+  virtual void read_some(boost::asio::mutable_buffers_1 const & read_buffer,
+                         boost::function<void(boost::system::error_code const &, size_t)> handler);
   ~ssl_delegate();
 
  private:
-  asio::io_service & service_;
+  boost::asio::io_service & service_;
   client_options options_;
-  scoped_ptr<asio::ssl::context> context_;
-  scoped_ptr<asio::ssl::stream<asio::ip::tcp::socket> > socket_;
+  boost::scoped_ptr<boost::asio::ssl::context> context_;
+  boost::scoped_ptr<boost::asio::ssl::stream<boost::asio::ip::tcp::socket> > socket_;
 
   ssl_delegate(ssl_delegate const &);  // = delete
   ssl_delegate& operator=(ssl_delegate);  // = delete
 
-  void handle_connected(system::error_code const & ec,
-                        function<void(system::error_code const &)> handler);
+  void handle_connected(boost::system::error_code const & ec,
+                        boost::function<void(boost::system::error_code const &)> handler);
 };
 
 }  // namespace http
 }  // namespace network
-}  // namespace boost
 
 #endif /* NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819 */

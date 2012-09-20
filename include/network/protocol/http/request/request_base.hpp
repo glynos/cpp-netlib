@@ -16,7 +16,7 @@
 
 namespace network { namespace http {
 
-struct body_source : iostreams::source {
+struct body_source {
   virtual std::streamsize read(char * buffer, std::streamsize size);
   virtual ~body_source();
 };
@@ -44,7 +44,7 @@ struct request_base : message_base, request_storage_base {
   virtual void set_method(std::string const & method) = 0;
   virtual void set_status(std::string const & status) = 0;
   virtual void set_status_message(std::string const & status_message) = 0;
-  virtual void set_body_writer(function<void(char*, size_t)> writer) = 0;
+  virtual void set_body_writer(boost::function<void(char*, size_t)> writer) = 0;
   virtual void set_uri(std::string const &uri) = 0;
   virtual void set_uri(::network::uri const &uri) = 0;
 
@@ -54,7 +54,7 @@ struct request_base : message_base, request_storage_base {
   virtual void get_method(std::string & method) const = 0;
   virtual void get_status(std::string & status) const = 0;
   virtual void get_status_message(std::string & status_message) const = 0;
-  virtual void get_body(function<void(char*, size_t)> chunk_reader) const = 0;
+  virtual void get_body(boost::function<void(char*, size_t)> chunk_reader) const = 0;
   virtual void get_body(std::string const & body) const = 0;
   virtual ~request_base() = 0;
 };

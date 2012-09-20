@@ -9,7 +9,6 @@
 #ifndef NETWORK_URI_CONFIG_INC
 #define NETWORK_URI_CONFIG_INC
 
-
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 

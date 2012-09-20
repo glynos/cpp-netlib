@@ -19,9 +19,10 @@ struct response;
 class request_options;
 
 struct client_connection {
-  typedef function<void(iterator_range<char const *> const &,
-                        system::error_code const &)>
-      callback_type;
+  typedef boost::function<
+    void(boost::iterator_range<char const *> const &,
+         boost::system::error_code const &)>
+    callback_type;
   virtual response send_request(std::string const & method,
                                 request const & request,
                                 bool get_body,

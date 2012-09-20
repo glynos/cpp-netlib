@@ -20,14 +20,14 @@ struct simple_connection_factory_pimpl;
 
 struct simple_connection_factory : connection_factory {
   simple_connection_factory();
-  simple_connection_factory(shared_ptr<connection_delegate_factory> conn_delegate_factory,
-                            shared_ptr<resolver_delegate_factory> res_delegate_factory);
-  virtual shared_ptr<client_connection> create_connection(asio::io_service & service,
+  simple_connection_factory(boost::shared_ptr<connection_delegate_factory> conn_delegate_factory,
+                            boost::shared_ptr<resolver_delegate_factory> res_delegate_factory);
+  virtual boost::shared_ptr<client_connection> create_connection(boost::asio::io_service & service,
                                                           request_base const & request,
                                                           client_options const & options); // override
   virtual ~simple_connection_factory();
  private:
-  scoped_ptr<simple_connection_factory_pimpl> pimpl;
+  boost::scoped_ptr<simple_connection_factory_pimpl> pimpl;
   simple_connection_factory(simple_connection_factory const &);  // = delete
   simple_connection_factory& operator=(simple_connection_factory);  // = delete
 };

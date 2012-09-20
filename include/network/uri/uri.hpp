@@ -28,7 +28,7 @@ bool parse(std::string::const_iterator first,
 } // namespace detail
 
 
-class BOOST_URI_DECL uri {
+class uri {
 
     friend class builder;
 

@@ -18,7 +18,7 @@ struct async_resolver_pimpl;
 struct async_resolver : resolver_delegate {
   using resolver_delegate::resolve_completion_function;
 
-  async_resolver(asio::io_service & service, bool cache_resolved);
+  async_resolver(boost::asio::io_service & service, bool cache_resolved);
   virtual void resolve(std::string const & host,
                        uint16_t port,
                        resolve_completion_function once_resolved);  // override
@@ -28,7 +28,7 @@ struct async_resolver : resolver_delegate {
  protected:
   // We need a shared_ptr because the pimpl may live on long after the resolver
   // delegate (instances of this type) is actually destroyed.
-  shared_ptr<async_resolver_pimpl> pimpl;
+  boost::shared_ptr<async_resolver_pimpl> pimpl;
 };
 
 } // namespace http

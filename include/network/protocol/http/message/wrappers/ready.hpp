@@ -16,8 +16,8 @@ namespace network { namespace http {
 
     namespace impl {
         template <class Tag>
-        struct ready_wrapper : boost::network::detail::wrapper_base_const<Tag, async_message<Tag> > {
-            typedef boost::network::detail::wrapper_base_const<Tag, async_message<Tag> >
+        struct ready_wrapper : network::detail::wrapper_base_const<Tag, async_message<Tag> > {
+            typedef network::detail::wrapper_base_const<Tag, async_message<Tag> >
                 wrapper_base;
             explicit ready_wrapper(async_message<Tag> const & message)
             : wrapper_base(message) {}

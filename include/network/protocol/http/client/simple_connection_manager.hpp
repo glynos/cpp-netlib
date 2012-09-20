@@ -49,8 +49,8 @@ struct simple_connection_manager : connection_manager {
    *   shared_ptr<client_connection> -- either an already-generated object
    *   or a newly constructed connection configured to perform the request.
    */
-  virtual shared_ptr<client_connection> get_connection(
-      asio::io_service & service,
+  virtual boost::shared_ptr<client_connection> get_connection(
+      boost::asio::io_service & service,
       request_base const & request,
       client_options const & options);  // override
 
@@ -73,7 +73,7 @@ struct simple_connection_manager : connection_manager {
   virtual ~simple_connection_manager();  // override
 
  protected:
-  scoped_ptr<simple_connection_manager_pimpl> pimpl;
+  boost::scoped_ptr<simple_connection_manager_pimpl> pimpl;
 
  private:
   /// Disabled copy constructor.

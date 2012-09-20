@@ -24,7 +24,7 @@ connection_delegate_factory::connection_delegate_factory() {
 
 connection_delegate_factory::connection_delegate_ptr
 connection_delegate_factory::create_connection_delegate(
-    asio::io_service & service,
+    boost::asio::io_service & service,
     bool https,
     client_options const &options) {
   NETWORK_MESSAGE("connection_delegate_factory::create_connection_delegate(...)");
@@ -36,7 +36,7 @@ connection_delegate_factory::create_connection_delegate(
                                     options));
 #else
     NETWORK_MESSAGE("creating an SSL delegate, but not supported");
-    THROW_EXCEPTION(std::runtime_error("HTTPS not supported."));
+    BOOST_THROW_EXCEPTION(std::runtime_error("HTTPS not supported."));
 #endif /* NETWORK_ENABLE_HTTPS */
   } else {
     NETWORK_MESSAGE("creating a normal delegate");

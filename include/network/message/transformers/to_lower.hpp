@@ -68,7 +68,7 @@ struct to_lower_placeholder_helper {
  private:
   to_lower_placeholder_helper() {}
   to_lower_placeholder_helper(to_lower_placeholder_helper const &) {}
-  friend to_lower_placeholder_helper boost::network::to_lower_(to_lower_placeholder_helper);
+  friend to_lower_placeholder_helper network::to_lower_(to_lower_placeholder_helper);
 };
 
 }  // namespace detail

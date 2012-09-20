@@ -15,7 +15,6 @@
 #include <network/protocol/http/message/wrappers/port.hpp>
 #include <network/protocol/http/message/wrappers/protocol.hpp>
 #include <network/protocol/http/message/wrappers/query.hpp>
-#include <network/protocol/http/message/wrappers/ready.hpp>
 #include <network/protocol/http/message/wrappers/status.hpp>
 #include <network/protocol/http/message/wrappers/status_message.hpp>
 #include <network/protocol/http/message/wrappers/uri.hpp>

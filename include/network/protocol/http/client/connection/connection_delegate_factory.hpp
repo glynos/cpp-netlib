@@ -16,13 +16,13 @@ namespace http {
 class client_options;
 
 struct connection_delegate_factory {
-  typedef shared_ptr<connection_delegate> connection_delegate_ptr;
+  typedef boost::shared_ptr<connection_delegate> connection_delegate_ptr;
 
   connection_delegate_factory();
 
   // This is the factory method that actually returns the delegate instance.
   virtual connection_delegate_ptr create_connection_delegate(
-      asio::io_service & service,
+      boost::asio::io_service & service,
       bool https,
       client_options const &options);
 

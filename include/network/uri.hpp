@@ -5,10 +5,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_URI_INC
-# define NETWORK_URI_INC
+#ifndef NETWORK_URI_HPP
+#define NETWORK_URI_HPP
 
 #include <network/uri/uri.hpp>
 #include <network/uri/uri_io.hpp>
 
-#endif // NETWORK_URI_INC
+#endif // NETWORK_URI_HPP

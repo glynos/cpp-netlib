@@ -29,8 +29,8 @@ struct simple_connection_manager_pimpl {
     }
   }
 
-  shared_ptr<client_connection> get_connection(asio::io_service & service,
-                                               request_base const & request,
+  boost::shared_ptr<client_connection> get_connection(boost::asio::io_service & service,
+                                                      request_base const & request,
                                                client_options const &options) {
     NETWORK_MESSAGE("simple_connection_manager_pimpl::get_connection(...)");
     return connection_factory_->create_connection(service, request, options_);
@@ -51,7 +51,7 @@ struct simple_connection_manager_pimpl {
 
 private:
   client_options options_;
-  shared_ptr<connection_factory> connection_factory_;
+  boost::shared_ptr<connection_factory> connection_factory_;
 };
 
 simple_connection_manager::simple_connection_manager(client_options const &options)
@@ -61,8 +61,8 @@ simple_connection_manager::simple_connection_manager(client_options const &optio
                         "client_options const &)");
 }
 
-shared_ptr<client_connection> simple_connection_manager::get_connection(
-    asio::io_service & service,
+boost::shared_ptr<client_connection> simple_connection_manager::get_connection(
+    boost::asio::io_service & service,
     request_base const & request,
     client_options const &options) {
   NETWORK_MESSAGE("simple_connection_manager::get_connection(...)");

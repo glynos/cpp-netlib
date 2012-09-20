@@ -16,7 +16,7 @@ struct destination_wrapper {
   operator std::string () const;
  private:
   message_base const & message_;
-  mutable optional<std::string> cache_;
+  mutable boost::optional<std::string> cache_;
 };
 
 inline destination_wrapper const

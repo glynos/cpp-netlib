@@ -19,7 +19,7 @@ struct version_wrapper {
   operator std::string() const;
  private:
   response_base & response_;
-  mutable optional<std::string> cache_;
+  mutable boost::optional<std::string> cache_;
 };
 
 inline std::ostream & operator<< (std::ostream & os, version_wrapper const & version) {

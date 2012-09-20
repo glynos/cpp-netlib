@@ -61,8 +61,8 @@ struct response_parser {
   }
 
   template <class Range>
-  fusion::tuple<logic::tribool,iterator_range<typename Range::const_iterator> > parse_until(state_t stop_state, Range & range_) {
-    logic::tribool parsed_ok(logic::indeterminate);
+  boost::fusion::tuple<boost::logic::tribool,boost::iterator_range<typename Range::const_iterator> > parse_until(state_t stop_state, Range & range_) {
+    boost::logic::tribool parsed_ok(boost::logic::indeterminate);
     typename Range::const_iterator start = boost::begin(range_),
       current = start,
       end = boost::end(range_);
@@ -121,7 +121,7 @@ struct response_parser {
           }
           break;
         case http_version_slash:
-          if (algorithm::is_digit()(*current)) {
+          if (boost::algorithm::is_digit()(*current)) {
             state_ = http_version_major;
             ++current;
           } else {
@@ -137,7 +137,7 @@ struct response_parser {
           }
           break;
         case http_version_dot:
-          if (algorithm::is_digit()(*current)) {
+          if (boost::algorithm::is_digit()(*current)) {
             state_ = http_version_minor;
             ++current;
           } else {
@@ -153,7 +153,7 @@ struct response_parser {
           }
           break;
         case http_version_done:
-          if (algorithm::is_digit()(*current)) {
+          if (boost::algorithm::is_digit()(*current)) {
             state_ = http_status_digit;
             ++current;
           } else {
@@ -161,7 +161,7 @@ struct response_parser {
           }
           break;
         case http_status_digit:
-          if (algorithm::is_digit()(*current)) {
+          if (boost::algorithm::is_digit()(*current)) {
             ++current;
           } else if (*current == ' ') {
             state_ = http_status_done;
@@ -171,7 +171,7 @@ struct response_parser {
           }
           break;
         case http_status_done:
-          if (algorithm::is_alnum()(*current)) {
+          if (boost::algorithm::is_alnum()(*current)) {
             state_ = http_status_message_char;
             ++current;
           } else {
@@ -179,7 +179,7 @@ struct response_parser {
           }
           break;
         case http_status_message_char:
-          if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current) || (*current == ' ')) {
+          if (boost::algorithm::is_alnum()(*current) || boost::algorithm::is_punct()(*current) || (*current == ' ')) {
             ++current;
           } else if (*current == '\r') {
             state_ = http_status_message_cr;
@@ -198,7 +198,7 @@ struct response_parser {
           break;
         case http_status_message_done:
         case http_header_line_done:
-          if (algorithm::is_alnum()(*current)) {
+          if (boost::algorithm::is_alnum()(*current)) {
             state_ = http_header_name_char;
             ++current;
           } else if (*current == '\r') {
@@ -212,16 +212,16 @@ struct response_parser {
           if (*current == ':') {
             state_ = http_header_colon;
             ++current;
-          } else if (algorithm::is_alnum()(*current) || algorithm::is_space()(*current) || algorithm::is_punct()(*current)) {
+          } else if (boost::algorithm::is_alnum()(*current) || boost::algorithm::is_space()(*current) || boost::algorithm::is_punct()(*current)) {
             ++current;
           } else {
             parsed_ok = false;
           }
           break;
         case http_header_colon:
-          if (algorithm::is_space()(*current)) {
+          if (boost::algorithm::is_space()(*current)) {
             ++current;
-          } else if (algorithm::is_alnum()(*current) || algorithm::is_punct()(*current)) {
+          } else if (boost::algorithm::is_alnum()(*current) || boost::algorithm::is_punct()(*current)) {
             state_ = http_header_value_char;
             ++current;
           } else {
@@ -232,7 +232,7 @@ struct response_parser {
           if (*current == '\r') {
             state_ = http_header_line_cr;
             ++current;
-          } else if (algorithm::is_cntrl()(*current)) {
+          } else if (boost::algorithm::is_cntrl()(*current)) {
             parsed_ok = false;
           } else {
             ++current;
@@ -262,7 +262,7 @@ struct response_parser {
       local_range = boost::make_iterator_range(current, end);
     }
     if (state_ == stop_state) parsed_ok = true;
-    return fusion::make_tuple(parsed_ok,boost::make_iterator_range(start, current));
+    return boost::fusion::make_tuple(parsed_ok,boost::make_iterator_range(start, current));
   }
 
   state_t state() {
