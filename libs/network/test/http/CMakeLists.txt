@@ -36,6 +36,7 @@ if (Boost_FOUND)
 	  )
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
+            ${ICU_LIBRARIES} ${ICU_I18N_LIBRARIES}
 	    ${CMAKE_THREAD_LIBS_INIT}
             cppnetlib-message
             cppnetlib-message-wrappers
@@ -65,6 +66,7 @@ if (Boost_FOUND)
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
+            ${ICU_LIBRARIES} ${ICU_I18N_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT}
             cppnetlib-constants
             cppnetlib-uri
@@ -96,6 +98,7 @@ if (Boost_FOUND)
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
+            ${ICU_LIBRARIES} ${ICU_I18N_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT}
             cppnetlib-constants
             cppnetlib-uri

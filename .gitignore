@@ -1,4 +1,3 @@
-*.cmake
 *.swp
 *.pyc
 CMakeCache.txt
