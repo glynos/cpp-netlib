@@ -273,13 +273,125 @@ BOOST_AUTO_TEST_CASE(ipv6_address_test_2) {
     BOOST_CHECK_EQUAL(network::path(instance), "/");
 }
 
-//BOOST_AUTO_TEST_CASE(ipv6_loopback_test) {
-//    network::uri instance("http://[::1]/");
-//    BOOST_REQUIRE(network::valid(instance));
-//    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
-//    BOOST_CHECK_EQUAL(network::host(instance), "[::1]");
-//    BOOST_CHECK_EQUAL(network::path(instance), "/");
-//}
+BOOST_AUTO_TEST_CASE(ipv6_address_test_3) {
+    network::uri instance("http://[2001:db8:85a3:0:0:8a2e:370:7334]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[2001:db8:85a3:0:0:8a2e:370:7334]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_4) {
+    network::uri instance("http://[2001:db8:85a3::8a2e:370:7334]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[2001:db8:85a3::8a2e:370:7334]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_5) {
+    network::uri instance("http://[2001:0db8:0000:0000:0000:0000:1428:57ab]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[2001:0db8:0000:0000:0000:0000:1428:57ab]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_6) {
+    network::uri instance("http://[2001:0db8:0000:0000:0000::1428:57ab]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[2001:0db8:0000:0000:0000::1428:57ab]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_7) {
+    network::uri instance("http://[2001:0db8:0:0:0:0:1428:57ab]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[2001:0db8:0:0:0:0:1428:57ab]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_8) {
+    network::uri instance("http://[2001:0db8:0:0::1428:57ab]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[2001:0db8:0:0::1428:57ab]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_9) {
+    network::uri instance("http://[2001:0db8::1428:57ab]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[2001:0db8::1428:57ab]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_10) {
+    network::uri instance("http://[2001:db8::1428:57ab]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[2001:db8::1428:57ab]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_11) {
+    network::uri instance("http://[::ffff:0c22:384e]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[::ffff:0c22:384e]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_12) {
+    network::uri instance("http://[fe80::]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[fe80::]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_address_test_13) {
+    network::uri instance("http://[::ffff:c000:280]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[::ffff:c000:280]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_loopback_test) {
+    network::uri instance("http://[::1]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[::1]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_loopback_test_1) {
+    network::uri instance("http://[0000:0000:0000:0000:0000:0000:0000:0001]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[0000:0000:0000:0000:0000:0000:0000:0001]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_v4inv6_test_1) {
+    network::uri instance("http://[::ffff:12.34.56.78]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[::ffff:12.34.56.78]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
+
+BOOST_AUTO_TEST_CASE(ipv6_v4inv6_test_2) {
+    network::uri instance("http://[::ffff:192.0.2.128]/");
+    BOOST_REQUIRE(network::valid(instance));
+    BOOST_CHECK_EQUAL(network::scheme(instance), "http");
+    BOOST_CHECK_EQUAL(network::host(instance), "[::ffff:192.0.2.128]");
+    BOOST_CHECK_EQUAL(network::path(instance), "/");
+}
 
 BOOST_AUTO_TEST_CASE(ftp_test) {
     network::uri instance("ftp://john.doe@ftp.example.com/");
