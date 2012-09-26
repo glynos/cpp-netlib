@@ -11,9 +11,9 @@ namespace network { namespace http {
 
 template <class H>
 struct Header
-  : DefaultConstructible<H>
-  , Assignable<H>
-  , CopyConstructible<H>
+  : boost::DefaultConstructible<H>
+  , boost::Assignable<H>
+  , boost::CopyConstructible<H>
 {
 
   BOOST_CONCEPT_USAGE(Header) {

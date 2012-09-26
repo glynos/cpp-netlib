@@ -48,13 +48,13 @@ namespace network { namespace http {
 
             std::string name, value;
 
-            request << ::boost::network::source(source_)
-                << ::boost::network::destination(destination_)
-                << ::boost::network::http::method(method_)
-                << ::boost::network::http::major_version(major_version_)
-                << ::boost::network::http::minor_version(minor_version_)
-                << ::boost::network::header(name, value)
-                << ::boost::network::body(body_);
+            request << network::source(source_)
+                << network::destination(destination_)
+                << network::http::method(method_)
+                << network::http::major_version(major_version_)
+                << network::http::minor_version(minor_version_)
+                << network::header(name, value)
+                << network::body(body_);
 
             (void)source_;(void)method_;(void)destination_;
             (void)major_version_;(void)minor_version_;(void)headers_;
@@ -67,7 +67,7 @@ namespace network { namespace http {
 
     template <class R>
     struct ClientRequest
-        : boost::network::Message<R>
+        : network::Message<R>
     {
         BOOST_CONCEPT_USAGE(ClientRequest) {
             std::string tmp;
@@ -83,7 +83,7 @@ namespace network { namespace http {
 
             request << uri(std::string());
 
-            boost::network::http::uri(request, std::string());
+            network::http::uri(request, std::string());
 
             (void)host_;
             (void)port_;

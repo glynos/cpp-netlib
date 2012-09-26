@@ -44,14 +44,14 @@ inline void swap(response_header & l, response_header & r) {
 }  // namespace http
 }  // namespace network
 
-FUSION_ADAPT_STRUCT(
-  boost::network::http::request_header,
+BOOST_FUSION_ADAPT_STRUCT(
+  network::http::request_header,
   (std::string, name)
   (std::string, value)
   )
 
-FUSION_ADAPT_STRUCT(
-  boost::network::http::response_header,
+BOOST_FUSION_ADAPT_STRUCT(
+  network::http::response_header,
   (std::string, name)
   (std::string, value)
   )

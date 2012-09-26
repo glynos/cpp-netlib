@@ -31,7 +31,7 @@ struct linearize_header {
   };
 
   template <class ValueType>
-  CONCEPT_REQUIRES(
+  BOOST_CONCEPT_REQUIRES(
       ((Header<ValueType>)),
       (string_type)
   ) operator()(ValueType & header) {
@@ -46,7 +46,7 @@ struct linearize_header {
 };
 
 template <class Request, class OutputIterator>
-CONCEPT_REQUIRES(
+BOOST_CONCEPT_REQUIRES(
     ((ClientRequest<Request>)),
     (OutputIterator)
 ) linearize(
@@ -130,7 +130,7 @@ CONCEPT_REQUIRES(
     }
     typedef headers_wrapper::container_type headers_container;
     typedef headers_container::const_iterator headers_iterator;
-    headers_container const & request_headers = boost::network::headers(request);
+    headers_container const & request_headers = network::headers(request);
     headers_iterator iterator = boost::begin(request_headers),
                      end = boost::end(request_headers);
     bool has_user_agent = false;
@@ -153,7 +153,7 @@ CONCEPT_REQUIRES(
       boost::copy(crlf, oi);
     }
     boost::copy(crlf, oi);
-    auto body_data = boost::network::body(request);
+    auto body_data = network::body(request);
     return std::copy(body_data.begin(), body_data.end(), oi);
 }
     

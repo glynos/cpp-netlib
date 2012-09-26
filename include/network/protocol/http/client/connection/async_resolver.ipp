@@ -24,34 +24,34 @@
 #include <network/protocol/http/client/connection/async_resolver.hpp>
 
 namespace network { namespace http {
-struct async_resolver_pimpl : enable_shared_from_this<async_resolver_pimpl> {
+struct async_resolver_pimpl : boost::enable_shared_from_this<async_resolver_pimpl> {
   typedef resolver_delegate::resolve_completion_function resolve_completion_function;
-  async_resolver_pimpl(asio::io_service & service, bool cache_resolved);
+  async_resolver_pimpl(boost::asio::io_service & service, bool cache_resolved);
   void resolve(std::string const & host,
                uint16_t port,
                resolve_completion_function once_resolved);
   void clear_resolved_cache();
  private:
-  asio::ip::udp::resolver resolver_;
+  boost::asio::ip::udp::resolver resolver_;
   bool cache_resolved_;
-  typedef asio::ip::udp::resolver::iterator
+  typedef boost::asio::ip::udp::resolver::iterator
           resolver_iterator;
-  typedef unordered_map<std::string, std::pair<resolver_iterator,resolver_iterator> >
+  typedef boost::unordered_map<std::string, std::pair<resolver_iterator,resolver_iterator> >
           endpoint_cache;
   endpoint_cache endpoint_cache_;
-  scoped_ptr<asio::io_service::strand> resolver_strand_;
+  boost::scoped_ptr<boost::asio::io_service::strand> resolver_strand_;
 
   void handle_resolve(std::string const & host,
                       resolve_completion_function once_resolved,
-                      system::error_code const & ec,
+                      boost::system::error_code const & ec,
                       resolver_iterator endpoint_iterator);
 };
   
-async_resolver_pimpl::async_resolver_pimpl(asio::io_service & service, bool cache_resolved)
+async_resolver_pimpl::async_resolver_pimpl(boost::asio::io_service & service, bool cache_resolved)
   : resolver_(service),
     cache_resolved_(cache_resolved),
     endpoint_cache_(),
-    resolver_strand_(new(std::nothrow) asio::io_service::strand(service))
+    resolver_strand_(new(std::nothrow) boost::asio::io_service::strand(service))
 {
   // Do nothing
 }
@@ -65,7 +65,7 @@ void async_resolver_pimpl::resolve(std::string const & host,
                                    boost::uint16_t port,
                                    resolve_completion_function once_resolved) {
   if (!resolver_strand_.get())
-    THROW_EXCEPTION(std::runtime_error(
+    BOOST_THROW_EXCEPTION(std::runtime_error(
         "Uninitialized resolver strand, ran out of memory."));
 
   if (cache_resolved_) {
@@ -78,8 +78,8 @@ void async_resolver_pimpl::resolve(std::string const & host,
     }
   }
 
-  std::string port_str = lexical_cast<std::string>(port);
-  asio::ip::udp::resolver::query query(host, port_str);
+  std::string port_str = boost::lexical_cast<std::string>(port);
+  boost::asio::ip::udp::resolver::query query(host, port_str);
   resolver_.async_resolve(
       query,
       resolver_strand_->wrap(
@@ -110,19 +110,19 @@ void async_resolver_pimpl::handle_resolve(std::string const & host,
   }
 }
 
-async_resolver::async_resolver(asio::io_service & service, bool cache_resolved)
+async_resolver::async_resolver(boost::asio::io_service & service, bool cache_resolved)
 : pimpl(new (std::nothrow) async_resolver_pimpl(service, cache_resolved))
 {}
 
 void async_resolver::resolve(std::string const & host,
                              uint16_t port,
                              resolve_completion_function once_resolved) {
-  ASSERT(pimpl.get() && "Uninitialized pimpl, probably ran out of memory.");
+  BOOST_ASSERT(pimpl.get() && "Uninitialized pimpl, probably ran out of memory.");
   pimpl->resolve(host, port, once_resolved);
 }
 
 void async_resolver::clear_resolved_cache() {
-  ASSERT(pimpl.get() && "Uninitialized pimpl, probably ran out of memory.");
+  BOOST_ASSERT(pimpl.get() && "Uninitialized pimpl, probably ran out of memory.");
   pimpl->clear_resolved_cache();
 }
 
