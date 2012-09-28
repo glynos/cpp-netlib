@@ -4,8 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_MINOR_VERSION_HPP_20101120
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_MINOR_VERSION_HPP_20101120
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_MINOR_VERSION_HPP_20101120
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_MINOR_VERSION_HPP_20101120
 
 #include <network/protocol/http/support/is_server.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -35,5 +35,5 @@ minor_version(boost::uint8_t minor_version_) {
 }  // namespace http
 }  // namespace network
   
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_MINOR_VERSION_HPP_20101120 */
+#endif /* NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_MINOR_VERSION_HPP_20101120 */
 

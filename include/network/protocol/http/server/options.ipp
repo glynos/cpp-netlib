@@ -4,8 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
-#define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
+#ifndef NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
+#define NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
 
 #include <network/protocol/http/server/options.hpp>
 #include <boost/asio/io_service.hpp>
@@ -287,4 +287,4 @@ int server_options::linger_timeout() const {
 
 }  // namespace network
 
-#endif  // BOOST_NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
+#endif  // NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318

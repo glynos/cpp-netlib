@@ -7,8 +7,8 @@
 // This is the conglomeration of all message-related implementation files. All
 // we're doing is including all the .ipp files that are relevant.
 
-#ifdef BOOST_NETWORK_NO_LIB
-#undef BOOST_NETWORK_NO_LIB
+#ifdef NETWORK_NO_LIB
+#undef NETWORK_NO_LIB
 #endif
 
 #include <network/message/message.ipp>

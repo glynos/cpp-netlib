@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_NETWORK_NO_LIB
+#define NETWORK_NO_LIB
 #include <network/include/http/client.hpp>
 
 int main(int argc, char * argv[]) {

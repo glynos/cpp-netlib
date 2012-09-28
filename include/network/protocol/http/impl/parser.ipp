@@ -8,8 +8,8 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //      http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_PARSER_IPP
-#define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_IPP
+#ifndef NETWORK_PROTOCOL_HTTP_PARSER_IPP
+#define NETWORK_PROTOCOL_HTTP_PARSER_IPP
 
 #include <network/protocol/http/parser.hpp>
 
@@ -777,4 +777,4 @@ static bool basic_parser<Tag,Traits>::parse_cookie_header(types::cookie_params& 
 }  // namespace http
 }  // namespace network
 
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_PARSER_IPP
+#endif // NETWORK_PROTOCOL_HTTP_PARSER_IPP

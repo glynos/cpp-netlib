@@ -5,13 +5,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifdef BOOST_NETWORK_NO_LIB
-#warn Building the library even with BOOST_NETWORK_NO_LIB defined.
-#undef BOOST_NETWORK_NO_LIB
+#ifdef NETWORK_NO_LIB
+#warn Building the library even with NETWORK_NO_LIB defined.
+#undef NETWORK_NO_LIB
 #endif
 
 #include <network/protocol/http/client/connection/normal_delegate.ipp>
 
-#ifdef BOOST_NETWORK_ENABLE_HTTPS
+#ifdef NETWORK_ENABLE_HTTPS
 #include <network/protocol/http/client/connection/ssl_delegate.ipp>
 #endif

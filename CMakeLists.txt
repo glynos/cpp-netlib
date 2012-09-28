@@ -14,11 +14,11 @@ find_package( Threads )
 set(CMAKE_VERBOSE_MAKEFILE true)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
-    add_definitions(-DBOOST_NETWORK_DEBUG)
+    add_definitions(-DNETWORK_DEBUG)
 endif()
 
 if (OPENSSL_FOUND)
-    add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
+    add_definitions(-DNETWORK_ENABLE_HTTPS)
 endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)

@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(http_client_get_test) {
     BOOST_CHECK_EQUAL ( status_message_, std::string("Found") );
 }
 
-#ifdef BOOST_NETWORK_ENABLE_HTTPS
+#ifdef NETWORK_ENABLE_HTTPS
 
 BOOST_AUTO_TEST_CASE(https_client_get_test) {
     http::client::request request("https://www.google.com");

@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_PORT_HPP_20100618
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_PORT_HPP_20100618
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_PORT_HPP_20100618
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_PORT_HPP_20100618
 
 #include <network/protocol/http/request/request_base.hpp>
 #include <boost/optional.hpp>
@@ -29,4 +29,4 @@ port(request_base const & request) {
 } // namespace http
 } // namespace network
 
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_PORT_HPP_20100618
+#endif // NETWORK_PROTOCOL_HTTP_MESSAGE_PORT_HPP_20100618

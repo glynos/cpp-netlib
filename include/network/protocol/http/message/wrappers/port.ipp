@@ -4,8 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_PORT_IPP_20111204
-#define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_PORT_IPP_20111204
+#ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_PORT_IPP_20111204
+#define NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_PORT_IPP_20111204
 
 #include <network/protocol/http/message/wrappers/port.hpp>
 #include <network/uri.hpp>
@@ -40,4 +40,4 @@ port_wrapper::operator boost::optional<boost::uint16_t> () const {
 }  // namespace http
 }  // namespace network
 
-#endif  // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_PORT_IPP_20111204
+#endif  // NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_PORT_IPP_20111204

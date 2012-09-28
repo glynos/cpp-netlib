@@ -12,7 +12,7 @@
 #include <boost/scoped_array.hpp>
 
 #ifdef NETWORK_DEBUG
-BOOST_CONCEPT_ASSERT((boost::network::http::ClientRequest<boost::network::http::request>));
+BOOST_CONCEPT_ASSERT((network::http::ClientRequest<network::http::request>));
 #endif
 
 namespace network { namespace http {
