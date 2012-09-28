@@ -27,7 +27,7 @@ struct thread_pool {
               io_service_ptr io_service = io_service_ptr(),
               worker_threads_ptr worker_threads = worker_threads_ptr());
   std::size_t const thread_count() const;
-  void post(function<void()> f);
+  void post(boost::function<void()> f);
   ~thread_pool();
   void swap(thread_pool & other);
  protected:

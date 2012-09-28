@@ -33,14 +33,14 @@
 namespace network { namespace http {
 
 #ifndef NETWORK_NO_LIB
-  extern void parse_version(std::string const & partial_parsed, fusion::tuple<uint8_t,uint8_t> & version_pair);
+  extern void parse_version(std::string const & partial_parsed, boost::fusion::tuple<uint8_t,uint8_t> & version_pair);
   extern void parse_headers(std::string const & input, std::vector<std::pair<std::string,std::string> > & container);
 #endif
 
 class sync_server_connection : public boost::enable_shared_from_this<sync_server_connection> {
  public:
   sync_server_connection(boost::asio::io_service & service,
-             function<void(request const &, response &)> handler)
+             boost::function<void(request const &, response &)> handler)
   : service_(service)
   , handler_(handler)
   , socket_(service_)
@@ -81,15 +81,15 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
 
   void handle_read_data(state_t state, boost::system::error_code const & ec, std::size_t bytes_transferred) {
     if (!ec) {
-      logic::tribool parsed_ok;
-      iterator_range<buffer_type::iterator> result_range, input_range;
+      boost::logic::tribool parsed_ok;
+      boost::iterator_range<buffer_type::iterator> result_range, input_range;
       data_end = read_buffer_.begin();
       std::advance(data_end, bytes_transferred);
       switch (state) {
         case method:
           input_range = boost::make_iterator_range(
             new_start, data_end);
-          fusion::tie(parsed_ok, result_range) = parser_.parse_until(
+          boost::fusion::tie(parsed_ok, result_range) = parser_.parse_until(
             request_parser::method_done, input_range);
           if (!parsed_ok) {
             client_error();
@@ -99,7 +99,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
             swap(partial_parsed, method);
             method.append(boost::begin(result_range),
                     boost::end(result_range));
-            trim(method);
+            boost::trim(method);
             request_.set_method(method);
             new_start = boost::end(result_range);
             // Determine whether we're going to need to parse the body of the
@@ -117,7 +117,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
         case uri:
           input_range = boost::make_iterator_range(
             new_start, data_end);
-          fusion::tie(parsed_ok, result_range) = parser_.parse_until(
+          boost::fusion::tie(parsed_ok, result_range) = parser_.parse_until(
             request_parser::uri_done,
             input_range);
           if (!parsed_ok) {
@@ -128,7 +128,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
             swap(partial_parsed, destination);
             destination.append(boost::begin(result_range),
                        boost::end(result_range));
-            trim(destination);
+            boost::trim(destination);
             request_.set_destination(destination);
             new_start = boost::end(result_range);
           } else {
@@ -142,18 +142,18 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
         case version:
           input_range = boost::make_iterator_range(
             new_start, data_end);
-          fusion::tie(parsed_ok, result_range) = parser_.parse_until(
+          boost::fusion::tie(parsed_ok, result_range) = parser_.parse_until(
             request_parser::version_done,
             input_range);
           if (!parsed_ok) {
             client_error();
             break;
           } else if (parsed_ok == true) {
-            fusion::tuple<uint8_t, uint8_t> version_pair;
+            boost::fusion::tuple<uint8_t, uint8_t> version_pair;
             partial_parsed.append(boost::begin(result_range), boost::end(result_range));
             parse_version(partial_parsed, version_pair);
-            request_.set_version_major(fusion::get<0>(version_pair));
-            request_.set_version_minor(fusion::get<1>(version_pair));
+            request_.set_version_major(boost::fusion::get<0>(version_pair));
+            request_.set_version_minor(boost::fusion::get<1>(version_pair));
             new_start = boost::end(result_range);
             partial_parsed.clear();
           } else {
@@ -167,7 +167,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
         case headers:
           input_range = boost::make_iterator_range(
             new_start, data_end);
-          fusion::tie(parsed_ok, result_range) = parser_.parse_until(
+          boost::fusion::tie(parsed_ok, result_range) = parser_.parse_until(
             request_parser::headers_done,
             input_range);
           if (!parsed_ok) {
@@ -190,11 +190,11 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
               response response_;
               handler_(request_, response_);
               flatten_response();
-              std::vector<asio::const_buffer> response_buffers(output_buffers_.size());
+              std::vector<boost::asio::const_buffer> response_buffers(output_buffers_.size());
               std::transform(output_buffers_.begin(), output_buffers_.end(),
                              response_buffers.begin(),
                              [](buffer_type const &buffer) {
-                               return asio::const_buffer(buffer.data(), buffer.size());
+                               return boost::asio::const_buffer(buffer.data(), buffer.size());
                              });
               boost::asio::async_write(
                 socket_,
@@ -219,11 +219,11 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
           std::abort();
       }
     } else {
-      error_encountered = in_place<boost::system::system_error>(ec);
+      error_encountered = boost::in_place<boost::system::system_error>(ec);
     }
   }
 
-  void handle_write(system::error_code const &ec) {
+  void handle_write(boost::system::error_code const &ec) {
     // First thing we do is clear out the output buffers.
     output_buffers_.clear();
     if (ec) {
@@ -235,30 +235,30 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
       static char const bad_request[] =
           "HTTP/1.0 400 Bad Request\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
 
-      asio::async_write(
+      boost::asio::async_write(
           socket()
-          , asio::buffer(bad_request, strlen(bad_request))
+          , boost::asio::buffer(bad_request, strlen(bad_request))
           , wrapper_.wrap(
               boost::bind(
                   &sync_server_connection::client_error_sent
                   , sync_server_connection::shared_from_this()
-                  , asio::placeholders::error
-                  , asio::placeholders::bytes_transferred)));
+                  , boost::asio::placeholders::error
+                  , boost::asio::placeholders::bytes_transferred)));
   }
 
   void client_error_sent(boost::system::error_code const & ec, std::size_t bytes_transferred) {
       if (!ec) {
           boost::system::error_code ignored;
-          socket().shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
+          socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
           socket().close(ignored);
       } else {
-          error_encountered = in_place<boost::system::system_error>(ec);
+          error_encountered = boost::in_place<boost::system::system_error>(ec);
       }
   }
 
   void read_more(state_t state) {
       socket_.async_read_some(
-          asio::buffer(read_buffer_)
+          boost::asio::buffer(read_buffer_)
           , wrapper_.wrap(
               boost::bind(
                   &sync_server_connection::handle_read_data,
@@ -294,7 +294,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
     bool done = false;
     while (!done) {
       buffer_type buffer;
-      response_.get_body([&done, &buffer](iterator_range<char const *> data) {
+      response_.get_body([&done, &buffer](boost::iterator_range<char const *> data) {
         if (boost::empty(data)) done = true;
         else std::copy(std::begin(data), std::end(data), buffer.begin());
       }, buffer.size());
@@ -312,7 +312,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   }
 
   boost::asio::io_service & service_;
-  function<void(request const &, response &)> handler_;
+  boost::function<void(request const &, response &)> handler_;
   boost::asio::ip::tcp::socket socket_;
   boost::asio::io_service::strand wrapper_;
 
@@ -324,7 +324,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   response response_;
   std::list<buffer_type> output_buffers_;
   std::string partial_parsed;
-  optional<system::system_error> error_encountered;
+  boost::optional<boost::system::system_error> error_encountered;
   bool read_body_;
 };
 

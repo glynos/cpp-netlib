@@ -57,7 +57,7 @@ class async_server {
   ~async_server();
 
   typedef http::request request;
-  typedef shared_ptr<async_server_connection> connection_ptr;
+  typedef boost::shared_ptr<async_server_connection> connection_ptr;
  private:
   async_server_impl *pimpl_;
   async_server(async_server const &other);  // = delete

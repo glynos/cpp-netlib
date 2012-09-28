@@ -23,7 +23,7 @@ struct response;
 class sync_server_impl : protected socket_options_setter {
  public:
   sync_server_impl(server_options const &options,
-                   function<void(request const &, response &)> handler);
+                   boost::function<void(request const &, response &)> handler);
   void run();
   void stop();
   void listen();
@@ -31,15 +31,15 @@ class sync_server_impl : protected socket_options_setter {
  private:
   server_options options_;
   std::string address_, port_;
-  asio::io_service *service_;
-  asio::ip::tcp::acceptor *acceptor_;
-  shared_ptr<sync_server_connection> new_connection_;
-  mutex listening_mutex_;
+  boost::asio::io_service *service_;
+  boost::asio::ip::tcp::acceptor *acceptor_;
+  boost::shared_ptr<sync_server_connection> new_connection_;
+  boost::mutex listening_mutex_;
   bool listening_, owned_service_;
-  function<void(request const &, response &)> handler_;
+  boost::function<void(request const &, response &)> handler_;
 
   void start_listening();
-  void handle_accept(system::error_code const &ec);
+  void handle_accept(boost::system::error_code const &ec);
 };
 
 }  // namespace http

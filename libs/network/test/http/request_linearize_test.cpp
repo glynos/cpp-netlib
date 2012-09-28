@@ -11,8 +11,8 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-namespace http = boost::network::http;
-namespace net  = boost::network;
+namespace http = network::http;
+namespace net  = network;
 
 BOOST_AUTO_TEST_CASE(linearize_request) {
     http::request request("http://www.boost.org");

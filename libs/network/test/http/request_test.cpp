@@ -11,8 +11,8 @@
 #include <boost/test/unit_test.hpp>
 #include <network/uri/uri_io.hpp>
 
-namespace http = boost::network::http;
-namespace net = boost::network;
+namespace http = network::http;
+namespace net = network;
 
 BOOST_AUTO_TEST_CASE(request_construction) {
   http::request request;

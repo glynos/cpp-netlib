@@ -165,7 +165,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     NETWORK_MESSAGE("http_async_connection_pimpl::handle_connected(...)");
     if (!ec) {
       NETWORK_MESSAGE("connected successfully");
-      ASSERT(connection_delegate_.get() != 0);
+      BOOST_ASSERT(connection_delegate_.get() != 0);
       NETWORK_MESSAGE("scheduling write...");
       connection_delegate_->write(command_streambuf,
                        request_strand_.wrap(
@@ -339,7 +339,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
 
             // The invocation of the callback is synchronous to allow us to
             // wait before scheduling another read.
-            callback(make_iterator_range(begin, end), ec);
+            callback(boost::make_iterator_range(begin, end), ec);
 
             connection_delegate_->read_some(
                 boost::asio::mutable_buffers_1(this->part.c_array(),
@@ -386,7 +386,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               // We call the callback function synchronously passing the error
               // condition (in this case, end of file) so that it can handle
               // it appropriately.
-              callback(make_iterator_range(begin, end), ec);
+              callback(boost::make_iterator_range(begin, end), ec);
             } else {
               NETWORK_MESSAGE("no callback provided, appending to body...");
               std::string body_string;
@@ -414,7 +414,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               buffer_type::const_iterator begin = this->part.begin();
               buffer_type::const_iterator end = begin;
               std::advance(end, bytes_transferred);
-              callback(make_iterator_range(begin, end), ec);
+              callback(boost::make_iterator_range(begin, end), ec);
               connection_delegate_->read_some(
                   boost::asio::mutable_buffers_1(
                       this->part.c_array(),
@@ -448,7 +448,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           }
           return;
         default:
-          ASSERT(false && "Bug, report this to the developers!");
+          BOOST_ASSERT(false && "Bug, report this to the developers!");
       }
     } else {
       boost::system::system_error error(ec);
@@ -468,7 +468,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
           this->body_promise.set_exception(boost::copy_exception(error));
           break;
         default:
-          ASSERT(false && "Bug, report this to the developers!");
+          BOOST_ASSERT(false && "Bug, report this to the developers!");
       }
     }
   }
@@ -481,7 +481,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     debug_escaper(debug_escaper const & other)
       : string(other.string) {}
     void operator()( std::string::value_type input) {
-      if (!algorithm::is_print()(input)) {
+      if (!boost::algorithm::is_print()(input)) {
         std::ostringstream escaped_stream;
         if (input == '\r') {
           string.append("\\r");
@@ -529,7 +529,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       std::swap(version, partial_parsed);
       version.append(boost::begin(result_range),
                boost::end(result_range));
-      algorithm::trim(version);
+      boost::algorithm::trim(version);
       version_promise.set_value(version);
       part_begin = boost::end(result_range);
     } else if (parsed_ok == false) {
@@ -583,9 +583,9 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       std::swap(status, partial_parsed);
       status.append(boost::begin(result_range),
               boost::end(result_range));
-      trim(status);
+      boost::trim(status);
       boost::uint16_t status_int =
-        lexical_cast<boost::uint16_t>(status);
+        boost::lexical_cast<boost::uint16_t>(status);
       status_promise.set_value(status_int);
       part_begin = boost::end(result_range);
     } else if (parsed_ok == false) {
@@ -638,7 +638,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       std::swap(status_message, partial_parsed);
       status_message.append(boost::begin(result_range),
                   boost::end(result_range));
-      algorithm::trim(status_message);
+      boost::algorithm::trim(status_message);
       status_message_promise.set_value(status_message);
       part_begin = boost::end(result_range);
     } else if (parsed_ok == false) {
@@ -700,13 +700,13 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                        boost::end(result_range));
       input_range.advance_begin(boost::distance(result_range));
 
-      trim(header_pair.first);
+      boost::trim(header_pair.first);
       if (header_pair.first.size() > 1) {
         header_pair.first.erase(
           header_pair.first.size() - 1
         );
       }
-      trim(header_pair.second);
+      boost::trim(header_pair.second);
       headers.insert(header_pair);
     }
     headers_promise.set_value(headers);

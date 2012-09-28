@@ -9,8 +9,8 @@
 #include <network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
 
-namespace http = boost::network::http;
-namespace net = boost::network;
+namespace http = network::http;
+namespace net = network;
 
 BOOST_AUTO_TEST_CASE(http_get_test_different_port) {
   http::request request_("http://www.boost.org:80/");

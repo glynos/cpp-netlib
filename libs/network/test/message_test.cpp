@@ -11,7 +11,7 @@
 #include <network/message.hpp>
 #include <algorithm>
 
-using namespace boost::network;
+using namespace network;
 
 /**
  * Defines a set of template functions that can be used to test
@@ -50,14 +50,14 @@ BOOST_AUTO_TEST_CASE(headers_directive_test) {
 
 BOOST_AUTO_TEST_CASE(body_directive_test) {
     message instance;
-    instance << ::boost::network::body("body");
+    instance << ::network::body("body");
     std::string body_string = body(instance);
     BOOST_CHECK ( body_string == "body" );
 }
 
 BOOST_AUTO_TEST_CASE(source_directive_test) {
     message instance;
-    instance << ::boost::network::source("source");
+    instance << ::network::source("source");
     std::string source_string = source(instance);
     BOOST_CHECK ( source_string == "source" );
 }

@@ -41,8 +41,8 @@ response const basic_client_facade::get(request const &request,
 }
 
 response const basic_client_facade::post(request request,
-                                         optional<std::string> body,
-                                         optional<std::string> content_type,
+                                         boost::optional<std::string> body,
+                                         boost::optional<std::string> content_type,
                                          body_callback_function_type body_handler,
                                          request_options const &options) {
   NETWORK_MESSAGE("basic_client_facade::post(...)");
@@ -50,7 +50,7 @@ response const basic_client_facade::post(request request,
     NETWORK_MESSAGE("using body provided.");
     request << remove_header("Content-Length")
             << header("Content-Length", boost::lexical_cast<std::string>(body->size()))
-            << boost::network::body(*body);
+            << network::body(*body);
   }
 
   headers_wrapper::container_type const & headers_ =
@@ -70,8 +70,8 @@ response const basic_client_facade::post(request request,
 }
 
 response const basic_client_facade::put(request request,
-                                        optional<std::string> body,
-                                        optional<std::string> content_type,
+                                        boost::optional<std::string> body,
+                                        boost::optional<std::string> content_type,
                                         body_callback_function_type body_handler,
                                         request_options const & options) {
   NETWORK_MESSAGE("basic_client_facade::put(...)");
@@ -79,7 +79,7 @@ response const basic_client_facade::put(request request,
     NETWORK_MESSAGE("using body provided.");
     request << remove_header("Content-Length")
             << header("Content-Length", boost::lexical_cast<std::string>(body->size()))
-            << boost::network::body(*body);
+            << network::body(*body);
   }
 
   headers_wrapper::container_type const & headers_ =

@@ -4,8 +4,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
 
-namespace http = boost::network::http;
-namespace util = boost::network::utils;
+namespace http = network::http;
+namespace util = network::utils;
 
 struct dummy_async_handler;
 typedef http::async_server<dummy_async_handler> async_server;
@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
 
   // stop from main thread
   {
-    BOOST_NETWORK_MESSAGE("TEST: stop without running");
+    NETWORK_MESSAGE("TEST: stop without running");
     util::thread_pool pool;
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
     server_instance.stop();
@@ -42,7 +42,7 @@ int main(int argc, char * argv[]) {
 
   // run-stop from main thread
   {
-    BOOST_NETWORK_MESSAGE("TEST: stop from main thread");
+    NETWORK_MESSAGE("TEST: stop from main thread");
     util::thread_pool pool;
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
@@ -55,7 +55,7 @@ int main(int argc, char * argv[]) {
 
   // run-stop from another thread
   {
-    BOOST_NETWORK_MESSAGE("TEST: stop from another thread");
+    NETWORK_MESSAGE("TEST: stop from another thread");
     util::thread_pool pool;
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
@@ -71,7 +71,7 @@ int main(int argc, char * argv[]) {
 
   // run-stop-run-stop from another thread
   {
-    BOOST_NETWORK_MESSAGE("TEST: run-stop-run-stop from another thread");
+    NETWORK_MESSAGE("TEST: run-stop-run-stop from another thread");
     util::thread_pool pool;
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
@@ -95,7 +95,7 @@ int main(int argc, char * argv[]) {
 
   // run-run-stop from another thread
   {
-    BOOST_NETWORK_MESSAGE("TEST: run-run-stop from another thread");
+    NETWORK_MESSAGE("TEST: run-run-stop from another thread");
     util::thread_pool pool;
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
@@ -115,7 +115,7 @@ int main(int argc, char * argv[]) {
 
   // run-stop-stop from another thread
   {
-    BOOST_NETWORK_MESSAGE("TEST: run-stop-stop from another thread");
+    NETWORK_MESSAGE("TEST: run-stop-stop from another thread");
     util::thread_pool pool;
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 

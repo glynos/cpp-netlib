@@ -10,8 +10,8 @@
 #include <network/include/http/server.hpp>
 #include <boost/test/unit_test.hpp>
 
-namespace http = boost::network::http;
-namespace util = boost::network::utils;
+namespace http = network::http;
+namespace util = network::utils;
 
 struct dummy_sync_handler;
 struct dummy_async_handler;

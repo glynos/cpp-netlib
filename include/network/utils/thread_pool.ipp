@@ -103,7 +103,7 @@ std::size_t const thread_pool::thread_count() const {
   return pimpl->thread_count();
 }
 
-void thread_pool::post(function<void()> f) {
+void thread_pool::post(boost::function<void()> f) {
   pimpl->post(f);
 }
 

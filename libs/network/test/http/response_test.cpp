@@ -8,7 +8,7 @@
 #include <network/protocol/http/response.hpp>
 #include <boost/test/unit_test.hpp>
 
-namespace http = boost::network::http;
+namespace http = network::http;
 
 BOOST_AUTO_TEST_CASE(response_constructor_test) {
   http::response created;

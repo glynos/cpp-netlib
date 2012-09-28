@@ -20,14 +20,14 @@ struct response_pimpl {
   }
 
   void set_destination(std::string const &destination) {
-    promise<std::string> destination_promise;
+    boost::promise<std::string> destination_promise;
     destination_promise.set_value(destination);
-    unique_future<std::string> tmp_future = destination_promise.get_future();
+    boost::unique_future<std::string> tmp_future = destination_promise.get_future();
     destination_future_ = boost::move(tmp_future);
   }
 
   void get_destination(std::string &destination) {
-    if (destination_future_.get_state() == future_state::uninitialized) {
+    if (destination_future_.get_state() == boost::future_state::uninitialized) {
       destination = "";
     } else {
       destination = destination_future_.get();
@@ -35,14 +35,14 @@ struct response_pimpl {
   }
 
   void set_source(std::string const &source) {
-    promise<std::string> source_promise;
+    boost::promise<std::string> source_promise;
     source_promise.set_value(source);
-    unique_future<std::string> tmp_future = source_promise.get_future();
+    boost::unique_future<std::string> tmp_future = source_promise.get_future();
     source_future_ = boost::move(tmp_future);
   }
 
   void get_source(std::string &source) {
-    if (source_future_.get_state() == future_state::uninitialized) {
+    if (source_future_.get_state() == boost::future_state::uninitialized) {
       source = "";
     } else {
       source = source_future_.get();
@@ -59,10 +59,10 @@ struct response_pimpl {
   }
 
   void remove_headers() {
-    if (headers_future_.get_state() == future_state::uninitialized) {
-      promise<std::multimap<std::string, std::string> > headers_promise;
+    if (headers_future_.get_state() == boost::future_state::uninitialized) {
+      boost::promise<std::multimap<std::string, std::string> > headers_promise;
       headers_promise.set_value(std::multimap<std::string, std::string>());
-      unique_future<std::multimap<std::string, std::string> > tmp =
+      boost::unique_future<std::multimap<std::string, std::string> > tmp =
           headers_promise.get_future();
       std::multimap<std::string, std::string>().swap(added_headers_);
       std::set<std::string>().swap(removed_headers_);
@@ -71,9 +71,9 @@ struct response_pimpl {
   }
 
   void get_headers(
-      function<void(std::string const &, std::string const &)> inserter) {
+      boost::function<void(std::string const &, std::string const &)> inserter) {
     std::multimap<std::string, std::string>::const_iterator it;
-    if (headers_future_.get_state() == future_state::uninitialized) {
+    if (headers_future_.get_state() == boost::future_state::uninitialized) {
       it = added_headers_.begin();
       for (;it != added_headers_.end(); ++it) {
         if (removed_headers_.find(it->first) == removed_headers_.end()) {
@@ -93,22 +93,22 @@ struct response_pimpl {
   }
   void get_headers(
       std::string const & name,
-      function<void(std::string const &, std::string const &)> inserter) { /* FIXME: Do something! */ }
+      boost::function<void(std::string const &, std::string const &)> inserter) { /* FIXME: Do something! */ }
   void get_headers(
-      function<bool(std::string const &, std::string const &)> predicate,
-      function<void(std::string const &, std::string const &)> inserter) { /* FIXME: Do something! */ }
+      boost::function<bool(std::string const &, std::string const &)> predicate,
+      boost::function<void(std::string const &, std::string const &)> inserter) { /* FIXME: Do something! */ }
 
   void set_body(std::string const &body) {
-    promise<std::string> body_promise;
+    boost::promise<std::string> body_promise;
     body_promise.set_value(body);
-    unique_future<std::string> tmp_future = body_promise.get_future();
+    boost::unique_future<std::string> tmp_future = body_promise.get_future();
     body_future_ = boost::move(tmp_future);
   }
 
   void append_body(std::string const & data) { /* FIXME: Do something! */ }
 
   void get_body(std::string &body) {
-    if (body_future_.get_state() == future_state::uninitialized) {
+    if (body_future_.get_state() == boost::future_state::uninitialized) {
       body = "";
     } else {
       body = body_future_.get();
@@ -116,18 +116,18 @@ struct response_pimpl {
   }
 
   void get_body(
-      function<void(iterator_range<char const *>)> chunk_reader,
+      boost::function<void(boost::iterator_range<char const *>)> chunk_reader,
       size_t size) { /* FIXME: Do something! */ }
 
   void set_status(boost::uint16_t status) {
-    promise<boost::uint16_t> status_promise;
+    boost::promise<boost::uint16_t> status_promise;
     status_promise.set_value(status);
-    unique_future<boost::uint16_t> tmp_future = status_promise.get_future();
+    boost::unique_future<boost::uint16_t> tmp_future = status_promise.get_future();
     status_future_ = boost::move(tmp_future);
   }
 
   void get_status(boost::uint16_t &status) {
-    if (status_future_.get_state() == future_state::uninitialized) {
+    if (status_future_.get_state() == boost::future_state::uninitialized) {
       status = 0u;
     } else {
       status = status_future_.get();
@@ -135,14 +135,14 @@ struct response_pimpl {
   }
 
   void set_status_message(std::string const &status_message) {
-    promise<std::string> status_message_promise_;
+    boost::promise<std::string> status_message_promise_;
     status_message_promise_.set_value(status_message);
-    unique_future<std::string> tmp_future = status_message_promise_.get_future();
+    boost::unique_future<std::string> tmp_future = status_message_promise_.get_future();
     status_message_future_ = boost::move(tmp_future);
   }
 
   void get_status_message(std::string &status_message) {
-    if (status_message_future_.get_state() == future_state::uninitialized) {
+    if (status_message_future_.get_state() == boost::future_state::uninitialized) {
       status_message = "";
     } else {
       status_message = status_message_future_.get();
@@ -150,117 +150,117 @@ struct response_pimpl {
   }
 
   void set_version(std::string const &version) {
-    promise<std::string> version_promise;
+    boost::promise<std::string> version_promise;
     version_promise.set_value(version);
-    unique_future<std::string> tmp_future = version_promise.get_future();
+    boost::unique_future<std::string> tmp_future = version_promise.get_future();
     version_future_ = boost::move(tmp_future);
   }
 
   void get_version(std::string &version) {
-    if (version_future_.get_state() == future_state::uninitialized) {
+    if (version_future_.get_state() == boost::future_state::uninitialized) {
       version = "";
     } else {
       version = version_future_.get();
     }
   }
 
-  void set_source_promise(promise<std::string> &promise_) {
-    unique_future<std::string> tmp_future = promise_.get_future();
+  void set_source_promise(boost::promise<std::string> &promise_) {
+    boost::unique_future<std::string> tmp_future = promise_.get_future();
     source_future_ = boost::move(tmp_future);
   }
 
-  void set_destination_promise(promise<std::string> &promise_) {
-    unique_future<std::string> tmp_future = promise_.get_future();
+  void set_destination_promise(boost::promise<std::string> &promise_) {
+    boost::unique_future<std::string> tmp_future = promise_.get_future();
     destination_future_ = boost::move(tmp_future);
   }
 
-  void set_headers_promise(promise<std::multimap<std::string, std::string> > &promise_) {
-    unique_future<std::multimap<std::string, std::string> > tmp_future = promise_.get_future();
+  void set_headers_promise(boost::promise<std::multimap<std::string, std::string> > &promise_) {
+    boost::unique_future<std::multimap<std::string, std::string> > tmp_future = promise_.get_future();
     headers_future_ = boost::move(tmp_future);
   }
 
-  void set_status_promise(promise<boost::uint16_t> &promise_) {
-    unique_future<boost::uint16_t> tmp_future = promise_.get_future();
+  void set_status_promise(boost::promise<boost::uint16_t> &promise_) {
+    boost::unique_future<boost::uint16_t> tmp_future = promise_.get_future();
     status_future_ = boost::move(tmp_future);
   }
 
-  void set_status_message_promise(promise<std::string> &promise_) {
-    unique_future<std::string> tmp_future = promise_.get_future();
+  void set_status_message_promise(boost::promise<std::string> &promise_) {
+    boost::unique_future<std::string> tmp_future = promise_.get_future();
     status_message_future_ = boost::move(tmp_future);
   }
 
-  void set_version_promise(promise<std::string> &promise_) {
-    unique_future<std::string> tmp_future = promise_.get_future();
+  void set_version_promise(boost::promise<std::string> &promise_) {
+    boost::unique_future<std::string> tmp_future = promise_.get_future();
     version_future_ = boost::move(tmp_future);
   }
 
-  void set_body_promise(promise<std::string> &promise_) {
-    unique_future<std::string> tmp_future = promise_.get_future();
+  void set_body_promise(boost::promise<std::string> &promise_) {
+    boost::unique_future<std::string> tmp_future = promise_.get_future();
     body_future_ = boost::move(tmp_future);
   }
 
   bool equals(response_pimpl const &other) {
-    if (source_future_.get_state() != future_state::uninitialized) {
-      if (other.source_future_.get_state() == future_state::uninitialized)
+    if (source_future_.get_state() != boost::future_state::uninitialized) {
+      if (other.source_future_.get_state() == boost::future_state::uninitialized)
         return false;
       if (source_future_.get() != other.source_future_.get())
         return false;
     } else {
-      if (other.source_future_.get_state() != future_state::uninitialized)
+      if (other.source_future_.get_state() != boost::future_state::uninitialized)
         return false;
     }
-    if (destination_future_.get_state() != future_state::uninitialized) {
-      if (other.destination_future_.get_state() == future_state::uninitialized)
+    if (destination_future_.get_state() != boost::future_state::uninitialized) {
+      if (other.destination_future_.get_state() == boost::future_state::uninitialized)
         return false;
       if (destination_future_.get() != other.destination_future_.get())
         return false;
     } else {
-      if (other.destination_future_.get_state() != future_state::uninitialized)
+      if (other.destination_future_.get_state() != boost::future_state::uninitialized)
         return false;
     }
-    if (headers_future_.get_state() != future_state::uninitialized) {
-      if (other.headers_future_.get_state() == future_state::uninitialized)
+    if (headers_future_.get_state() != boost::future_state::uninitialized) {
+      if (other.headers_future_.get_state() == boost::future_state::uninitialized)
         return false;
       if (headers_future_.get() != other.headers_future_.get())
         return false;
     } else {
-      if (other.headers_future_.get_state() != future_state::uninitialized)
+      if (other.headers_future_.get_state() != boost::future_state::uninitialized)
         return false;
     }
-    if (status_future_.get_state() != future_state::uninitialized) {
-      if (other.status_future_.get_state() == future_state::uninitialized)
+    if (status_future_.get_state() != boost::future_state::uninitialized) {
+      if (other.status_future_.get_state() == boost::future_state::uninitialized)
         return false;
       if (status_future_.get() != other.status_future_.get())
         return false;
     } else {
-      if (other.status_future_.get_state() != future_state::uninitialized)
+      if (other.status_future_.get_state() != boost::future_state::uninitialized)
         return false;
     }
-    if (status_message_future_.get_state() != future_state::uninitialized) {
-      if (other.status_message_future_.get_state() == future_state::uninitialized)
+    if (status_message_future_.get_state() != boost::future_state::uninitialized) {
+      if (other.status_message_future_.get_state() == boost::future_state::uninitialized)
         return false;
       if (status_message_future_.get() != other.status_message_future_.get())
         return false;
     } else {
-      if (other.status_message_future_.get_state() != future_state::uninitialized)
+      if (other.status_message_future_.get_state() != boost::future_state::uninitialized)
         return false;
     }
-    if (version_future_.get_state() != future_state::uninitialized) {
-      if (other.version_future_.get_state() == future_state::uninitialized)
+    if (version_future_.get_state() != boost::future_state::uninitialized) {
+      if (other.version_future_.get_state() == boost::future_state::uninitialized)
         return false;
       if (version_future_.get() != other.version_future_.get())
         return false;
     } else {
-      if (other.version_future_.get_state() != future_state::uninitialized)
+      if (other.version_future_.get_state() != boost::future_state::uninitialized)
         return false;
     }
-    if (body_future_.get_state() != future_state::uninitialized) {
-      if (other.body_future_.get_state() == future_state::uninitialized)
+    if (body_future_.get_state() != boost::future_state::uninitialized) {
+      if (other.body_future_.get_state() == boost::future_state::uninitialized)
         return false;
       if (body_future_.get() != other.body_future_.get())
         return false;
     } else {
-      if (other.body_future_.get_state() != future_state::uninitialized)
+      if (other.body_future_.get_state() != boost::future_state::uninitialized)
         return false;
     }
     if (other.added_headers_ != added_headers_ || other.removed_headers_ != removed_headers_)
@@ -269,14 +269,14 @@ struct response_pimpl {
   }
 
  private:
-  mutable shared_future<std::string> source_future_;
-  mutable shared_future<std::string> destination_future_;
-  mutable shared_future<std::multimap<std::string, std::string> >
+  mutable boost::shared_future<std::string> source_future_;
+  mutable boost::shared_future<std::string> destination_future_;
+  mutable boost::shared_future<std::multimap<std::string, std::string> >
       headers_future_;
-  mutable shared_future<boost::uint16_t> status_future_;
-  mutable shared_future<std::string> status_message_future_;
-  mutable shared_future<std::string> version_future_;
-  mutable shared_future<std::string> body_future_;
+  mutable boost::shared_future<boost::uint16_t> status_future_;
+  mutable boost::shared_future<std::string> status_message_future_;
+  mutable boost::shared_future<std::string> version_future_;
+  mutable boost::shared_future<std::string> body_future_;
   // TODO: use unordered_map and unordered_set here.
   std::multimap<std::string, std::string> added_headers_;
   std::set<std::string> removed_headers_;
@@ -352,17 +352,17 @@ void response::get_source(std::string &source) const {
   pimpl_->get_source(source);
 }
 
-void response::get_headers(function<void(std::string const &, std::string const &)> inserter) const {
+void response::get_headers(boost::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl_->get_headers(inserter);
 }
 
 void response::get_headers(std::string const &name,
-                           function<void(std::string const &, std::string const &)> inserter) const {
+                           boost::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl_->get_headers(name, inserter);
 }
 
-void response::get_headers(function<bool(std::string const &, std::string const &)> predicate,
-                           function<void(std::string const &, std::string const &)> inserter) const {
+void response::get_headers(boost::function<bool(std::string const &, std::string const &)> predicate,
+                           boost::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl_->get_headers(predicate, inserter);
 }
 
@@ -370,7 +370,7 @@ void response::get_body(std::string &body) const {
   pimpl_->get_body(body);
 }
 
-void response::get_body(function<void(iterator_range<char const *>)> chunk_reader, size_t size) const {
+void response::get_body(boost::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
   pimpl_->get_body(chunk_reader, size);
 }
 
@@ -402,31 +402,31 @@ response::~response() {
   delete pimpl_;
 }
 
-void response::set_version_promise(promise<std::string> &promise) {
+void response::set_version_promise(boost::promise<std::string> &promise) {
   return pimpl_->set_version_promise(promise);
 }
 
-void response::set_status_promise(promise<boost::uint16_t> &promise) {
+void response::set_status_promise(boost::promise<boost::uint16_t> &promise) {
   return pimpl_->set_status_promise(promise);
 }
 
-void response::set_status_message_promise(promise<std::string> &promise) {
+void response::set_status_message_promise(boost::promise<std::string> &promise) {
   return pimpl_->set_status_message_promise(promise);
 }
 
-void response::set_headers_promise(promise<std::multimap<std::string, std::string> > &promise) {
+void response::set_headers_promise(boost::promise<std::multimap<std::string, std::string> > &promise) {
   return pimpl_->set_headers_promise(promise);
 }
 
-void response::set_source_promise(promise<std::string> &promise) {
+void response::set_source_promise(boost::promise<std::string> &promise) {
   return pimpl_->set_source_promise(promise);
 }
 
-void response::set_destination_promise(promise<std::string> &promise) {
+void response::set_destination_promise(boost::promise<std::string> &promise) {
   return pimpl_->set_destination_promise(promise);
 }
 
-void response::set_body_promise(promise<std::string> &promise) {
+void response::set_body_promise(boost::promise<std::string> &promise) {
   return pimpl_->set_body_promise(promise);
 }
 

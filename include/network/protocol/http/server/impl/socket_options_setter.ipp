@@ -12,38 +12,38 @@
 
 namespace network { namespace http {
 
-void socket_options_setter::set_socket_options(server_options const & options, asio::ip::tcp::socket &socket) {
-  system::error_code ignored;
+void socket_options_setter::set_socket_options(server_options const & options, boost::asio::ip::tcp::socket &socket) {
+  boost::system::error_code ignored;
   socket.non_blocking(options.non_blocking_io(), ignored);
   if (options.linger()) {
-    asio::ip::tcp::socket::linger linger(true, options.linger_timeout());
+    boost::asio::ip::tcp::socket::linger linger(true, options.linger_timeout());
     socket.set_option(linger, ignored);
   }
   if (int buf_size = options.receive_buffer_size() >= 0) {
-    asio::ip::tcp::socket::receive_buffer_size receive_buffer_size(buf_size);
+    boost::asio::ip::tcp::socket::receive_buffer_size receive_buffer_size(buf_size);
     socket.set_option(receive_buffer_size, ignored);
   }
   if (int buf_size = options.send_buffer_size() >= 0) {
-    asio::ip::tcp::socket::send_buffer_size send_buffer_size(buf_size);
+    boost::asio::ip::tcp::socket::send_buffer_size send_buffer_size(buf_size);
     socket.set_option(send_buffer_size, ignored);
   }
   if (int buf_size = options.receive_low_watermark() >= 0) {
-    asio::ip::tcp::socket::receive_low_watermark receive_low_watermark(buf_size);
+    boost::asio::ip::tcp::socket::receive_low_watermark receive_low_watermark(buf_size);
     socket.set_option(receive_low_watermark, ignored);
   }
   if (int buf_size = options.send_low_watermark() >= 0) {
-    asio::ip::tcp::socket::send_low_watermark send_low_watermark(buf_size);
+    boost::asio::ip::tcp::socket::send_low_watermark send_low_watermark(buf_size);
     socket.set_option(send_low_watermark, ignored);
   }
 }
 
-void socket_options_setter::set_acceptor_options(server_options const &options, asio::ip::tcp::acceptor &acceptor) {
-  system::error_code ignored;
+void socket_options_setter::set_acceptor_options(server_options const &options, boost::asio::ip::tcp::acceptor &acceptor) {
+  boost::system::error_code ignored;
   acceptor.set_option(
-      asio::ip::tcp::acceptor::reuse_address(options.reuse_address()),
+      boost::asio::ip::tcp::acceptor::reuse_address(options.reuse_address()),
       ignored);
   acceptor.set_option(
-      asio::ip::tcp::acceptor::enable_connection_aborted(options.report_aborted()),
+      boost::asio::ip::tcp::acceptor::enable_connection_aborted(options.report_aborted()),
       ignored);
 }
 

@@ -30,9 +30,9 @@ class async_server_connection;
 
 class async_server_impl : protected socket_options_setter {
  public:
-  typedef shared_ptr<async_server_connection> connection_ptr;
+  typedef boost::shared_ptr<async_server_connection> connection_ptr;
   async_server_impl(server_options const &options,
-                    function<void(request const &, connection_ptr)> handler,
+                    boost::function<void(request const &, connection_ptr)> handler,
                     utils::thread_pool &thread_pool);
   ~async_server_impl();
   void run();
@@ -42,17 +42,17 @@ class async_server_impl : protected socket_options_setter {
  private:
   server_options options_;
   std::string address_, port_;
-  asio::io_service *service_;
-  asio::ip::tcp::acceptor *acceptor_;
-  shared_ptr<async_server_connection> new_connection_;
-  mutex listening_mutex_, stopping_mutex_;
-  function<void(request const &, connection_ptr)> handler_;
+  boost::asio::io_service *service_;
+  boost::asio::ip::tcp::acceptor *acceptor_;
+  boost::shared_ptr<async_server_connection> new_connection_;
+  boost::mutex listening_mutex_, stopping_mutex_;
+  boost::function<void(request const &, connection_ptr)> handler_;
   utils::thread_pool &pool_;
   bool listening_, owned_service_, stopping_;
 
   void handle_stop();
   void start_listening();
-  void handle_accept(system::error_code const &ec);
+  void handle_accept(boost::system::error_code const &ec);
 };
 
 }  // namespace http

@@ -8,7 +8,7 @@
 #include <network/protocol/http/request/request_base.hpp>
 #include <boost/test/unit_test.hpp>
 
-namespace http = boost::network::http;
+namespace http = network::http;
 
 // In this test we make sure that the implementation of the default request
 // storage base actually doesn't have bugs and works as advertised. Although we

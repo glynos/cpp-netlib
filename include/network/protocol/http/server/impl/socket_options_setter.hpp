@@ -15,8 +15,8 @@ class server_options;
 
 class socket_options_setter {
  protected:
-  void set_socket_options(server_options const &options, asio::ip::tcp::socket &socket);
-  void set_acceptor_options(server_options const &options, asio::ip::tcp::acceptor &acceptor);
+  void set_socket_options(server_options const &options, boost::asio::ip::tcp::socket &socket);
+  void set_acceptor_options(server_options const &options, boost::asio::ip::tcp::acceptor &acceptor);
 };
 
 }  // namespace http

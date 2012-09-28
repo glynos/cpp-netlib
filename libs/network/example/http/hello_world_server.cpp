@@ -16,7 +16,7 @@
 #include <iostream>
 
 
-namespace http = boost::network::http;
+namespace http = network::http;
 
 
 /*<< Defines the server. >>*/

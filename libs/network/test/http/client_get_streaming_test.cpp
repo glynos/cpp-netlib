@@ -9,15 +9,15 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 
-namespace net = boost::network;
-namespace http = boost::network::http;
+namespace net = network;
+namespace http = network::http;
 
 struct body_handler {
 
     explicit body_handler(std::string & body)
     : body(body) {}
 
-    BOOST_NETWORK_HTTP_BODY_CALLBACK(operator(), range, error) {
+    NETWORK_HTTP_BODY_CALLBACK(operator(), range, error) {
         body.append(boost::begin(range), boost::end(range));
     }
 

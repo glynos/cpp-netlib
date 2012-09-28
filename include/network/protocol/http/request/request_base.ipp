@@ -32,7 +32,7 @@ struct request_storage_base_pimpl {
   size_t chunk_size_;
   typedef std::vector<std::pair<char *, size_t> > chunks_vector;
   chunks_vector chunks_;
-  mutable mutex chunk_mutex_;
+  mutable boost::mutex chunk_mutex_;
 
   request_storage_base_pimpl(request_storage_base_pimpl const &other);
 };
@@ -83,7 +83,7 @@ request_storage_base_pimpl::request_storage_base_pimpl(size_t chunk_size)
 request_storage_base_pimpl::request_storage_base_pimpl(request_storage_base_pimpl const &other)
 : chunk_size_(other.chunk_size_)
 , chunks_(0) {
-  lock_guard<mutex> scoped_lock(other.chunk_mutex_);
+  boost::lock_guard<boost::mutex> scoped_lock(other.chunk_mutex_);
   chunks_.reserve(other.chunks_.size());
   chunks_vector::const_iterator it = other.chunks_.begin();
   for (; it != other.chunks_.end(); ++it) {
@@ -101,7 +101,7 @@ request_storage_base_pimpl * request_storage_base_pimpl::clone() const {
 }
  
 void request_storage_base_pimpl::append(char const *data, size_t size) {
-  lock_guard<mutex> scoped_lock(chunk_mutex_);
+  boost::lock_guard<boost::mutex> scoped_lock(chunk_mutex_);
   if (chunks_.empty()) {
     chunks_.push_back(std::make_pair(
         new (std::nothrow) char[chunk_size_], 0));
@@ -128,7 +128,7 @@ void request_storage_base_pimpl::append(char const *data, size_t size) {
 }
 
 size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t size) const {
-  lock_guard<mutex> scoped_lock(chunk_mutex_);
+  boost::lock_guard<boost::mutex> scoped_lock(chunk_mutex_);
   if (chunks_.empty()) return 0;
   // First we find which chunk we're going to read from using the provided
   // offset and some arithmetic to determine the correct one.
@@ -153,7 +153,7 @@ size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t
 }
 
 void request_storage_base_pimpl::flatten(std::string &destination) const {
-  lock_guard<mutex> scpoped_lock(chunk_mutex_);
+  boost::lock_guard<boost::mutex> scpoped_lock(chunk_mutex_);
   chunks_vector::const_iterator chunk_iterator = chunks_.begin();
   for (; chunk_iterator != chunks_.end(); ++chunk_iterator) {
     destination.append(chunk_iterator->first, chunk_iterator->second);
@@ -161,7 +161,7 @@ void request_storage_base_pimpl::flatten(std::string &destination) const {
 }
 
 void request_storage_base_pimpl::clear() {
-  lock_guard<mutex> scoped_lock(chunk_mutex_);
+  boost::lock_guard<boost::mutex> scoped_lock(chunk_mutex_);
   chunks_vector::const_iterator chunk_iterator = chunks_.begin();
   for (; chunk_iterator != chunks_.end(); ++chunk_iterator) {
     delete [] chunk_iterator->first;

@@ -26,13 +26,13 @@ struct basic_client_facade {
                      body_callback_function_type body_handler = body_callback_function_type(),
                      request_options const &options=request_options());
   response const post(request request,
-                      optional<std::string> body = optional<std::string>(),
-                      optional<std::string> content_type = optional<std::string>(),
+                      boost::optional<std::string> body = boost::optional<std::string>(),
+                      boost::optional<std::string> content_type = boost::optional<std::string>(),
                       body_callback_function_type body_handler = body_callback_function_type(),
                       request_options const&options = request_options());
   response const put(request request,
-                     optional<std::string> body = optional<std::string>(),
-                     optional<std::string> content_type = optional<std::string>(),
+                     boost::optional<std::string> body = boost::optional<std::string>(),
+                     boost::optional<std::string> content_type = boost::optional<std::string>(),
                      body_callback_function_type body_handler = body_callback_function_type(),
                      request_options const & options = request_options());
   response const delete_(request const & request,

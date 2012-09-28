@@ -9,7 +9,7 @@
 #include <network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
 
-namespace http = boost::network::http;
+namespace http = network::http;
 
 BOOST_AUTO_TEST_CASE(http_get_test_timeout_1_0) {
     http::client::request request("http://localhost:12121/");

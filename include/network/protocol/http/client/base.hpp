@@ -28,7 +28,7 @@ class client_options;
 
 struct client_base {
   typedef
-    function<void(boost::iterator_range<char const *> const &, system::error_code const &)>
+    boost::function<void(boost::iterator_range<char const *> const &, boost::system::error_code const &)>
     body_callback_function_type;
 
   client_base();

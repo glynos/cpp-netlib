@@ -4,8 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef 2008817MESSAGE_FWD_INC
-#define 2008817MESSAGE_FWD_INC
+#ifndef MESSAGE_FWS_INC_20120928
+#define MESSAGE_FWS_INC_20120928
 
 namespace network {
 
@@ -14,4 +14,4 @@ struct basic_message;
 
 } // namespace network
 
-#endif // 2008817MESSAGE_FWD_INC
+#endif // MESSAGE_FWS_INC_20120928

@@ -53,14 +53,14 @@ namespace network { namespace http {
         state_t state() const { return internal_state; }
 
         template <class Range>
-        fusion::tuple<logic::tribool, iterator_range<typename Range::const_iterator> >
+        boost::fusion::tuple<boost::logic::tribool, boost::iterator_range<typename Range::const_iterator> >
         parse_until(state_t stop_state, Range & range) {
-            logic::tribool parsed_ok = logic::indeterminate;
-            typedef typename range_iterator<Range>::type iterator;
+            boost::logic::tribool parsed_ok = boost::logic::indeterminate;
+            typedef typename boost::range_iterator<Range>::type iterator;
             iterator start = boost::begin(range)
                     , end  = boost::end(range)
                     , current_iterator = start;
-            iterator_range<iterator> local_range = 
+            boost::iterator_range<iterator> local_range = 
                 boost::make_iterator_range(start, end);
             while (
                 !boost::empty(local_range)
@@ -70,22 +70,22 @@ namespace network { namespace http {
                 current_iterator = boost::begin(local_range);
                 switch(internal_state) {
                     case method_start:
-                        if (algorithm::is_upper()(*current_iterator)) internal_state = method_char;
+                        if (boost::algorithm::is_upper()(*current_iterator)) internal_state = method_char;
                         else parsed_ok = false;
                         break;
                     case method_char:
-                        if (algorithm::is_upper()(*current_iterator)) break;
-                        else if (algorithm::is_space()(*current_iterator)) internal_state = method_done;
+                        if (boost::algorithm::is_upper()(*current_iterator)) break;
+                        else if (boost::algorithm::is_space()(*current_iterator)) internal_state = method_done;
                         else parsed_ok = false;
                         break;
                     case method_done:
-                        if (algorithm::is_cntrl()(*current_iterator)) parsed_ok = false;
-                        else if (algorithm::is_space()(*current_iterator)) parsed_ok = false;
+                        if (boost::algorithm::is_cntrl()(*current_iterator)) parsed_ok = false;
+                        else if (boost::algorithm::is_space()(*current_iterator)) parsed_ok = false;
                         else internal_state = uri_char;
                         break;
                     case uri_char:
-                        if (algorithm::is_cntrl()(*current_iterator)) parsed_ok = false;
-                        else if (algorithm::is_space()(*current_iterator)) internal_state = uri_done;
+                        if (boost::algorithm::is_cntrl()(*current_iterator)) parsed_ok = false;
+                        else if (boost::algorithm::is_space()(*current_iterator)) internal_state = uri_done;
                         break;
                     case uri_done:
                         if (*current_iterator == 'H') internal_state = version_h;
@@ -108,7 +108,7 @@ namespace network { namespace http {
                         else parsed_ok = false;
                         break;
                     case version_slash:
-                        if (algorithm::is_digit()(*current_iterator)) internal_state = version_d1;
+                        if (boost::algorithm::is_digit()(*current_iterator)) internal_state = version_d1;
                         else parsed_ok = false;
                         break;
                     case version_d1:
@@ -116,7 +116,7 @@ namespace network { namespace http {
                         else parsed_ok = false;
                         break;
                     case version_dot:
-                        if (algorithm::is_digit()(*current_iterator)) internal_state = version_d2;
+                        if (boost::algorithm::is_digit()(*current_iterator)) internal_state = version_d2;
                         else parsed_ok = false;
                         break;
                     case version_d2:
@@ -128,13 +128,13 @@ namespace network { namespace http {
                         else parsed_ok = false;
                         break;
                     case version_done:
-                        if (algorithm::is_alnum()(*current_iterator)) internal_state = header_name;
+                        if (boost::algorithm::is_alnum()(*current_iterator)) internal_state = header_name;
                         else if (*current_iterator == '\r') internal_state = headers_cr;
                         else parsed_ok = false;
                         break;
                     case header_name:
                         if (*current_iterator == ':') internal_state = header_colon;
-                        else if (algorithm::is_alnum()(*current_iterator) || algorithm::is_punct()(*current_iterator)) break;
+                        else if (boost::algorithm::is_alnum()(*current_iterator) || boost::algorithm::is_punct()(*current_iterator)) break;
                         else parsed_ok = false;
                         break;
                     case header_colon:
@@ -143,7 +143,7 @@ namespace network { namespace http {
                         break;
                     case header_value:
                         if (*current_iterator == '\r') internal_state = header_cr;
-                        else if (algorithm::is_cntrl()(*current_iterator)) parsed_ok = false;
+                        else if (boost::algorithm::is_cntrl()(*current_iterator)) parsed_ok = false;
                         break;
                     case header_cr:
                         if (*current_iterator == '\n') internal_state = header_line_done;
@@ -151,7 +151,7 @@ namespace network { namespace http {
                         break;
                     case header_line_done:
                         if (*current_iterator == '\r') internal_state = headers_cr;
-                        else if (algorithm::is_alnum()(*current_iterator)) internal_state = header_name;
+                        else if (boost::algorithm::is_alnum()(*current_iterator)) internal_state = header_name;
                         else parsed_ok = false;
                         break;
                     case headers_cr:
@@ -168,7 +168,7 @@ namespace network { namespace http {
                 local_range = boost::make_iterator_range(
                     ++current_iterator, end);
             }
-            return fusion::make_tuple(
+            return boost::fusion::make_tuple(
                 parsed_ok, 
                 boost::make_iterator_range(
                     start, current_iterator

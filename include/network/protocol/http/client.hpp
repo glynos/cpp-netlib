@@ -24,8 +24,8 @@ struct client : basic_client_facade {
   typedef basic_client_facade
           base_facade_type;
  public:
-  typedef ::boost::network::http::request request;
-  typedef ::boost::network::http::response response;
+  typedef network::http::request request;
+  typedef network::http::response response;
 
   // Constructor
   // =================================================================

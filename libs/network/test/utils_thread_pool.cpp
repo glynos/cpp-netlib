@@ -11,7 +11,7 @@
 #include <network/utils/thread_pool.hpp>
 #include <boost/bind.hpp>
 
-using namespace boost::network;
+using namespace network;
 
 // This test specifies the requirements for a thread pool interface. At the
 // very least any thread pool implementation should be able to pass the simple

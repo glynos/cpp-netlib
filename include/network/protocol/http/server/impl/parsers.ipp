@@ -24,7 +24,7 @@
 
 namespace network { namespace http {
 
-    NETWORK_INLINE void parse_version(std::string const & partial_parsed, fusion::tuple<uint8_t,uint8_t> & version_pair) {
+    NETWORK_INLINE void parse_version(std::string const & partial_parsed, boost::fusion::tuple<uint8_t,uint8_t> & version_pair) {
         using namespace boost::spirit::qi;
         parse(
             partial_parsed.begin(), partial_parsed.end(),

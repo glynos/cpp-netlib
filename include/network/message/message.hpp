@@ -20,7 +20,7 @@ struct message_pimpl;
 // The common message type.
 struct message : message_base {
   // Nested types
-  typedef iterator_range<
+  typedef boost::iterator_range<
     std::multimap<std::string, std::string>::const_iterator>
     headers_range;
 
@@ -45,16 +45,16 @@ struct message : message_base {
   virtual void get_destination(std::string & destination) const;
   virtual void get_source(std::string & source) const;
   virtual void get_headers(
-      function<void(std::string const &, std::string const &)> inserter) const;
+      boost::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_headers(
       std::string const & name,
-      function<void(std::string const &, std::string const &)> inserter) const;
+      boost::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_headers(
-      function<bool(std::string const &, std::string const &)> predicate,
-      function<void(std::string const &, std::string const &)> inserter) const;
+      boost::function<bool(std::string const &, std::string const &)> predicate,
+      boost::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_body(std::string & body) const;
   virtual void get_body(
-      function<void(iterator_range<char const *>)> chunk_reader,
+      boost::function<void(boost::iterator_range<char const *>)> chunk_reader,
       size_t size) const;
 
   void swap(message & other);

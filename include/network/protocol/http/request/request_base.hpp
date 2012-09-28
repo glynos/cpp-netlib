@@ -4,11 +4,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008
-#define BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008
+#ifndef NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008
+#define NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008
 
-#ifndef BOOST_NETWORK_BUFFER_CHUNK
-#define BOOST_NETWORK_BUFFER_CHUNK 1024  // We want 1KiB worth of data at least.
+#ifndef NETWORK_BUFFER_CHUNK
+#define NETWORK_BUFFER_CHUNK 1024  // We want 1KiB worth of data at least.
 #endif
 
 #include <network/message/message_base.hpp>
@@ -25,7 +25,7 @@ struct request_storage_base_pimpl;
 
 struct request_storage_base {
  protected:
-  request_storage_base(size_t chunk_size = BOOST_NETWORK_BUFFER_CHUNK);
+  request_storage_base(size_t chunk_size = NETWORK_BUFFER_CHUNK);
   request_storage_base(request_storage_base const &other);
   virtual void append(char const *data, size_t size);
   virtual size_t read(char *destination, size_t offset, size_t size) const;
@@ -62,4 +62,4 @@ struct request_base : message_base, request_storage_base {
 }  // namespace http
 }  // namespace network
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008 */
+#endif /* NETWORK_PROTOCOL_HTTP_REQUEST_BASE_HPP_20111008 */

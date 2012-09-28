@@ -12,7 +12,7 @@
 #include <algorithm>
 
 BOOST_AUTO_TEST_CASE ( message_transform_toupper ) {
-    using namespace boost::network;
+    using namespace network;
 
     message msg;
     msg << source("me");
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE ( message_transform_toupper ) {
 }
 
 BOOST_AUTO_TEST_CASE ( message_transform_tolower ) {
-    using namespace boost::network;
+    using namespace network;
 
     message msg;
     msg << source("ME");

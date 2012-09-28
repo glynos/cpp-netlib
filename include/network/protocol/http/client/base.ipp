@@ -22,7 +22,7 @@ namespace network { namespace http {
 
 struct client_base_pimpl {
   typedef
-    function<void(boost::iterator_range<char const *> const &, system::error_code const &)>
+    boost::function<void(boost::iterator_range<char const *> const &, boost::system::error_code const &)>
     body_callback_function_type;
   client_base_pimpl(client_options const &options);
   response const request_skeleton(request const & request_,
@@ -37,7 +37,7 @@ struct client_base_pimpl {
   boost::asio::io_service * service_ptr;
   boost::shared_ptr<boost::asio::io_service::work> sentinel_;
   boost::shared_ptr<boost::thread> lifetime_thread_;
-  shared_ptr<connection_manager> connection_manager_;
+  boost::shared_ptr<connection_manager> connection_manager_;
   bool owned_service_;
 };
 
@@ -78,7 +78,7 @@ client_base_pimpl::client_base_pimpl(client_options const &options)
   NETWORK_MESSAGE("client_base_pimpl::client_base_pimpl(client_options const &)");
   if (service_ptr == 0) {
     NETWORK_MESSAGE("creating owned io_service.");
-    service_ptr = new(std::nothrow) asio::io_service;
+    service_ptr = new(std::nothrow) boost::asio::io_service;
     owned_service_ = true;
   }
   if (!connection_manager_.get()) {
@@ -93,7 +93,7 @@ client_base_pimpl::client_base_pimpl(client_options const &options)
       service_ptr
       )));
   if (!lifetime_thread_.get())
-    THROW_EXCEPTION(std::runtime_error("Cannot allocate client lifetime thread; not enough memory."));
+    BOOST_THROW_EXCEPTION(std::runtime_error("Cannot allocate client lifetime thread; not enough memory."));
 }
 
 client_base_pimpl::~client_base_pimpl()
@@ -117,7 +117,7 @@ response const client_base_pimpl::request_skeleton(
   )
 {
   NETWORK_MESSAGE("client_base_pimpl::request_skeleton(...)");
-  shared_ptr<client_connection> connection_;
+  boost::shared_ptr<client_connection> connection_;
   connection_ = connection_manager_->get_connection(*service_ptr, request_, options_);
   return connection_->send_request(method, request_, get_body, callback, options);
 }
