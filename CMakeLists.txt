@@ -6,6 +6,10 @@
 
 cmake_minimum_required(VERSION 2.8)
 project(CPP-NETLIB)
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+find_package( ICU )
+
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 find_package( Boost 1.45.0 REQUIRED unit_test_framework system regex date_time thread chrono filesystem program_options )
@@ -33,6 +37,10 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   else()
     message(FATAL_ERROR "No advanced standard C++ support (-std=c++0x and -std=c++11 not defined).")
   endif()
+elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+  set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
+  set(CMAKE_CXX_LINK_FLAGS "-std=c++11 -stdlib=libc++")
+  message("C++ Flags: ${CMAKE_CXX_FLAGS} link flags: ${CMAKE_CXX_LINK_FLAGS}")
 endif()
 
 if (Boost_FOUND)
