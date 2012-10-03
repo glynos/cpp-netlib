@@ -14,7 +14,7 @@ namespace network {
 namespace http {
 
 template <class T1, class T2>
-T1 & 
+inline T1 const & 
 name(std::pair<T1,T2> const & p) {
   return p.first;
 }
