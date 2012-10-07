@@ -10,8 +10,12 @@ project network_test/uri :
     requirements
         <include>../../../../
         <include>../
+        <toolset>gcc:<cxxflags>-std=c++0x
     ;
 
-run url_test.cpp /cpp-netlib//cppnetlib-uri ;
-run url_builder_test.cpp /cpp-netlib//cppnetlib-uri ;
-run url_encoding_test.cpp /cpp-netlib//cppnetlib-uri ;
+run uri_test.cpp /cpp-netlib//cppnetlib-uri ;
+run uri_builder_test.cpp /cpp-netlib//cppnetlib-uri ;
+run uri_builder_stream_test.cpp /cpp-netlib//cppnetlib-uri ;
+run uri_encoding_test.cpp /cpp-netlib//cppnetlib-uri ;
+run relative_uri_test.cpp /cpp-netlib//cppnetlib-uri ;
+run scheme_tests.cpp /cpp-netlib//cppnetlib-uri ;
