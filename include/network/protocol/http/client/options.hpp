@@ -10,7 +10,7 @@
 #include <list>
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include <boost/asio/io_service.hpp>
+#include <asio/io_service.hpp>
 #include <network/protocol/http/client/connection/connection_factory.hpp>
 #include <network/protocol/http/client/connection_manager.hpp>
 #include <network/protocol/http/client/client_connection.hpp>
@@ -51,8 +51,8 @@ namespace http {
     // The default setting when un-set is nullptr, meaning it signals the client
     // implementation that the user doesn't want to use his own io_service
     // instance.
-    client_options& io_service(boost::asio::io_service *io_service);
-    boost::asio::io_service* io_service() const;
+    client_options& io_service(asio::io_service *io_service);
+    asio::io_service* io_service() const;
     
     // The following option determines whether the client should follow
     // HTTP redirects when the implementation encounters them. The default

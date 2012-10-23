@@ -8,17 +8,17 @@
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_HPP_20111016
 
 #include <utility>
-#include <boost/asio/ip/udp.hpp>
-#include <boost/function.hpp>
+#include <asio/ip/udp.hpp>
+#include <functional>
 
 namespace network {
 namespace http {
 
 struct resolver_delegate {
-  typedef boost::asio::ip::udp::resolver::iterator resolver_iterator;
+  typedef asio::ip::udp::resolver::iterator resolver_iterator;
   typedef std::pair<resolver_iterator, resolver_iterator>
           iterator_pair;
-  typedef boost::function<void(boost::system::error_code const &, iterator_pair)>
+  typedef std::function<void(asio::error_code const &, iterator_pair)>
           resolve_completion_function;
   virtual void resolve(std::string const & host,
                        uint16_t port,

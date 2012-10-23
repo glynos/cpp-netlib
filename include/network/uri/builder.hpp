@@ -9,7 +9,7 @@
 #ifndef NETWORK_URI_BUILDER_INC
 #define NETWORK_URI_BUILDER_INC
 
-#include <boost/asio/ip/address.hpp>
+#include <asio/ip/address.hpp>
 
 namespace network {
 class builder {
@@ -48,19 +48,19 @@ public:
         return *this;
     }
 
-    builder &host(const boost::asio::ip::address &host) {
+    builder &host(const asio::ip::address &host) {
         uri_.uri_.append(host.to_string());
         uri_.parse();
         return *this;
     }
 
-    builder &host(const boost::asio::ip::address_v4 &host) {
+    builder &host(const asio::ip::address_v4 &host) {
         uri_.uri_.append(host.to_string());
         uri_.parse();
         return *this;
     }
 
-    builder &host(const boost::asio::ip::address_v6 &host) {
+    builder &host(const asio::ip::address_v6 &host) {
         uri_.uri_.append("[");
         uri_.uri_.append(host.to_string());
         uri_.uri_.append("]");

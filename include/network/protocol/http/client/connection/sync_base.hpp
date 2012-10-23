@@ -10,10 +10,10 @@
 #include <network/protocol/http/traits/resolver_policy.hpp>
 #include <network/traits/ostringstream.hpp>
 #include <network/traits/istringstream.hpp>
-#include <boost/asio/streambuf.hpp>
-#include <boost/asio/read.hpp>
-#include <boost/asio/write.hpp>
-#include <boost/asio/read_until.hpp>
+#include <asio/streambuf.hpp>
+#include <asio/read.hpp>
+#include <asio/write.hpp>
+#include <asio/read_until.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <network/protocol/http/response.hpp>
 
@@ -34,8 +34,8 @@ namespace network { namespace http { namespace impl {
 
         template <class Socket>
         void init_socket(Socket & socket_, resolver_type & resolver_, string_type const & hostname, string_type const & port, resolver_function_type resolve_) {
-            using boost::asio::ip::tcp;
-            boost::system::error_code error = boost::asio::error::host_not_found;
+            using asio::ip::tcp;
+            asio::error_code error = asio::error::host_not_found;
             typename resolver_type::iterator endpoint_iterator, end;
             boost::tie(endpoint_iterator, end) = resolve_(resolver_, hostname, port);
             while (error && endpoint_iterator != end) {
@@ -51,12 +51,12 @@ namespace network { namespace http { namespace impl {
             }
 
             if (error)
-                throw boost::system::system_error(error);
+                throw std::system_error(error);
         }
 
         template <class Socket>
-        void read_status(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
-            boost::asio::read_until(socket_, response_buffer, "\r\n");
+        void read_status(Socket & socket_, basic_response<Tag> & response_, asio::streambuf & response_buffer) {
+            asio::read_until(socket_, response_buffer, "\r\n");
             std::istream response_stream(&response_buffer);
             string_type http_version;
             unsigned int status_code;
@@ -76,8 +76,8 @@ namespace network { namespace http { namespace impl {
         }
 
         template <class Socket>
-        void read_headers(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
-            boost::asio::read_until(socket_, response_buffer, "\r\n\r\n");
+        void read_headers(Socket & socket_, basic_response<Tag> & response_, asio::streambuf & response_buffer) {
+            asio::read_until(socket_, response_buffer, "\r\n\r\n");
             std::istream response_stream(&response_buffer);
             string_type header_line, name;
             while (std::getline(response_stream, header_line) && header_line != "\r") {
@@ -101,24 +101,24 @@ namespace network { namespace http { namespace impl {
         }
 
         template <class Socket>
-        void send_request_impl(Socket & socket_, string_type const & method, boost::asio::streambuf & request_buffer) {
+        void send_request_impl(Socket & socket_, string_type const & method, asio::streambuf & request_buffer) {
             write(socket_, request_buffer);
         }
 
         template <class Socket>
-        void read_body_normal(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer, typename ostringstream<Tag>::type & body_stream) {
-            boost::system::error_code error;
+        void read_body_normal(Socket & socket_, basic_response<Tag> & response_, asio::streambuf & response_buffer, typename ostringstream<Tag>::type & body_stream) {
+            asio::error_code error;
             if (response_buffer.size() > 0)
                 body_stream << &response_buffer;
 
-            while (boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error)) {
+            while (asio::read(socket_, response_buffer, asio::transfer_at_least(1), error)) {
                 body_stream << &response_buffer;
             }
         }
 
         template <class Socket>
-        void read_body_transfer_chunk_encoding(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer, typename ostringstream<Tag>::type & body_stream) {
-            boost::system::error_code error;
+        void read_body_transfer_chunk_encoding(Socket & socket_, basic_response<Tag> & response_, asio::streambuf & response_buffer, typename ostringstream<Tag>::type & body_stream) {
+            asio::error_code error;
             // look for the content-length header
             typename headers_range<basic_response<Tag> >::type content_length_range =
                 headers(response_)["Content-Length"];
@@ -133,7 +133,7 @@ namespace network { namespace http { namespace impl {
                     bool stopping = false;
                     do {
                         std::size_t chunk_size_line = read_until(socket_, response_buffer, "\r\n", error);
-                        if ((chunk_size_line == 0) && (error != boost::asio::error::eof)) throw boost::system::system_error(error);
+                        if ((chunk_size_line == 0) && (error != asio::error::eof)) throw std::system_error(error);
                         std::size_t chunk_size = 0;
                         string_type data;
                         {
@@ -144,8 +144,8 @@ namespace network { namespace http { namespace impl {
                         }
                         if (chunk_size == 0) {
                             stopping = true;
-                            if (!read_until(socket_, response_buffer, "\r\n", error) && (error != boost::asio::error::eof))
-                                throw boost::system::system_error(error);
+                            if (!read_until(socket_, response_buffer, "\r\n", error) && (error != asio::error::eof))
+                                throw std::system_error(error);
                         } else {
                             bool stopping_inner = false;
                             std::istreambuf_iterator<char> eos;
@@ -155,9 +155,9 @@ namespace network { namespace http { namespace impl {
 
                             do {
                                 if (chunk_size != 0) {
-                                    std::size_t chunk_bytes_read = read(socket_, response_buffer, boost::asio::transfer_at_least(chunk_size), error);
+                                    std::size_t chunk_bytes_read = read(socket_, response_buffer, asio::transfer_at_least(chunk_size), error);
                                     if (chunk_bytes_read == 0) {
-                                        if (error != boost::asio::error::eof) throw boost::system::system_error(error);
+                                        if (error != asio::error::eof) throw std::system_error(error);
                                         stopping_inner = true;
                                     }
                                 }
@@ -181,7 +181,7 @@ namespace network { namespace http { namespace impl {
 				if ( length == 0 )
 					return;
 				size_t bytes_read = 0;
-                while ((bytes_read = boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1), error))) {
+                while ((bytes_read = asio::read(socket_, response_buffer, asio::transfer_at_least(1), error))) {
                     body_stream << &response_buffer;
                     length -= bytes_read;
                     if ((length <= 0) || error)
@@ -191,7 +191,7 @@ namespace network { namespace http { namespace impl {
         }
 
         template <class Socket>
-        void read_body(Socket & socket_, basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+        void read_body(Socket & socket_, basic_response<Tag> & response_, asio::streambuf & response_buffer) {
             typename ostringstream<Tag>::type body_stream;
             // TODO tag dispatch based on whether it's HTTP 1.0 or HTTP 1.1
             if (version_major == 1 && version_minor == 0) {
@@ -231,9 +231,9 @@ namespace network { namespace http { namespace impl {
 
         virtual void init_socket(string_type const & hostname, string_type const & port) = 0;
         virtual void send_request_impl(string_type const & method, basic_request<Tag> const & request_) = 0;
-        virtual void read_status(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) = 0;
-        virtual void read_headers(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) = 0;
-        virtual void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) = 0;
+        virtual void read_status(basic_response<Tag> & response_, asio::streambuf & response_buffer) = 0;
+        virtual void read_headers(basic_response<Tag> & response_, asio::streambuf & response_buffer) = 0;
+        virtual void read_body(basic_response<Tag> & response_, asio::streambuf & response_buffer) = 0;
         virtual bool is_open() = 0;
         virtual void close_socket() = 0;
         virtual ~sync_connection_base() {}

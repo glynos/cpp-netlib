@@ -7,37 +7,37 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_IPP_20110819
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_IPP_20110819
 
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/streambuf.hpp>
-#include <boost/asio/write.hpp>
-#include <boost/function.hpp>
-#include <boost/asio/buffer.hpp>
+#include <asio/ip/tcp.hpp>
+#include <asio/streambuf.hpp>
+#include <asio/write.hpp>
+#include <functional>
+#include <asio/buffer.hpp>
 #include <network/protocol/http/client/connection/normal_delegate.hpp>
 #include <network/detail/debug.hpp>
 
-network::http::normal_delegate::normal_delegate(boost::asio::io_service & service)
+network::http::normal_delegate::normal_delegate(asio::io_service & service)
   : service_(service)
 {}
 
 void network::http::normal_delegate::connect(
-    boost::asio::ip::tcp::endpoint & endpoint,
+    asio::ip::tcp::endpoint & endpoint,
     std::string const &host,
-    boost::function<void(boost::system::error_code const &)> handler) {
-  socket_.reset(new boost::asio::ip::tcp::socket(service_));
+    std::function<void(asio::error_code const &)> handler) {
+  socket_.reset(new asio::ip::tcp::socket(service_));
   socket_->async_connect(endpoint, handler);
 }
 
 void network::http::normal_delegate::write(
-    boost::asio::streambuf & command_streambuf,
-    boost::function<void(boost::system::error_code const &, size_t)> handler) {
+    asio::streambuf & command_streambuf,
+    std::function<void(asio::error_code const &, size_t)> handler) {
   NETWORK_MESSAGE("normal_delegate::write(...)");
   NETWORK_MESSAGE("scheduling asynchronous write...");
-  boost::asio::async_write(*socket_, command_streambuf, handler);
+  asio::async_write(*socket_, command_streambuf, handler);
 }
 
 void network::http::normal_delegate::read_some(
-    boost::asio::mutable_buffers_1 const & read_buffer,
-    boost::function<void(boost::system::error_code const &, size_t)> handler) {
+    asio::mutable_buffers_1 const & read_buffer,
+    std::function<void(asio::error_code const &, size_t)> handler) {
   NETWORK_MESSAGE("normal_delegate::read_some(...)");
   NETWORK_MESSAGE("scheduling asynchronous read some...");
   socket_->async_read_some(read_buffer, handler);

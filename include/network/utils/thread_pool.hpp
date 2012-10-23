@@ -8,17 +8,17 @@
 #define NETWORK_UTILS_THREAD_POOL_HPP_20101020
 
 #include <cstddef>
-#include <boost/thread/thread.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/scope_exit.hpp>
+#include <thread>
+#include <memory>
+#include <functional>
+#include <vector>
+#include <asio/io_service.hpp>
 
 namespace network { namespace utils {
 
-typedef boost::shared_ptr<boost::asio::io_service> io_service_ptr;
-typedef boost::shared_ptr<boost::thread_group> worker_threads_ptr;
-typedef boost::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
+typedef std::shared_ptr<asio::io_service> io_service_ptr;
+typedef std::shared_ptr<std::vector<std::thread>> worker_threads_ptr;
+typedef std::shared_ptr<asio::io_service::work> sentinel_ptr;
 
 struct thread_pool_pimpl;
 
@@ -27,7 +27,7 @@ struct thread_pool {
               io_service_ptr io_service = io_service_ptr(),
               worker_threads_ptr worker_threads = worker_threads_ptr());
   std::size_t const thread_count() const;
-  void post(boost::function<void()> f);
+  void post(std::function<void()> f);
   ~thread_pool();
   void swap(thread_pool & other);
  protected:

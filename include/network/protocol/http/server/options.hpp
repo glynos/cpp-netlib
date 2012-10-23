@@ -35,8 +35,8 @@ class server_options {
   server_options& port(std::string const &port);
   std::string const port() const;
   
-  server_options& io_service(boost::asio::io_service *service);
-  boost::asio::io_service *io_service() const;
+  server_options& io_service(asio::io_service *service);
+  asio::io_service *io_service() const;
 
   server_options& reuse_address(bool setting);
   bool reuse_address() const;

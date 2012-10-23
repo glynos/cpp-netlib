@@ -24,8 +24,8 @@ struct sync_client  :
   typedef function<void(iterator_range<char const *> const &, system::error_code const &)> body_callback_function_type;
   friend struct basic_client_impl<Tag,version_major,version_minor>;
 
-  boost::asio::io_service * service_ptr;
-  boost::asio::io_service & service_;
+  asio::io_service * service_ptr;
+  asio::io_service & service_;
   resolver_type resolver_;
   optional<string_type> certificate_file, verify_path;
 
@@ -34,14 +34,14 @@ struct sync_client  :
     , optional<string_type> const & verify_path = optional<string_type>()
   )
     : connection_base(cache_resolved, follow_redirect),
-    service_ptr(new boost::asio::io_service),
+    service_ptr(new asio::io_service),
     service_(*service_ptr),
     resolver_(service_)
     , certificate_file(certificate_file)
     , verify_path(verify_path)
   {}
 
-  sync_client(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service
+  sync_client(bool cache_resolved, bool follow_redirect, asio::io_service & service
     , optional<string_type> const & certificate_file = optional<string_type>()
     , optional<string_type> const & verify_path = optional<string_type>()
   )

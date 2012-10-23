@@ -37,13 +37,13 @@ namespace network { namespace http {
             set_optional(send_low_watermark, args, _send_low_watermark);
         }
 
-        void acceptor_options(boost::asio::ip::tcp::acceptor & acceptor) {
+        void acceptor_options(asio::ip::tcp::acceptor & acceptor) {
             acceptor.set_option(acceptor_reuse_address);
             acceptor.set_option(acceptor_report_aborted);
         }
 
-        void socket_options(boost::asio::ip::tcp::socket & socket) {
-            boost::system::error_code ignored;
+        void socket_options(asio::ip::tcp::socket & socket) {
+            asio::error_code ignored;
             socket.io_control(non_blocking_io, ignored);
             socket.set_option(linger, ignored);
             if (receive_buffer_size) socket.set_option(*receive_buffer_size, ignored);

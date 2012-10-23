@@ -10,7 +10,7 @@
 #include <network/version.hpp>
 #include <network/protocol/http/client/options.hpp>
 
-#include <boost/asio/io_service.hpp>
+#include <asio/io_service.hpp>
 #include <network/protocol/http/client/facade.hpp>
 #include <network/protocol/http/client/macros.hpp>
 #include <network/protocol/http/request.hpp>

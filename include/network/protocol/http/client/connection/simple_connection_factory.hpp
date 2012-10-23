@@ -22,7 +22,7 @@ struct simple_connection_factory : connection_factory {
   simple_connection_factory();
   simple_connection_factory(boost::shared_ptr<connection_delegate_factory> conn_delegate_factory,
                             boost::shared_ptr<resolver_delegate_factory> res_delegate_factory);
-  virtual boost::shared_ptr<client_connection> create_connection(boost::asio::io_service & service,
+  virtual boost::shared_ptr<client_connection> create_connection(asio::io_service & service,
                                                           request_base const & request,
                                                           client_options const & options); // override
   virtual ~simple_connection_factory();

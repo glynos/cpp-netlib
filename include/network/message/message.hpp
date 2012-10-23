@@ -9,7 +9,7 @@
 
 #include <string>
 #include <map>
-#include <boost/function.hpp>
+#include <functional>
 #include <network/message/message_base.hpp>
 #include <boost/shared_container_iterator.hpp>
 
@@ -45,16 +45,16 @@ struct message : message_base {
   virtual void get_destination(std::string & destination) const;
   virtual void get_source(std::string & source) const;
   virtual void get_headers(
-      boost::function<void(std::string const &, std::string const &)> inserter) const;
+      std::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_headers(
       std::string const & name,
-      boost::function<void(std::string const &, std::string const &)> inserter) const;
+      std::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_headers(
-      boost::function<bool(std::string const &, std::string const &)> predicate,
-      boost::function<void(std::string const &, std::string const &)> inserter) const;
+      std::function<bool(std::string const &, std::string const &)> predicate,
+      std::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_body(std::string & body) const;
   virtual void get_body(
-      boost::function<void(boost::iterator_range<char const *>)> chunk_reader,
+      std::function<void(boost::iterator_range<char const *>)> chunk_reader,
       size_t size) const;
 
   void swap(message & other);

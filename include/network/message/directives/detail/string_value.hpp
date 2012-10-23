@@ -10,7 +10,7 @@
 #include <network/traits/string.hpp>
 #include <network/support/is_async.hpp>
 #include <network/support/is_sync.hpp>
-#include <boost/thread/future.hpp>
+#include <future>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>

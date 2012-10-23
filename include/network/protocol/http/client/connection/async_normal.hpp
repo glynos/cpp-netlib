@@ -14,13 +14,9 @@
 #include <network/protocol/http/client/client_connection.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-namespace boost { namespace asio {
-
+namespace asio {
 class io_service;
-
 }  // namespace asio
-
-}  // namespace boost
 
 namespace network { namespace http {
 
@@ -36,7 +32,7 @@ struct http_async_connection : client_connection
   using client_connection::callback_type;
   http_async_connection(boost::shared_ptr<resolver_delegate> resolver_delegate,
                         boost::shared_ptr<connection_delegate> connection_delegate,
-                        boost::asio::io_service & io_service,
+                        asio::io_service & io_service,
                         bool follow_redirects);
   http_async_connection * clone() const;
   virtual response send_request(std::string const & method,

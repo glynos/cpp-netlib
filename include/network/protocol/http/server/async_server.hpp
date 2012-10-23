@@ -65,7 +65,7 @@ namespace network { namespace http {
 				system::error_code ignored;
 				acceptor.close(ignored);
 				listening = false;
-				service_.post(boost::bind(&async_server_base::handle_stop, this));
+				service_.post(std::bind(&async_server_base::handle_stop, this));
 			}
         }
 
@@ -95,7 +95,7 @@ namespace network { namespace http {
 			if (stopping) service_.stop(); // a user may have started listening again before the stop command is reached
 		}
 
-        void handle_accept(boost::system::error_code const & ec) {
+        void handle_accept(asio::error_code const & ec) {
 			{
 				scoped_mutex_lock stopping_lock(stopping_mutex_);
 				if (stopping) return;	// we dont want to add another handler instance, and we dont want to know about errors for a socket we dont need anymore
@@ -111,10 +111,10 @@ namespace network { namespace http {
 						)
 					);
 				acceptor.async_accept(new_connection->socket(),
-					boost::bind(
+					std::bind(
 						&async_server_base<Tag,Handler>::handle_accept
 						, this
-						, boost::asio::placeholders::error
+						, asio::placeholders::error
 						)
 					);
             } else {
@@ -123,7 +123,7 @@ namespace network { namespace http {
         }
         
         void start_listening() {
-            using boost::asio::ip::tcp;
+            using asio::ip::tcp;
             
             system::error_code error;
 			
@@ -155,10 +155,10 @@ namespace network { namespace http {
             }
             new_connection.reset(new connection(service_, handler, thread_pool));
             acceptor.async_accept(new_connection->socket(),
-                boost::bind(
+                std::bind(
                     &async_server_base<Tag,Handler>::handle_accept
                     , this
-                    , boost::asio::placeholders::error));
+                    , asio::placeholders::error));
             listening = true;
 			scoped_mutex_lock stopping_lock(stopping_mutex_);
 			stopping = false; // if we were in the process of stopping, we revoke that command and continue listening

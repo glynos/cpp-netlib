@@ -17,7 +17,7 @@ namespace network { namespace http {
     protected:
         template <class ArgPack>
         server_storage_base(ArgPack const & /* args */, no_io_service)
-        : self_service_(new boost::asio::io_service())
+        : self_service_(new asio::io_service())
         , service_(*self_service_)
         {}
 

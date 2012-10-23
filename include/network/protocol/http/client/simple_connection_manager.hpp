@@ -50,7 +50,7 @@ struct simple_connection_manager : connection_manager {
    *   or a newly constructed connection configured to perform the request.
    */
   virtual boost::shared_ptr<client_connection> get_connection(
-      boost::asio::io_service & service,
+      asio::io_service & service,
       request_base const & request,
       client_options const & options);  // override
 

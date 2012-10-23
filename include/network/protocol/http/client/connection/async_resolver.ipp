@@ -9,11 +9,11 @@
 
 #include <string>
 #include <utility>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/ip/udp.hpp>
-#include <boost/asio/placeholders.hpp>
-#include <boost/asio/strand.hpp>
-#include <boost/bind.hpp>
+#include <asio/io_service.hpp>
+#include <asio/ip/udp.hpp>
+#include <asio/placeholders.hpp>
+#include <asio/strand.hpp>
+#include <functional>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/unordered_map.hpp>
@@ -26,32 +26,32 @@
 namespace network { namespace http {
 struct async_resolver_pimpl : boost::enable_shared_from_this<async_resolver_pimpl> {
   typedef resolver_delegate::resolve_completion_function resolve_completion_function;
-  async_resolver_pimpl(boost::asio::io_service & service, bool cache_resolved);
+  async_resolver_pimpl(asio::io_service & service, bool cache_resolved);
   void resolve(std::string const & host,
                uint16_t port,
                resolve_completion_function once_resolved);
   void clear_resolved_cache();
  private:
-  boost::asio::ip::udp::resolver resolver_;
+  asio::ip::udp::resolver resolver_;
   bool cache_resolved_;
-  typedef boost::asio::ip::udp::resolver::iterator
+  typedef asio::ip::udp::resolver::iterator
           resolver_iterator;
   typedef boost::unordered_map<std::string, std::pair<resolver_iterator,resolver_iterator> >
           endpoint_cache;
   endpoint_cache endpoint_cache_;
-  boost::scoped_ptr<boost::asio::io_service::strand> resolver_strand_;
+  boost::scoped_ptr<asio::io_service::strand> resolver_strand_;
 
   void handle_resolve(std::string const & host,
                       resolve_completion_function once_resolved,
-                      boost::system::error_code const & ec,
+                      asio::error_code const & ec,
                       resolver_iterator endpoint_iterator);
 };
   
-async_resolver_pimpl::async_resolver_pimpl(boost::asio::io_service & service, bool cache_resolved)
+async_resolver_pimpl::async_resolver_pimpl(asio::io_service & service, bool cache_resolved)
   : resolver_(service),
     cache_resolved_(cache_resolved),
     endpoint_cache_(),
-    resolver_strand_(new(std::nothrow) boost::asio::io_service::strand(service))
+    resolver_strand_(new(std::nothrow) asio::io_service::strand(service))
 {
   // Do nothing
 }
@@ -72,29 +72,30 @@ void async_resolver_pimpl::resolve(std::string const & host,
     endpoint_cache::iterator iter =
         endpoint_cache_.find(boost::to_lower_copy(host));
     if (iter != endpoint_cache_.end()) {
-      boost::system::error_code ignored;
+      asio::error_code ignored;
       once_resolved(ignored, iter->second);
       return;
     }
   }
 
   std::string port_str = boost::lexical_cast<std::string>(port);
-  boost::asio::ip::udp::resolver::query query(host, port_str);
+  asio::ip::udp::resolver::query query(host, port_str);
+  using namespace std::placeholders;
   resolver_.async_resolve(
       query,
       resolver_strand_->wrap(
-          boost::bind(
+          std::bind(
               &async_resolver_pimpl::handle_resolve,
               async_resolver_pimpl::shared_from_this(),
               boost::to_lower_copy(host),
               once_resolved,
-              boost::asio::placeholders::error,
-              boost::asio::placeholders::iterator)));
+              _1,
+              _2)));
 }
 
 void async_resolver_pimpl::handle_resolve(std::string const & host,
                                           resolve_completion_function once_resolved,
-                                          boost::system::error_code const & ec,
+                                          asio::error_code const & ec,
                                           resolver_iterator endpoint_iterator) {
   endpoint_cache::iterator iter;
   bool inserted = false;
@@ -110,7 +111,7 @@ void async_resolver_pimpl::handle_resolve(std::string const & host,
   }
 }
 
-async_resolver::async_resolver(boost::asio::io_service & service, bool cache_resolved)
+async_resolver::async_resolver(asio::io_service & service, bool cache_resolved)
 : pimpl(new (std::nothrow) async_resolver_pimpl(service, cache_resolved))
 {}
 

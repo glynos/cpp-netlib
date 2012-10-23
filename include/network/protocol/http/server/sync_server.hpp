@@ -10,8 +10,8 @@
 
 #include <network/detail/debug.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
-#include <boost/asio/ip/tcp.hpp>
+#include <functional>
+#include <asio/ip/tcp.hpp>
 #include <network/protocol/http/response.hpp>
 #include <network/protocol/http/request.hpp>
 #include <network/protocol/http/server/sync_connection.hpp>
@@ -72,24 +72,24 @@ namespace network { namespace http {
 
         Handler & handler_;
         string_type address_, port_;
-        boost::asio::ip::tcp::acceptor acceptor_;
+        asio::ip::tcp::acceptor acceptor_;
         boost::shared_ptr<sync_connection<Tag,Handler> > new_connection;
         boost::mutex listening_mutex_;
         bool listening_;
 
-        void handle_accept(boost::system::error_code const & ec) {
+        void handle_accept(asio::error_code const & ec) {
             if (!ec) {
                 socket_options_base::socket_options(new_connection->socket());
                 new_connection->start();
                 new_connection.reset(new sync_connection<Tag,Handler>(service_, handler_));
                 acceptor_.async_accept(new_connection->socket(),
-                    boost::bind(&sync_server_base<Tag,Handler>::handle_accept,
-                                this, boost::asio::placeholders::error));
+                    std::bind(&sync_server_base<Tag,Handler>::handle_accept,
+                                this, asio::placeholders::error));
             }
         }
 
         void start_listening() {
-            using boost::asio::ip::tcp;
+            using asio::ip::tcp;
             system::error_code error;
             tcp::resolver resolver(service_);
             tcp::resolver::query query(address_, port_);
@@ -117,8 +117,8 @@ namespace network { namespace http {
             }
             new_connection.reset(new sync_connection<Tag,Handler>(service_, handler_));
             acceptor_.async_accept(new_connection->socket(),
-                boost::bind(&sync_server_base<Tag,Handler>::handle_accept,
-                            this, boost::asio::placeholders::error));
+                std::bind(&sync_server_base<Tag,Handler>::handle_accept,
+                            this, asio::placeholders::error));
             listening_ = true;
         }
     };

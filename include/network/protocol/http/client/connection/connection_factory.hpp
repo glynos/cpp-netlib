@@ -9,13 +9,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace boost { namespace asio {
-
+namespace asio {
 class io_service;
-
 }  // namespace asio
-
-}  // namespace boost
 
 namespace network { namespace http {
 
@@ -25,7 +21,7 @@ struct request_base;
 
 struct connection_factory {
   virtual boost::shared_ptr<client_connection> create_connection(
-      boost::asio::io_service &service,
+      asio::io_service &service,
       request_base const & request,
       client_options const &options) = 0;
   virtual ~connection_factory() = 0; // pure virtual, interface only.

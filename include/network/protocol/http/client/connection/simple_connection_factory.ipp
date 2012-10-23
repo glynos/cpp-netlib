@@ -32,7 +32,7 @@ struct simple_connection_factory_pimpl {
   }
 
   boost::shared_ptr<client_connection> create_connection(
-      boost::asio::io_service & service,
+      asio::io_service & service,
       request_base const & request,
       client_options const & options) {
     NETWORK_MESSAGE("simple_connection_factory_pimpl::create_connection(...)");
@@ -71,7 +71,7 @@ simple_connection_factory::simple_connection_factory(boost::shared_ptr<connectio
 }
 
 boost::shared_ptr<client_connection>
-simple_connection_factory::create_connection(boost::asio::io_service & service,
+simple_connection_factory::create_connection(asio::io_service & service,
                                              request_base const & request,
                                              client_options const &options) {
   NETWORK_MESSAGE("simple_connection_factory::create_connection(...)");

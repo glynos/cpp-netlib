@@ -24,7 +24,7 @@ connection_delegate_factory::connection_delegate_factory() {
 
 connection_delegate_factory::connection_delegate_ptr
 connection_delegate_factory::create_connection_delegate(
-    boost::asio::io_service & service,
+    asio::io_service & service,
     bool https,
     client_options const &options) {
   NETWORK_MESSAGE("connection_delegate_factory::create_connection_delegate(...)");

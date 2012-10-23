@@ -29,7 +29,7 @@ struct simple_connection_manager_pimpl {
     }
   }
 
-  boost::shared_ptr<client_connection> get_connection(boost::asio::io_service & service,
+  boost::shared_ptr<client_connection> get_connection(asio::io_service & service,
                                                       request_base const & request,
                                                client_options const &options) {
     NETWORK_MESSAGE("simple_connection_manager_pimpl::get_connection(...)");
@@ -62,7 +62,7 @@ simple_connection_manager::simple_connection_manager(client_options const &optio
 }
 
 boost::shared_ptr<client_connection> simple_connection_manager::get_connection(
-    boost::asio::io_service & service,
+    asio::io_service & service,
     request_base const & request,
     client_options const &options) {
   NETWORK_MESSAGE("simple_connection_manager::get_connection(...)");

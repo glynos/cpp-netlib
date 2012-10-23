@@ -7,12 +7,12 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_ASYNC_IMPL_HPP_20100623
 #define NETWORK_PROTOCOL_HTTP_CLIENT_ASYNC_IMPL_HPP_20100623
 
+#include <thread>
+#include <functional>
 #include <network/protocol/http/client/base.hpp>
 #include <network/protocol/http/client/options.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/strand.hpp>
-#include <boost/thread/thread.hpp>
-#include <boost/bind.hpp>
+#include <asio/io_service.hpp>
+#include <asio/strand.hpp>
 #include <network/protocol/http/client/connection_manager.hpp>
 #include <network/protocol/http/client/simple_connection_manager.hpp>
 #include <network/protocol/http/request.hpp>
@@ -22,7 +22,7 @@ namespace network { namespace http {
 
 struct client_base_pimpl {
   typedef
-    boost::function<void(boost::iterator_range<char const *> const &, boost::system::error_code const &)>
+    std::function<void(boost::iterator_range<char const *> const &, asio::error_code const &)>
     body_callback_function_type;
   client_base_pimpl(client_options const &options);
   response const request_skeleton(request const & request_,
@@ -34,9 +34,9 @@ struct client_base_pimpl {
   ~client_base_pimpl();
  private:
   client_options options_;
-  boost::asio::io_service * service_ptr;
-  boost::shared_ptr<boost::asio::io_service::work> sentinel_;
-  boost::shared_ptr<boost::thread> lifetime_thread_;
+  asio::io_service * service_ptr;
+  boost::shared_ptr<asio::io_service::work> sentinel_;
+  boost::shared_ptr<std::thread> lifetime_thread_;
   boost::shared_ptr<connection_manager> connection_manager_;
   bool owned_service_;
 };
@@ -78,7 +78,7 @@ client_base_pimpl::client_base_pimpl(client_options const &options)
   NETWORK_MESSAGE("client_base_pimpl::client_base_pimpl(client_options const &)");
   if (service_ptr == 0) {
     NETWORK_MESSAGE("creating owned io_service.");
-    service_ptr = new(std::nothrow) boost::asio::io_service;
+    service_ptr = new(std::nothrow) asio::io_service;
     owned_service_ = true;
   }
   if (!connection_manager_.get()) {
@@ -86,12 +86,9 @@ client_base_pimpl::client_base_pimpl(client_options const &options)
     connection_manager_.reset(
         new (std::nothrow) simple_connection_manager(options));
   }
-  sentinel_.reset(new (std::nothrow) boost::asio::io_service::work(*service_ptr));
-  lifetime_thread_.reset(new (std::nothrow) boost::thread(
-    boost::bind(
-      &boost::asio::io_service::run,
-      service_ptr
-      )));
+  sentinel_.reset(new (std::nothrow) asio::io_service::work(*service_ptr));
+  auto local_ptr = service_ptr;
+  lifetime_thread_.reset(new (std::nothrow) std::thread([local_ptr]() { local_ptr->run(); }));
   if (!lifetime_thread_.get())
     BOOST_THROW_EXCEPTION(std::runtime_error("Cannot allocate client lifetime thread; not enough memory."));
 }

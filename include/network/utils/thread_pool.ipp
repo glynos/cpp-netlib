@@ -36,7 +36,7 @@ struct thread_pool_pimpl {
         } BOOST_SCOPE_EXIT_END
 
         if (!io_service_.get()) {
-            io_service_.reset(new boost::asio::io_service);
+            io_service_.reset(new asio::io_service);
         }
 
         if (!worker_threads_.get()) {
@@ -44,16 +44,12 @@ struct thread_pool_pimpl {
         }
 
         if (!sentinel_.get()) {
-            sentinel_.reset(new boost::asio::io_service::work(*io_service_));
+            sentinel_.reset(new asio::io_service::work(*io_service_));
         }
 
+        auto io_service_local = io_service_;
         for (std::size_t counter = 0; counter < threads_; ++counter)
-            worker_threads_->create_thread(
-                boost::bind(
-                    &boost::asio::io_service::run,
-                    io_service_
-                    )
-            );
+            worker_threads_->emplace_back([=io_service_local]() { io_service_local->run() });
 
         commit = true;
     }
@@ -62,7 +58,7 @@ struct thread_pool_pimpl {
         return threads_;
     }
 
-    void post(boost::function<void()> f) {
+    void post(std::function<void()> f) {
         io_service_->post(f);
     }
 
@@ -103,7 +99,7 @@ std::size_t const thread_pool::thread_count() const {
   return pimpl->thread_count();
 }
 
-void thread_pool::post(boost::function<void()> f) {
+void thread_pool::post(std::function<void()> f) {
   pimpl->post(f);
 }
 

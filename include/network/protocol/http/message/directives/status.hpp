@@ -8,7 +8,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_STATUS_HPP_20100603
 #define NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_STATUS_HPP_20100603
 
-#include <boost/thread/future.hpp>
+#include <future>
 #include <boost/mpl/if.hpp>
 #include <boost/cstdint.hpp>
 #include <network/protocol/http/response/response_base.hpp>

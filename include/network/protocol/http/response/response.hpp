@@ -36,16 +36,16 @@ struct response : response_base {
   virtual void get_destination(std::string & destination) const;
   virtual void get_source(std::string & source) const;
   virtual void get_headers(
-      boost::function<void(std::string const &, std::string const &)> inserter) const;
+      std::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_headers(
       std::string const & name,
-      boost::function<void(std::string const &, std::string const &)> inserter) const;
+      std::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_headers(
-      boost::function<bool(std::string const &, std::string const &)> predicate,
-      boost::function<void(std::string const &, std::string const &)> inserter) const;
+      std::function<bool(std::string const &, std::string const &)> predicate,
+      std::function<void(std::string const &, std::string const &)> inserter) const;
   virtual void get_body(std::string & body) const;
   virtual void get_body(
-      boost::function<void(boost::iterator_range<char const *>)> chunk_reader,
+      std::function<void(boost::iterator_range<char const *>)> chunk_reader,
       size_t size) const;
 
   // From response_base...
@@ -61,13 +61,13 @@ struct response : response_base {
   friend struct impl::setter_access;  // Hide access through accessor class.
   // These methods are unique to the response type which will allow for creating
   // promises that can be set appropriately.
-  void set_version_promise(boost::promise<std::string>&);
-  void set_status_promise(boost::promise<boost::uint16_t>&);
-  void set_status_message_promise(boost::promise<std::string>&);
-  void set_headers_promise(boost::promise<std::multimap<std::string, std::string> >&);
-  void set_source_promise(boost::promise<std::string>&);
-  void set_destination_promise(boost::promise<std::string>&);
-  void set_body_promise(boost::promise<std::string>&);
+  void set_version_promise(std::promise<std::string>&);
+  void set_status_promise(std::promise<boost::uint16_t>&);
+  void set_status_message_promise(std::promise<std::string>&);
+  void set_headers_promise(std::promise<std::multimap<std::string, std::string> >&);
+  void set_source_promise(std::promise<std::string>&);
+  void set_destination_promise(std::promise<std::string>&);
+  void set_body_promise(std::promise<std::string>&);
 
   response_pimpl *pimpl_;
 };

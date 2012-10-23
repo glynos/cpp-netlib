@@ -8,7 +8,7 @@
 #define NETWORK_PROTOCOL_HTTP_SERVER_OPTIONS_IPP_20120318
 
 #include <network/protocol/http/server/options.hpp>
-#include <boost/asio/io_service.hpp>
+#include <asio/io_service.hpp>
 
 namespace network { namespace http {
 
@@ -49,11 +49,11 @@ class server_options_pimpl {
     return port_;
   }
 
-  void io_service(boost::asio::io_service *service) {
+  void io_service(asio::io_service *service) {
     io_service_ = service;
   }
 
-  boost::asio::io_service *io_service() const {
+  asio::io_service *io_service() const {
     return io_service_;
   }
 
@@ -131,7 +131,7 @@ class server_options_pimpl {
 
  private:
   std::string address_, port_;
-  boost::asio::io_service *io_service_;
+  asio::io_service *io_service_;
   int receive_buffer_size_, send_buffer_size_,
       receive_low_watermark_, send_low_watermark_,
       linger_timeout_;
@@ -193,12 +193,12 @@ std::string const server_options::port() const {
   return pimpl_->port();
 }
 
-server_options& server_options::io_service(boost::asio::io_service *io_service) {
+server_options& server_options::io_service(asio::io_service *io_service) {
   pimpl_->io_service(io_service);
   return *this;
 }
 
-boost::asio::io_service* server_options::io_service() const {
+asio::io_service* server_options::io_service() const {
   return pimpl_->io_service();
 }
 

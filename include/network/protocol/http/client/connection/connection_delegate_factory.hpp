@@ -22,7 +22,7 @@ struct connection_delegate_factory {
 
   // This is the factory method that actually returns the delegate instance.
   virtual connection_delegate_ptr create_connection_delegate(
-      boost::asio::io_service & service,
+      asio::io_service & service,
       bool https,
       client_options const &options);
 

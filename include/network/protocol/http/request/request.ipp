@@ -66,8 +66,8 @@ struct request_pimpl {
     headers_.insert(std::make_pair(name, value));
   }
 
-  void get_headers(boost::function<bool(std::string const &, std::string const &)> predicate,
-                   boost::function<void(std::string const &, std::string const &)> inserter) const {
+  void get_headers(std::function<bool(std::string const &, std::string const &)> predicate,
+                   std::function<void(std::string const &, std::string const &)> inserter) const {
     headers_type::const_iterator it = headers_.begin();
     for (; it != headers_.end(); ++it) {
       if (predicate(it->first, it->second)) {
@@ -76,7 +76,7 @@ struct request_pimpl {
     }
   }
 
-  void get_headers(boost::function<void(std::string const &, std::string const &)> inserter) const {
+  void get_headers(std::function<void(std::string const &, std::string const &)> inserter) const {
     headers_type::const_iterator it = headers_.begin();
     for (; it != headers_.end(); ++it) {
       inserter(it->first, it->second);
@@ -84,7 +84,7 @@ struct request_pimpl {
   }
 
   void get_headers(std::string const &name,
-                   boost::function<void(std::string const &, std::string const &)> inserter) const {
+                   std::function<void(std::string const &, std::string const &)> inserter) const {
     headers_type::const_iterator it = headers_.begin();
     for (; it != headers_.end(); ++it) {
       if (it->first == name) {
@@ -233,15 +233,15 @@ void request::get_source(std::string & source) const {
   pimpl_->get_source(source);
 }
 
-void request::get_headers(boost::function<void(std::string const &, std::string const &)> inserter) const {
+void request::get_headers(std::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl_->get_headers(inserter);
 }
 
-void request::get_headers(std::string const & name, boost::function<void(std::string const &, std::string const &)> inserter) const {
+void request::get_headers(std::string const & name, std::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl_->get_headers(name, inserter);
 }
 
-void request::get_headers(boost::function<bool(std::string const &, std::string const &)> predicate, boost::function<void(std::string const &, std::string const &)> inserter) const {
+void request::get_headers(std::function<bool(std::string const &, std::string const &)> predicate, std::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl_->get_headers(predicate, inserter);
 }
 
@@ -249,7 +249,7 @@ void request::get_body(std::string & body) const {
   this->flatten(body);
 }
 
-void request::get_body(boost::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
+void request::get_body(std::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
   boost::scoped_array<char> local_buffer(new (std::nothrow) char[size]);
   size_t bytes_read = this->read(local_buffer.get(),
                                  pimpl_->read_offset(),
@@ -271,7 +271,7 @@ void request::set_status(std::string const & status) {
 void request::set_status_message(std::string const & status_message) {
 }
 
-void request::set_body_writer(boost::function<void(char*, size_t)> writer) {
+void request::set_body_writer(std::function<void(char*, size_t)> writer) {
 }
 
 void request::set_uri(std::string const &uri) {
@@ -316,7 +316,7 @@ void request::get_status(std::string & status) const {
 void request::get_status_message(std::string & status_message) const {
 }
 
-void request::get_body(boost::function<void(char*, size_t)> chunk_reader) const {
+void request::get_body(std::function<void(char*, size_t)> chunk_reader) const {
 }
 
 void request::get_body(std::string const & body) const {

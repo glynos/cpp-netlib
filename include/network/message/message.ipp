@@ -61,14 +61,14 @@ struct message_pimpl {
     source = source_;
   }
 
-  void get_headers(boost::function<void(std::string const &, std::string const &)> inserter) const {
+  void get_headers(std::function<void(std::string const &, std::string const &)> inserter) const {
     std::multimap<std::string, std::string>::const_iterator it  = headers_.begin(),
                                                             end = headers_.end();
     for (; it != end; ++it) inserter(it->first, it->second);
   }
 
   void get_headers(std::string const & name,
-                   boost::function<void(std::string const &, std::string const &)> inserter) const {
+                   std::function<void(std::string const &, std::string const &)> inserter) const {
     std::multimap<std::string, std::string>::const_iterator it = headers_.find(name),
                                                             end= headers_.end();
     while (it != end) {
@@ -77,8 +77,8 @@ struct message_pimpl {
     }
   }
 
-  void get_headers(boost::function<bool(std::string const &, std::string const &)> predicate,
-                   boost::function<void(std::string const &, std::string const &)> inserter) const {
+  void get_headers(std::function<bool(std::string const &, std::string const &)> predicate,
+                   std::function<void(std::string const &, std::string const &)> inserter) const {
     std::multimap<std::string, std::string>::const_iterator it = headers_.begin(),
                                                             end = headers_.end();
     while (it != end) {
@@ -92,7 +92,7 @@ struct message_pimpl {
     body = body_;
   }
 
-  void get_body(boost::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
+  void get_body(std::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
     static char const * nullptr_ = 0;
     if (body_read_pos == body_.size())
       chunk_reader(boost::make_iterator_range(nullptr_, nullptr_));
@@ -179,17 +179,17 @@ void message::get_source(std::string & source) const {
   pimpl->get_source(source);
 }
 
-void message::get_headers(boost::function<void(std::string const &, std::string const &)> inserter) const {
+void message::get_headers(std::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl->get_headers(inserter);
 }
 
 void message::get_headers(std::string const & name,
-                          boost::function<void(std::string const &, std::string const &)> inserter) const {
+                          std::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl->get_headers(name, inserter);
 }
 
-void message::get_headers(boost::function<bool(std::string const &, std::string const &)> predicate,
-                          boost::function<void(std::string const &, std::string const &)> inserter) const {
+void message::get_headers(std::function<bool(std::string const &, std::string const &)> predicate,
+                          std::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl->get_headers(predicate, inserter);
 }
 
@@ -197,7 +197,7 @@ void message::get_body(std::string & body) const {
   pimpl->get_body(body);
 }
 
-void message::get_body(boost::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
+void message::get_body(std::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
   pimpl->get_body(chunk_reader, size);
 }
 

@@ -7,9 +7,9 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CLIENT_CONNECTION_HPP_20111103
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CLIENT_CONNECTION_HPP_20111103
 
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/range/iterator_range.hpp>
-#include <boost/system/error_code.hpp>
+#include <asio/error_code.hpp>
 
 namespace network { namespace http {
 
@@ -19,9 +19,9 @@ struct response;
 class request_options;
 
 struct client_connection {
-  typedef boost::function<
+  typedef std::function<
     void(boost::iterator_range<char const *> const &,
-         boost::system::error_code const &)>
+         asio::error_code const &)>
     callback_type;
   virtual response send_request(std::string const & method,
                                 request const & request,

@@ -114,14 +114,14 @@ namespace impl {
                     << "\"");
 #endif
         std::runtime_error error("Invalid Version Part.");
-        version_promise.set_exception(boost::copy_exception(error));
-        status_promise.set_exception(boost::copy_exception(error));
+        version_promise.set_exception(std::make_exception_ptr(error));
+        status_promise.set_exception(std::make_exception_ptr(error));
         status_message_promise.set_exception(
-          boost::copy_exception(error));
-        headers_promise.set_exception(boost::copy_exception(error));
-        source_promise.set_exception(boost::copy_exception(error));
-        destination_promise.set_exception(boost::copy_exception(error));
-        body_promise.set_exception(boost::copy_exception(error));
+          std::make_exception_ptr(error));
+        headers_promise.set_exception(std::make_exception_ptr(error));
+        source_promise.set_exception(std::make_exception_ptr(error));
+        destination_promise.set_exception(std::make_exception_ptr(error));
+        body_promise.set_exception(std::make_exception_ptr(error));
       } else {
         partial_parsed.append(
           boost::begin(result_range),
@@ -129,7 +129,7 @@ namespace impl {
           );
         part_begin = part.begin();
         delegate_->read_some(
-          boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+          asio::mutable_buffers_1(part.c_array(), part.size()),
           callback
           );
       }
@@ -171,13 +171,13 @@ namespace impl {
                     << "\"");
 #endif
         std::runtime_error error("Invalid status part.");
-        status_promise.set_exception(boost::copy_exception(error));
+        status_promise.set_exception(std::make_exception_ptr(error));
         status_message_promise.set_exception(
-          boost::copy_exception(error));
-        headers_promise.set_exception(boost::copy_exception(error));
-        source_promise.set_exception(boost::copy_exception(error));
-        destination_promise.set_exception(boost::copy_exception(error));
-        body_promise.set_exception(boost::copy_exception(error));
+          std::make_exception_ptr(error));
+        headers_promise.set_exception(std::make_exception_ptr(error));
+        source_promise.set_exception(std::make_exception_ptr(error));
+        destination_promise.set_exception(std::make_exception_ptr(error));
+        body_promise.set_exception(std::make_exception_ptr(error));
       } else {
         partial_parsed.append(
           boost::begin(result_range),
@@ -185,7 +185,7 @@ namespace impl {
           );
         part_begin = part.begin();
         delegate_->read_some(
-          boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+          asio::mutable_buffers_1(part.c_array(), part.size()),
           callback
           );
       }
@@ -226,18 +226,18 @@ namespace impl {
 #endif
         std::runtime_error error("Invalid status message part.");
         status_message_promise.set_exception(
-          boost::copy_exception(error));
-        headers_promise.set_exception(boost::copy_exception(error));
-        source_promise.set_exception(boost::copy_exception(error));
-        destination_promise.set_exception(boost::copy_exception(error));
-        body_promise.set_exception(boost::copy_exception(error));
+          std::make_exception_ptr(error));
+        headers_promise.set_exception(std::make_exception_ptr(error));
+        source_promise.set_exception(std::make_exception_ptr(error));
+        destination_promise.set_exception(std::make_exception_ptr(error));
+        body_promise.set_exception(std::make_exception_ptr(error));
       } else {
         partial_parsed.append(
           boost::begin(result_range),
           boost::end(result_range));
         part_begin = part.begin();
         delegate_->read_some(
-          boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+          asio::mutable_buffers_1(part.c_array(), part.size()),
           callback
           );
       }
@@ -319,16 +319,16 @@ namespace impl {
                     << boost::distance(result_range));
 #endif
         std::runtime_error error("Invalid header part.");
-        headers_promise.set_exception(boost::copy_exception(error));
-        body_promise.set_exception(boost::copy_exception(error));
-        source_promise.set_exception(boost::copy_exception(error));
-        destination_promise.set_exception(boost::copy_exception(error));
+        headers_promise.set_exception(std::make_exception_ptr(error));
+        body_promise.set_exception(std::make_exception_ptr(error));
+        source_promise.set_exception(std::make_exception_ptr(error));
+        destination_promise.set_exception(std::make_exception_ptr(error));
       } else {
         partial_parsed.append(boost::begin(result_range),
                     boost::end(result_range));
         part_begin = part.begin();
         delegate_->read_some(
-          boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+          asio::mutable_buffers_1(part.c_array(), part.size()),
           callback
           );
       }
@@ -348,19 +348,19 @@ namespace impl {
       partial_parsed.append(part_begin, bytes);
       part_begin = part.begin();
       delegate_->read_some(
-        boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+        asio::mutable_buffers_1(part.c_array(), part.size()),
         callback
         );
     }
 
     response_parser response_parser_;
-    boost::promise<std::string> version_promise;
-    boost::promise<boost::uint16_t> status_promise;
-    boost::promise<std::string> status_message_promise;
-    boost::promise<std::multimap<std::string, std::string> > headers_promise;
-    boost::promise<std::string> source_promise;
-    boost::promise<std::string> destination_promise;
-    boost::promise<std::string> body_promise;
+    std::promise<std::string> version_promise;
+    std::promise<boost::uint16_t> status_promise;
+    std::promise<std::string> status_message_promise;
+    std::promise<std::multimap<std::string, std::string> > headers_promise;
+    std::promise<std::string> source_promise;
+    std::promise<std::string> destination_promise;
+    std::promise<std::string> body_promise;
     typedef boost::array<char, NETWORK_BUFFER_CHUNK> buffer_type;
     buffer_type part;
      buffer_type::const_iterator part_begin;

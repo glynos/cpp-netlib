@@ -9,7 +9,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_MESSAGE_ASYNC_MESSAGE_HPP_20100622
 #define NETWORK_PROTOCOL_HTTP_MESSAGE_ASYNC_MESSAGE_HPP_20100622
 
-#include <boost/thread/future.hpp>
+#include <future>
 #include <boost/cstdint.hpp>
 #include <boost/optional.hpp>
 
