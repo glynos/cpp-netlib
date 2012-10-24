@@ -64,7 +64,9 @@ namespace boost { namespace network { namespace http {
         certificate_filename_(certificate_filename),
         verify_path_(verify_path)
       {
-      }
+         connection_base::resolver_strand_.reset(new
+    	            boost::asio::io_service::strand(service_));
+     }
 
       ~async_client() throw ()
       {
