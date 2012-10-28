@@ -73,6 +73,8 @@ lib cppnetlib-constants : libs/network/src/constants.cpp ;
 install headers : client server
    : <location>../../../boost/network/include/http ;
 
-install libraries : cppnetlib-uri ;
+install libraries : cppnetlib-uri cppnetlib-message cppnetlib-message-directives cppnetlib-message-wrappers
+    cppnetlib-http-message cppnetlib-http-message-wrappers cppnetlib-http-server-parsers cppnetlib-http-server
+    cppnetlib-http-client-connections cppnetlib-http-client cppnetlib-utils-thread_pool cppnetlib-constants ;
 
 alias all : headers ;
