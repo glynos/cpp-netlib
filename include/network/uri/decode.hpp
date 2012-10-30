@@ -74,6 +74,12 @@ OutputIterator decode(const InputIterator &in_begin,
             *out++ = 0x10 * v0 + v1;
         }
         else
+	   if (*it == '+')
+	   {
+	       *out++ = ' ';
+	       ++ it;
+	   }
+	   else
         {
             *out++ = *it++;
         }
