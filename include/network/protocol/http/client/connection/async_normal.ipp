@@ -430,20 +430,53 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                           placeholders::bytes_transferred)));
             } else {
               NETWORK_MESSAGE("no callback provided, appending to body...");
+              bool get_more = true;
+              buffer_type::const_iterator begin = this->part.begin();
+              buffer_type::const_iterator end = begin;
+              std::advance(end, bytes_transferred);
+              // check the content length header
+              //auto headers_future = headers_promise.get_future();
+              auto it = headers_.find("Content-Length");
+              if (it != headers_.end()) {
+                try {
+                  unsigned content_length = stoi(it->second);
+                  get_more = (end - begin) < content_length;
+                  NETWORK_MESSAGE("Content-Length: " << content_length 
+                    << ", disconnect: " << !get_more);
+                } catch(...) {
+                }
+              }
               // Here we don't have a body callback. Let's
               // make sure that we deal with the remainder
               // from the headers part in case we do have data
               // that's still in the buffer.
-              this->parse_body(request_strand_.wrap(
-                                   boost::bind(
-                                       &this_type::handle_received_data,
-                                       this_type::shared_from_this(),
-                                       body,
-                                       get_body,
-                                       callback,
-                                       placeholders::error,
-                                       placeholders::bytes_transferred)),
-                               bytes_transferred);
+              if (get_more) {
+                this->parse_body(request_strand_.wrap(
+                                     boost::bind(
+                                         &this_type::handle_received_data,
+                                         this_type::shared_from_this(),
+                                         body,
+                                         get_body,
+                                         callback,
+                                         placeholders::error,
+                                         placeholders::bytes_transferred)),
+                                 bytes_transferred);
+              } else {
+                std::string body_string;
+                std::swap(body_string, this->partial_parsed);
+                body_string.append(
+                  this->part.begin()
+                  , bytes_transferred
+                  );
+                this->body_promise.set_value(body_string);                
+                // TODO set the destination value somewhere!
+                this->destination_promise.set_value("");
+                this->source_promise.set_value("");
+                this->part.assign('\0');
+                this->response_parser_.reset();
+                //NETWORK_MESSAGE("forcing socket disconnect on content length");
+                //connection_delegate_->disconnect();
+              }
             }
           }
           return;
@@ -709,6 +742,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       boost::trim(header_pair.second);
       headers.insert(header_pair);
     }
+    this->headers_ = headers;
     headers_promise.set_value(headers);
   }
 
@@ -790,6 +824,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   boost::promise<boost::uint16_t> status_promise;
   boost::promise<std::string> status_message_promise;
   boost::promise<std::multimap<std::string, std::string> > headers_promise;
+  std::multimap<std::string, std::string> headers_;  
   boost::promise<std::string> source_promise;
   boost::promise<std::string> destination_promise;
   boost::promise<std::string> body_promise;
