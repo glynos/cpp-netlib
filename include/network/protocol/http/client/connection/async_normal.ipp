@@ -741,7 +741,11 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
         content_length_ = std::stoul(it->second);
         NETWORK_MESSAGE("Content-Length: " << *content_length_);
       } catch(const std::invalid_argument&) {
+        NETWORK_MESSAGE("invalid argument exception while interpreting " 
+          << it->second << " as content length");
       } catch(const std::out_of_range&) {
+        NETWORK_MESSAGE("out of range exception while interpreting " 
+          << it->second << " as content length");
       }
     }
     headers_promise.set_value(headers);
