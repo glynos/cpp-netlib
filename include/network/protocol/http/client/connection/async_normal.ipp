@@ -738,7 +738,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     auto it = headers.find("Content-Length");
     if (it != headers.end()) {
       try {
-        content_length_ = std::stoi(it->second);
+        content_length_ = std::stoul(it->second);
         NETWORK_MESSAGE("Content-Length: " << *content_length_);
       } catch(const std::invalid_argument&) {
       } catch(const std::out_of_range&) {
@@ -825,7 +825,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   boost::promise<boost::uint16_t> status_promise;
   boost::promise<std::string> status_message_promise;
   boost::promise<std::multimap<std::string, std::string> > headers_promise;
-  boost::optional<unsigned> content_length_;
+  boost::optional<size_t> content_length_;
   boost::promise<std::string> source_promise;
   boost::promise<std::string> destination_promise;
   boost::promise<std::string> body_promise;
