@@ -439,11 +439,11 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               auto it = headers_.find("Content-Length");
               if (it != headers_.end()) {
                 try {
-                  unsigned content_length = stoi(it->second);
+                  unsigned content_length = std::stoi(it->second);
                   get_more = (end - begin) < content_length;
-                  NETWORK_MESSAGE("Content-Length: " << content_length 
-                    << ", disconnect: " << !get_more);
-                } catch(...) {
+                  NETWORK_MESSAGE("Content-Length: " << content_length);
+                } catch(const std::invalid_argument&) {
+                } catch(const std::out_of_range&) {
                 }
               }
               // Here we don't have a body callback. Let's
