@@ -1,7 +1,4 @@
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-find_package ( Boost 1.41.0 COMPONENTS unit_test_framework )
-set ( Boost_USE_STATIC_LIBS ON )
-set ( Boost_USE_MULTITHREADED ON )
 
 if ( Boost_FOUND )
     add_executable ( mime-roundtrip mime-roundtrip.cpp )
