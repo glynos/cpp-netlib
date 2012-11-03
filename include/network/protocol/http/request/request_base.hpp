@@ -55,7 +55,7 @@ struct request_base : message_base, request_storage_base {
   virtual void get_status(std::string & status) const = 0;
   virtual void get_status_message(std::string & status_message) const = 0;
   virtual void get_body(boost::function<void(char*, size_t)> chunk_reader) const = 0;
-  virtual void get_body(std::string const & body) const = 0;
+  virtual void get_body(std::string & body) const = 0;
   virtual ~request_base() = 0;
 };
 
