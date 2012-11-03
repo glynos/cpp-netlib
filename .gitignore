@@ -10,3 +10,6 @@ libs/mime/test/mime-roundtrip
 bin/
 tests/
 _build
+CPP-NETLIB.*
+CMakeScripts/
+*.cmake
