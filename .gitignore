@@ -13,3 +13,4 @@ _build
 CPP-NETLIB.*
 CMakeScripts/
 *.cmake
+*~

@@ -16,7 +16,7 @@ struct request_header;
 struct response_header;
 
 template <class T1, class T2>
-T1 & value(std::pair<T1,T2> const & p) {
+inline T1 const & value(std::pair<T1,T2> const & p) {
   return p.second;
 }
 
