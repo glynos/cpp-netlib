@@ -61,7 +61,7 @@ endforeach(src_file)
 set(CPP-NETLIB_HTTP_MESSAGE_SRCS http/request.cpp http/response.cpp)
 add_library(cppnetlib-http-message ${CPP-NETLIB_HTTP_MESSAGE_SRCS})
 add_dependencies(cppnetlib-http-message
-  ${Boost_LIBRARIES}
+#   ${Boost_LIBRARIES}
   cppnetlib-message)
 target_link_libraries(cppnetlib-http-message
   ${Boost_LIBRARIES}
@@ -99,7 +99,6 @@ set(CPP-NETLIB_HTTP_SERVER_SRCS
     )
 add_library(cppnetlib-http-server ${CPP-NETLIB_HTTP_SERVER_SRCS})
 add_dependencies(cppnetlib-http-server
-  ${Boost_LIBRARIES}
   cppnetlib-constants
   cppnetlib-uri
   cppnetlib-message
@@ -108,6 +107,7 @@ add_dependencies(cppnetlib-http-server
   cppnetlib-http-message
   cppnetlib-http-message-wrappers
   cppnetlib-http-server-parsers
+  cppnetlib-utils-thread_pool
   )
 target_link_libraries(cppnetlib-http-server
   ${Boost_LIBRARIES}
@@ -119,6 +119,7 @@ target_link_libraries(cppnetlib-http-server
   cppnetlib-http-message
   cppnetlib-http-message-wrappers
   cppnetlib-http-server-parsers
+  cppnetlib-utils-thread_pool
   )
 foreach (src_file ${CPP-NETLIB_HTTP_SERVER_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
@@ -150,7 +151,6 @@ set(CPP-NETLIB_HTTP_CLIENT_SRCS
     http/client.cpp)
 add_library(cppnetlib-http-client ${CPP-NETLIB_HTTP_CLIENT_SRCS})
 add_dependencies(cppnetlib-http-client
-  ${Boost_LIBRARIES}
   cppnetlib-constants
   cppnetlib-uri
   cppnetlib-message

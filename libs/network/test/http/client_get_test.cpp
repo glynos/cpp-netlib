@@ -4,6 +4,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifdef BUILD_SHARED_LIBS
+# define BOOST_TEST_DYN_LINK
+#endif
 #define BOOST_TEST_MODULE HTTP 1.0 Get Test
 #include <network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
