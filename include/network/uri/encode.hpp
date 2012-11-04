@@ -163,7 +163,7 @@ inline
 std::string encoded(const std::string &input) {
     std::string encoded;
     encode(input, std::back_inserter(encoded));
-    return std::move(encoded);
+    return encoded;
 }
 } // namespace network
 
