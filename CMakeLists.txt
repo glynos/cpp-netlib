@@ -16,9 +16,6 @@ find_package( ICU )
 
 if(BUILD_SHARED_LIBS)
   set(Boost_USE_STATIC_LIBS OFF)
-  # TODO/NOTE:
-  # the examples won't compile with the current setup and shared libraries yet
-  set(BUILD_EXAMPLES OFF)
 else()
   set(Boost_USE_STATIC_LIBS ON)
 endif()
