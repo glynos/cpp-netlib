@@ -10,6 +10,7 @@
 #include <vector>
 #include <thread>
 #include <network/utils/thread_pool.hpp>
+#include <boost/scope_exit.hpp>
 
 namespace network { namespace utils {
 

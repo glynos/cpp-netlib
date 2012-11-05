@@ -18,37 +18,35 @@
 
 namespace network { namespace http {
 
-connection_delegate_factory::connection_delegate_factory() {
-  NETWORK_MESSAGE("connection_delegate_factory::connection_delegate_factory()");
-}
-
-connection_delegate_factory::connection_delegate_ptr
-connection_delegate_factory::create_connection_delegate(
-    asio::io_service & service,
-    bool https,
-    client_options const &options) {
-  NETWORK_MESSAGE("connection_delegate_factory::create_connection_delegate(...)");
-  connection_delegate_ptr delegate;
-  if (https) {
-#ifdef NETWORK_ENABLE_HTTPS
-    NETWORK_MESSAGE("creating an SSL delegate");
-    delegate.reset(new ssl_delegate(service,
-                                    options));
-#else
-    NETWORK_MESSAGE("creating an SSL delegate, but not supported");
-    BOOST_THROW_EXCEPTION(std::runtime_error("HTTPS not supported."));
-#endif /* NETWORK_ENABLE_HTTPS */
-  } else {
-    NETWORK_MESSAGE("creating a normal delegate");
-    delegate.reset(new normal_delegate(service));
+  connection_delegate_factory::connection_delegate_factory() {
+    NETWORK_MESSAGE("connection_delegate_factory::connection_delegate_factory()");
   }
-  return delegate;
-}
 
-connection_delegate_factory::~connection_delegate_factory() {
-  NETWORK_MESSAGE("connection_delegate_factory::~connection_delegate_factory()");
-}
+  connection_delegate_factory::connection_delegate_ptr
+  connection_delegate_factory::create_connection_delegate(boost::asio::io_service & service,
+                                                          bool https,
+                                                          client_options const &options) {
+    NETWORK_MESSAGE("connection_delegate_factory::create_connection_delegate(...)");
+    connection_delegate_ptr delegate;
+    if (https) {
+#ifdef NETWORK_ENABLE_HTTPS
+      NETWORK_MESSAGE("creating an SSL delegate");
+      delegate.reset(new ssl_delegate(service, options));
+#else
+      NETWORK_MESSAGE("creating an SSL delegate, but not supported");
+      BOOST_THROW_EXCEPTION(std::runtime_error("HTTPS not supported."));
+#endif /* NETWORK_ENABLE_HTTPS */
+    } else {
+      NETWORK_MESSAGE("creating a normal delegate");
+      delegate.reset(new normal_delegate(service));
+    }
+    return delegate;
+  }
 
+  connection_delegate_factory::~connection_delegate_factory() {
+    NETWORK_MESSAGE("connection_delegate_factory::~connection_delegate_factory()");
+  }
+  
 }  // namespace http
 }  // namespace network
 

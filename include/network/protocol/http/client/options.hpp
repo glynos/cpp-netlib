@@ -10,7 +10,7 @@
 #include <list>
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include <asio/io_service.hpp>
+#include <boost/asio/io_service.hpp>
 #include <network/protocol/http/client/connection/connection_factory.hpp>
 #include <network/protocol/http/client/connection_manager.hpp>
 #include <network/protocol/http/client/client_connection.hpp>

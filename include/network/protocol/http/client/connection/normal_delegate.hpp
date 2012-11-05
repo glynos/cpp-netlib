@@ -7,8 +7,8 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819
 
+#include <memory>
 #include <network/protocol/http/client/connection/connection_delegate.hpp>
-#include <boost/scoped_ptr.hpp>
 
 namespace boost { namespace asio {
 
@@ -22,20 +22,20 @@ namespace network {
 namespace http {
 
 struct normal_delegate : connection_delegate {
-  normal_delegate(asio::io_service & service);
+  normal_delegate(boost::asio::io_service & service);
 
-  virtual void connect(asio::ip::tcp::endpoint & endpoint,
+  virtual void connect(boost::asio::ip::tcp::endpoint & endpoint,
                        std::string const &host,
-                       std::function<void(asio::error_code const &)> handler);
-  virtual void write(asio::streambuf & command_streambuf,
-                     std::function<void(asio::error_code const &, size_t)> handler);
-  virtual void read_some(asio::mutable_buffers_1 const & read_buffer,
-                         std::function<void(asio::error_code const &, size_t)> handler);
+                       std::function<void(boost::system::error_code const &)> handler);
+  virtual void write(boost::asio::streambuf & command_streambuf,
+                     std::function<void(boost::system::error_code const &, size_t)> handler);
+  virtual void read_some(boost::asio::mutable_buffers_1 const & read_buffer,
+                         std::function<void(boost::system::error_code const &, size_t)> handler);
   ~normal_delegate();
 
  private:
-  asio::io_service & service_;
-  boost::scoped_ptr<asio::ip::tcp::socket> socket_;
+  boost::asio::io_service & service_;
+  std::unique_ptr<boost::asio::ip::tcp::socket> socket_;
 
   normal_delegate(normal_delegate const &);  // = delete
   normal_delegate& operator=(normal_delegate);  // = delete

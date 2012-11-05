@@ -9,7 +9,7 @@
 
 #include <functional>
 #include <boost/range/iterator_range.hpp>
-#include <asio/error_code.hpp>
+#include <boost/asio/error.hpp>
 
 namespace network { namespace http {
 
@@ -21,7 +21,7 @@ class request_options;
 struct client_connection {
   typedef std::function<
     void(boost::iterator_range<char const *> const &,
-         asio::error_code const &)>
+         boost::system::error_code const &)>
     callback_type;
   virtual response send_request(std::string const & method,
                                 request const & request,
