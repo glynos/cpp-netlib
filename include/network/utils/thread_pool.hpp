@@ -25,7 +25,11 @@ struct thread_pool_pimpl;
 struct thread_pool {
   thread_pool(std::size_t threads = 1,
               io_service_ptr io_service = io_service_ptr(),
-              worker_threads_ptr worker_threads = worker_threads_ptr());
+              std::vector<std::thread> worker_threads = {});
+  thread_pool(thread_pool const&) = delete;
+  thread_pool(thread_pool &&other);
+  thread_pool& operator=(thread_pool const&) = delete;
+  thread_pool& operator=(thread_pool &&other);
   std::size_t const thread_count() const;
   void post(std::function<void()> f);
   ~thread_pool();

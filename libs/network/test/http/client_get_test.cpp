@@ -4,6 +4,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#ifdef BUILD_SHARED_LIBS
+# define BOOST_TEST_DYN_LINK
+#endif
 #define BOOST_TEST_MODULE HTTP 1.0 Get Test
 #include <network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
@@ -26,8 +29,8 @@ BOOST_AUTO_TEST_CASE(http_client_get_test) {
     response.get_status(status_);
     response.get_status_message(status_message_);
     BOOST_CHECK_EQUAL ( version_.substr(0,7), "HTTP/1.");
-    BOOST_CHECK_EQUAL ( status_, 302u );
-    BOOST_CHECK_EQUAL ( status_message_, std::string("Found") );
+    BOOST_CHECK ( status_ == 302u || status_ == 200u );
+    BOOST_CHECK ( status_message_ == std::string("Found") || status_message_ == std::string("OK") );
 }
 
 #ifdef NETWORK_ENABLE_HTTPS
@@ -47,8 +50,8 @@ BOOST_AUTO_TEST_CASE(https_client_get_test) {
     response.get_status(status_);
     response.get_status_message(status_message_);
     BOOST_CHECK_EQUAL ( version_.substr(0,7), "HTTP/1.");
-    BOOST_CHECK_EQUAL ( status_, 302u );
-    BOOST_CHECK_EQUAL ( status_message_, std::string("Found") );
+    BOOST_CHECK ( status_ == 302u || status_ == 200u );
+    BOOST_CHECK ( status_message_ == std::string("Found") || status_message_ == std::string("OK") );
 }
 
 #endif

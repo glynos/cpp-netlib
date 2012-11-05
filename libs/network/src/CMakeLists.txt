@@ -18,12 +18,19 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   elseif (HAVE_STD0X)
     set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++0x")
   endif()
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+  CHECK_CXX_COMPILER_FLAG(-std=c++11 HAVE_STD11)
+  set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++11 -stdlib=libc++")
+  set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++11 -stdlib=libc++")
 endif()
 
 set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp uri/normalize.cpp)
 add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
 foreach (src_file ${CPP-NETLIB_URI_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
@@ -37,6 +44,9 @@ foreach (src_file ${CPP-NETLIB_MESSAGE_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
 endforeach(src_file)
 
@@ -44,6 +54,9 @@ set(CPP-NETLIB_MESSAGE_DIRECTIVES_SRCS message/directives.cpp)
 add_library(cppnetlib-message-directives ${CPP-NETLIB_MESSAGE_DIRECTIVES_SRCS})
 foreach (src_file ${CPP-NETLIB_MESSAGE_DIRECTIVES_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
@@ -55,19 +68,25 @@ foreach (src_file ${CPP-NETLIB_MESSAGE_WRAPPERS_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
 endforeach(src_file)
 
 set(CPP-NETLIB_HTTP_MESSAGE_SRCS http/request.cpp http/response.cpp)
 add_library(cppnetlib-http-message ${CPP-NETLIB_HTTP_MESSAGE_SRCS})
 add_dependencies(cppnetlib-http-message
-  ${Boost_LIBRARIES}
+#   ${Boost_LIBRARIES}
   cppnetlib-message)
 target_link_libraries(cppnetlib-http-message
   ${Boost_LIBRARIES}
   cppnetlib-message)
 foreach (src_file ${CPP-NETLIB_HTTP_MESSAGE_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
@@ -79,6 +98,9 @@ foreach (src_file ${CPP-NETLIB_HTTP_MESSAGE_WRAPPERS_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
 endforeach(src_file)
 
@@ -86,6 +108,9 @@ set(CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS server_request_parsers_impl.cpp)
 add_library(cppnetlib-http-server-parsers ${CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS})
 foreach (src_file ${CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
@@ -99,7 +124,6 @@ set(CPP-NETLIB_HTTP_SERVER_SRCS
     )
 add_library(cppnetlib-http-server ${CPP-NETLIB_HTTP_SERVER_SRCS})
 add_dependencies(cppnetlib-http-server
-  ${Boost_LIBRARIES}
   cppnetlib-constants
   cppnetlib-uri
   cppnetlib-message
@@ -108,6 +132,7 @@ add_dependencies(cppnetlib-http-server
   cppnetlib-http-message
   cppnetlib-http-message-wrappers
   cppnetlib-http-server-parsers
+  cppnetlib-utils-thread_pool
   )
 target_link_libraries(cppnetlib-http-server
   ${Boost_LIBRARIES}
@@ -119,9 +144,13 @@ target_link_libraries(cppnetlib-http-server
   cppnetlib-http-message
   cppnetlib-http-message-wrappers
   cppnetlib-http-server-parsers
+  cppnetlib-utils-thread_pool
   )
 foreach (src_file ${CPP-NETLIB_HTTP_SERVER_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
@@ -143,6 +172,9 @@ foreach (src_file ${CPP-NETLIB_HTTP_CLIENT_CONNECTIONS_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
 endforeach(src_file)
 
@@ -150,7 +182,6 @@ set(CPP-NETLIB_HTTP_CLIENT_SRCS
     http/client.cpp)
 add_library(cppnetlib-http-client ${CPP-NETLIB_HTTP_CLIENT_SRCS})
 add_dependencies(cppnetlib-http-client
-  ${Boost_LIBRARIES}
   cppnetlib-constants
   cppnetlib-uri
   cppnetlib-message
@@ -175,6 +206,9 @@ foreach (src_file ${CPP-NETLIB_HTTP_CLIENT_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
 endforeach(src_file)
 
@@ -184,6 +218,9 @@ foreach (src_file ${CPP-NETLIB_UTILS_THREAD_POOL_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
 endforeach(src_file)
 
@@ -191,6 +228,9 @@ set(CPP-NETLIB_CONSTANTS_SRCS constants.cpp)
 add_library(cppnetlib-constants ${CPP-NETLIB_CONSTANTS_SRCS})
 foreach (src_file ${CPP-NETLIB_CONSTANTS_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()

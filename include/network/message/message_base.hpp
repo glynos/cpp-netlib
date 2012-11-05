@@ -29,8 +29,8 @@ struct message_base {
   virtual void get_headers(std::function<void(std::string const &, std::string const &)> inserter) const = 0;
   virtual void get_headers(std::string const & name, std::function<void(std::string const &, std::string const &)> inserter) const = 0;
   virtual void get_headers(std::function<bool(std::string const &, std::string const &)> predicate, std::function<void(std::string const &, std::string const &)> inserter) const = 0;
+  virtual void get_body(std::function<void(std::string::const_iterator, size_t)> chunk_reader, size_t size) const = 0;
   virtual void get_body(std::string & body) const = 0;
-  virtual void get_body(std::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const = 0;
 
   // Destructor
   virtual ~message_base() = 0;  // pure virtual
