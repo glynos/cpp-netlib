@@ -43,6 +43,9 @@ elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   message("C++ Flags: ${CMAKE_CXX_FLAGS} link flags: ${CMAKE_CXX_LINK_FLAGS}")
 endif()
 
+option( CPP-NETLIB_ALWAYS_LOGGING "Allow cpp-netlib to log debug messages even in non-debug mode." FALSE )
+option( CPP-NETLIB_DISABLE_LOGGING "Disable logging definitely, no logging code will be generated or compiled." FALSE )
+
 if (Boost_FOUND)
     if (MSVC)
       add_definitions(-D_SCL_SECURE_NO_WARNINGS)
