@@ -12,6 +12,7 @@
     print out network-related errors through standard error. This is only
     useful when NETWORK_DEBUG is turned on. Otherwise the macro amounts to a
     no-op.
+
     The user can force the logging to be enabled by defining NETWORK_ENABLE_LOG.
 */
 #if defined(NETWORK_DEBUG) && !defined(NETWORK_ENABLE_LOGGING)
