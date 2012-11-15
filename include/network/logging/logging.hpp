@@ -31,10 +31,20 @@ class log_record
 public:
   log_record(){} // = default;
 
-  // Implicit construction from string
-  log_record( const std::string& message ) 
+  // Implicit construction from anything serializable to text.
+  template< typename TypeOfSomething >
+  log_record( TypeOfSomething&& message ) 
+	  : m_filename( "unknown" )
+	  , m_line(0)
   {
-    write( message );
+    write( std::forward<TypeOfSomething>(message) );
+  }
+
+  // Construction with recording context informations.
+  log_record( std::string filename, unsigned long line )
+	  : m_filename( filename )
+	  , m_line( line )
+  {
   }
 
   ~log_record()
@@ -49,7 +59,9 @@ public:
     return *this;
   }
 
-  std::string full_message() const { return m_text_stream.str(); }
+  std::string message() const { return m_text_stream.str(); }
+  const std::string& filename() const { return m_filename; }
+  unsigned long line() const { return m_line; }
 
 private:
   // disable copy
@@ -57,7 +69,8 @@ private:
   log_record& operator=( const log_record& ); // = delete;
 
   std::ostringstream m_text_stream; // stream in which we build the message
-    
+  std::string m_filename; // = "unknown";
+  unsigned long m_line; // = 0;
 };
   
 template< typename TypeOfSomething >
