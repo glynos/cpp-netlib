@@ -9,9 +9,9 @@
 
 #include <network/protocol/http/server/async_impl.hpp>
 #include <network/protocol/http/server/connection/async.hpp>
-#include <asio/io_service.hpp>
-#include <asio/ip/tcp.hpp>
-#include <asio/placeholders.hpp>
+#include <boost/asio/io_service.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/placeholders.hpp>
 #include <functional>
 #include <network/detail/debug.hpp>
 
@@ -34,11 +34,11 @@ async_server_impl::async_server_impl(server_options const &options,
 , owned_service_(false)
 , stopping_(false) {
   if (service_ == 0) {
-    service_ = new (std::nothrow) asio::io_service;
+    service_ = new boost::asio::io_service;
     owned_service_ = true;
   }
   BOOST_ASSERT(service_ != 0);
-  acceptor_ = new (std::nothrow) asio::ip::tcp::acceptor(*service_);
+  acceptor_ = new boost::asio::ip::tcp::acceptor(*service_);
   BOOST_ASSERT(acceptor_ != 0);
 }
 
@@ -53,20 +53,20 @@ void async_server_impl::run() {
 }
 
 void async_server_impl::stop() {
-  boost::lock_guard<boost::mutex> listening_lock(listening_mutex_);
+  std::lock_guard<std::mutex> listening_lock(listening_mutex_);
   if (listening_) {
-    boost::lock_guard<boost::mutex> stopping_lock(stopping_mutex_);
+    std::lock_guard<std::mutex> stopping_lock(stopping_mutex_);
     stopping_ = true;
-    asio::error_code ignored;
+    boost::system::error_code ignored;
     acceptor_->close(ignored);
     listening_ = false;
     service_->post(
-        std::bind(&async_server_impl::handle_stop, this));
+        boost::bind(&async_server_impl::handle_stop, this));
   }
 }
 
 void async_server_impl::listen() {
-  boost::lock_guard<boost::mutex> listening_lock(listening_mutex_);
+  std::lock_guard<std::mutex> listening_lock(listening_mutex_);
   NETWORK_MESSAGE("listening on " << address_ << ':' << port_);
   if (!listening_) start_listening();
   if (!listening_) {
@@ -76,15 +76,15 @@ void async_server_impl::listen() {
 }
 
 void async_server_impl::handle_stop() {
-  boost::lock_guard<boost::mutex> stopping_lock(stopping_mutex_);
+  std::lock_guard<std::mutex> stopping_lock(stopping_mutex_);
   // A user may have stopped listening again before the stop command is
   // reached.
   if (stopping_) service_->stop();
 }
 
-void async_server_impl::handle_accept(asio::error_code const & ec) {
+void async_server_impl::handle_accept(boost::system::error_code const & ec) {
   {
-    boost::lock_guard<boost::mutex> stopping_lock(stopping_mutex_);
+    std::lock_guard<std::mutex> stopping_lock(stopping_mutex_);
     // We dont want to add another handler instance, and we dont want to know
     // about errors for a socket we dont need anymore.
     if (stopping_) return;
@@ -96,18 +96,18 @@ void async_server_impl::handle_accept(asio::error_code const & ec) {
         new async_server_connection(*service_, handler_, pool_));
     acceptor_->async_accept(
         new_connection_->socket(),
-        std::bind(
+        boost::bind(
             &async_server_impl::handle_accept,
             this,
-            asio::placeholders::error));
+            boost::asio::placeholders::error));
   } else {
     NETWORK_MESSAGE("Error accepting connection, reason: " << ec);
   }
 }
 
 void async_server_impl::start_listening() {
-  using asio::ip::tcp;
-  asio::error_code error;
+  using boost::asio::ip::tcp;
+  boost::system::error_code error;
   service_->reset();  // allows repeated cycles of run->stop->run
   tcp::resolver resolver(*service_);
   tcp::resolver::query query(address_, port_);
@@ -128,7 +128,7 @@ void async_server_impl::start_listening() {
     NETWORK_MESSAGE("error binding socket: " << address_ << ":" << port_);
     BOOST_THROW_EXCEPTION(std::runtime_error("Error binding socket."));
   }
-  acceptor_->listen(asio::socket_base::max_connections, error);
+  acceptor_->listen(boost::asio::socket_base::max_connections, error);
   if (error) {
     NETWORK_MESSAGE("error listening on socket: '" << error << "' on " << address_ << ":" << port_);
     BOOST_THROW_EXCEPTION(std::runtime_error("Error listening on socket."));
@@ -136,12 +136,12 @@ void async_server_impl::start_listening() {
   new_connection_.reset(new async_server_connection(*service_, handler_, pool_));
   acceptor_->async_accept(
       new_connection_->socket(),
-      std::bind(
+      boost::bind(
           &async_server_impl::handle_accept,
           this,
-          asio::placeholders::error));
+          boost::asio::placeholders::error));
   listening_ = true;
-  boost::lock_guard<boost::mutex> stopping_lock(stopping_mutex_);
+  std::lock_guard<std::mutex> stopping_lock(stopping_mutex_);
   stopping_ = false; // if we were in the process of stopping, we revoke that command and continue listening
   NETWORK_MESSAGE("now listening on '" << address_ << ":" << port_ << "'");
 }

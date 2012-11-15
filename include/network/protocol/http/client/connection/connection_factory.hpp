@@ -7,11 +7,12 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_CONNECTION_FACTORY_HPP_20111112
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_CONNECTION_FACTORY_HPP_20111112
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
-namespace asio {
+namespace boost { namespace asio {
 class io_service;
 }  // namespace asio
+}  // namespace boost
 
 namespace network { namespace http {
 
@@ -20,8 +21,8 @@ struct client_connection;
 struct request_base;
 
 struct connection_factory {
-  virtual boost::shared_ptr<client_connection> create_connection(
-      asio::io_service &service,
+  virtual std::shared_ptr<client_connection> create_connection(
+      boost::asio::io_service &service,
       request_base const & request,
       client_options const &options) = 0;
   virtual ~connection_factory() = 0; // pure virtual, interface only.

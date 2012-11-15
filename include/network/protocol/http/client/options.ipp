@@ -70,19 +70,19 @@ namespace network { namespace http {
       return openssl_verify_paths_;
     }
 
-    void connection_manager(boost::shared_ptr<http::connection_manager> manager) {
+    void connection_manager(std::shared_ptr<http::connection_manager> manager) {
       connection_manager_ = manager;
     }
 
-    boost::shared_ptr<http::connection_manager> connection_manager() const {
+    std::shared_ptr<http::connection_manager> connection_manager() const {
       return connection_manager_;
     }
 
-    void connection_factory(boost::shared_ptr<http::connection_factory> factory) {
+    void connection_factory(std::shared_ptr<http::connection_factory> factory) {
       connection_factory_ = factory;
     }
 
-    boost::shared_ptr<http::connection_factory> connection_factory() const {
+    std::shared_ptr<http::connection_factory> connection_factory() const {
       return connection_factory_;
     }
 
@@ -103,8 +103,8 @@ namespace network { namespace http {
     boost::asio::io_service *io_service_;
     bool follow_redirects_, cache_resolved_;
     std::list<std::string> openssl_certificate_paths_, openssl_verify_paths_;
-    boost::shared_ptr<http::connection_manager> connection_manager_;
-    boost::shared_ptr<http::connection_factory> connection_factory_;
+    std::shared_ptr<http::connection_manager> connection_manager_;
+    std::shared_ptr<http::connection_factory> connection_factory_;
   };
 
   client_options::client_options()

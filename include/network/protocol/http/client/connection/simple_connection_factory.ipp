@@ -40,13 +40,11 @@ struct simple_connection_factory_pimpl {
     ::network::uri uri_ = http::uri(request);
     NETWORK_MESSAGE("destination: " << uri_);
     bool https = boost::algorithm::to_lower_copy(::network::scheme(uri_)) == "https";
-    std::shared_ptr<client_connection> conn_;
-    conn_.reset(new (std::nothrow) http_async_connection(
+    return std::make_shared<http_async_connection>(
       res_delegate_factory_->create_resolver_delegate(service, options.cache_resolved()),
       conn_delegate_factory_->create_connection_delegate(service, https, options),
       service,
-      options.follow_redirects()));
-    return conn_;
+      options.follow_redirects());
   }
 
  private:

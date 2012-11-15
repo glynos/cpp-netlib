@@ -7,8 +7,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SIMPLE_CONNECTION_FACTORY_20111112
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SIMPLE_CONNECTION_FACTORY_20111112
 
-#include <boost/scoped_ptr.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <network/protocol/http/client/connection/connection_factory.hpp>
 #include <network/protocol/http/client/connection/connection_delegate_factory.hpp>
 #include <network/protocol/http/client/connection/resolver_delegate_factory.hpp>
@@ -20,14 +19,14 @@ struct simple_connection_factory_pimpl;
 
 struct simple_connection_factory : connection_factory {
   simple_connection_factory();
-  simple_connection_factory(boost::shared_ptr<connection_delegate_factory> conn_delegate_factory,
-                            boost::shared_ptr<resolver_delegate_factory> res_delegate_factory);
-  virtual boost::shared_ptr<client_connection> create_connection(asio::io_service & service,
-                                                          request_base const & request,
-                                                          client_options const & options); // override
+  simple_connection_factory(std::shared_ptr<connection_delegate_factory> conn_delegate_factory,
+                            std::shared_ptr<resolver_delegate_factory> res_delegate_factory);
+  virtual std::shared_ptr<client_connection> create_connection(boost::asio::io_service & service,
+                                                               request_base const & request,
+                                                               client_options const & options) override;
   virtual ~simple_connection_factory();
  private:
-  boost::scoped_ptr<simple_connection_factory_pimpl> pimpl;
+  std::unique_ptr<simple_connection_factory_pimpl> pimpl;
   simple_connection_factory(simple_connection_factory const &);  // = delete
   simple_connection_factory& operator=(simple_connection_factory);  // = delete
 };

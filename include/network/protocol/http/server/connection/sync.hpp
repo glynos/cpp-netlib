@@ -19,12 +19,12 @@
 #include <network/protocol/http/server/request_parser.hpp>
 #include <network/protocol/http/request.hpp>
 #include <network/protocol/http/response.hpp>
-#include <asio/ip/tcp.hpp>
-#include <asio/buffer.hpp>
-#include <asio/write.hpp>
-#include <asio/read.hpp>
-#include <asio/strand.hpp>
-#include <asio/placeholders.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/buffer.hpp>
+#include <boost/asio/write.hpp>
+#include <boost/asio/read.hpp>
+#include <boost/asio/strand.hpp>
+#include <boost/asio/placeholders.hpp>
 #include <boost/array.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
@@ -39,7 +39,7 @@ namespace network { namespace http {
 
 class sync_server_connection : public boost::enable_shared_from_this<sync_server_connection> {
  public:
-  sync_server_connection(asio::io_service & service,
+  sync_server_connection(boost::asio::io_service & service,
              std::function<void(request const &, response &)> handler)
   : service_(service)
   , handler_(handler)
@@ -48,13 +48,13 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   {
   }
 
-  asio::ip::tcp::socket & socket() {
+  boost::asio::ip::tcp::socket & socket() {
     return socket_;
   }
 
   void start() {
-    using asio::ip::tcp;
-    asio::error_code option_error;
+    using boost::asio::ip::tcp;
+    boost::system::error_code option_error;
     // TODO make no_delay an option in server_options.
     socket_.set_option(tcp::no_delay(true), option_error);
     std::ostringstream ip_stream;
@@ -62,14 +62,14 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
       << socket_.remote_endpoint().port();
     request_.set_source(ip_stream.str());
     socket_.async_read_some(
-      asio::buffer(read_buffer_),
+      boost::asio::buffer(read_buffer_),
       wrapper_.wrap(
-        std::bind(
+        boost::bind(
           &sync_server_connection::handle_read_data,
           sync_server_connection::shared_from_this(),
           method,
-          asio::placeholders::error,
-          asio::placeholders::bytes_transferred)));
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred)));
   }
 
  private:
@@ -79,7 +79,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   };
 
 
-  void handle_read_data(state_t state, asio::error_code const & ec, std::size_t bytes_transferred) {
+  void handle_read_data(state_t state, boost::system::error_code const & ec, std::size_t bytes_transferred) {
     if (!ec) {
       boost::logic::tribool parsed_ok;
       boost::iterator_range<buffer_type::iterator> result_range, input_range;
@@ -190,20 +190,20 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
               response response_;
               handler_(request_, response_);
               flatten_response();
-              std::vector<asio::const_buffer> response_buffers(output_buffers_.size());
+              std::vector<boost::asio::const_buffer> response_buffers(output_buffers_.size());
               std::transform(output_buffers_.begin(), output_buffers_.end(),
                              response_buffers.begin(),
                              [](buffer_type const &buffer) {
-                               return asio::const_buffer(buffer.data(), buffer.size());
+                               return boost::asio::const_buffer(buffer.data(), buffer.size());
                              });
-              asio::async_write(
+              boost::asio::async_write(
                 socket_,
                 response_buffers,
                 wrapper_.wrap(
-                  std::bind(
+                  boost::bind(
                     &sync_server_connection::handle_write,
                     sync_server_connection::shared_from_this(),
-                    asio::placeholders::error)));
+                    boost::asio::placeholders::error)));
             }
             return;
           } else {
@@ -219,11 +219,11 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
           std::abort();
       }
     } else {
-      error_encountered = boost::in_place<std::system_error>(ec);
+      error_encountered = boost::in_place<boost::system::system_error>(ec);
     }
   }
 
-  void handle_write(asio::error_code const &ec) {
+  void handle_write(boost::system::error_code const &ec) {
     // First thing we do is clear out the output buffers.
     output_buffers_.clear();
     if (ec) {
@@ -235,37 +235,37 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
       static char const bad_request[] =
           "HTTP/1.0 400 Bad Request\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
 
-      asio::async_write(
+      boost::asio::async_write(
           socket()
-          , asio::buffer(bad_request, strlen(bad_request))
+          , boost::asio::buffer(bad_request, strlen(bad_request))
           , wrapper_.wrap(
-              std::bind(
+              boost::bind(
                   &sync_server_connection::client_error_sent
                   , sync_server_connection::shared_from_this()
-                  , asio::placeholders::error
-                  , asio::placeholders::bytes_transferred)));
+                  , boost::asio::placeholders::error
+                  , boost::asio::placeholders::bytes_transferred)));
   }
 
-  void client_error_sent(asio::error_code const & ec, std::size_t bytes_transferred) {
+  void client_error_sent(boost::system::error_code const & ec, std::size_t bytes_transferred) {
       if (!ec) {
-          asio::error_code ignored;
-          socket().shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
+          boost::system::error_code ignored;
+          socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
           socket().close(ignored);
       } else {
-          error_encountered = boost::in_place<std::system_error>(ec);
+          error_encountered = boost::in_place<boost::system::system_error>(ec);
       }
   }
 
   void read_more(state_t state) {
       socket_.async_read_some(
-          asio::buffer(read_buffer_)
+          boost::asio::buffer(read_buffer_)
           , wrapper_.wrap(
-              std::bind(
+              boost::bind(
                   &sync_server_connection::handle_read_data,
                   sync_server_connection::shared_from_this(),
                   state,
-                  asio::placeholders::error,
-                  asio::placeholders::bytes_transferred
+                  boost::asio::placeholders::error,
+                  boost::asio::placeholders::bytes_transferred
                   )
               )
           );
@@ -294,9 +294,13 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
     bool done = false;
     while (!done) {
       buffer_type buffer;
-      response_.get_body([&done, &buffer](boost::iterator_range<char const *> data) {
-        if (boost::empty(data)) done = true;
-        else std::copy(std::begin(data), std::end(data), buffer.begin());
+      response_.get_body([&done, &buffer](std::string::const_iterator start, size_t length) {
+        if (!length) done = true;
+        else {
+          std::string::const_iterator past_end = start;
+          std::advance(past_end, length);
+          std::copy(start, past_end, buffer.begin());
+        }
       }, buffer.size());
       if (!done) output_buffers_.emplace_back(std::move(buffer));
     }
@@ -311,10 +315,10 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
     }
   }
 
-  asio::io_service & service_;
+  boost::asio::io_service & service_;
   std::function<void(request const &, response &)> handler_;
-  asio::ip::tcp::socket socket_;
-  asio::io_service::strand wrapper_;
+  boost::asio::ip::tcp::socket socket_;
+  boost::asio::io_service::strand wrapper_;
 
   typedef boost::array<char,NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE> buffer_type;
   buffer_type read_buffer_;
@@ -324,7 +328,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   response response_;
   std::list<buffer_type> output_buffers_;
   std::string partial_parsed;
-  boost::optional<std::system_error> error_encountered;
+  boost::optional<boost::system::system_error> error_encountered;
   bool read_body_;
 };
 

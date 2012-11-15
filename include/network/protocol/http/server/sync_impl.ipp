@@ -7,6 +7,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_SERVER_SYNC_IMPL_IPP_20120319
 #define NETWORK_PROTOCOL_HTTP_SERVER_SYNC_IMPL_IPP_20120319
 
+#include <boost/bind.hpp>
 #include <network/protocol/http/server/sync_impl.hpp>
 #include <network/protocol/http/server/connection/sync.hpp>
 #include <network/detail/debug.hpp>
@@ -25,11 +26,11 @@ sync_server_impl::sync_server_impl(server_options const &options,
 , listening_(false)
 , owned_service_(false) {
   if (service_ == 0) {
-    service_ = new (std::nothrow) asio::io_service;
+    service_ = new boost::asio::io_service;
     owned_service_ = true;
     BOOST_ASSERT(service_ != 0);
   }
-  acceptor_ = new (std::nothrow) asio::ip::tcp::acceptor(*service_);
+  acceptor_ = new boost::asio::ip::tcp::acceptor(*service_);
   BOOST_ASSERT(acceptor_ != 0);
 }
 
@@ -39,25 +40,25 @@ void sync_server_impl::run() {
 }
 
 void sync_server_impl::stop() {
-  asio::error_code ignored;
+  boost::system::error_code ignored;
   acceptor_->close(ignored);
   service_->stop();
 }
 
 void sync_server_impl::listen() {
-  boost::lock_guard<boost::mutex> listening_lock(listening_mutex_);
+  std::lock_guard<std::mutex> listening_lock(listening_mutex_);
   if (!listening_) start_listening();
 }
 
-void sync_server_impl::handle_accept(asio::error_code const &ec) {
+void sync_server_impl::handle_accept(boost::system::error_code const &ec) {
   if (!ec) {
     set_socket_options(options_, new_connection_->socket());
     new_connection_->start();
     new_connection_.reset(new sync_server_connection(*service_, handler_));
     acceptor_->async_accept(new_connection_->socket(),
-        bind(&sync_server_impl::handle_accept,
+        boost::bind(&sync_server_impl::handle_accept,
              this,
-             asio::placeholders::error));
+             boost::asio::placeholders::error));
   } else {
     NETWORK_MESSAGE("error accepting connection: " << ec);
     this->stop();
@@ -65,8 +66,8 @@ void sync_server_impl::handle_accept(asio::error_code const &ec) {
 }
 
 void sync_server_impl::start_listening() {
-  using asio::ip::tcp;
-  asio::error_code error;
+  using boost::asio::ip::tcp;
+  boost::system::error_code error;
   tcp::resolver resolver(*service_);
   tcp::resolver::query query(address_, port_);
   tcp::resolver::iterator endpoint_ = resolver.resolve(query, error);
@@ -83,8 +84,8 @@ void sync_server_impl::start_listening() {
   set_acceptor_options(options_, *acceptor_);
   acceptor_->bind(endpoint, error);
   if (error) {
-    NETWORK_MESSAGE("error binding to socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
-    BOOST_THROW_EXCEPTION(std::runtime_error("Error binding to socket for acceptor."));
+    NETWORK_MESSAGE("error boost::binding to socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
+    BOOST_THROW_EXCEPTION(std::runtime_error("Error boost::binding to socket for acceptor."));
   }
   acceptor_->listen(tcp::socket::max_connections, error);
   if (error) {
@@ -93,9 +94,9 @@ void sync_server_impl::start_listening() {
   }
   new_connection_.reset(new sync_server_connection(*service_, handler_));
   acceptor_->async_accept(new_connection_->socket(),
-                          bind(&sync_server_impl::handle_accept,
+                          boost::bind(&sync_server_impl::handle_accept,
                                this,
-                               asio::placeholders::error));
+                               boost::asio::placeholders::error));
   listening_ = true;
 }
 

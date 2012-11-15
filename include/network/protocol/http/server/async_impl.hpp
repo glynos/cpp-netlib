@@ -8,18 +8,13 @@
 #define NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_IMPL_20120318
 
 #include <functional>
-#include <boost/shared_ptr.hpp>
-#include <asio/ip/tcp.hpp>
-#include <boost/thread/mutex.hpp>
+#include <boost/asio/ip/tcp.hpp>
 #include <network/protocol/http/server/options.hpp>
 #include <network/protocol/http/server/impl/socket_options_setter.hpp>
 
 namespace network { namespace utils {
-
 struct thread_pool;
-
 }  // namespace util
-
 }  // namespace network
 
 namespace network { namespace http {
@@ -30,7 +25,7 @@ class async_server_connection;
 
 class async_server_impl : protected socket_options_setter {
  public:
-  typedef boost::shared_ptr<async_server_connection> connection_ptr;
+  typedef std::shared_ptr<async_server_connection> connection_ptr;
   async_server_impl(server_options const &options,
                     std::function<void(request const &, connection_ptr)> handler,
                     utils::thread_pool &thread_pool);
@@ -42,17 +37,17 @@ class async_server_impl : protected socket_options_setter {
  private:
   server_options options_;
   std::string address_, port_;
-  asio::io_service *service_;
-  asio::ip::tcp::acceptor *acceptor_;
-  boost::shared_ptr<async_server_connection> new_connection_;
-  boost::mutex listening_mutex_, stopping_mutex_;
+  boost::asio::io_service *service_;
+  boost::asio::ip::tcp::acceptor *acceptor_;
+  std::shared_ptr<async_server_connection> new_connection_;
+  std::mutex listening_mutex_, stopping_mutex_;
   std::function<void(request const &, connection_ptr)> handler_;
   utils::thread_pool &pool_;
   bool listening_, owned_service_, stopping_;
 
   void handle_stop();
   void start_listening();
-  void handle_accept(asio::error_code const &ec);
+  void handle_accept(boost::system::error_code const &ec);
 };
 
 }  // namespace http
