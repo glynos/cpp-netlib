@@ -13,7 +13,7 @@
     useful when NETWORK_DEBUG is turned on. Otherwise the macro amounts to a
     no-op.
 
-    The user can force the logging to be enabled by defining NETWORK_ENABLE_LOG.
+    The user can force the logging to be enabled by defining NETWORK_ENABLE_LOGGING.
 */
 #if defined(NETWORK_DEBUG) && !defined(NETWORK_ENABLE_LOGGING)
 #  define NETWORK_ENABLE_LOGGING
