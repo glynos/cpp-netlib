@@ -20,7 +20,7 @@ namespace handler
     void std_log_handler( const log_record& log )
     {
       std::cerr << "[network " << log.filename() << ":" << log.line() << "] " 
-              << log.message() << std::endl;
+                << log.message() << std::endl;
     }
   }
 

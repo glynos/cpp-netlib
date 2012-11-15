@@ -33,11 +33,11 @@ if (Boost_FOUND)
             cppnetlib-http-message-wrappers
             cppnetlib-uri
             cppnetlib-constants
-	  )
+            )
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES}
             ${ICU_LIBRARIES} ${ICU_I18N_LIBRARIES}
-	    ${CMAKE_THREAD_LIBS_INIT}
+            ${CMAKE_THREAD_LIBS_INIT}
             cppnetlib-message
             cppnetlib-message-wrappers
             cppnetlib-http-message

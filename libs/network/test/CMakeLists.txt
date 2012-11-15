@@ -5,6 +5,7 @@
 
 include_directories(${CPP-NETLIB_SOURCE_DIR}/include)
 
+add_subdirectory(logging)
 add_subdirectory(uri)
 add_subdirectory(http)
 
