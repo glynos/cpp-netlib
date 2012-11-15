@@ -8,7 +8,7 @@
 #define NETWORK_RPTOCOL_HTTP_REQUEST_BASE_IPP_20111102
 
 #include <network/protocol/http/request/request_base.hpp>
-#include <boost/thread/mutex.hpp>
+#include <thread>
 #include <cstring>
 
 namespace network { namespace http {
@@ -21,7 +21,7 @@ struct request_storage_base_pimpl {
   explicit request_storage_base_pimpl(size_t chunk_size);
   request_storage_base_pimpl *clone() const;
   void append(char const *data, size_t size);
-  size_t read(char *destination, size_t offset, size_t size) const;
+  size_t read(std::string &destination, size_t offset, size_t size) const;
   void flatten(std::string &destination) const;
   void clear();
   bool equals(request_storage_base_pimpl const &other) const;
@@ -32,7 +32,7 @@ struct request_storage_base_pimpl {
   size_t chunk_size_;
   typedef std::vector<std::pair<char *, size_t> > chunks_vector;
   chunks_vector chunks_;
-  mutable boost::mutex chunk_mutex_;
+  mutable std::mutex chunk_mutex_;
 
   request_storage_base_pimpl(request_storage_base_pimpl const &other);
 };
@@ -53,7 +53,7 @@ void request_storage_base::append(char const *data, size_t size) {
   pimpl_->append(data, size);
 }
 
-size_t request_storage_base::read(char *destination, size_t offset, size_t size) const {
+size_t request_storage_base::read(std::string &destination, size_t offset, size_t size) const {
   return pimpl_->read(destination, offset, size);
 }
 
@@ -83,7 +83,7 @@ request_storage_base_pimpl::request_storage_base_pimpl(size_t chunk_size)
 request_storage_base_pimpl::request_storage_base_pimpl(request_storage_base_pimpl const &other)
 : chunk_size_(other.chunk_size_)
 , chunks_(0) {
-  boost::lock_guard<boost::mutex> scoped_lock(other.chunk_mutex_);
+  std::lock_guard<std::mutex> scoped_lock(other.chunk_mutex_);
   chunks_.reserve(other.chunks_.size());
   chunks_vector::const_iterator it = other.chunks_.begin();
   for (; it != other.chunks_.end(); ++it) {
@@ -101,7 +101,7 @@ request_storage_base_pimpl * request_storage_base_pimpl::clone() const {
 }
  
 void request_storage_base_pimpl::append(char const *data, size_t size) {
-  boost::lock_guard<boost::mutex> scoped_lock(chunk_mutex_);
+  std::lock_guard<std::mutex> scoped_lock(chunk_mutex_);
   if (chunks_.empty()) {
     chunks_.push_back(std::make_pair(
         new (std::nothrow) char[chunk_size_], 0));
@@ -127,8 +127,8 @@ void request_storage_base_pimpl::append(char const *data, size_t size) {
   }
 }
 
-size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t size) const {
-  boost::lock_guard<boost::mutex> scoped_lock(chunk_mutex_);
+size_t request_storage_base_pimpl::read(std::string &destination, size_t offset, size_t size) const {
+  std::lock_guard<std::mutex> scoped_lock(chunk_mutex_);
   if (chunks_.empty()) return 0;
   // First we find which chunk we're going to read from using the provided
   // offset and some arithmetic to determine the correct one.
@@ -136,14 +136,12 @@ size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t
   offset = offset % chunk_size_;
 
   // Then we start copying up to size data either until we've reached the end
-  // or we're 
   size_t chunks_count = chunks_.size();
   size_t read_count = 0;
   while (size > 0 && chunk_index < chunks_count) {
     size_t bytes_to_read = std::min(chunks_[chunk_index].second, size);
-    std::memcpy(destination + read_count,
-                chunks_[chunk_index].first + offset,
-                bytes_to_read);
+    destination.append(chunks_[chunk_index].first+offset,
+                       chunks_[chunk_index].first+offset+bytes_to_read);
     read_count += bytes_to_read;
     size -= bytes_to_read;
     offset = 0;
@@ -153,7 +151,7 @@ size_t request_storage_base_pimpl::read(char *destination, size_t offset, size_t
 }
 
 void request_storage_base_pimpl::flatten(std::string &destination) const {
-  boost::lock_guard<boost::mutex> scpoped_lock(chunk_mutex_);
+  std::lock_guard<std::mutex> scpoped_lock(chunk_mutex_);
   chunks_vector::const_iterator chunk_iterator = chunks_.begin();
   for (; chunk_iterator != chunks_.end(); ++chunk_iterator) {
     destination.append(chunk_iterator->first, chunk_iterator->second);
@@ -161,7 +159,7 @@ void request_storage_base_pimpl::flatten(std::string &destination) const {
 }
 
 void request_storage_base_pimpl::clear() {
-  boost::lock_guard<boost::mutex> scoped_lock(chunk_mutex_);
+  std::lock_guard<std::mutex> scoped_lock(chunk_mutex_);
   chunks_vector::const_iterator chunk_iterator = chunks_.begin();
   for (; chunk_iterator != chunks_.end(); ++chunk_iterator) {
     delete [] chunk_iterator->first;
@@ -170,7 +168,7 @@ void request_storage_base_pimpl::clear() {
 }
 
 bool request_storage_base_pimpl::equals(request_storage_base_pimpl const &other) const {
-  lock(other.chunk_mutex_, this->chunk_mutex_);
+  std::lock(other.chunk_mutex_, this->chunk_mutex_);
   if (other.chunk_size_ != chunk_size_ || other.chunks_.size() != chunks_.size()) {
     other.chunk_mutex_.unlock();
     this->chunk_mutex_.unlock();
@@ -193,7 +191,7 @@ bool request_storage_base_pimpl::equals(request_storage_base_pimpl const &other)
 }
 
 void request_storage_base_pimpl::swap(request_storage_base_pimpl &other) {
-  lock(other.chunk_mutex_, this->chunk_mutex_);
+  std::lock(other.chunk_mutex_, this->chunk_mutex_);
   std::swap(chunk_size_, other.chunk_size_);
   std::swap(chunks_, other.chunks_);
   other.chunk_mutex_.unlock();

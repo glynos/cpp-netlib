@@ -17,7 +17,7 @@
 namespace network { namespace http {
 
 struct body_source {
-  virtual std::streamsize read(char * buffer, std::streamsize size);
+  virtual std::streamsize read(std::string&, std::streamsize size);
   virtual ~body_source();
 };
 
@@ -28,7 +28,7 @@ struct request_storage_base {
   request_storage_base(size_t chunk_size = NETWORK_BUFFER_CHUNK);
   request_storage_base(request_storage_base const &other);
   virtual void append(char const *data, size_t size);
-  virtual size_t read(char *destination, size_t offset, size_t size) const;
+  virtual size_t read(std::string &destination, size_t offset, size_t size) const;
   virtual void flatten(std::string &destination) const;
   virtual void clear();
   virtual bool equals(request_storage_base const &other) const;

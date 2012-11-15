@@ -184,16 +184,6 @@ request& request::operator=(request rhs) {
   return *this;
 }
 
-bool request::equals(request const &other) const {
-  return pimpl_->equals(*other.pimpl_) &&
-         request_storage_base::equals(other);
-}
-
-void request::swap(request & other) {
-  std::swap(this->pimpl_, other.pimpl_);
-  request_storage_base::swap(other);
-}
-
 // From message_base...
 // Mutators
 void request::set_destination(std::string const & destination) {
@@ -249,15 +239,11 @@ void request::get_body(std::string & body) const {
   this->flatten(body);
 }
 
-void request::get_body(std::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
-  boost::scoped_array<char> local_buffer(new (std::nothrow) char[size]);
-  size_t bytes_read = this->read(local_buffer.get(),
-                                 pimpl_->read_offset(),
-                                 size);
+void request::get_body(std::function<void(std::string::const_iterator, size_t)> chunk_reader, size_t size) const {
+  std::string local_buffer;
+  size_t bytes_read = this->read(local_buffer, pimpl_->read_offset(), size);
   pimpl_->advance_read_offset(bytes_read);
-  char const * begin = local_buffer.get();
-  char const * end = local_buffer.get() + bytes_read;
-  chunk_reader(boost::make_iterator_range(begin, end));
+  chunk_reader(local_buffer.cbegin(), bytes_read);
 }
 
 // From request_base...
@@ -314,12 +300,6 @@ void request::get_status(std::string & status) const {
 }
 
 void request::get_status_message(std::string & status_message) const {
-}
-
-void request::get_body(std::function<void(char*, size_t)> chunk_reader) const {
-}
-
-void request::get_body(std::string const & body) const {
 }
 
 }  // namespace http

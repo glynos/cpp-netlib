@@ -86,7 +86,6 @@ namespace network { namespace http {
                         Directive const & directive
                         )
   {
->>>>>>> master
     directive(message);
     return message;
   }

@@ -115,7 +115,7 @@ struct response_pimpl {
   }
 
   void get_body(
-      std::function<void(boost::iterator_range<char const *>)> chunk_reader,
+      std::function<void(std::string::const_iterator, size_t)> chunk_reader,
       size_t size) { /* FIXME: Do something! */ }
 
   void set_status(boost::uint16_t status) {
@@ -369,7 +369,7 @@ void response::get_body(std::string &body) const {
   pimpl_->get_body(body);
 }
 
-void response::get_body(std::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
+void response::get_body(std::function<void(std::string::const_iterator, size_t)> chunk_reader, size_t size) const {
   pimpl_->get_body(chunk_reader, size);
 }
 
