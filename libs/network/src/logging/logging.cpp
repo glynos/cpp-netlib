@@ -13,6 +13,9 @@
 
 namespace network { namespace logging { 
 
+	const char* log_record::UNKNOWN_FILE_NAME = "unknown";
+
+
 namespace handler 
 {
   namespace

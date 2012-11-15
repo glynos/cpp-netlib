@@ -1,4 +1,4 @@
-// Copyright 2011 A. Joel Lamotte <mjklaim@gmail.com>.
+// Copyright (c) 2012 A. Joel Lamotte <mjklaim@gmail.com>.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -29,12 +29,17 @@ namespace handler
 class log_record
 {
 public:
-  log_record(){} // = default;
+  log_record()
+    : m_filename( UNKNOWN_FILE_NAME )
+	, m_line(0)
+  {} // = default;
+
+  static const char* UNKNOWN_FILE_NAME;
 
   // Implicit construction from anything serializable to text.
   template< typename TypeOfSomething >
   log_record( TypeOfSomething&& message ) 
-      : m_filename( "unknown" )
+      : m_filename( UNKNOWN_FILE_NAME )
       , m_line(0)
   {
     write( std::forward<TypeOfSomething>(message) );
@@ -69,7 +74,7 @@ private:
   log_record& operator=( const log_record& ); // = delete;
 
   std::ostringstream m_text_stream; // stream in which we build the message
-  std::string m_filename; // = "unknown";
+  std::string m_filename; // = UNKNOWN_FILE_NAME;
   unsigned long m_line; // = 0;
 };
   
