@@ -43,7 +43,7 @@ public:
   }
   
   template< typename TypeOfSomething >
-  log_record& write( const TypeOfSomething& something ) // THINK: use universal references?
+  log_record& write( TypeOfSomething&& something )
   {
     m_text_stream << something;
     return *this;
@@ -61,9 +61,9 @@ private:
 };
   
 template< typename TypeOfSomething >
-inline log_record& operator<<( log_record& log, const TypeOfSomething& something ) // THINK: use universal references?
+inline log_record& operator<<( log_record& log, TypeOfSomething&& something )
 {
-  return log.write( something );
+  return log.write( std::forward<TypeOfSomething>(something) );
 }
 
 }}
