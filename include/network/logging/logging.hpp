@@ -31,7 +31,7 @@ class log_record
 public:
   log_record()
     : m_filename( UNKNOWN_FILE_NAME )
-	, m_line(0)
+    , m_line(0)
   {} // = default;
 
   static const char* UNKNOWN_FILE_NAME;
