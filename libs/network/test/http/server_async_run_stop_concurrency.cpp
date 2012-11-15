@@ -1,3 +1,7 @@
+#ifdef BUILD_SHARED_LIBS
+# define BOOST_TEST_DYN_LINK
+# define BOOST_TEST_NO_MAIN
+#endif
 #define BOOST_TEST_MODULE HTTP Asynchronous Server Tests
 
 #include <network/include/http/server.hpp>

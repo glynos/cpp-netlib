@@ -1,4 +1,4 @@
-
+   
 #          Copyright Dean Michael Berris 2007.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
@@ -15,24 +15,23 @@ if [ os.name ] = CYGWIN
 
 project network_test :
     requirements
-        <include>../../../
-        <include>.
+        <include>../../../include
         <source>/boost//unit_test_framework
         <source>/boost//system
         <source>/boost//date_time
         <source>/boost//regex
         <source>/boost//thread
         <source>/boost//filesystem
-        <variant>debug:<define>BOOST_NETWORK_DEBUG
-        <toolset>gcc:<define>BOOST_NETWORK_ENABLE_HTTPS
+        <variant>debug:<define>NETWORK_DEBUG
+        <toolset>gcc:<define>NETWORK_ENABLE_HTTPS
         <toolset>gcc:<linkflags>-lpthread
         <toolset>gcc:<linkflags>-lssl
         <toolset>gcc:<linkflags>-lcrypto
-        <toolset>darwin:<define>BOOST_NETWORK_ENABLE_HTTPS
+        <toolset>darwin:<define>NETWORK_ENABLE_HTTPS
         <toolset>darwin:<linkflags>-lpthread
         <toolset>darwin:<linkflags>-lssl
         <toolset>darwin:<linkflags>-lcrypto
-        <toolset>clang:<define>BOOST_NETWORK_ENABLE_HTTPS
+        <toolset>clang:<define>NETWORK_ENABLE_HTTPS
         <toolset>clang:<linkflags>-lpthread
         <toolset>clang:<linkflags>-lssl
         <toolset>clang:<linkflags>-lcrypto
@@ -43,7 +42,7 @@ project network_test :
         <toolset>msvc:<define>BOOST_ASIO_NO_WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>WIN32_LEAN_AND_MEAN
         <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
-	<toolset>msvc:<define>_WIN32_WINNT=0x0501
+        <toolset>msvc:<define>_WIN32_WINNT=0x0501
         <c++-template-depth>256
         <link>static
     ;
@@ -51,5 +50,11 @@ project network_test :
 build-project http ;
 build-project uri ;
 
-run message_test.cpp ;
-run message_transform_test.cpp ;
+run message_test.cpp /cpp-netlib//cppnetlib-message
+    /cpp-netlib//cppnetlib-message-directives
+    /cpp-netlib//cppnetlib-message-wrappers ;
+
+run message_transform_test.cpp /cpp-netlib//cppnetlib-message
+    /cpp-netlib//cppnetlib-message-directives
+    /cpp-netlib//cppnetlib-message-wrappers ;
+

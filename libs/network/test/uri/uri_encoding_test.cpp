@@ -4,6 +4,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#ifdef BUILD_SHARED_LIBS
+# define BOOST_TEST_DYN_LINK
+#endif
 #define BOOST_TEST_MODULE URI encoding test
 #include <boost/config/warning_disable.hpp>
 #include <boost/test/unit_test.hpp>

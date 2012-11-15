@@ -65,3 +65,7 @@ BOOST_AUTO_TEST_CASE(text_stream) {
   BOOST_CHECK( record.filename() == file_name );
   BOOST_CHECK( record.line() == line_num );
 }
+
+BOOST_AUTO_TEST_CASE(raw_log) {
+  log( "This is a raw log." );
+}

@@ -10,3 +10,4 @@ libs/mime/test/mime-roundtrip
 bin/
 tests/
 _build
+*~
