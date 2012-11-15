@@ -34,16 +34,16 @@ public:
   // Implicit construction from anything serializable to text.
   template< typename TypeOfSomething >
   log_record( TypeOfSomething&& message ) 
-	  : m_filename( "unknown" )
-	  , m_line(0)
+      : m_filename( "unknown" )
+      , m_line(0)
   {
     write( std::forward<TypeOfSomething>(message) );
   }
 
   // Construction with recording context informations.
   log_record( std::string filename, unsigned long line )
-	  : m_filename( filename )
-	  , m_line( line )
+      : m_filename( filename )
+      , m_line( line )
   {
   }
 

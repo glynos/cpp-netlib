@@ -18,9 +18,9 @@ namespace handler
   namespace
   {
     void std_log_handler( const log_record& log )
-	{
+    {
       std::cerr << "[network " << log.filename() << ":" << log.line() << "] " 
-	            << log.message() << std::endl;
+              << log.message() << std::endl;
     }
   }
 
@@ -47,7 +47,7 @@ void log( const log_record& log )
   auto log_handler = current_log_record_handler;
   if( log_handler )
   {
-	(*log_handler)( log );
+  (*log_handler)( log );
   }
 }
 
