@@ -1,5 +1,6 @@
 # Copyright (c) Glyn Matthews 2011, 2012.
 # Copyright 2011 Dean Michael Berris (dberris@google.com)
+# Copyright 2012 A. Joel Lamotte (mjklaim@gmail.com)
 # Copyright 2011 Google, Inc.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
@@ -18,6 +19,28 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   elseif (HAVE_STD0X)
     set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++0x")
   endif()
+endif()
+
+if( CPP-NETLIB_ALWAYS_LOGGING )
+  add_definitions( /D NETWORK_ENABLE_LOGGING )
+endif()
+
+if( NOT CPP-NETLIB_DISABLE_LOGGING )
+  set( CPP-NETLIB_LOGGING_SRCS 
+    logging/logging.cpp 
+  )
+  add_library(cppnetlib-logging ${CPP-NETLIB_LOGGING_SRCS})
+  foreach (src_file ${CPP-NETLIB_LOGGING_SRCS})
+  if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+      PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+  endif()
+  endforeach(src_file)
+  
+  # this library name is defined only if we created the target
+  # if not then it will be empty
+  set( CPP-NETLIB_LOGGING_LIB cppnetlib-logging )
+  
 endif()
 
 set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp uri/normalize.cpp)
@@ -99,6 +122,7 @@ set(CPP-NETLIB_HTTP_SERVER_SRCS
     )
 add_library(cppnetlib-http-server ${CPP-NETLIB_HTTP_SERVER_SRCS})
 add_dependencies(cppnetlib-http-server
+  ${CPP-NETLIB_LOGGING_LIB}
   cppnetlib-constants
   cppnetlib-uri
   cppnetlib-message
@@ -111,6 +135,7 @@ add_dependencies(cppnetlib-http-server
   )
 target_link_libraries(cppnetlib-http-server
   ${Boost_LIBRARIES}
+  ${CPP-NETLIB_LOGGING_LIB}
   cppnetlib-constants
   cppnetlib-uri
   cppnetlib-message
@@ -151,6 +176,7 @@ set(CPP-NETLIB_HTTP_CLIENT_SRCS
     http/client.cpp)
 add_library(cppnetlib-http-client ${CPP-NETLIB_HTTP_CLIENT_SRCS})
 add_dependencies(cppnetlib-http-client
+  ${CPP-NETLIB_LOGGING_LIB}
   cppnetlib-constants
   cppnetlib-uri
   cppnetlib-message
@@ -162,6 +188,7 @@ add_dependencies(cppnetlib-http-client
   )
 target_link_libraries(cppnetlib-http-client
   ${Boost_LIBRARIES}
+  ${CPP-NETLIB_LOGGING_LIB}
   cppnetlib-constants
   cppnetlib-uri
   cppnetlib-message
