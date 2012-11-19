@@ -63,12 +63,19 @@ public:
     m_text_stream << something;
     return *this;
   }
+  
+  template< typename TypeOfSomething >
+  inline log_record& operator<<( TypeOfSomething&& something )
+  {
+    return write( std::forward<TypeOfSomething>(something) );
+  }
 
   std::string message() const { return m_text_stream.str(); }
   const std::string& filename() const { return m_filename; }
   unsigned long line() const { return m_line; }
 
 private:
+
   // disable copy
   log_record( const log_record& ); // = delete;
   log_record& operator=( const log_record& ); // = delete;
@@ -77,12 +84,6 @@ private:
   std::string m_filename; // = UNKNOWN_FILE_NAME;
   unsigned long m_line; // = 0;
 };
-  
-template< typename TypeOfSomething >
-inline log_record& operator<<( log_record& log, TypeOfSomething&& something )
-{
-  return log.write( std::forward<TypeOfSomething>(something) );
-}
 
 }}
 
