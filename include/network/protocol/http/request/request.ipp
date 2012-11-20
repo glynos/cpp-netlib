@@ -246,6 +246,10 @@ void request::get_body(std::function<void(std::string::const_iterator, size_t)> 
   chunk_reader(local_buffer.cbegin(), bytes_read);
 }
 
+void request::get_body(std::function<void(std::string::const_iterator, size_t)> chunk_reader) const {
+  this->get_body(chunk_reader, NETWORK_DEFAULT_CHUNK_SIZE);
+}
+
 // From request_base...
 // Setters
 void request::set_method(std::string const & method) {

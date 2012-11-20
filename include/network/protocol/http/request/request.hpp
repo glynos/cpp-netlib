@@ -7,6 +7,10 @@
 #ifndef NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021
 #define NETWORK_PROTOCOL_HTTP_REQUEST_REQUEST_HPP_20111021
 
+#ifndef NETWORK_DEFAULT_CHUNK_SIZE
+#define NETWORK_DEFAULT_CHUNK_SIZE 4096
+#endif  // NETWORK_DEFAULT_CHUNK_SIZE
+
 #include <network/protocol/http/request/request_base.hpp>
 #include <network/uri.hpp>
 #include <network/protocol/http/message/directives/major_version.hpp>

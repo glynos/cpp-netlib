@@ -9,7 +9,7 @@
 #ifndef NETWORK_INCLUDE_HTTP_SERVER_HPP_
 #define NETWORK_INCLUDE_HTTP_SERVER_HPP_
 
-#include <asio/io_service.hpp>
+#include <boost/asio/io_service.hpp>
 #include <network/protocol/http/server.hpp>
 #include <network/utils/thread_pool.hpp>
 #include <network/detail/debug.hpp>
