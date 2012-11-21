@@ -51,12 +51,7 @@ public:
       , m_line( line )
   {
   }
-
-  ~log_record()
-  { 
-    log( *this );
-  }
-  
+    
   template< typename TypeOfSomething >
   log_record& write( TypeOfSomething&& something )
   {

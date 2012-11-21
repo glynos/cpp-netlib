@@ -23,7 +23,7 @@
 
 #  include <network/logging/logging.hpp>
 #  ifndef NETWORK_MESSAGE
-#  define NETWORK_MESSAGE(msg) network::logging::log_record( __FILE__, __LINE__ ) << msg;
+#  define NETWORK_MESSAGE(msg) { network::logging::log( network::logging::log_record( __FILE__, __LINE__ ) << msg ); }
 #  endif
 
 #else

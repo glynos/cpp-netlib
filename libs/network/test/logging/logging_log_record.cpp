@@ -10,6 +10,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <network/logging/logging.hpp>
+#define NETWORK_ENABLE_LOGGING
+#include <network/detail/debug.hpp>
 
 using namespace network::logging;
 
@@ -68,4 +70,9 @@ BOOST_AUTO_TEST_CASE(text_stream) {
 
 BOOST_AUTO_TEST_CASE(raw_log) {
   log( "This is a raw log." );
+}
+
+BOOST_AUTO_TEST_CASE(macro_log) {
+  NETWORK_MESSAGE( "This is a log through the macro." );
+  NETWORK_MESSAGE( "This is a log through the macro, with a stream! Num=" << 42  << " - OK!" );
 }

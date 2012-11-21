@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(custom_log_handler_output) {
   const auto message = "At line " + std::to_string(line_num) + " we check the code.";
 
   set_log_record_handler( custom_log_handler );
-  log_record( file_name, line_num ) << "At line " << line_num << " we check the code.";
+  log( log_record( file_name, line_num ) << "At line " << line_num << " we check the code." );
 
   const auto result_output = log_output.str();
 
