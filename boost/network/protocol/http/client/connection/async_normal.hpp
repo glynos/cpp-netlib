@@ -171,6 +171,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                                      placeholders::error)));
         } else {
           set_errors(ec ? ec : boost::asio::error::host_not_found);
+          boost::iterator_range<const char*> range;
+          callback(range,ec);
         }
       }
     }
