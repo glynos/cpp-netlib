@@ -7,13 +7,8 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_BASE_HPP_20111008
 #define NETWORK_PROTOCOL_HTTP_CLIENT_BASE_HPP_20111008
 
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/range/iterator_range.hpp>
-
-namespace boost { namespace asio {
-class io_service;
-}  // namespace asio
-}  // namespace boost
 
 namespace network {
 namespace http {
@@ -28,7 +23,7 @@ class client_options;
 
 struct client_base {
   typedef
-    boost::function<void(boost::iterator_range<char const *> const &, boost::system::error_code const &)>
+    std::function<void(boost::iterator_range<char const *> const &, boost::system::error_code const &)>
     body_callback_function_type;
 
   client_base();

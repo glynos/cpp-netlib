@@ -15,8 +15,8 @@
 #include <boost/cstdint.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
+#include <functional>
+#include <functional>
 #include <boost/algorithm/string/predicate.hpp>
 #include <network/protocol/http/client/connection/resolver_delegate.hpp>
 #include <boost/unordered_map.hpp>

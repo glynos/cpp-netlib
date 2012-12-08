@@ -8,7 +8,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_IMPL_HTTPS_SYNC_CONNECTION_HTTP_20100601
 #define NETWORK_PROTOCOL_HTTP_IMPL_HTTPS_SYNC_CONNECTION_HTTP_20100601
 
-#include <boost/asio/ssl.hpp>
+#include <asio/ssl.hpp>
 
 namespace network {
 namespace http {
@@ -33,39 +33,39 @@ struct https_sync_connection : public virtual sync_connection_base<Tag,version_m
   : connection_base(),
     resolver_(resolver),
     resolve_(resolve),
-    context_(resolver.get_io_service(), boost::asio::ssl::context::sslv23_client),
+    context_(resolver.get_io_service(), asio::ssl::context::sslv23_client),
     socket_(resolver.get_io_service(), context_) {
     if (certificate_filename || verify_path) {
-      context_.set_verify_mode(boost::asio::ssl::context::verify_peer);
+      context_.set_verify_mode(asio::ssl::context::verify_peer);
       // FIXME make the certificate filename and verify path parameters be optional ranges
       if (certificate_filename) context_.load_verify_file(*certificate_filename);
       if (verify_path) context_.add_verify_path(*verify_path);
     } else {
-      context_.set_verify_mode(boost::asio::ssl::context::verify_none);
+      context_.set_verify_mode(asio::ssl::context::verify_none);
     }
   }
 
   void init_socket(string_type const & hostname, string_type const & port) {
     connection_base::init_socket(socket_.lowest_layer(), resolver_, hostname, port, resolve_);
-    socket_.handshake(boost::asio::ssl::stream_base::client);
+    socket_.handshake(asio::ssl::stream_base::client);
   }
 
   void send_request_impl(string_type const & method, basic_request<Tag> const & request_) {
-    boost::asio::streambuf request_buffer;
+    asio::streambuf request_buffer;
     linearize(request_, method, version_major, version_minor,
         std::ostreambuf_iterator<typename char_<Tag>::type>(&request_buffer));
     connection_base::send_request_impl(socket_, method, request_buffer);
   }
 
-  void read_status(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+  void read_status(basic_response<Tag> & response_, asio::streambuf & response_buffer) {
     connection_base::read_status(socket_, response_, response_buffer);
   }
 
-  void read_headers(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+  void read_headers(basic_response<Tag> & response_, asio::streambuf & response_buffer) {
     connection_base::read_headers(socket_, response_, response_buffer);
   }
 
-  void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+  void read_body(basic_response<Tag> & response_, asio::streambuf & response_buffer) {
     connection_base::read_body(socket_, response_, response_buffer);  
     typename headers_range<basic_response<Tag> >::type connection_range =
       headers(response_)["Connection"];
@@ -81,8 +81,8 @@ struct https_sync_connection : public virtual sync_connection_base<Tag,version_m
   }
 
   void close_socket() { 
-    boost::system::error_code ignored;
-    socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
+    asio::error_code ignored;
+    socket_.lowest_layer().shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
     if (ignored) return;
     socket_.lowest_layer().close(ignored);
   }
@@ -94,8 +94,8 @@ struct https_sync_connection : public virtual sync_connection_base<Tag,version_m
   private:
   resolver_type & resolver_;
   resolver_function_type resolve_;
-  boost::asio::ssl::context context_;
-  boost::asio::ssl::stream<boost::asio::ip::tcp::socket> socket_;
+  asio::ssl::context context_;
+  asio::ssl::stream<asio::ip::tcp::socket> socket_;
   
 };
 

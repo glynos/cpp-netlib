@@ -9,7 +9,7 @@
 
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/streambuf.hpp>
-#include <boost/function.hpp>
+#include <functional>
 
 namespace network {
 namespace http {
@@ -17,11 +17,11 @@ namespace http {
 struct connection_delegate {
   virtual void connect(boost::asio::ip::tcp::endpoint & endpoint,
                        std::string const & host,
-                       boost::function<void(boost::system::error_code const &)> handler) = 0;
+                       std::function<void(boost::system::error_code const &)> handler) = 0;
   virtual void write(boost::asio::streambuf & command_streambuf,
-                     boost::function<void(boost::system::error_code const &, size_t)> handler) = 0;
+                     std::function<void(boost::system::error_code const &, size_t)> handler) = 0;
   virtual void read_some(boost::asio::mutable_buffers_1 const & read_buffer,
-                         boost::function<void(boost::system::error_code const &, size_t)> handler) = 0;
+                         std::function<void(boost::system::error_code const &, size_t)> handler) = 0;
   virtual ~connection_delegate() {}
 };
 

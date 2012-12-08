@@ -7,6 +7,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SIMPLE_CONNECTION_FACTORY_20111120
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SIMPLE_CONNECTION_FACTORY_20111120
 
+#include <memory>
 #include <network/protocol/http/client/connection/simple_connection_factory.hpp>
 #include <network/protocol/http/client/connection/resolver_delegate_factory.hpp>
 #include <network/protocol/http/client/connection/connection_delegate_factory.hpp>
@@ -24,14 +25,14 @@ namespace network {
 namespace http {
 
 struct simple_connection_factory_pimpl {
-  simple_connection_factory_pimpl(boost::shared_ptr<connection_delegate_factory> conn_delegate_factory,
-                                  boost::shared_ptr<resolver_delegate_factory> res_delegate_factory)
+  simple_connection_factory_pimpl(std::shared_ptr<connection_delegate_factory> conn_delegate_factory,
+                                  std::shared_ptr<resolver_delegate_factory> res_delegate_factory)
   : conn_delegate_factory_(conn_delegate_factory)
   , res_delegate_factory_(res_delegate_factory) {
     NETWORK_MESSAGE("simple_connection_factory_pimpl::simple_connection_factory_pimpl(...)");
   }
 
-  boost::shared_ptr<client_connection> create_connection(
+  std::shared_ptr<client_connection> create_connection(
       boost::asio::io_service & service,
       request_base const & request,
       client_options const & options) {
@@ -39,38 +40,36 @@ struct simple_connection_factory_pimpl {
     ::network::uri uri_ = http::uri(request);
     NETWORK_MESSAGE("destination: " << uri_);
     bool https = boost::algorithm::to_lower_copy(::network::scheme(uri_)) == "https";
-    boost::shared_ptr<client_connection> conn_;
-    conn_.reset(new (std::nothrow) http_async_connection(
+    return std::make_shared<http_async_connection>(
       res_delegate_factory_->create_resolver_delegate(service, options.cache_resolved()),
       conn_delegate_factory_->create_connection_delegate(service, https, options),
       service,
-      options.follow_redirects()));
-    return conn_;
+      options.follow_redirects());
   }
 
  private:
-  boost::shared_ptr<connection_delegate_factory> conn_delegate_factory_;
-  boost::shared_ptr<resolver_delegate_factory> res_delegate_factory_;
+  std::shared_ptr<connection_delegate_factory> conn_delegate_factory_;
+  std::shared_ptr<resolver_delegate_factory> res_delegate_factory_;
 };
 
 simple_connection_factory::simple_connection_factory() {
   NETWORK_MESSAGE("simple_connection_factory::simple_connection_factory()");
-  boost::shared_ptr<connection_delegate_factory> connection_delegate_factory_;
+  std::shared_ptr<connection_delegate_factory> connection_delegate_factory_;
   connection_delegate_factory_.reset(new (std::nothrow) connection_delegate_factory());
-  boost::shared_ptr<resolver_delegate_factory> resolver_delegate_factory_;
+  std::shared_ptr<resolver_delegate_factory> resolver_delegate_factory_;
   resolver_delegate_factory_.reset(new (std::nothrow) resolver_delegate_factory());
   pimpl.reset(new (std::nothrow) simple_connection_factory_pimpl(
     connection_delegate_factory_, resolver_delegate_factory_));
 }
 
-simple_connection_factory::simple_connection_factory(boost::shared_ptr<connection_delegate_factory> conn_delegate_factory,
-                                                     boost::shared_ptr<resolver_delegate_factory> res_delegate_factory)
+simple_connection_factory::simple_connection_factory(std::shared_ptr<connection_delegate_factory> conn_delegate_factory,
+                                                     std::shared_ptr<resolver_delegate_factory> res_delegate_factory)
 : pimpl(new (std::nothrow) simple_connection_factory_pimpl(conn_delegate_factory, res_delegate_factory))
 {
   NETWORK_MESSAGE("simple_connection_factory::simple_connection_factory(...)");
 }
 
-boost::shared_ptr<client_connection>
+std::shared_ptr<client_connection>
 simple_connection_factory::create_connection(boost::asio::io_service & service,
                                              request_base const & request,
                                              client_options const &options) {

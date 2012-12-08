@@ -60,7 +60,7 @@ public:
         return *this;
     }
 
-    builder &host(const boost::asio::ip::address_v6 &host) {
+  builder &host(const boost::asio::ip::address_v6 &host) {
         uri_.uri_.append("[");
         uri_.uri_.append(host.to_string());
         uri_.uri_.append("]");

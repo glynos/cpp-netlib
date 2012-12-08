@@ -7,9 +7,9 @@
 #ifndef NETWORK_PROTOCOL_HTTP_SERVER_IMPL_HPP_20120318
 #define NETWORK_PROTOCOL_HTTP_SERVER_IMPL_HPP_20120318
 
-#include <boost/function.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/thread/mutex.hpp>
+#include <functional>
+#include <memory>
+#include <thread>
 #include <boost/asio/ip/tcp.hpp>
 #include <network/protocol/http/server/impl/socket_options_setter.hpp>
 #include <network/protocol/http/server/options.hpp>
@@ -23,7 +23,7 @@ struct response;
 class sync_server_impl : protected socket_options_setter {
  public:
   sync_server_impl(server_options const &options,
-                   boost::function<void(request const &, response &)> handler);
+                   std::function<void(request const &, response &)> handler);
   void run();
   void stop();
   void listen();
@@ -33,10 +33,10 @@ class sync_server_impl : protected socket_options_setter {
   std::string address_, port_;
   boost::asio::io_service *service_;
   boost::asio::ip::tcp::acceptor *acceptor_;
-  boost::shared_ptr<sync_server_connection> new_connection_;
-  boost::mutex listening_mutex_;
+  std::shared_ptr<sync_server_connection> new_connection_;
+  std::mutex listening_mutex_;
   bool listening_, owned_service_;
-  boost::function<void(request const &, response &)> handler_;
+  std::function<void(request const &, response &)> handler_;
 
   void start_listening();
   void handle_accept(boost::system::error_code const &ec);

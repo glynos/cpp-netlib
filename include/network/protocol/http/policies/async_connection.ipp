@@ -72,7 +72,7 @@ network::http::simple_async_connection_manager(bool cache_resolved,
 
 boost::shared_ptr<network::http::client_connection>
 network::http::simple_async_connection_manager::get_connection(
-    boost::asio::io_service & service,
+    asio::io_service & service,
     request_base const & request) {
   // TODO move out calls to new to a factory, taken as a parameter at
   // construction time so that we are not tied to actual hard-coded

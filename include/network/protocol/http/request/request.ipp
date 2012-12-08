@@ -66,8 +66,8 @@ struct request_pimpl {
     headers_.insert(std::make_pair(name, value));
   }
 
-  void get_headers(boost::function<bool(std::string const &, std::string const &)> predicate,
-                   boost::function<void(std::string const &, std::string const &)> inserter) const {
+  void get_headers(std::function<bool(std::string const &, std::string const &)> predicate,
+                   std::function<void(std::string const &, std::string const &)> inserter) const {
     headers_type::const_iterator it = headers_.begin();
     for (; it != headers_.end(); ++it) {
       if (predicate(it->first, it->second)) {
@@ -76,7 +76,7 @@ struct request_pimpl {
     }
   }
 
-  void get_headers(boost::function<void(std::string const &, std::string const &)> inserter) const {
+  void get_headers(std::function<void(std::string const &, std::string const &)> inserter) const {
     headers_type::const_iterator it = headers_.begin();
     for (; it != headers_.end(); ++it) {
       inserter(it->first, it->second);
@@ -84,7 +84,7 @@ struct request_pimpl {
   }
 
   void get_headers(std::string const &name,
-                   boost::function<void(std::string const &, std::string const &)> inserter) const {
+                   std::function<void(std::string const &, std::string const &)> inserter) const {
     headers_type::const_iterator it = headers_.begin();
     for (; it != headers_.end(); ++it) {
       if (it->first == name) {
@@ -184,16 +184,6 @@ request& request::operator=(request rhs) {
   return *this;
 }
 
-bool request::equals(request const &other) const {
-  return pimpl_->equals(*other.pimpl_) &&
-         request_storage_base::equals(other);
-}
-
-void request::swap(request & other) {
-  std::swap(this->pimpl_, other.pimpl_);
-  request_storage_base::swap(other);
-}
-
 // From message_base...
 // Mutators
 void request::set_destination(std::string const & destination) {
@@ -233,15 +223,15 @@ void request::get_source(std::string & source) const {
   pimpl_->get_source(source);
 }
 
-void request::get_headers(boost::function<void(std::string const &, std::string const &)> inserter) const {
+void request::get_headers(std::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl_->get_headers(inserter);
 }
 
-void request::get_headers(std::string const & name, boost::function<void(std::string const &, std::string const &)> inserter) const {
+void request::get_headers(std::string const & name, std::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl_->get_headers(name, inserter);
 }
 
-void request::get_headers(boost::function<bool(std::string const &, std::string const &)> predicate, boost::function<void(std::string const &, std::string const &)> inserter) const {
+void request::get_headers(std::function<bool(std::string const &, std::string const &)> predicate, std::function<void(std::string const &, std::string const &)> inserter) const {
   pimpl_->get_headers(predicate, inserter);
 }
 
@@ -249,15 +239,15 @@ void request::get_body(std::string & body) const {
   this->flatten(body);
 }
 
-void request::get_body(boost::function<void(boost::iterator_range<char const *>)> chunk_reader, size_t size) const {
-  boost::scoped_array<char> local_buffer(new (std::nothrow) char[size]);
-  size_t bytes_read = this->read(local_buffer.get(),
-                                 pimpl_->read_offset(),
-                                 size);
+void request::get_body(std::function<void(std::string::const_iterator, size_t)> chunk_reader, size_t size) const {
+  std::string local_buffer;
+  size_t bytes_read = this->read(local_buffer, pimpl_->read_offset(), size);
   pimpl_->advance_read_offset(bytes_read);
-  char const * begin = local_buffer.get();
-  char const * end = local_buffer.get() + bytes_read;
-  chunk_reader(boost::make_iterator_range(begin, end));
+  chunk_reader(local_buffer.cbegin(), bytes_read);
+}
+
+void request::get_body(std::function<void(std::string::const_iterator, size_t)> chunk_reader) const {
+  this->get_body(chunk_reader, NETWORK_DEFAULT_CHUNK_SIZE);
 }
 
 // From request_base...
@@ -271,7 +261,7 @@ void request::set_status(std::string const & status) {
 void request::set_status_message(std::string const & status_message) {
 }
 
-void request::set_body_writer(boost::function<void(char*, size_t)> writer) {
+void request::set_body_writer(std::function<void(char*, size_t)> writer) {
 }
 
 void request::set_uri(std::string const &uri) {
@@ -314,12 +304,6 @@ void request::get_status(std::string & status) const {
 }
 
 void request::get_status_message(std::string & status_message) const {
-}
-
-void request::get_body(boost::function<void(char*, size_t)> chunk_reader) const {
-}
-
-void request::get_body(std::string const & body) const {
 }
 
 }  // namespace http

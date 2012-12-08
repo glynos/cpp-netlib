@@ -101,7 +101,7 @@ inline
 std::string decoded(const std::string &input) {
     std::string decoded;
     decode(input, std::back_inserter(decoded));
-    return std::move(decoded);
+    return decoded;
 }
 } // namespace network
 

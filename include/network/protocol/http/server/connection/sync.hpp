@@ -28,7 +28,7 @@
 #include <boost/array.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
-#include <boost/bind.hpp>
+#include <functional>
 
 namespace network { namespace http {
 
@@ -40,7 +40,7 @@ namespace network { namespace http {
 class sync_server_connection : public boost::enable_shared_from_this<sync_server_connection> {
  public:
   sync_server_connection(boost::asio::io_service & service,
-             boost::function<void(request const &, response &)> handler)
+             std::function<void(request const &, response &)> handler)
   : service_(service)
   , handler_(handler)
   , socket_(service_)
@@ -294,9 +294,13 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
     bool done = false;
     while (!done) {
       buffer_type buffer;
-      response_.get_body([&done, &buffer](boost::iterator_range<char const *> data) {
-        if (boost::empty(data)) done = true;
-        else std::copy(std::begin(data), std::end(data), buffer.begin());
+      response_.get_body([&done, &buffer](std::string::const_iterator start, size_t length) {
+        if (!length) done = true;
+        else {
+          std::string::const_iterator past_end = start;
+          std::advance(past_end, length);
+          std::copy(start, past_end, buffer.begin());
+        }
       }, buffer.size());
       if (!done) output_buffers_.emplace_back(std::move(buffer));
     }
@@ -312,7 +316,7 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
   }
 
   boost::asio::io_service & service_;
-  boost::function<void(request const &, response &)> handler_;
+  std::function<void(request const &, response &)> handler_;
   boost::asio::ip::tcp::socket socket_;
   boost::asio::io_service::strand wrapper_;
 

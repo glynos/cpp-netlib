@@ -14,7 +14,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 #define NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 
-#include <boost/asio/buffer.hpp>
+#include <asio/buffer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <network/protocol/http/message/header.hpp>
 
@@ -53,10 +53,10 @@ struct basic_response : response_base {
   /// Convert the reply into a vector of buffers. The buffers do not own the
   /// underlying memory blocks, therefore the reply object must remain valid and
   /// not be changed until the write operation has completed.
-  std::vector<boost::asio::const_buffer> to_buffers() {
+  std::vector<asio::const_buffer> to_buffers() {
     // FIXME: Rethink this and do this asynchronously.
-    using boost::asio::const_buffer;
-    using boost::asio::buffer;
+    using asio::const_buffer;
+    using asio::buffer;
     static const char name_value_separator[] = { ':', ' ' };
     static const char crlf[] = { '\r', '\n' };
     std::vector<const_buffer> buffers;
@@ -231,8 +231,8 @@ struct basic_response : response_base {
       }
   }
 
-  boost::asio::const_buffer to_buffer(status_type status) {
-    using boost::asio::buffer;
+  asio::const_buffer to_buffer(status_type status) {
+    using asio::buffer;
     static const String ok =
       "HTTP/1.0 200 OK\r\n";
     static const String created =

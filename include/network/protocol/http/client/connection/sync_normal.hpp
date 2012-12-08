@@ -37,21 +37,21 @@ struct http_sync_connection : public virtual sync_connection_base<Tag, version_m
   }
 
   void send_request_impl(string_type const & method, basic_request<Tag> const & request_) {
-    boost::asio::streambuf request_buffer;
+    asio::streambuf request_buffer;
     linearize(request_, method, version_major, version_minor, 
               std::ostreambuf_iterator<typename char_<Tag>::type>(&request_buffer));
     connection_base::send_request_impl(socket_, method, request_buffer);
   }
 
-  void read_status(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+  void read_status(basic_response<Tag> & response_, asio::streambuf & response_buffer) {
     connection_base::read_status(socket_, response_, response_buffer);
   }
 
-  void read_headers(basic_response<Tag> & response, boost::asio::streambuf & response_buffer) {
+  void read_headers(basic_response<Tag> & response, asio::streambuf & response_buffer) {
     connection_base::read_headers(socket_, response, response_buffer);
   }
 
-  void read_body(basic_response<Tag> & response_, boost::asio::streambuf & response_buffer) {
+  void read_body(basic_response<Tag> & response_, asio::streambuf & response_buffer) {
     connection_base::read_body(socket_, response_, response_buffer);
     typename headers_range<basic_response<Tag> >::type connection_range =
         headers(response_)["Connection"];
@@ -66,8 +66,8 @@ struct http_sync_connection : public virtual sync_connection_base<Tag, version_m
 
   void close_socket() {
     if (!is_open()) return;
-    boost::system::error_code ignored;
-    socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
+    asio::error_code ignored;
+    socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
     if (ignored) return;
     socket_.close(ignored);
   }
@@ -76,7 +76,7 @@ struct http_sync_connection : public virtual sync_connection_base<Tag, version_m
 
   resolver_type & resolver_;
   resolver_function_type resolve_;
-  boost::asio::ip::tcp::socket socket_;
+  asio::ip::tcp::socket socket_;
 };
 
 } // namespace impl

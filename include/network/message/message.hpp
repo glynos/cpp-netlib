@@ -9,71 +9,68 @@
 
 #include <string>
 #include <map>
-#include <boost/function.hpp>
+#include <functional>
 #include <network/message/message_base.hpp>
 #include <boost/shared_container_iterator.hpp>
 
 namespace network {
 
-struct message_pimpl;
+  struct message_pimpl;
 
-// The common message type.
-struct message : message_base {
-  // Nested types
-  typedef boost::iterator_range<
+  // The common message type.
+  struct message : message_base {
+    // Nested types
+    typedef boost::iterator_range<
     std::multimap<std::string, std::string>::const_iterator>
     headers_range;
 
-  // Constructors
-  message();
-  message(message const & other);
+    // Constructors
+    message();
+    message(message const & other);
+    message(message && other) = default;
 
-  // Assignment
-  message & operator=(message other);
+    // Assignment
+    message& operator=(message const &other);
+    message& operator=(message &&other);
 
-  // Mutators
-  virtual void set_destination(std::string const & destination);
-  virtual void set_source(std::string const & source);
-  virtual void append_header(std::string const & name,
-                             std::string const & value);
-  virtual void remove_headers(std::string const & name);
-  virtual void remove_headers();
-  virtual void set_body(std::string const & body);
-  virtual void append_body(std::string const & data);
+    // Mutators
+    virtual void set_destination(std::string const & destination);
+    virtual void set_source(std::string const & source);
+    virtual void append_header(std::string const & name,
+                               std::string const & value);
+    virtual void remove_headers(std::string const & name);
+    virtual void remove_headers();
+    virtual void set_body(std::string const & body);
+    virtual void append_body(std::string const & data);
 
-  // Retrievers
-  virtual void get_destination(std::string & destination) const;
-  virtual void get_source(std::string & source) const;
-  virtual void get_headers(
-      boost::function<void(std::string const &, std::string const &)> inserter) const;
-  virtual void get_headers(
-      std::string const & name,
-      boost::function<void(std::string const &, std::string const &)> inserter) const;
-  virtual void get_headers(
-      boost::function<bool(std::string const &, std::string const &)> predicate,
-      boost::function<void(std::string const &, std::string const &)> inserter) const;
-  virtual void get_body(std::string & body) const;
-  virtual void get_body(
-      boost::function<void(boost::iterator_range<char const *>)> chunk_reader,
-      size_t size) const;
+    // Retrievers
+    virtual void get_destination(std::string & destination) const;
+    virtual void get_source(std::string & source) const;
+    virtual void get_headers(std::function<void(std::string const &, std::string const &)> inserter) const;
+    virtual void get_headers(std::string const & name,
+                             std::function<void(std::string const &, std::string const &)> inserter) const;
+    virtual void get_headers(std::function<bool(std::string const &, std::string const &)> predicate,
+                             std::function<void(std::string const &, std::string const &)> inserter) const;
+    virtual void get_body(std::string & body) const;
+    virtual void get_body(std::function<void(std::string::const_iterator, size_t)> chunk_reader, size_t size) const;
 
-  void swap(message & other);
+    void swap(message & other);
 
-  // Destructor
-  virtual ~message();
- private:
-  message_pimpl * pimpl;
-};
+    // Destructor
+    virtual ~message();
+  private:
+    message_pimpl * pimpl;
+  };
 
-inline void swap(message & left, message & right) {
+  inline void swap(message & left, message & right) {
     left.swap(right);
-}
+  }
 
-template <class Directive>
-message_base & operator<< (message_base & msg, Directive directive) {
-  directive(msg);
-  return msg;
-}
+  template <class Directive>
+  message_base & operator<< (message_base & msg, Directive directive) {
+    directive(msg);
+    return msg;
+  }
 
 }  // namespace network
 

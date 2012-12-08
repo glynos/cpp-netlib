@@ -7,7 +7,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_RESOLVER_DELEGATE_FACTORY_HPP_20110930
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_RESOLVER_DELEGATE_FACTORY_HPP_20110930
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <network/protocol/http/request/request_base.hpp>
 #include <network/protocol/http/client/connection/resolver_delegate.hpp>
 
@@ -15,7 +15,7 @@ namespace network { namespace http {
 
 struct resolver_delegate_factory {
   resolver_delegate_factory();
-  virtual boost::shared_ptr<resolver_delegate> create_resolver_delegate(
+  virtual std::shared_ptr<resolver_delegate> create_resolver_delegate(
       boost::asio::io_service & service,
       bool cache_resolved);
   virtual ~resolver_delegate_factory();

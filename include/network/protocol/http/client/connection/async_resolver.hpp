@@ -7,7 +7,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_ASYNC_RESOLVER_20111126
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_ASYNC_RESOLVER_20111126
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <network/protocol/http/client/connection/resolver_delegate.hpp>
 
 namespace network {
@@ -28,7 +28,7 @@ struct async_resolver : resolver_delegate {
  protected:
   // We need a shared_ptr because the pimpl may live on long after the resolver
   // delegate (instances of this type) is actually destroyed.
-  boost::shared_ptr<async_resolver_pimpl> pimpl;
+  std::shared_ptr<async_resolver_pimpl> pimpl;
 };
 
 } // namespace http

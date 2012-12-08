@@ -20,21 +20,17 @@ add_executable(hello_world_client http/hello_world_client.cpp)
 #  add_executable(fileserver http/fileserver.cpp)
 #endif (UNIX)
 set(BOOST_CLIENT_LIBS
-    ${Boost_CHRONO_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
 	${Boost_FILESYSTEM_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${Boost_REGEX_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
 	)
 set(BOOST_SERVER_LIBS
-    ${Boost_CHRONO_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
 	${Boost_FILESYSTEM_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
 	)
 	
 target_link_libraries(uri_builder

@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE(request_storage_flow) {
   static char data[] =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae ante sed nunc dapibus convallis in at neque. Vestibulum sed congue nunc. Sed tempus lorem non dui ultrices porttitor porta ligula venenatis. Sed a orci gravida tellus condimentum laoreet. Vivamus pulvinar, tortor eu adipiscing tempus, dolor urna tincidunt enim, id pretium eros ante quis dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In hac habitasse platea dictumst. Maecenas mattis metus.";
   simple.append(data, sizeof(data));
-  char output[sizeof(data)];
+  std::string output;
   size_t bytes_read = simple.read(output, 0, sizeof(data));
   BOOST_CHECK_EQUAL(bytes_read, sizeof(data));
   std::string flattened;
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_CASE(request_storage_copy) {
   request_test original(64);
   static char quick_brown[] = "The quick brown fox jumps over the lazy dog.";
   original.append(quick_brown, sizeof(quick_brown));
-  char output[sizeof(quick_brown)];
+  std::string output;
   request_test copy(original);
   size_t bytes_read = copy.read(output, 0, sizeof(quick_brown));
   BOOST_CHECK_EQUAL(bytes_read, sizeof(quick_brown));

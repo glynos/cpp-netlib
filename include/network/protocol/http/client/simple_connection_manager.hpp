@@ -7,7 +7,7 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_SIMPLE_CONNECTION_MANAGER_HPP_20111105
 #define NETWORK_PROTOCOL_HTTP_CLIENT_SIMPLE_CONNECTION_MANAGER_HPP_20111105
 
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 #include <network/protocol/http/client/connection_manager.hpp>
 #include <network/protocol/http/client/connection/connection_factory.hpp>
 
@@ -49,10 +49,10 @@ struct simple_connection_manager : connection_manager {
    *   shared_ptr<client_connection> -- either an already-generated object
    *   or a newly constructed connection configured to perform the request.
    */
-  virtual boost::shared_ptr<client_connection> get_connection(
+  virtual std::shared_ptr<client_connection> get_connection(
       boost::asio::io_service & service,
       request_base const & request,
-      client_options const & options);  // override
+      client_options const & options) override;
 
   /** reset
    *
@@ -60,7 +60,7 @@ struct simple_connection_manager : connection_manager {
    * used by the connection manager to perform its functions. In the case of
    * this simple_connection_manager, the call to reset will not do anything.
    */
-  virtual void reset();  // override
+  virtual void reset() override;
 
   /** clear_resolved_cache
    *
@@ -70,10 +70,10 @@ struct simple_connection_manager : connection_manager {
 
   /** Destructor.
    */
-  virtual ~simple_connection_manager();  // override
+  virtual ~simple_connection_manager() override;
 
  protected:
-  boost::scoped_ptr<simple_connection_manager_pimpl> pimpl;
+  std::unique_ptr<simple_connection_manager_pimpl> pimpl;
 
  private:
   /// Disabled copy constructor.

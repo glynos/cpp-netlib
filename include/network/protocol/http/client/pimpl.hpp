@@ -70,7 +70,7 @@ struct basic_client_impl
         : base_type(cache_resolved, follow_redirect, certificate_filename, verify_path)
     {}
 
-    basic_client_impl(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service, optional<string_type> const & certificate_filename, optional<string_type> const & verify_path)
+    basic_client_impl(bool cache_resolved, bool follow_redirect, asio::io_service & service, optional<string_type> const & certificate_filename, optional<string_type> const & verify_path)
         : base_type(cache_resolved, follow_redirect, service, certificate_filename, verify_path)
     {}
 

@@ -8,7 +8,7 @@
 #define NETWORK_PROTOCOL_HTTP_CLIENT_MACROS_HPP_20110430
 
 #include <boost/range/iterator_range.hpp>
-#include <boost/system/error_code.hpp>
+#include <boost/asio/placeholders.hpp>
 
 #ifndef NETWORK_HTTP_BODY_CALLBACK
 #define NETWORK_HTTP_BODY_CALLBACK(function_name, range_name, error_name) \

@@ -7,8 +7,8 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819
 
+#include <memory>
 #include <network/protocol/http/client/connection/connection_delegate.hpp>
-#include <boost/scoped_ptr.hpp>
 
 namespace boost { namespace asio {
 
@@ -26,16 +26,16 @@ struct normal_delegate : connection_delegate {
 
   virtual void connect(boost::asio::ip::tcp::endpoint & endpoint,
                        std::string const &host,
-                       boost::function<void(boost::system::error_code const &)> handler);
+                       std::function<void(boost::system::error_code const &)> handler);
   virtual void write(boost::asio::streambuf & command_streambuf,
-                     boost::function<void(boost::system::error_code const &, size_t)> handler);
+                     std::function<void(boost::system::error_code const &, size_t)> handler);
   virtual void read_some(boost::asio::mutable_buffers_1 const & read_buffer,
-                         boost::function<void(boost::system::error_code const &, size_t)> handler);
+                         std::function<void(boost::system::error_code const &, size_t)> handler);
   ~normal_delegate();
 
  private:
   boost::asio::io_service & service_;
-  boost::scoped_ptr<boost::asio::ip::tcp::socket> socket_;
+  std::unique_ptr<boost::asio::ip::tcp::socket> socket_;
 
   normal_delegate(normal_delegate const &);  // = delete
   normal_delegate& operator=(normal_delegate);  // = delete

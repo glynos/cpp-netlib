@@ -7,7 +7,12 @@
 #ifndef NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_ASYNC_NORMAL_IPP_20111123
 #define NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_ASYNC_NORMAL_IPP_20111123
 
+#include <memory>
+#include <utility>
+#include <boost/asio/error.hpp>
+#include <boost/asio/strand.hpp>
 #include <boost/asio/placeholders.hpp>
+#include <boost/bind.hpp>
 #include <network/protocol/http/client/connection/async_normal.hpp>
 #include <network/protocol/http/request.hpp>
 #include <network/protocol/http/response.hpp>
@@ -15,7 +20,6 @@
 #include <network/protocol/http/client/connection/resolver_delegate.hpp>
 #include <network/protocol/http/algorithms/linearize.hpp>
 #include <network/protocol/http/impl/access.hpp>
-#include <boost/asio/strand.hpp>
 #include <network/detail/debug.hpp>
 #ifdef NETWORK_ENABLE_HTTPS
 #include <boost/asio/ssl/error.hpp>
@@ -23,9 +27,7 @@
 
 namespace network { namespace http {
 
-namespace placeholders = boost::asio::placeholders;
-
-struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_connection_pimpl>
+struct http_async_connection_pimpl : std::enable_shared_from_this<http_async_connection_pimpl>
 {
   typedef http_async_connection::callback_type body_callback_function_type;
   typedef resolver_delegate::resolver_iterator resolver_iterator;
@@ -33,8 +35,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   typedef http_async_connection_pimpl this_type;
 
   http_async_connection_pimpl(
-    boost::shared_ptr<resolver_delegate> resolver_delegate,
-    boost::shared_ptr<connection_delegate> connection_delegate,
+    std::shared_ptr<resolver_delegate> resolver_delegate,
+    std::shared_ptr<connection_delegate> connection_delegate,
     boost::asio::io_service & io_service,
     bool follow_redirect)
   :
@@ -66,6 +68,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     boost::uint16_t port_ = port(request);
     NETWORK_MESSAGE("port: " << port_);
     this->host_ = host(request);
+    
     resolver_delegate_->resolve(
         this->host_,
         port_,
@@ -76,14 +79,14 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                 port_,
                 get_body,
                 callback,
-                _1,
-                _2)));
+                boost::asio::placeholders::error,
+                boost::asio::placeholders::bytes_transferred)));
     return response_;
   }
 
   http_async_connection_pimpl * clone() {
     NETWORK_MESSAGE("http_async_connection_pimpl::clone()");
-    return new (std::nothrow) http_async_connection_pimpl(
+    return new http_async_connection_pimpl(
         this->resolver_delegate_,
         this->connection_delegate_,
         request_strand_.get_io_service(),
@@ -115,13 +118,13 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     NETWORK_MESSAGE("http_async_connection_pimpl::set_errors(...)");
     NETWORK_MESSAGE("error: " << ec);
     boost::system::system_error error(ec);
-    this->version_promise.set_exception(boost::copy_exception(error));
-    this->status_promise.set_exception(boost::copy_exception(error));
-    this->status_message_promise.set_exception(boost::copy_exception(error));
-    this->headers_promise.set_exception(boost::copy_exception(error));
-    this->source_promise.set_exception(boost::copy_exception(error));
-    this->destination_promise.set_exception(boost::copy_exception(error));
-    this->body_promise.set_exception(boost::copy_exception(error));
+    this->version_promise.set_exception(std::make_exception_ptr(error));
+    this->status_promise.set_exception(std::make_exception_ptr(error));
+    this->status_message_promise.set_exception(std::make_exception_ptr(error));
+    this->headers_promise.set_exception(std::make_exception_ptr(error));
+    this->source_promise.set_exception(std::make_exception_ptr(error));
+    this->destination_promise.set_exception(std::make_exception_ptr(error));
+    this->body_promise.set_exception(std::make_exception_ptr(error));
     NETWORK_MESSAGE("promise+future exceptions set.");
   }
 
@@ -138,6 +141,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       NETWORK_MESSAGE("trying connection to: "
                             << iter->endpoint().address() << ":" << port);
       boost::asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
+      
       connection_delegate_->connect(
           endpoint,
           this->host_,
@@ -150,7 +154,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                   callback,
                   std::make_pair(++iter,
                                  resolver_iterator()),
-                  placeholders::error)));
+                  boost::asio::placeholders::error)));
     } else {
       NETWORK_MESSAGE("error encountered while resolving.");
       set_errors(ec ? ec : boost::asio::error::host_not_found);
@@ -167,6 +171,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       NETWORK_MESSAGE("connected successfully");
       BOOST_ASSERT(connection_delegate_.get() != 0);
       NETWORK_MESSAGE("scheduling write...");
+      
       connection_delegate_->write(command_streambuf,
                        request_strand_.wrap(
                            boost::bind(
@@ -174,14 +179,15 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                this_type::shared_from_this(),
                                get_body,
                                callback,
-                               placeholders::error,
-                               placeholders::bytes_transferred)));
+                               boost::asio::placeholders::error,
+                               boost::asio::placeholders::bytes_transferred)));
     } else {
       NETWORK_MESSAGE("connection unsuccessful");
       if (!boost::empty(endpoint_range)) {
         resolver_iterator iter = boost::begin(endpoint_range);
         NETWORK_MESSAGE("trying: " << iter->endpoint().address() << ":" << port);
         boost::asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
+        
         connection_delegate_->connect(endpoint,
                            this->host_,
                            request_strand_.wrap(
@@ -193,7 +199,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                    callback,
                                    std::make_pair(++iter,
                                                   resolver_iterator()),
-                                   placeholders::error)));
+                                   boost::asio::placeholders::error)));
       } else {
         set_errors(ec ? ec : boost::asio::error::host_not_found);
       }
@@ -211,6 +217,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     NETWORK_MESSAGE("http_async_connection_pimpl::handle_sent_request(...)");
     if (!ec) {
       NETWORK_MESSAGE("request sent successfuly; scheduling partial read...");
+      
       connection_delegate_->read_some(
           boost::asio::mutable_buffers_1(this->part.c_array(),
                                          this->part.size()),
@@ -218,8 +225,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
               boost::bind(&this_type::handle_received_data,
                           this_type::shared_from_this(),
                           version, get_body, callback,
-                          placeholders::error,
-                          placeholders::bytes_transferred)));
+                          boost::asio::placeholders::error,
+                          boost::asio::placeholders::bytes_transferred)));
     } else {
       NETWORK_MESSAGE("request sent unsuccessfully; setting errors");
       set_errors(ec);
@@ -244,6 +251,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     if (!ec || ec == boost::asio::error::eof || is_short_read_error) {
       NETWORK_MESSAGE("processing data chunk, no error encountered so far...");
       boost::logic::tribool parsed_ok;
+      
       size_t remainder;
       switch(state) {
         case version:
@@ -254,8 +262,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                           &this_type::handle_received_data,
                                           this_type::shared_from_this(),
                                           version, get_body, callback,
-                                          placeholders::error,
-                                          placeholders::bytes_transferred)),
+                                          boost::asio::placeholders::error,
+                                          boost::asio::placeholders::bytes_transferred)),
                                   bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status:
@@ -266,8 +274,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                          &this_type::handle_received_data,
                                          this_type::shared_from_this(),
                                          status, get_body, callback,
-                                         placeholders::error,
-                                         placeholders::bytes_transferred)),
+                                         boost::asio::placeholders::error,
+                                         boost::asio::placeholders::bytes_transferred)),
                                  bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status_message:
@@ -279,7 +287,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                   &this_type::handle_received_data,
                   this_type::shared_from_this(),
                   status_message, get_body, callback,
-                  placeholders::error, placeholders::bytes_transferred
+                  boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
                   )
                 ),
               bytes_transferred
@@ -298,7 +306,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                   &this_type::handle_received_data,
                   this_type::shared_from_this(),
                   headers, get_body, callback,
-                  placeholders::error, placeholders::bytes_transferred
+                  boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
                   )
                 ),
               bytes_transferred
@@ -350,8 +358,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                 body,
                                 get_body,
                                 callback,
-                                placeholders::error,
-                                placeholders::bytes_transferred)));
+                                boost::asio::placeholders::error,
+                                boost::asio::placeholders::bytes_transferred)));
           } else {
             NETWORK_MESSAGE("no callback provided, appending to body...");
             // Here we handle the body data ourself and append to an
@@ -362,7 +370,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                   &this_type::handle_received_data,
                   this_type::shared_from_this(),
                   body, get_body, callback,
-                  placeholders::error, placeholders::bytes_transferred
+                  boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred
                   )
                 ),
               remainder);
@@ -426,8 +434,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                           body,
                           get_body,
                           callback,
-                          placeholders::error,
-                          placeholders::bytes_transferred)));
+                          boost::asio::placeholders::error,
+                          boost::asio::placeholders::bytes_transferred)));
             } else {
               NETWORK_MESSAGE("no callback provided, appending to body...");
               bool get_more = true;
@@ -451,8 +459,8 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                                          body,
                                          get_body,
                                          callback,
-                                         placeholders::error,
-                                         placeholders::bytes_transferred)),
+                                         boost::asio::placeholders::error,
+                                         boost::asio::placeholders::bytes_transferred)),
                                  bytes_transferred);
               } else {
                 std::string body_string;
@@ -477,19 +485,19 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
     } else {
       boost::system::system_error error(ec);
       NETWORK_MESSAGE("error encountered: " << error.what() << " (" << ec << ")");
-      this->source_promise.set_exception(boost::copy_exception(error));
-      this->destination_promise.set_exception(boost::copy_exception(error));
+      this->source_promise.set_exception(std::make_exception_ptr(error));
+      this->destination_promise.set_exception(std::make_exception_ptr(error));
       switch (state) {
         case version:
-          this->version_promise.set_exception(boost::copy_exception(error));
+          this->version_promise.set_exception(std::make_exception_ptr(error));
         case status:
-          this->status_promise.set_exception(boost::copy_exception(error));
+          this->status_promise.set_exception(std::make_exception_ptr(error));
         case status_message:
-          this->status_message_promise.set_exception(boost::copy_exception(error));
+          this->status_message_promise.set_exception(std::make_exception_ptr(error));
         case headers:
-          this->headers_promise.set_exception(boost::copy_exception(error));
+          this->headers_promise.set_exception(std::make_exception_ptr(error));
         case body:
-          this->body_promise.set_exception(boost::copy_exception(error));
+          this->body_promise.set_exception(std::make_exception_ptr(error));
           break;
         default:
           BOOST_ASSERT(false && "Bug, report this to the developers!");
@@ -536,7 +544,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   };
 
   boost::logic::tribool parse_version(
-      boost::function<void(boost::system::error_code, size_t)> callback,
+      std::function<void(boost::system::error_code, size_t)> callback,
       size_t bytes) {
     boost::logic::tribool parsed_ok;
     part_begin = part.begin();
@@ -568,14 +576,14 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                   << "\"");
 #endif
       std::runtime_error error("Invalid Version Part.");
-      version_promise.set_exception(boost::copy_exception(error));
-      status_promise.set_exception(boost::copy_exception(error));
+      version_promise.set_exception(std::make_exception_ptr(error));
+      status_promise.set_exception(std::make_exception_ptr(error));
       status_message_promise.set_exception(
-        boost::copy_exception(error));
-      headers_promise.set_exception(boost::copy_exception(error));
-      source_promise.set_exception(boost::copy_exception(error));
-      destination_promise.set_exception(boost::copy_exception(error));
-      body_promise.set_exception(boost::copy_exception(error));
+        std::make_exception_ptr(error));
+      headers_promise.set_exception(std::make_exception_ptr(error));
+      source_promise.set_exception(std::make_exception_ptr(error));
+      destination_promise.set_exception(std::make_exception_ptr(error));
+      body_promise.set_exception(std::make_exception_ptr(error));
     } else {
       partial_parsed.append(
         boost::begin(result_range),
@@ -591,7 +599,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   }
     
   boost::logic::tribool parse_status(
-      boost::function<void(boost::system::error_code, size_t)> callback,
+      std::function<void(boost::system::error_code, size_t)> callback,
       size_t bytes) {
     boost::logic::tribool parsed_ok;
      buffer_type::const_iterator part_end = part.begin();
@@ -624,13 +632,13 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                   << "\"");
 #endif
       std::runtime_error error("Invalid status part.");
-      status_promise.set_exception(boost::copy_exception(error));
+      status_promise.set_exception(std::make_exception_ptr(error));
       status_message_promise.set_exception(
-        boost::copy_exception(error));
-      headers_promise.set_exception(boost::copy_exception(error));
-      source_promise.set_exception(boost::copy_exception(error));
-      destination_promise.set_exception(boost::copy_exception(error));
-      body_promise.set_exception(boost::copy_exception(error));
+        std::make_exception_ptr(error));
+      headers_promise.set_exception(std::make_exception_ptr(error));
+      source_promise.set_exception(std::make_exception_ptr(error));
+      destination_promise.set_exception(std::make_exception_ptr(error));
+      body_promise.set_exception(std::make_exception_ptr(error));
     } else {
       partial_parsed.append(
         boost::begin(result_range),
@@ -646,7 +654,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   }
 
   boost::logic::tribool parse_status_message(
-      boost::function<void(boost::system::error_code, size_t)> callback,
+      std::function<void(boost::system::error_code, size_t)> callback,
       size_t bytes) {
     boost::logic::tribool parsed_ok;
      buffer_type::const_iterator part_end = part.begin();
@@ -678,11 +686,11 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
 #endif
       std::runtime_error error("Invalid status message part.");
       status_message_promise.set_exception(
-        boost::copy_exception(error));
-      headers_promise.set_exception(boost::copy_exception(error));
-      source_promise.set_exception(boost::copy_exception(error));
-      destination_promise.set_exception(boost::copy_exception(error));
-      body_promise.set_exception(boost::copy_exception(error));
+        std::make_exception_ptr(error));
+      headers_promise.set_exception(std::make_exception_ptr(error));
+      source_promise.set_exception(std::make_exception_ptr(error));
+      destination_promise.set_exception(std::make_exception_ptr(error));
+      body_promise.set_exception(std::make_exception_ptr(error));
     } else {
       partial_parsed.append(
         boost::begin(result_range),
@@ -752,7 +760,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
   }
 
   boost::fusion::tuple<boost::logic::tribool, size_t> parse_headers(
-      boost::function<void(boost::system::error_code, size_t)> callback,
+      std::function<void(boost::system::error_code, size_t)> callback,
       size_t bytes) {
     boost::logic::tribool parsed_ok;
     buffer_type::const_iterator part_end = part.begin();
@@ -785,10 +793,10 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
                   << boost::distance(result_range));
 #endif
       std::runtime_error error("Invalid header part.");
-      headers_promise.set_exception(boost::copy_exception(error));
-      body_promise.set_exception(boost::copy_exception(error));
-      source_promise.set_exception(boost::copy_exception(error));
-      destination_promise.set_exception(boost::copy_exception(error));
+      headers_promise.set_exception(std::make_exception_ptr(error));
+      body_promise.set_exception(std::make_exception_ptr(error));
+      source_promise.set_exception(std::make_exception_ptr(error));
+      destination_promise.set_exception(std::make_exception_ptr(error));
     } else {
       partial_parsed.append(boost::begin(result_range),
                   boost::end(result_range));
@@ -807,7 +815,7 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
       );
   }
 
-  void parse_body(boost::function<void(boost::system::error_code, size_t)> callback, size_t bytes) {
+  void parse_body(std::function<void(boost::system::error_code, size_t)> callback, size_t bytes) {
     // TODO: we should really not use a string for the partial body
     // buffer.
     partial_parsed.append(part_begin, bytes);
@@ -820,19 +828,19 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
 
   bool follow_redirect_;
   boost::asio::io_service::strand request_strand_;
-  boost::shared_ptr<resolver_delegate> resolver_delegate_;
-  boost::shared_ptr<connection_delegate> connection_delegate_;
+  std::shared_ptr<resolver_delegate> resolver_delegate_;
+  std::shared_ptr<connection_delegate> connection_delegate_;
   boost::asio::streambuf command_streambuf;
   std::string method;
   response_parser response_parser_;
-  boost::promise<std::string> version_promise;
-  boost::promise<boost::uint16_t> status_promise;
-  boost::promise<std::string> status_message_promise;
-  boost::promise<std::multimap<std::string, std::string> > headers_promise;
+  std::promise<std::string> version_promise;
+  std::promise<boost::uint16_t> status_promise;
+  std::promise<std::string> status_message_promise;
+  std::promise<std::multimap<std::string, std::string> > headers_promise;
   boost::optional<size_t> content_length_;
-  boost::promise<std::string> source_promise;
-  boost::promise<std::string> destination_promise;
-  boost::promise<std::string> body_promise;
+  std::promise<std::string> source_promise;
+  std::promise<std::string> destination_promise;
+  std::promise<std::string> body_promise;
   typedef boost::array<char, NETWORK_BUFFER_CHUNK> buffer_type;
   buffer_type part;
   buffer_type::const_iterator part_begin;
@@ -842,23 +850,23 @@ struct http_async_connection_pimpl : boost::enable_shared_from_this<http_async_c
 
 // END OF PIMPL DEFINITION
 
-http_async_connection::http_async_connection(boost::shared_ptr<resolver_delegate> resolver_delegate,
-                                             boost::shared_ptr<connection_delegate> connection_delegate,
+http_async_connection::http_async_connection(std::shared_ptr<resolver_delegate> resolver_delegate,
+                                             std::shared_ptr<connection_delegate> connection_delegate,
                                              boost::asio::io_service & io_service,
                                              bool follow_redirects)
-: pimpl(new (std::nothrow) http_async_connection_pimpl(resolver_delegate,
+: pimpl(new http_async_connection_pimpl(resolver_delegate,
                                                        connection_delegate,
                                                        io_service,
                                                        follow_redirects)) {}
 
-http_async_connection::http_async_connection(boost::shared_ptr<http_async_connection_pimpl> new_pimpl)
+http_async_connection::http_async_connection(std::shared_ptr<http_async_connection_pimpl> new_pimpl)
 : pimpl(new_pimpl) {}
 
 http_async_connection::~http_async_connection() {}
 
 http_async_connection * http_async_connection::clone() const {
-  boost::shared_ptr<http_async_connection_pimpl> new_pimpl(pimpl->clone());
-  return new (std::nothrow) http_async_connection(new_pimpl);
+  std::shared_ptr<http_async_connection_pimpl> new_pimpl(pimpl->clone());
+  return new http_async_connection(new_pimpl);
 }
 
 response http_async_connection::send_request(std::string const & method,

@@ -9,7 +9,7 @@
 
 #include <network/message/wrappers/headers.hpp>
 #include <network/message/message_base.hpp>
-#include <boost/function.hpp>
+#include <functional>
 
 namespace network {
 
