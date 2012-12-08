@@ -694,3 +694,17 @@ BOOST_AUTO_TEST_CASE(uri_unordered_set_test) {
     BOOST_REQUIRE(!uri_set.empty());
     BOOST_CHECK_EQUAL((*uri_set.begin()), network::uri("http://www.example.com/"));
 }
+
+BOOST_AUTO_TEST_CASE(issue_161_test) {
+    network::uri instance("http://www.example.com/path?param1=-&param2=some+plus+encoded+text&param3=~");
+    BOOST_REQUIRE(network::valid(instance));
+
+    std::map<std::string, std::string> queries;
+    network::query_map(instance, queries);
+    BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(3));
+    BOOST_CHECK_EQUAL(queries["param1"], "-");
+    BOOST_CHECK_EQUAL(queries["param2"], "some+plus+encoded+text");
+    BOOST_CHECK_EQUAL(queries["param3"], "~");
+    BOOST_CHECK_EQUAL(network::decoded(queries["param2"]), "some plus encoded text");
+}
+

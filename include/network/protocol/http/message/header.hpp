@@ -24,6 +24,7 @@ namespace network {
 namespace http {
 
 struct request_header {
+  typedef std::string string_type;
   std::string name, value;
 };
 
@@ -33,6 +34,7 @@ inline void swap(request_header & l, request_header & r) {
 }
 
 struct response_header {
+  typedef std::string string_type;
   std::string name, value;
 };
 
