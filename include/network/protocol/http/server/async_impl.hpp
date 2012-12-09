@@ -8,6 +8,7 @@
 #define NETWORK_PROTOCOL_HTTP_SERVER_ASYNC_IMPL_20120318
 
 #include <functional>
+#include <mutex>
 #include <boost/asio/ip/tcp.hpp>
 #include <network/protocol/http/server/options.hpp>
 #include <network/protocol/http/server/impl/socket_options_setter.hpp>

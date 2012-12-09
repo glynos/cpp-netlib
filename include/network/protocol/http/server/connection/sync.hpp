@@ -29,6 +29,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <functional>
+#include <mutex>
 
 namespace network { namespace http {
 
@@ -337,4 +338,3 @@ class sync_server_connection : public boost::enable_shared_from_this<sync_server
 } // namespace network
 
 #endif // NETWORK_HTTP_SERVER_SYNC_CONNECTION_HPP_
-

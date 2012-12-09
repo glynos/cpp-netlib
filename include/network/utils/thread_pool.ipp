@@ -17,7 +17,7 @@ namespace network { namespace utils {
   struct thread_pool_pimpl {
     thread_pool_pimpl(std::size_t threads = 1,
                       io_service_ptr io_service = io_service_ptr(),
-                      std::vector<std::thread> worker_threads = {})
+                      std::vector<std::thread> worker_threads = std::vector<std::thread>())
     : threads_(threads)
     , io_service_(io_service)
     , worker_threads_(std::move(worker_threads))
@@ -45,8 +45,10 @@ namespace network { namespace utils {
       commit = true;
     }
 
+#if !defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS)
     thread_pool_pimpl(thread_pool_pimpl const &) = delete;
     thread_pool_pimpl & operator=(thread_pool_pimpl const &) = delete;
+#endif // !defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS)
 
     thread_pool_pimpl(thread_pool_pimpl&& other) {
       other.swap(*this);

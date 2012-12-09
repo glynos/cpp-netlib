@@ -25,10 +25,14 @@ namespace network { namespace utils {
   struct thread_pool {
     thread_pool(std::size_t threads = 1,
                 io_service_ptr io_service = io_service_ptr(),
-                std::vector<std::thread> worker_threads = {});
+                std::vector<std::thread> worker_threads = std::vector<std::thread>());
+#if !defined(BOOST_NO_CXX11_DELETED_FUNCTIONS)
     thread_pool(thread_pool const&) = delete;
+#endif // !defined(BOOST_NO_CXX11_DELETEED_FUNCTIONS)
     thread_pool(thread_pool &&other);
+#if !defined(BOOST_NO_CXX11_DELETED_FUNCTIONS)
     thread_pool& operator=(thread_pool const&) = delete;
+#endif // !defined(BOOST_NO_CXX11_DELETEED_FUNCTIONS)
     thread_pool& operator=(thread_pool &&other);
     std::size_t const thread_count() const;
     void post(std::function<void()> f);

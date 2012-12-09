@@ -10,6 +10,7 @@
 #include <boost/range/iterator.hpp>
 #include <boost/optional.hpp>
 #include <network/message/message_base.hpp>
+#include <string>
 
 namespace network {
 

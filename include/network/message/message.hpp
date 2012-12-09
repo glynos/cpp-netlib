@@ -27,7 +27,9 @@ namespace network {
     // Constructors
     message();
     message(message const & other);
+#if !defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS)
     message(message && other) = default;
+#endif // !defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS)
 
     // Assignment
     message& operator=(message const &other);

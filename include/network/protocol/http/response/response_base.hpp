@@ -8,6 +8,7 @@
 #define NETWORK_PROTOCOL_HTTP_RESPONSE_BASE_HPP_20110930
 
 #include <network/message/message_base.hpp>
+#include <cstdint>
 
 namespace network { namespace http {
 

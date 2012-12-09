@@ -10,6 +10,7 @@
 #include <functional>
 #include <memory>
 #include <thread>
+#include <mutex>
 #include <boost/asio/ip/tcp.hpp>
 #include <network/protocol/http/server/impl/socket_options_setter.hpp>
 #include <network/protocol/http/server/options.hpp>
