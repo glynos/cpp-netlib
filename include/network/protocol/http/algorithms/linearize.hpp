@@ -34,7 +34,7 @@ struct linearize_header {
   BOOST_CONCEPT_REQUIRES(
       ((Header<ValueType>)),
       (string_type)
-  ) operator()(ValueType & header) {
+  ) operator()(ValueType const & header) {
       typedef std::ostringstream output_stream;
       typedef constants consts;
       output_stream header_line;
