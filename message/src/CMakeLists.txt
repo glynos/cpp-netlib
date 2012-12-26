@@ -16,8 +16,11 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
 endif()
 
 include_directories(${CPP-NETLIB_SOURCE_DIR}/uri/src ${CPP-NETLIB_SOURCE_DIR}/message/src)
-set(CPP-NETLIB_MESSAGE_SRCS message.cpp directives.cpp wrappers.cpp)
+
+set(CPP-NETLIB_MESSAGE_SRCS message.cpp)
 add_library(cppnetlib-message ${CPP-NETLIB_MESSAGE_SRCS})
+add_dependencies(cppnetlib-message cppnetlib-uri)
+target_link_libraries(cppnetlib-message cppnetlib-uri)
 foreach (src_file ${CPP-NETLIB_MESSAGE_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set_source_files_properties(${src_file}
@@ -27,3 +30,28 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
 endif()
 endforeach(src_file)
+
+set(CPP-NETLIB_MESSAGE_DIRECTIVES_SRCS directives.cpp)
+add_library(cppnetlib-message-directives ${CPP-NETLIB_MESSAGE_DIRECTIVES_SRCS})
+foreach (src_file ${CPP-NETLIB_MESSAGE_DIRECTIVES_SRCS})
+if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+endif()
+endforeach(src_file)
+
+set(CPP-NETLIB_MESSAGE_WRAPPERS_SRCS wrappers.cpp)
+add_library(cppnetlib-message-wrappers ${CPP-NETLIB_MESSAGE_WRAPPERS_SRCS})
+foreach (src_file ${CPP-NETLIB_MESSAGE_WRAPPERS_SRCS})
+if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+    set_source_files_properties(${src_file}
+        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+endif()
+endforeach(src_file)
+
