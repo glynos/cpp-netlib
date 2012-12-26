@@ -30,8 +30,8 @@ if( CPP-NETLIB_ALWAYS_LOGGING )
 endif()
 
 if( NOT CPP-NETLIB_DISABLE_LOGGING )
-  set( CPP-NETLIB_LOGGING_SRCS 
-    logging/logging.cpp 
+  set( CPP-NETLIB_LOGGING_SRCS
+    logging/logging.cpp
   )
   add_library(cppnetlib-logging ${CPP-NETLIB_LOGGING_SRCS})
   foreach (src_file ${CPP-NETLIB_LOGGING_SRCS})
@@ -40,24 +40,24 @@ if( NOT CPP-NETLIB_DISABLE_LOGGING )
       PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
   endif()
   endforeach(src_file)
-  
+
   # this library name is defined only if we created the target
   # if not then it will be empty
   set( CPP-NETLIB_LOGGING_LIB cppnetlib-logging )
-  
+
 endif()
 
-set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp uri/normalize.cpp)
-add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
-foreach (src_file ${CPP-NETLIB_URI_SRCS})
-if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-endif()
-endforeach(src_file)
+#set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp uri/normalize.cpp)
+#add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
+#foreach (src_file ${CPP-NETLIB_URI_SRCS})
+#if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+#    set_source_files_properties(${src_file}
+#        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+#elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+#    set_source_files_properties(${src_file}
+#        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+#endif()
+#endforeach(src_file)
 
 set(CPP-NETLIB_MESSAGE_SRCS message/message.cpp)
 add_library(cppnetlib-message ${CPP-NETLIB_MESSAGE_SRCS})
