@@ -7,8 +7,13 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 
-include_directories(${CPP-NETLIB_SOURCE_DIR}/include)
-include_directories(${CPP-NETLIB_SOURCE_DIR})
+include_directories(
+  ${CPP-NETLIB_SOURCE_DIR}/uri/src
+  ${CPP-NETLIB_SOURCE_DIR}/message/src
+  ${CPP-NETLIB_SOURCE_DIR}/logging/src
+  ${CPP-NETLIB_SOURCE_DIR}/include
+  ${CPP-NETLIB_SOURCE_DIR})
+
 if (OPENSSL_FOUND)
 include_directories(${OPENSSL_INCLUDE_DIR})
 endif()
@@ -24,78 +29,6 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++11 -stdlib=libc++")
   set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++11 -stdlib=libc++")
 endif()
-
-if( CPP-NETLIB_ALWAYS_LOGGING )
-  add_definitions( /D NETWORK_ENABLE_LOGGING )
-endif()
-
-if( NOT CPP-NETLIB_DISABLE_LOGGING )
-  set( CPP-NETLIB_LOGGING_SRCS
-    logging/logging.cpp
-  )
-  add_library(cppnetlib-logging ${CPP-NETLIB_LOGGING_SRCS})
-  foreach (src_file ${CPP-NETLIB_LOGGING_SRCS})
-  if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    set_source_files_properties(${src_file}
-      PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-  endif()
-  endforeach(src_file)
-
-  # this library name is defined only if we created the target
-  # if not then it will be empty
-  set( CPP-NETLIB_LOGGING_LIB cppnetlib-logging )
-
-endif()
-
-#set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp uri/normalize.cpp)
-#add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
-#foreach (src_file ${CPP-NETLIB_URI_SRCS})
-#if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-#    set_source_files_properties(${src_file}
-#        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-#elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-#    set_source_files_properties(${src_file}
-#        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-#endif()
-#endforeach(src_file)
-
-set(CPP-NETLIB_MESSAGE_SRCS message/message.cpp)
-add_library(cppnetlib-message ${CPP-NETLIB_MESSAGE_SRCS})
-add_dependencies(cppnetlib-message cppnetlib-uri)
-target_link_libraries(cppnetlib-message cppnetlib-uri)
-foreach (src_file ${CPP-NETLIB_MESSAGE_SRCS})
-if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-endif()
-endforeach(src_file)
-
-set(CPP-NETLIB_MESSAGE_DIRECTIVES_SRCS message/directives.cpp)
-add_library(cppnetlib-message-directives ${CPP-NETLIB_MESSAGE_DIRECTIVES_SRCS})
-foreach (src_file ${CPP-NETLIB_MESSAGE_DIRECTIVES_SRCS})
-if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-endif()
-endforeach(src_file)
-
-set(CPP-NETLIB_MESSAGE_WRAPPERS_SRCS message/wrappers.cpp)
-add_library(cppnetlib-message-wrappers ${CPP-NETLIB_MESSAGE_WRAPPERS_SRCS})
-foreach (src_file ${CPP-NETLIB_MESSAGE_WRAPPERS_SRCS})
-if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-endif()
-endforeach(src_file)
 
 set(CPP-NETLIB_HTTP_MESSAGE_SRCS http/request.cpp http/response.cpp)
 add_library(cppnetlib-http-message ${CPP-NETLIB_HTTP_MESSAGE_SRCS})
@@ -127,59 +60,59 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
 endif()
 endforeach(src_file)
 
-set(CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS server_request_parsers_impl.cpp)
-add_library(cppnetlib-http-server-parsers ${CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS})
-foreach (src_file ${CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS})
-if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-endif()
-endforeach(src_file)
-
-set(CPP-NETLIB_HTTP_SERVER_SRCS
-    http/server_async_impl.cpp
-    http/server_options.cpp
-    http/server_socket_options_setter.cpp
-    http/server_sync_impl.cpp
-    )
-add_library(cppnetlib-http-server ${CPP-NETLIB_HTTP_SERVER_SRCS})
-add_dependencies(cppnetlib-http-server
-  ${CPP-NETLIB_LOGGING_LIB}
-  cppnetlib-constants
-  cppnetlib-uri
-  cppnetlib-message
-  cppnetlib-message-wrappers
-  cppnetlib-message-directives
-  cppnetlib-http-message
-  cppnetlib-http-message-wrappers
-  cppnetlib-http-server-parsers
-  cppnetlib-utils-thread_pool
-  )
-target_link_libraries(cppnetlib-http-server
-  ${Boost_LIBRARIES}
-  ${CPP-NETLIB_LOGGING_LIB}
-  cppnetlib-constants
-  cppnetlib-uri
-  cppnetlib-message
-  cppnetlib-message-wrappers
-  cppnetlib-message-directives
-  cppnetlib-http-message
-  cppnetlib-http-message-wrappers
-  cppnetlib-http-server-parsers
-  cppnetlib-utils-thread_pool
-  )
-foreach (src_file ${CPP-NETLIB_HTTP_SERVER_SRCS})
-if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-endif()
-endforeach(src_file)
+#set(CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS server_request_parsers_impl.cpp)
+#add_library(cppnetlib-http-server-parsers ${CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS})
+#foreach (src_file ${CPP-NETLIB_HTTP_SERVER_PARSERS_SRCS})
+#if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+#    set_source_files_properties(${src_file}
+#        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+#elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+#    set_source_files_properties(${src_file}
+#        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+#endif()
+#endforeach(src_file)
+#
+#set(CPP-NETLIB_HTTP_SERVER_SRCS
+#    http/server_async_impl.cpp
+#    http/server_options.cpp
+#    http/server_socket_options_setter.cpp
+#    http/server_sync_impl.cpp
+#    )
+#add_library(cppnetlib-http-server ${CPP-NETLIB_HTTP_SERVER_SRCS})
+#add_dependencies(cppnetlib-http-server
+#  ${CPP-NETLIB_LOGGING_LIB}
+#  cppnetlib-constants
+#  cppnetlib-uri
+#  cppnetlib-message
+#  cppnetlib-message-wrappers
+#  cppnetlib-message-directives
+#  cppnetlib-http-message
+#  cppnetlib-http-message-wrappers
+#  cppnetlib-http-server-parsers
+#  cppnetlib-utils-thread_pool
+#  )
+#target_link_libraries(cppnetlib-http-server
+#  ${Boost_LIBRARIES}
+#  ${CPP-NETLIB_LOGGING_LIB}
+#  cppnetlib-constants
+#  cppnetlib-uri
+#  cppnetlib-message
+#  cppnetlib-message-wrappers
+#  cppnetlib-message-directives
+#  cppnetlib-http-message
+#  cppnetlib-http-message-wrappers
+#  cppnetlib-http-server-parsers
+#  cppnetlib-utils-thread_pool
+#  )
+#foreach (src_file ${CPP-NETLIB_HTTP_SERVER_SRCS})
+#if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+#    set_source_files_properties(${src_file}
+#        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+#elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+#    set_source_files_properties(${src_file}
+#        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
+#endif()
+#endforeach(src_file)
 
 set(CPP-NETLIB_HTTP_CLIENT_CONNECTIONS_SRCS
     http/client_connections.cpp
