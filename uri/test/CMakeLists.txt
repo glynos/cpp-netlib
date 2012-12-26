@@ -5,6 +5,7 @@
 
 
 #include_directories(${GTEST_INCLUDE_DIRS})
+include_directories(${CPP-NETLIB_SOURCE_DIR}/uri/src)
 
 if (Boost_FOUND)
   set(
@@ -20,10 +21,8 @@ if (Boost_FOUND)
     endif()
     add_executable(cpp-netlib-${test} ${test}.cpp)
     add_dependencies(cpp-netlib-${test} cppnetlib-uri)
-    message(STATUS ${Boost_FOUND})
-    message(STATUS ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
     target_link_libraries(cpp-netlib-${test}
-      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri)
+      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri)
     if (OPENSSL_FOUND)
       target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
     endif()
