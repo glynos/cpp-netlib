@@ -16,6 +16,14 @@ if (OPENSSL_FOUND)
     add_definitions(-DBOOST_NETWORK_ENABLE_HTTPS)
 endif()
 
+if( NOT CPP-NETLIB_DISABLE_LOGGING )
+  set( CPP-NETLIB_LOGGING_LIB cppnetlib-logging )
+endif()
+
+  # this library name is defined only if we created the target
+  # if not then it will be empty
+  set( CPP-NETLIB_LOGGING_LIB cppnetlib-logging )
+
 if (Boost_FOUND)
     # These are the internal (simple) tests.
     set ( MESSAGE_TESTS
@@ -77,6 +85,7 @@ if (Boost_FOUND)
             cppnetlib-message
             cppnetlib-message-wrappers
             cppnetlib-message-directives
+	    ${CPP-NETLIB_LOGGING_LIB}
             cppnetlib-http-message
             cppnetlib-http-message-wrappers
             cppnetlib-http-client
