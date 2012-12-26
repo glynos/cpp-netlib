@@ -3,21 +3,30 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+include_directories(${CPP-NETLIB_SOURCE_DIR}/uri/src)
+include_directories(${CPP-NETLIB_SOURCE_DIR}/message/src)
 
-set(
-  TESTS
-  message_test
-  )
-foreach (test ${TESTS})
-  add_executable(${test} ${test}.cpp)
-  add_dependencies(${test} message)
-  target_link_libraries(${test}
-    ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} uri)
-  if (OPENSSL_FOUND)
-    target_link_libraries(${test} ${OPENSSL_LIBRARIES})
-  endif()
-  set_target_properties(${test}
-    PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Uri_BINARY_DIR}/tests)
-  add_test(${test}
-    ${Uri_BINARY_DIR}/tests/${test})
-endforeach (test)
+if (Boost_FOUND)
+  set(
+    TESTS
+    message_test
+    message_transform_test
+    )
+  foreach (test ${TESTS})
+    if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+      set_source_files_properties(${test}.cpp
+	PROPERTIES COMPILE_FLAGS "-Wall")
+    endif()
+    add_executable(cpp-netlib-${test} ${test}.cpp)
+    add_dependencies(cpp-netlib-${test} cppnetlib-uri cppnetlib-message)
+    target_link_libraries(cpp-netlib-${test}
+      ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri cppnetlib-message)
+    if (OPENSSL_FOUND)
+      target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
+    endif()
+    set_target_properties(cpp-netlib-${test}
+      PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
+    add_test(cpp-netlib-${test}
+      ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
+  endforeach (test)
+endif (Boost_FOUND)
