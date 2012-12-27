@@ -6,11 +6,7 @@
 include_directories(${CPP-NETLIB_SOURCE_DIR}/concurrency/src)
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-  if (HAVE_STD11)
-    set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++11")
-  elseif (HAVE_STD0X)
-    set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++0x")
-  endif()
+  set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++11")
 elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   CHECK_CXX_COMPILER_FLAG(-std=c++11 HAVE_STD11)
   set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++11 -stdlib=libc++")
