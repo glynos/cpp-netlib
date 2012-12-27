@@ -1,11 +1,12 @@
 // Copyright 2010 Dean Michael Berris.
 // Copyright 2012 Google, Inc.
+// Copyright (c) Glyn Matthews 2012.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_UTILS_THREAD_POOL_HPP_20101020
-#define NETWORK_UTILS_THREAD_POOL_HPP_20101020
+#ifndef NETWORK_CONCURRENCY_THREAD_POOL_HPP_20101020
+#define NETWORK_CONCURRENCY_THREAD_POOL_HPP_20101020
 
 #include <cstddef>
 #include <thread>
@@ -14,7 +15,7 @@
 #include <vector>
 #include <boost/asio/io_service.hpp>
 
-namespace network { namespace utils {
+namespace network { namespace concurrency {
 
   typedef std::shared_ptr<boost::asio::io_service> io_service_ptr;
   typedef std::shared_ptr<std::vector<std::thread>> worker_threads_ptr;
@@ -46,7 +47,7 @@ namespace network { namespace utils {
     l.swap(r);
   }
 
-}  // namespace utils
+}  // namespace concurrency
 }  // namespace network
 
-#endif /* NETWORK_UTILS_THREAD_POOL_HPP_20101020 */
+#endif /* NETWORK_CONCURRENCY_THREAD_POOL_HPP_20101020 */

@@ -172,18 +172,6 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
 endif()
 endforeach(src_file)
 
-set(CPP-NETLIB_UTILS_THREAD_POOL_SRCS utils/thread_pool.cpp)
-add_library(cppnetlib-utils-thread_pool ${CPP-NETLIB_UTILS_THREAD_POOL_SRCS})
-foreach (src_file ${CPP-NETLIB_UTILS_THREAD_POOL_SRCS})
-if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    set_source_files_properties(${src_file}
-        PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
-endif()
-endforeach(src_file)
-
 set(CPP-NETLIB_CONSTANTS_SRCS constants.cpp)
 add_library(cppnetlib-constants ${CPP-NETLIB_CONSTANTS_SRCS})
 foreach (src_file ${CPP-NETLIB_CONSTANTS_SRCS})

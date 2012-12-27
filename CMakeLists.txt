@@ -113,3 +113,4 @@ message(STATUS "  CPP-NETLIB_DISABLE_LOGGING:   ${CPP-NETLIB_DISABLE_LOGGING}\t(
 add_subdirectory(uri)
 add_subdirectory(message)
 add_subdirectory(logging)
+add_subdirectory(concurrency)

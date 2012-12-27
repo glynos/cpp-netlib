@@ -1,18 +1,19 @@
 // Copyright 2011 Dean Michael Berris <dberris@google.com>.
 // Copyright 2011 Google, Inc.
+// Copyright (c) Glyn Matthews 2012.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_UTILS_THREAD_POOL_IPP_20111021
-#define NETWORK_UTILS_THREAD_POOL_IPP_20111021
+#ifndef NETWORK_CONCURRENCY_THREAD_POOL_IPP_20111021
+#define NETWORK_CONCURRENCY_THREAD_POOL_IPP_20111021
 
 #include <vector>
 #include <thread>
-#include <network/utils/thread_pool.hpp>
+#include <network/concurrency/thread_pool.hpp>
 #include <boost/scope_exit.hpp>
 
-namespace network { namespace utils {
+namespace network { namespace concurrency {
 
   struct thread_pool_pimpl {
     thread_pool_pimpl(std::size_t threads = 1,
@@ -109,7 +110,7 @@ namespace network { namespace utils {
     delete pimpl;
   }
 
-}  // namespace utils
+}  // namespace concurrency
 }  // namespace network
 
-#endif /* NETWORK_UTILS_THREAD_POOL_IPP_20111021 */
+#endif /* NETWORK_CONCURRENCY_THREAD_POOL_IPP_20111021 */
