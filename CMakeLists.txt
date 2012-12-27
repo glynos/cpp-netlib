@@ -86,11 +86,11 @@ if (Boost_FOUND)
       enable_testing()
       add_subdirectory(libs/network/test)
       if (NOT MSVC)
-        add_subdirectory(libs/mime/test)
+        #add_subdirectory(libs/mime/test)
       endif(NOT MSVC)
     endif()
     if(CPP-NETLIB_BUILD_EXAMPLES)
-      add_subdirectory(libs/network/example)
+      #add_subdirectory(libs/network/example)
     endif()
 endif(Boost_FOUND)
 
@@ -104,3 +104,12 @@ message(STATUS "  CPP-NETLIB_BUILD_TESTS:       ${CPP-NETLIB_BUILD_TESTS}\t(Buil
 message(STATUS "  CPP-NETLIB_BUILD_EXAMPLES:    ${CPP-NETLIB_BUILD_EXAMPLES}\t(Build the examples using cpp-netlib: ON, OFF)")
 message(STATUS "  CPP-NETLIB_ALWAYS_LOGGING:    ${CPP-NETLIB_ALWAYS_LOGGING}\t(Allow cpp-netlib to log debug messages even in non-debug mode: ON, OFF)")
 message(STATUS "  CPP-NETLIB_DISABLE_LOGGING:   ${CPP-NETLIB_DISABLE_LOGGING}\t(Disable logging definitely, no logging code will be generated or compiled: ON, OFF)")
+
+############################################################################
+#
+# The code following this point is for the new directory structure
+#
+
+add_subdirectory(uri)
+add_subdirectory(message)
+add_subdirectory(logging)
