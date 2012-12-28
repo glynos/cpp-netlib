@@ -55,7 +55,7 @@ public:
   template< typename TypeOfSomething >
   log_record& write( TypeOfSomething&& something )
   {
-    m_text_stream << something;
+    m_text_stream << std::forward<TypeOfSomething>(something);
     return *this;
   }
   
