@@ -3,6 +3,8 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+include_directories(${CPP-NETLIB_SOURCE_DIR}/concurrency/src)
+
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++11")
 elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
@@ -11,10 +13,9 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   set(CPP-NETLIB_CXXFLAGS "-Wall -std=c++11 -stdlib=libc++")
 endif()
 
-include_directories(${CPP-NETLIB_SOURCE_DIR}/logging/src)
-set(CPP-NETLIB_LOGGING_SRCS logging.cpp)
-add_library(cppnetlib-logging ${CPP-NETLIB_LOGGING_SRCS})
-foreach (src_file ${CPP-NETLIB_LOGGING_SRCS})
+set(CPP-NETLIB_CONCURRENCY_SRCS thread_pool.cpp)
+add_library(cppnetlib-concurrency ${CPP-NETLIB_CONCURRENCY_SRCS})
+foreach (src_file ${CPP-NETLIB_CONCURRENCY_SRCS})
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set_source_files_properties(${src_file}
         PROPERTIES COMPILE_FLAGS ${CPP-NETLIB_CXXFLAGS})
