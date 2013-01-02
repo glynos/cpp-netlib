@@ -11,7 +11,7 @@ include_directories(
   ${CPP-NETLIB_SOURCE_DIR}/uri/src
   ${CPP-NETLIB_SOURCE_DIR}/message/src
   ${CPP-NETLIB_SOURCE_DIR}/logging/src
-  ${CPP-NETLIB_SOURCE_DIR}/include
+  ${CPP-NETLIB_SOURCE_DIR}/http/src
   ${CPP-NETLIB_SOURCE_DIR})
 
 if (OPENSSL_FOUND)
