@@ -18,7 +18,8 @@ path_wrapper::path_wrapper(request_base const & request)
 path_wrapper::operator std::string () const {
   ::network::uri uri_;
   request_.get_uri(uri_);
-  return path(uri_);
+  auto path = uri_.path();
+  return path? std::string(*path) : std::string("");
 }
 
 }  // namespace http

@@ -29,9 +29,10 @@ int main(int argc, char *argv[]) {
         network::uri base_uri("http://search.twitter.com/search.json");
 
         std::cout << "Searching Twitter for query: " << argv[1] << std::endl;
-        network::uri search;
-        search << base_uri << network::query("q", network::encoded(argv[1]));
-        http::client::request request(search);
+
+	network::uri_builder builder(base_uri);
+	builder.query("q", argv[1]))
+        http::client::request request(builder.uri());
         http::client::response response = client.get(request);
 
         Document d;

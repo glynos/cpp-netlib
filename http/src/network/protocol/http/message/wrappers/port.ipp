@@ -19,22 +19,27 @@ port_wrapper::port_wrapper(request_base const & request)
 port_wrapper::operator boost::uint16_t () const {
   ::network::uri uri_;
   request_.get_uri(uri_);
-  boost::optional<boost::uint16_t> optional_port = port_us(uri_);
+  auto optional_port = uri_.port();
   if (!optional_port) {
-    std::string scheme_ = scheme(uri_);
-    if (scheme_ == "http") {
+    auto scheme_ = uri_.scheme();
+    assert(scheme_);
+    if (*scheme_ == "http") {
       return 80u;
-    } else if (scheme_ == "https") {
+    } else if (*scheme_ == "https") {
       return 443u;
     }
   }
-  return optional_port ? *optional_port : 80u;
+  return std::stoul(std::string(*optional_port));
 }
 
 port_wrapper::operator boost::optional<boost::uint16_t> () const {
   ::network::uri uri_;
   request_.get_uri(uri_);
-  return port_us(uri_);
+  auto optional_port = uri_.port();
+  if (!optional_port) {
+    return boost::optional<boost::uint16_t>();
+  }
+  return std::stoul(std::string(*optional_port));
 }
 
 }  // namespace http

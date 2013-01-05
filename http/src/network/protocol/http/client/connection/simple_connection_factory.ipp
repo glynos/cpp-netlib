@@ -18,6 +18,7 @@
 #include <network/uri/uri_io.hpp>
 #endif
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include <network/protocol/http/message/wrappers/uri.hpp>
 
@@ -39,7 +40,7 @@ struct simple_connection_factory_pimpl {
     NETWORK_MESSAGE("simple_connection_factory_pimpl::create_connection(...)");
     ::network::uri uri_ = http::uri(request);
     NETWORK_MESSAGE("destination: " << uri_);
-    bool https = boost::algorithm::to_lower_copy(::network::scheme(uri_)) == "https";
+    bool https = boost::algorithm::to_lower_copy(std::string(*uri_.scheme())) == "https";
     return std::make_shared<http_async_connection>(
       res_delegate_factory_->create_resolver_delegate(service, options.cache_resolved()),
       conn_delegate_factory_->create_connection_delegate(service, https, options),

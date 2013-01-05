@@ -9,6 +9,7 @@
 #define NETWORK_PROTOCOL_HTTP_MESSAGE_PORT_HPP_20100618
 
 #include <network/protocol/http/request/request_base.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/optional.hpp>
 
 namespace network { namespace http {

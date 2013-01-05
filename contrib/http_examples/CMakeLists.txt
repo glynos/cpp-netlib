@@ -20,7 +20,7 @@ endif()
 add_executable(simple_wget simple_wget.cpp)
 add_executable(atom_reader atom/atom.cpp atom/main.cpp)
 add_executable(rss_reader rss/rss.cpp rss/main.cpp)
-add_executable(twitter_search twitter/search.cpp)
+#add_executable(twitter_search twitter/search.cpp)
 #add_executable(hello_world_server http/hello_world_server.cpp)
 add_executable(hello_world_client http/hello_world_client.cpp)
 #if (UNIX)
@@ -81,19 +81,19 @@ target_link_libraries(rss_reader
     cppnetlib-http-client-connections
     ${CPP-NETLIB_LOGGING_LIB})
 
-target_link_libraries(twitter_search
-    ${BOOST_CLIENT_LIBS}
-    ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-uri
-    cppnetlib-message
-    cppnetlib-message-directives
-    cppnetlib-message-wrappers
-    cppnetlib-http-message-wrappers
-    cppnetlib-http-message
-    cppnetlib-constants
-    cppnetlib-http-client
-    cppnetlib-http-client-connections
-    ${CPP-NETLIB_LOGGING_LIB})
+#target_link_libraries(twitter_search
+#    ${BOOST_CLIENT_LIBS}
+#    ${CMAKE_THREAD_LIBS_INIT}
+#    cppnetlib-uri
+#    cppnetlib-message
+#    cppnetlib-message-directives
+#    cppnetlib-message-wrappers
+#    cppnetlib-http-message-wrappers
+#    cppnetlib-http-message
+#    cppnetlib-constants
+#    cppnetlib-http-client
+#    cppnetlib-http-client-connections
+#    ${CPP-NETLIB_LOGGING_LIB})
 
 #target_link_libraries(hello_world_server
 #    ${BOOST_SERVER_LIBS}
@@ -120,7 +120,7 @@ if (OPENSSL_FOUND)
   target_link_libraries(simple_wget ${OPENSSL_LIBRARIES})
   target_link_libraries(atom_reader ${OPENSSL_LIBRARIES})
   target_link_libraries(rss_reader ${OPENSSL_LIBRARIES})
-  target_link_libraries(twitter_search ${OPENSSL_LIBRARIES})
+  #target_link_libraries(twitter_search ${OPENSSL_LIBRARIES})
   #target_link_libraries(hello_world_server ${OPENSSL_LIBRARIES})
   target_link_libraries(hello_world_client ${OPENSSL_LIBRARIES})
 endif (OPENSSL_FOUND)
@@ -136,7 +136,7 @@ endif (OPENSSL_FOUND)
 set_target_properties(simple_wget PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(atom_reader PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(rss_reader PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
-set_target_properties(twitter_search PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+#set_target_properties(twitter_search PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 #set_target_properties(hello_world_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(hello_world_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 #if (UNIX)

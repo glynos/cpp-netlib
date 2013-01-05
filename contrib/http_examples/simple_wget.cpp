@@ -27,10 +27,14 @@ namespace http = network::http;
 
 namespace {
 std::string get_filename(const network::uri &url) {
-    std::string path = network::path(url);
-    std::size_t index = path.find_last_of('/');
-    std::string filename = path.substr(index + 1);
+  auto path = url.path();
+  if (path) {
+    auto path_str = std::string(*path);
+    auto index = path_str.find_last_of('/');
+    auto filename = path_str.substr(index + 1);
     return filename.empty()? "index.html" : filename;
+  }
+  return "index.html";
 }
 } // namespace
 
@@ -38,28 +42,28 @@ std::string get_filename(const network::uri &url) {
 int
 main(int argc, char *argv[]) {
 
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " url" << std::endl;
-        return 1;
-    }
+  if (argc != 2) {
+    std::cerr << "Usage: " << argv[0] << " url" << std::endl;
+    return 1;
+  }
 
-    try {
-        http::client client;
-        http::client::request request(argv[1]);
-        http::client::response response = client.get(request);
+  try {
+    http::client client;
+    http::client::request request(argv[1]);
+    http::client::response response = client.get(request);
 
-        network::uri uri;
-        request.get_uri(uri);
-        std::string filename = get_filename(uri);
-        std::cout << "Saving to: " << filename << std::endl;
-        std::ofstream ofs(filename.c_str());
-        ofs << static_cast<std::string>(body(response)) << std::endl;
-    }
-    catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return 1;
-    }
+    network::uri uri;
+    request.get_uri(uri);
+    std::string filename = get_filename(uri);
+    std::cout << "Saving to: " << filename << std::endl;
+    std::ofstream ofs(filename.c_str());
+    ofs << static_cast<std::string>(body(response)) << std::endl;
+  }
+  catch (std::exception &e) {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
 
-    return 0;
+  return 0;
 }
 //]
