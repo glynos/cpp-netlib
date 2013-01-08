@@ -33,23 +33,36 @@ You can find official release packages of the library at::
 Building and Installing
 -----------------------
 
+Configuring the submodules
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The project contains submodules for some dependencies and some
+libraries. Once you have cloned cpp-netlib, you must update the
+submodules:
+
+::
+
+    $ cd ~/cpp-netlib
+    $ git submodule update
+
 Building with CMake
 ~~~~~~~~~~~~~~~~~~~
 
 To build the libraries and run the tests with CMake, you will need to
-have CMake version 2.8 or higher installed appropriately in your
+have CMake version 2.8.10 or higher installed appropriately in your
 system.
 
 ::
 
     $ cmake --version
-    cmake version 2.8.1
+    cmake version 2.8.10
 
 Inside the cpp-netlib directory, you can issue the following statements to
 configure and generate the Makefiles, and build the tests::
 
     $ cd ~/cpp-netlib      # we're assuming it's where cpp-netlib is
-    $ cmake -DCMAKE_BUILD_TYPE=Debug     \
+    $ cmake ~/cpp-netlib-build \ # cmake is built out of source
+    >       -DCMAKE_BUILD_TYPE=Debug     \
     >       -DCMAKE_C_COMPILER=clang     \
     >       -DCMAKE_CXX_COMPILER=clang++ \
     >    .
@@ -57,7 +70,7 @@ configure and generate the Makefiles, and build the tests::
 Once CMake is done with generating the Makefiles and configuring the project,
 you can now build the tests and run them::
 
-    $ cd ~/cpp-netlib
+    $ cd ~/cpp-netlib-build
     $ make
     $ make test
 
@@ -67,42 +80,14 @@ list`_.
 
 .. _`developers mailing list`: cpp-netlib@googlegroups.com
 
-Building with Boost.Build
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you don't already have Boost.Build set up on your system, follow the steps
-indicated in the Boost Getting Started Guide [#]_ -- you will particularly want
-to copy the ``bjam`` executable to a directory that is already in your ``PATH``
-so that you don't have to go hunting for it all the time. A good place to put it
-is in ``/usr/local/bin``.
-
-.. [#] http://www.boost.org/doc/libs/release/more/getting_started/
-
-Building and running the tests can be as simple as doing the following::
-
-    $ cd ~/cpp-netlib
-    $ bjam
-
-Doing this will already build all the tests and run them as they are built. In
-case you encounter any problems and would like to report it to the developers,
-please do the following::
-
-    $ cd ~/cpp-netlib
-    $ bjam 2>&1 >build-test.log
-
-And then attach the ``build-test.log`` file to the email you will send to the
-cpp-netlib `developers mailing list`_.
-
-.. _`developers mailing list`: cpp-netlib@googlegroups.com
-
 Running Tests
 -------------
 
 If you want to run the tests that come with cpp-netlib, there are a few things
 you will need. These are:
 
-  * A compiler (GCC 4.x, Clang 2.8, MSVC 2008)
-  * A build tool (CMake [#]_ recommended, Boost.Build also an option)
+  * A compiler (GCC 4.7.x, Clang 2.8, MSVC 2012)
+  * CMake [#]_
   * OpenSSL headers (optional)
 
 .. note:: This assumes that you have cpp-netlib at the top-level of
@@ -136,13 +121,11 @@ would be greatly appreciated. Copious amounts of comments will be called out,
 but code that is not self-explanatory typically at least requires a rationale
 documentation in comments explaining "why" the code is written that way.
 
-The main "upstream" repository is the one hosted by the original maintainer of
-the project (Dean Michael Berris) at http://github.com/mikhailberis/cpp-netlib.
-The "official" release repository is maintained at
-http://github.com/cpp-netlib/cpp-netlib -- which is a fork of the upstream
-repository. It is recommended that forks be made against the upstream repostory
-and pull requests be submitted against the upstream repository so that patches
-and other implementations can be curated by the original maintainer.
+The main "upstream" repository and official release repository is
+maintained at http://github.com/cpp-netlib/cpp-netlib. It is
+recommended that forks and pull requests be submitted to the upstream
+repository so that patches and other implementations can be curated by
+the project administrators.
 
 Contact and Support
 -------------------
