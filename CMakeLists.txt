@@ -33,12 +33,14 @@ find_package( OpenSSL )
 find_package( Threads )
 set(CMAKE_VERBOSE_MAKEFILE true)
 
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-    add_definitions(-DNETWORK_DEBUG)
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+  add_definitions(-DNETWORK_DEBUG)
 endif()
 
+
+
 if (OPENSSL_FOUND)
-    add_definitions(-DNETWORK_ENABLE_HTTPS)
+  add_definitions(-DNETWORK_ENABLE_HTTPS)
 endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
@@ -77,12 +79,13 @@ if (Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif(Boost_FOUND)
 
-message(STATUS "CPP-NETLIB Options selected:")
+message(STATUS "CPP-NETLIB options selected:")
 message(STATUS "  CPP-NETLIB_BUILD_SHARED_LIBS: ${CPP-NETLIB_BUILD_SHARED_LIBS}\t(Build cpp-netlib as shared libraries: OFF, ON)")
 message(STATUS "  CPP-NETLIB_BUILD_TESTS:       ${CPP-NETLIB_BUILD_TESTS}\t(Build the unit tests: ON, OFF)")
 message(STATUS "  CPP-NETLIB_BUILD_EXAMPLES:    ${CPP-NETLIB_BUILD_EXAMPLES}\t(Build the examples using cpp-netlib: ON, OFF)")
 message(STATUS "  CPP-NETLIB_ALWAYS_LOGGING:    ${CPP-NETLIB_ALWAYS_LOGGING}\t(Allow cpp-netlib to log debug messages even in non-debug mode: ON, OFF)")
 message(STATUS "  CPP-NETLIB_DISABLE_LOGGING:   ${CPP-NETLIB_DISABLE_LOGGING}\t(Disable logging definitely, no logging code will be generated or compiled: ON, OFF)")
+message(STATUS "CMake build options selected:")
 
 ############################################################################
 #
@@ -91,6 +94,12 @@ message(STATUS "  CPP-NETLIB_DISABLE_LOGGING:   ${CPP-NETLIB_DISABLE_LOGGING}\t(
 
 if(CPP-NETLIB_BUILD_TESTS)
   enable_testing()
+  if(MSVC11)
+    add_definitions(-D_VARIADIC_MAX=10)
+  endif(MSVC11)
+  if(MSVC)
+    set(gtest_force_shared_crt ON CACHE BOOL "Override gtest option.")
+  endif(MSVC)
   add_subdirectory(deps/gtest)
   set(GTEST_ROOT ${CPP-NETLIB_SOURCE_DIR}/deps/gtest)
   set(GTEST_FOUND ON)
