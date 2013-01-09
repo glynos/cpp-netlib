@@ -9,6 +9,7 @@
 
 #include <network/protocol/http/client/facade.hpp>
 #include <network/detail/debug.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace network {
 namespace http {

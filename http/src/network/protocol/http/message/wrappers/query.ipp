@@ -18,7 +18,8 @@ query_wrapper::query_wrapper(request_base const & request)
 query_wrapper::operator std::string () const {
   ::network::uri uri_;
   request_.get_uri(uri_);
-  return query(uri_);
+  auto query = uri_.query();
+  return query? std::string(*query) : std::string("");
 }
 
 }  // namespace http

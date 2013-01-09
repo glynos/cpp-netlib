@@ -47,26 +47,26 @@ BOOST_AUTO_TEST_CASE(request_value_semantics) {
   BOOST_CHECK(original == assigned);
 }
 
-BOOST_AUTO_TEST_CASE(request_uri_test) {
-  http::request request;
-  request.set_uri("http://www.google.com/");
-  http::request other(request);
-  std::string original, copied;
-  request.get_uri(original);
-  other.get_uri(copied);
-  BOOST_CHECK_EQUAL(std::string("http://www.google.com/"), original);
-  BOOST_CHECK_EQUAL(original, copied);
-
-  // Now we test the bare uri instance with accessing using the request
-  // convenience wrapper.
-  network::uri uri_;
-  request.get_uri(uri_);
-  std::string host_ = http::host(request);
-  BOOST_CHECK(network::valid(uri_));
-  BOOST_CHECK_EQUAL(std::string("www.google.com"), host_);
-  BOOST_CHECK_EQUAL(uri_.host(), host_);
-  BOOST_CHECK_EQUAL(std::string("www.google.com"), uri_.host());
-}
+//BOOST_AUTO_TEST_CASE(request_uri_test) {
+//  http::request request;
+//  request.set_uri("http://www.google.com/");
+//  http::request other(request);
+//  std::string original, copied;
+//  request.get_uri(original);
+//  other.get_uri(copied);
+//  BOOST_CHECK_EQUAL(std::string("http://www.google.com/"), original);
+//  BOOST_CHECK_EQUAL(original, copied);
+//
+//  // Now we test the bare uri instance with accessing using the request
+//  // convenience wrapper.
+//  network::uri uri_;
+//  request.get_uri(uri_);
+//  std::string host_ = http::host(request);
+//  BOOST_CHECK(network::valid(uri_));
+//  BOOST_CHECK_EQUAL(std::string("www.google.com"), host_);
+//  BOOST_CHECK_EQUAL(uri_.host(), host_);
+//  BOOST_CHECK_EQUAL(std::string("www.google.com"), uri_.host());
+//}
 
 BOOST_AUTO_TEST_CASE(request_url_constructor_test) {
   http::request request("http://www.google.com/");

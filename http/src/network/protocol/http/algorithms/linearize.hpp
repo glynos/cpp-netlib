@@ -14,6 +14,7 @@
 #include <network/constants.hpp>
 #include <boost/concept/requires.hpp>
 #include <boost/optional.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/range/algorithm/copy.hpp>
 
 namespace network {
@@ -38,8 +39,8 @@ struct linearize_header {
       typedef std::ostringstream output_stream;
       typedef constants consts;
       output_stream header_line;
-      header_line << name(header) 
-          << consts::colon() << consts::space() 
+      header_line << name(header)
+          << consts::colon() << consts::space()
           << value(header) << consts::crlf();
       return header_line.str();
   }
@@ -50,16 +51,16 @@ BOOST_CONCEPT_REQUIRES(
     ((ClientRequest<Request>)),
     (OutputIterator)
 ) linearize(
-    Request const & request, 
+    Request const & request,
     std::string const & method,
-    unsigned version_major, 
-    unsigned version_minor, 
+    unsigned version_major,
+    unsigned version_minor,
     OutputIterator oi
-    ) 
+    )
 {
     typedef constants consts;
     typedef std::string string_type;
-    static string_type 
+    static string_type
         http_slash = consts::http_slash()
         , accept   = consts::accept()
         , accept_mime = consts::default_accept_mime()
@@ -76,7 +77,7 @@ BOOST_CONCEPT_REQUIRES(
     *oi = consts::space_char();
     {
       std::string path_ = path(request);
-      if (path_.empty() || path_[0] != consts::slash_char()) 
+      if (path_.empty() || path_[0] != consts::slash_char())
           *oi = consts::slash_char();
       boost::copy(path_, oi);
     }
@@ -156,8 +157,8 @@ BOOST_CONCEPT_REQUIRES(
     auto body_data = network::body(request);
     return std::copy(body_data.begin(), body_data.end(), oi);
 }
-    
+
 }  // namespace http
 }  // namespace network
-    
+
 #endif /* NETWORK_PROTOCOL_HTTP_ALGORITHMS_LINEARIZE_HPP_20101028 */

@@ -18,7 +18,8 @@ host_wrapper::host_wrapper(request_base const & request)
 host_wrapper::operator std::string () const {
   ::network::uri uri_;
   request_.get_uri(uri_);
-  return host(uri_);
+  auto host = uri_.host();
+  return host? std::string(*host) : std::string("");
 }
 
 }  // namespace http

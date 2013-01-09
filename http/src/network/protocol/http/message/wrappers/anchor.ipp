@@ -20,7 +20,8 @@ anchor_wrapper::anchor_wrapper(request_base const & request)
 anchor_wrapper::operator std::string () const {
   ::network::uri uri_;
   request_.get_uri(uri_);
-  return fragment(uri_);
+  auto fragment = uri_.fragment();
+  return fragment? std::string(*fragment) : std::string();
 }
 
 }  // namespace http

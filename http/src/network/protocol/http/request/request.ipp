@@ -47,7 +47,7 @@ struct request_pimpl {
   }
 
   void set_uri(std::string const & uri) {
-    uri_ = uri;
+    set_uri(::network::uri(uri));
   }
 
   void set_uri(::network::uri const & uri) {
