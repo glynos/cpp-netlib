@@ -97,16 +97,27 @@ if(CPP-NETLIB_BUILD_TESTS)
   if(MSVC11)
     add_definitions(-D_VARIADIC_MAX=10)
   endif(MSVC11)
+
   if(MSVC)
     set(gtest_force_shared_crt ON CACHE BOOL "Override gtest option.")
   endif(MSVC)
-  add_subdirectory(deps/gtest)
+
+  # gmock automatically searches for gtest
+  add_subdirectory(deps/gmock)
+
   set(GTEST_ROOT ${CPP-NETLIB_SOURCE_DIR}/deps/gtest)
   set(GTEST_FOUND ON)
   set(GTEST_INCLUDE_DIRS ${GTEST_ROOT}/include)
   set(GTEST_LIBRARIES gtest)
   set(GTEST_MAIN_LIBRARIES gtest_main)
   set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+
+  set(GMOCK_ROOT ${CPP-NETLIB_SOURCE_DIR}/deps/gmock)
+  set(GMOCK_FOUND ON)
+  set(GMOCK_INCLUDE_DIRS ${GTEST_INCLUDE_DIRS} {${GMOCK_DIR}/include)
+  set(GMOCK_LIBRARIES {$GTEST_LIBRARIES} gmock)
+  set(GMOCK_MAIN_LIBRARIES gmock_main)
+  set(GMOCK_BOTH_LIBRARIES ${GMOCK_LIBRARIES} ${GMOCK_MAIN_LIBRARIES})
 endif()
 
 add_subdirectory(uri)

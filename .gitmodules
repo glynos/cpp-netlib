@@ -4,3 +4,6 @@
 [submodule "uri"]
 	path = uri
 	url = git://github.com/cpp-netlib/uri
+[submodule "deps/gmock"]
+	path = deps/gmock
+	url = git://github.com/cpp-netlib/gmock
