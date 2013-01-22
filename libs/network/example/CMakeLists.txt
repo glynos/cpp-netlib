@@ -28,13 +28,17 @@ set(BOOST_CLIENT_LIBS
     ${Boost_THREAD_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
     ${Boost_REGEX_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY})
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_CHRONO_LIBRARY})
 
 set(BOOST_SERVER_LIBS
     ${Boost_THREAD_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
-    ${Boost_PROGRAM_OPTIONS_LIBRARY})
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_CHRONO_LIBRARY})
 
 target_link_libraries(http_client
     ${BOOST_CLIENT_LIBS}
