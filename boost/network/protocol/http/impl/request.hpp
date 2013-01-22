@@ -157,6 +157,7 @@ namespace http {
         typedef vector_type headers_container_type;
         typedef boost::uint16_t port_type;
         mutable string_type source;
+        mutable port_type source_port;
         mutable string_type method;
         mutable string_type destination;
         mutable boost::uint8_t http_version_major;
@@ -168,6 +169,7 @@ namespace http {
             using std::swap;
             swap(method, r.method);
             swap(source, r.source);
+            swap(source_port, r.source_port);
             swap(destination, r.destination);
             swap(http_version_major, r.http_version_major);
             swap(http_version_minor, r.http_version_minor);
