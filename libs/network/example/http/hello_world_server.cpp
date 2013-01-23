@@ -29,9 +29,8 @@ struct hello_world {
     void operator() (server::request const &request,
                      server::response &response) {
         server::string_type ip = source(request);
-        unsigned int port = request.source_port;
         std::ostringstream data;
-        data << "Hello, " << ip << ':' << port << '!';
+        data << "Hello, " << ip << "!";
         response = server::response::stock_reply(
             server::response::ok, data.str());
     }
