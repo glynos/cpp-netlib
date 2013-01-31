@@ -20,4 +20,3 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_1_0, client, client_types) {
     BOOST_CHECK_EQUAL ( 12121, port_ );
     BOOST_CHECK_THROW ( response_ = client_.get(request); temp = body(response_); , std::exception );
 }
-

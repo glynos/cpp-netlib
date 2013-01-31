@@ -9,7 +9,7 @@
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/client/pimpl.hpp>
-#include <boost/network/protocol/http/client/parameters.hpp>
+#include <boost/network/protocol/http/client/options.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -28,45 +28,20 @@ namespace boost { namespace network { namespace http {
         typedef basic_client_impl<Tag,version_major,version_minor> pimpl_type;
         typedef function<void(iterator_range<char const *> const &,system::error_code const &)> body_callback_function_type;
 
-        template <class ArgPack>
-        basic_client_facade(ArgPack const & args)
+        basic_client_facade(client_options<Tag> const &options)
         {
-            init_pimpl(args,
-                typename mpl::if_<
-                    is_same<
-                        typename parameter::value_type<ArgPack, tag::io_service, void>::type,
-                        void
-                        >,
-                    no_io_service,
-                    has_io_service
-                    >::type());
+            init_pimpl(options);
         }
 
-        BOOST_PARAMETER_MEMBER_FUNCTION((response const), head, tag, (required (request,(request const &)))) {
+        response const head(request const &request) {
             return pimpl->request_skeleton(request, "HEAD", false, body_callback_function_type());
         }
 
-        BOOST_PARAMETER_MEMBER_FUNCTION((response const), get , tag,
-            (required
-                (request,(request const &))
-                )
-            (optional
-                (body_handler,(body_callback_function_type),body_callback_function_type())
-                )
-            ) {
+        response const get(request const &request, body_callback_function_type body_handler = body_callback_function_type()) {
             return pimpl->request_skeleton(request, "GET", true, body_handler);
         }
 
-        BOOST_PARAMETER_MEMBER_FUNCTION((response const), post, tag,
-            (required
-                (request,(request)) // yes sir, we make a copy of the original request.
-                )
-            (optional
-                (body,(string_type const &),string_type())
-                (content_type,(string_type const &),string_type())
-                (body_handler,(body_callback_function_type),body_callback_function_type())
-                )
-            ) {
+        response const post(request request, string_type const &body = string_type(), string_type const &content_type = string_type(), body_callback_function_type body_handler = body_callback_function_type()) {
             if (body != string_type()) {
                 request << remove_header("Content-Length")
                     << header("Content-Length", boost::lexical_cast<string_type>(body.size()))
@@ -88,16 +63,7 @@ namespace boost { namespace network { namespace http {
             return pimpl->request_skeleton(request, "POST", true, body_handler);
         }
 
-        BOOST_PARAMETER_MEMBER_FUNCTION((response const), put , tag,
-            (required
-                (request,(request)) // yes sir, we make a copy of the original request.
-                )
-            (optional
-                (body,(string_type const &),string_type())
-                (content_type,(string_type const &),string_type())
-                (body_handler,(body_callback_function_type),body_callback_function_type())
-                )
-            ) {
+        response const put(request request, string_type const &body = string_type(), string_type const &content_type = string_type(), body_callback_function_type body_handler = body_callback_function_type()) {
             if (body != string_type()) {
                 request << remove_header("Content-Length")
                     << header("Content-Length", boost::lexical_cast<string_type>(body.size()))
@@ -119,14 +85,7 @@ namespace boost { namespace network { namespace http {
             return pimpl->request_skeleton(request, "PUT", true, body_handler);
         }
 
-        BOOST_PARAMETER_MEMBER_FUNCTION((response const), delete_, tag,
-            (required
-                (request,(request const &))
-                )
-            (optional
-                (body_handler,(body_callback_function_type),body_callback_function_type())
-                )
-            ) {
+        response const delete_(request const &request, body_callback_function_type body_handler = body_callback_function_type()) {
             return pimpl->request_skeleton(request, "DELETE", true, body_handler);
         }
 
@@ -141,31 +100,15 @@ namespace boost { namespace network { namespace http {
 
         boost::shared_ptr<pimpl_type> pimpl;
 
-        template <class ArgPack>
-        void init_pimpl(ArgPack const & args, no_io_service) {
+        void init_pimpl(client_options<Tag> const & options) {
             pimpl.reset(
                 new pimpl_type(
-                    args[_cache_resolved|false]
-                    , args[_follow_redirects|false]
-                    , optional<string_type>(args[_openssl_certificate|optional<string_type>()])
-                    , optional<string_type>(args[_openssl_verify_path|optional<string_type>()])
-                    )
-                );
+                    options.cache_resolved(),
+                    options.follow_redirects(),
+                    options.openssl_certificate(),
+                    options.openssl_verify_path(),
+                    options.io_service()));
         }
-
-        template <class ArgPack>
-        void init_pimpl(ArgPack const & args, has_io_service) {
-            pimpl.reset(
-                new pimpl_type(
-                    args[_cache_resolved|false]
-                    , args[_follow_redirects|false]
-                    , args[_io_service]
-                    , optional<string_type>(args[_openssl_certificate|optional<string_type>()])
-                    , optional<string_type>(args[_openssl_verify_path|optional<string_type>()])
-                    )
-                );
-        }
-
     };
 
 } // namespace http

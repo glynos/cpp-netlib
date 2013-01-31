@@ -24,8 +24,8 @@
 #include <map>
 
 #include <boost/network/protocol/http/client/facade.hpp>
-#include <boost/network/protocol/http/client/parameters.hpp>
 #include <boost/network/protocol/http/client/macros.hpp>
+#include <boost/network/protocol/http/client/options.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -41,38 +41,18 @@ namespace boost { namespace network { namespace http {
         typedef basic_response<Tag> response;
         typedef typename string<Tag>::type string_type;
         typedef Tag tag_type;
+        typedef client_options<Tag> options;
 
-        // Constructor
+        // Constructors
         // =================================================================
-        // This is a Boost.Parameter-based constructor forwarder, whose
-        // implementation is actually forwarded to the base type.
-        //
-        // The supported parameters are:
-        //      _follow_redirects : bool -- whether to follow HTTP redirect
-        //                                  responses (default: false)
-        //      _cache_resolved   : bool -- whether to cache the resolved
-        //                                  endpoints (default: false)
-        //      _io_service       : boost::asio::io_service &
-        //                               -- supply an io_service to the
-        //                                  client
-        //      _openssl_certificate : string
-        //                               -- the name of the certificate file
-        //                                  to use
-        //      _openssl_verify_path : string
-        //                               -- the name of the directory from
-        //                                  which the certificate authority
-        //                                  files can be found
+        // This constructor takes a single options argument of type
+        // client_options. See boost/network/protocol/http/client/options.hpp
+        // for more details.
+        explicit basic_client(options const & options)
+        : base_facade_type(options) {}
 
-        BOOST_PARAMETER_CONSTRUCTOR(
-            basic_client, (base_facade_type), tag,
-            (optional
-                (in_out(io_service), (boost::asio::io_service&))
-                (follow_redirects, (bool))
-                (cache_resolved, (bool))
-                (openssl_certificate, (string_type))
-                (openssl_verify_path, (string_type))
-                ))
-
+        // This default constructor sets up the default options.
+        basic_client() : base_facade_type(options()) {}
         //
         // =================================================================
 

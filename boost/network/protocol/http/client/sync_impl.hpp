@@ -22,30 +22,19 @@ namespace boost { namespace network { namespace http {
             typedef function<void(iterator_range<char const *> const &, system::error_code const &)> body_callback_function_type;
             friend struct basic_client_impl<Tag,version_major,version_minor>;
 
-            boost::asio::io_service * service_ptr;
+            boost::shared_ptr<boost::asio::io_service> service_ptr;
             boost::asio::io_service & service_;
             resolver_type resolver_;
             optional<string_type> certificate_file, verify_path;
 
             sync_client(bool cache_resolved, bool follow_redirect
+                , boost::shared_ptr<boost::asio::io_service> service
                 , optional<string_type> const & certificate_file = optional<string_type>()
                 , optional<string_type> const & verify_path = optional<string_type>()
             )
                 : connection_base(cache_resolved, follow_redirect),
-                service_ptr(new boost::asio::io_service),
+                service_ptr(service.get() ? service : make_shared<boost::asio::io_service>()),
                 service_(*service_ptr),
-                resolver_(service_)
-                , certificate_file(certificate_file)
-                , verify_path(verify_path)
-            {}
-
-            sync_client(bool cache_resolved, bool follow_redirect, boost::asio::io_service & service
-                , optional<string_type> const & certificate_file = optional<string_type>()
-                , optional<string_type> const & verify_path = optional<string_type>()
-            )
-                : connection_base(cache_resolved, follow_redirect),
-                service_ptr(0),
-                service_(service),
                 resolver_(service_)
                 , certificate_file(certificate_file)
                 , verify_path(verify_path)
@@ -53,7 +42,7 @@ namespace boost { namespace network { namespace http {
 
             ~sync_client() {
                 connection_base::cleanup();
-                delete service_ptr;
+                service_ptr.reset();
             }
 
             basic_response<Tag> const request_skeleton(basic_request<Tag> const & request_, string_type method, bool get_body, body_callback_function_type callback) {
