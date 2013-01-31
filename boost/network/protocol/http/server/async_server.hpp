@@ -23,29 +23,20 @@ namespace boost { namespace network { namespace http {
         typedef typename boost::network::http::response_header<Tag>::type response_header;
         typedef async_connection<Tag,Handler> connection;
         typedef shared_ptr<connection> connection_ptr;
-		typedef boost::unique_lock<boost::mutex> scoped_mutex_lock;
+        typedef boost::unique_lock<boost::mutex> scoped_mutex_lock;
 
-        template <class ArgPack>
-        async_server_base(ArgPack const & args)
-        : server_storage_base(args,
-            typename mpl::if_<
-                is_same<
-                    typename parameter::value_type<ArgPack, tag::io_service, void>::type,
-                    void
-                    >,
-                server_storage_base::no_io_service,
-                server_storage_base::has_io_service
-                >::type())
-        , socket_options_base(args)
-        , handler(args[_handler])
-        , address_(args[_address])
-        , port_(args[_port])
-        , thread_pool(args[_thread_pool])
+        explicit async_server_base(server_options<Tag, Handler> const &options)
+        : server_storage_base(options)
+        , socket_options_base(options)
+        , handler(options.handler())
+        , address_(options.address())
+        , port_(options.port())
+        , thread_pool(options.thread_pool() ? options.thread_pool() : boost::make_shared<utils::thread_pool>())
         , acceptor(server_storage_base::service_)
         , stopping(false)
         , new_connection()
         , listening_mutex_()
-		, stopping_mutex_()
+        , stopping_mutex_()
         , listening(false)
         {}
 
@@ -57,19 +48,19 @@ namespace boost { namespace network { namespace http {
         void stop() {
             // stop accepting new requests and let all the existing
             // handlers finish.
-			scoped_mutex_lock listening_lock(listening_mutex_);
-			if (listening) { // we dont bother stopping if we arent currently listening
-				scoped_mutex_lock stopping_lock(stopping_mutex_);
-				stopping = true;
-				system::error_code ignored;
-				acceptor.close(ignored);
-				listening = false;
-				service_.post(boost::bind(&async_server_base::handle_stop, this));
-			}
+            scoped_mutex_lock listening_lock(listening_mutex_);
+            if (listening) { // we dont bother stopping if we arent currently listening
+              scoped_mutex_lock stopping_lock(stopping_mutex_);
+              stopping = true;
+              system::error_code ignored;
+              acceptor.close(ignored);
+              listening = false;
+              service_.post(boost::bind(&async_server_base::handle_stop, this));
+            }
         }
 
         void listen() {
-			scoped_mutex_lock listening_lock(listening_mutex_);
+            scoped_mutex_lock listening_lock(listening_mutex_);
             BOOST_NETWORK_MESSAGE("Listening on " << address_ << ':' << port_);
             if (!listening) start_listening(); // we only initialize our acceptor/sockets if we arent already listening
             if (!listening) {
@@ -81,41 +72,35 @@ namespace boost { namespace network { namespace http {
     private:
         Handler & handler;
         string_type address_, port_;
-        utils::thread_pool & thread_pool;
+        boost::shared_ptr<utils::thread_pool> thread_pool;
         asio::ip::tcp::acceptor acceptor;
         bool stopping;
         connection_ptr new_connection;
         boost::mutex listening_mutex_;
-		boost::mutex stopping_mutex_;
+        boost::mutex stopping_mutex_;
         bool listening;
-		
-		void handle_stop() {
-			scoped_mutex_lock stopping_lock(stopping_mutex_);
-			if (stopping) service_.stop(); // a user may have started listening again before the stop command is reached
-		}
+    
+        void handle_stop() {
+            scoped_mutex_lock stopping_lock(stopping_mutex_);
+            if (stopping) service_.stop(); // a user may have started listening again before the stop command is reached
+        }
 
         void handle_accept(boost::system::error_code const & ec) {
-			{
-				scoped_mutex_lock stopping_lock(stopping_mutex_);
-				if (stopping) return;	// we dont want to add another handler instance, and we dont want to know about errors for a socket we dont need anymore
-			}
+            {
+              scoped_mutex_lock stopping_lock(stopping_mutex_);
+              if (stopping) return;  // we dont want to add another handler instance, and we dont want to know about errors for a socket we dont need anymore
+            }
             if (!ec) {
                 socket_options_base::socket_options(new_connection->socket());
                 new_connection->start();
                 new_connection.reset(
-					new connection(
-						service_
-						, handler
-						, thread_pool
-						)
-					);
-				acceptor.async_accept(new_connection->socket(),
-					boost::bind(
-						&async_server_base<Tag,Handler>::handle_accept
-						, this
-						, boost::asio::placeholders::error
-						)
-					);
+                    new connection(service_, handler, *thread_pool));
+                acceptor.async_accept(
+                    new_connection->socket(),
+                    boost::bind(
+                        &async_server_base<Tag,Handler>::handle_accept,
+                        this,
+                        boost::asio::placeholders::error));
             } else {
                 BOOST_NETWORK_MESSAGE("Error accepting connection, reason: " << ec);
             }
@@ -123,11 +108,8 @@ namespace boost { namespace network { namespace http {
         
         void start_listening() {
             using boost::asio::ip::tcp;
-            
             system::error_code error;
-			
-			service_.reset(); // this allows repeated cycles of run -> stop -> run
-			
+            service_.reset(); // this allows repeated cycles of run -> stop -> run
             tcp::resolver resolver(service_);
             tcp::resolver::query query(address_, port_);
             tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
@@ -152,15 +134,15 @@ namespace boost { namespace network { namespace http {
                 BOOST_NETWORK_MESSAGE("Error listening on socket: '" << error << "' on " << address_ << ":" << port_);
                 return;
             }
-            new_connection.reset(new connection(service_, handler, thread_pool));
+            new_connection.reset(new connection(service_, handler, *thread_pool));
             acceptor.async_accept(new_connection->socket(),
                 boost::bind(
                     &async_server_base<Tag,Handler>::handle_accept
                     , this
                     , boost::asio::placeholders::error));
             listening = true;
-			scoped_mutex_lock stopping_lock(stopping_mutex_);
-			stopping = false; // if we were in the process of stopping, we revoke that command and continue listening
+            scoped_mutex_lock stopping_lock(stopping_mutex_);
+            stopping = false; // if we were in the process of stopping, we revoke that command and continue listening
             BOOST_NETWORK_MESSAGE("Now listening on socket: '" << address_ << ":" << port_ << "'");
         }
     };

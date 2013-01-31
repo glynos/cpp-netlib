@@ -13,7 +13,6 @@
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/server/sync_server.hpp>
 #include <boost/network/protocol/http/server/async_server.hpp>
-#include <boost/network/protocol/http/server/parameters.hpp>
 
 namespace boost { namespace network { namespace http {
     
@@ -40,25 +39,10 @@ namespace boost { namespace network { namespace http {
     struct server : server_base<tags::http_server, Handler>::type {
         typedef typename server_base<tags::http_server, Handler>::type
             server_base;
+        typedef server_options<tags::http_server, Handler> options;
 
-        BOOST_PARAMETER_CONSTRUCTOR(
-            server, (server_base), tag,
-            (required
-                (address, (typename server_base::string_type const &))
-                (port, (typename server_base::string_type const &))
-                (in_out(handler), (Handler &)))
-            (optional
-                (in_out(io_service), (boost::asio::io_service &))
-                (reuse_address, (bool))
-                (report_aborted, (bool))
-                (receive_buffer_size, (int))
-                (send_buffer_size, (int))
-                (receive_low_watermark, (int))
-                (send_low_watermark, (int))
-                (non_blocking_io, (int))
-                (linger, (bool))
-                (linger_timeout, (int)))
-            )
+        explicit server(options const &options)
+        : server_base(options) {}
     };
 
     template <class Handler>
@@ -66,26 +50,10 @@ namespace boost { namespace network { namespace http {
     {
         typedef typename server_base<tags::http_async_server, Handler>::type
             server_base;
+        typedef server_options<tags::http_async_server, Handler> options;
 
-        BOOST_PARAMETER_CONSTRUCTOR(
-            async_server, (server_base), tag,
-            (required
-                (address, (typename server_base::string_type const &))
-                (port, (typename server_base::string_type const &))
-                (in_out(handler), (Handler&))
-                (in_out(thread_pool), (utils::thread_pool&)))
-            (optional
-                (in_out(io_service), (boost::asio::io_service&))
-                (reuse_address, (bool))
-                (report_aborted, (bool))
-                (receive_buffer_size, (int))
-                (send_buffer_size, (int))
-                (receive_low_watermark, (int))
-                (send_low_watermark, (int))
-                (non_blocking_io, (bool))
-                (linger, (bool))
-                (linger_timeout, (int)))
-            )
+        explicit async_server(options const &options)
+        : server_base(options) {}
     };
 
 } // namespace http
