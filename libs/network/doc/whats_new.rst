@@ -7,6 +7,15 @@
 :mod:`cpp-netlib` 0.9
 ---------------------
 
+v0.9.5
+~~~~~~
+* Removing dependency on Boost.Parameter from HTTP client and server.
+* Fix for Clang error on Twitter example.
+* Adding source port to the request (HTTP server).
+* Updates to CMake config for MSVC 2010/2012.
+* Support chunked content encoding in client response parsing.
+* Fix bug with client not invoking callback when a request fails.
+
 v0.9.4
 ~~~~~~
 * Lots of URI fixes.
