@@ -63,6 +63,14 @@ namespace boost { namespace network { namespace http {
             return pimpl->request_skeleton(request, "POST", true, body_handler);
         }
 
+        response const post(request const &request, body_callback_function callback) {
+          return post(request, string_type(), string_type(), callback);
+        }
+
+        response const post(request const &request, string_type const &body, body_callback_function callback) {
+          return post(request, body, string_type(), callback);
+        }
+
         response const put(request request, string_type const &body = string_type(), string_type const &content_type = string_type(), body_callback_function_type body_handler = body_callback_function_type()) {
             if (body != string_type()) {
                 request << remove_header("Content-Length")
@@ -87,6 +95,14 @@ namespace boost { namespace network { namespace http {
 
         response const delete_(request const &request, body_callback_function_type body_handler = body_callback_function_type()) {
             return pimpl->request_skeleton(request, "DELETE", true, body_handler);
+        }
+
+        response const put(request const& request, body_callback_function_type callback) {
+          return put(request, string_type(), string_type(), callback);
+        }
+
+        response const put(request const& request, string_type body, body_callback_function_type callback) {
+          return put(request, body, string_type(), callback);
         }
 
         void clear_resolved_cache() {
