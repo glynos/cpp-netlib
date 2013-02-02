@@ -62,7 +62,8 @@ int main(int argc, char * argv[]) {
     http_client::string_type destination_ = host(request);
 
     request << ::boost::network::header("Connection", "close");
-    http_client client(http::_follow_redirects=true);
+    http_client::options client_options;
+    http_client client(client_options.follow_redirects(true));
     http_client::response response = client.get(request);
 
     if (show_headers) {

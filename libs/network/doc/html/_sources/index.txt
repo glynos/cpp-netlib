@@ -4,7 +4,7 @@
 .. :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 .. 	  Dean Michael Berris <mikhailberis@gmail.com>
 .. :Date: Feb 22, 2012
-.. :Version: 0.9.3
+.. :Version: 0.9.4
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 .. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2012.
 ..             Distributed under the Boost Software License, Version
@@ -76,8 +76,8 @@ The client is as simple as this:
     client::request request_("http://127.0.0.1:8000/");
     request_ << header("Connection", "close");
     client client_;
-    client::response response_ = client_.get(request);
-    std::string body = body(response_);
+    client::response response_ = client_.get(request_);
+    std::string body_ = body(response_);
 
 And the corresponding server code is listed below:
 

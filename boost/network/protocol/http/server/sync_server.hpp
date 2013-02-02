@@ -15,9 +15,9 @@
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/server/sync_connection.hpp>
-#include <boost/network/protocol/http/server/parameters.hpp>
 #include <boost/network/protocol/http/server/storage_base.hpp>
 #include <boost/network/protocol/http/server/socket_options_base.hpp>
+#include <boost/network/protocol/http/server/options.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/thread/mutex.hpp>
 
@@ -30,21 +30,12 @@ namespace boost { namespace network { namespace http {
         typedef basic_response<Tag> response;
         typedef typename boost::network::http::response_header<Tag>::type response_header;
 
-        template <class ArgPack>
-        sync_server_base(ArgPack const & args)
-        : server_storage_base(args,
-            typename mpl::if_<
-                is_same<
-                    typename parameter::value_type<ArgPack, tag::io_service, void>::type,
-                    void
-                    >,
-                server_storage_base::no_io_service,
-                server_storage_base::has_io_service
-                >::type())
-        , socket_options_base(args)
-        , handler_(args[_handler])
-        , address_(args[_address])
-        , port_(args[_port])
+        sync_server_base(server_options<Tag, Handler> const & options)
+        : server_storage_base(options)
+        , socket_options_base(options)
+        , handler_(options.handler())
+        , address_(options.address())
+        , port_(options.port())
         , acceptor_(server_storage_base::service_)
         , new_connection()
         , listening_mutex_()

@@ -6,7 +6,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/server/parameters.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
+#include <boost/network/protocol/http/server/options.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -14,24 +16,13 @@ namespace boost { namespace network { namespace http {
         struct no_io_service {};
         struct has_io_service {};
     protected:
-        template <class ArgPack>
-        server_storage_base(ArgPack const & args, no_io_service)
-        : self_service_(new boost::asio::io_service())
+        template <class Tag, class Handler>
+        explicit server_storage_base(server_options<Tag, Handler> const & options)
+        : self_service_(options.io_service()? options.io_service() : boost::make_shared<boost::asio::io_service>())
         , service_(*self_service_)
         {}
 
-        template <class ArgPack>
-        server_storage_base(ArgPack const & args, has_io_service)
-        : self_service_(0)
-        , service_(args[_io_service])
-        {}
-
-        ~server_storage_base() {
-            delete self_service_;
-            self_service_ = 0;
-        }
-
-        asio::io_service * self_service_;
+        boost::shared_ptr<asio::io_service> self_service_;
         asio::io_service & service_;
     };
     

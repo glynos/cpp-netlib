@@ -104,7 +104,7 @@ elements.  For example the program:
 
 will output::
 
-   htp://www.github.com/cpp-netlib
+   http://www.github.com/cpp-netlib
 
 ``URI Concept``
 ```````````````

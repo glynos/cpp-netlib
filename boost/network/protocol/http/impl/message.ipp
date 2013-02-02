@@ -129,7 +129,7 @@ namespace boost { namespace network { namespace http {
     }
 
     template <typename Tag>
-    bool const message_impl<Tag>::base64_decode(const typename message_impl<Tag>::string_type &input, typename message_impl<Tag>::string_type &output)
+    bool message_impl<Tag>::base64_decode(const typename message_impl<Tag>::string_type &input, typename message_impl<Tag>::string_type &output)
     {
         static const char nop = -1; 
         static const char decoding_data[] = {
@@ -210,7 +210,7 @@ namespace boost { namespace network { namespace http {
     }
     
     template <typename Tag>
-    bool const message_impl<Tag>::base64_encode(typename message_impl<Tag>::string_type const & input, typename message_impl<Tag>::string_type & output)
+    bool message_impl<Tag>::base64_encode(typename message_impl<Tag>::string_type const & input, typename message_impl<Tag>::string_type & output)
     {
         static const char encoding_data[] = 
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

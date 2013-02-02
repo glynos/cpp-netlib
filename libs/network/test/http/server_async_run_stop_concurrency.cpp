@@ -23,11 +23,9 @@ int main(int argc, char * argv[]) {
     dummy_async_handler async_handler;
 
 #define ASYNC_SERVER_TEST_CONFIG  \
-  http::_address = "127.0.0.1",  \
-  http::_port = "8007",    \
-  http::_handler = async_handler,  \
-  http::_thread_pool = pool,    \
-  http::_reuse_address = true
+  options.address("127.0.0.1") \
+         .port("8007") \
+         .reuse_address(true)
 
 #define ASYNC_SERVER_SLEEP_TIME    \
   boost::posix_time::milliseconds(100)
@@ -35,7 +33,7 @@ int main(int argc, char * argv[]) {
   // stop from main thread
   {
     BOOST_NETWORK_MESSAGE("TEST: stop without running");
-    util::thread_pool pool;
+    async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
     server_instance.stop();
   }
@@ -43,7 +41,7 @@ int main(int argc, char * argv[]) {
   // run-stop from main thread
   {
     BOOST_NETWORK_MESSAGE("TEST: stop from main thread");
-    util::thread_pool pool;
+    async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
     boost::thread running_thread(boost::bind(&async_server::run, &server_instance));
@@ -56,7 +54,7 @@ int main(int argc, char * argv[]) {
   // run-stop from another thread
   {
     BOOST_NETWORK_MESSAGE("TEST: stop from another thread");
-    util::thread_pool pool;
+    async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
     boost::thread running_thread(boost::bind(&async_server::run, &server_instance));
@@ -72,7 +70,7 @@ int main(int argc, char * argv[]) {
   // run-stop-run-stop from another thread
   {
     BOOST_NETWORK_MESSAGE("TEST: run-stop-run-stop from another thread");
-    util::thread_pool pool;
+    async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
     boost::thread running_thread(boost::bind(&async_server::run, &server_instance));
@@ -96,7 +94,7 @@ int main(int argc, char * argv[]) {
   // run-run-stop from another thread
   {
     BOOST_NETWORK_MESSAGE("TEST: run-run-stop from another thread");
-    util::thread_pool pool;
+    async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
     boost::thread running_thread(boost::bind(&async_server::run, &server_instance));
@@ -116,7 +114,7 @@ int main(int argc, char * argv[]) {
   // run-stop-stop from another thread
   {
     BOOST_NETWORK_MESSAGE("TEST: run-stop-stop from another thread");
-    util::thread_pool pool;
+    async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
     boost::thread running_thread(boost::bind(&async_server::run, &server_instance));

@@ -171,6 +171,8 @@ namespace boost { namespace network { namespace http { namespace impl {
                                      placeholders::error)));
         } else {
           set_errors(ec ? ec : boost::asio::error::host_not_found);
+          boost::iterator_range<const char*> range;
+          callback(range,ec);
         }
       }
     }
@@ -199,7 +201,16 @@ namespace boost { namespace network { namespace http { namespace impl {
     }
 
     void handle_received_data(state_t state, bool get_body, body_callback_function_type callback, boost::system::error_code const & ec, std::size_t bytes_transferred) {
-        if (!ec || ec == boost::asio::error::eof) {
+        static long short_read_error = 335544539;
+        bool is_ssl_short_read_error = 
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
+        ec.category() == asio::error::ssl_category &&
+        ec.value() == short_read_error
+#else
+        false
+#endif
+        ;
+        if (!ec || ec == boost::asio::error::eof || is_ssl_short_read_error) {
         logic::tribool parsed_ok;
         size_t remainder;
         switch(state) {
@@ -321,7 +332,7 @@ namespace boost { namespace network { namespace http { namespace impl {
             }
             return;
           case body:
-            if (ec == boost::asio::error::eof) {
+            if (ec == boost::asio::error::eof || is_ssl_short_read_error) {
               // Here we're handling the case when the connection has been
               // closed from the server side, or at least that the end of file
               // has been reached while reading the socket. This signals the end

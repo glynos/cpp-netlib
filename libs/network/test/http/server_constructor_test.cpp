@@ -37,48 +37,21 @@ struct dummy_async_handler {
 BOOST_AUTO_TEST_CASE(minimal_constructor) {
     dummy_sync_handler sync_handler;
     dummy_async_handler async_handler;
-    util::thread_pool pool;
-
-    BOOST_CHECK_NO_THROW(sync_server sync_instance("127.0.0.1", "80", sync_handler) );
-    BOOST_CHECK_NO_THROW(async_server async_instance("127.0.0.1", "80", async_handler, pool) );
+    
+    sync_server::options sync_options(sync_handler);
+    async_server::options async_options(async_handler);
+    BOOST_CHECK_NO_THROW(sync_server sync_instance(sync_options.address("127.0.0.1").port("80")) );
+    BOOST_CHECK_NO_THROW(async_server async_instance(async_options.address("127.0.0.1").port("80")) );
 }
 
 BOOST_AUTO_TEST_CASE(with_io_service_parameter) {
     dummy_sync_handler sync_handler;
     dummy_async_handler async_handler;
-    util::thread_pool pool;
-    boost::asio::io_service io_service;
+    boost::shared_ptr<util::thread_pool> thread_pool;
+    boost::shared_ptr<boost::asio::io_service> io_service;
+    sync_server::options sync_options(sync_handler);
+    async_server::options async_options(async_handler);
 
-    BOOST_CHECK_NO_THROW(sync_server sync_instance("127.0.0.1", "80", sync_handler, io_service));
-    BOOST_CHECK_NO_THROW(async_server async_instance("127.0.0.1", "80", async_handler, pool, io_service));
-}
-
-BOOST_AUTO_TEST_CASE(with_socket_options_parameter) {
-    dummy_sync_handler sync_handler;
-    dummy_async_handler async_handler;
-    util::thread_pool pool;
-
-    BOOST_CHECK_NO_THROW(sync_server sync_instance("127.0.0.1", "80", sync_handler,
-        http::_reuse_address=true,
-        http::_report_aborted=true,
-        http::_receive_buffer_size=4096,
-        http::_send_buffer_size=4096,
-        http::_receive_low_watermark=1024,
-        http::_send_low_watermark=1024,
-        http::_non_blocking_io=true,
-        http::_linger=true,
-        http::_linger_timeout=0
-        ));
-    BOOST_CHECK_NO_THROW(async_server async_instance("127.0.0.1", "80", async_handler, pool,
-        http::_reuse_address=true,
-        http::_report_aborted=true,
-        http::_receive_buffer_size=4096,
-        http::_send_buffer_size=4096,
-        http::_receive_low_watermark=1024,
-        http::_send_low_watermark=1024,
-        http::_non_blocking_io=true,
-        http::_linger=true,
-        http::_linger_timeout=0
-        ));
-
+    BOOST_CHECK_NO_THROW(sync_server sync_instance(sync_options.address("127.0.0.1").port("80").io_service(io_service).thread_pool(thread_pool)));
+    BOOST_CHECK_NO_THROW(async_server async_instance(async_options.address("127.0.0.1").port("80").io_service(io_service).thread_pool(thread_pool)));
 }

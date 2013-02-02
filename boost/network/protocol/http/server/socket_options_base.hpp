@@ -6,8 +6,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/server/parameters.hpp>
-#include <boost/optional.hpp>
 #include <boost/utility/in_place_factory.hpp>
 
 namespace boost { namespace network { namespace http {
@@ -23,18 +21,17 @@ namespace boost { namespace network { namespace http {
         asio::socket_base::non_blocking_io non_blocking_io;
         asio::socket_base::linger linger;
 
-        template <class ArgPack>
-        socket_options_base(ArgPack const & args)
-        : acceptor_reuse_address(args[_reuse_address|false])
-        , acceptor_report_aborted(args[_report_aborted|false])
-        , non_blocking_io(args[_non_blocking_io|true])
-        , linger(args[_linger|true], args[_linger_timeout|0])
-        {
-            set_optional(receive_buffer_size, args, _receive_buffer_size);
-            set_optional(send_buffer_size, args, _send_buffer_size);
-            set_optional(receive_low_watermark, args, _receive_low_watermark);
-            set_optional(send_low_watermark, args, _send_low_watermark);
-        }
+        template <class Tag, class Handler>
+        explicit socket_options_base(server_options<Tag, Handler> const &options)
+        : acceptor_reuse_address(options.reuse_address())
+        , acceptor_report_aborted(options.report_aborted())
+        , receive_buffer_size(options.receive_buffer_size())
+        , send_buffer_size(options.send_buffer_size())
+        , receive_low_watermark(options.receive_low_watermark())
+        , send_low_watermark(options.send_low_watermark())
+        , non_blocking_io(options.non_blocking_io())
+        , linger(options.linger(), options.linger_timeout())
+        {}
 
         void acceptor_options(boost::asio::ip::tcp::acceptor & acceptor) {
             acceptor.set_option(acceptor_reuse_address);
@@ -50,35 +47,6 @@ namespace boost { namespace network { namespace http {
             if (send_buffer_size) socket.set_option(*send_buffer_size, ignored);
             if (send_low_watermark) socket.set_option(*send_low_watermark, ignored);
         }
-
-    private:
-
-        template <class Optional, class Args, class Keyword>
-        typename boost::enable_if<
-            mpl::not_<
-                boost::is_same<
-                    typename boost::parameter::value_type<Args, Keyword, void>::type
-                    , void
-                    >
-                >
-            , void
-        >::type
-        set_optional(Optional & option, Args const & args, Keyword const & keyword) {
-            option = in_place<typename Optional::value_type>(args[keyword]);
-        }
-
-        template <class Optional, class Args, class Keyword>
-        typename boost::enable_if<
-            boost::is_same<
-                typename boost::parameter::value_type<Args, Keyword, void>::type
-                , void
-                >
-            , void
-        >::type
-        set_optional(Optional &, Args const &, Keyword const &) {
-            // do nothing
-        }
-
     };
 
 } /* http */
