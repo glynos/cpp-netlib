@@ -32,7 +32,7 @@ extensions = ['sphinx.ext.todo',
 todo_include_todos = True
 
 # Add any paths that contain templates here, relative to this directory.
-# templates_path = ['_templates']
+templates_path = ['_templates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -85,7 +85,7 @@ add_module_names = True
 
 # The name of the Pygments (syntax highlighting) style to use.
 # pygments_style = 'sphinx'
-pygments_style = 'sphinx'
+pygments_style = 'bw'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -110,8 +110,8 @@ html_use_index = False
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_style = 'cpp-netlib.css'
-# html_static_path = ['_static']
+html_style = 'cpp-netlib.css'
+html_static_path = ['_static']
 
 # html_translator_class = "adjusts.CppNetlibHTMLTranslator"
 
