@@ -139,37 +139,35 @@ initialization.
 
 ``client()``
     Default constructor.
-``client(boost::asio::io_service & io_service)``
-    Construct a client to use an existing Boost.Asio ``io_service`` instance.
-``template <class ArgPack> client(ArgPack const & args)``
-    Pass in an argument pack. See supported parameters in the table below.
+``explicit client(client::options const &)``
+    Constructor taking a ``client_options<Tag>`` object. The following table
+    shows the options you can set on a ``client_options<Tag>`` instance.
 
 +----------------------+-------------------------------+-------------------------+
 | Parameter Name       | Type                          | Description             |
 +======================+===============================+=========================+
-| _follow_redirects    | ``bool``                      | Boolean to specify      |
+| follow_redirects     | ``bool``                      | Boolean to specify      |
 |                      |                               | whether the client      |
 |                      |                               | should follow HTTP      |
 |                      |                               | redirects. Default is   |
 |                      |                               | ``false``.              |
 +----------------------+-------------------------------+-------------------------+
-| _cache_resolved      | ``bool``                      | Boolean to specify      |
+| cache_resolved       | ``bool``                      | Boolean to specify      |
 |                      |                               | whether the client      |
 |                      |                               | should cache resolved   |
 |                      |                               | endpoints. The default  |
 |                      |                               | is ``false``.           |
 +----------------------+-------------------------------+-------------------------+
-| _io_service          | ``boost::asio::io_service &`` | Reference to an         |
-|                      |                               | instance of a           |
+| io_service           | ``shared_ptr<io_service>``    | Shared pointer to a     |
 |                      |                               | Boost.Asio              |
 |                      |                               | ``io_service``.         |
 +----------------------+-------------------------------+-------------------------+
-| _openssl_certificate | string                        | The filename of the     |
+| openssl_certificate  | string                        | The filename of the     |
 |                      |                               | certificate to load for |
 |                      |                               | the SSL connection for  |
 |                      |                               | verification.           |
 +----------------------+-------------------------------+-------------------------+
-| _openssl_verify_path | string                        | The directory from      |
+| openssl_verify_path  | string                        | The directory from      |
 |                      |                               | which the certificate   |
 |                      |                               | authority files are     |
 |                      |                               | located.                |
@@ -182,11 +180,13 @@ the following:
 .. code-block:: c++
 
     using namespace boost::network::http; // parameters are in this namespace
-    boost::asio::io_service my_io_service;
-    client client_(_follow_redirects=true, _cache_resolved=true,
-                   _io_service=my_io_service
-                   , _openssl_certificate="/tmp/my-cert"
-                   , _openssl_verify_path="/tmp/ca-certs/");
+    client::options options;
+    options.follow_redirects(true)
+           .cache_resolved(true)
+           .io_service(boost::make_shared<boost::asio::io_service>())
+           .openssl_certificate("/tmp/my-cert")
+           .openssl_verify_path("/tmp/ca-certs");
+    client client_(options);
     // use client_ as normal from here on out.
 
 HTTP Methods
@@ -207,7 +207,7 @@ and that there is an appropriately constructed response object named
 
 ``response_ = client_.get(request_)``
     Perform an HTTP GET request.
-``response_ = client_.get(request_, _body_handler=callback)``
+``response_ = client_.get(request_, callback)``
     Perform an HTTP GET request, and have the body chunks be handled by the
     ``callback`` parameter. The signature of ``callback`` should be the following:
     ``void(iterator_range<char const *> const &, boost::system::error_code const
@@ -217,7 +217,7 @@ and that there is an appropriately constructed response object named
 ``response_ = client_.post(request_)``
     Perform an HTTP POST, use the data already set in the request object which
     includes the headers, and the body.
-``response_ = client_.post(request_, _body_handler=callback)``
+``response_ = client_.post(request_, callback)``
     Perform an HTTP POST request, and have the body chunks be handled by the
     ``callback`` parameter. The signature of ``callback`` should be the following:
     ``void(iterator_range<char const *> const &, boost::system::error_code const
@@ -226,18 +226,18 @@ and that there is an appropriately constructed response object named
     Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
     is the HTTP Client's ``Tag``. The default content-type used is
     ``x-application/octet-stream``.
-``response_ = client_.post(request_, body, _body_handler=callback)``
+``response_ = client_.post(request_, body, callback)``
     Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
     is the HTTP Client's ``Tag``. The default content-type used is
     ``x-application/octet-stream``. Have the response body chunks be handled by
     the ``callback`` parameter. The signature of ``callback`` should be the
     following: ``void(iterator_range<char const *> const &,
     boost::system::error_code const &)``.
-``response_ = client_.post(request_, content_type, body)``
+``response_ = client_.post(request_, body, content_type)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers.
-``response_ = client_.post(request_, content_type, body, _body_handler=callback)``
+``response_ = client_.post(request_, body, content_type, callback)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers. Have the response
@@ -247,7 +247,7 @@ and that there is an appropriately constructed response object named
 ``response_ = client_.put(request_)``
     Perform an HTTP PUT, use the data already set in the request object which
     includes the headers, and the body.
-``response_ = client_.put(request_, _body_handler=callback)``
+``response_ = client_.put(request_, callback)``
     Perform an HTTP PUT request, and have the body chunks be handled by the
     ``callback`` parameter. The signature of ``callback`` should be the following:
     ``void(iterator_range<char const *> const &, boost::system::error_code const
@@ -256,18 +256,18 @@ and that there is an appropriately constructed response object named
     Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
     is the HTTP Client's ``Tag``. The default content-type used is
     ``x-application/octet-stream``.
-``response_ = client_.put(request_, body, _body_handler=callback)``
+``response_ = client_.put(request_, body, callback)``
     Body is a string of type ``boost::network::string<Tag>::type`` where ``Tag``
     is the HTTP Client's ``Tag``. The default content-type used is
     ``x-application/octet-stream``. Have the response body chunks be handled by
     the ``callback`` parameter. The signature of ``callback`` should be the
     following: ``void(iterator_range<char const *> const &,
     boost::system::error_code const &)``.
-``response_ = client_.put(request_, content_type, body)``
+``response_ = client_.put(request_, body, content_type)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers.
-``response_ = client_.put(request_, content_type, body, _body_handler=callback)``
+``response_ = client_.put(request_, body, content_type, body_handler=callback)``
     The body and content_type parameters are of type
     ``boost::network::string<Tag>::type`` where ``Tag`` is the HTTP Client's
     ``Tag``. This uses the request object's other headers. Have the response
@@ -276,7 +276,7 @@ and that there is an appropriately constructed response object named
     &, boost::system::error_code const &)``.
 ``response_ = client_.delete_(request_)``
     Perform an HTTP DELETE request.
-``response_ = client_.delete_(request_, _body_handler=callback)``
+``response_ = client_.delete_(request_, body_handler=callback)``
     Perform an HTTP DELETE request, and have the response body chunks be handled
     by the ``callback`` parameter. The signature of ``callback`` should be the
     following: ``void(iterator_range<char const *> const &,
@@ -320,7 +320,7 @@ An example of how to use the macro is shown below:
     // somewhere else
     std::string some_string;
     response_ = client_.get(request("http://cpp-netlib.github.com/"),
-                            _body_handler=body_handler(some_string));
+                            body_handler(some_string));
 
 You can also use if for standalone functions instead if you don't want or need
 to create a function object.
@@ -337,7 +337,7 @@ to create a function object.
 
     // somewhere else
     response_ = client_.get(request("http://cpp-netlib.github.com/"),
-                            _body_handler=print_body);
+                            print_body);
 
 The ``BOOST_NETWORK_HTTP_BODY_CALLBACK`` macro is defined in
 ``boost/network/protocol/http/client/macros.hpp``.

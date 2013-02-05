@@ -1,19 +1,21 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Atom feed reader &mdash; cpp-netlib v0.9.4</title>
+    <title>Atom feed reader &mdash; cpp-netlib v0.9.5</title>
+    
     <link rel="stylesheet" href="../../_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.9.4',
+        VERSION:     '0.9.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +24,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.9.4" href="../../index.html" />
+    <link rel="top" title="cpp-netlib v0.9.5" href="../../index.html" />
     <link rel="up" title="Examples" href="../../examples.html" />
     <link rel="next" title="Twitter search" href="twitter_search.html" />
     <link rel="prev" title="“Hello world” HTTP client" href="hello_world_client.html" />
@@ -43,10 +45,11 @@
   </head>
   <body>
 
+
     <div class="document">
   <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="../../index.html">cpp-netlib v0.9.4</a></h1>
+      <h1><a href="../../index.html">cpp-netlib v0.9.5</a></h1>
       <div id="global-nav">
         <a title="Home page" href="../../index.html">Home</a>  |
         <a title="Table of contents" href="../../contents.html">Table of contents</a> |
@@ -69,19 +72,19 @@
         <div class="yui-b">
           <div class="yui-g" id="examples-http-atom_reader">
             
-  <div class="section" id="cpp-netlib-atom-feed-reader">
-<span id="cpp-netlib-atom-reader"></span><h1>Atom feed reader<a class="headerlink" href="#cpp-netlib-atom-feed-reader" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="atom-feed-reader">
+<span id="atom-reader"></span><h1>Atom feed reader<a class="headerlink" href="#atom-feed-reader" title="Permalink to this headline">¶</a></h1>
 <p>The next examples show some simple, more practical applications using
 the HTTP client.  The first one reads a simple <a class="reference external" href="http://en.wikipedia.org/wiki/Atom_(standard)">Atom</a> feed and prints
 the titles of each entry to the console.</p>
-<div class="section" id="cpp-netlib-the-code">
-<h2>The code<a class="headerlink" href="#cpp-netlib-the-code" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-code">
+<h2>The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &quot;atom.hpp&quot;</span>
 <span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
 <span class="cp">#include &lt;boost/foreach.hpp&gt;</span>
 <span class="cp">#include &lt;iostream&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
     <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
@@ -89,7 +92,7 @@ the titles of each entry to the console.</p>
         <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="k">try</span> <span class="p">{</span>
+    <span class="n">try</span> <span class="p">{</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
         <span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">header</span><span class="p">(</span><span class="s">&quot;Connection&quot;</span><span class="p">,</span> <span class="s">&quot;close&quot;</span><span class="p">);</span>
@@ -112,8 +115,8 @@ the titles of each entry to the console.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="cpp-netlib-building-and-running-atom-reader">
-<h2>Building and running <tt class="docutils literal"><span class="pre">atom_reader</span></tt><a class="headerlink" href="#cpp-netlib-building-and-running-atom-reader" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="building-and-running-atom-reader">
+<h2>Building and running <tt class="docutils literal"><span class="pre">atom_reader</span></tt><a class="headerlink" href="#building-and-running-atom-reader" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/cpp-netlib-build
 <span class="nv">$ </span>make atom_reader
 </pre></div>
@@ -124,8 +127,8 @@ lists of all the commits on cpp-netlib&#8217;s master branch:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="cpp-netlib-diving-into-the-code">
-<h2>Diving into the code<a class="headerlink" href="#cpp-netlib-diving-into-the-code" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="diving-into-the-code">
+<h2>Diving into the code<a class="headerlink" href="#diving-into-the-code" title="Permalink to this headline">¶</a></h2>
 <p>Most of this will now be familiar.  The response is passed to the
 constructor to the <tt class="docutils literal"><span class="pre">atom::feed</span></tt> class, which parses the resultant
 XML.  To keep this example as simple as possible, <a class="reference external" href="http://rapidxml.sourceforge.net/">rapidxml</a>, a
@@ -167,7 +170,7 @@ header-only XML parser library, was used to parse the response.</p>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="../../index.html">cpp-netlib v0.9.4</a>
+        <a href="../../index.html">cpp-netlib v0.9.5</a>
         
           <ul><li><a href="../../examples.html">Examples</a>
         
@@ -176,15 +179,10 @@ header-only XML parser library, was used to parse the response.</p>
       </li>
   </ul>
 
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../../_sources/examples/http/atom_reader.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -196,6 +194,8 @@ header-only XML parser library, was used to parse the response.</p>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
+            <h3>Last update:</h3>
+            <p class="topless">Feb 05, 2013</p>
         </div>
       
     </div>
