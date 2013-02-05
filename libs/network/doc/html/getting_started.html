@@ -1,19 +1,21 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Getting Started &mdash; cpp-netlib v0.9.4</title>
+    <title>Getting Started &mdash; cpp-netlib v0.9.5</title>
+    
     <link rel="stylesheet" href="_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.9.4',
+        VERSION:     '0.9.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +24,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.9.4" href="index.html" />
+    <link rel="top" title="cpp-netlib v0.9.5" href="index.html" />
     <link rel="next" title="Examples" href="examples.html" />
     <link rel="prev" title="What’s New" href="whats_new.html" />
 <script type="text/javascript">
@@ -42,10 +44,11 @@
   </head>
   <body>
 
+
     <div class="document">
   <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="index.html">cpp-netlib v0.9.4</a></h1>
+      <h1><a href="index.html">cpp-netlib v0.9.5</a></h1>
       <div id="global-nav">
         <a title="Home page" href="index.html">Home</a>  |
         <a title="Table of contents" href="contents.html">Table of contents</a> |
@@ -58,7 +61,7 @@
       <div class="nav">
     &laquo; <a href="whats_new.html" title="What&amp;#8217;s New">previous</a>
      |
-    <a title="cpp-netlib v0.9.4" href="index.html" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9.5" href="index.html" accesskey="U">up</a>
    |
     <a href="examples.html" title="Examples">next</a> &raquo;</div>
     </div>
@@ -68,10 +71,10 @@
         <div class="yui-b">
           <div class="yui-g" id="getting_started">
             
-  <div class="section" id="cpp-netlib-getting-started">
-<span id="cpp-netlib-id1"></span><h1>Getting Started<a class="headerlink" href="#cpp-netlib-getting-started" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="cpp-netlib-downloading-an-official-release">
-<h2>Downloading an official release<a class="headerlink" href="#cpp-netlib-downloading-an-official-release" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="getting-started">
+<span id="id1"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="downloading-an-official-release">
+<h2>Downloading an official release<a class="headerlink" href="#downloading-an-official-release" title="Permalink to this headline">¶</a></h2>
 <p>All stable versions of <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> can be downloaded from
 <a class="reference external" href="http://github.com/cpp-netlib/cpp-netlib/downloads">Github</a> from this url:</p>
 <blockquote>
@@ -81,8 +84,8 @@
 <span class="pre">cpp-netlib.tar.bz2</span></tt>) tarball, or as a zipfile (<tt class="docutils literal"><span class="pre">unzip</span>
 <span class="pre">cpp-netlib.zip</span></tt>, or on Windows using a tool such as <a class="reference external" href="http://www.7-zip.org/">7zip</a>).</p>
 </div>
-<div class="section" id="cpp-netlib-downloading-a-development-version">
-<h2>Downloading a development version<a class="headerlink" href="#cpp-netlib-downloading-a-development-version" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="downloading-a-development-version">
+<h2>Downloading a development version<a class="headerlink" href="#downloading-a-development-version" title="Permalink to this headline">¶</a></h2>
 <p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://git-scm.com/">Git</a> for source control, so to use any
 development versions Git must be installed on your system.</p>
 <p>Using the command line, the command to get the latest code is:</p>
@@ -111,10 +114,10 @@ you want to submit patches, you will have to create a fork of the project
 <a class="reference external" href="http://help.github.com/pull-requests/">pull requests</a>).</p>
 </div>
 </div>
-<div class="section" id="cpp-netlib-getting-boost">
-<h2>Getting Boost<a class="headerlink" href="#cpp-netlib-getting-boost" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="getting-boost">
+<h2>Getting Boost<a class="headerlink" href="#getting-boost" title="Permalink to this headline">¶</a></h2>
 <p><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> depends on <a class="reference external" href="http://www.boost.org/doc/libs/release/more/getting_started/index.html">Boost</a>.  It should work for any version
-of Boost above 1.45.0.  If Boost is not installed on your system, the
+of Boost above 1.50.0.  If Boost is not installed on your system, the
 latest package can be found on the <a class="reference external" href="http://www.boost.org/users/download/">Boost web-site</a>.  The environment
 variable <tt class="docutils literal"><span class="pre">BOOST_ROOT</span></tt> must be defined, which must be the full path
 name of the top directory of the Boost distribution.  Although Boost
@@ -134,8 +137,8 @@ with Boost 1.46.1. Some have reported though that Boost 1.47.0
 and <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> work together better.</p>
 </div>
 </div>
-<div class="section" id="cpp-netlib-getting-cmake">
-<h2>Getting CMake<a class="headerlink" href="#cpp-netlib-getting-cmake" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="getting-cmake">
+<h2>Getting CMake<a class="headerlink" href="#getting-cmake" title="Permalink to this headline">¶</a></h2>
 <p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://www.cmake.org/">CMake</a> to generate platform-specific build files. If
 you intend to run the test suite, you can follow the instructions below.
 Otherwise, you don&#8217;t need CMake to use <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> in your project. The
@@ -146,8 +149,8 @@ your HOME directory using the command <tt class="docutils literal"><span class="
 the <tt class="docutils literal"><span class="pre">~/cpp-netlib</span></tt> directory exists, and is the top-level directory of the
 <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> release.</p>
 </div>
-<div class="section" id="cpp-netlib-building-with-cmake">
-<h2>Building with CMake<a class="headerlink" href="#cpp-netlib-building-with-cmake" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="building-with-cmake">
+<h2>Building with CMake<a class="headerlink" href="#building-with-cmake" title="Permalink to this headline">¶</a></h2>
 <p>To build the tests that come with cpp-netlib, we first need to configure the
 build system to use our compiler of choice. This is done by running the
 <tt class="docutils literal"><span class="pre">cmake</span></tt> command at the top-level directory of <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> with
@@ -166,8 +169,8 @@ $ cmake -DCMAKE_BUILD_TYPE=Debug \
 For the purposes of documentation, we&#8217;ll assume that all
 builds are done in <tt class="docutils literal"><span class="pre">~/cpp-netlib-build</span></tt>.</p>
 </div>
-<div class="section" id="cpp-netlib-building-on-linux">
-<h3>Building on Linux<a class="headerlink" href="#cpp-netlib-building-on-linux" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="building-on-linux">
+<h3>Building on Linux<a class="headerlink" href="#building-on-linux" title="Permalink to this headline">¶</a></h3>
 <p>On Linux, this will generate the appropriate Makefiles that will enable you to
 build and run the tests and examples that come with <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>. To build
 the tests, you can run <tt class="docutils literal"><span class="pre">make</span></tt> in the same top-level directory of
@@ -192,8 +195,8 @@ compile-time burden is much reduced in recent versions.</p>
 <div class="highlight-python"><pre>$ make test</pre>
 </div>
 </div>
-<div class="section" id="cpp-netlib-building-on-windows">
-<h3>Building On Windows<a class="headerlink" href="#cpp-netlib-building-on-windows" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="building-on-windows">
+<h3>Building On Windows<a class="headerlink" href="#building-on-windows" title="Permalink to this headline">¶</a></h3>
 <p>If you&#8217;re using the Microsoft Visual C++ compiler or the Microsoft Visual Studio
 IDE and you would like to build cpp-netlib from within Visual Studio, you can
 look for the solution and project files as the artifacts of the call to
@@ -218,8 +221,8 @@ libraries.  Using GCC on Linux these are:</p>
 </div>
 </div>
 </div>
-<div class="section" id="cpp-netlib-reporting-issues-getting-support">
-<h2>Reporting Issues, Getting Support<a class="headerlink" href="#cpp-netlib-reporting-issues-getting-support" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="reporting-issues-getting-support">
+<h2>Reporting Issues, Getting Support<a class="headerlink" href="#reporting-issues-getting-support" title="Permalink to this headline">¶</a></h2>
 <p>In case you find yourself stuck or if you&#8217;ve found a bug (or you want to just
 join the discussion) you have a few options to choose from.</p>
 <p>For reporting bugs, feature requests, and asking questions about the
@@ -270,22 +273,17 @@ through <a class="reference external" href="http://groups.google.com/forum/#!for
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="index.html">cpp-netlib v0.9.4</a>
+        <a href="index.html">cpp-netlib v0.9.5</a>
         
         <ul><li>Getting Started</li></ul>
         
       </li>
   </ul>
 
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/getting_started.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -297,6 +295,8 @@ through <a class="reference external" href="http://groups.google.com/forum/#!for
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
+            <h3>Last update:</h3>
+            <p class="topless">Feb 05, 2013</p>
         </div>
       
     </div>
@@ -305,7 +305,7 @@ through <a class="reference external" href="http://groups.google.com/forum/#!for
       <div class="nav">
     &laquo; <a href="whats_new.html" title="What&amp;#8217;s New">previous</a>
      |
-    <a title="cpp-netlib v0.9.4" href="index.html" accesskey="U">up</a>
+    <a title="cpp-netlib v0.9.5" href="index.html" accesskey="U">up</a>
    |
     <a href="examples.html" title="Examples">next</a> &raquo;</div>
     </div>

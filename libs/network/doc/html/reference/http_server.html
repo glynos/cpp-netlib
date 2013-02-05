@@ -1,19 +1,21 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HTTP Server API &mdash; cpp-netlib v0.9.4</title>
+    <title>HTTP Server API &mdash; cpp-netlib v0.9.5</title>
+    
     <link rel="stylesheet" href="../_static/cpp-netlib.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.9.4',
+        VERSION:     '0.9.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -22,7 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.9.4" href="../index.html" />
+    <link rel="top" title="cpp-netlib v0.9.5" href="../index.html" />
     <link rel="up" title="Reference Manual" href="../reference.html" />
     <link rel="next" title="References" href="../references.html" />
     <link rel="prev" title="HTTP Response" href="http_response.html" />
@@ -43,10 +45,11 @@
   </head>
   <body>
 
+
     <div class="document">
   <div id="custom-doc" class="yui-t4">
     <div id="hd">
-      <h1><a href="../index.html">cpp-netlib v0.9.4</a></h1>
+      <h1><a href="../index.html">cpp-netlib v0.9.5</a></h1>
       <div id="global-nav">
         <a title="Home page" href="../index.html">Home</a>  |
         <a title="Table of contents" href="../contents.html">Table of contents</a> |
@@ -69,10 +72,10 @@
         <div class="yui-b">
           <div class="yui-g" id="reference-http_server">
             
-  <div class="section" id="cpp-netlib-http-server-api">
-<h1>HTTP Server API<a class="headerlink" href="#cpp-netlib-http-server-api" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="cpp-netlib-general">
-<h2>General<a class="headerlink" href="#cpp-netlib-general" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="http-server-api">
+<h1>HTTP Server API<a class="headerlink" href="#http-server-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
 <p><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> includes and implements two distinct HTTP server
 implementations that you can use and embed in your own applications. Both HTTP
 Server implementations:</p>
@@ -94,8 +97,8 @@ implementations.</li>
 <p>The HTTP Servers have different semantics, and in some cases require different
 APIs from the supplied template parameters.</p>
 </div>
-<div class="section" id="cpp-netlib-implementations">
-<h2>Implementations<a class="headerlink" href="#cpp-netlib-implementations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="implementations">
+<h2>Implementations<a class="headerlink" href="#implementations" title="Permalink to this headline">¶</a></h2>
 <p>There are two different user-facing template classes that differentiate the
 <a class="reference internal" href="#synchronous-servers">Synchronous Servers</a> from the <a class="reference internal" href="#asynchronous-servers">Asynchronous Servers</a>. Both templates take a
 single template parameter named <tt class="docutils literal"><span class="pre">Handler</span></tt> which describes the type of the
@@ -127,13 +130,13 @@ following table:</p>
 <col width="61%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Construct</th>
+<tr class="row-odd"><th class="head">Construct</th>
 <th class="head">Return Type</th>
 <th class="head">Description</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td><tt class="docutils literal"><span class="pre">h(req,res)</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">h(req,res)</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">void</span></tt></td>
 <td>Handle the request; res is passed in as a
 non-const lvalue, which represents the
@@ -169,13 +172,13 @@ following table:</p>
 <col width="59%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Construct</th>
+<tr class="row-odd"><th class="head">Construct</th>
 <th class="head">Return Type</th>
 <th class="head">Description</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td><tt class="docutils literal"><span class="pre">h(req,</span> <span class="pre">conn)</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">h(req,</span> <span class="pre">conn)</span></tt></td>
 <td><tt class="docutils literal"><span class="pre">void</span></tt></td>
 <td>Handle the request; conn is a shared
 pointer which exposes functions for
@@ -186,8 +189,8 @@ writing to and reading from the connection.</td>
 <p>More information about the internals of the <a class="reference internal" href="#asynchronous-servers">Asynchronous Servers</a> can be found
 in the following section.</p>
 </div>
-<div class="section" id="cpp-netlib-synchronous-servers">
-<h2>Synchronous Servers<a class="headerlink" href="#cpp-netlib-synchronous-servers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="synchronous-servers">
+<h2>Synchronous Servers<a class="headerlink" href="#synchronous-servers" title="Permalink to this headline">¶</a></h2>
 <p>The synchronous server implementation is represented by the template <tt class="docutils literal"><span class="pre">server</span></tt>
 in namespace <tt class="docutils literal"><span class="pre">boost::network::http</span></tt>. The <tt class="docutils literal"><span class="pre">server</span></tt> template takes in a single
 template parameter named <tt class="docutils literal"><span class="pre">Handler</span></tt> which models the SynchronousHandler
@@ -223,8 +226,8 @@ threads.</p>
 It is important to understand that the HTTP Server is actually embedded in your
 application, which means you can expose almost all your application logic
 through the Handler type, which you can also initialize appropriately.</p>
-<div class="section" id="cpp-netlib-api-documentation">
-<h3>API Documentation<a class="headerlink" href="#cpp-netlib-api-documentation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="api-documentation">
+<h3>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h3>
 <p>The following sections assume that the following file has been included:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/include/http/server.hpp&gt;</span>
 </pre></div>
@@ -243,97 +246,91 @@ through the Handler type, which you can also initialize appropriately.</p>
 <span class="p">};</span>
 </pre></div>
 </div>
-<div class="section" id="cpp-netlib-constructor">
-<h4>Constructor<a class="headerlink" href="#cpp-netlib-constructor" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="constructor">
+<h4>Constructor<a class="headerlink" href="#constructor" title="Permalink to this headline">¶</a></h4>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">http_server(address,</span> <span class="pre">port,</span> <span class="pre">handler)</span></tt></dt>
-<dd>Construct an HTTP Server instance, passing in the address and port as
-<tt class="docutils literal"><span class="pre">std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span></tt> and handler being of type <tt class="docutils literal"><span class="pre">handler_type</span></tt> but
-passed in as an lvalue reference.</dd>
-<dt><tt class="docutils literal"><span class="pre">template</span> <span class="pre">&lt;class</span> <span class="pre">ArgPack&gt;</span> <span class="pre">client(ArgPack</span> <span class="pre">const</span> <span class="pre">&amp;</span> <span class="pre">args)</span></tt></dt>
-<dd>Pass in an argument pack. See supported parameters in the table below.</dd>
+<dt><tt class="docutils literal"><span class="pre">explicit</span> <span class="pre">http_server(options)</span></tt></dt>
+<dd>Construct an HTTP Server instance, passing in a <tt class="docutils literal"><span class="pre">server_options&lt;Tag,</span>
+<span class="pre">Handler&gt;</span></tt> object. The following table shows the supported options in
+<tt class="docutils literal"><span class="pre">server_options&lt;Tag,</span> <span class="pre">Handler&gt;</span></tt>.</dd>
 </dl>
 <table border="1" class="docutils">
 <colgroup>
-<col width="15%" />
+<col width="14%" />
 <col width="26%" />
 <col width="60%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Parameter Name</th>
+<tr class="row-odd"><th class="head">Parameter Name</th>
 <th class="head">Type</th>
 <th class="head">Description</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td>_address</td>
+<tr class="row-even"><td>address</td>
 <td>string_type</td>
 <td>The hostname or IP address from which the server should be bound to. This parameter is required.</td>
 </tr>
-<tr><td>_port</td>
+<tr class="row-odd"><td>port</td>
 <td>string_type</td>
 <td>The port to which the server should bind and listen to. This parameter is required.</td>
 </tr>
-<tr><td>_handler</td>
-<td><tt class="docutils literal"><span class="pre">Handler</span> <span class="pre">&amp;</span></tt></td>
-<td>An lvalue reference to an instance of <tt class="docutils literal"><span class="pre">Handler</span></tt>. This parameter is required.</td>
-</tr>
-<tr><td>_thread_pool</td>
-<td><tt class="docutils literal"><span class="pre">boost::network::utils::thread_pool</span> <span class="pre">&amp;</span></tt></td>
-<td>An lvalue reference to an instance of <tt class="docutils literal"><span class="pre">boost::network::utils::thread_pool</span></tt> &#8211; this is the
+<tr class="row-even"><td>thread_pool</td>
+<td><tt class="docutils literal"><span class="pre">shared_ptr&lt;thread_pool&gt;</span></tt></td>
+<td>A shared pointer to an instance of <tt class="docutils literal"><span class="pre">boost::network::utils::thread_pool</span></tt> &#8211; this is the
 thread pool from where the handler is invoked. This parameter is only applicable and required
 for <tt class="docutils literal"><span class="pre">async_server</span></tt> instances.</td>
 </tr>
-<tr><td>_io_service</td>
-<td><tt class="docutils literal"><span class="pre">boost::asio::io_service</span> <span class="pre">&amp;</span></tt></td>
+<tr class="row-odd"><td>io_service</td>
+<td><tt class="docutils literal"><span class="pre">shared_ptr&lt;io_service&gt;</span></tt></td>
 <td>An optional lvalue to an instance of <tt class="docutils literal"><span class="pre">boost::asio::io_service</span></tt> which allows the server to use
 an already-constructed <tt class="docutils literal"><span class="pre">boost::asio::io_service</span></tt> instance instead of instantiating one that it
 manages.</td>
 </tr>
-<tr><td>_reuse_address</td>
+<tr class="row-even"><td>reuse_address</td>
 <td><tt class="docutils literal"><span class="pre">bool</span></tt></td>
 <td>A boolean that specifies whether to re-use the address and port on which the server will be
 bound to. This enables or disables the socket option for listener sockets. The default is
 <tt class="docutils literal"><span class="pre">false</span></tt>.</td>
 </tr>
-<tr><td>_report_aborted</td>
+<tr class="row-odd"><td>report_aborted</td>
 <td><tt class="docutils literal"><span class="pre">bool</span></tt></td>
 <td>A boolean that specifies whether the listening socket should report aborted connection attempts
 to the accept handler (an internal detail of cpp-netlib). This is put in place to allow for
 future-proofing the code in case an optional error handler function is supported in later
 releases of cpp-netlib. The default is <tt class="docutils literal"><span class="pre">false</span></tt>.</td>
 </tr>
-<tr><td>_receive_buffer_size</td>
+<tr class="row-even"><td>receive_buffer_size</td>
 <td><tt class="docutils literal"><span class="pre">int</span></tt></td>
 <td>The size of the socket&#8217;s receive buffer. The default is defined by Boost.Asio and is
 platform-dependent.</td>
 </tr>
-<tr><td>_send_buffer_size</td>
+<tr class="row-odd"><td>send_buffer_size</td>
 <td><tt class="docutils literal"><span class="pre">int</span></tt></td>
 <td>The size of the socket&#8217;s send buffer. The default is defined by Boost.Asio and is
 platform-dependent.</td>
 </tr>
-<tr><td>_receive_low_watermark</td>
+<tr class="row-even"><td>receive_low_watermark</td>
 <td><tt class="docutils literal"><span class="pre">int</span></tt></td>
 <td>The size of the socket&#8217;s low watermark for its receive buffer. The default is defined by
 Boost.Asio and is platform-dependent.</td>
 </tr>
-<tr><td>_send_buffer_size</td>
+<tr class="row-odd"><td>send_buffer_size</td>
 <td><tt class="docutils literal"><span class="pre">int</span></tt></td>
 <td>The size of the socket&#8217;s send low watermark for its send buffer. The default is defined by
 Boost.Asio and is platform-dependent.</td>
 </tr>
-<tr><td>_non_blocking_io</td>
+<tr class="row-even"><td>non_blocking_io</td>
 <td><tt class="docutils literal"><span class="pre">bool</span></tt></td>
 <td>An optional bool to define whether the socket should use non-blocking I/O in case the platform
 supports it. The default is <tt class="docutils literal"><span class="pre">true</span></tt>.</td>
 </tr>
-<tr><td>_linger</td>
+<tr class="row-odd"><td>linger</td>
 <td><tt class="docutils literal"><span class="pre">bool</span></tt></td>
 <td>An optional bool to determine whether the socket should linger in case there&#8217;s still data to be
 sent out at the time of its closing. The default is <tt class="docutils literal"><span class="pre">true</span></tt>.</td>
 </tr>
-<tr><td>_linger_timeout</td>
+<tr class="row-even"><td>linger_timeout</td>
 <td><tt class="docutils literal"><span class="pre">int</span></tt></td>
 <td>An optional int to define the timeout to wait for socket closes before it is set to linger.
 The default is <tt class="docutils literal"><span class="pre">0</span></tt>.</td>
@@ -342,22 +339,25 @@ The default is <tt class="docutils literal"><span class="pre">0</span></tt>.</td
 </table>
 <p>To use the above supported named parameters, you&#8217;ll have code that looks like the following:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span> <span class="c1">// parameters are in this namespace</span>
-<span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">io_service</span> <span class="n">my_io_service</span><span class="p">;</span>
-<span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">thread_pool</span> <span class="n">pool</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="n">handler</span> <span class="n">handler_instance</span><span class="p">;</span>
-<span class="n">async_server</span><span class="o">&lt;</span><span class="n">handler</span><span class="o">&gt;</span> <span class="n">instance</span><span class="p">(</span><span class="n">_address</span><span class="o">=</span><span class="s">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">_port</span><span class="o">=</span><span class="s">&quot;80&quot;</span><span class="p">,</span> <span class="n">_handler</span><span class="o">=</span><span class="n">handler_instance</span><span class="p">,</span>
-                               <span class="n">_io_service</span><span class="o">=</span><span class="n">my_io_service</span><span class="p">,</span> <span class="n">_thread_pool</span><span class="o">=</span><span class="n">pool</span><span class="p">,</span>
-                               <span class="n">_reuse_address</span><span class="o">=</span><span class="kc">true</span><span class="p">);</span>
+<span class="n">async_server</span><span class="o">&lt;</span><span class="n">handler</span><span class="o">&gt;::</span><span class="n">options</span> <span class="n">options</span><span class="p">(</span><span class="n">handler_instance</span><span class="p">);</span>
+<span class="n">options</span><span class="p">.</span><span class="n">address</span><span class="p">(</span><span class="s">&quot;0.0.0.0&quot;</span><span class="p">)</span>
+       <span class="p">.</span><span class="n">port</span><span class="p">(</span><span class="s">&quot;80&quot;</span><span class="p">)</span>
+       <span class="p">.</span><span class="n">io_service</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">io_service</span><span class="o">&gt;</span><span class="p">())</span>
+       <span class="p">.</span><span class="n">thread_pool</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">thread_pool</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+       <span class="p">.</span><span class="n">reuse_address</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<span class="n">async_server</span><span class="o">&lt;</span><span class="n">handler</span><span class="o">&gt;</span> <span class="n">instance</span><span class="p">(</span><span class="n">options</span><span class="p">);</span>
 <span class="n">instance</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="cpp-netlib-public-members">
-<h4>Public Members<a class="headerlink" href="#cpp-netlib-public-members" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="public-members">
+<h4>Public Members<a class="headerlink" href="#public-members" title="Permalink to this headline">¶</a></h4>
 <p>The following definitions assume that a properly constructed <tt class="docutils literal"><span class="pre">http_server</span></tt>
 instance has been constructed in the following manner:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">handler_type</span> <span class="n">handler</span><span class="p">;</span>
-<span class="n">http_server</span> <span class="n">server</span><span class="p">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="s">&quot;8000&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="p">);</span>
+<span class="n">http_server</span><span class="o">::</span><span class="n">options</span> <span class="n">options</span><span class="p">(</span><span class="n">handler</span><span class="p">);</span>
+<span class="n">http_server</span> <span class="nf">server</span><span class="p">(</span><span class="n">options</span><span class="p">.</span><span class="n">address</span><span class="p">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="p">).</span><span class="n">port</span><span class="p">(</span><span class="s">&quot;8000&quot;</span><span class="p">));</span>
 </pre></div>
 </div>
 <dl class="docutils">
@@ -377,8 +377,8 @@ following the example:</dd>
 <dd>Stop the HTTP Server acceptor and wait for all pending requests to finish.</dd>
 </dl>
 </div>
-<div class="section" id="cpp-netlib-response-object">
-<h4>Response Object<a class="headerlink" href="#cpp-netlib-response-object" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="response-object">
+<h4>Response Object<a class="headerlink" href="#response-object" title="Permalink to this headline">¶</a></h4>
 <p>The response object has its own public member functions which can be very
 helpful in certain simple situations.</p>
 <dl class="docutils">
@@ -419,21 +419,21 @@ which can be directly manipulated by the handler.</p>
 <col width="47%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Member Name</th>
+<tr class="row-odd"><th class="head">Member Name</th>
 <th class="head">Type</th>
 <th class="head">Description</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td>status</td>
+<tr class="row-even"><td>status</td>
 <td><tt class="docutils literal"><span class="pre">status_type</span></tt></td>
 <td>The HTTP status of the response.</td>
 </tr>
-<tr><td>headers</td>
+<tr class="row-odd"><td>headers</td>
 <td><tt class="docutils literal"><span class="pre">vector&lt;header&gt;</span></tt></td>
 <td>Vector of headers. <a class="footnote-reference" href="#id3" id="id1">[1]</a></td>
 </tr>
-<tr><td>content</td>
+<tr class="row-even"><td>content</td>
 <td><tt class="docutils literal"><span class="pre">string_type</span></tt> <a class="footnote-reference" href="#id4" id="id2">[2]</a></td>
 <td>The contents of the response.</td>
 </tr>
@@ -457,8 +457,8 @@ members <tt class="docutils literal"><span class="pre">name</span></tt> and <tt 
 </div>
 </div>
 </div>
-<div class="section" id="cpp-netlib-asynchronous-servers">
-<h2>Asynchronous Servers<a class="headerlink" href="#cpp-netlib-asynchronous-servers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="asynchronous-servers">
+<h2>Asynchronous Servers<a class="headerlink" href="#asynchronous-servers" title="Permalink to this headline">¶</a></h2>
 <p>The asynchronous server implementation is significantly different to the
 synchronous server implementation in three ways:</p>
 <blockquote>
@@ -511,8 +511,8 @@ accesses to the internal state of the Handler.</p>
 <span class="p">};</span>
 </pre></div>
 </div>
-<div class="section" id="cpp-netlib-id5">
-<h3>API Documentation<a class="headerlink" href="#cpp-netlib-id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>API Documentation<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>The following sections assume that the following file has been included:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/include/http/server.hpp&gt;</span>
 <span class="cp">#include &lt;boost/network/utils/thread_pool.hpp&gt;</span>
@@ -532,29 +532,22 @@ accesses to the internal state of the Handler.</p>
 <span class="p">};</span>
 </pre></div>
 </div>
-<div class="section" id="cpp-netlib-id6">
-<h4>Constructor<a class="headerlink" href="#cpp-netlib-id6" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id6">
+<h4>Constructor<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">http_server(address,</span> <span class="pre">port,</span> <span class="pre">handler,</span> <span class="pre">thread_pool)</span></tt></dt>
-<dd>Construct an HTTP Server instance, passing in the address and port as
-<tt class="docutils literal"><span class="pre">std::string</span> <span class="pre">const</span> <span class="pre">&amp;</span></tt> and handler being of type <tt class="docutils literal"><span class="pre">handler_type</span></tt> but
-passed in as an lvalue reference. The <tt class="docutils literal"><span class="pre">thread_pool</span></tt> parameter is an
-instance of <tt class="docutils literal"><span class="pre">boost::network::utils::thread_pool</span></tt> that has been previously
-instantiated.</dd>
+<dt><tt class="docutils literal"><span class="pre">explicit</span> <span class="pre">http_server(options)</span></tt></dt>
+<dd>Construct an HTTP server instance passing in a <tt class="docutils literal"><span class="pre">server_options&lt;Tag,</span>
+<span class="pre">Handler&gt;</span></tt> instance.</dd>
 </dl>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The <tt class="docutils literal"><span class="pre">boost::network::utils::thread_pool</span></tt> has a single constructor
-parameter which is the number of threads to run the thread pool.</p>
 </div>
-</div>
-<div class="section" id="cpp-netlib-id7">
-<h4>Public Members<a class="headerlink" href="#cpp-netlib-id7" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id7">
+<h4>Public Members<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
 <p>The following definitions assume that a properly constructed <tt class="docutils literal"><span class="pre">http_server</span></tt>
 instance has been constructed in the following manner:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">handler_type</span> <span class="n">handler</span><span class="p">;</span>
-<span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">thread_pool</span> <span class="n">thread_pool</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="n">http_server</span> <span class="n">server</span><span class="p">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="s">&quot;8000&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">thread_pool</span><span class="p">);</span>
+<span class="n">http_server</span><span class="o">::</span><span class="n">options</span> <span class="n">options</span><span class="p">(</span><span class="n">handler</span><span class="p">);</span>
+<span class="n">options</span><span class="p">.</span><span class="n">thread_pool</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">thread_pool</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+<span class="n">http_server</span> <span class="nf">server</span><span class="p">(</span><span class="n">options</span><span class="p">.</span><span class="n">address</span><span class="p">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="p">).</span><span class="n">port</span><span class="p">(</span><span class="s">&quot;8000&quot;</span><span class="p">));</span>
 </pre></div>
 </div>
 <dl class="docutils">
@@ -574,8 +567,8 @@ following the example:</dd>
 <dd>Stop the HTTP Server acceptor and wait for all pending requests to finish.</dd>
 </dl>
 </div>
-<div class="section" id="cpp-netlib-connection-object">
-<h4>Connection Object<a class="headerlink" href="#cpp-netlib-connection-object" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="connection-object">
+<h4>Connection Object<a class="headerlink" href="#connection-object" title="Permalink to this headline">¶</a></h4>
 <p>The connection object has its own public member functions which will be the
 primary means for reading from and writing to the connection.</p>
 <dl class="docutils">
@@ -629,7 +622,7 @@ connection.</p>
 an enum type nested in <tt class="docutils literal"><span class="pre">http_status::connection</span></tt> which is given in the
 following code listing.</dd>
 </dl>
-<div class="highlight-c++"><div class="highlight"><pre><span class="k">enum</span> <span class="n">status_t</span> <span class="p">{</span>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">enum</span> <span class="kt">status_t</span> <span class="p">{</span>
     <span class="n">ok</span> <span class="o">=</span> <span class="mi">200</span>
     <span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="mi">201</span>
     <span class="p">,</span> <span class="n">accepted</span> <span class="o">=</span> <span class="mi">202</span>
@@ -723,7 +716,7 @@ the headers for a connection more than once.</p>
   <h3>You are here:</h3>
   <ul>
       <li>
-        <a href="../index.html">cpp-netlib v0.9.4</a>
+        <a href="../index.html">cpp-netlib v0.9.5</a>
         
           <ul><li><a href="../reference.html">Reference Manual</a>
         
@@ -732,15 +725,10 @@ the headers for a connection more than once.</p>
       </li>
   </ul>
 
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/reference/http_server.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -752,6 +740,8 @@ the headers for a connection more than once.</p>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
+            <h3>Last update:</h3>
+            <p class="topless">Feb 05, 2013</p>
         </div>
       
     </div>
