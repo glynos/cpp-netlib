@@ -63,11 +63,11 @@ namespace boost { namespace network { namespace http {
             return pimpl->request_skeleton(request, "POST", true, body_handler);
         }
 
-        response const post(request const &request, body_callback_function callback) {
+        response const post(request const &request, body_callback_function_type callback) {
           return post(request, string_type(), string_type(), callback);
         }
 
-        response const post(request const &request, string_type const &body, body_callback_function callback) {
+        response const post(request const &request, string_type const &body, body_callback_function_type callback) {
           return post(request, body, string_type(), callback);
         }
 
