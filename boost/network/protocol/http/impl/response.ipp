@@ -35,6 +35,7 @@ namespace boost { namespace network { namespace http {
             created = 201,
             accepted = 202,
             no_content = 204,
+            partial_content = 206,
             multiple_choices = 300,
             moved_permanently = 301,
             moved_temporarily = 302,
@@ -45,10 +46,14 @@ namespace boost { namespace network { namespace http {
             not_found = 404,
             not_supported = 405,
             not_acceptable = 406,
+            request_timeout = 408,
+            precondition_failed = 412,
+            unsatisfiable_range = 416,
             internal_server_error = 500,
             not_implemented = 501,
             bad_gateway = 502,
-            service_unavailable = 503
+            service_unavailable = 503,
+            space_unavailable = 507
         } status;
         
         /// The headers to be included in the reply.
@@ -196,6 +201,27 @@ namespace boost { namespace network { namespace http {
               "<head><title>Service Unavailable</title></head>"
               "<body><h1>503 Service Unavailable</h1></body>"
               "</html>";
+            static const char space_unavailable[] =
+              "<html>"
+              "<head><title>Space Unavailable</title></head>"
+              "<body><h1>HTTP/1.0 507 Insufficient Space to Store Resource</h1></body>"
+              "</html>";
+            static const char partial_content[] = "<html>"
+              "<head><title>Partial Content</title></head>"
+              "<body><h1>HTTP/1.1 206 Partial Content</h1></body>"
+              "</html>";
+            static const char request_timeout[] = "<html>"
+              "<head><title>Request Timeout</title></head>"
+              "<body><h1>HTTP/1.1 408 Request Timeout</h1></body>"
+              "</html>";
+            static const char precondition_failed[] = "<html>"
+              "<head><title>Precondition Failed</title></head>"
+              "<body><h1>HTTP/1.1 412 Precondition Failed</h1></body>"
+              "</html>";
+            static const char unsatisfiable_range[] = "<html>"
+              "<head><title>Unsatisfiable Range</title></head>"
+              "<body><h1>HTTP/1.1 416 Requested Range Not Satisfiable</h1></body>"
+              "</html>";
     
              switch (status)
               {
@@ -235,6 +261,16 @@ namespace boost { namespace network { namespace http {
                 return bad_gateway;
               case basic_response<tags::http_server>::service_unavailable:
                 return service_unavailable;
+              case basic_response<tags::http_server>::space_unavailable:
+                return space_unavailable;
+              case basic_response<tags::http_server>::partial_content:
+                return partial_content;
+              case basic_response<tags::http_server>::request_timeout:
+                return request_timeout;
+              case basic_response<tags::http_server>::unsatisfiable_range:
+                return unsatisfiable_range;
+              case basic_response<tags::http_server>::precondition_failed:
+                return precondition_failed;
               default:
                 return internal_server_error;
               }
@@ -278,6 +314,16 @@ namespace boost { namespace network { namespace http {
               "HTTP/1.0 502 Bad Gateway\r\n";
             static const string_type service_unavailable =
               "HTTP/1.0 503 Service Unavailable\r\n";
+            static const string_type space_unavailable =
+              "HTTP/1.0 507 Insufficient Space to Store Resource\r\n";
+            static const string_type partial_content =
+              "HTTP/1.1 206 Partial Content\r\n";
+            static const string_type request_timeout =
+              "HTTP/1.1 408 Request Timeout\r\n";
+            static const string_type precondition_failed =
+              "HTTP/1.1 412 Precondition Failed\r\n";
+            static const string_type unsatisfiable_range =
+              "HTTP/1.1 416 Requested Range Not Satisfiable\r\n";
     
             switch (status) {
                 case basic_response<tags::http_server>::ok:
@@ -316,6 +362,16 @@ namespace boost { namespace network { namespace http {
                     return buffer(bad_gateway);
                 case basic_response<tags::http_server>::service_unavailable:
                     return buffer(service_unavailable);
+                case basic_response<tags::http_server>::space_unavailable:
+                    return buffer(space_unavailable);
+                case basic_response<tags::http_server>::partial_content:
+                    return buffer(partial_content);
+                case basic_response<tags::http_server>::request_timeout:
+                    return buffer(request_timeout);
+                case basic_response<tags::http_server>::unsatisfiable_range:
+                    return buffer(unsatisfiable_range);
+                case basic_response<tags::http_server>::precondition_failed:
+                    return buffer(precondition_failed);
                 default:
                     return buffer(internal_server_error);
             }
