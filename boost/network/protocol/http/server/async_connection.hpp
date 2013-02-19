@@ -62,6 +62,7 @@ namespace boost { namespace network { namespace http {
             , created = 201
             , accepted = 202
             , no_content = 204
+            , partial_content = 206
             , multiple_choices = 300
             , moved_permanently = 301
             , moved_temporarily = 302
@@ -72,10 +73,14 @@ namespace boost { namespace network { namespace http {
             , not_found = 404
             , not_supported = 405
             , not_acceptable = 406
+            , request_timeout = 408
+            , precondition_failed = 412
+            , unsatisfiable_range = 416
             , internal_server_error = 500
             , not_implemented = 501
             , bad_gateway = 502
             , service_unavailable = 503
+            , space_unavailable = 507
         };
 
         typedef typename string<Tag>::type string_type;
@@ -104,6 +109,11 @@ namespace boost { namespace network { namespace http {
                 , bad_gateway_[]            = "Bad Gateway"
                 , service_unavailable_[]    = "Service Unavailable"
                 , unknown_[]                = "Unknown"
+                , partial_content_[]        = "Partial Content"
+                , request_timeout_[]        = "Request Timeout"
+                , precondition_failed_[]    = "Precondition Failed"
+                , unsatisfiable_range_[]    = "Requested Range Not Satisfiable"
+                , space_unavailable_[]      = "Insufficient Space to Store Resource"
                 ;
             switch(status) {
                 case ok:                    return ok_;
@@ -124,6 +134,11 @@ namespace boost { namespace network { namespace http {
                 case not_implemented:       return not_implemented_;
                 case bad_gateway:           return bad_gateway_;
                 case service_unavailable:   return service_unavailable_;
+                case partial_content:       return partial_content_;
+                case request_timeout:       return request_timeout_;
+                case precondition_failed:   return precondition_failed_;
+                case unsatisfiable_range:   return unsatisfiable_range_;
+                case space_unavailable:     return space_unavailable_;
                 default:                    return unknown_;
             }
         }
