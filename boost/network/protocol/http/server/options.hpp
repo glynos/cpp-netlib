@@ -107,9 +107,9 @@ struct server_options {
 
  private:
   boost::shared_ptr<boost::asio::io_service> io_service_;
+  Handler &handler_;
   string_type address_;
   string_type port_;
-  Handler &handler_;
   bool reuse_address_;
   bool report_aborted_;
   bool non_blocking_io_;
