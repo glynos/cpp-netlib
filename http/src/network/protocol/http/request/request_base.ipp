@@ -10,6 +10,7 @@
 #include <network/protocol/http/request/request_base.hpp>
 #include <thread>
 #include <cstring>
+#include <vector>
 
 namespace network { namespace http {
 
