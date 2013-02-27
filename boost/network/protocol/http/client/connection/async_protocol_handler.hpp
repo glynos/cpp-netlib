@@ -286,6 +286,11 @@ namespace boost { namespace network { namespace http { namespace impl {
         trim(header_pair.second);
         headers.insert(header_pair);
       }
+      // determine if the body parser will need to handle chunked encoding
+      typename headers_range<basic_response<Tag> >::type transfer_encoding_range = 
+          headers.equal_range("Transfer-Encoding");
+      is_chunk_encoding = !empty(transfer_encoding_range) 
+          && boost::iequals(boost::begin(transfer_encoding_range)->second, "chunked");
       headers_promise.set_value(headers);
     }
 
@@ -373,6 +378,7 @@ namespace boost { namespace network { namespace http { namespace impl {
     buffer_type part;
     typename buffer_type::const_iterator part_begin;
     string_type partial_parsed;
+    bool is_chunk_encoding;
   };
 
 

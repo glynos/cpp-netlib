@@ -354,7 +354,10 @@ namespace boost { namespace network { namespace http { namespace impl {
                   this->part.begin()
                   , bytes_transferred
                   );
-                this->body_promise.set_value(body_string);
+                if (this->is_chunk_encoding)
+                  this->body_promise.set_value(parse_chunk_encoding(body_string));
+                else
+                  this->body_promise.set_value(body_string);
               }
               // TODO set the destination value somewhere!
               this->destination_promise.set_value("");
@@ -427,6 +430,34 @@ namespace boost { namespace network { namespace http { namespace impl {
             BOOST_ASSERT(false && "Bug, report this to the developers!");
         }
       }
+    }
+    
+    string_type parse_chunk_encoding( string_type & body_string ) {
+        string_type body;
+        string_type crlf = "\r\n";
+        
+        typename string_type::iterator begin = body_string.begin();
+        for (typename string_type::iterator iter =
+                std::search(begin, body_string.end(), crlf.begin(), crlf.end());
+                iter != body_string.end();
+                iter = std::search(begin, body_string.end(), crlf.begin(), crlf.end())) {
+            string_type line(begin, iter);
+            if (line.empty())
+                break;
+            std::stringstream stream(line);
+            int len;
+            stream >> std::hex >> len;
+            std::advance(iter, 2);
+            if (!len)
+                break;
+            if (len <= body_string.end() - iter) {
+                body.insert(body.end(), iter, iter + len);
+                std::advance(iter, len);
+            }
+            begin = iter;
+        }
+        
+        return body;
     }
 
     bool follow_redirect_;
