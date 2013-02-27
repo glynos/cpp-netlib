@@ -118,7 +118,34 @@ namespace boost { namespace network { namespace http {
         }
 
         string_type const body() const {
-            return body_.get();
+            string_type body;
+            string_type partial_parsed = body_.get();
+
+            typename headers_range<basic_response<Tag> >::type transfer_encoding_range = headers().equal_range("Transfer-Encoding");
+            if (!empty(transfer_encoding_range) && boost::iequals(boost::begin(transfer_encoding_range)->second, "chunked")) {
+                typename string_type::iterator begin = partial_parsed.begin();
+                string_type crlf = "\r\n";
+                for (typename string_type::iterator iter = std::search(begin, partial_parsed.end(), crlf.begin(), crlf.end());
+                        iter != partial_parsed.end();
+                        iter = std::search(begin, partial_parsed.end(), crlf.begin(), crlf.end())) {
+                    string_type line(begin, iter);
+                    if (line.empty()) break;
+                    std::stringstream stream(line);
+                    int len;
+                    stream >> std::hex >> len;
+                    iter += 2;
+                    if (!len) break;
+                    if (len <= partial_parsed.end() - iter) {
+                        body.insert(body.end(), iter, iter + len);
+                        iter += len;
+                    }
+                    begin = iter;
+                }
+            } else {
+                std::swap(body, partial_parsed);
+            }
+
+            return body;
         }
 
         void body(boost::shared_future<string_type> const & future) const {
