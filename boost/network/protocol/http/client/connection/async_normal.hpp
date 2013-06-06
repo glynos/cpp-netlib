@@ -452,7 +452,7 @@ namespace boost { namespace network { namespace http { namespace impl {
                 break;
             if (len <= body_string.end() - iter) {
                 body.insert(body.end(), iter, iter + len);
-                std::advance(iter, len);
+                std::advance(iter, len+2);
             }
             begin = iter;
         }
