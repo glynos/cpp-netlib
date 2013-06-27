@@ -35,6 +35,9 @@ if (Boost_FOUND)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()
+	if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	  target_link_libraries(cpp-netlib-http-${test} rt)
+	endif()
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}
@@ -53,6 +56,9 @@ if (Boost_FOUND)
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
         target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
+	if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	  target_link_libraries(cpp-netlib-http-${test} rt)
+	endif()
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}

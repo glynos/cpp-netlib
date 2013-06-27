@@ -9,12 +9,12 @@
 
 v0.9.5
 ~~~~~~
-* Removing dependency on Boost.Parameter from HTTP client and server.
-* Fix for Clang error on Twitter example.
-* Adding source port to the request (HTTP server).
-* Updates to CMake config for MSVC 2010/2012.
-* Support chunked content encoding in client response parsing.
-* Fix bug with client not invoking callback when a request fails.
+* Removed dependency on Boost.Parameter from HTTP client and server.
+* Fixed for Clang error on Twitter example.
+* Added source port to the request (HTTP server).
+* Updated CMake config for MSVC 2010/2012.
+* Now support chunked content encoding in client response parsing.
+* Fixed bug with client not invoking callback when a request fails.
 
 v0.9.4
 ~~~~~~

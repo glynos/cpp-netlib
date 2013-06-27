@@ -26,6 +26,9 @@ if (Boost_FOUND)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
         endif()
+	if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	  target_link_libraries(cpp-netlib-${test} rt)
+	endif()
         set_target_properties(cpp-netlib-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-${test}

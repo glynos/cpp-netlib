@@ -90,12 +90,23 @@ if (OPENSSL_FOUND)
   target_link_libraries(hello_world_client ${OPENSSL_LIBRARIES})
 endif (OPENSSL_FOUND)
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  target_link_libraries(http_client rt)
+  target_link_libraries(simple_wget rt)
+  target_link_libraries(atom_reader rt)
+  target_link_libraries(rss_reader rt)
+  target_link_libraries(twitter_search rt)
+  target_link_libraries(hello_world_server rt)
+  target_link_libraries(hello_world_client rt)
+endif()
+
 if (UNIX)
   target_link_libraries(fileserver
     ${BOOST_SERVER_LIBS}
     ${Boost_FILESYSTEM_LIBRARY}
     ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-server-parsers)
+    cppnetlib-server-parsers
+    rt)
 endif (UNIX)
 
 set_target_properties(http_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)

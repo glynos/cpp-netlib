@@ -3,10 +3,10 @@
 
 .. :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 .. 	  Dean Michael Berris <dberris@google.com>
-.. :Date: Feb 2, 2013
-.. :Version: 0.9.5
+.. :Date: Jun 26, 2013
+.. :Version: 0.10.0
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
-.. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2012.
+.. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2013.
 ..             Copyrigh 2013 Google, Inc.
 ..             Distributed under the Boost Software License, Version
 ..             1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -20,12 +20,9 @@ http://cpp-netlib.org/.
 
 **Download**
 
-You can download the latest releases of the library at:
-
-    http://github.com/cpp-netlib/cpp-netlib/downloads
-
-You can find more information about the progress of the development by
-checking our GitHub_ project page at:
+This version of :mod:`cpp-netlib` is tagged as cpp-netlib-0.10.0 in the GitHub_
+repository. You can find more information about the progress of the development
+by checking our GitHub_ project page at:
 
     http://github.com/cpp-netlib/cpp-netlib
 
@@ -93,7 +90,10 @@ And the corresponding server code is listed below:
 
     int main(int arg, char * argv[]) {
         handler handler_;
-        http_server server_("0.0.0.0", "8000", handler_);
+        http_server::options options(handler_);
+        http_server server_(
+            options.address("0.0.0.0")
+                   .port("8000"));
         server_.run();
     }
 
