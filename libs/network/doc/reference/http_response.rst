@@ -70,7 +70,7 @@ supports the following constructs.
 |                                     |          | ``r``.                      |
 +-------------------------------------+----------+-----------------------------+
 
-.. _Message Concept: message.html#message-concept
+.. _Message Concept: ../in_depth/message.html#message-concept
 
 Directives
 ----------

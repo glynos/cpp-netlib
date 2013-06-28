@@ -7,7 +7,12 @@
 Downloading an official release
 ===============================
 
-All stable versions of :mod:`cpp-netlib` can be downloaded from
+You can find links to the latest official release from the project's official
+website:
+
+    http://cpp-netlib.org/
+
+All previous stable versions of :mod:`cpp-netlib` can be downloaded from
 Github_ from this url:
 
     http://github.com/cpp-netlib/cpp-netlib/downloads
