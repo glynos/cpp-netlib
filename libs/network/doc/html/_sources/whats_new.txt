@@ -4,6 +4,22 @@
  What's New
 ************
 
+:mod:`cpp-netlib` 0.10
+----------------------
+
+v0.10.0
+~~~~~~~
+* Added support for more HTTP status codes (206, 408, 412, 416, 507).
+* Refactored the parser for chunked encoding.
+* Fixed parsing chunked encoding if the response body has ``<chunk>CLRF<hex>CLRF<data>``.
+* Added librt dependency on Linux.
+* Check the callback in the asynchronous client before calling it.
+* Fixed issues `#110`_, `#168`_, `#213`_.
+
+.. _`#110`: https://github.com/cpp-netlib/cpp-netlib/issues/110
+.. _`#168`: https://github.com/cpp-netlib/cpp-netlib/issues/168
+.. _`#213`: https://github.com/cpp-netlib/cpp-netlib/issues/213
+
 :mod:`cpp-netlib` 0.9
 ---------------------
 

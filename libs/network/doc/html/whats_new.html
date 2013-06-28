@@ -55,6 +55,20 @@
             
   <div class="section" id="what-s-new">
 <span id="whats-new"></span><h1>What&#8217;s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cpp-netlib-0-10">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.10<a class="headerlink" href="#cpp-netlib-0-10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="v0-10-0">
+<h3>v0.10.0<a class="headerlink" href="#v0-10-0" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added support for more HTTP status codes (206, 408, 412, 416, 507).</li>
+<li>Refactored the parser for chunked encoding.</li>
+<li>Fixed parsing chunked encoding if the response body has <tt class="docutils literal"><span class="pre">&lt;chunk&gt;CLRF&lt;hex&gt;CLRF&lt;data&gt;</span></tt>.</li>
+<li>Added librt dependency on Linux.</li>
+<li>Check the callback in the asynchronous client before calling it.</li>
+<li>Fixed issues <a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/110">#110</a>, <a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/168">#168</a>, <a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/213">#213</a>.</li>
+</ul>
+</div>
+</div>
 <div class="section" id="cpp-netlib-0-9">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9<a class="headerlink" href="#cpp-netlib-0-9" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="v0-9-5">
@@ -183,6 +197,10 @@ the asynchronous client in 0.7 already has all the parts available.</li>
   <h3><a href="contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">What&#8217;s New</a><ul>
+<li><a class="reference internal" href="#cpp-netlib-0-10"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.10</a><ul>
+<li><a class="reference internal" href="#v0-10-0">v0.10.0</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#cpp-netlib-0-9"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.9</a><ul>
 <li><a class="reference internal" href="#v0-9-5">v0.9.5</a></li>
 <li><a class="reference internal" href="#v0-9-4">v0.9.4</a></li>
@@ -237,7 +255,7 @@ the asynchronous client in 0.7 already has all the parts available.</li>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Jun 27, 2013.
+      Last updated on Jun 28, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

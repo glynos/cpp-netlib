@@ -5,10 +5,10 @@
 ************
 
 :mod:`cpp-netlib` 0.10
----------------------
+----------------------
 
 v0.10.0
-~~~~~~
+~~~~~~~
 * Added support for more HTTP status codes (206, 408, 412, 416, 507).
 * Refactored the parser for chunked encoding.
 * Fixed parsing chunked encoding if the response body has ``<chunk>CLRF<hex>CLRF<data>``.

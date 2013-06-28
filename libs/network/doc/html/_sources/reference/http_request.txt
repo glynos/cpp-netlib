@@ -118,7 +118,7 @@ and also supports the following constructs.
 | ``r.body``                    | ``S``  | The body of the request.            |
 +-------------------------------+--------+-------------------------------------+
 
-.. _Message Concept: message.html#message-concept
+.. _Message Concept: ../in_depth/message.html#message-concept
 
 Directives
 ----------

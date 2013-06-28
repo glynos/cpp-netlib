@@ -334,7 +334,7 @@ synchronous server implementation in three ways:
 
 The asynchronous server is meant to allow for better scalability in terms of the
 number of concurrent connections and for performing asynchronous actions within
-the handlers. If your applacation does not need to write out information
+the handlers. If your application does not need to write out information
 asynchronously or perform potentially long computations, then the synchronous
 server gives a generally better performance profile than the asynchronous
 server.
