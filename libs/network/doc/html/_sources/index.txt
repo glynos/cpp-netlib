@@ -20,6 +20,11 @@ http://cpp-netlib.org/.
 
 **Download**
 
+You can get the latest official version of the library from the official
+project website at:
+
+    http://cpp-netlib.org/
+
 This version of :mod:`cpp-netlib` is tagged as cpp-netlib-0.10.0 in the GitHub_
 repository. You can find more information about the progress of the development
 by checking our GitHub_ project page at:
