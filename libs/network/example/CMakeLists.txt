@@ -105,8 +105,10 @@ if (UNIX)
     ${BOOST_SERVER_LIBS}
     ${Boost_FILESYSTEM_LIBRARY}
     ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-server-parsers
-    rt)
+    cppnetlib-server-parsers)
+  if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    target_link_libraries(fileserver rt)
+  endif()
 endif (UNIX)
 
 set_target_properties(http_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
