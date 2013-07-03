@@ -105,6 +105,26 @@ happens on a different thread.
    dedicated to that request. The client does not re-cycle connections and uses
    a one-request-one-connection model.
 
+When an asynchronous client object is destroyed, it waits for all pending
+asynchronous operations to finish. Errors encountered during operations on
+retrieving data from the response objects cause exceptions to be thrown --
+therefore it is best that if a client object is constructed, it should outlive
+the response object or be outside the try-catch block handling the errors from
+operations on responses. In code, usage should look like the following:
+
+.. code-block:: c++
+
+    http::client client;
+    try {
+      http::client::response response = client.get("http://www.example.com/");
+      std::cout << body(response);
+    } catch (std::exception& e) {
+      // deal with exceptions here
+    }
+
+A common mistake is to declare the client inside the try block which invokes
+undefined behavior when errors arise from the handling of response objects.
+
 Member Functions
 ----------------
 
