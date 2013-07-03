@@ -90,20 +90,21 @@ namespace boost { namespace network { namespace http {
               scoped_mutex_lock stopping_lock(stopping_mutex_);
               if (stopping) return;  // we dont want to add another handler instance, and we dont want to know about errors for a socket we dont need anymore
             }
-            if (!ec) {
-                socket_options_base::socket_options(new_connection->socket());
-                new_connection->start();
-                new_connection.reset(
-                    new connection(service_, handler, *thread_pool));
-                acceptor.async_accept(
-                    new_connection->socket(),
-                    boost::bind(
-                        &async_server_base<Tag,Handler>::handle_accept,
-                        this,
-                        boost::asio::placeholders::error));
-            } else {
-                BOOST_NETWORK_MESSAGE("Error accepting connection, reason: " << ec);
+
+            if (ec) {
+              BOOST_NETWORK_MESSAGE("Error accepting connection, reason: "
+                                    << ec);
             }
+
+            socket_options_base::socket_options(new_connection->socket());
+            new_connection->start();
+            new_connection.reset(
+                new connection(service_, handler, *thread_pool));
+            acceptor.async_accept(
+                new_connection->socket(),
+                boost::bind(&async_server_base<Tag, Handler>::handle_accept,
+                            this,
+                            boost::asio::placeholders::error));
         }
         
         void start_listening() {
