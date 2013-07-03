@@ -21,6 +21,10 @@ if (OPENSSL_FOUND)
     include_directories(${OPENSSL_INCLUDE_DIR})
 endif()
 
+if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+endif()
+
 if (Boost_FOUND)
     if (MSVC)
       add_definitions(-D_SCL_SECURE_NO_WARNINGS)
