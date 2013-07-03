@@ -134,11 +134,11 @@ resolver.</td>
 </tbody>
 </table>
 <p>The default typedef for the HTTP client that is provided uses the
-<tt class="docutils literal"><span class="pre">http_default_8bit_udp_resolve</span></tt> tag, and implements HTTP 1.0. The exact
+<tt class="docutils literal"><span class="pre">http_async_8bit_udp_resolve</span></tt> tag, and implements HTTP 1.1. The exact
 typedef is in the <tt class="docutils literal"><span class="pre">boost::network::http</span></tt> namespace as the following:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="k">namespace</span> <span class="n">boost</span> <span class="p">{</span> <span class="k">namespace</span> <span class="n">network</span> <span class="p">{</span> <span class="k">namespace</span> <span class="n">http</span> <span class="p">{</span>
 
-    <span class="k">typedef</span> <span class="n">basic_client</span><span class="o">&lt;</span><span class="n">tags</span><span class="o">::</span><span class="n">http_default_8bit_udp_resolve</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="o">&gt;</span>
+    <span class="k">typedef</span> <span class="n">basic_client</span><span class="o">&lt;</span><span class="n">tags</span><span class="o">::</span><span class="n">http_async_8bit_udp_resolve</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">&gt;</span>
         <span class="n">client</span><span class="p">;</span>
 
 <span class="p">}}}</span>
@@ -304,7 +304,7 @@ the request.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Jun 28, 2013.
+      Last updated on Jul 04, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>
