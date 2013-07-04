@@ -68,15 +68,18 @@ namespace boost { namespace network { namespace http {
         boost::mutex listening_mutex_;
         bool listening_;
 
-        void handle_accept(boost::system::error_code const & ec) {
-            if (!ec) {
-                socket_options_base::socket_options(new_connection->socket());
-                new_connection->start();
-                new_connection.reset(new sync_connection<Tag,Handler>(service_, handler_));
-                acceptor_.async_accept(new_connection->socket(),
-                    boost::bind(&sync_server_base<Tag,Handler>::handle_accept,
-                                this, boost::asio::placeholders::error));
-            }
+        void handle_accept(boost::system::error_code const& ec) {
+          if (ec) {
+          }
+          socket_options_base::socket_options(new_connection->socket());
+          new_connection->start();
+          new_connection.reset(
+              new sync_connection<Tag, Handler>(service_, handler_));
+          acceptor_.async_accept(
+              new_connection->socket(),
+              boost::bind(&sync_server_base<Tag, Handler>::handle_accept,
+                          this,
+                          boost::asio::placeholders::error));
         }
 
         void start_listening() {
@@ -87,24 +90,24 @@ namespace boost { namespace network { namespace http {
             tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
             if (error) {
                 BOOST_NETWORK_MESSAGE("Error resolving address: " << address_ << ':' << port_);
-                return;
+                boost::throw_exception(std::runtime_error("Error resolving address."));
             }
             tcp::endpoint endpoint = *endpoint_iterator;
             acceptor_.open(endpoint.protocol(), error);
             if (error) {
                 BOOST_NETWORK_MESSAGE("Error opening socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
-                return;
+                boost::throw_exception(std::runtime_error("Error opening socket."));
             }
             socket_options_base::acceptor_options(acceptor_);
             acceptor_.bind(endpoint, error);
             if (error) {
                 BOOST_NETWORK_MESSAGE("Error binding to socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
-                return;
+                boost::throw_exception(std::runtime_error("Error binding to socket."));
             }
             acceptor_.listen(tcp::socket::max_connections, error);
             if (error) {
                 BOOST_NETWORK_MESSAGE("Error listening on socket: " << address_ << ':' << port_ << " -- reason: '" << error << '\'');
-                return;
+                boost::throw_exception(std::runtime_error("Error listening on socket."));
             }
             new_connection.reset(new sync_connection<Tag,Handler>(service_, handler_));
             acceptor_.async_accept(new_connection->socket(),

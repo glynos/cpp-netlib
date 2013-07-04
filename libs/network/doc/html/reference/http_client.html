@@ -209,6 +209,23 @@ many threads. Each request starts a sequence of asynchronous operations
 dedicated to that request. The client does not re-cycle connections and uses
 a one-request-one-connection model.</p>
 </div>
+<p>When an asynchronous client object is destroyed, it waits for all pending
+asynchronous operations to finish. Errors encountered during operations on
+retrieving data from the response objects cause exceptions to be thrown &#8211;
+therefore it is best that if a client object is constructed, it should outlive
+the response object or be outside the try-catch block handling the errors from
+operations on responses. In code, usage should look like the following:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
+<span class="n">try</span> <span class="p">{</span>
+  <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://www.example.com/&quot;</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">body</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// deal with exceptions here</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A common mistake is to declare the client inside the try block which invokes
+undefined behavior when errors arise from the handling of response objects.</p>
 </div>
 </div>
 <div class="section" id="member-functions">
@@ -523,7 +540,7 @@ to create a function object.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Jun 28, 2013.
+      Last updated on Jul 04, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

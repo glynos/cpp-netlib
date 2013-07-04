@@ -7,6 +7,26 @@
 :mod:`cpp-netlib` 0.10
 ----------------------
 
+v0.10.1
+~~~~~~~
+* Documentation updates (`#182`_, `#265`_, `#194`_, `#233`_, `#255`_)
+* Fix issue with async server inadvertently stopping from listening when
+  accepting a connection fails. (`#172`_)
+* Allow overriding and ultimately removing defaulted headers from HTTP
+  requests. (`#263`_)
+* Add `-Wall` to the base rule for GCC builds. (`#264`_)
+* Make the server implementation throw on startup errors. (`#166`_)
+
+.. _`#182`: https://github.com/cpp-netlib/cpp-netlib/issues/182
+.. _`#265`: https://github.com/cpp-netlib/cpp-netlib/issues/265
+.. _`#194`: https://github.com/cpp-netlib/cpp-netlib/issues/194
+.. _`#172`: https://github.com/cpp-netlib/cpp-netlib/issues/172
+.. _`#263`: https://github.com/cpp-netlib/cpp-netlib/issues/263
+.. _`#233`: https://github.com/cpp-netlib/cpp-netlib/issues/233
+.. _`#264`: https://github.com/cpp-netlib/cpp-netlib/issues/264
+.. _`#255`: https://github.com/cpp-netlib/cpp-netlib/issues/255
+.. _`#166`: https://github.com/cpp-netlib/cpp-netlib/issues/166
+
 v0.10.0
 ~~~~~~~
 * Added support for more HTTP status codes (206, 408, 412, 416, 507).

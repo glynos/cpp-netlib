@@ -61,6 +61,13 @@
 HTTP Response objects. This section details the <a class="reference internal" href="#response-concept">Response Concept</a> requirements,
 the implemented and required <a class="reference internal" href="#directives">Directives</a>, <a class="reference internal" href="#modifiers">Modifiers</a>, and <a class="reference internal" href="#wrappers">Wrappers</a> that work
 with the HTTP Response objects.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The HTTP server response object is a POD type, which doesn&#8217;t support
+any of the following details. There are only a few fields available in the
+HTTP server response type, which can be seen in
+<tt class="docutils literal"><span class="pre">boost/network/protocol/http/impl/response.ipp</span></tt>.</p>
+</div>
 <div class="section" id="response-concept">
 <h2>Response Concept<a class="headerlink" href="#response-concept" title="Permalink to this headline">¶</a></h2>
 <p>A type models the Response Concept if it models the <a class="reference external" href="../in_depth/message.html#message-concept">Message Concept</a> and also
@@ -462,7 +469,7 @@ provides the status message of the given response.</dd>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Jun 28, 2013.
+      Last updated on Jul 04, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
     </div>
   </body>

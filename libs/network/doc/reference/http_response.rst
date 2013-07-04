@@ -7,6 +7,11 @@ HTTP Response objects. This section details the `Response Concept`_ requirements
 the implemented and required Directives_, Modifiers_, and Wrappers_ that work
 with the HTTP Response objects.
 
+.. note:: The HTTP server response object is a POD type, which doesn't support
+   any of the following details. There are only a few fields available in the
+   HTTP server response type, which can be seen in
+   ``boost/network/protocol/http/impl/response.ipp``.
+
 Response Concept
 ----------------
 

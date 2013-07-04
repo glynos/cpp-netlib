@@ -35,23 +35,41 @@ struct dummy_async_handler {
 };
 
 BOOST_AUTO_TEST_CASE(minimal_constructor) {
-    dummy_sync_handler sync_handler;
-    dummy_async_handler async_handler;
-    
-    sync_server::options sync_options(sync_handler);
-    async_server::options async_options(async_handler);
-    BOOST_CHECK_NO_THROW(sync_server sync_instance(sync_options.address("127.0.0.1").port("80")) );
-    BOOST_CHECK_NO_THROW(async_server async_instance(async_options.address("127.0.0.1").port("80")) );
+  dummy_sync_handler sync_handler;
+  dummy_async_handler async_handler;
+  sync_server::options sync_options(sync_handler);
+  async_server::options async_options(async_handler);
+  BOOST_CHECK_NO_THROW(
+      sync_server sync_instance(sync_options.address("127.0.0.1").port("80")));
+  BOOST_CHECK_NO_THROW(async_server async_instance(
+      async_options.address("127.0.0.1").port("80")));
 }
 
 BOOST_AUTO_TEST_CASE(with_io_service_parameter) {
-    dummy_sync_handler sync_handler;
-    dummy_async_handler async_handler;
-    boost::shared_ptr<util::thread_pool> thread_pool;
-    boost::shared_ptr<boost::asio::io_service> io_service;
-    sync_server::options sync_options(sync_handler);
-    async_server::options async_options(async_handler);
+  dummy_sync_handler sync_handler;
+  dummy_async_handler async_handler;
+  boost::shared_ptr<util::thread_pool> thread_pool;
+  boost::shared_ptr<boost::asio::io_service> io_service;
+  sync_server::options sync_options(sync_handler);
+  async_server::options async_options(async_handler);
 
-    BOOST_CHECK_NO_THROW(sync_server sync_instance(sync_options.address("127.0.0.1").port("80").io_service(io_service).thread_pool(thread_pool)));
-    BOOST_CHECK_NO_THROW(async_server async_instance(async_options.address("127.0.0.1").port("80").io_service(io_service).thread_pool(thread_pool)));
+  BOOST_CHECK_NO_THROW(sync_server sync_instance(sync_options.address(
+      "127.0.0.1").port("80").io_service(io_service).thread_pool(thread_pool)));
+  BOOST_CHECK_NO_THROW(async_server async_instance(async_options.address(
+      "127.0.0.1").port("80").io_service(io_service).thread_pool(thread_pool)));
+}
+
+BOOST_AUTO_TEST_CASE(throws_on_failure) {
+  dummy_sync_handler sync_handler;
+  dummy_async_handler async_handler;
+  boost::shared_ptr<util::thread_pool> thread_pool;
+  boost::shared_ptr<boost::asio::io_service> io_service;
+  sync_server::options sync_options(sync_handler);
+  async_server::options async_options(async_handler);
+  sync_server sync_instance(sync_options.address("127.0.0.1").port(
+      "80").io_service(io_service).thread_pool(thread_pool));
+  async_server async_instance(async_options.address("127.0.0.1").port(
+      "80").io_service(io_service).thread_pool(thread_pool));
+  BOOST_CHECK_THROW(sync_instance.run(), std::runtime_error);
+  BOOST_CHECK_THROW(async_instance.run(), std::runtime_error);
 }

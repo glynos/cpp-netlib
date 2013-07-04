@@ -6,6 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <algorithm>
+#include <bitset>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
@@ -15,6 +17,7 @@
 #include <boost/concept/requires.hpp>
 #include <boost/optional.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/algorithm/string/compare.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -92,48 +95,86 @@ namespace boost { namespace network { namespace http {
         *oi = consts::dot_char();
         boost::copy(version_minor_str, oi);
         boost::copy(crlf, oi);
-        boost::copy(host, oi);
-        *oi = consts::colon_char();
-        *oi = consts::space_char();
-        boost::copy(request.host(), oi);
-        boost::optional<boost::uint16_t> port_ = port(request);
-        if (port_) {
-            string_type port_str = boost::lexical_cast<string_type>(*port_);
-            *oi = consts::colon_char();
-            boost::copy(port_str, oi);
-        }
-        boost::copy(crlf, oi);
-        boost::copy(accept, oi);
-        *oi = consts::colon_char();
-        *oi = consts::space_char();
-        boost::copy(accept_mime, oi);
-        boost::copy(crlf, oi);
-        if (version_major == 1u && version_minor == 1u) {
-            boost::copy(accept_encoding, oi);
-            *oi = consts::colon_char();
-            *oi = consts::space_char();
-            boost::copy(default_accept_encoding, oi);
-            boost::copy(crlf, oi);
-        }
+
+        // We need to determine whether we've seen any of the following headers
+        // before setting the defaults. We use a bitset to keep track of the
+        // defaulted headers.
+        enum { ACCEPT, ACCEPT_ENCODING, HOST, MAX };
+        std::bitset<MAX> found_headers;
+        static char const* defaulted_headers[][2] = {
+          {consts::accept(),
+           consts::accept() + std::strlen(consts::accept())},
+          {consts::accept_encoding(),
+           consts::accept_encoding() + std::strlen(consts::accept_encoding())},
+          {consts::host(), consts::host() + std::strlen(consts::host())}
+        };
+
         typedef typename headers_range<Request>::type headers_range;
         typedef typename range_value<headers_range>::type headers_value;
-        BOOST_FOREACH(const headers_value &header, headers(request))
-        {
-            string_type header_name = name(header),
-                        header_value = value(header);
-            boost::copy(header_name, oi);
-            *oi = consts::colon_char();
-            *oi = consts::space_char();
-            boost::copy(header_value, oi);
-            boost::copy(crlf, oi);
+        BOOST_FOREACH(const headers_value & header, headers(request)) {
+          string_type header_name = name(header), header_value = value(header);
+          // Here we check that we have not seen an override to the defaulted
+          // headers.
+          for (int header_index = 0; header_index < MAX; ++header_index)
+            if (std::distance(header_name.begin(), header_name.end()) ==
+                    std::distance(defaulted_headers[header_index][0],
+                                  defaulted_headers[header_index][1]) &&
+                std::equal(header_name.begin(),
+                           header_name.end(),
+                           defaulted_headers[header_index][0],
+                           algorithm::is_iequal()))
+              found_headers.set(header_index, true);
+
+          // We ignore empty headers.
+          if (header_value.empty()) continue;
+          boost::copy(header_name, oi);
+          *oi = consts::colon_char();
+          *oi = consts::space_char();
+          boost::copy(header_value, oi);
+          boost::copy(crlf, oi);
+
         }
+
+        if (!found_headers[HOST]) {
+          boost::copy(host, oi);
+          *oi = consts::colon_char();
+          *oi = consts::space_char();
+          boost::copy(request.host(), oi);
+          boost::optional<boost::uint16_t> port_ = port(request);
+          if (port_) {
+              string_type port_str = boost::lexical_cast<string_type>(*port_);
+              *oi = consts::colon_char();
+              boost::copy(port_str, oi);
+          }
+          boost::copy(crlf, oi);
+        }
+
+        if (!found_headers[ACCEPT]) {
+          boost::copy(accept, oi);
+          *oi = consts::colon_char();
+          *oi = consts::space_char();
+          boost::copy(accept_mime, oi);
+          boost::copy(crlf, oi);
+        }
+
+        if (version_major == 1u &&
+            version_minor == 1u &&
+            !found_headers[ACCEPT_ENCODING]) {
+          boost::copy(accept_encoding, oi);
+          *oi = consts::colon_char();
+          *oi = consts::space_char();
+          boost::copy(default_accept_encoding, oi);
+          boost::copy(crlf, oi);
+        }
+
         if (!connection_keepalive<Tag>::value) {
-            boost::copy(connection, oi);
-            *oi = consts::colon_char();
-            *oi = consts::space_char();
+          boost::copy(connection, oi);
+          *oi = consts::colon_char();
+          *oi = consts::space_char();
             boost::copy(close, oi);
             boost::copy(crlf, oi);
         }
+
         boost::copy(crlf, oi);
         typename body_range<Request>::type body_data = body(request).range();
         return boost::copy(body_data, oi);
