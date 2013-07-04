@@ -15,6 +15,7 @@ v0.10.1
 * Allow overriding and ultimately removing defaulted headers from HTTP
   requests. (`#263`_)
 * Add `-Wall` to the base rule for GCC builds. (`#264`_)
+* Make the server implementation throw on startup errors. (`#166`_)
 
 .. _`#182`: https://github.com/cpp-netlib/cpp-netlib/issues/182
 .. _`#265`: https://github.com/cpp-netlib/cpp-netlib/issues/265
@@ -24,6 +25,7 @@ v0.10.1
 .. _`#233`: https://github.com/cpp-netlib/cpp-netlib/issues/233
 .. _`#264`: https://github.com/cpp-netlib/cpp-netlib/issues/264
 .. _`#255`: https://github.com/cpp-netlib/cpp-netlib/issues/255
+.. _`#166`: https://github.com/cpp-netlib/cpp-netlib/issues/166
 
 v0.10.0
 ~~~~~~~
