@@ -1,4 +1,7 @@
 #define BOOST_TEST_MODULE HTTP Asynchronous Server Tests
+#ifdef BOOST_TEST_DYN_LINK
+#define BOOST_TEST_NO_MAIN
+#endif /* BOOST_TEST_DYN_LINK */
 
 #include <boost/network/include/http/server.hpp>
 #include <boost/test/unit_test.hpp>
@@ -135,3 +138,6 @@ int main(int argc, char * argv[]) {
 
   return 0;
 }
+#ifdef BOOST_TEST_DYN_LINK
+#undef BOOST_TEST_NO_MAIN
+#endif /* BOOST_TEST_DYN_LINK */
