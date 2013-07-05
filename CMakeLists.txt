@@ -5,7 +5,17 @@
 
 cmake_minimum_required(VERSION 2.8)
 project(CPP-NETLIB)
-set(Boost_USE_STATIC_LIBS ON)
+
+option (BOOST_DYN_LINK
+  "Build the project using dynamic linking for the boost testing libs"
+  OFF)
+if (BOOST_DYN_LINK)
+  message ("Linking boost testing libs dynamically...")
+  add_definitions(-DBOOST_TEST_DYN_LINK)
+elseif (BOOST_DYN_LINK)
+  set(Boost_USE_STATIC_LIBS ON)
+endif(BOOST_DYN_LINK)
+
 set(Boost_USE_MULTI_THREADED ON)
 find_package( Boost 1.45.0 REQUIRED unit_test_framework system regex date_time thread filesystem program_options chrono )
 find_package( OpenSSL )
