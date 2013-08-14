@@ -1,5 +1,6 @@
 include_directories(${CPP-NETLIB_SOURCE_DIR})
 find_package ( Boost 1.41.0 COMPONENTS unit_test_framework )
+file ( COPY TestMessages DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 
 option (BOOST_DYN_LINK
   "Build the project using dynamic linking for the boost test libs"
