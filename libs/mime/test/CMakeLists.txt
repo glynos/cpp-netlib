@@ -2,15 +2,18 @@ include_directories(${CPP-NETLIB_SOURCE_DIR})
 find_package ( Boost 1.41.0 COMPONENTS unit_test_framework )
 file ( COPY TestMessages DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 
-option (BOOST_DYN_LINK
-  "Build the project using dynamic linking for the boost test libs"
-  OFF)
-if (BOOST_DYN_LINK)
-  message ("Do not try to link boost test libs dynamically for this test...")
-  remove_definitions(-DBOOST_TEST_DYN_LINK)
-elseif (BOOST_DYN_LINK)
+option( CPP-NETLIB_BUILD_SHARED_LIBS "Build cpp-netlib as shared libraries." OFF )
+
+if(CPP-NETLIB_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
+  message ("Linking boost testing libs dynamically...")
+  set(Boost_USE_STATIC_LIBS OFF)
+  set(CPP-NETLIB_BUILD_SHARED_LIBS ON)
+  add_definitions(-DBOOST_TEST_DYN_LINK)
+else()
   set(Boost_USE_STATIC_LIBS ON)
-endif(BOOST_DYN_LINK)
+  set(CPP-NETLIB_BUILD_SHARED_LIBS OFF)
+  set(BUILD_SHARED_LIBS OFF)
+endif()
 
 set ( Boost_USE_MULTITHREADED ON )
 
