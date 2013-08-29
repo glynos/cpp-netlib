@@ -25,6 +25,12 @@ find_package( OpenSSL )
 find_package( Threads )
 set(CMAKE_VERBOSE_MAKEFILE true)
 
+set(BUILD_SHARED_LIBS ON)
+set(CPPNETLIB_VERSION_MAJOR 0) # MUST bump this whenever we make ABI-incompatible changes
+set(CPPNETLIB_VERSION_MINOR 10)
+set(CPPNETLIB_VERSION_PATCH 1)
+set(CPPNETLIB_VERSION_STRING ${CPPNETLIB_VERSION_MAJOR}.${CPPNETLIB_VERSION_MINOR}.${CPPNETLIB_VERSION_PATCH})
+
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DBOOST_NETWORK_DEBUG)
 endif()
@@ -60,3 +66,5 @@ if (MSVC)
 endif()
 
 enable_testing()
+
+install(DIRECTORY boost DESTINATION "include")
