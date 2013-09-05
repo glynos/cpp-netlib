@@ -39,7 +39,7 @@ struct client_options {
     swap(cache_resolved_, other.cache_resolved_);
     swap(follow_redirects_, other.follow_redirects_);
     swap(openssl_certificate_, other.openssl_certificate_);
-    swap(openssl_verify_path, other.openssl_verify_path_);
+    swap(openssl_verify_path_, other.openssl_verify_path_);
     swap(io_service_, other.io_service_);
   }
 
