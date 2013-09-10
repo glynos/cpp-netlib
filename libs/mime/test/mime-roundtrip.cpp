@@ -12,7 +12,9 @@
 #include <boost/mime.hpp>
 #include <boost/bind.hpp>
 
-#define BOOST_TEST_MODULE MIME Roundtrip
+#ifdef BOOST_TEST_DYN_LINK
+#define BOOST_TEST_ALTERNATIVE_INIT_API
+#endif
 #include <boost/test/included/unit_test.hpp>
 
 #include <fstream>
@@ -73,7 +75,7 @@ namespace {
 		BOOST_CHECK_EQUAL ( readfile ( fileName ), from_mime ( mp ));
 		}
 	
-	void test_expected_parse_fail ( const char *fileName ) {
+	void test_expected_parse_fail ( const char *) {
 		}
 	
 }
@@ -81,8 +83,12 @@ namespace {
 
 using namespace boost::unit_test;
 
+#ifdef BOOST_TEST_DYN_LINK
+bool init_unit_test()
+#else
 test_suite*
-init_unit_test_suite( int argc, char* argv[] ) 
+init_unit_test_suite( int, char** )
+#endif
 {
     framework::master_test_suite().add ( BOOST_TEST_CASE( boost::bind ( test_roundtrip, "TestMessages/00000001" )));
     framework::master_test_suite().add ( BOOST_TEST_CASE( boost::bind ( test_roundtrip, "TestMessages/00000019" )));
@@ -94,5 +100,16 @@ init_unit_test_suite( int argc, char* argv[] )
 
 //	test cases that fail
 //  framework::master_test_suite().add ( BOOST_TEST_CASE( boost::bind ( test_roundtrip, "TestMessages/0019-NoBoundary" )));
-    return 0;
+    return
+#ifdef BOOST_TEST_DYN_LINK
+    true;
+#else
+    0;
+#endif
 }
+
+#ifdef BOOST_TEST_DYN_LINK
+int main(int argc, char* argv[]) {
+  return unit_test_main(&init_unit_test, argc, argv);
+}
+#endif
