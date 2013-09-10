@@ -12,6 +12,7 @@
 #include <boost/mime.hpp>
 #include <boost/bind.hpp>
 
+#define BOOST_TEST_MODULE MIME Roundtrip
 #include <boost/test/included/unit_test.hpp>
 
 #include <fstream>
