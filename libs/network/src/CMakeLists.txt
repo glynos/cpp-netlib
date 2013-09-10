@@ -12,16 +12,16 @@ set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp)
 add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
 set_target_properties(cppnetlib-uri
   PROPERTIES VERSION ${CPPNETLIB_VERSION_STRING} SOVERSION ${CPPNETLIB_VERSION_MAJOR})
-install(TARGETS cppnetlib-uri DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE})
+install(TARGETS cppnetlib-uri DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 set(CPP-NETLIB_HTTP_SERVER_SRCS server_request_parsers_impl.cpp)
 add_library(cppnetlib-server-parsers ${CPP-NETLIB_HTTP_SERVER_SRCS})
 set_target_properties(cppnetlib-server-parsers
   PROPERTIES VERSION ${CPPNETLIB_VERSION_STRING} SOVERSION ${CPPNETLIB_VERSION_MAJOR})
-install(TARGETS cppnetlib-server-parsers DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE})
+install(TARGETS cppnetlib-server-parsers DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 set(CPP-NETLIB_HTTP_CLIENT_SRCS client.cpp)
 add_library(cppnetlib-client-connections ${CPP-NETLIB_HTTP_CLIENT_SRCS})
 set_target_properties(cppnetlib-client-connections
   PROPERTIES VERSION ${CPPNETLIB_VERSION_STRING} SOVERSION ${CPPNETLIB_VERSION_MAJOR})
-install(TARGETS cppnetlib-client-connections DESTINATION lib/${CMAKE_LIBRARY_ARCHITECTURE})
+install(TARGETS cppnetlib-client-connections DESTINATION ${CMAKE_INSTALL_LIBDIR})
