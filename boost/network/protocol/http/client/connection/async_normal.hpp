@@ -250,13 +250,13 @@ struct http_async_connection
                             body_callback_function_type callback,
                             boost::system::error_code const& ec,
                             std::size_t bytes_transferred) {
-    static long short_read_error = 335544539;
+    static const long short_read_error = 335544539;
     bool is_ssl_short_read_error =
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
         ec.category() == asio::error::ssl_category &&
         ec.value() == short_read_error;
 #else
-    false;
+        false && short_read_error;
 #endif
     if (!ec || ec == boost::asio::error::eof || is_ssl_short_read_error) {
       logic::tribool parsed_ok;
