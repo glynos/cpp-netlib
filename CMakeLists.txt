@@ -67,4 +67,5 @@ endif()
 
 enable_testing()
 
-install(DIRECTORY boost DESTINATION "include")
+include(GNUInstallDirs)
+install(DIRECTORY boost DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
