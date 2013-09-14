@@ -22,7 +22,6 @@ namespace utils {
 // struct state<Value>  {
 //     bool empty () const;
 //     void clear();
-//     unsigned short padding_length() const;
 // }
 //
 // OutputIterator encode(InputIterator begin, InputIterator end,
@@ -85,12 +84,6 @@ struct state {
         last_encoded_value = 0;
     }
   
-    unsigned short padding_length() const {
-        // the fewer octets from the triplet processed, the more characters
-        // needed as padding padding - that is why the complement here
-        return triplet_index ? 3 - triplet_index : 0;
-    }
-
 protected:
     // number of the octet in the incomplete quantum, which has been
     // processed the last time; 0 means that the previous quantum was
@@ -414,12 +407,12 @@ std::basic_string<Char> encode(char const * value) {
     return result;
 }
 
-// the function overloads for string literals encode the input without
+// The function overloads for string literals encode the input without
 // the terminating zero, which is usually expected, because the trailing
 // zero byte is not considered a part of the string value; the overloads
-// foran input range would wrap the string literal by Boost.Range and
-// encodethe full memory occupated by the string literal - including the
-// unwanted last zero byte
+// for an input range would wrap the string literal by Boost.Range and
+// encode the full memory occupated by the string literal - including the
+// unwanted last zero byte.
 
 } // namespace base64
 

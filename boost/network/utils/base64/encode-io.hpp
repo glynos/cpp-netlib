@@ -110,7 +110,7 @@ private:
 
     // allow only the construction with an output stream (strict RAII)
     state();
-    state(state<Char, Value> const & source);
+    state(state<Char, Value> const &);
 
     std::basic_ostream<Char> & output;
 
