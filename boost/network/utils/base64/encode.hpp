@@ -52,7 +52,7 @@ namespace detail {
 // from the input sequence to encode.
 template <typename Value>
 char encode_value(Value value) {
-	static char const * encoding = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	static char const encoding[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 	return encoding[static_cast<unsigned int>(value)];
 }
 
