@@ -14,6 +14,7 @@ if (Boost_FOUND)
         message_test
         message_transform_test
         utils_thread_pool
+        utils_base64_test
         )
     foreach (test ${TESTS})
         if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
