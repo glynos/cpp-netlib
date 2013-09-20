@@ -8,8 +8,24 @@ project(CPP-NETLIB)
 
 option( CPP-NETLIB_BUILD_SHARED_LIBS "Build cpp-netlib as shared libraries." OFF )
 
+include(GNUInstallDirs)
+
+# determine install path for CMake config files
+if(WIN32 AND NOT CYGWIN)
+    set(DEF_INSTALL_CMAKE_DIR CMake)
+else()
+    set(DEF_INSTALL_CMAKE_DIR lib/CMake/cppnetlib)
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+
+# Make relative cmake install path absolute (needed later on)
+if(NOT IS_ABSOLUTE "${INSTALL_CMAKE_DIR}")
+    set(INSTALL_CMAKE_DIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}")
+endif()
+
+
 if(CPP-NETLIB_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
-  message ("Linking boost testing libs dynamically...")
+  message (STATUS "Linking boost testing libs dynamically...")
   set(Boost_USE_STATIC_LIBS OFF)
   set(CPP-NETLIB_BUILD_SHARED_LIBS ON)
   set(BUILD_SHARED_LIBS ON)
@@ -68,5 +84,40 @@ endif()
 
 enable_testing()
 
-include(GNUInstallDirs)
 install(DIRECTORY boost DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+###
+## Export Targets
+# (so cpp-netlib can be easily used by other CMake projects)
+# [see http://www.cmake.org/Wiki/CMake/Tutorials/How_to_create_a_ProjectConfig.cmake_file]
+
+# Add all targets to the build-tree export set
+export(TARGETS cppnetlib-client-connections cppnetlib-server-parsers cppnetlib-uri
+    FILE "${PROJECT_BINARY_DIR}/cppnetlibTargets.cmake")
+# Export the package for use from the build-tree
+# (this registers the build-tree with a global CMake-registry)
+export(PACKAGE cppnetlib)
+# Create the cppnetlibConfig.cmake and cppnetlibConfigVersion files
+file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
+    "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+# ... for the build tree
+set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}")
+configure_file(cppnetlibConfig.cmake.in
+    "${PROJECT_BINARY_DIR}/cppnetlibConfig.cmake" @ONLY)
+# ... for the install tree
+set(CONF_INCLUDE_DIRS "\${CPPNETLIB_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+configure_file(cppnetlibConfig.cmake.in
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cppnetlibConfig.cmake" @ONLY)
+# ... for both
+configure_file(cppnetlibConfigVersion.cmake.in
+    "${PROJECT_BINARY_DIR}/cppnetlibConfigVersion.cmake" @ONLY)
+# Install the cppnetlibConfig.cmake and cppnetlibConfigVersion.cmake
+install(FILES
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cppnetlibConfig.cmake"
+    "${PROJECT_BINARY_DIR}/cppnetlibConfigVersion.cmake"
+    DESTINATION "${INSTALL_CMAKE_DIR}"
+    COMPONENT dev)
+# Install the export set for use with the install-tree
+install(EXPORT cppnetlibTargets
+    DESTINATION "${INSTALL_CMAKE_DIR}"
+    COMPONENT dev)
