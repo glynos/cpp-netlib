@@ -39,6 +39,12 @@ set_target_properties(cppnetlib-client-connections
     PROPERTIES VERSION ${CPPNETLIB_VERSION_STRING}
     SOVERSION ${CPPNETLIB_VERSION_MAJOR}
     PUBLIC_HEADER "${CPP-NETLIB_HEADERS}")
+if (OPENSSL_FOUND)
+    target_link_libraries(cppnetlib-client-connections ssl crypto)
+endif ()
+if (Boost_FOUND)
+    target_link_libraries(cppnetlib-client-connections boost_system)
+endif ()
 install(TARGETS cppnetlib-client-connections
     EXPORT cppnetlibTargets
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}
