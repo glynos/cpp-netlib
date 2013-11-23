@@ -17,10 +17,6 @@ if (Boost_FOUND)
 	request_linearize_test
         )
     foreach ( test ${TESTS} )
-        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-            set_source_files_properties(${test}.cpp
-                PROPERTIES COMPILE_FLAGS "-Wall")
-        endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test}
             cppnetlib-uri)
@@ -43,10 +39,6 @@ if (Boost_FOUND)
         client_get_streaming_test
         )
     foreach ( test ${TESTS} )
-        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-            set_source_files_properties(${test}.cpp
-                PROPERTIES COMPILE_FLAGS "-Wall")
-        endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test}
             cppnetlib-uri
@@ -72,10 +64,6 @@ if (Boost_FOUND)
         server_async_run_stop_concurrency
         )
     foreach ( test ${SERVER_API_TESTS} )
-        if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-            set_source_files_properties(${test}.cpp
-                PROPERTIES COMPILE_FLAGS "-Wall")
-        endif()
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
         target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
