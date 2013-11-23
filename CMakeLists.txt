@@ -36,6 +36,8 @@ endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -ftemplate-depth=256")
 endif()
 
 if (Boost_FOUND)
