@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(interface_test) {
     BOOST_CHECK_EQUAL(result, "YWJj");
 
     // check array of chars
-    char char_array[] = { 'a', 'b', 'c' };
+    char char_array[] = { 'a', 'b', 'c', 0 };
 
     BOOST_CHECK_EQUAL(base64::encode<char>(char_array), "YWJj");
 
