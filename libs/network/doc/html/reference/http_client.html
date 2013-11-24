@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -6,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>HTTP Client API &mdash; cpp-netlib v0.10.0</title>
+    <title>HTTP Client API &mdash; cpp-netlib v0.11.0</title>
     
     <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +24,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.10.0" href="../index.html" />
+    <link rel="top" title="cpp-netlib v0.11.0" href="../index.html" />
     <link rel="up" title="Reference Manual" href="../reference.html" />
     <link rel="next" title="HTTP Request" href="http_request.html" />
     <link rel="prev" title="Reference Manual" href="../reference.html" />
@@ -45,7 +46,7 @@
         <li class="right" >
           <a href="../reference.html" title="Reference Manual"
              accesskey="P">previous</a> |</li>
-        <li><a href="../contents.html">cpp-netlib v0.10.0</a> &raquo;</li>
+        <li><a href="../contents.html">cpp-netlib v0.11.0</a> &raquo;</li>
           <li><a href="../reference.html" accesskey="U">Reference Manual</a> &raquo;</li> 
       </ul>
     </div>  
@@ -69,10 +70,6 @@ or pass them around in smart pointers or by reference.</li>
 <li><strong>Assume that requests made are independent of each other.</strong> There currently
 is no cookie or session management system built-in to cpp-netlib&#8217;s HTTP client
 implementations.</li>
-<li><strong>Are header-only and are compiled-into your application.</strong> Future releases in
-case you want to upgrade the implementation you are using in your application
-will be distributed as header-only implementations, which means you have to
-re-compile your application to use a newer version of the implementations.</li>
 </ul>
 </div></blockquote>
 <p>The HTTP clients all share the same API, but the internals are documented in
@@ -80,6 +77,8 @@ terms of what is different and what to expect with the different
 implementations.</p>
 <p>As of 0.9.1 the default implementation for the <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> HTTP client is
 asynchronous.</p>
+<p>As of 0.11 the <a class="reference internal" href="#synchronous-clients">Synchronous Clients</a> are now <em>DEPRECATED</em> and will be removed
+in subsequent releases.</p>
 </div>
 <div class="section" id="implementations">
 <h2>Implementations<a class="headerlink" href="#implementations" title="Permalink to this headline">¶</a></h2>
@@ -183,6 +182,11 @@ are encountered in the performance of the HTTP requests.</p>
 <p class="last">The synchronous clients are <strong>NOT</strong> thread safe. You will need to do
 external synchronization to use synchronous client implementations.</p>
 </div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As of version 0.11, all the synchronous client implementations are
+deprecated. They will be removed in the next version of the library.</p>
+</div>
 </div>
 <div class="section" id="asynchronous-clients">
 <h3>Asynchronous Clients<a class="headerlink" href="#asynchronous-clients" title="Permalink to this headline">¶</a></h3>
@@ -250,6 +254,11 @@ by default now have an externally-linked component. This is a breaking change
 for code that used to rely on cpp-netlib being a header-only library, but can
 inhibited by defining the <tt class="docutils literal"><span class="pre">BOOST_NETWORK_NO_LIB</span></tt> preprocessor macro before
 including any cpp-netlib header.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Starting version 0.11, cpp-netlib clients and server implementations
+no longer support the <tt class="docutils literal"><span class="pre">BOOST_NETWORK_NO_LIB</span></tt> option.</p>
 </div>
 <div class="section" id="constructors">
 <h3>Constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h3>
@@ -380,6 +389,22 @@ following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt
 body chunks be handled by the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of
 <tt class="docutils literal"><span class="pre">callback</span></tt> should be the following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
 <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">streaming_callback)</span></tt></dt>
+<dd>Perform and HTTP POST request, and have the request&#8217;s body chunks be
+generated by the <tt class="docutils literal"><span class="pre">streaming_callback</span></tt> which has a signature of the form:
+<tt class="docutils literal"><span class="pre">bool(string_type&amp;)</span></tt>. The provided <tt class="docutils literal"><span class="pre">string_type&amp;</span></tt> will be streamed as
+soon as the function returns. A return value of <tt class="docutils literal"><span class="pre">false</span></tt> signals the client
+that the most recent invocation is the last chunk to be sent.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">callback,</span> <span class="pre">streaming_callback)</span></tt></dt>
+<dd>Perform an HTTP POST request, and have the body chunks be handled by the
+<tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of <tt class="docutils literal"><span class="pre">callback</span></tt> should be the
+following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
+<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>. This form also has the request&#8217;s body
+chunks be generated by the <tt class="docutils literal"><span class="pre">streaming_callback</span></tt> which has a signature of
+the form: <tt class="docutils literal"><span class="pre">bool(string_type&amp;)</span></tt>. The provided <tt class="docutils literal"><span class="pre">string_type&amp;</span></tt> will be
+streamed as soon as the function returns. A return value of <tt class="docutils literal"><span class="pre">false</span></tt>
+signals the client that the most recent invocation is the last chunk to be
+sent.</dd>
 <dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_)</span></tt></dt>
 <dd>Perform an HTTP PUT, use the data already set in the request object which
 includes the headers, and the body.</dd>
@@ -410,6 +435,22 @@ following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt
 body chunks be handled by the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of
 <tt class="docutils literal"><span class="pre">callback</span></tt> should be the following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
 <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">streaming_callback)</span></tt></dt>
+<dd>Perform and HTTP PUT request, and have the request&#8217;s body chunks be
+generated by the <tt class="docutils literal"><span class="pre">streaming_callback</span></tt> which has a signature of the form:
+<tt class="docutils literal"><span class="pre">bool(string_type&amp;)</span></tt>. The provided <tt class="docutils literal"><span class="pre">string_type&amp;</span></tt> will be streamed as
+soon as the function returns. A return value of <tt class="docutils literal"><span class="pre">false</span></tt> signals the client
+that the most recent invocation is the last chunk to be sent.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">callback,</span> <span class="pre">streaming_callback)</span></tt></dt>
+<dd>Perform an HTTP PUT request, and have the body chunks be handled by the
+<tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of <tt class="docutils literal"><span class="pre">callback</span></tt> should be the
+following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
+<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>. This form also has the request&#8217;s body
+chunks be generated by the <tt class="docutils literal"><span class="pre">streaming_callback</span></tt> which has a signature of
+the form: <tt class="docutils literal"><span class="pre">bool(string_type&amp;)</span></tt>. The provided <tt class="docutils literal"><span class="pre">string_type&amp;</span></tt> will be
+streamed as soon as the function returns. A return value of <tt class="docutils literal"><span class="pre">false</span></tt>
+signals the client that the most recent invocation is the last chunk to be
+sent.</dd>
 <dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.delete_(request_)</span></tt></dt>
 <dd>Perform an HTTP DELETE request.</dd>
 <dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.delete_(request_,</span> <span class="pre">body_handler=callback)</span></tt></dt>
@@ -534,14 +575,14 @@ to create a function object.</p>
         <li class="right" >
           <a href="../reference.html" title="Reference Manual"
              >previous</a> |</li>
-        <li><a href="../contents.html">cpp-netlib v0.10.0</a> &raquo;</li>
+        <li><a href="../contents.html">cpp-netlib v0.11.0</a> &raquo;</li>
           <li><a href="../reference.html" >Reference Manual</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Jul 04, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Last updated on Nov 24, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
