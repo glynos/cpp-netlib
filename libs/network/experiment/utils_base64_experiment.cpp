@@ -1,8 +1,13 @@
+#include <boost/config.hpp>
 #include <boost/network/utils/base64/encode.hpp>
 #include <boost/network/utils/base64/encode-io.hpp>
 #include "utils/base64-standalone.hpp"
+// Since we're having issues with libc++ on OS X we're excluding this in the
+// meantime if we're using libc++
+#ifndef _LIBCPP_VERSION
 #include "utils/base64-stateless.hpp"
 #include "utils/base64-stateful_buffer.hpp"
+#endif
 #include "utils/base64-stateful_iterator.hpp"
 #include "utils/base64-stateful_transform.hpp"
 #include <iostream>
@@ -58,6 +63,8 @@ using namespace boost::network::utils;
     base64::encode_rest(result_encoder, rest)
 
 // testing the code from experimental/base64-stateless.hpp
+// NOTE(dberris): Only do this if we're NOT using libc++.
+#ifndef _LIBCPP_VERSION
 #define base64 base64_stateless
 #include "utils_base64_experiment.ipp"
 #undef base64
@@ -70,6 +77,7 @@ using namespace boost::network::utils;
 #define base64 base64_stateful_buffer
 #include "utils_base64_experiment.ipp"
 #undef base64
+#endif  // _LIBCPP_VERSION
 
 // testing the code from experimental/base64-stateful_transform.hpp
 #define base64 base64_stateful_transform
