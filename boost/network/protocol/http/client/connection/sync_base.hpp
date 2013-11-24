@@ -168,15 +168,18 @@ struct sync_connection_base_impl {
           } else {
             bool stopping_inner = false;
             do {
-              std::size_t chunk_bytes_read =
-                  read(socket_,
-                       response_buffer,
-                       boost::asio::transfer_at_least(chunk_size),
-                       error);
-              if (chunk_bytes_read == 0) {
-                if (error != boost::asio::error::eof)
-                  throw boost::system::system_error(error);
-                stopping_inner = true;
+              if (response_buffer.size() < (chunk_size+2)){
+                std::size_t toRead = (chunk_size+2) - response_buffer.size();
+                std::size_t chunk_bytes_read =
+                    read(socket_,
+                         response_buffer,
+                         boost::asio::transfer_at_least(toRead),
+                         error);
+                if (chunk_bytes_read == 0) {
+                  if (error != boost::asio::error::eof)
+                    throw boost::system::system_error(error);
+                  stopping_inner = true;
+                }
               }
 
               std::istreambuf_iterator<char> eos;
