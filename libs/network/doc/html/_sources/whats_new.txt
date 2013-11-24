@@ -21,10 +21,15 @@ v0.11.0
 * Support chunked transfer encoding from HTTP responses (`#86`_)
 * Make OS X Clang builds use C++11 and libc++. 
 * Update Boost requirement to 1.54.0.
+* Experimental Base64 encoding/decoding library (`#287`_)
+* *Known test failure:* OS X Xcode Clang 5.0 + Boost 1.54.0 + libc++ don't play
+  well with Boost.Serialization issues, mitigate test breakage but
+  ``cpp-netlib-utils_base64_test`` still fails in this platform. (`#287`_) 
 
 .. _`#129`: https://github.com/cpp-netlib/cpp-netlib/issues/129
 .. _`#245`: https://github.com/cpp-netlib/cpp-netlib/issues/245
 .. _`#277`: https://github.com/cpp-netlib/cpp-netlib/issues/277
+.. _`#287`: https://github.com/cpp-netlib/cpp-netlib/issues/287
 .. _`#279`: https://github.com/cpp-netlib/cpp-netlib/issues/279
 .. _`#27`: https://github.com/cpp-netlib/cpp-netlib/issues/27
 .. _`#285`: https://github.com/cpp-netlib/cpp-netlib/issues/285

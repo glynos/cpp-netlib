@@ -71,9 +71,13 @@
 <li>Remove unsupported Jamfiles from the whole project (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/316">#316</a>)</li>
 <li>Add <tt class="docutils literal"><span class="pre">make</span> <span class="pre">install</span></tt> for Linux and OS X (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/285">#285</a>)</li>
 <li>Fix incorrect Body processing (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/69">#69</a>)</li>
-<li>Support chunked transfer encoding from HTTP responses (<a href="#id31"><span class="problematic" id="id32">`#86`_</span></a>)</li>
+<li>Support chunked transfer encoding from HTTP responses (<a href="#id32"><span class="problematic" id="id33">`#86`_</span></a>)</li>
 <li>Make OS X Clang builds use C++11 and libc++.</li>
 <li>Update Boost requirement to 1.54.0.</li>
+<li>Experimental Base64 encoding/decoding library (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/287">#287</a>)</li>
+<li><em>Known test failure:</em> OS X Xcode Clang 5.0 + Boost 1.54.0 + libc++ don&#8217;t play
+well with Boost.Serialization issues, mitigate test breakage but
+<tt class="docutils literal"><span class="pre">cpp-netlib-utils_base64_test</span></tt> still fails in this platform. (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/287">#287</a>)</li>
 </ul>
 </div>
 <div class="section" id="cpp-netlib-0-10">
@@ -290,7 +294,7 @@ the asynchronous client in 0.7 already has all the parts available.</li>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Nov 24, 2013.
+      Last updated on Nov 25, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
