@@ -16,13 +16,21 @@ v0.11.0
 * Support streaming body chunks for PUT/POST client requests (`#27`_)
 * Fix non-case-sensitive header parsing for some client tags (`#313`_)
 * Remove unsupported Jamfiles from the whole project (`#316`_)
+* Add ``make install`` for Linux and OS X (`#285`_) 
+* Fix incorrect Body processing (`#69`_)
+* Support chunked transfer encoding from HTTP responses (`#86`_)
+* Make OS X Clang builds use C++11 (requires Boost 1.540 installed, built with
+  C++11 and linked with libc++ as well). 
 
-.. _`#245`: https://github.com/cpp-netlib/cpp-netlib/issues/245
-.. _`#279`: https://github.com/cpp-netlib/cpp-netlib/issues/279
-.. _`#277`: https://github.com/cpp-netlib/cpp-netlib/issues/277
 .. _`#129`: https://github.com/cpp-netlib/cpp-netlib/issues/129
+.. _`#245`: https://github.com/cpp-netlib/cpp-netlib/issues/245
+.. _`#277`: https://github.com/cpp-netlib/cpp-netlib/issues/277
+.. _`#279`: https://github.com/cpp-netlib/cpp-netlib/issues/279
 .. _`#27`: https://github.com/cpp-netlib/cpp-netlib/issues/27
+.. _`#285`: https://github.com/cpp-netlib/cpp-netlib/issues/285
 .. _`#313`: https://github.com/cpp-netlib/cpp-netlib/issues/313
+.. _`#316`: https://github.com/cpp-netlib/cpp-netlib/issues/316
+.. _`#69`: https://github.com/cpp-netlib/cpp-netlib/issues/69
 
 :mod:`cpp-netlib` 0.10
 ----------------------
