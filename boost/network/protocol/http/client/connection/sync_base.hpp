@@ -169,11 +169,11 @@ struct sync_connection_base_impl {
             bool stopping_inner = false;
             do {
               if (response_buffer.size() < (chunk_size+2)){
-                std::size_t toRead = (chunk_size+2) - response_buffer.size();
+                std::size_t bytes_to_read = (chunk_size+2) - response_buffer.size();
                 std::size_t chunk_bytes_read =
                     read(socket_,
                          response_buffer,
-                         boost::asio::transfer_at_least(toRead),
+                         boost::asio::transfer_at_least(bytes_to_read),
                          error);
                 if (chunk_bytes_read == 0) {
                   if (error != boost::asio::error::eof)
