@@ -4,6 +4,26 @@
  What's New
 ************
 
+:mod:`cpp-netlib` 0.11
+----------------------
+
+v0.11.0
+* Fix thread leak in DNS resolution failure (`#245`_)
+* Remove unsupported `client_fwd.hpp` header (`#277`_)
+* Remove support for header-only usage (`#129`_) -- this means that the
+  BOOST_NETWORK_NO_LIB option is no longer actually supported.
+* Deprecate Synchronous Client implementations (`#279`_)
+* Support streaming body chunks for PUT/POST client requests (`#27`_)
+* Fix non-case-sensitive header parsing for some client tags (`#313`_)
+* Remove unsupported Jamfiles from the whole project (`#316`_)
+
+.. _`#245`: https://github.com/cpp-netlib/cpp-netlib/issues/245
+.. _`#279`: https://github.com/cpp-netlib/cpp-netlib/issues/279
+.. _`#277`: https://github.com/cpp-netlib/cpp-netlib/issues/277
+.. _`#129`: https://github.com/cpp-netlib/cpp-netlib/issues/129
+.. _`#27`: https://github.com/cpp-netlib/cpp-netlib/issues/27
+.. _`#313`: https://github.com/cpp-netlib/cpp-netlib/issues/313
+
 :mod:`cpp-netlib` 0.10
 ----------------------
 
