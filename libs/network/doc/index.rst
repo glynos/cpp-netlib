@@ -3,8 +3,8 @@
 
 .. :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 .. 	  Dean Michael Berris <dberris@google.com>
-.. :Date: Jul 4, 2013
-.. :Version: 0.10.1
+.. :Date: Nov 24, 2013
+.. :Version: 0.11.0
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 .. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2013.
 ..             Copyrigh 2013 Google, Inc.
@@ -25,7 +25,7 @@ project website at:
 
     http://cpp-netlib.org/
 
-This version of :mod:`cpp-netlib` is tagged as cpp-netlib-0.10.0 in the GitHub_
+This version of :mod:`cpp-netlib` is tagged as cpp-netlib-0.11.0 in the GitHub_
 repository. You can find more information about the progress of the development
 by checking our GitHub_ project page at:
 
@@ -110,6 +110,7 @@ Want to learn more?
     * :ref:`Find out what's new <whats_new>`
     * :ref:`Study the library in more depth <in_depth>`
     * :ref:`Discover more through the full reference <reference>`
+    * :ref:`Full table of contents <contents>`
 
 .. warning:: Be aware that not all features are stable.  The generic
    	     message design is under review and the URI and HTTP

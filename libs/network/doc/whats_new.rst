@@ -19,8 +19,8 @@ v0.11.0
 * Add ``make install`` for Linux and OS X (`#285`_) 
 * Fix incorrect Body processing (`#69`_)
 * Support chunked transfer encoding from HTTP responses (`#86`_)
-* Make OS X Clang builds use C++11 (requires Boost 1.540 installed, built with
-  C++11 and linked with libc++ as well). 
+* Make OS X Clang builds use C++11 and libc++. 
+* Update Boost requirement to 1.54.0.
 
 .. _`#129`: https://github.com/cpp-netlib/cpp-netlib/issues/129
 .. _`#245`: https://github.com/cpp-netlib/cpp-netlib/issues/245
