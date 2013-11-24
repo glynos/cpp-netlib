@@ -20,7 +20,8 @@ set_target_properties(cppnetlib-uri
 install(TARGETS cppnetlib-uri
     EXPORT cppnetlibTargets
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+    LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
 
 set(CPP-NETLIB_HTTP_SERVER_SRCS server_request_parsers_impl.cpp)
 add_library(cppnetlib-server-parsers ${CPP-NETLIB_HTTP_SERVER_SRCS})
@@ -31,7 +32,8 @@ set_target_properties(cppnetlib-server-parsers
 install(TARGETS cppnetlib-server-parsers
     EXPORT cppnetlibTargets
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+    LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
 
 set(CPP-NETLIB_HTTP_CLIENT_SRCS client.cpp)
 add_library(cppnetlib-client-connections ${CPP-NETLIB_HTTP_CLIENT_SRCS})
@@ -43,9 +45,10 @@ if (OPENSSL_FOUND)
     target_link_libraries(cppnetlib-client-connections ssl crypto)
 endif ()
 if (Boost_FOUND)
-    target_link_libraries(cppnetlib-client-connections boost_system)
+    target_link_libraries(cppnetlib-client-connections ${Boost_System_LIBRARY})
 endif ()
 install(TARGETS cppnetlib-client-connections
     EXPORT cppnetlibTargets
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
+    LIBRARY DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR})
