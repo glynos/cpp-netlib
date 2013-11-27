@@ -8,6 +8,7 @@
 ----------------------
 
 v0.11.0
+~~~~~~~
 * Fix thread leak in DNS resolution failure (`#245`_)
 * Remove unsupported `client_fwd.hpp` header (`#277`_)
 * Remove support for header-only usage (`#129`_) -- this means that the
