@@ -42,7 +42,7 @@ set_target_properties(cppnetlib-client-connections
     SOVERSION ${CPPNETLIB_VERSION_MAJOR}
     PUBLIC_HEADER "${CPP-NETLIB_HEADERS}")
 if (OPENSSL_FOUND)
-    target_link_libraries(cppnetlib-client-connections ssl crypto)
+    target_link_libraries(cppnetlib-client-connections ${OPENSSL_LIBRARIES})
 endif ()
 if (Boost_FOUND)
     target_link_libraries(cppnetlib-client-connections ${Boost_System_LIBRARY})
