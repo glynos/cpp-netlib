@@ -45,6 +45,7 @@ namespace boost { namespace network { namespace http {
             partial_content = 206,
             multiple_choices = 300,
             moved_permanently = 301,
+            moved_temporarily = 302,    ///< \deprecated Not HTTP standard
             found = 302,
             see_other = 303,
             not_modified = 304,
@@ -56,6 +57,7 @@ namespace boost { namespace network { namespace http {
             payment_required = 402,
             forbidden = 403,
             not_found = 404,
+            not_supported = 405,        ///< \deprecated Not HTTP standard
             method_not_allowed = 405,
             not_acceptable = 406,
             proxy_authentication_required = 407,
@@ -67,6 +69,7 @@ namespace boost { namespace network { namespace http {
             request_entity_too_large = 413,
             request_uri_too_large = 414,
             unsupported_media_type = 415,
+            unsatisfiable_range = 416,   ///< \deprecated Not HTTP standard
             requested_range_not_satisfiable = 416,
             expectation_failed = 417,
             precondition_required = 428,
