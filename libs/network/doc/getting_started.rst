@@ -159,6 +159,13 @@ Once the build has completed, you can now run the test suite by issuing::
 
     $ make test
 
+.. note:: As of version 0.9.3, :mod:`cpp-netlib` produces three static
+          libraries.  Using GCC on Linux these are::
+
+   	     libcppnetlib-client-connections.a
+	     libcppnetlib-server-parsers.a
+	     libcppnetlib-uri.a
+
 Building On Windows
 ~~~~~~~~~~~~~~~~~~~
 
