@@ -176,13 +176,7 @@ look for the solution and project files as the artifacts of the call to
 with a number of project files for Visual Studio.
 
 .. note:: As of version 0.9.3, :mod:`cpp-netlib` produces three static
-          libraries.  Using GCC on Linux these are::
-
-   	     libcppnetlib-client-connections.a
-	     libcppnetlib-server-parsers.a
-	     libcppnetlib-uri.a
-
-	  And using Visual C++ on Windows they are::
+          libraries.  Using Visual C++ on Windows they are::
 
    	     cppnetlib-client-connections.lib
 	     cppnetlib-server-parsers.lib
