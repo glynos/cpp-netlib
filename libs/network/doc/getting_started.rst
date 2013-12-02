@@ -166,6 +166,8 @@ Once the build has completed, you can now run the test suite by issuing::
 	     libcppnetlib-server-parsers.a
 	     libcppnetlib-uri.a
 
+	  Users can find them in ``~/cpp-netlib-build/libs/network/src``.
+
 Building On Windows
 ~~~~~~~~~~~~~~~~~~~
 
