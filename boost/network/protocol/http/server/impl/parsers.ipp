@@ -1,6 +1,7 @@
 #ifndef SERVER_REQUEST_PARSERS_IMPL_UW3PM6V6
 #define SERVER_REQUEST_PARSERS_IMPL_UW3PM6V6
 
+#define BOOST_SPIRIT_UNICODE
 #include <boost/spirit/include/qi.hpp>
 
 // Copyright 2010 Dean Michael Berris. 
@@ -20,6 +21,26 @@
 #endif
 #include <vector>
 
+namespace boost { namespace spirit { namespace traits {
+
+    typedef std::basic_string<uint32_t> u32_string;
+
+    template <> // <typename Attrib, typename T, typename Enable>
+    struct assign_to_container_from_value<std::string, u32_string, void>
+    {
+        static void call(u32_string const& val, std::string& attr) {
+            u32_to_u8_iterator<u32_string::const_iterator> begin(val.begin()), end(val.end());
+            for(; begin != end; ++begin)
+                attr += *begin;
+        }
+    };
+
+} // namespace traits
+
+} // namespace spirit
+
+} // namespace boost
+
 namespace boost { namespace network { namespace http {
 
     BOOST_NETWORK_INLINE void parse_version(std::string const & partial_parsed, fusion::tuple<uint8_t,uint8_t> & version_pair) {
@@ -37,12 +58,13 @@ namespace boost { namespace network { namespace http {
 
     BOOST_NETWORK_INLINE void parse_headers(std::string const & input, std::vector<request_header_narrow> & container) {
         using namespace boost::spirit::qi;
+        u8_to_u32_iterator<std::string::const_iterator> begin(input.begin()), end(input.end());
         parse(
-            input.begin(), input.end(),
+            begin, end,
             *(
-                +(alnum|(punct-':'))
+                as<boost::spirit::traits::u32_string>()[+(alnum|(punct-':'))]
                 >> lit(": ")
-                >> +((alnum|space|punct) - '\r' - '\n')
+                >> as<boost::spirit::traits::u32_string>()[+((unicode::alnum|space|punct) - '\r' - '\n')]
                 >> lit("\r\n")
             )
             >> lit("\r\n")
