@@ -15,6 +15,7 @@ add_executable(rss_reader rss/rss.cpp rss/main.cpp)
 add_executable(twitter_search twitter/search.cpp)
 add_executable(hello_world_server http/hello_world_server.cpp)
 add_executable(hello_world_client http/hello_world_client.cpp)
+add_executable(hello_world_async_server_with_work_queue http/hello_world_async_server_with_work_queue.cpp)
 if (UNIX)
   add_executable(fileserver http/fileserver.cpp)
 endif (UNIX)
@@ -80,6 +81,12 @@ target_link_libraries(hello_world_client
     cppnetlib-uri
     cppnetlib-client-connections)
 
+target_link_libraries(hello_world_async_server_with_work_queue
+    ${BOOST_CLIENT_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT}
+    cppnetlib-uri
+    cppnetlib-client-connections)
+
 if (OPENSSL_FOUND)
   target_link_libraries(http_client ${OPENSSL_LIBRARIES})
   target_link_libraries(simple_wget ${OPENSSL_LIBRARIES})
@@ -88,6 +95,7 @@ if (OPENSSL_FOUND)
   target_link_libraries(twitter_search ${OPENSSL_LIBRARIES})
   target_link_libraries(hello_world_server ${OPENSSL_LIBRARIES})
   target_link_libraries(hello_world_client ${OPENSSL_LIBRARIES})
+  target_link_libraries(hello_world_async_server_with_work_queue ${OPENSSL_LIBRARIES})
 endif (OPENSSL_FOUND)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -98,6 +106,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   target_link_libraries(twitter_search rt)
   target_link_libraries(hello_world_server rt)
   target_link_libraries(hello_world_client rt)
+  target_link_libraries(hello_world_async_server_with_work_queue cppnetlib-server-parsers rt)
 endif()
 
 if (UNIX)
@@ -118,6 +127,7 @@ set_target_properties(rss_reader PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLI
 set_target_properties(twitter_search PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(hello_world_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(hello_world_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+set_target_properties(hello_world_async_server_with_work_queue PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 if (UNIX)
   set_target_properties(fileserver PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 endif (UNIX)
