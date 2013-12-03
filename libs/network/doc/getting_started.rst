@@ -159,9 +159,9 @@ Once the build has completed, you can now run the test suite by issuing::
 
     $ make test
 
-You can install :mod:`cpp-netlib` by issueing *as root*::
+You can install :mod:`cpp-netlib` by issueing::
 
-    $ make install
+    $ sudo make install
 
 By default this installs :mod:`cpp-netlib` into ``/usr/local``.
 
