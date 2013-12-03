@@ -159,7 +159,7 @@ Once the build has completed, you can now run the test suite by issuing::
 
     $ make test
 
-You can install :mod:`cpp-netlib` by issueing::
+You can install :mod:`cpp-netlib` by issuing::
 
     $ sudo make install
 
