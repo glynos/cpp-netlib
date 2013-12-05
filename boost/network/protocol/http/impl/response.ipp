@@ -53,7 +53,6 @@ namespace boost { namespace network { namespace http {
             temporary_redirect = 307,
             bad_request = 400,
             unauthorized = 401,
-            forbidden = 403,
             payment_required = 402,
             forbidden = 403,
             not_found = 404,
