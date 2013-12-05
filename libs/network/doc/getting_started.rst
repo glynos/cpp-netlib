@@ -159,6 +159,21 @@ Once the build has completed, you can now run the test suite by issuing::
 
     $ make test
 
+You can install :mod:`cpp-netlib` by issuing::
+
+    $ sudo make install
+
+By default this installs :mod:`cpp-netlib` into ``/usr/local``.
+
+.. note:: As of version 0.9.3, :mod:`cpp-netlib` produces three static
+   libraries.  Using GCC on Linux these are::
+
+      libcppnetlib-client-connections.a
+      libcppnetlib-server-parsers.a
+      libcppnetlib-uri.a
+
+   Users can find them in ``~/cpp-netlib-build/libs/network/src``.
+
 Building On Windows
 ~~~~~~~~~~~~~~~~~~~
 
@@ -169,19 +184,35 @@ look for the solution and project files as the artifacts of the call to
 with a number of project files for Visual Studio.
 
 .. note:: As of version 0.9.3, :mod:`cpp-netlib` produces three static
-          libraries.  Using GCC on Linux these are::
+   libraries.  Using Visual C++ on Windows they are::
 
-   	     libcppnetlib-client-connections.a
-	     libcppnetlib-server-parsers.a
-	     libcppnetlib-uri.a
+      cppnetlib-client-connections.lib
+      cppnetlib-server-parsers.lib
+      cppnetlib-uri.lib
 
-	  And using Visual C++ on Windows they are::
+   Users can find them in ``~/cpp-netlib-build/libs/network/src``.
 
-   	     cppnetlib-client-connections.lib
-	     cppnetlib-server-parsers.lib
-	     cppnetlib-uri.lib
+Using :mod:`cpp-netlib`
+=======================
 
-	  Users can find them in ``~/cpp-netlib-build/libs/network/src``.
+CMake projects
+~~~~~~~~~~~~~~
+
+Projects using CMake can add the following lines in their ``CMakeLists.txt`` to
+be able to use :mod:`cpp-netlib`::
+    
+   set ( CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ~/cpp-netlib-build )
+   find_package ( cppnetlib 0.11.0 REQUIRED )
+   include_directories ( ${CPPNETLIB_INCLUDE_DIRS} )
+   target_link_libraries ( MyApplication ${CPPNETLIB_LIBRARIES} )
+
+.. note:: Setting ``CMAKE_PREFIX_PATH`` is only required when :mod:`cpp-netlib`
+   is not installed to a location that CMake searches.  When :mod:`cpp-netlib`
+   is installed to the default location (``/usr/local``), ``CMake`` can find it.
+
+.. note:: We assume that ``MyApplication`` is the application that you are 
+   building and which depends on :mod:`cpp-netlib`.
+
 
 Reporting Issues, Getting Support
 =================================
