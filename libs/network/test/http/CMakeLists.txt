@@ -62,6 +62,7 @@ if (Boost_FOUND)
     set ( SERVER_API_TESTS
         server_constructor_test
         server_async_run_stop_concurrency
+        server_header_parser_test
         )
     foreach ( test ${SERVER_API_TESTS} )
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
