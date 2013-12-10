@@ -85,7 +85,8 @@ target_link_libraries(hello_world_async_server_with_work_queue
     ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
-    cppnetlib-client-connections)
+    cppnetlib-client-connections
+    cppnetlib-server-parsers)
 
 if (OPENSSL_FOUND)
   target_link_libraries(http_client ${OPENSSL_LIBRARIES})
@@ -106,7 +107,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   target_link_libraries(twitter_search rt)
   target_link_libraries(hello_world_server rt)
   target_link_libraries(hello_world_client rt)
-  target_link_libraries(hello_world_async_server_with_work_queue cppnetlib-server-parsers rt)
+  target_link_libraries(hello_world_async_server_with_work_queue rt)
 endif()
 
 if (UNIX)
