@@ -35,7 +35,7 @@ namespace boost { namespace network { namespace http {
 
         template <class ValueType>
         BOOST_CONCEPT_REQUIRES(
-            ((Header<ValueType>)),
+            ((Header<typename boost::remove_cv<ValueType>::type>)),
             (string_type)
         ) operator()(ValueType & header) {
             typedef typename ostringstream<Tag>::type output_stream;
