@@ -34,15 +34,12 @@ struct sync_connection_base_impl {
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename string<Tag>::type string_type;
   typedef function<typename resolver_base::resolver_iterator_pair(
-      resolver_type&,
-      string_type const&,
-      string_type const&)> resolver_function_type;
+      resolver_type&, string_type const&, string_type const&)>
+      resolver_function_type;
 
   template <class Socket>
-  void init_socket(Socket& socket_,
-                   resolver_type& resolver_,
-                   string_type const& hostname,
-                   string_type const& port,
+  void init_socket(Socket& socket_, resolver_type& resolver_,
+                   string_type const& hostname, string_type const& port,
                    resolver_function_type resolve_) {
     using boost::asio::ip::tcp;
     boost::system::error_code error = boost::asio::error::host_not_found;
@@ -56,13 +53,11 @@ struct sync_connection_base_impl {
       ++endpoint_iterator;
     }
 
-    if (error)
-      throw boost::system::system_error(error);
+    if (error) throw boost::system::system_error(error);
   }
 
   template <class Socket>
-  void read_status(Socket& socket_,
-                   basic_response<Tag>& response_,
+  void read_status(Socket& socket_, basic_response<Tag>& response_,
                    boost::asio::streambuf& response_buffer) {
     boost::asio::read_until(socket_, response_buffer, "\r\n");
     std::istream response_stream(&response_buffer);
@@ -82,8 +77,7 @@ struct sync_connection_base_impl {
   }
 
   template <class Socket>
-  void read_headers(Socket& socket_,
-                    basic_response<Tag>& response_,
+  void read_headers(Socket& socket_, basic_response<Tag>& response_,
                     boost::asio::streambuf& response_buffer) {
     boost::asio::read_until(socket_, response_buffer, "\r\n\r\n");
     std::istream response_stream(&response_buffer);
@@ -106,31 +100,27 @@ struct sync_connection_base_impl {
   }
 
   template <class Socket>
-  void send_request_impl(Socket& socket_,
-                         string_type const& method,
+  void send_request_impl(Socket& socket_, string_type const& method,
                          boost::asio::streambuf& request_buffer) {
     write(socket_, request_buffer);
   }
 
   template <class Socket>
-  void read_body_normal(Socket& socket_,
-                        basic_response<Tag>& response_,
+  void read_body_normal(Socket& socket_, basic_response<Tag>& response_,
                         boost::asio::streambuf& response_buffer,
                         typename ostringstream<Tag>::type& body_stream) {
     boost::system::error_code error;
-    if (response_buffer.size() > 0)
-      body_stream << &response_buffer;
+    if (response_buffer.size() > 0) body_stream << &response_buffer;
 
-    while (boost::asio::read(
-        socket_, response_buffer, boost::asio::transfer_at_least(1), error)) {
+    while (boost::asio::read(socket_, response_buffer,
+                             boost::asio::transfer_at_least(1), error)) {
       body_stream << &response_buffer;
     }
   }
 
   template <class Socket>
   void read_body_transfer_chunk_encoding(
-      Socket& socket_,
-      basic_response<Tag>& response_,
+      Socket& socket_, basic_response<Tag>& response_,
       boost::asio::streambuf& response_buffer,
       typename ostringstream<Tag>::type& body_stream) {
     boost::system::error_code error;
@@ -168,13 +158,12 @@ struct sync_connection_base_impl {
           } else {
             bool stopping_inner = false;
             do {
-              if (response_buffer.size() < (chunk_size+2)){
-                std::size_t bytes_to_read = (chunk_size+2) - response_buffer.size();
+              if (response_buffer.size() < (chunk_size + 2)) {
+                std::size_t bytes_to_read =
+                    (chunk_size + 2) - response_buffer.size();
                 std::size_t chunk_bytes_read =
-                    read(socket_,
-                         response_buffer,
-                         boost::asio::transfer_at_least(bytes_to_read),
-                         error);
+                    read(socket_, response_buffer,
+                         boost::asio::transfer_at_least(bytes_to_read), error);
                 if (chunk_bytes_read == 0) {
                   if (error != boost::asio::error::eof)
                     throw boost::system::system_error(error);
@@ -199,29 +188,24 @@ struct sync_connection_base_impl {
         throw std::runtime_error("Unsupported Transfer-Encoding.");
     } else {
       size_t already_read = response_buffer.size();
-      if (already_read)
-        body_stream << &response_buffer;
+      if (already_read) body_stream << &response_buffer;
       size_t length =
           lexical_cast<size_t>(boost::begin(content_length_range)->second) -
           already_read;
-      if (length == 0)
-        return;
+      if (length == 0) return;
       size_t bytes_read = 0;
-      while ((bytes_read = boost::asio::read(socket_,
-                                             response_buffer,
+      while ((bytes_read = boost::asio::read(socket_, response_buffer,
                                              boost::asio::transfer_at_least(1),
                                              error))) {
         body_stream << &response_buffer;
         length -= bytes_read;
-        if ((length <= 0) || error)
-          break;
+        if ((length <= 0) || error) break;
       }
     }
   }
 
   template <class Socket>
-  void read_body(Socket& socket_,
-                 basic_response<Tag>& response_,
+  void read_body(Socket& socket_, basic_response<Tag>& response_,
                  boost::asio::streambuf& response_buffer) {
     typename ostringstream<Tag>::type body_stream;
     // TODO tag dispatch based on whether it's HTTP 1.0 or HTTP 1.1
@@ -231,8 +215,8 @@ struct sync_connection_base_impl {
       if (response_.version() == "HTTP/1.0")
         read_body_normal(socket_, response_, response_buffer, body_stream);
       else
-        read_body_transfer_chunk_encoding(
-            socket_, response_, response_buffer, body_stream);
+        read_body_transfer_chunk_encoding(socket_, response_, response_buffer,
+                                          body_stream);
     } else {
       throw std::runtime_error("Unsupported HTTP version number.");
     }
@@ -247,17 +231,15 @@ struct sync_connection_base {
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename string<Tag>::type string_type;
   typedef function<typename resolver_base::resolver_iterator_pair(
-      resolver_type&,
-      string_type const&,
-      string_type const&)> resolver_function_type;
+      resolver_type&, string_type const&, string_type const&)>
+      resolver_function_type;
   typedef function<bool(string_type&)> body_generator_function_type;
 
   // FIXME make the certificate filename and verify path parameters be optional
   // ranges
   static sync_connection_base<Tag, version_major, version_minor>*
-  new_connection(resolver_type& resolver,
-                 resolver_function_type resolve,
-                 bool https,
+  new_connection(resolver_type& resolver, resolver_function_type resolve,
+                 bool https, bool always_verify_peer,
                  optional<string_type> const& cert_filename =
                      optional<string_type>(),
                  optional<string_type> const& verify_path =

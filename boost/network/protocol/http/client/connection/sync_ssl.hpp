@@ -9,6 +9,15 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/asio/ssl.hpp>
+#include <boost/asio/ssl/context.hpp>
+#include <boost/asio/ssl/context_base.hpp>
+#include <boost/asio/streambuf.hpp>
+#include <boost/function.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/optional/optional.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/traits/resolver_policy.hpp>
 
 namespace boost {
 namespace network {
@@ -29,17 +38,16 @@ struct https_sync_connection
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename string<Tag>::type string_type;
   typedef function<typename resolver_base::resolver_iterator_pair(
-      resolver_type&,
-      string_type const&,
-      string_type const&)> resolver_function_type;
+      resolver_type&, string_type const&, string_type const&)>
+      resolver_function_type;
   typedef sync_connection_base_impl<Tag, version_major, version_minor>
       connection_base;
   typedef function<bool(string_type&)> body_generator_function_type;
 
   // FIXME make the certificate filename and verify path parameters be
   // optional ranges
-  https_sync_connection(resolver_type& resolver,
-                        resolver_function_type resolve,
+  https_sync_connection(resolver_type& resolver, resolver_function_type resolve,
+                        bool always_verify_peer,
                         optional<string_type> const& certificate_filename =
                             optional<string_type>(),
                         optional<string_type> const& verify_path =
@@ -56,16 +64,18 @@ struct https_sync_connection
       // optional ranges
       if (certificate_filename)
         context_.load_verify_file(*certificate_filename);
-      if (verify_path)
-        context_.add_verify_path(*verify_path);
+      if (verify_path) context_.add_verify_path(*verify_path);
     } else {
-      context_.set_verify_mode(boost::asio::ssl::context::verify_none);
+      if (always_verify_peer)
+        context_.set_verify_mode(boost::asio::ssl::context_base::verify_peer);
+      else
+        context_.set_verify_mode(boost::asio::ssl::context_base::verify_none);
     }
   }
 
   void init_socket(string_type const& hostname, string_type const& port) {
-    connection_base::init_socket(
-        socket_.lowest_layer(), resolver_, hostname, port, resolve_);
+    connection_base::init_socket(socket_.lowest_layer(), resolver_, hostname,
+                                 port, resolve_);
     socket_.handshake(boost::asio::ssl::stream_base::client);
   }
 
@@ -74,17 +84,13 @@ struct https_sync_connection
                          body_generator_function_type generator) {
     boost::asio::streambuf request_buffer;
     linearize(
-        request_,
-        method,
-        version_major,
-        version_minor,
+        request_, method, version_major, version_minor,
         std::ostreambuf_iterator<typename char_<Tag>::type>(&request_buffer));
     connection_base::send_request_impl(socket_, method, request_buffer);
     if (generator) {
       string_type chunk;
       while (generator(chunk)) {
-        std::copy(chunk.begin(),
-                  chunk.end(),
+        std::copy(chunk.begin(), chunk.end(),
                   std::ostreambuf_iterator<typename char_<Tag>::type>(
                       &request_buffer));
         chunk.clear();
@@ -120,10 +126,9 @@ struct https_sync_connection
 
   void close_socket() {
     boost::system::error_code ignored;
-    socket_.lowest_layer()
-        .shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
-    if (ignored)
-      return;
+    socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both,
+                                    ignored);
+    if (ignored) return;
     socket_.lowest_layer().close(ignored);
   }
 

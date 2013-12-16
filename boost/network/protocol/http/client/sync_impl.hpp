@@ -1,6 +1,16 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SYNC_IMPL_HPP_20100623
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SYNC_IMPL_HPP_20100623
 
+#include <boost/function.hpp>
+#include <boost/bind/bind.hpp>
+#include <boost/optional/optional.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/protocol/http/traits/vector.hpp>
+#include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/traits/connection_policy.hpp>
+
 // Copyright 2013 Google, Inc.
 // Copyright 2010 Dean Michael Berris <dberris@google.com>
 // Distributed under the Boost Software License, Version 1.0.
@@ -31,9 +41,10 @@ struct sync_client
   boost::asio::io_service& service_;
   resolver_type resolver_;
   optional<string_type> certificate_file, verify_path;
+  bool always_verify_peer_;
 
-  sync_client(bool cache_resolved,
-              bool follow_redirect,
+  sync_client(bool cache_resolved, bool follow_redirect,
+              bool always_verify_peer,
               boost::shared_ptr<boost::asio::io_service> service,
               optional<string_type> const& certificate_file =
                   optional<string_type>(),
@@ -45,7 +56,8 @@ struct sync_client
         service_(*service_ptr),
         resolver_(service_),
         certificate_file(certificate_file),
-        verify_path(verify_path) {}
+        verify_path(verify_path),
+        always_verify_peer_(always_verify_peer) {}
 
   ~sync_client() {
     connection_base::cleanup();
@@ -53,15 +65,14 @@ struct sync_client
   }
 
   basic_response<Tag> request_skeleton(basic_request<Tag> const& request_,
-                                       string_type method,
-                                       bool get_body,
+                                       string_type method, bool get_body,
                                        body_callback_function_type callback,
                                        body_generator_function_type generator) {
     typename connection_base::connection_ptr connection_;
     connection_ = connection_base::get_connection(
         resolver_, request_, certificate_file, verify_path);
-    return connection_->send_request(
-        method, request_, get_body, callback, generator);
+    return connection_->send_request(method, request_, get_body, callback,
+                                     generator);
   }
 };
 
