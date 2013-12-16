@@ -33,7 +33,7 @@ struct basic_client_facade {
                         system::error_code const&)> body_callback_function_type;
   typedef function<bool(string_type&)> body_generator_function_type;
 
-  basic_client_facade(client_options<Tag> const& options) {
+  explicit basic_client_facade(client_options<Tag> const& options) {
     init_pimpl(options);
   }
 
@@ -167,6 +167,7 @@ struct basic_client_facade {
   void init_pimpl(client_options<Tag> const& options) {
     pimpl.reset(new pimpl_type(options.cache_resolved(),
                                options.follow_redirects(),
+                               options.always_verify_peer(),
                                options.openssl_certificate(),
                                options.openssl_verify_path(),
                                options.io_service()));

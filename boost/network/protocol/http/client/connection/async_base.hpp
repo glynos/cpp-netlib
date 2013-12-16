@@ -37,6 +37,7 @@ namespace boost { namespace network { namespace http { namespace impl {
         resolve_function resolve,
         resolver_type & resolver,
         bool follow_redirect,
+        bool always_verify_peer,
         bool https,
         optional<string_type> certificate_filename=optional<string_type>(),
         optional<string_type> const & verify_path=optional<string_type>()) {
@@ -52,6 +53,7 @@ namespace boost { namespace network { namespace http { namespace impl {
               delegate_factory_type::new_connection_delegate(
                   resolver.get_io_service(),
                   https,
+                  always_verify_peer,
                   certificate_filename,
                   verify_path)));
       BOOST_ASSERT(temp.get() != 0);

@@ -36,8 +36,8 @@ struct async_client
 
   typedef function<bool(string_type&)> body_generator_function_type;
 
-  async_client(bool cache_resolved,
-               bool follow_redirect,
+  async_client(bool cache_resolved, bool follow_redirect,
+               bool always_verify_peer,
                boost::shared_ptr<boost::asio::io_service> service,
                optional<string_type> const& certificate_filename,
                optional<string_type> const& verify_path)
@@ -49,7 +49,8 @@ struct async_client
         resolver_(service_),
         sentinel_(new boost::asio::io_service::work(service_)),
         certificate_filename_(certificate_filename),
-        verify_path_(verify_path) {
+        verify_path_(verify_path),
+        always_verify_peer_(always_verify_peer) {
     connection_base::resolver_strand_.reset(
         new boost::asio::io_service::strand(service_));
     lifetime_thread_.reset(new boost::thread(
@@ -65,16 +66,15 @@ struct async_client
   }
 
   basic_response<Tag> const request_skeleton(
-      basic_request<Tag> const& request_,
-      string_type const& method,
-      bool get_body,
-      body_callback_function_type callback,
+      basic_request<Tag> const& request_, string_type const& method,
+      bool get_body, body_callback_function_type callback,
       body_generator_function_type generator) {
     typename connection_base::connection_ptr connection_;
     connection_ = connection_base::get_connection(
-        resolver_, request_, certificate_filename_, verify_path_);
-    return connection_->send_request(
-        method, request_, get_body, callback, generator);
+        resolver_, request_, always_verify_peer_, certificate_filename_,
+        verify_path_);
+    return connection_->send_request(method, request_, get_body, callback,
+                                     generator);
   }
 
   boost::shared_ptr<boost::asio::io_service> service_ptr;
@@ -83,6 +83,7 @@ struct async_client
   boost::shared_ptr<boost::asio::io_service::work> sentinel_;
   boost::shared_ptr<boost::thread> lifetime_thread_;
   optional<string_type> certificate_filename_, verify_path_;
+  bool always_verify_peer_;
 };
 }  // namespace impl
 }  // namespace http
