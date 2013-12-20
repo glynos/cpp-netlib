@@ -3,7 +3,7 @@
 
 .. :Authors: Glyn Matthews <glyn.matthews@gmail.com>
 .. 	  Dean Michael Berris <dberris@google.com>
-.. :Date: Nov 24, 2013
+.. :Date: 2013-12-21
 .. :Version: 0.11.0
 .. :Description: Complete user documentation, with examples, for the :mod:`cpp-netlib`.
 .. :Copyright: Copyright Glyn Matthews, Dean Michael Berris 2008-2013.
@@ -61,7 +61,7 @@ network applications with the minimum of fuss.
 An HTTP server-client example can be written in tens of lines of code.
 The client is as simple as this:
 
-.. code-block:: c++
+.. code-block:: cpp
 
     using namespace boost::network;
     using namespace boost::network::http;
@@ -74,7 +74,7 @@ The client is as simple as this:
 
 And the corresponding server code is listed below:
 
-.. code-block:: c++
+.. code-block:: cpp
 
     namespace http = boost::network::http;
 

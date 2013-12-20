@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -14,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -58,27 +57,29 @@
 <span id="whats-new"></span><h1>What&#8217;s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="cpp-netlib-0-11">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.11<a class="headerlink" href="#cpp-netlib-0-11" title="Permalink to this headline">¶</a></h2>
-<p>v0.11.0
-* Fix thread leak in DNS resolution failure (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/245">#245</a>)
-* Remove unsupported <cite>client_fwd.hpp</cite> header (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/277">#277</a>)
-* Remove support for header-only usage (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/129">#129</a>) &#8211; this means that the</p>
-<blockquote>
-<div>BOOST_NETWORK_NO_LIB option is no longer actually supported.</div></blockquote>
+<div class="section" id="v0-11-0">
+<h3>v0.11.0<a class="headerlink" href="#v0-11-0" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
+<li>Fix thread leak in DNS resolution failure (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/245">#245</a>)</li>
+<li>Remove unsupported <cite>client_fwd.hpp</cite> header (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/277">#277</a>)</li>
+<li>Remove support for header-only usage (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/129">#129</a>) &#8211; this means that the BOOST_NETWORK_NO_LIB option is no longer actually supported.</li>
 <li>Deprecate Synchronous Client implementations (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/279">#279</a>)</li>
 <li>Support streaming body chunks for PUT/POST client requests (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/27">#27</a>)</li>
 <li>Fix non-case-sensitive header parsing for some client tags (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/313">#313</a>)</li>
 <li>Remove unsupported Jamfiles from the whole project (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/316">#316</a>)</li>
 <li>Add <tt class="docutils literal"><span class="pre">make</span> <span class="pre">install</span></tt> for Linux and OS X (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/285">#285</a>)</li>
 <li>Fix incorrect Body processing (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/69">#69</a>)</li>
-<li>Support chunked transfer encoding from HTTP responses (<a href="#id32"><span class="problematic" id="id33">`#86`_</span></a>)</li>
+<li>Support chunked transfer encoding from HTTP responses (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/86">#86</a>)</li>
 <li>Make OS X Clang builds use C++11 and libc++.</li>
 <li>Update Boost requirement to 1.54.0.</li>
 <li>Experimental Base64 encoding/decoding library (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/287">#287</a>)</li>
 <li><em>Known test failure:</em> OS X Xcode Clang 5.0 + Boost 1.54.0 + libc++ don&#8217;t play
 well with Boost.Serialization issues, mitigate test breakage but
 <tt class="docutils literal"><span class="pre">cpp-netlib-utils_base64_test</span></tt> still fails in this platform. (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/287">#287</a>)</li>
+<li>Provide a client option to always validate peers for HTTPS requests made by
+the client. (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/349">#349</a>)</li>
 </ul>
+</div>
 </div>
 <div class="section" id="cpp-netlib-0-10">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.10<a class="headerlink" href="#cpp-netlib-0-10" title="Permalink to this headline">¶</a></h2>
@@ -234,7 +235,10 @@ the asynchronous client in 0.7 already has all the parts available.</li>
   <h3><a href="contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">What&#8217;s New</a><ul>
-<li><a class="reference internal" href="#cpp-netlib-0-11"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.11</a></li>
+<li><a class="reference internal" href="#cpp-netlib-0-11"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.11</a><ul>
+<li><a class="reference internal" href="#v0-11-0">v0.11.0</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#cpp-netlib-0-10"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.10</a><ul>
 <li><a class="reference internal" href="#v0-10-1">v0.10.1</a></li>
 <li><a class="reference internal" href="#v0-10-0">v0.10.0</a></li>
@@ -294,8 +298,8 @@ the asynchronous client in 0.7 already has all the parts available.</li>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Nov 25, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on Dec 21, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
     </div>
   </body>
 </html>
