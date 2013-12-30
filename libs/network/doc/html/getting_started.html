@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -14,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.11.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -181,6 +180,21 @@ compile-time burden is much reduced in recent versions.</p>
 <p>Once the build has completed, you can now run the test suite by issuing:</p>
 <div class="highlight-python"><pre>$ make test</pre>
 </div>
+<p>You can install <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> by issuing:</p>
+<div class="highlight-python"><pre>$ sudo make install</pre>
+</div>
+<p>By default this installs <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> into <tt class="docutils literal"><span class="pre">/usr/local</span></tt>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>As of version 0.9.3, <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> produces three static
+libraries.  Using GCC on Linux these are:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">libcppnetlib</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">connections</span><span class="o">.</span><span class="n">a</span>
+<span class="n">libcppnetlib</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">parsers</span><span class="o">.</span><span class="n">a</span>
+<span class="n">libcppnetlib</span><span class="o">-</span><span class="n">uri</span><span class="o">.</span><span class="n">a</span>
+</pre></div>
+</div>
+<p class="last">Users can find them in <tt class="docutils literal"><span class="pre">~/cpp-netlib-build/libs/network/src</span></tt>.</p>
+</div>
 </div>
 <div class="section" id="building-on-windows">
 <h3>Building On Windows<a class="headerlink" href="#building-on-windows" title="Permalink to this headline">¶</a></h3>
@@ -192,19 +206,37 @@ with a number of project files for Visual Studio.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>As of version 0.9.3, <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> produces three static
-libraries.  Using GCC on Linux these are:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">libcppnetlib</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">connections</span><span class="o">.</span><span class="n">a</span>
-<span class="n">libcppnetlib</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">parsers</span><span class="o">.</span><span class="n">a</span>
-<span class="n">libcppnetlib</span><span class="o">-</span><span class="n">uri</span><span class="o">.</span><span class="n">a</span>
-</pre></div>
-</div>
-<p>And using Visual C++ on Windows they are:</p>
+libraries.  Using Visual C++ on Windows they are:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">cppnetlib</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">connections</span><span class="o">.</span><span class="n">lib</span>
 <span class="n">cppnetlib</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">parsers</span><span class="o">.</span><span class="n">lib</span>
 <span class="n">cppnetlib</span><span class="o">-</span><span class="n">uri</span><span class="o">.</span><span class="n">lib</span>
 </pre></div>
 </div>
 <p class="last">Users can find them in <tt class="docutils literal"><span class="pre">~/cpp-netlib-build/libs/network/src</span></tt>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="using-cpp-netlib">
+<h2>Using <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt><a class="headerlink" href="#using-cpp-netlib" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cmake-projects">
+<h3>CMake projects<a class="headerlink" href="#cmake-projects" title="Permalink to this headline">¶</a></h3>
+<p>Projects using CMake can add the following lines in their <tt class="docutils literal"><span class="pre">CMakeLists.txt</span></tt> to
+be able to use <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>:</p>
+<div class="highlight-python"><pre>set ( CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ~/cpp-netlib-build )
+find_package ( cppnetlib 0.11.0 REQUIRED )
+include_directories ( ${CPPNETLIB_INCLUDE_DIRS} )
+target_link_libraries ( MyApplication ${CPPNETLIB_LIBRARIES} )</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Setting <tt class="docutils literal"><span class="pre">CMAKE_PREFIX_PATH</span></tt> is only required when <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>
+is not installed to a location that CMake searches.  When <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>
+is installed to the default location (<tt class="docutils literal"><span class="pre">/usr/local</span></tt>), <tt class="docutils literal"><span class="pre">CMake</span></tt> can find it.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We assume that <tt class="docutils literal"><span class="pre">MyApplication</span></tt> is the application that you are
+building and which depends on <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>.</p>
 </div>
 </div>
 </div>
@@ -237,6 +269,10 @@ through <a class="reference external" href="http://groups.google.com/forum/#!for
 <li><a class="reference internal" href="#building-with-cmake">Building with CMake</a><ul>
 <li><a class="reference internal" href="#building-on-linux">Building on Linux</a></li>
 <li><a class="reference internal" href="#building-on-windows">Building On Windows</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-cpp-netlib">Using <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a><ul>
+<li><a class="reference internal" href="#cmake-projects">CMake projects</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#reporting-issues-getting-support">Reporting Issues, Getting Support</a></li>
@@ -281,8 +317,8 @@ through <a class="reference external" href="http://groups.google.com/forum/#!for
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Nov 24, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on Dec 21, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
     </div>
   </body>
 </html>

@@ -8,10 +8,10 @@
 ----------------------
 
 v0.11.0
+~~~~~~~
 * Fix thread leak in DNS resolution failure (`#245`_)
 * Remove unsupported `client_fwd.hpp` header (`#277`_)
-* Remove support for header-only usage (`#129`_) -- this means that the
-  BOOST_NETWORK_NO_LIB option is no longer actually supported.
+* Remove support for header-only usage (`#129`_) -- this means that the BOOST_NETWORK_NO_LIB option is no longer actually supported.
 * Deprecate Synchronous Client implementations (`#279`_)
 * Support streaming body chunks for PUT/POST client requests (`#27`_)
 * Fix non-case-sensitive header parsing for some client tags (`#313`_)
@@ -25,17 +25,21 @@ v0.11.0
 * *Known test failure:* OS X Xcode Clang 5.0 + Boost 1.54.0 + libc++ don't play
   well with Boost.Serialization issues, mitigate test breakage but
   ``cpp-netlib-utils_base64_test`` still fails in this platform. (`#287`_) 
+* Provide a client option to always validate peers for HTTPS requests made by
+  the client. (`#349`_)
 
 .. _`#129`: https://github.com/cpp-netlib/cpp-netlib/issues/129
 .. _`#245`: https://github.com/cpp-netlib/cpp-netlib/issues/245
 .. _`#277`: https://github.com/cpp-netlib/cpp-netlib/issues/277
-.. _`#287`: https://github.com/cpp-netlib/cpp-netlib/issues/287
 .. _`#279`: https://github.com/cpp-netlib/cpp-netlib/issues/279
 .. _`#27`: https://github.com/cpp-netlib/cpp-netlib/issues/27
 .. _`#285`: https://github.com/cpp-netlib/cpp-netlib/issues/285
+.. _`#287`: https://github.com/cpp-netlib/cpp-netlib/issues/287
 .. _`#313`: https://github.com/cpp-netlib/cpp-netlib/issues/313
 .. _`#316`: https://github.com/cpp-netlib/cpp-netlib/issues/316
+.. _`#349`: https://github.com/cpp-netlib/cpp-netlib/issues/349
 .. _`#69`: https://github.com/cpp-netlib/cpp-netlib/issues/69
+.. _`#86`: https://github.com/cpp-netlib/cpp-netlib/issues/86
 
 :mod:`cpp-netlib` 0.10
 ----------------------
