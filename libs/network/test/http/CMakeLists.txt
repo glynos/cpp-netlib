@@ -14,7 +14,7 @@ endif()
 if (Boost_FOUND)
     set ( TESTS
         request_incremental_parser_test
-	request_linearize_test
+	      request_linearize_test
         )
     foreach ( test ${TESTS} )
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
@@ -23,9 +23,12 @@ if (Boost_FOUND)
         target_link_libraries(cpp-netlib-http-${test}
             ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}
             cppnetlib-uri)
-	if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	  target_link_libraries(cpp-netlib-http-${test} rt)
-	endif()
+	    if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU AND ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+          target_link_libraries(cpp-netlib-http-${test} ws2_32)
+        endif()
+	    if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	      target_link_libraries(cpp-netlib-http-${test} rt)
+	    endif()
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}
@@ -50,9 +53,12 @@ if (Boost_FOUND)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()
-	if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	  target_link_libraries(cpp-netlib-http-${test} rt)
-	endif()
+	      if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU AND ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+          target_link_libraries(cpp-netlib-http-${test} ws2_32)
+        endif()
+	      if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	        target_link_libraries(cpp-netlib-http-${test} rt)
+	      endif()
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}
@@ -68,9 +74,12 @@ if (Boost_FOUND)
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
         target_link_libraries(cpp-netlib-http-${test} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
-	if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	  target_link_libraries(cpp-netlib-http-${test} rt)
-	endif()
+	      if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU AND ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+          target_link_libraries(cpp-netlib-http-${test} ws2_32 wsock32)
+        endif()
+	      if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	        target_link_libraries(cpp-netlib-http-${test} rt)
+	      endif()
         set_target_properties(cpp-netlib-http-${test}
             PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
         add_test(cpp-netlib-http-${test}
