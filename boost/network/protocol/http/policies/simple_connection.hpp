@@ -47,12 +47,17 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
                     optional<string_type> const& certificate_filename =
                         optional<string_type>(),
                     optional<string_type> const& verify_path =
+                        optional<string_type>(),
+                    optional<string_type> const& certificate_file =
+                        optional<string_type>(),
+                    optional<string_type> const& private_key_file =
                         optional<string_type>())
         : pimpl(), follow_redirect_(follow_redirect) {
       pimpl.reset(impl::sync_connection_base<
           Tag, version_major,
           version_minor>::new_connection(resolver, resolve, https,
-                                         certificate_filename, verify_path));
+                                         certificate_filename, verify_path,
+                                         certificate_file, private_key_file));
     }
 
     basic_response<Tag> send_request(string_type const& method,
@@ -104,9 +109,13 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
   connection_ptr get_connection(resolver_type& resolver,
                                 basic_request<Tag> const& request_,
                                 bool always_verify_peer,
+                                optional<string_type> const& certificate_filename =
+                                    optional<string_type>(),
+                                optional<string_type> const& verify_path =
+                                    optional<string_type>(),
                                 optional<string_type> const& certificate_file =
                                     optional<string_type>(),
-                                optional<string_type> const& verify_file =
+                                optional<string_type> const& private_key_file =
                                     optional<string_type>()) {
     connection_ptr connection_(new connection_impl(
         resolver, follow_redirect_, always_verify_peer, request_.host(),
@@ -115,7 +124,8 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
                                               version_minor>::resolve,
                     this, _1, _2, _3),
         boost::iequals(request_.protocol(), string_type("https")),
-        certificate_file, verify_file));
+        certificate_filename, verify_path,
+        certificate_file, private_key_file));
     return connection_;
   }
 

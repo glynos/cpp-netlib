@@ -40,7 +40,9 @@ namespace boost { namespace network { namespace http { namespace impl {
         bool always_verify_peer,
         bool https,
         optional<string_type> certificate_filename=optional<string_type>(),
-        optional<string_type> const & verify_path=optional<string_type>()) {
+        optional<string_type> const & verify_path=optional<string_type>(),
+        optional<string_type> certificate_file=optional<string_type>(),
+        optional<string_type> private_key_file=optional<string_type>()) {
       typedef http_async_connection<Tag,version_major,version_minor>
           async_connection;
       typedef typename delegate_factory<Tag>::type delegate_factory_type;
@@ -55,7 +57,9 @@ namespace boost { namespace network { namespace http { namespace impl {
                   https,
                   always_verify_peer,
                   certificate_filename,
-                  verify_path)));
+                  verify_path,
+                  certificate_file,
+                  private_key_file)));
       BOOST_ASSERT(temp.get() != 0);
       return temp;
     }

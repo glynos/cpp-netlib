@@ -21,5 +21,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_cient_constructor_params_test, client, client
     typename client::options options;
     client instance(options.follow_redirects(true).cache_resolved(true));
     client instance2(options.openssl_certificate("foo").openssl_verify_path("bar"));
-    client instance3(options.follow_redirects(true).io_service(boost::make_shared<boost::asio::io_service>()).cache_resolved(true));
+    client instance3(options.openssl_certificate_file("foo").openssl_private_key_file("bar"));
+    client instance4(options.follow_redirects(true).io_service(boost::make_shared<boost::asio::io_service>()).cache_resolved(true));
 }

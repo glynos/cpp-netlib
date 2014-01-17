@@ -51,6 +51,10 @@ struct https_sync_connection
                         optional<string_type> const& certificate_filename =
                             optional<string_type>(),
                         optional<string_type> const& verify_path =
+                            optional<string_type>(),
+                        optional<string_type> const& certificate_file =
+                            optional<string_type>(),
+                        optional<string_type> const& private_key_file =
                             optional<string_type>())
       : connection_base(),
         resolver_(resolver),
@@ -71,6 +75,12 @@ struct https_sync_connection
       else
         context_.set_verify_mode(boost::asio::ssl::context_base::verify_none);
     }
+    if (certificate_file)
+      context_.use_certificate_file(
+        *certificate_file, boost::asio::ssl::context::pem);
+    if (private_key_file)
+      context_.use_private_key_file(
+        *private_key_file, boost::asio::ssl::context::pem);
   }
 
   void init_socket(string_type const& hostname, string_type const& port) {

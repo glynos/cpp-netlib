@@ -40,12 +40,15 @@ struct async_connection_policy : resolver_policy<Tag>::type {
                     resolve_function resolve, resolver_type& resolver,
                     bool https,
                     optional<string_type> const& certificate_filename,
-                    optional<string_type> const& verify_path) {
+                    optional<string_type> const& verify_path,
+                    optional<string_type> const& certificate_file,
+                    optional<string_type> const& private_key_file) {
       pimpl = impl::async_connection_base<
           Tag, version_major,
           version_minor>::new_connection(resolve, resolver, follow_redirect,
                                          always_verify_peer, https,
-                                         certificate_filename, verify_path);
+                                         certificate_filename, verify_path,
+                                         certificate_file, private_key_file);
     }
 
     basic_response<Tag> send_request(string_type const& method,
@@ -67,7 +70,11 @@ struct async_connection_policy : resolver_policy<Tag>::type {
       bool always_verify_peer,
       optional<string_type> const& certificate_filename =
           optional<string_type>(),
-      optional<string_type> const& verify_path = optional<string_type>()) {
+      optional<string_type> const& verify_path =
+          optional<string_type>(),
+      optional<string_type> const& certificate_file =
+          optional<string_type>(),
+      optional<string_type> const& private_key_file = optional<string_type>()) {
     string_type protocol_ = protocol(request_);
     connection_ptr connection_(new connection_impl(
         follow_redirect_, always_verify_peer,
@@ -75,7 +82,8 @@ struct async_connection_policy : resolver_policy<Tag>::type {
                                              version_minor>::resolve,
                     this, _1, _2, _3, _4),
         resolver, boost::iequals(protocol_, string_type("https")),
-        certificate_filename, verify_path));
+        certificate_filename, verify_path,
+        certificate_file, private_key_file));
     return connection_;
   }
 

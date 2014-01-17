@@ -45,6 +45,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     typedef function<shared_ptr<connection_impl>(resolver_type&,
                                                  basic_request<Tag> const&,
                                                  optional<string_type> const&,
+                                                 optional<string_type> const&,
+                                                 optional<string_type> const&,
                                                  optional<string_type> const&)>
         get_connection_function;
 
@@ -55,21 +57,29 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                     resolver_function_type resolve,
                     get_connection_function get_connection,
                     bool https,
-                    optional<string_type> const& certificate_file =
+                    optional<string_type> const& certificate_filename =
                         optional<string_type>(),
                     optional<string_type> const& verify_path =
+                        optional<string_type>(),
+                    optional<string_type> const& certificate_file =
+                        optional<string_type>(),
+                    optional<string_type> const&  private_key_file =
                         optional<string_type>())
         : pimpl(impl::sync_connection_base<Tag, version_major, version_minor>::
                     new_connection(resolver,
                                    resolve,
                                    https,
+                                   certificate_filename,
+                                   verify_path,
                                    certificate_file,
-                                   verify_path)),
+                                   private_key_file)),
           resolver_(resolver),
           connection_follow_redirect_(follow_redirect),
           get_connection_(get_connection),
-          certificate_filename_(certificate_file),
-          verify_path_(verify_path) {}
+          certificate_filename_(certificate_filename),
+          verify_path_(verify_path),
+          certificate_file_(certificate_file),
+          private_key_file_(private_key_file) {}
 
     basic_response<Tag> send_request(string_type const& method,
                                      basic_request<Tag> request_,
@@ -149,7 +159,9 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
               request_.uri(location_header->second);
               connection_ptr connection_;
               connection_ = get_connection_(
-                  resolver_, request_, certificate_filename_, verify_path_);
+                  resolver_, request_,
+                  certificate_filename_, verify_path_,
+                  certificate_file_, private_key_file_);
               ++count;
               continue;
             } else
@@ -167,7 +179,10 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     resolver_type& resolver_;
     bool connection_follow_redirect_;
     get_connection_function get_connection_;
-    optional<string_type> certificate_filename_, verify_path_;
+    optional<string_type> certificate_filename_;
+    optional<string_type> verify_path_;
+    optional<string_type> certificate_file_;
+    optional<string_type> private_key_file_;
   };
 
   typedef shared_ptr<connection_impl> connection_ptr;
@@ -181,7 +196,11 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       basic_request<Tag> const& request_,
       optional<string_type> const& certificate_filename =
           optional<string_type>(),
-      optional<string_type> const& verify_path = optional<string_type>()) {
+      optional<string_type> const& verify_path =
+          optional<string_type>(),
+      optional<string_type> const& certificate_file =
+          optional<string_type>(),
+      optional<string_type> const& private_key_file = optional<string_type>()) {
     string_type index =
         (request_.host() + ':') + lexical_cast<string_type>(request_.port());
     connection_ptr connection_;
@@ -206,10 +225,14 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                       _1,
                       _2,
                       _3,
-                      _4),
+                      _4,
+                      _5,
+                      _6),
           boost::iequals(request_.protocol(), string_type("https")),
           certificate_filename,
-          verify_path));
+          verify_path,
+          certificate_file,
+          private_key_file));
       host_connections.insert(std::make_pair(index, connection_));
       return connection_;
     }
