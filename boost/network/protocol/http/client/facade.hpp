@@ -170,6 +170,8 @@ struct basic_client_facade {
                                options.always_verify_peer(),
                                options.openssl_certificate(),
                                options.openssl_verify_path(),
+                               options.openssl_certificate_file(),
+                               options.openssl_private_key_file(),
                                options.io_service()));
   }
 };

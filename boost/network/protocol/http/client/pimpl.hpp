@@ -69,9 +69,12 @@ struct basic_client_impl
                     bool always_verify_peer,
                     optional<string_type> const& certificate_filename,
                     optional<string_type> const& verify_path,
+                    optional<string_type> const& certificate_file,
+                    optional<string_type> const& private_key_file,
                     boost::shared_ptr<boost::asio::io_service> service)
       : base_type(cache_resolved, follow_redirect, always_verify_peer, service,
-                  certificate_filename, verify_path) {}
+                  certificate_filename, verify_path,
+                  certificate_file, private_key_file) {}
 
   ~basic_client_impl() {}
 };

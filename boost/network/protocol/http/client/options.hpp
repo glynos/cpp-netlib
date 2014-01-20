@@ -25,6 +25,8 @@ struct client_options {
         follow_redirects_(false),
         openssl_certificate_(),
         openssl_verify_path_(),
+        openssl_certificate_file_(),
+        openssl_private_key_file_(),
         io_service_(),
         always_verify_peer_(false) {}
 
@@ -33,6 +35,8 @@ struct client_options {
         follow_redirects_(other.follow_redirects_),
         openssl_certificate_(other.openssl_certificate_),
         openssl_verify_path_(other.openssl_verify_path_),
+        openssl_certificate_file_(other.openssl_certificate_file_),
+        openssl_private_key_file_(other.openssl_private_key_file_),
         io_service_(other.io_service_),
         always_verify_peer_(other.always_verify_peer_) {}
 
@@ -47,6 +51,8 @@ struct client_options {
     swap(follow_redirects_, other.follow_redirects_);
     swap(openssl_certificate_, other.openssl_certificate_);
     swap(openssl_verify_path_, other.openssl_verify_path_);
+    swap(openssl_certificate_file_, other.openssl_certificate_file_);
+    swap(openssl_private_key_file_, other.openssl_private_key_file_);
     swap(io_service_, other.io_service_);
     swap(always_verify_peer_, other.always_verify_peer_);
   }
@@ -71,6 +77,16 @@ struct client_options {
     return *this;
   }
 
+  client_options& openssl_certificate_file(string_type const& v) {
+    openssl_certificate_file_ = v;
+    return *this;
+  }
+
+  client_options& openssl_private_key_file(string_type const& v) {
+    openssl_private_key_file_ = v;
+    return *this;
+  }
+
   client_options& io_service(boost::shared_ptr<boost::asio::io_service> v) {
     io_service_ = v;
     return *this;
@@ -88,6 +104,14 @@ struct client_options {
     return openssl_verify_path_;
   }
 
+  boost::optional<string_type> openssl_certificate_file() const {
+    return openssl_certificate_file_;
+  }
+
+  boost::optional<string_type> openssl_private_key_file() const {
+    return openssl_private_key_file_;
+  }
+
   boost::shared_ptr<boost::asio::io_service> io_service() const {
     return io_service_;
   }
@@ -99,6 +123,8 @@ struct client_options {
   bool follow_redirects_;
   boost::optional<string_type> openssl_certificate_;
   boost::optional<string_type> openssl_verify_path_;
+  boost::optional<string_type> openssl_certificate_file_;
+  boost::optional<string_type> openssl_private_key_file_;
   boost::shared_ptr<boost::asio::io_service> io_service_;
   bool always_verify_peer_;
 };
