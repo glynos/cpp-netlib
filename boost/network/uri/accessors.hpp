@@ -34,8 +34,8 @@ struct key_value_sequence
     {
         query =  pair >> *((spirit::qi::lit(';') | '&') >> pair);
         pair  =  key >> -('=' >> value);
-        key   =  spirit::qi::char_("a-zA-Z_") >> *spirit::qi::char_("a-zA-Z_0-9/%");
-        value = +spirit::qi::char_("a-zA-Z_0-9/%");
+        key   =  spirit::qi::char_("a-zA-Z_") >> *spirit::qi::char_("-+.~a-zA-Z_0-9/%");
+        value = +spirit::qi::char_("-+.~a-zA-Z_0-9/%");
     }
 
     spirit::qi::rule<uri::const_iterator, Map()> query;
