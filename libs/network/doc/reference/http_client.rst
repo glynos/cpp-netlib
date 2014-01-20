@@ -168,40 +168,50 @@ initialization.
     Constructor taking a ``client_options<Tag>`` object. The following table
     shows the options you can set on a ``client_options<Tag>`` instance.
 
-+---------------------+----------------------------+--------------------------+
-| Parameter Name      | Type                       | Description              |
-+=====================+============================+==========================+
-| follow_redirects    | ``bool``                   | Boolean to specify       |
-|                     |                            | whether the client       |
-|                     |                            | should follow HTTP       |
-|                     |                            | redirects. Default is    |
-|                     |                            | ``false``.               |
-+---------------------+----------------------------+--------------------------+
-| cache_resolved      | ``bool``                   | Boolean to specify       |
-|                     |                            | whether the client       |
-|                     |                            | should cache resolved    |
-|                     |                            | endpoints. The default   |
-|                     |                            | is ``false``.            |
-+---------------------+----------------------------+--------------------------+
-| io_service          | ``shared_ptr<io_service>`` | Shared pointer to a      |
-|                     |                            | Boost.Asio               |
-|                     |                            | ``io_service``.          |
-+---------------------+----------------------------+--------------------------+
-| openssl_certificate | ``string``                 | The filename of the      |
-|                     |                            | certificate to load for  |
-|                     |                            | the SSL connection for   |
-|                     |                            | verification.            |
-+---------------------+----------------------------+--------------------------+
-| openssl_verify_path | ``string``                 | The directory from       |
-|                     |                            | which the certificate    |
-|                     |                            | authority files are      |
-|                     |                            | located.                 |
-+---------------------+----------------------------+--------------------------+
-| always_verify_peer  | ``bool``                   | Boolean to specify       |
-|                     |                            | whether the client       |
-|                     |                            | should always verify     |
-|                     |                            | peers in SSL connections |
-+---------------------+----------------------------+--------------------------+
++--------------------------+----------------------------+--------------------------+
+| Parameter Name           | Type                       | Description              |
++==========================+============================+==========================+
+| follow_redirects         | ``bool``                   | Boolean to specify       |
+|                          |                            | whether the client       |
+|                          |                            | should follow HTTP       |
+|                          |                            | redirects. Default is    |
+|                          |                            | ``false``.               |
++--------------------------+----------------------------+--------------------------+
+| cache_resolved           | ``bool``                   | Boolean to specify       |
+|                          |                            | whether the client       |
+|                          |                            | should cache resolved    |
+|                          |                            | endpoints. The default   |
+|                          |                            | is ``false``.            |
++--------------------------+----------------------------+--------------------------+
+| io_service               | ``shared_ptr<io_service>`` | Shared pointer to a      |
+|                          |                            | Boost.Asio               |
+|                          |                            | ``io_service``.          |
++--------------------------+----------------------------+--------------------------+
+| openssl_certificate      | ``string``                 | The filename of the      |
+|                          |                            | certificate to load for  |
+|                          |                            | the SSL connection for   |
+|                          |                            | verification.            |
++--------------------------+----------------------------+--------------------------+
+| openssl_verify_path      | ``string``                 | The directory from       |
+|                          |                            | which the certificate    |
+|                          |                            | authority files are      |
+|                          |                            | located.                 |
++--------------------------+----------------------------+--------------------------+
+| always_verify_peer       | ``bool``                   | Boolean to specify       |
+|                          |                            | whether the client       |
+|                          |                            | should always verify     |
+|                          |                            | peers in SSL connections |
++--------------------------+----------------------------+--------------------------+
+| openssl_certificate_file | ``string``                 | Filename of the          |
+|                          |                            | certificate to use for   |
+|                          |                            | client-side SSL session  |
+|                          |                            | establishment.           |
++--------------------------+----------------------------+--------------------------+
+| openssl_private_key_file | ``string``                 | Filename of the          |
+|                          |                            | private key to use for   |
+|                          |                            | client-side SSL session  |
+|                          |                            | establishment.           |
++--------------------------+----------------------------+--------------------------+
 
 
 To use the above supported named parameters, you'll have code that looks like
