@@ -67,7 +67,7 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   else()
     # We just add the -Wall and a high enough template depth
     # flag for Clang in other systems.
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -ftemplate-dempth=256")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -ftemplate-depth=256")
   endif()
 endif()
 
