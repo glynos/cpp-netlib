@@ -38,6 +38,7 @@ namespace boost { namespace network { namespace http {
         , listening_mutex_()
         , stopping_mutex_()
         , listening(false)
+        , ctx_(options.context())
         {}
 
         void run() {
@@ -79,6 +80,7 @@ namespace boost { namespace network { namespace http {
         boost::mutex listening_mutex_;
         boost::mutex stopping_mutex_;
         bool listening;
+        boost::shared_ptr<boost::asio::ssl::context> ctx_;
     
         void handle_stop() {
             scoped_mutex_lock stopping_lock(stopping_mutex_);
@@ -96,13 +98,14 @@ namespace boost { namespace network { namespace http {
                                     << ec);
             }
 
-            socket_options_base::socket_options(new_connection->socket());
+            socket_options_base::socket_options(new_connection->socket().next_layer());
+
             new_connection->start();
             new_connection.reset(
-                new connection(service_, handler, *thread_pool));
+                new connection(service_, handler, *thread_pool, ctx_));
             acceptor.async_accept(
-                new_connection->socket(),
-                boost::bind(&async_server_base<Tag, Handler>::handle_accept,
+                new_connection->socket().next_layer(),
+               boost::bind(&async_server_base<Tag, Handler>::handle_accept,
                             this,
                             boost::asio::placeholders::error));
         }
@@ -135,8 +138,8 @@ namespace boost { namespace network { namespace http {
                 BOOST_NETWORK_MESSAGE("Error listening on socket: '" << error << "' on " << address_ << ":" << port_);
                 return;
             }
-            new_connection.reset(new connection(service_, handler, *thread_pool));
-            acceptor.async_accept(new_connection->socket(),
+            new_connection.reset(new connection(service_, handler, *thread_pool, ctx_));
+            acceptor.async_accept(new_connection->socket().next_layer(),
                 boost::bind(
                     &async_server_base<Tag,Handler>::handle_accept
                     , this
