@@ -3,6 +3,7 @@
 
 // Copyright 2013 Google, Inc.
 // Copyright 2013 Dean Michael Berris <dberris@google.com>
+// Copyright 2014 Jelle Van den Driessche
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
