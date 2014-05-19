@@ -2,6 +2,7 @@
 #define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_CONNECTION_HPP_20101027
 
 // Copyright 2010 Dean Michael Berris.
+// Copyright 2014 Jelle Van den Driessche.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -18,6 +19,7 @@
 #include <boost/asio/strand.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/network/protocol/stream_handler.hpp>
 #include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/optional.hpp>
@@ -149,14 +151,16 @@ namespace boost { namespace network { namespace http {
             asio::io_service & io_service
             , Handler & handler
             , utils::thread_pool & thread_pool
+            , boost::shared_ptr<boost::asio::ssl::context> ctx = boost::shared_ptr<boost::asio::ssl::context>( )
             )
-        : socket_(io_service)
-        , strand(io_service)
+        : strand(io_service)
         , handler(handler)
         , thread_pool_(thread_pool)
         , headers_already_sent(false)
         , headers_in_progress(false)
+        , handshake_done(false)
         , headers_buffer(BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE)
+        , socket_(io_service, ctx)
         {
             new_start = read_buffer_.begin();
         }
@@ -285,7 +289,7 @@ namespace boost { namespace network { namespace http {
                         , asio::placeholders::error, asio::placeholders::bytes_transferred)));
         }
 
-        asio::ip::tcp::socket & socket()    { return socket_;               }
+        boost::network::stream_handler & socket()    { return socket_;      }
         utils::thread_pool & thread_pool()  { return thread_pool_;          }
         bool has_error()                    { return (!!error_encountered); }
         optional<boost::system::system_error> error()
@@ -319,12 +323,13 @@ namespace boost { namespace network { namespace http {
         typedef boost::lock_guard<boost::recursive_mutex> lock_guard;
         typedef std::list<boost::function<void()> > pending_actions_list;
 
-        asio::ip::tcp::socket socket_;
+        boost::network::stream_handler socket_;
         asio::io_service::strand strand;
         Handler & handler;
         utils::thread_pool & thread_pool_;
         volatile bool headers_already_sent, headers_in_progress;
         asio::streambuf headers_buffer;
+        bool handshake_done;
 
         boost::recursive_mutex headers_mutex;
         buffer_type read_buffer_;
@@ -350,20 +355,28 @@ namespace boost { namespace network { namespace http {
             read_more(method);
         }
 
+
         void read_more(state_t state) {
-            socket_.async_read_some(
-                asio::buffer(read_buffer_)
-                , strand.wrap(
-                    boost::bind(
-                        &async_connection<Tag,Handler>::handle_read_data,
-                        async_connection<Tag,Handler>::shared_from_this(),
-                        state,
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred
+            if(socket_.is_ssl_enabled() && !handshake_done) {
+                socket_.async_handshake(boost::asio::ssl::stream_base::server,
+                    boost::bind(&async_connection::handle_handshake, async_connection<Tag,Handler>::shared_from_this(),
+                    boost::asio::placeholders::error, state));
+            } else {
+                socket_.async_read_some(
+                    asio::buffer(read_buffer_)
+                    , strand.wrap(
+                        boost::bind(
+                            &async_connection<Tag,Handler>::handle_read_data,
+                            async_connection<Tag,Handler>::shared_from_this(),
+                            state,
+                            boost::asio::placeholders::error,
+                            boost::asio::placeholders::bytes_transferred
                         )
                     )
                 );
+            }
         }
+
 
         void handle_read_data(state_t state, boost::system::error_code const & ec, std::size_t bytes_transferred) {
             if (!ec) {
@@ -644,6 +657,14 @@ namespace boost { namespace network { namespace http {
                     ,asio::placeholders::error
                     ,asio::placeholders::bytes_transferred)
             );
+        }
+        void handle_handshake(const boost::system::error_code& ec, state_t state) {
+            if (!ec) {
+                handshake_done = true;
+                read_more(state);
+            } else {
+                error_encountered = in_place<boost::system::system_error>(ec);
+            }
         }
     };
     

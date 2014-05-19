@@ -3,12 +3,14 @@
 
 // Copyright 2013 Google, Inc.
 // Copyright 2013 Dean Michael Berris <dberris@google.com>
+// Copyright 2014 Jelle Van den Driessche
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/socket_base.hpp>
+#include <boost/asio/ssl.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/utils/thread_pool.hpp>
 #include <boost/optional.hpp>
@@ -35,6 +37,7 @@ struct server_options {
   , receive_low_watermark_()
   , send_low_watermark_()
   , thread_pool_()
+  , context_()
   {}
 
   server_options(const server_options &other)
@@ -52,6 +55,7 @@ struct server_options {
   , receive_low_watermark_(other.receive_low_watermark_)
   , send_low_watermark_(other.send_low_watermark_)
   , thread_pool_(other.thread_pool_)
+  , context_(other.context_)
   {}
 
   server_options &operator= (server_options other) {
@@ -74,8 +78,10 @@ struct server_options {
     swap(receive_low_watermark_, other.receive_low_watermark_);
     swap(send_low_watermark_, other.send_low_watermark_);
     swap(thread_pool_, other.thread_pool_);
+    swap(context_, other.context_);
   }
 
+  server_options &context(boost::shared_ptr<boost::asio::ssl::context> v) { context_ = v; return *this; }
   server_options &io_service(boost::shared_ptr<boost::asio::io_service> v) { io_service_ = v; return *this; }
   server_options &address(string_type const &v) { address_ = v; return *this; }
   server_options &port(string_type const &v) { port_ = v; return *this; }
@@ -104,8 +110,9 @@ struct server_options {
   boost::optional<boost::asio::socket_base::receive_low_watermark> receive_low_watermark() const { return receive_low_watermark_; }
   boost::optional<boost::asio::socket_base::send_low_watermark> send_low_watermark() const { return send_low_watermark_; }
   boost::shared_ptr<utils::thread_pool> thread_pool() const { return thread_pool_; } 
-
+  boost::shared_ptr<boost::asio::ssl::context> context() const { return context_; }
  private:
+  boost::shared_ptr<boost::asio::ssl::context> context_;
   boost::shared_ptr<boost::asio::io_service> io_service_;
   Handler &handler_;
   string_type address_;
