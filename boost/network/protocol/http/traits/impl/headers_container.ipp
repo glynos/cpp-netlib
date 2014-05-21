@@ -17,20 +17,23 @@
 
 namespace boost { namespace network { namespace impl {
         
+    // Moving implementation from original
+    // message_traits implementation by
+    // Atomic Labs, Inc.
+    // --
+    // returns true if str1 < str2 (ignoring case)
+    struct is_less_ignore_case_impl {
+        inline bool operator() (
+                string<http::tags::http_default_8bit_tcp_resolve>::type const & str1, 
+                string<http::tags::http_default_8bit_tcp_resolve>::type const & str2) const {
+            return to_lower_copy(str1) < to_lower_copy(str2);
+        };
+    };
+
     template <class Tag>
     struct headers_container_impl<Tag, typename enable_if<typename Tag::is_client>::type> {
-        // Moving implementation from original
-        // message_traits implementation by
-        // Atomic Labs, Inc.
-        // --
-        // returns true if str1 < str2 (ignoring case)
-        struct is_less_ignore_case {
-            inline bool operator() (
-                    string<http::tags::http_default_8bit_tcp_resolve>::type const & str1, 
-                    string<http::tags::http_default_8bit_tcp_resolve>::type const & str2) const {
-                return to_lower_copy(str1) < to_lower_copy(str2);
-            };
-        };
+
+        typedef is_less_ignore_case_impl is_less_ignore_case;
 
         typedef std::multimap<
             string<http::tags::http_default_8bit_tcp_resolve>::type,
