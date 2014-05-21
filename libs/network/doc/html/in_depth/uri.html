@@ -63,7 +63,8 @@ on <a class="reference external" href="http://tools.ietf.org/html/rfc3986">RFC 3
 <div class="section" id="generic-uri-syntax-overview">
 <h2>Generic URI syntax overview<a class="headerlink" href="#generic-uri-syntax-overview" title="Permalink to this headline">¶</a></h2>
 <p>A generic URI will take the form:</p>
-<div class="highlight-python"><pre>[scheme:]scheme-specific-part[#fragment]</pre>
+<div class="highlight-python"><div class="highlight"><pre>[scheme:]scheme-specific-part[#fragment]
+</pre></div>
 </div>
 <p>A URI is known as <cite>absolute</cite> if it specifies the scheme.  Otherwise,
 it is known as a relative URI.  Currently, <tt class="docutils literal"><span class="pre">uri</span></tt> supports only
@@ -71,9 +72,10 @@ absolute URIs.</p>
 <p>URIs can be further classified according to whether they&#8217;re
 hierarchical or opaque (non-hierarchical).</p>
 <p>Some examples of non-hierarchical URIs include:</p>
-<div class="highlight-python"><pre>mailto:john.doe@example.com
+<div class="highlight-python"><div class="highlight"><pre>mailto:john.doe@example.com
 news:comp.infosystems.www.servers.unix
-tel:+1-816-555-1212</pre>
+tel:+1-816-555-1212
+</pre></div>
 </div>
 <p>The data following the first <tt class="docutils literal"><span class="pre">&quot;:&quot;</span></tt> is said to be opaque to the URI
 parser and requires no further parsing.  By way of example, the
@@ -83,14 +85,17 @@ by defining everything after the <tt class="docutils literal"><span class="pre">
 <p>A hierarchical URI is identified by a double slash (<tt class="docutils literal"><span class="pre">&quot;//&quot;</span></tt>) after
 the scheme and a scheme-specific component, which <a class="reference external" href="http://tools.ietf.org/html/rfc3986">RFC 3986</a> defines
 to be:</p>
-<div class="highlight-python"><pre>[scheme:][//authority][path][?query][#fragment]</pre>
+<div class="highlight-python"><div class="highlight"><pre>[scheme:][//authority][path][?query][#fragment]
+</pre></div>
 </div>
 <p>The authority component can be further broken down to:</p>
-<div class="highlight-python"><pre>[user_info@]host[:port]</pre>
+<div class="highlight-python"><div class="highlight"><pre>[user_info@]host[:port]
+</pre></div>
 </div>
 <p>Examples of hierarchical URIs include:</p>
-<div class="highlight-python"><pre>http://www.boost.org/
-file:///bin/bash</pre>
+<div class="highlight-python"><div class="highlight"><pre>http://www.boost.org/
+file:///bin/bash
+</pre></div>
 </div>
 <p>The following example, describing a complex URI using FTP, shows how
 a URI is broken down by the parser:</p>
@@ -114,8 +119,9 @@ constructor:</p>
 </pre></div>
 </div>
 <p>The command-line output of this program will be:</p>
-<div class="highlight-python"><pre>scheme: http
-host: cpp-netlib.github.com</pre>
+<div class="highlight-python"><div class="highlight"><pre>scheme: http
+host: cpp-netlib.github.com
+</pre></div>
 </div>
 </div>
 <div class="section" id="the-uri-builder">
@@ -138,7 +144,8 @@ elements.  For example the program:</p>
 </pre></div>
 </div>
 <p>will output:</p>
-<div class="highlight-python"><pre>http://www.github.com/cpp-netlib</pre>
+<div class="highlight-python"><div class="highlight"><pre>http://www.github.com/cpp-netlib
+</pre></div>
 </div>
 </div>
 <div class="section" id="uri-concept">
@@ -281,8 +288,8 @@ elements.  For example the program:</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Dec 21, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+      Last updated on May 21, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

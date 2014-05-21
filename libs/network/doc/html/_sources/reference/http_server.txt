@@ -217,6 +217,9 @@ Constructor
 | linger_timeout        | ``int``                                  | An optional int to define the timeout to wait for socket closes before it is set to linger.      |
 |                       |                                          | The default is ``0``.                                                                            |
 +-----------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
+| context               | ``shared_ptr<context>``                  | An optional shared pointer to an instance of ``boost::asio::ssl::context`` -- this contains the  |
+|                       |                                          | settings needed to support SSL. This parameter is only applicable for ``async_server`` instances.|
++-----------------------+------------------------------------------+--------------------------------------------------------------------------------------------------+
 
 To use the above supported named parameters, you'll have code that looks like the following:
 
@@ -524,6 +527,39 @@ primary means for reading from and writing to the connection.
     The function throws an instance of ``std::logic_error`` if you try to set
     the headers for a connection more than once.
 
+Adding SSL support to Asynchronous Server
+-----------------------------------------
 
+In order to setup SSL support for an Asynchronous Server, it is best to start from
+a regular Asynchronous Server (see above). Once this server is setup, SSL can be
+enabled by adding a Boost.Asio.Ssl.Context_ to the options. The settings that can be
+used are defined in the link.
+
+.. code-block:: c++
+
+    boost::shared_ptr<boost::asio::ssl::context> ctx = boost::make_shared<boost::asio::ssl::context>(boost::asio::ssl::context::sslv23);
+    ctx->set_options(
+    	boost::asio::ssl::context::default_workarounds
+    	| boost::asio::ssl::context::no_sslv2
+    	| boost::asio::ssl::context::single_dh_use);
+    context_.set_password_callback(boost::bind(&server::get_password, this));
+    context_.use_certificate_chain_file("server.pem");
+    context_.use_private_key_file("server.pem", boost::asio::ssl::context::pem);
+    context_.use_tmp_dh_file("dh512.pem");
+	
+    handler_type handler;
+    http_server::options options(handler);
+    options.thread_pool(boost::make_shared<boost::network::utils::thread_pool>(2));
+    http_server server(options.address("127.0.0.1").port("8000").context(ctx));
+
+	
+.. code-block:: c++
+
+	std::string get_password() const
+	{
+		return "test";
+	}
+	
 .. _Boost.Range: http://www.boost.org/libs/range
 .. _Boost.Function: http://www.boost.org/libs/function
+.. _Boost.Asio.SSL.Context: http://www.boost.org/doc/libs/1_55_0/doc/html/boost_asio/reference/ssl__context.html

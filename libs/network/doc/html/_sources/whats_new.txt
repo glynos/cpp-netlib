@@ -27,8 +27,11 @@ v0.11.0
   ``cpp-netlib-utils_base64_test`` still fails in this platform. (`#287`_) 
 * Provide a client option to always validate peers for HTTPS requests made by
   the client. (`#349`_)
+* Back-port fix for `#163`_ for improved URI parsing.
+* Added support for client-side certificates and private keys (`#361`_).
 
 .. _`#129`: https://github.com/cpp-netlib/cpp-netlib/issues/129
+.. _`#163`: https://github.com/cpp-netlib/cpp-netlib/issues/163
 .. _`#245`: https://github.com/cpp-netlib/cpp-netlib/issues/245
 .. _`#277`: https://github.com/cpp-netlib/cpp-netlib/issues/277
 .. _`#279`: https://github.com/cpp-netlib/cpp-netlib/issues/279
@@ -40,6 +43,7 @@ v0.11.0
 .. _`#349`: https://github.com/cpp-netlib/cpp-netlib/issues/349
 .. _`#69`: https://github.com/cpp-netlib/cpp-netlib/issues/69
 .. _`#86`: https://github.com/cpp-netlib/cpp-netlib/issues/86
+.. _`#361`: https://github.com/cpp-netlib/cpp-netlib/pull/361
 
 :mod:`cpp-netlib` 0.10
 ----------------------
