@@ -114,9 +114,9 @@ namespace boost { namespace network {
 		{
 			try {
 				if(ssl_enabled) {
-					return ssl_sock_->shutdown();
+					ssl_sock_->shutdown(e);
 				} else {
-					return tcp_sock_->shutdown(boost::asio::ip::tcp::socket::shutdown_send);
+					tcp_sock_->shutdown(boost::asio::ip::tcp::socket::shutdown_send,e);
 				}
 			} catch(const boost::system::error_code & e) {
 				std::cerr << e.message() << std::endl;
