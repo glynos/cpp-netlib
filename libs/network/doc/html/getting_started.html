@@ -75,7 +75,8 @@ website:</p>
 <p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> uses <a class="reference external" href="http://git-scm.com/">Git</a> for source control, so to use any
 development versions Git must be installed on your system.</p>
 <p>Using the command line, the command to get the latest code is:</p>
-<div class="highlight-python"><pre>shell$ git clone git://github.com/cpp-netlib/cpp-netlib.git</pre>
+<div class="highlight-python"><div class="highlight"><pre>shell$ git clone git://github.com/cpp-netlib/cpp-netlib.git
+</pre></div>
 </div>
 <p>This should be enough information get to started.  To do more complex
 things with Git, such as pulling changes or checking out a new branch,
@@ -141,12 +142,13 @@ the <tt class="docutils literal"><span class="pre">~/cpp-netlib</span></tt> dire
 build system to use our compiler of choice. This is done by running the
 <tt class="docutils literal"><span class="pre">cmake</span></tt> command at the top-level directory of <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> with
 additional parameters:</p>
-<div class="highlight-python"><pre>$ mkdir ~/cpp-netlib-build
+<div class="highlight-python"><div class="highlight"><pre>$ mkdir ~/cpp-netlib-build
 $ cd ~/cpp-netlib-build
 $ cmake -DCMAKE_BUILD_TYPE=Debug \
 &gt;       -DCMAKE_C_COMPILER=gcc   \
 &gt;       -DCMAKE_CXX_COMPILER=g++ \
-&gt;       ../cpp-netlib</pre>
+&gt;       ../cpp-netlib
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -161,7 +163,8 @@ builds are done in <tt class="docutils literal"><span class="pre">~/cpp-netlib-b
 build and run the tests and examples that come with <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>. To build
 the tests, you can run <tt class="docutils literal"><span class="pre">make</span></tt> in the same top-level directory of
 <tt class="docutils literal"><span class="pre">~/cpp-netlib-build</span></tt>:</p>
-<div class="highlight-python"><pre>$ make</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ make
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -178,10 +181,12 @@ tests. Do this at the risk of <a class="reference external" href="http://en.wiki
 compile-time burden is much reduced in recent versions.</p>
 </div>
 <p>Once the build has completed, you can now run the test suite by issuing:</p>
-<div class="highlight-python"><pre>$ make test</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ make test
+</pre></div>
 </div>
 <p>You can install <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> by issuing:</p>
-<div class="highlight-python"><pre>$ sudo make install</pre>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo make install
+</pre></div>
 </div>
 <p>By default this installs <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> into <tt class="docutils literal"><span class="pre">/usr/local</span></tt>.</p>
 <div class="admonition note">
@@ -222,10 +227,11 @@ libraries.  Using Visual C++ on Windows they are:</p>
 <h3>CMake projects<a class="headerlink" href="#cmake-projects" title="Permalink to this headline">¶</a></h3>
 <p>Projects using CMake can add the following lines in their <tt class="docutils literal"><span class="pre">CMakeLists.txt</span></tt> to
 be able to use <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>:</p>
-<div class="highlight-python"><pre>set ( CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ~/cpp-netlib-build )
+<div class="highlight-python"><div class="highlight"><pre>set ( CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ~/cpp-netlib-build )
 find_package ( cppnetlib 0.11.0 REQUIRED )
 include_directories ( ${CPPNETLIB_INCLUDE_DIRS} )
-target_link_libraries ( MyApplication ${CPPNETLIB_LIBRARIES} )</pre>
+target_link_libraries ( MyApplication ${CPPNETLIB_LIBRARIES} )
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -317,8 +323,8 @@ through <a class="reference external" href="http://groups.google.com/forum/#!for
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Dec 21, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+      Last updated on May 21, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

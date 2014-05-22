@@ -318,6 +318,11 @@ sent out at the time of its closing. The default is <tt class="docutils literal"
 <td>An optional int to define the timeout to wait for socket closes before it is set to linger.
 The default is <tt class="docutils literal"><span class="pre">0</span></tt>.</td>
 </tr>
+<tr class="row-odd"><td>context</td>
+<td><tt class="docutils literal"><span class="pre">shared_ptr&lt;context&gt;</span></tt></td>
+<td>An optional shared pointer to an instance of <tt class="docutils literal"><span class="pre">boost::asio::ssl::context</span></tt> &#8211; this contains the
+settings needed to support SSL. This parameter is only applicable for <tt class="docutils literal"><span class="pre">async_server</span></tt> instances.</td>
+</tr>
 </tbody>
 </table>
 <p>To use the above supported named parameters, you&#8217;ll have code that looks like the following:</p>
@@ -648,6 +653,37 @@ the headers for a connection more than once.</p>
 </div>
 </div>
 </div>
+<div class="section" id="adding-ssl-support-to-asynchronous-server">
+<h2>Adding SSL support to Asynchronous Server<a class="headerlink" href="#adding-ssl-support-to-asynchronous-server" title="Permalink to this headline">¶</a></h2>
+<p>In order to setup SSL support for an Asynchronous Server, it is best to start from
+a regular Asynchronous Server (see above). Once this server is setup, SSL can be
+enabled by adding a <a class="reference external" href="http://www.boost.org/doc/libs/1_55_0/doc/html/boost_asio/reference/ssl__context.html">Boost.Asio.Ssl.Context</a> to the options. The settings that can be
+used are defined in the link.</p>
+<div class="highlight-c++"><div class="highlight"><pre>    <span class="c1">// Initialize SSL context</span>
+    <span class="n">boost</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">&gt;</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">&gt;</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">::</span><span class="n">sslv23</span><span class="p">);</span>
+    <span class="n">ctx</span><span class="o">-&gt;</span><span class="n">set_options</span><span class="p">(</span>
+            <span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">::</span><span class="n">default_workarounds</span>
+            <span class="o">|</span> <span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">::</span><span class="n">no_sslv2</span>
+            <span class="o">|</span> <span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">::</span><span class="n">single_dh_use</span><span class="p">);</span>
+
+    <span class="c1">// Set keys</span>
+    <span class="n">ctx</span><span class="o">-&gt;</span><span class="n">set_password_callback</span><span class="p">(</span><span class="n">password_callback</span><span class="p">);</span>
+    <span class="n">ctx</span><span class="o">-&gt;</span><span class="n">use_certificate_chain_file</span><span class="p">(</span><span class="s">&quot;server.pem&quot;</span><span class="p">);</span>
+    <span class="n">ctx</span><span class="o">-&gt;</span><span class="n">use_private_key_file</span><span class="p">(</span><span class="s">&quot;server.pem&quot;</span><span class="p">,</span> <span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context</span><span class="o">::</span><span class="n">pem</span><span class="p">);</span>
+    <span class="n">ctx</span><span class="o">-&gt;</span><span class="n">use_tmp_dh_file</span><span class="p">(</span><span class="s">&quot;dh512.pem&quot;</span><span class="p">);</span>
+
+<span class="n">handler_type</span> <span class="n">handler</span><span class="p">;</span>
+<span class="n">http_server</span><span class="o">::</span><span class="n">options</span> <span class="n">options</span><span class="p">(</span><span class="n">handler</span><span class="p">);</span>
+<span class="n">options</span><span class="p">.</span><span class="n">thread_pool</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">utils</span><span class="o">::</span><span class="n">thread_pool</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+<span class="n">http_server</span> <span class="nf">server</span><span class="p">(</span><span class="n">options</span><span class="p">.</span><span class="n">address</span><span class="p">(</span><span class="s">&quot;127.0.0.1&quot;</span><span class="p">).</span><span class="n">port</span><span class="p">(</span><span class="s">&quot;8442&quot;</span><span class="p">).</span><span class="n">context</span><span class="p">(</span><span class="n">ctx</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">password_callback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">max_length</span><span class="p">,</span> <span class="n">boost</span><span class="o">::</span><span class="n">asio</span><span class="o">::</span><span class="n">ssl</span><span class="o">::</span><span class="n">context_base</span><span class="o">::</span><span class="n">password_purpose</span> <span class="n">purpose</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -679,6 +715,7 @@ the headers for a connection more than once.</p>
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#adding-ssl-support-to-asynchronous-server">Adding SSL support to Asynchronous Server</a></li>
 </ul>
 </li>
 </ul>
@@ -721,8 +758,8 @@ the headers for a connection more than once.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2013, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Dec 21, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+      Last updated on May 21, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
