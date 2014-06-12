@@ -116,7 +116,7 @@ namespace boost { namespace network {
 
             static char const * close() {
                 static char close_[] = {
-                    'C','l','o','s','e', 0
+                    'c','l','o','s','e', 0
                 };
                 return close_;
             }
