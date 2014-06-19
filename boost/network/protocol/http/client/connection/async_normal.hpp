@@ -68,8 +68,11 @@ struct http_async_connection
       connection_delegate_ptr;
 
   http_async_connection(resolver_type& resolver, resolve_function resolve,
-                        bool follow_redirect, connection_delegate_ptr delegate)
-      : follow_redirect_(follow_redirect),
+                        bool follow_redirect, int timeout,
+                        connection_delegate_ptr delegate)
+      : timeout_(timeout),
+        timer_(resolver.get_io_service()),
+        follow_redirect_(follow_redirect),
         resolver_(resolver),
         resolve_(resolve),
         request_strand_(resolver.get_io_service()),
@@ -92,6 +95,13 @@ struct http_async_connection
              request_strand_.wrap(boost::bind(
                  &this_type::handle_resolved, this_type::shared_from_this(),
                  port_, get_body, callback, generator, _1, _2)));
+    if (timeout_ > 0) {
+      timer_.expires_from_now(boost::posix_time::seconds(timeout_));
+      timer_.async_wait(request_strand_.wrap(
+                            boost::bind(&this_type::handle_timeout,
+                                        this_type::shared_from_this(),
+                                        _1)));
+    }
     return response_;
   }
 
@@ -107,6 +117,11 @@ struct http_async_connection
     this->source_promise.set_exception(boost::copy_exception(error));
     this->destination_promise.set_exception(boost::copy_exception(error));
     this->body_promise.set_exception(boost::copy_exception(error));
+    this->timer_.cancel();
+  }
+
+  void handle_timeout(boost::system::error_code const &ec) {
+    if (!ec) delegate_->disconnect();
   }
 
   void handle_resolved(boost::uint16_t port, bool get_body,
@@ -348,6 +363,7 @@ struct http_async_connection
             this->source_promise.set_value("");
             this->part.assign('\0');
             this->response_parser_.reset();
+            this->timer_.cancel();
           } else {
             // This means the connection has not been closed yet and we want
             // to get more
@@ -436,6 +452,8 @@ struct http_async_connection
     return body;
   }
 
+  int timeout_;
+  boost::asio::deadline_timer timer_;
   bool follow_redirect_;
   resolver_type& resolver_;
   resolve_function resolve_;

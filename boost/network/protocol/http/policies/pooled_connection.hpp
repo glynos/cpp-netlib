@@ -57,6 +57,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                     resolver_function_type resolve,
                     get_connection_function get_connection,
                     bool https,
+                    bool always_verify_peer,
+                    int timeout,
                     optional<string_type> const& certificate_filename =
                         optional<string_type>(),
                     optional<string_type> const& verify_path =
@@ -69,6 +71,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                     new_connection(resolver,
                                    resolve,
                                    https,
+                                   always_verify_peer,
+                                   timeout,
                                    certificate_filename,
                                    verify_path,
                                    certificate_file,
@@ -190,10 +194,12 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
   typedef unordered_map<string_type, connection_ptr> host_connection_map;
   host_connection_map host_connections;
   bool follow_redirect_;
+  int timeout_;
 
   connection_ptr get_connection(
       resolver_type& resolver,
       basic_request<Tag> const& request_,
+      bool always_verify_peer,
       optional<string_type> const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path =
@@ -224,11 +230,14 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                       this,
                       _1,
                       _2,
+                      always_verify_peer,
                       _3,
                       _4,
                       _5,
                       _6),
           boost::iequals(request_.protocol(), string_type("https")),
+          always_verify_peer,
+          timeout_,
           certificate_filename,
           verify_path,
           certificate_file,
@@ -239,10 +248,11 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     return it->second;
   }
 
-  pooled_connection_policy(bool cache_resolved, bool follow_redirect)
+  pooled_connection_policy(bool cache_resolved, bool follow_redirect, int timeout)
       : resolver_base(cache_resolved),
         host_connections(),
-        follow_redirect_(follow_redirect) {}
+        follow_redirect_(follow_redirect),
+        timeout_(timeout) {}
 };
 
 }  // namespace http

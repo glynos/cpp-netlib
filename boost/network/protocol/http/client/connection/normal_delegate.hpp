@@ -22,6 +22,7 @@ struct normal_delegate : connection_delegate {
                      function<void(system::error_code const &, size_t)> handler);
   virtual void read_some(asio::mutable_buffers_1 const & read_buffer,
                          function<void(system::error_code const &, size_t)> handler);
+  virtual void disconnect();
   ~normal_delegate();
 
  private:

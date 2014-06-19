@@ -38,7 +38,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
   struct connection_impl {
     connection_impl(bool follow_redirect, bool always_verify_peer,
                     resolve_function resolve, resolver_type& resolver,
-                    bool https,
+                    bool https, int timeout,
                     optional<string_type> const& certificate_filename,
                     optional<string_type> const& verify_path,
                     optional<string_type> const& certificate_file,
@@ -46,7 +46,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
       pimpl = impl::async_connection_base<
           Tag, version_major,
           version_minor>::new_connection(resolve, resolver, follow_redirect,
-                                         always_verify_peer, https,
+                                         always_verify_peer, https, timeout,
                                          certificate_filename, verify_path,
                                          certificate_file, private_key_file);
     }
@@ -81,7 +81,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
         boost::bind(&async_connection_policy<Tag, version_major,
                                              version_minor>::resolve,
                     this, _1, _2, _3, _4),
-        resolver, boost::iequals(protocol_, string_type("https")),
+        resolver, boost::iequals(protocol_, string_type("https")), timeout_,
         certificate_filename, verify_path,
         certificate_file, private_key_file));
     return connection_;
@@ -89,10 +89,11 @@ struct async_connection_policy : resolver_policy<Tag>::type {
 
   void cleanup() {}
 
-  async_connection_policy(bool cache_resolved, bool follow_redirect)
-      : resolver_base(cache_resolved), follow_redirect_(follow_redirect) {}
+  async_connection_policy(bool cache_resolved, bool follow_redirect, int timeout)
+      : resolver_base(cache_resolved), follow_redirect_(follow_redirect), timeout_(timeout) {}
 
   bool follow_redirect_;
+  int timeout_;
 };
 
 }  // namespace http

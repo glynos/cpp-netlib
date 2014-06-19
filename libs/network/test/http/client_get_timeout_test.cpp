@@ -20,3 +20,25 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_1_0, client, client_types) {
     BOOST_CHECK_EQUAL ( 12121, port_ );
     BOOST_CHECK_THROW ( response_ = client_.get(request); temp = body(response_); , std::exception );
 }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_with_options, client, client_types) {
+    typename client::request request("http://commondatastorage.googleapis.com/cpp-netlib-downloads/0.11.0/cpp-netlib-0.11.0.zip");
+    typename client::response response;
+    typename client::options options;
+    client client_(options.timeout(1));
+    typename client::response::string_type temp;
+    BOOST_CHECK_THROW ( response = client_.get(request); temp = body(response); , std::exception );
+}
+
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(https_get_test_timeout_with_options, client, client_types) {
+    typename client::request request("https://codeload.github.com/cpp-netlib/cpp-netlib/zip/0.11-devel");
+    typename client::response response;
+    typename client::options options;
+    client client_(options.timeout(1));
+    typename client::response::string_type temp;
+    BOOST_CHECK_THROW ( response = client_.get(request); temp = body(response); , std::exception );
+}
+
+#endif
