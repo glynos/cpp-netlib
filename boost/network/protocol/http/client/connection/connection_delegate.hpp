@@ -16,6 +16,7 @@ struct connection_delegate {
                      function<void(system::error_code const &, size_t)> handler) = 0;
   virtual void read_some(asio::mutable_buffers_1 const & read_buffer,
                          function<void(system::error_code const &, size_t)> handler) = 0;
+  virtual void disconnect() = 0;
   virtual ~connection_delegate() {}
 };
 

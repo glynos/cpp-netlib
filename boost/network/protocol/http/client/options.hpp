@@ -28,7 +28,8 @@ struct client_options {
         openssl_certificate_file_(),
         openssl_private_key_file_(),
         io_service_(),
-        always_verify_peer_(false) {}
+        always_verify_peer_(false),
+        timeout_(0) {}
 
   client_options(client_options const& other)
       : cache_resolved_(other.cache_resolved_),
@@ -38,7 +39,8 @@ struct client_options {
         openssl_certificate_file_(other.openssl_certificate_file_),
         openssl_private_key_file_(other.openssl_private_key_file_),
         io_service_(other.io_service_),
-        always_verify_peer_(other.always_verify_peer_) {}
+        always_verify_peer_(other.always_verify_peer_),
+        timeout_(other.timeout_) {}
 
   client_options& operator=(client_options other) {
     other.swap(*this);
@@ -55,6 +57,7 @@ struct client_options {
     swap(openssl_private_key_file_, other.openssl_private_key_file_);
     swap(io_service_, other.io_service_);
     swap(always_verify_peer_, other.always_verify_peer_);
+    swap(timeout_, other.timeout_);
   }
 
   client_options& cache_resolved(bool v) {
@@ -92,6 +95,11 @@ struct client_options {
     return *this;
   }
 
+  client_options& timeout(int v) {
+    timeout_ = v;
+    return *this;
+  }
+
   bool cache_resolved() const { return cache_resolved_; }
 
   bool follow_redirects() const { return follow_redirects_; }
@@ -118,6 +126,8 @@ struct client_options {
 
   bool always_verify_peer() const { return always_verify_peer_; }
 
+  int timeout() const { return timeout_; }
+
  private:
   bool cache_resolved_;
   bool follow_redirects_;
@@ -127,6 +137,7 @@ struct client_options {
   boost::optional<string_type> openssl_private_key_file_;
   boost::shared_ptr<boost::asio::io_service> io_service_;
   bool always_verify_peer_;
+  int timeout_;
 };
 
 template <class Tag>

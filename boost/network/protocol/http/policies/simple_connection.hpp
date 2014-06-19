@@ -44,6 +44,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
                     bool always_verify_peer, string_type const& hostname,
                     string_type const& port, resolver_function_type resolve,
                     bool https,
+                    int timeout,
                     optional<string_type> const& certificate_filename =
                         optional<string_type>(),
                     optional<string_type> const& verify_path =
@@ -56,6 +57,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
       pimpl.reset(impl::sync_connection_base<
           Tag, version_major,
           version_minor>::new_connection(resolver, resolve, https,
+                                         always_verify_peer, timeout,
                                          certificate_filename, verify_path,
                                          certificate_file, private_key_file));
     }
@@ -123,7 +125,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
         boost::bind(&simple_connection_policy<Tag, version_major,
                                               version_minor>::resolve,
                     this, _1, _2, _3),
-        boost::iequals(request_.protocol(), string_type("https")),
+        boost::iequals(request_.protocol(), string_type("https")), timeout_,
         certificate_filename, verify_path,
         certificate_file, private_key_file));
     return connection_;
@@ -131,11 +133,12 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
 
   void cleanup() {}
 
-  simple_connection_policy(bool cache_resolved, bool follow_redirect)
-      : resolver_base(cache_resolved), follow_redirect_(follow_redirect) {}
+  simple_connection_policy(bool cache_resolved, bool follow_redirect, int timeout)
+      : resolver_base(cache_resolved), follow_redirect_(follow_redirect), timeout_(timeout) {}
 
   // member variables
   bool follow_redirect_;
+  int timeout_;
 };
 
 }  // namespace http

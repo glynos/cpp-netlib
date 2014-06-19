@@ -239,7 +239,7 @@ struct sync_connection_base {
   // ranges
   static sync_connection_base<Tag, version_major, version_minor>*
   new_connection(resolver_type& resolver, resolver_function_type resolve,
-                 bool https, bool always_verify_peer,
+                 bool https, bool always_verify_peer, int timeout,
                  optional<string_type> const& certificate_filename =
                      optional<string_type>(),
                  optional<string_type> const& verify_path =
@@ -253,7 +253,7 @@ struct sync_connection_base {
       return dynamic_cast<
           sync_connection_base<Tag, version_major, version_minor>*>(
           new https_sync_connection<Tag, version_major, version_minor>(
-              resolver, resolve,
+              resolver, resolve, always_verify_peer, timeout,
               certificate_filename, verify_path,
               certificate_file, private_key_file));
 #else
@@ -263,7 +263,8 @@ struct sync_connection_base {
     return dynamic_cast<
         sync_connection_base<Tag, version_major, version_minor>*>(
         new http_sync_connection<Tag, version_major, version_minor>(resolver,
-                                                                    resolve));
+                                                                    resolve,
+                                                                    timeout));
   }
 
   virtual void init_socket(string_type const& hostname,
