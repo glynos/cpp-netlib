@@ -37,6 +37,10 @@ struct basic_client_facade {
     init_pimpl(options);
   }
 
+  virtual ~basic_client_facade() {
+    pimpl->wait_complete();
+  }
+
   response head(request const& request) {
     return pimpl->request_skeleton(request,
                                    "HEAD",

@@ -63,10 +63,12 @@ struct async_client
 
   ~async_client() throw() {
     sentinel_.reset();
+  }
+
+  void wait_complete() {
+    sentinel_.reset();
     if (lifetime_thread_.get()) {
-      if (lifetime_thread_->get_id() != boost::this_thread::get_id()) {
-        lifetime_thread_->join();
-      }
+      lifetime_thread_->join();
       lifetime_thread_.reset();
     }
   }
