@@ -112,7 +112,6 @@ struct server_options {
   boost::shared_ptr<utils::thread_pool> thread_pool() const { return thread_pool_; } 
   boost::shared_ptr<boost::asio::ssl::context> context() const { return context_; }
  private:
-  boost::shared_ptr<boost::asio::ssl::context> context_;
   boost::shared_ptr<boost::asio::io_service> io_service_;
   Handler &handler_;
   string_type address_;
@@ -127,6 +126,7 @@ struct server_options {
   boost::optional<boost::asio::socket_base::receive_low_watermark> receive_low_watermark_;
   boost::optional<boost::asio::socket_base::send_low_watermark> send_low_watermark_;
   boost::shared_ptr<utils::thread_pool> thread_pool_;
+  boost::shared_ptr<boost::asio::ssl::context> context_;
 };
 
 template <class Tag, class Handler>
