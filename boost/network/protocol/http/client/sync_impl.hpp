@@ -73,6 +73,8 @@ struct sync_client
     service_ptr.reset();
   }
 
+  void wait_complete() {}
+
   basic_response<Tag> request_skeleton(basic_request<Tag> const& request_,
                                        string_type method, bool get_body,
                                        body_callback_function_type callback,

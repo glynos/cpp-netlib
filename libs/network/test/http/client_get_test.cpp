@@ -36,3 +36,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(https_client_get_test, client, client_types) {
 }
 
 #endif
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(http_temp_client_get_test, client, client_types) {
+    typename client::request request("http://www.google.co.kr");
+    typename client::response response;
+    BOOST_REQUIRE_NO_THROW ( response = client().get(request) );
+    typename net::headers_range<typename client::response>::type range = headers(response)["Content-Type"];
+    BOOST_CHECK ( !boost::empty(range) );
+    BOOST_REQUIRE_NO_THROW ( BOOST_CHECK ( body(response).size() != 0 ) );
+    BOOST_CHECK_EQUAL ( response.version().substr(0,7), std::string("HTTP/1.") );
+    BOOST_CHECK_EQUAL ( response.status(), 200u );
+    BOOST_CHECK_EQUAL ( response.status_message(), std::string("OK") );
+}
