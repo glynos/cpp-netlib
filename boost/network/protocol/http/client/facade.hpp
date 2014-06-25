@@ -37,7 +37,7 @@ struct basic_client_facade {
     init_pimpl(options);
   }
 
-  virtual ~basic_client_facade() {
+  ~basic_client_facade() {
     pimpl->wait_complete();
   }
 
