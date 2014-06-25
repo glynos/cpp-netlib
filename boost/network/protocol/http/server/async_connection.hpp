@@ -156,11 +156,11 @@ namespace boost { namespace network { namespace http {
         : strand(io_service)
         , handler(handler)
         , thread_pool_(thread_pool)
-        , headers_already_sent(false)
-        , headers_in_progress(false)
-        , handshake_done(false)
         , headers_buffer(BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE)
         , socket_(io_service, ctx)
+        , handshake_done(false)
+        , headers_already_sent(false)
+        , headers_in_progress(false)
         {
             new_start = read_buffer_.begin();
         }
@@ -323,13 +323,13 @@ namespace boost { namespace network { namespace http {
         typedef boost::lock_guard<boost::recursive_mutex> lock_guard;
         typedef std::list<boost::function<void()> > pending_actions_list;
 
-        boost::network::stream_handler socket_;
         asio::io_service::strand strand;
         Handler & handler;
         utils::thread_pool & thread_pool_;
-        volatile bool headers_already_sent, headers_in_progress;
         asio::streambuf headers_buffer;
+        boost::network::stream_handler socket_;
         bool handshake_done;
+        volatile bool headers_already_sent, headers_in_progress;
 
         boost::recursive_mutex headers_mutex;
         buffer_type read_buffer_;
