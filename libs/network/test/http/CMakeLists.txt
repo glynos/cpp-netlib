@@ -13,6 +13,7 @@ endif()
 
 if (Boost_FOUND)
     set ( TESTS
+        response_incremental_parser_test
         request_incremental_parser_test
 	      request_linearize_test
         )
