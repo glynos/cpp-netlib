@@ -1,0 +1,17 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+env: BOOST_ROOT=$TRAVIS_BUILD_DIR/../boost_1_55_0
+
+before_install:
+  - curl -s http://cznic.dl.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.bz2|tar xfj - -C ..
+install:
+  - cd $BOOST_ROOT
+  - ./bootstrap.sh --with-toolset=$CC
+  - ./b2 -j4 --stagedir=.
+  - cd -
+
+script:
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX
+  - make all test
