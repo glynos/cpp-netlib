@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_1_0, client, client_types) {
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_with_options, client, client_types) {
-    typename client::request request("http://commondatastorage.googleapis.com/cpp-netlib-downloads/0.11.0/cpp-netlib-0.11.0.zip");
+    typename client::request request("http://cznic.dl.sourceforge.net/project/boost/boost/1.55.0/boost_1_55_0.tar.bz2");
     typename client::response response;
     typename client::options options;
     client client_(options.timeout(1));
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_with_options, client, client
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(https_get_test_timeout_with_options, client, client_types) {
-    typename client::request request("https://codeload.github.com/cpp-netlib/cpp-netlib/zip/0.11-devel");
+    typename client::request request("https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.8.2.tar.bz2");
     typename client::response response;
     typename client::options options;
     client client_(options.timeout(1));

@@ -44,11 +44,12 @@ namespace boost { namespace network {
 		}
 
 		stream_handler(boost::asio::io_service& io, boost::shared_ptr<boost::asio::ssl::context> ctx = boost::shared_ptr<boost::asio::ssl::context>())  {	
-			tcp_sock_ = boost::make_shared< tcp_socket >(io);
+			tcp_sock_ = boost::make_shared< tcp_socket >(boost::ref(io));
 			ssl_enabled = false;
 			if(ctx) {
 				/// SSL is enabled
-				ssl_sock_ = boost::make_shared< ssl_socket >(io, *ctx);
+				ssl_sock_ = boost::make_shared< ssl_socket >(boost::ref(io),
+                                                             boost::ref(*ctx));
 				ssl_enabled = true;
 			}
 		}
