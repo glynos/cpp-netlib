@@ -11,6 +11,8 @@
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <iterator>
 
+#include <boost/asio/deadline_timer.hpp>
+
 namespace boost {
 namespace network {
 namespace http {
