@@ -72,6 +72,7 @@ struct http_async_connection
                         connection_delegate_ptr delegate)
       : timeout_(timeout),
         timer_(resolver.get_io_service()),
+        is_timedout_(false),
         follow_redirect_(follow_redirect),
         resolver_(resolver),
         resolve_(resolve),
@@ -122,6 +123,7 @@ struct http_async_connection
 
   void handle_timeout(boost::system::error_code const &ec) {
     if (!ec) delegate_->disconnect();
+    is_timedout_ = true;
   }
 
   void handle_resolved(boost::uint16_t port, bool get_body,
@@ -152,7 +154,9 @@ struct http_async_connection
                         body_generator_function_type generator,
                         resolver_iterator_pair endpoint_range,
                         boost::system::error_code const& ec) {
-    if (!ec) {
+    if (is_timedout_) {
+      set_errors(asio::error::timed_out);
+    } else if (!ec) {
       BOOST_ASSERT(delegate_.get() != 0);
       delegate_->write(
           command_streambuf,
@@ -191,7 +195,7 @@ struct http_async_connection
                            body_generator_function_type generator,
                            boost::system::error_code const& ec,
                            std::size_t bytes_transferred) {
-    if (!ec) {
+    if (!is_timedout_ && !ec) {
       if (generator) {
         // Here we write some more data that the generator provides, before
         // we wait for data from the server.
@@ -219,7 +223,7 @@ struct http_async_connection
               version, get_body, callback, placeholders::error,
               placeholders::bytes_transferred)));
     } else {
-      set_errors(ec);
+      set_errors(is_timedout_ ? asio::error::timed_out : ec);
     }
   }
 
@@ -235,7 +239,8 @@ struct http_async_connection
 #else
         false && short_read_error;
 #endif
-    if (!ec || ec == boost::asio::error::eof || is_ssl_short_read_error) {
+    if (!is_timedout_ &&
+        (!ec || ec == boost::asio::error::eof || is_ssl_short_read_error)) {
       logic::tribool parsed_ok;
       size_t remainder;
       switch (state) {
@@ -403,7 +408,7 @@ struct http_async_connection
           BOOST_ASSERT(false && "Bug, report this to the developers!");
       }
     } else {
-      boost::system::system_error error(ec);
+      boost::system::system_error error(is_timedout_ ? asio::error::timed_out : ec);
       this->source_promise.set_exception(boost::copy_exception(error));
       this->destination_promise.set_exception(boost::copy_exception(error));
       switch (state) {
@@ -454,6 +459,7 @@ struct http_async_connection
 
   int timeout_;
   boost::asio::deadline_timer timer_;
+  bool is_timedout_;
   bool follow_redirect_;
   resolver_type& resolver_;
   resolve_function resolve_;
