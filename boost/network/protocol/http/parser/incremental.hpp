@@ -228,6 +228,12 @@ namespace boost { namespace network { namespace http {
                         if (*current == ':') {
                             state_ = http_header_colon;
                             ++current;
+                        } else if (*current == '\r') {
+                            state_ = http_header_line_cr;
+                            ++current;
+                        } else if (*current == '\n') {
+                            state_ = http_header_line_done;
+                            ++current;
                         } else if (algorithm::is_alnum()(*current) || algorithm::is_space()(*current) || algorithm::is_punct()(*current)) {
                             ++current;
                         } else {

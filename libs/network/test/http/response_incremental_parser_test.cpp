@@ -348,5 +348,30 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(incremental_parser_parse_header_lines, eol, eol_ty
         valid_headers);
     BOOST_CHECK_EQUAL(parsed_ok, true);
     BOOST_CHECK(parsed1 != parsed2);
+
+    p.reset(response_parser_type::http_status_message_done);
+    valid_headers = "Content-Type: text/html;" + eol::literal + "charset=utf-8" + eol::literal + eol::literal;
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_header_line_done,
+        valid_headers);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    parsed1 = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed1 << " state=" << p.state() << std::endl;
+    p.reset(response_parser_type::http_status_message_done);
+    end = valid_headers.end();
+    valid_headers.assign(boost::end(result_range), end);
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_header_line_done,
+        valid_headers);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    parsed2 = std::string(boost::begin(result_range), boost::end(result_range));
+    std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
+    valid_headers.assign(boost::end(result_range), end);
+    p.reset(response_parser_type::http_status_message_done);
+    fusion::tie(parsed_ok, result_range) = p.parse_until(
+        response_parser_type::http_headers_done,
+        valid_headers);
+    BOOST_CHECK_EQUAL(parsed_ok, true);
+    BOOST_CHECK(parsed1 != parsed2);
 }
 
