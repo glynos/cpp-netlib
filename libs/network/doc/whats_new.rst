@@ -7,6 +7,15 @@
 :mod:`cpp-netlib` 0.11
 ----------------------
 
+v0.11.1
+~~~~~~~
+* Add support for request timeouts.
+* Build configuration fixes.
+* Support for Travis CI in-project config.
+* Make the response parser more flexible to support older/ad-hoc servers that don't have standard format responses.
+* Fix some instability in the client destructor.
+* MSVC 2010 specific fixes.
+
 v0.11.0
 ~~~~~~~
 * Fix thread leak in DNS resolution failure (`#245`_)
