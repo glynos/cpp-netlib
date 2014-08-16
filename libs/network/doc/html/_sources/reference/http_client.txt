@@ -212,6 +212,11 @@ initialization.
 |                          |                            | client-side SSL session  |
 |                          |                            | establishment.           |
 +--------------------------+----------------------------+--------------------------+
+| timeout                  | ``int``                    | Number of seconds to     |
+|                          |                            | wait for client requests |
+|                          |                            | before considering a     |
+|                          |                            | timeout has occurred.    |
++--------------------------+----------------------------+--------------------------+
 
 
 To use the above supported named parameters, you'll have code that looks like
@@ -225,7 +230,8 @@ the following:
            .cache_resolved(true)
            .io_service(boost::make_shared<boost::asio::io_service>())
            .openssl_certificate("/tmp/my-cert")
-           .openssl_verify_path("/tmp/ca-certs");
+           .openssl_verify_path("/tmp/ca-certs")
+           .timeout(10);
     client client_(options);
     // use client_ as normal from here on out.
 
