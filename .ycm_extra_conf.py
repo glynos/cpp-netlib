@@ -26,6 +26,8 @@ flags = [
     '/usr/include/c++/4.6',
     '-isystem',
     '/usr/include/clang/3.0/include',
+    '-isystem',
+    '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/c++/v1',
     '-I',
     os.environ['BOOST_ROOT'],
     # Always enable debugging for the project when building for semantic
