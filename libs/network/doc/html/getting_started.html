@@ -138,7 +138,7 @@ the <tt class="docutils literal"><span class="pre">~/cpp-netlib</span></tt> dire
 </div>
 <div class="section" id="building-with-cmake">
 <h2>Building with CMake<a class="headerlink" href="#building-with-cmake" title="Permalink to this headline">¶</a></h2>
-<p>To build the tests that come with cpp-netlib, we first need to configure the
+<p>To build the tests that come with <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>, we first need to configure the
 build system to use our compiler of choice. This is done by running the
 <tt class="docutils literal"><span class="pre">cmake</span></tt> command at the top-level directory of <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> with
 additional parameters:</p>
@@ -156,6 +156,29 @@ $ cmake -DCMAKE_BUILD_TYPE=Debug \
 <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is built outside the source directory.
 For the purposes of documentation, we&#8217;ll assume that all
 builds are done in <tt class="docutils literal"><span class="pre">~/cpp-netlib-build</span></tt>.</p>
+</div>
+<p>If you intend to use the SSL support when using the HTTP client libraries in
+<tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>, you may need to build it with <a class="reference external" href="http://www.openssl.org/">OpenSSL</a> installed or at least
+available to CMake. One example for building the library with <a class="reference external" href="http://www.openssl.org/">OpenSSL</a> support
+is by doing the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ cmake -DCMAKE_BUILD_TYPE=Debug \
+&gt;       -DCMAKE_C_COMPILER=clang \
+&gt;       -DCMAKE_CXX_COMPILER=clang++ \
+&gt;       -DOPENSSL_ROOT_DIR=/Users/dberris/homebrew/Cellar/openssl/1.0.1f
+&gt;       ../cpp-netlib
+</pre></div>
+</div>
+<p>You can also use a different root directory for the <a class="reference external" href="http://www.boost.org/doc/libs/release/more/getting_started/index.html">Boost</a> project by using the
+<tt class="docutils literal"><span class="pre">-DBOOST_ROOT</span></tt> configuration option to CMake. This is useful if you intend to
+build the library with a specific version of Boost that you&#8217;ve built in a
+separate directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ cmake -DCMAKE_BUILD_TYPE=Debug \
+&gt;       -DCMAKE_C_COMPILER=clang \
+&gt;       -DCMAKE_CXX_COMPILER=clang++ \
+&gt;       -DOPENSSL_ROOT_DIR=/Users/dberris/homebrew/Cellar/openssl/1.0.1f \
+&gt;       -DBOOST_ROOT=/Users/dberris/Source/boost_1_55_0
+&gt;       ../cpp-netlib
+</pre></div>
 </div>
 <div class="section" id="building-on-linux">
 <h3>Building on Linux<a class="headerlink" href="#building-on-linux" title="Permalink to this headline">¶</a></h3>
@@ -204,8 +227,8 @@ libraries.  Using GCC on Linux these are:</p>
 <div class="section" id="building-on-windows">
 <h3>Building On Windows<a class="headerlink" href="#building-on-windows" title="Permalink to this headline">¶</a></h3>
 <p>If you&#8217;re using the Microsoft Visual C++ compiler or the Microsoft Visual Studio
-IDE and you would like to build cpp-netlib from within Visual Studio, you can
-look for the solution and project files as the artifacts of the call to
+IDE and you would like to build <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> from within Visual Studio, you
+can look for the solution and project files as the artifacts of the call to
 <tt class="docutils literal"><span class="pre">cmake</span></tt> &#8211; the file should be named <tt class="docutils literal"><span class="pre">CPP-NETLIB.sln</span></tt> (the solution) along
 with a number of project files for Visual Studio.</p>
 <div class="admonition note">
@@ -323,7 +346,7 @@ through <a class="reference external" href="http://groups.google.com/forum/#!for
     </div>
     <div class="footer">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Aug 12, 2014.
+      Last updated on Sep 01, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

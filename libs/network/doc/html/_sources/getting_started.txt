@@ -114,7 +114,7 @@ the ``~/cpp-netlib`` directory exists, and is the top-level directory of the
 Building with CMake
 ===================
 
-To build the tests that come with cpp-netlib, we first need to configure the
+To build the tests that come with :mod:`cpp-netlib`, we first need to configure the
 build system to use our compiler of choice. This is done by running the
 ``cmake`` command at the top-level directory of :mod:`cpp-netlib` with
 additional parameters::
@@ -130,6 +130,31 @@ additional parameters::
           :mod:`cpp-netlib` is built outside the source directory.
           For the purposes of documentation, we'll assume that all
           builds are done in ``~/cpp-netlib-build``.
+
+If you intend to use the SSL support when using the HTTP client libraries in
+:mod:`cpp-netlib`, you may need to build it with OpenSSL_ installed or at least
+available to CMake. One example for building the library with OpenSSL_ support
+is by doing the following::
+
+    $ cmake -DCMAKE_BUILD_TYPE=Debug \
+    >       -DCMAKE_C_COMPILER=clang \
+    >       -DCMAKE_CXX_COMPILER=clang++ \
+    >       -DOPENSSL_ROOT_DIR=/Users/dberris/homebrew/Cellar/openssl/1.0.1f
+    >       ../cpp-netlib
+
+.. _OpenSSL: http://www.openssl.org/
+
+You can also use a different root directory for the Boost_ project by using the
+``-DBOOST_ROOT`` configuration option to CMake. This is useful if you intend to
+build the library with a specific version of Boost that you've built in a
+separate directory::
+
+    $ cmake -DCMAKE_BUILD_TYPE=Debug \
+    >       -DCMAKE_C_COMPILER=clang \
+    >       -DCMAKE_CXX_COMPILER=clang++ \
+    >       -DOPENSSL_ROOT_DIR=/Users/dberris/homebrew/Cellar/openssl/1.0.1f \
+    >       -DBOOST_ROOT=/Users/dberris/Source/boost_1_55_0
+    >       ../cpp-netlib
 
 Building on Linux
 ~~~~~~~~~~~~~~~~~
@@ -178,8 +203,8 @@ Building On Windows
 ~~~~~~~~~~~~~~~~~~~
 
 If you're using the Microsoft Visual C++ compiler or the Microsoft Visual Studio
-IDE and you would like to build cpp-netlib from within Visual Studio, you can
-look for the solution and project files as the artifacts of the call to
+IDE and you would like to build :mod:`cpp-netlib` from within Visual Studio, you
+can look for the solution and project files as the artifacts of the call to
 ``cmake`` -- the file should be named ``CPP-NETLIB.sln`` (the solution) along
 with a number of project files for Visual Studio.
 

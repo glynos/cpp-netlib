@@ -25,6 +25,23 @@ asynchronous.
 As of 0.11 the `Synchronous Clients`_ are now *DEPRECATED* and will be removed
 in subsequent releases.
 
+Features
+--------
+
+The HTTP client implementation supports requesting secure HTTP (HTTPS) content
+only in the following situations:
+
+  * **Client libraries are built with ``BOOST_NETWORK_ENABLE_HTTPS``.** This
+    tells the implementation to use HTTPS-specific code to handle HTTPS-based
+    content when making connections associated with HTTPS URI's. This requires
+    a dependency on OpenSSL_.
+  * **The ``BOOST_NETWORK_ENABLE_HTTPS`` macro is set when compiling user
+    code.** It is best to define this either at compile-time of all code using
+    the library, or before including any of the client headers.
+
+.. _OpenSSL: http://www.openssl.org/
+
+
 Implementations
 ---------------
 
@@ -126,6 +143,9 @@ operations on responses. In code, usage should look like the following:
 
 A common mistake is to declare the client inside the try block which invokes
 undefined behavior when errors arise from the handling of response objects.
+Previous examples cited by the documentation showed the short version of the
+code which didn't bother moving the ``http::client`` object outside of the same
+``try`` block where the request/response objects are being used.
 
 Member Functions
 ----------------
