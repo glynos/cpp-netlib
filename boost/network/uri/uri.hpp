@@ -87,7 +87,7 @@ public:
 
     void swap(uri &other) {
         boost::swap(uri_, other.uri_);
-		other.parse();
+	other.parse();
         boost::swap(is_valid_, other.is_valid_);
     }
 
