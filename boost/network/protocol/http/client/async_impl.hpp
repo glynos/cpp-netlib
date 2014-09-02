@@ -57,8 +57,9 @@ struct async_client
         always_verify_peer_(always_verify_peer) {
     connection_base::resolver_strand_.reset(
         new boost::asio::io_service::strand(service_));
-    lifetime_thread_.reset(new boost::thread(
-        boost::bind(&boost::asio::io_service::run, &service_)));
+    if(!service)
+        lifetime_thread_.reset(new boost::thread(
+            boost::bind(&boost::asio::io_service::run, &service_)));
   }
 
   ~async_client() throw() {
