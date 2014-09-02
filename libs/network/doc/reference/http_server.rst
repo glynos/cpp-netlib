@@ -156,10 +156,8 @@ And that the following typedef's have been put in place:
     typedef boost::network::http::server<handler_type> http_server;
 
     struct handler_type {
-        void operator()(
-            http_server::request const & request,
-            http_server::response & response
-        ) {
+        void operator()(http_server::request const & request,
+                        http_server::response & response) {
             // do something here
         }
     };
@@ -227,13 +225,12 @@ To use the above supported named parameters, you'll have code that looks like th
 
     using namespace boost::network::http; // parameters are in this namespace
     handler handler_instance;
-    async_server<handler>::options options(handler_instance);
+    sync_server<handler>::options options(handler_instance);
     options.address("0.0.0.0")
            .port("80")
            .io_service(boost::make_shared<boost::asio::io_service>())
-           .thread_pool(boost::make_shared<boost::network::utils::thread_pool>(2))
            .reuse_address(true);
-    async_server<handler> instance(options);
+    sync_server<handler> instance(options);
     instance.run();
 
 Public Members
@@ -391,10 +388,8 @@ And that the following typedef's have been put in place:
     typedef boost::network::http::server<handler_type> http_server;
 
     struct handler_type {
-        void operator()(
-            http_server::request const & request,
-            http_server::connection_ptr connection
-        ) {
+        void operator()(http_server::request const & request,
+                        http_server::connection_ptr connection) {
             // do something here
         }
     };
@@ -537,31 +532,28 @@ used are defined in the link.
 
 .. code-block:: c++
 
-	// Initialize SSL context
-	boost::shared_ptr<boost::asio::ssl::context> ctx = boost::make_shared<boost::asio::ssl::context>(boost::asio::ssl::context::sslv23);
-	ctx->set_options(
+    // Initialize SSL context
+    boost::shared_ptr<boost::asio::ssl::context> ctx = boost::make_shared<boost::asio::ssl::context>(boost::asio::ssl::context::sslv23);
+    ctx->set_options(
                 boost::asio::ssl::context::default_workarounds
                 | boost::asio::ssl::context::no_sslv2
                 | boost::asio::ssl::context::single_dh_use);
-	
-	// Set keys
-	ctx->set_password_callback(password_callback);
-	ctx->use_certificate_chain_file("server.pem");
-	ctx->use_private_key_file("server.pem", boost::asio::ssl::context::pem);
-	ctx->use_tmp_dh_file("dh512.pem");
-	
+    
+    // Set keys
+    ctx->set_password_callback(password_callback);
+    ctx->use_certificate_chain_file("server.pem");
+    ctx->use_private_key_file("server.pem", boost::asio::ssl::context::pem);
+    ctx->use_tmp_dh_file("dh512.pem");
+    
     handler_type handler;
     http_server::options options(handler);
     options.thread_pool(boost::make_shared<boost::network::utils::thread_pool>(2));
     http_server server(options.address("127.0.0.1").port("8442").context(ctx));
 
-	
-.. code-block:: c++
-
-	std::string password_callback(std::size_t max_length, boost::asio::ssl::context_base::password_purpose purpose) {
-		return std::string("test");
-	}
-	
+    std::string password_callback(std::size_t max_length, boost::asio::ssl::context_base::password_purpose purpose) {
+        return std::string("test");
+    }
+    
 .. _Boost.Range: http://www.boost.org/libs/range
 .. _Boost.Function: http://www.boost.org/libs/function
 .. _Boost.Asio.SSL.Context: http://www.boost.org/doc/libs/1_55_0/doc/html/boost_asio/reference/ssl__context.html

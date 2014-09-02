@@ -79,6 +79,22 @@ asynchronous.</p>
 <p>As of 0.11 the <a class="reference internal" href="#synchronous-clients">Synchronous Clients</a> are now <em>DEPRECATED</em> and will be removed
 in subsequent releases.</p>
 </div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<p>The HTTP client implementation supports requesting secure HTTP (HTTPS) content
+only in the following situations:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Client libraries are built with ``BOOST_NETWORK_ENABLE_HTTPS``.</strong> This
+tells the implementation to use HTTPS-specific code to handle HTTPS-based
+content when making connections associated with HTTPS URI&#8217;s. This requires
+a dependency on <a class="reference external" href="http://www.openssl.org/">OpenSSL</a>.</li>
+<li><strong>The ``BOOST_NETWORK_ENABLE_HTTPS`` macro is set when compiling user
+code.</strong> It is best to define this either at compile-time of all code using
+the library, or before including any of the client headers.</li>
+</ul>
+</div></blockquote>
+</div>
 <div class="section" id="implementations">
 <h2>Implementations<a class="headerlink" href="#implementations" title="Permalink to this headline">¶</a></h2>
 <p>There is a single user-facing template class named <tt class="docutils literal"><span class="pre">basic_client</span></tt> which takes
@@ -174,7 +190,7 @@ behave as a fully synchronous client.</p>
 </div></blockquote>
 <p>The synchronous client implements all the operations of the client underneath
 the interface all block to wait for I/O to finish. All the member methods are
-synchronous and will block until the response object is ready or throws if erros
+synchronous and will block until the response object is ready or throws if errors
 are encountered in the performance of the HTTP requests.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
@@ -228,7 +244,10 @@ operations on responses. In code, usage should look like the following:</p>
 </pre></div>
 </div>
 <p>A common mistake is to declare the client inside the try block which invokes
-undefined behavior when errors arise from the handling of response objects.</p>
+undefined behavior when errors arise from the handling of response objects.
+Previous examples cited by the documentation showed the short version of the
+code which didn&#8217;t bother moving the <tt class="docutils literal"><span class="pre">http::client</span></tt> object outside of the same
+<tt class="docutils literal"><span class="pre">try</span></tt> block where the request/response objects are being used.</p>
 </div>
 </div>
 <div class="section" id="member-functions">
@@ -237,7 +256,7 @@ undefined behavior when errors arise from the handling of response objects.</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">basic_client</span><span class="o">&lt;</span>
     <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="o">::</span><span class="n">tags</span><span class="o">::</span><span class="n">http_default_8bit_udp_resolve</span>
     <span class="p">,</span> <span class="mi">1</span>
-    <span class="p">,</span><span class="mi">1</span>
+    <span class="p">,</span> <span class="mi">1</span>
     <span class="o">&gt;</span>
     <span class="n">client</span><span class="p">;</span>
 </pre></div>
@@ -417,6 +436,17 @@ following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt
 body chunks be handled by the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of
 <tt class="docutils literal"><span class="pre">callback</span></tt> should be the following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
 <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">body,</span> <span class="pre">content_type,</span> <span class="pre">callback,</span> <span class="pre">streaming_callback)</span></tt></dt>
+<dd>The body and content_type parameters are of type
+<tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt> is the HTTP Client&#8217;s
+<tt class="docutils literal"><span class="pre">Tag</span></tt>. This uses the request object&#8217;s other headers. Have the response
+body chunks be handled by the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of
+<tt class="docutils literal"><span class="pre">callback</span></tt> should be the following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
+<span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>. The <tt class="docutils literal"><span class="pre">streaming_callback</span></tt>
+argument should have a which has a signature of the form:
+<tt class="docutils literal"><span class="pre">bool(string_type&amp;)</span></tt>. The provided <tt class="docutils literal"><span class="pre">string_type&amp;</span></tt> will be streamed as
+soon as the function returns. A return value of <tt class="docutils literal"><span class="pre">false</span></tt> signals the
+client that the most recent invocation is the last chunk to be sent.</dd>
 <dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">streaming_callback)</span></tt></dt>
 <dd>Perform and HTTP POST request, and have the request&#8217;s body chunks be
 generated by the <tt class="docutils literal"><span class="pre">streaming_callback</span></tt> which has a signature of the form:
@@ -456,13 +486,25 @@ following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt
 <dd>The body and content_type parameters are of type
 <tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt> is the HTTP Client&#8217;s
 <tt class="docutils literal"><span class="pre">Tag</span></tt>. This uses the request object&#8217;s other headers.</dd>
-<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body,</span> <span class="pre">content_type,</span> <span class="pre">body_handler=callback)</span></tt></dt>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body,</span> <span class="pre">content_type,</span> <span class="pre">callback)</span></tt></dt>
 <dd>The body and content_type parameters are of type
 <tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt> is the HTTP Client&#8217;s
 <tt class="docutils literal"><span class="pre">Tag</span></tt>. This uses the request object&#8217;s other headers. Have the response
 body chunks be handled by the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of
 <tt class="docutils literal"><span class="pre">callback</span></tt> should be the following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
 <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>.</dd>
+<dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body,</span> <span class="pre">content_type,</span> <span class="pre">callback,</span> <span class="pre">streaming_callback)</span></tt></dt>
+<dd>The body and content_type parameters are of type
+<tt class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></tt> where <tt class="docutils literal"><span class="pre">Tag</span></tt> is the HTTP Client&#8217;s
+<tt class="docutils literal"><span class="pre">Tag</span></tt>. This uses the request object&#8217;s other headers. Have the response
+body chunks be handled by the <tt class="docutils literal"><span class="pre">callback</span></tt> parameter. The signature of
+<tt class="docutils literal"><span class="pre">callback</span></tt> should be the following: <tt class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
+<span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></tt>. This form also has the request&#8217;s body
+chunks be generated by the <tt class="docutils literal"><span class="pre">streaming_callback</span></tt> which has a signature of
+the form: <tt class="docutils literal"><span class="pre">bool(string_type&amp;)</span></tt>. The provided <tt class="docutils literal"><span class="pre">string_type&amp;</span></tt> will be
+streamed as soon as the function returns. A return value of <tt class="docutils literal"><span class="pre">false</span></tt>
+signals the client that the most recent invocation is the last chunk to be
+sent</dd>
 <dt><tt class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">streaming_callback)</span></tt></dt>
 <dd>Perform and HTTP PUT request, and have the request&#8217;s body chunks be
 generated by the <tt class="docutils literal"><span class="pre">streaming_callback</span></tt> which has a signature of the form:
@@ -555,6 +597,7 @@ to create a function object.</p>
   <ul>
 <li><a class="reference internal" href="#">HTTP Client API</a><ul>
 <li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#features">Features</a></li>
 <li><a class="reference internal" href="#implementations">Implementations</a><ul>
 <li><a class="reference internal" href="#synchronous-clients">Synchronous Clients</a></li>
 <li><a class="reference internal" href="#asynchronous-clients">Asynchronous Clients</a></li>
@@ -609,7 +652,7 @@ to create a function object.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Aug 12, 2014.
+      Last updated on Sep 01, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

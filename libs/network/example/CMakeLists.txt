@@ -16,6 +16,7 @@ add_executable(twitter_search twitter/search.cpp)
 add_executable(hello_world_server http/hello_world_server.cpp)
 add_executable(hello_world_client http/hello_world_client.cpp)
 add_executable(hello_world_async_server_with_work_queue http/hello_world_async_server_with_work_queue.cpp)
+add_executable(trivial_google trivial_google.cpp)
 if (UNIX)
   add_executable(fileserver http/fileserver.cpp)
 endif (UNIX)
@@ -24,6 +25,7 @@ add_dependencies(simple_wget cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(atom_reader cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(rss_reader cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(twitter_search cppnetlib-uri cppnetlib-client-connections)
+add_dependencies(trivial_google cppnetlib-uri cppnetlib-client-connections)
 set(BOOST_CLIENT_LIBS
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${Boost_THREAD_LIBRARY}
@@ -37,6 +39,7 @@ set(BOOST_SERVER_LIBS
     ${Boost_THREAD_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_DATE_TIME_LIBRARY}
+    ${Boost_REGEX_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${Boost_FILESYSTEM_LIBRARY}
     ${Boost_CHRONO_LIBRARY})
@@ -71,6 +74,12 @@ target_link_libraries(twitter_search
     cppnetlib-uri
     cppnetlib-client-connections)
 
+target_link_libraries(trivial_google
+  ${BOOST_CLIENT_LIBS}
+  ${CMAKE_THREAD_LIBS_INIT}
+  cppnetlib-uri
+  cppnetlib-client-connections)
+
 target_link_libraries(hello_world_server
     ${BOOST_SERVER_LIBS}
     ${CMAKE_THREAD_LIBS_INIT})
@@ -97,6 +106,7 @@ if (OPENSSL_FOUND)
   target_link_libraries(hello_world_server ${OPENSSL_LIBRARIES})
   target_link_libraries(hello_world_client ${OPENSSL_LIBRARIES})
   target_link_libraries(hello_world_async_server_with_work_queue ${OPENSSL_LIBRARIES})
+  target_link_libraries(trivial_google ${OPENSSL_LIBRARIES})
 endif (OPENSSL_FOUND)
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU AND ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -108,6 +118,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU AND ${CMAKE_SYSTEM_NAME} MATCHES "Windo
   target_link_libraries(hello_world_server ws2_32 wsock32)
   target_link_libraries(hello_world_client ws2_32)
   target_link_libraries(hello_world_async_server_with_work_queue ws2_32 wsock32)
+  target_link_libraries(trivial_google ws2_32)
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -119,6 +130,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   target_link_libraries(hello_world_server rt)
   target_link_libraries(hello_world_client rt)
   target_link_libraries(hello_world_async_server_with_work_queue rt)
+  target_link_libraries(trivial_google rt)
 endif()
 
 if (UNIX)
@@ -140,9 +152,11 @@ set_target_properties(simple_wget PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETL
 set_target_properties(atom_reader PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(rss_reader PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(twitter_search PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+set_target_properties(trivial_google PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(hello_world_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(hello_world_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 set_target_properties(hello_world_async_server_with_work_queue PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
+
 if (UNIX)
   set_target_properties(fileserver PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 endif (UNIX)

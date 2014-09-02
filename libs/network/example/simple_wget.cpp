@@ -43,8 +43,8 @@ main(int argc, char *argv[]) {
         return 1;
     }
 
+    http::client client;
     try {
-        http::client client;
         http::client::request request(argv[1]);
         http::client::response response = client.get(request);
 

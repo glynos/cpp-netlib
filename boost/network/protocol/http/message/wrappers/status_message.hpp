@@ -1,11 +1,14 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_STATUS_MESSAGE_HPP_20100603
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_STATUS_MESSAGE_HPP_20100603
 
-// Copyright 2010 (c) Dean Michael Berris
+// Copyright 2010 (c) Dean Michael Berris <dberris@google.com>
 // Copyright 2010 (c) Sinefunc, Inc.
+// Copyright 2014 (c) Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#include <boost/network/traits/string.hpp>
 
 namespace boost { namespace network { namespace http {
 
@@ -27,11 +30,18 @@ namespace boost { namespace network { namespace http {
             status_message_wrapper(status_message_wrapper const & other)
                 : response_(other.response_) {}
 
-            operator string_type () {
+            operator string_type () const {
                 return response_.status_message();
             }
 
         };
+
+	template <class Tag>
+	inline std::ostream&
+	operator<<(std::ostream& os,
+		   const status_message_wrapper<Tag>& wrapper) {
+	  return os << static_cast<typename string<Tag>::type>(wrapper);
+	}
 
     } // namespace impl
 
