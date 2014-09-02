@@ -263,14 +263,49 @@ uri::string_type fragment(const uri &uri_) {
 
 inline
 uri::string_type hierarchical_part(const uri &uri_) {
-    return uri::string_type(boost::begin(uri_.user_info_range()),
-                            boost::end(uri_.path_range()));
+    uri::string_type::const_iterator first, last;
+    uri::const_range_type user_info = uri_.user_info_range();
+    uri::const_range_type host = uri_.host_range();
+	uri::const_range_type port = uri_.port_range();
+	uri::const_range_type path = uri_.path_range();
+    if (user_info) {
+        first = boost::begin(user_info);
+    }
+    else {
+        first = boost::begin(host);
+    }
+    if (path) {
+        last = boost::end(path);
+    }
+    else if (port) {
+        last = boost::end(port);
+    }
+    else {
+        last = boost::end(host);
+    }
+    return uri::string_type(first, last);
 }
 
 inline
 uri::string_type authority(const uri &uri_) {
-    return uri::string_type(boost::begin(uri_.user_info_range()),
-                            boost::end(uri_.port_range()));
+    uri::string_type::const_iterator first, last;
+    uri::const_range_type user_info = uri_.user_info_range();
+    uri::const_range_type host = uri_.host_range();
+    uri::const_range_type port = uri_.port_range();
+    if (user_info) {
+        first = boost::begin(user_info);
+    }
+    else {
+        first = boost::begin(host);
+    }
+
+    if (port) {
+        last = boost::end(port);
+    }
+    else {
+        last = boost::end(host);
+    }
+    return uri::string_type(first, last);
 }
 
 inline
