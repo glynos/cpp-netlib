@@ -133,8 +133,13 @@ additional parameters::
 
 If you intend to use the SSL support when using the HTTP client libraries in
 :mod:`cpp-netlib`, you may need to build it with OpenSSL_ installed or at least
-available to CMake. One example for building the library with OpenSSL_ support
-is by doing the following::
+available to CMake. If you have the development headers for OpenSSL_ installed
+on your system when you build :mod:`cpp-netlib`, CMake will be able to detect it
+and set the ``BOOST_NETWORK_ENABLE_HTTPS`` macro when building the library to
+support HTTPS URIs.
+
+One example for building the library with OpenSSL_ support with a custom
+(non-installed) version of OpenSSL_ is by doing the following::
 
     $ cmake -DCMAKE_BUILD_TYPE=Debug \
     >       -DCMAKE_C_COMPILER=clang \

@@ -94,6 +94,14 @@ code.</strong> It is best to define this either at compile-time of all code usin
 the library, or before including any of the client headers.</li>
 </ul>
 </div></blockquote>
+<p>To use the client implementations that support HTTPS URIs, you may explicitly
+do the following:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#define BOOST_NETWORK_ENABLE_HTTPS</span>
+<span class="cp">#include &lt;boost/network/include/http/client.hpp&gt;</span>
+</pre></div>
+</div>
+<p>This forces HTTPS support to be enabled and forces a dependency on <a class="reference external" href="http://www.openssl.org/">OpenSSL</a>.
+This dependency is imposed by <a class="reference external" href="http://www.boost.org/libs/asio">Boost.Asio</a></p>
 </div>
 <div class="section" id="implementations">
 <h2>Implementations<a class="headerlink" href="#implementations" title="Permalink to this headline">¶</a></h2>
@@ -652,7 +660,7 @@ to create a function object.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Sep 01, 2014.
+      Last updated on Sep 02, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
