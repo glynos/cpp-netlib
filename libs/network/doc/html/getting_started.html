@@ -159,8 +159,12 @@ builds are done in <tt class="docutils literal"><span class="pre">~/cpp-netlib-b
 </div>
 <p>If you intend to use the SSL support when using the HTTP client libraries in
 <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>, you may need to build it with <a class="reference external" href="http://www.openssl.org/">OpenSSL</a> installed or at least
-available to CMake. One example for building the library with <a class="reference external" href="http://www.openssl.org/">OpenSSL</a> support
-is by doing the following:</p>
+available to CMake. If you have the development headers for <a class="reference external" href="http://www.openssl.org/">OpenSSL</a> installed
+on your system when you build <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt>, CMake will be able to detect it
+and set the <tt class="docutils literal"><span class="pre">BOOST_NETWORK_ENABLE_HTTPS</span></tt> macro when building the library to
+support HTTPS URIs.</p>
+<p>One example for building the library with <a class="reference external" href="http://www.openssl.org/">OpenSSL</a> support with a custom
+(non-installed) version of <a class="reference external" href="http://www.openssl.org/">OpenSSL</a> is by doing the following:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ cmake -DCMAKE_BUILD_TYPE=Debug \
 &gt;       -DCMAKE_C_COMPILER=clang \
 &gt;       -DCMAKE_CXX_COMPILER=clang++ \
@@ -346,7 +350,7 @@ through <a class="reference external" href="http://groups.google.com/forum/#!for
     </div>
     <div class="footer">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Sep 01, 2014.
+      Last updated on Sep 02, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
