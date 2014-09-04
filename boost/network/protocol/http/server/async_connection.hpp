@@ -36,7 +36,7 @@
 
 #ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE
 /** Here we define a page's worth of header connection buffer data.
- *  This can be tuned to reduce the memory cost of connections, but this 
+ *  This can be tuned to reduce the memory cost of connections, but this
  *  default size is set to be friendly to typical service applications.
  *  This is the maximum size though and Boost.Asio's internal representation
  *  of a streambuf would make appropriate decisions on how big a buffer
@@ -91,7 +91,7 @@ namespace boost { namespace network { namespace http {
 
     private:
         static char const * status_message(status_t status) {
-            static char const 
+            static char const
                 ok_[]                       = "OK"
                 , created_[]                = "Created"
                 , accepted_[]               = "Accepted"
@@ -172,9 +172,9 @@ namespace boost { namespace network { namespace http {
 
         /** Function: template <class Range> set_headers(Range headers)
          *  Precondition: headers have not been sent yet
-         *  Postcondition: headers have been linearized to a buffer, 
+         *  Postcondition: headers have been linearized to a buffer,
          *                 and assumed to have been sent already when the function exits
-         *  Throws: std::logic_error in case the headers have already been sent. 
+         *  Throws: std::logic_error in case the headers have already been sent.
          *
          *  A call to set_headers takes a Range where each element models the
          *  Header concept. This Range will be linearized onto a buffer, which is
@@ -183,7 +183,7 @@ namespace boost { namespace network { namespace http {
         template <class Range>
         void set_headers(Range headers) {
             lock_guard lock(headers_mutex);
-            if (headers_in_progress || headers_already_sent) 
+            if (headers_in_progress || headers_already_sent)
                 boost::throw_exception(std::logic_error("Headers have already been sent."));
 
             if (error_encountered)
@@ -199,7 +199,7 @@ namespace boost { namespace network { namespace http {
                 if (!boost::empty(headers)) {
                     typedef typename Range::const_iterator iterator;
                     typedef typename string<Tag>::type string_type;
-                    boost::transform(headers, 
+                    boost::transform(headers,
                         std::ostream_iterator<string_type>(stream),
                         linearize_header<Tag>());
                 } else {
@@ -228,11 +228,11 @@ namespace boost { namespace network { namespace http {
             lock_guard lock(headers_mutex);
             if (error_encountered) boost::throw_exception(boost::system::system_error(*error_encountered));
 
-            boost::function<void(boost::system::error_code)> f = 
+            boost::function<void(boost::system::error_code)> f =
                 boost::bind(
                     &async_connection<Tag,Handler>::default_error
                     , async_connection<Tag,Handler>::shared_from_this()
-                    , _1);
+                    , boost::arg<1>());
 
             write_impl(
                 boost::make_iterator_range(range)
@@ -390,7 +390,7 @@ namespace boost { namespace network { namespace http {
                             new_start, data_end);
                         fusion::tie(parsed_ok, result_range) = parser.parse_until(
                             request_parser_type::method_done, input_range);
-                        if (!parsed_ok) { 
+                        if (!parsed_ok) {
                             client_error();
                             break;
                         } else if (parsed_ok == true) {
@@ -497,7 +497,7 @@ namespace boost { namespace network { namespace http {
         }
 
         void client_error() {
-            static char const * bad_request = 
+            static char const * bad_request =
                 "HTTP/1.0 400 Bad Request\r\nConnection: close\r\nContent-Type: text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
 
             asio::async_write(
@@ -583,9 +583,9 @@ namespace boost { namespace network { namespace http {
 
             static std::size_t const connection_buffer_size =
                 BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
-            shared_array_list temporaries = 
+            shared_array_list temporaries =
                 boost::make_shared<array_list>();
-            shared_buffers buffers = 
+            shared_buffers buffers =
                 boost::make_shared<std::vector<asio::const_buffer> >(0);
 
             std::size_t range_size = boost::distance(range);
@@ -593,7 +593,7 @@ namespace boost { namespace network { namespace http {
                 (range_size / connection_buffer_size)
                 + ((range_size % connection_buffer_size)?1:0)
                 );
-            std::size_t slice_size = 
+            std::size_t slice_size =
                 std::min(range_size,connection_buffer_size);
             typename boost::range_iterator<Range>::type
                 start = boost::begin(range)
@@ -667,11 +667,11 @@ namespace boost { namespace network { namespace http {
             }
         }
     };
-    
+
 } /* http */
-    
+
 } /* network */
-    
+
 } /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_SERVER_CONNECTION_HPP_20101027 */

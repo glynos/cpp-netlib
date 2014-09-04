@@ -95,13 +95,14 @@ struct http_async_connection
     resolve_(resolver_, host(request), port_,
              request_strand_.wrap(boost::bind(
                  &this_type::handle_resolved, this_type::shared_from_this(),
-                 port_, get_body, callback, generator, _1, _2)));
+                 port_, get_body, callback, generator, boost::arg<1>(),
+                 boost::arg<2>())));
     if (timeout_ > 0) {
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
       timer_.async_wait(request_strand_.wrap(
                             boost::bind(&this_type::handle_timeout,
                                         this_type::shared_from_this(),
-                                        _1)));
+                                        boost::arg<1>())));
     }
     return response_;
   }
