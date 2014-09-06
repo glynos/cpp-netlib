@@ -9,21 +9,21 @@
 #include <string>
 
 namespace boost {
-  namespace network {
-    namespace uri {
-      class hierarchical_schemes {
+namespace network {
+namespace uri {
+class hierarchical_schemes {
 
-       public:
-        static bool exists(const std::string &scheme);
-      };
+ public:
+  static bool exists(const std::string &scheme);
+};
 
-      class opaque_schemes {
+class opaque_schemes {
 
-       public:
-        static bool exists(const std::string &scheme);
-      };
-    }  // namespace uri
-  }    // namespace network
+ public:
+  static bool exists(const std::string &scheme);
+};
+}  // namespace uri
+}  // namespace network
 }  // namespace boost
 
 #endif  // __BOOST_NETWORK_URI_SCHEMES_INC__

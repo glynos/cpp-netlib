@@ -10,25 +10,25 @@
 #include <boost/network/support/is_default_wstring.hpp>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag> struct unsupported_tag;
+template <class Tag> struct unsupported_tag;
 
-    template <class Tag, class Enable = void> struct char_ {
-      typedef unsupported_tag<Tag> type;
-    };
+template <class Tag, class Enable = void> struct char_ {
+  typedef unsupported_tag<Tag> type;
+};
 
-    template <class Tag>
-    struct char_<Tag, typename enable_if<is_default_string<Tag> >::type> {
-      typedef char type;
-    };
+template <class Tag>
+struct char_<Tag, typename enable_if<is_default_string<Tag> >::type> {
+  typedef char type;
+};
 
-    template <class Tag>
-    struct char_<Tag, typename enable_if<is_default_wstring<Tag> >::type> {
-      typedef wchar_t type;
-    };
+template <class Tag>
+struct char_<Tag, typename enable_if<is_default_wstring<Tag> >::type> {
+  typedef wchar_t type;
+};
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

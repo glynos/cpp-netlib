@@ -12,17 +12,17 @@
 #include <map>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct query_container {
-        typedef std::multimap<typename string<Tag>::type,
-                              typename string<Tag>::type> type;
-      };
+template <class Tag> struct query_container {
+  typedef std::multimap<typename string<Tag>::type, typename string<Tag>::type>
+      type;
+};
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

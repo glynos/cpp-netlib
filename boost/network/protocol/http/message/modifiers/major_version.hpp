@@ -11,20 +11,20 @@
 #include <boost/cstdint.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_request;
+template <class Tag> struct basic_request;
 
-      template <class Tag>
-      inline typename enable_if<is_server<Tag>, void>::type major_version(
-          basic_request<Tag>& request, boost::uint8_t major_version_) {
-        request.http_version_major = major_version_;
-      }
+template <class Tag>
+inline typename enable_if<is_server<Tag>, void>::type major_version(
+    basic_request<Tag>& request, boost::uint8_t major_version_) {
+  request.http_version_major = major_version_;
+}
 
-    } /* http */
+} /* http */
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

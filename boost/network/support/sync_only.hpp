@@ -13,17 +13,17 @@
 #include <boost/mpl/placeholders.hpp>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag>
-    struct sync_only
-        : mpl::inherit_linearly<
-              typename mpl::replace_if<
-                  typename tags::components<Tag>::type,
-                  is_same<mpl::placeholders::_, tags::async>, tags::sync>::type,
-              mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2> > {};
+template <class Tag>
+struct sync_only
+    : mpl::inherit_linearly<
+          typename mpl::replace_if<typename tags::components<Tag>::type,
+                                   is_same<mpl::placeholders::_, tags::async>,
+                                   tags::sync>::type,
+          mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2> > {};
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

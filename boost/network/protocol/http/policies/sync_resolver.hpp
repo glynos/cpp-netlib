@@ -15,59 +15,57 @@
 #include <boost/unordered_map.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
-      namespace policies {
+namespace network {
+namespace http {
+namespace policies {
 
-        template <class Tag> struct sync_resolver {
+template <class Tag> struct sync_resolver {
 
-          typedef typename resolver<Tag>::type resolver_type;
-          typedef typename resolver_type::iterator resolver_iterator;
-          typedef typename resolver_type::query resolver_query;
-          typedef std::pair<resolver_iterator, resolver_iterator>
-              resolver_iterator_pair;
+  typedef typename resolver<Tag>::type resolver_type;
+  typedef typename resolver_type::iterator resolver_iterator;
+  typedef typename resolver_type::query resolver_query;
+  typedef std::pair<resolver_iterator, resolver_iterator>
+      resolver_iterator_pair;
 
-         protected:
-          typedef typename string<Tag>::type string_type;
-          typedef boost::unordered_map<string_type, resolver_iterator_pair>
-              resolved_cache;
-          resolved_cache endpoint_cache_;
-          bool cache_resolved_;
+ protected:
+  typedef typename string<Tag>::type string_type;
+  typedef boost::unordered_map<string_type, resolver_iterator_pair>
+      resolved_cache;
+  resolved_cache endpoint_cache_;
+  bool cache_resolved_;
 
-          sync_resolver(bool cache_resolved)
-              : cache_resolved_(cache_resolved) {}
+  sync_resolver(bool cache_resolved) : cache_resolved_(cache_resolved) {}
 
-          resolver_iterator_pair resolve(resolver_type& resolver_,
-                                         string_type const& hostname,
-                                         string_type const& port) {
-            if (cache_resolved_) {
-              typename resolved_cache::iterator cached_iterator =
-                  endpoint_cache_.find(hostname);
-              if (cached_iterator == endpoint_cache_.end()) {
-                bool inserted = false;
-                boost::fusion::tie(cached_iterator, inserted) =
-                    endpoint_cache_.insert(std::make_pair(
-                        boost::to_lower_copy(hostname),
-                        std::make_pair(resolver_.resolve(resolver_query(
-                                           hostname, port,
-                                           resolver_query::numeric_service)),
-                                       resolver_iterator())));
-              };
-              return cached_iterator->second;
-            };
+  resolver_iterator_pair resolve(resolver_type& resolver_,
+                                 string_type const& hostname,
+                                 string_type const& port) {
+    if (cache_resolved_) {
+      typename resolved_cache::iterator cached_iterator =
+          endpoint_cache_.find(hostname);
+      if (cached_iterator == endpoint_cache_.end()) {
+        bool inserted = false;
+        boost::fusion::tie(cached_iterator, inserted) =
+            endpoint_cache_.insert(std::make_pair(
+                boost::to_lower_copy(hostname),
+                std::make_pair(
+                    resolver_.resolve(resolver_query(
+                        hostname, port, resolver_query::numeric_service)),
+                    resolver_iterator())));
+      };
+      return cached_iterator->second;
+    };
 
-            return std::make_pair(
-                resolver_.resolve(resolver_query(
-                    hostname, port, resolver_query::numeric_service)),
-                resolver_iterator());
-          };
-        };
+    return std::make_pair(resolver_.resolve(resolver_query(
+                              hostname, port, resolver_query::numeric_service)),
+                          resolver_iterator());
+  };
+};
 
-      }  // namespace policies
+}  // namespace policies
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

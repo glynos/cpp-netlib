@@ -11,15 +11,15 @@
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag, class Enable = void> struct is_async : mpl::false_ {};
+template <class Tag, class Enable = void> struct is_async : mpl::false_ {};
 
-    template <class Tag>
-    struct is_async<
-        Tag, typename enable_if<typename Tag::is_async>::type> : mpl::true_ {};
+template <class Tag>
+struct is_async<
+    Tag, typename enable_if<typename Tag::is_async>::type> : mpl::true_ {};
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

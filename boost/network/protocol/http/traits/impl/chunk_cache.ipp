@@ -14,17 +14,17 @@
 #include <vector>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct chunk_cache {
-        // TODO define the allocator using an allocator_traits?
-        typedef std::list<std::vector<typename char_<Tag>::type> > type;
-      };
+template <class Tag> struct chunk_cache {
+  // TODO define the allocator using an allocator_traits?
+  typedef std::list<std::vector<typename char_<Tag>::type> > type;
+};
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

@@ -11,37 +11,37 @@
 #include <boost/network/uri/schemes.hpp>
 
 namespace boost {
-  namespace network {
-    namespace uri {
-      struct scheme_directive {
+namespace network {
+namespace uri {
+struct scheme_directive {
 
-        explicit scheme_directive(const std::string &scheme) : scheme(scheme) {}
+  explicit scheme_directive(const std::string &scheme) : scheme(scheme) {}
 
-        template <class Uri> void operator()(Uri &uri) const {
-          uri.append(scheme);
-          if (opaque_schemes::exists(scheme)) {
-            uri.append(":");
-          } else {
-            uri.append("://");
-          }
-        }
+  template <class Uri> void operator()(Uri &uri) const {
+    uri.append(scheme);
+    if (opaque_schemes::exists(scheme)) {
+      uri.append(":");
+    } else {
+      uri.append("://");
+    }
+  }
 
-        std::string scheme;
-      };
+  std::string scheme;
+};
 
-      inline scheme_directive scheme(const std::string &scheme) {
-        return scheme_directive(scheme);
-      }
+inline scheme_directive scheme(const std::string &scheme) {
+  return scheme_directive(scheme);
+}
 
-      namespace schemes {
-        inline uri &http(uri &uri_) { return uri_ << scheme("http"); }
+namespace schemes {
+inline uri &http(uri &uri_) { return uri_ << scheme("http"); }
 
-        inline uri &https(uri &uri_) { return uri_ << scheme("https"); }
+inline uri &https(uri &uri_) { return uri_ << scheme("https"); }
 
-        inline uri &file(uri &uri_) { return uri_ << scheme("file"); }
-      }  // namespace schemes
-    }    // namespace uri
-  }      // namespace network
+inline uri &file(uri &uri_) { return uri_ << scheme("file"); }
+}  // namespace schemes
+}  // namespace uri
+}  // namespace network
 }  // namespace boost
 
 #endif  // __BOOST_NETWORK_URI_DIRECTIVES_SCHEME_INC__

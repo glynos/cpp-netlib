@@ -11,26 +11,26 @@
 #include <boost/range/end.hpp>
 
 namespace boost {
-  namespace network {
-    namespace uri {
-      struct fragment_directive {
+namespace network {
+namespace uri {
+struct fragment_directive {
 
-        explicit fragment_directive(const std::string &fragment)
-            : fragment(fragment) {}
+  explicit fragment_directive(const std::string &fragment)
+      : fragment(fragment) {}
 
-        template <class Uri> void operator()(Uri &uri) const {
-          uri.append("#");
-          uri.append(fragment);
-        }
+  template <class Uri> void operator()(Uri &uri) const {
+    uri.append("#");
+    uri.append(fragment);
+  }
 
-        std::string fragment;
-      };
+  std::string fragment;
+};
 
-      inline fragment_directive fragment(const std::string &fragment) {
-        return fragment_directive(fragment);
-      }
-    }  // namespace uri
-  }    // namespace network
+inline fragment_directive fragment(const std::string &fragment) {
+  return fragment_directive(fragment);
+}
+}  // namespace uri
+}  // namespace network
 }  // namespace boost
 
 #endif  // __BOOST_NETWORK_URI_DIRECTIVES_FRAGMENT_INC__

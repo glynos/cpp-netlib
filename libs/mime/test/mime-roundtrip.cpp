@@ -27,56 +27,56 @@
 
 namespace {
 
-  std::string readfile(const char *fileName) {
-    std::ifstream in(fileName);
-    if (!in) {
-      std::cerr << std::string("Can't open file: ") + fileName << std::endl;
-      throw std::runtime_error(std::string("Can't open file: ") + fileName);
-    }
-
-    std::istreambuf_iterator<char> src(in);
-    std::istreambuf_iterator<char> eof;
-    std::string retVal;
-
-    in >> std::noskipws;
-    std::copy(src, eof, std::back_inserter(retVal));
-    return retVal;
+std::string readfile(const char *fileName) {
+  std::ifstream in(fileName);
+  if (!in) {
+    std::cerr << std::string("Can't open file: ") + fileName << std::endl;
+    throw std::runtime_error(std::string("Can't open file: ") + fileName);
   }
 
-  struct my_traits {
-    typedef std::string string_type;
-    //	typedef std::pair < std::string, string_type > header_type;
-    typedef std::string body_type;
-  };
+  std::istreambuf_iterator<char> src(in);
+  std::istreambuf_iterator<char> eof;
+  std::string retVal;
 
-  // using namespace boost::mime;
-  typedef boost::mime::basic_mime<my_traits> mime_part;
-  typedef boost::shared_ptr<mime_part> smp;
+  in >> std::noskipws;
+  std::copy(src, eof, std::back_inserter(retVal));
+  return retVal;
+}
 
-  smp to_mime(const char *fileName) {
-    std::ifstream in(fileName);
-    if (!in) {
-      std::cerr << std::string("Can't open file: ") + fileName << std::endl;
-      throw std::runtime_error(std::string("Can't open file: ") + fileName);
-    }
+struct my_traits {
+  typedef std::string string_type;
+  //	typedef std::pair < std::string, string_type > header_type;
+  typedef std::string body_type;
+};
 
-    in >> std::noskipws;
-    return mime_part::parse_mime(in);
+// using namespace boost::mime;
+typedef boost::mime::basic_mime<my_traits> mime_part;
+typedef boost::shared_ptr<mime_part> smp;
+
+smp to_mime(const char *fileName) {
+  std::ifstream in(fileName);
+  if (!in) {
+    std::cerr << std::string("Can't open file: ") + fileName << std::endl;
+    throw std::runtime_error(std::string("Can't open file: ") + fileName);
   }
 
-  std::string from_mime(smp mp) {
-    std::ostringstream oss;
-    oss << *mp;
-    return oss.str();
-  }
+  in >> std::noskipws;
+  return mime_part::parse_mime(in);
+}
 
-  void test_roundtrip(const char *fileName) {
-    smp mp;
-    BOOST_REQUIRE_NO_THROW(mp = to_mime(fileName));
-    BOOST_CHECK_EQUAL(readfile(fileName), from_mime(mp));
-  }
+std::string from_mime(smp mp) {
+  std::ostringstream oss;
+  oss << *mp;
+  return oss.str();
+}
 
-  void test_expected_parse_fail(const char *) {}
+void test_roundtrip(const char *fileName) {
+  smp mp;
+  BOOST_REQUIRE_NO_THROW(mp = to_mime(fileName));
+  BOOST_CHECK_EQUAL(readfile(fileName), from_mime(mp));
+}
+
+void test_expected_parse_fail(const char *) {}
 }
 
 using namespace boost::unit_test;

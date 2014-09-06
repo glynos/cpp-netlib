@@ -10,16 +10,16 @@
 #include <boost/network/tags.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <> struct query_string<tags::http_default_8bit_tcp_resolve> {
-        static boost::uint32_t const MAX = 1024u * 1024u;
-      };
+template <> struct query_string<tags::http_default_8bit_tcp_resolve> {
+  static boost::uint32_t const MAX = 1024u * 1024u;
+};
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

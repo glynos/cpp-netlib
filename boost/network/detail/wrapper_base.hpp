@@ -8,32 +8,31 @@
 #define __NETWORK_DETAIL_WRAPPER_BASE_HPP__
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    namespace detail {
+namespace detail {
 
-      template <class Tag, class Message> struct wrapper_base {
-        explicit wrapper_base(Message& message_) : _message(message_) {};
+template <class Tag, class Message> struct wrapper_base {
+  explicit wrapper_base(Message& message_) : _message(message_) {};
 
-       protected:
-        ~wrapper_base() {};  // for extending only
+ protected:
+  ~wrapper_base() {};  // for extending only
 
-        Message& _message;
-      };
+  Message& _message;
+};
 
-      template <class Tag, class Message> struct wrapper_base_const {
-        explicit wrapper_base_const(Message const& message_)
-            : _message(message_) {}
+template <class Tag, class Message> struct wrapper_base_const {
+  explicit wrapper_base_const(Message const& message_) : _message(message_) {}
 
-       protected:
-        ~wrapper_base_const() {};  // for extending only
+ protected:
+  ~wrapper_base_const() {};  // for extending only
 
-        Message const& _message;
-      };
+  Message const& _message;
+};
 
-    }  // namespace detail
+}  // namespace detail
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

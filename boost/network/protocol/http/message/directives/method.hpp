@@ -7,15 +7,15 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      BOOST_NETWORK_STRING_DIRECTIVE(method, method_, message.method(method_),
-                                     message.method = method_);
+BOOST_NETWORK_STRING_DIRECTIVE(method, method_, message.method(method_),
+                               message.method = method_);
 
-    } /* http */
+} /* http */
 
-  } /* network */
+} /* network */
 
 } /* booet */
 

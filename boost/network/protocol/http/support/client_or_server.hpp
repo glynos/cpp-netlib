@@ -11,28 +11,28 @@
 #include <boost/mpl/if.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct unsupported_tag;
+template <class Tag> struct unsupported_tag;
 
-      template <class Tag, class Enable = void> struct client_or_server {
-        typedef unsupported_tag<Tag> type;
-      };
+template <class Tag, class Enable = void> struct client_or_server {
+  typedef unsupported_tag<Tag> type;
+};
 
-      template <class Tag>
-      struct client_or_server<Tag, typename enable_if<is_server<Tag> >::type> {
-        typedef tags::server type;
-      };
+template <class Tag>
+struct client_or_server<Tag, typename enable_if<is_server<Tag> >::type> {
+  typedef tags::server type;
+};
 
-      template <class Tag>
-      struct client_or_server<Tag, typename enable_if<is_client<Tag> >::type> {
-        typedef tags::client type;
-      };
+template <class Tag>
+struct client_or_server<Tag, typename enable_if<is_client<Tag> >::type> {
+  typedef tags::client type;
+};
 
-    } /* http */
+} /* http */
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

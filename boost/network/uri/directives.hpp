@@ -9,22 +9,22 @@
 #include <boost/network/uri/uri.hpp>
 
 namespace boost {
-  namespace network {
-    namespace uri {
-      inline uri &operator<<(uri &uri_, const uri &root_uri) {
-        if (empty(uri_) && valid(root_uri)) {
-          uri_.append(boost::begin(root_uri), boost::end(root_uri));
-        }
-        return uri_;
-      }
+namespace network {
+namespace uri {
+inline uri &operator<<(uri &uri_, const uri &root_uri) {
+  if (empty(uri_) && valid(root_uri)) {
+    uri_.append(boost::begin(root_uri), boost::end(root_uri));
+  }
+  return uri_;
+}
 
-      template <class Directive>
-      inline uri &operator<<(uri &uri_, const Directive &directive) {
-        directive(uri_);
-        return uri_;
-      }
-    }  // namespace uri
-  }    // namespace network
+template <class Directive>
+inline uri &operator<<(uri &uri_, const Directive &directive) {
+  directive(uri_);
+  return uri_;
+}
+}  // namespace uri
+}  // namespace network
 }  // namespace boost
 
 #include <boost/network/uri/directives/scheme.hpp>

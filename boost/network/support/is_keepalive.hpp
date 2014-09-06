@@ -10,17 +10,15 @@
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag, class Enable = void>
-    struct is_keepalive : mpl::false_ {};
+template <class Tag, class Enable = void> struct is_keepalive : mpl::false_ {};
 
-    template <class Tag>
-    struct is_keepalive<
-        Tag,
-        typename enable_if<typename Tag::is_keepalive>::type> : mpl::true_ {};
+template <class Tag>
+struct is_keepalive<
+    Tag, typename enable_if<typename Tag::is_keepalive>::type> : mpl::true_ {};
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

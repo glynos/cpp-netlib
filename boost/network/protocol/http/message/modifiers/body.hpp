@@ -14,63 +14,61 @@
 #include <boost/network/message/directives.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_response;
+template <class Tag> struct basic_response;
 
-      template <class Tag> struct basic_request;
+template <class Tag> struct basic_request;
 
-      namespace impl {
+namespace impl {
 
-        template <class Tag, class T>
-        void body(basic_response<Tag> &response, T const &value,
-                  mpl::false_ const &) {
-          response << ::boost::network::body(value);
-        }
+template <class Tag, class T>
+void body(basic_response<Tag> &response, T const &value, mpl::false_ const &) {
+  response << ::boost::network::body(value);
+}
 
-        template <class Tag, class T>
-        void body(basic_response<Tag> &response, T const &future,
-                  mpl::true_ const &) {
-          response.body(future);
-        }
-      }
+template <class Tag, class T>
+void body(basic_response<Tag> &response, T const &future, mpl::true_ const &) {
+  response.body(future);
+}
+}
 
-      template <class Tag, class T>
-      inline void body(basic_response<Tag> &response, T const &value) {
-        impl::body(response, value, is_async<Tag>());
-      }
+template <class Tag, class T>
+inline void body(basic_response<Tag> &response, T const &value) {
+  impl::body(response, value, is_async<Tag>());
+}
 
-      template <class Tag, class T>
-      inline void body_impl(basic_request<Tag> &request, T const &value,
-                            tags::server) {
-        request.body = value;
-      }
+template <class Tag, class T>
+inline void body_impl(basic_request<Tag> &request, T const &value,
+                      tags::server) {
+  request.body = value;
+}
 
-      template <class Tag, class T>
-      inline void body_impl(basic_request<Tag> &request, T const &value,
-                            tags::client) {
-        request << ::boost::network::body(value);
-      }
+template <class Tag, class T>
+inline void body_impl(basic_request<Tag> &request, T const &value,
+                      tags::client) {
+  request << ::boost::network::body(value);
+}
 
-      template <class Tag, class T>
-      inline void body(basic_request<Tag> &request, T const &value) {
-        body_impl(request, value, typename client_or_server<Tag>::type());
-      }
+template <class Tag, class T>
+inline void body(basic_request<Tag> &request, T const &value) {
+  body_impl(request, value, typename client_or_server<Tag>::type());
+}
 
-    }  // namespace http
+}  // namespace http
 
-    namespace impl {
+namespace impl {
 
-      template <class Message, class ValueType, class Async>
-      inline void body(Message const &message, ValueType const &body_,
-                       http::tags::http_server, Async) {
-        message.body = body_;
-      }
+template <class Message, class ValueType, class Async>
+inline void body(Message const &message, ValueType const &body_,
+                 http::tags::http_server, Async) {
+  message.body = body_;
+}
 
-    } /* impl */
+} /* impl */
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

@@ -21,25 +21,25 @@
 #endif
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag> struct unsupported_tag;
+template <class Tag> struct unsupported_tag;
 
-    template <class Tag, class Enable = void> struct string {
-      typedef unsupported_tag<Tag> type;
-    };
+template <class Tag, class Enable = void> struct string {
+  typedef unsupported_tag<Tag> type;
+};
 
-    template <class Tag>
-    struct string<Tag, typename enable_if<is_default_string<Tag> >::type> {
-      typedef BOOST_NETWORK_DEFAULT_STRING type;
-    };
+template <class Tag>
+struct string<Tag, typename enable_if<is_default_string<Tag> >::type> {
+  typedef BOOST_NETWORK_DEFAULT_STRING type;
+};
 
-    template <class Tag>
-    struct string<Tag, typename enable_if<is_default_wstring<Tag> >::type> {
-      typedef BOOST_NETWORK_DEFAULT_WSTRING type;
-    };
+template <class Tag>
+struct string<Tag, typename enable_if<is_default_wstring<Tag> >::type> {
+  typedef BOOST_NETWORK_DEFAULT_WSTRING type;
+};
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

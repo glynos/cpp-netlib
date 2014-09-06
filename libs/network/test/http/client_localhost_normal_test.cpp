@@ -25,58 +25,57 @@ using std::cout;
 using std::endl;
 
 namespace {
-  const std::string base_url = "http://localhost:8000";
-  const std::string cgi_url = base_url + "/cgi-bin/requestinfo.py";
+const std::string base_url = "http://localhost:8000";
+const std::string cgi_url = base_url + "/cgi-bin/requestinfo.py";
 
-  struct running_server_fixture {
-    // NOTE: Can't use BOOST_REQUIRE_MESSAGE here, as Boost.Test data structures
-    // are not fully set up when the global fixture runs.
-    running_server_fixture() {
-      if (!server.start())
-        cout << "Failed to start HTTP server for test!" << endl;
-    }
-
-    ~running_server_fixture() {
-      if (!server.stop())
-        cout << "Failed to stop HTTP server for test!" << endl;
-    }
-
-    http_test_server server;
-  };
-
-  std::size_t readfile(std::ifstream& file, std::vector<char>& buffer) {
-    using std::ios;
-
-    std::istreambuf_iterator<char> src(file);
-    std::istreambuf_iterator<char> eof;
-    std::copy(src, eof, std::back_inserter(buffer));
-
-    return buffer.size();
+struct running_server_fixture {
+  // NOTE: Can't use BOOST_REQUIRE_MESSAGE here, as Boost.Test data structures
+  // are not fully set up when the global fixture runs.
+  running_server_fixture() {
+    if (!server.start())
+      cout << "Failed to start HTTP server for test!" << endl;
   }
 
-  std::map<std::string, std::string> parse_headers(std::string const& body) {
-    std::map<std::string, std::string> headers;
+  ~running_server_fixture() {
+    if (!server.stop()) cout << "Failed to stop HTTP server for test!" << endl;
+  }
 
-    std::istringstream stream(body);
-    while (stream.good()) {
-      std::string line;
-      std::getline(stream, line);
-      if (!stream.eof()) {
-        std::size_t colon = line.find(':');
-        if (colon != std::string::npos) {
-          std::string header = line.substr(0, colon);
-          std::string value = line.substr(colon + 2);
-          headers[header] = value;
-        }
+  http_test_server server;
+};
+
+std::size_t readfile(std::ifstream& file, std::vector<char>& buffer) {
+  using std::ios;
+
+  std::istreambuf_iterator<char> src(file);
+  std::istreambuf_iterator<char> eof;
+  std::copy(src, eof, std::back_inserter(buffer));
+
+  return buffer.size();
+}
+
+std::map<std::string, std::string> parse_headers(std::string const& body) {
+  std::map<std::string, std::string> headers;
+
+  std::istringstream stream(body);
+  while (stream.good()) {
+    std::string line;
+    std::getline(stream, line);
+    if (!stream.eof()) {
+      std::size_t colon = line.find(':');
+      if (colon != std::string::npos) {
+        std::string header = line.substr(0, colon);
+        std::string value = line.substr(colon + 2);
+        headers[header] = value;
       }
     }
-
-    return headers;
   }
 
-  std::string get_content_length(std::string const& content) {
-    return boost::lexical_cast<std::string>(content.length());
-  }
+  return headers;
+}
+
+std::string get_content_length(std::string const& content) {
+  return boost::lexical_cast<std::string>(content.length());
+}
 }
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)

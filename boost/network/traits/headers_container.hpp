@@ -13,20 +13,20 @@
 #include <boost/network/traits/string.hpp>
 
 namespace boost {
-  namespace network {
-    namespace impl {
+namespace network {
+namespace impl {
 
-      template <class Tag, class Enable = void> struct headers_container_impl {
-        typedef std::multimap<typename string<Tag>::type,
-                              typename string<Tag>::type> type;
-      };
+template <class Tag, class Enable = void> struct headers_container_impl {
+  typedef std::multimap<typename string<Tag>::type, typename string<Tag>::type>
+      type;
+};
 
-    }  // namespace impl
+}  // namespace impl
 
-    template <class Tag>
-    struct headers_container : impl::headers_container_impl<Tag> {};
+template <class Tag>
+struct headers_container : impl::headers_container_impl<Tag> {};
 
-  }  // namespace network
+}  // namespace network
 }  // namespace boost
 
 #endif  // __BOOST_NETWORK_TRAITS_HEADERS_CONTAINER_INC__

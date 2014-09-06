@@ -12,15 +12,15 @@
 #include <boost/static_assert.hpp>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag, class Enable = void> struct is_tcp : mpl::false_ {};
+template <class Tag, class Enable = void> struct is_tcp : mpl::false_ {};
 
-    template <class Tag>
-    struct is_tcp<
-        Tag, typename enable_if<typename Tag::is_tcp>::type> : mpl::true_ {};
+template <class Tag>
+struct is_tcp<Tag,
+              typename enable_if<typename Tag::is_tcp>::type> : mpl::true_ {};
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

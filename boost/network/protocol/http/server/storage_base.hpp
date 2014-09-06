@@ -11,30 +11,28 @@
 #include <boost/network/protocol/http/server/options.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      struct server_storage_base {
-        struct no_io_service {};
-        struct has_io_service {};
+struct server_storage_base {
+  struct no_io_service {};
+  struct has_io_service {};
 
-       protected:
-        template <class Tag, class Handler>
-        explicit server_storage_base(
-            server_options<Tag, Handler> const& options)
-            : self_service_(
-                  options.io_service()
-                      ? options.io_service()
-                      : boost::make_shared<boost::asio::io_service>()),
-              service_(*self_service_) {}
+ protected:
+  template <class Tag, class Handler>
+  explicit server_storage_base(server_options<Tag, Handler> const& options)
+      : self_service_(options.io_service()
+                          ? options.io_service()
+                          : boost::make_shared<boost::asio::io_service>()),
+        service_(*self_service_) {}
 
-        boost::shared_ptr<asio::io_service> self_service_;
-        asio::io_service& service_;
-      };
+  boost::shared_ptr<asio::io_service> self_service_;
+  asio::io_service& service_;
+};
 
-    } /* http */
+} /* http */
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

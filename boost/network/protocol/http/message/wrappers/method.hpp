@@ -10,32 +10,31 @@
 #include <boost/network/protocol/http/support/is_server.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_request;
+template <class Tag> struct basic_request;
 
-      template <class Tag> struct method_wrapper {
-        explicit method_wrapper(basic_request<Tag> const& message)
-            : message_(message) {}
+template <class Tag> struct method_wrapper {
+  explicit method_wrapper(basic_request<Tag> const& message)
+      : message_(message) {}
 
-        basic_request<Tag> const& message_;
+  basic_request<Tag> const& message_;
 
-        typedef typename basic_request<Tag>::string_type string_type;
+  typedef typename basic_request<Tag>::string_type string_type;
 
-        operator string_type() { return message_.method; }
-      };
+  operator string_type() { return message_.method; }
+};
 
-      template <class Tag>
-      inline typename enable_if<is_server<Tag>,
-                                typename string<Tag>::type>::type
-      method(basic_request<Tag> const& message) {
-        return method_wrapper<Tag>(message);
-      }
+template <class Tag>
+inline typename enable_if<is_server<Tag>, typename string<Tag>::type>::type
+method(basic_request<Tag> const& message) {
+  return method_wrapper<Tag>(message);
+}
 
-    } /* http */
+} /* http */
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

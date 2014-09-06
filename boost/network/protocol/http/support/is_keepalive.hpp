@@ -10,22 +10,20 @@
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct unsupported_tag;
+template <class Tag> struct unsupported_tag;
 
-      template <class Tag, class Enable = void>
-      struct is_keepalive : mpl::false_ {};
+template <class Tag, class Enable = void> struct is_keepalive : mpl::false_ {};
 
-      template <class Tag>
-      struct is_keepalive<
-          Tag,
-          typename enable_if<typename Tag::is_keepalive>::type> : mpl::true_ {};
+template <class Tag>
+struct is_keepalive<
+    Tag, typename enable_if<typename Tag::is_keepalive>::type> : mpl::true_ {};
 
-    } /* http */
+} /* http */
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

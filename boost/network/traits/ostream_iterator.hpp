@@ -12,20 +12,20 @@
 #include <iterator>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag> struct unsupported_tag;
+template <class Tag> struct unsupported_tag;
 
-    template <class Tag, class Input> struct ostream_iterator;
+template <class Tag, class Input> struct ostream_iterator;
 
-    template <class Tag, class Input>
-    struct ostream_iterator
-        : mpl::if_<is_default_string<Tag>, std::ostream_iterator<Input, char>,
-                   typename mpl::if_<is_default_wstring<Tag>,
-                                     std::ostream_iterator<Input, wchar_t>,
-                                     unsupported_tag<Tag> >::type> {};
+template <class Tag, class Input>
+struct ostream_iterator
+    : mpl::if_<is_default_string<Tag>, std::ostream_iterator<Input, char>,
+               typename mpl::if_<is_default_wstring<Tag>,
+                                 std::ostream_iterator<Input, wchar_t>,
+                                 unsupported_tag<Tag> >::type> {};
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

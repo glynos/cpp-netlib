@@ -8,30 +8,28 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_request;
+template <class Tag> struct basic_request;
 
-      namespace impl {
-        template <class Tag> struct protocol_wrapper {
-          basic_request<Tag> const& message_;
-          protocol_wrapper(basic_request<Tag> const& message)
-              : message_(message) {}
-          typedef typename basic_request<Tag>::string_type string_type;
-          operator string_type() { return message_.protocol(); }
-        };
-      }
+namespace impl {
+template <class Tag> struct protocol_wrapper {
+  basic_request<Tag> const& message_;
+  protocol_wrapper(basic_request<Tag> const& message) : message_(message) {}
+  typedef typename basic_request<Tag>::string_type string_type;
+  operator string_type() { return message_.protocol(); }
+};
+}
 
-      template <class Tag>
-      inline impl::protocol_wrapper<Tag> protocol(
-          basic_request<Tag> const& request) {
-        return impl::protocol_wrapper<Tag>(request);
-      }
+template <class Tag>
+inline impl::protocol_wrapper<Tag> protocol(basic_request<Tag> const& request) {
+  return impl::protocol_wrapper<Tag>(request);
+}
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

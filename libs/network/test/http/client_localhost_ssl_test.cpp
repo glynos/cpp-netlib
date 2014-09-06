@@ -25,34 +25,33 @@ using std::cout;
 using std::endl;
 
 namespace {
-  const std::string base_url = "https://localhost:8443";
-  const std::string cgi_url = base_url + "/cgi-bin/requestinfo.py";
+const std::string base_url = "https://localhost:8443";
+const std::string cgi_url = base_url + "/cgi-bin/requestinfo.py";
 
-  struct running_server_fixture {
-    // NOTE: Can't use BOOST_REQUIRE_MESSAGE here, as Boost.Test data structures
-    // are not fully set up when the global fixture runs.
-    running_server_fixture() {
-      if (!server.start())
-        cout << "Failed to start HTTP server for test!" << endl;
-    }
-
-    ~running_server_fixture() {
-      if (!server.stop())
-        cout << "Failed to stop HTTP server for test!" << endl;
-    }
-
-    http_test_server server;
-  };
-
-  std::size_t readfile(std::ifstream& file, std::vector<char>& buffer) {
-    using std::ios;
-
-    std::istreambuf_iterator<char> src(file);
-    std::istreambuf_iterator<char> eof;
-    std::copy(src, eof, std::back_inserter(buffer));
-
-    return buffer.size();
+struct running_server_fixture {
+  // NOTE: Can't use BOOST_REQUIRE_MESSAGE here, as Boost.Test data structures
+  // are not fully set up when the global fixture runs.
+  running_server_fixture() {
+    if (!server.start())
+      cout << "Failed to start HTTP server for test!" << endl;
   }
+
+  ~running_server_fixture() {
+    if (!server.stop()) cout << "Failed to stop HTTP server for test!" << endl;
+  }
+
+  http_test_server server;
+};
+
+std::size_t readfile(std::ifstream& file, std::vector<char>& buffer) {
+  using std::ios;
+
+  std::istreambuf_iterator<char> src(file);
+  std::istreambuf_iterator<char> eof;
+  std::copy(src, eof, std::back_inserter(buffer));
+
+  return buffer.size();
+}
 }
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)

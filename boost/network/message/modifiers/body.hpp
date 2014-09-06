@@ -10,26 +10,25 @@
 #include <boost/thread/future.hpp>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag, template <class> class Message, class ValueType>
-    inline void body_impl(Message<Tag>& message, ValueType const& body,
-                          tags::pod) {
-      message.body = body;
-    }
+template <class Tag, template <class> class Message, class ValueType>
+inline void body_impl(Message<Tag>& message, ValueType const& body, tags::pod) {
+  message.body = body;
+}
 
-    template <class Tag, template <class> class Message, class ValueType>
-    inline void body_impl(Message<Tag>& message, ValueType const& body,
-                          tags::normal) {
-      message.body(body);
-    }
+template <class Tag, template <class> class Message, class ValueType>
+inline void body_impl(Message<Tag>& message, ValueType const& body,
+                      tags::normal) {
+  message.body(body);
+}
 
-    template <class Tag, template <class> class Message, class ValueType>
-    inline void body(Message<Tag>& message, ValueType const& body_) {
-      body_impl(message, body_, typename pod_or_normal<Tag>::type());
-    }
+template <class Tag, template <class> class Message, class ValueType>
+inline void body(Message<Tag>& message, ValueType const& body_) {
+  body_impl(message, body_, typename pod_or_normal<Tag>::type());
+}
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

@@ -10,17 +10,17 @@
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag, class Enable = void>
-    struct is_default_string : mpl::false_ {};
+template <class Tag, class Enable = void>
+struct is_default_string : mpl::false_ {};
 
-    template <class Tag>
-    struct is_default_string<
-        Tag, typename enable_if<
-                 typename Tag::is_default_string>::type> : mpl::true_ {};
+template <class Tag>
+struct is_default_string<
+    Tag,
+    typename enable_if<typename Tag::is_default_string>::type> : mpl::true_ {};
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

@@ -9,18 +9,18 @@
 #include <boost/network/protocol/http/message/wrappers/helper.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_response;
+template <class Tag> struct basic_response;
 
-      template <class Tag> struct basic_request;
+template <class Tag> struct basic_request;
 
-      BOOST_NETWORK_DEFINE_HTTP_WRAPPER(source, source, source);
+BOOST_NETWORK_DEFINE_HTTP_WRAPPER(source, source, source);
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

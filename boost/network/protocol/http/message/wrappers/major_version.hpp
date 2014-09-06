@@ -11,28 +11,27 @@
 #include <boost/cstdint.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_request;
+template <class Tag> struct basic_request;
 
-      template <class Tag> struct major_version_wrapper {
-        basic_request<Tag> const& request;
-        explicit major_version_wrapper(basic_request<Tag> const& request)
-            : request(request) {}
-        operator boost::uint8_t() { return request.http_version_major; }
-      };
+template <class Tag> struct major_version_wrapper {
+  basic_request<Tag> const& request;
+  explicit major_version_wrapper(basic_request<Tag> const& request)
+      : request(request) {}
+  operator boost::uint8_t() { return request.http_version_major; }
+};
 
-      template <class Tag>
-      inline typename enable_if<is_server<Tag>,
-                                major_version_wrapper<Tag> >::type
-      major_version(basic_request<Tag> const& request) {
-        return major_version_wrapper<Tag>(request);
-      }
+template <class Tag>
+inline typename enable_if<is_server<Tag>, major_version_wrapper<Tag> >::type
+major_version(basic_request<Tag> const& request) {
+  return major_version_wrapper<Tag>(request);
+}
 
-    } /* http */
+} /* http */
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

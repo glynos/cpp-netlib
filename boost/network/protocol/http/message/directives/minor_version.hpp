@@ -11,29 +11,27 @@
 #include <boost/cstdint.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_request;
+template <class Tag> struct basic_request;
 
-      struct minor_version_directive {
-        boost::uint8_t minor_version;
-        explicit minor_version_directive(boost::uint8_t minor_version)
-            : minor_version(minor_version) {}
-        template <class Tag>
-        void operator()(basic_request<Tag>& request) const {
-          request.http_version_minor = minor_version;
-        }
-      };
+struct minor_version_directive {
+  boost::uint8_t minor_version;
+  explicit minor_version_directive(boost::uint8_t minor_version)
+      : minor_version(minor_version) {}
+  template <class Tag> void operator()(basic_request<Tag>& request) const {
+    request.http_version_minor = minor_version;
+  }
+};
 
-      inline minor_version_directive minor_version(
-          boost::uint8_t minor_version_) {
-        return minor_version_directive(minor_version_);
-      }
+inline minor_version_directive minor_version(boost::uint8_t minor_version_) {
+  return minor_version_directive(minor_version_);
+}
 
-    } /* http */
+} /* http */
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

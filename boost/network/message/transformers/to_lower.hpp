@@ -19,64 +19,62 @@
  * metaprogramming on the selected string target.
  */
 namespace boost {
-  namespace network {
+namespace network {
 
-    namespace impl {
+namespace impl {
 
-      template <class Selector> struct to_lower_transformer {};
+template <class Selector> struct to_lower_transformer {};
 
-      template <> struct to_lower_transformer<selectors::source_selector> {
-        template <class Tag>
-        void operator()(basic_message<Tag> &message_) const {
-          boost::to_lower(message_.source());
-        }
+template <> struct to_lower_transformer<selectors::source_selector> {
+  template <class Tag> void operator()(basic_message<Tag> &message_) const {
+    boost::to_lower(message_.source());
+  }
 
-       protected:
-        ~to_lower_transformer() {}
-      };
+ protected:
+  ~to_lower_transformer() {}
+};
 
-      template <> struct to_lower_transformer<selectors::destination_selector> {
-        template <class Tag>
-        void operator()(basic_message<Tag> &message_) const {
-          boost::to_lower(message_.destination());
-        }
+template <> struct to_lower_transformer<selectors::destination_selector> {
+  template <class Tag> void operator()(basic_message<Tag> &message_) const {
+    boost::to_lower(message_.destination());
+  }
 
-       protected:
-        ~to_lower_transformer() {};
-      };
+ protected:
+  ~to_lower_transformer() {};
+};
 
-    }  // namespace impl
+}  // namespace impl
 
-    namespace detail {
-      struct to_lower_placeholder_helper;
-    }
+namespace detail {
+struct to_lower_placeholder_helper;
+}
 
-    detail::to_lower_placeholder_helper to_lower_(
-        detail::to_lower_placeholder_helper);
+detail::to_lower_placeholder_helper to_lower_(
+    detail::to_lower_placeholder_helper);
 
-    namespace detail {
+namespace detail {
 
-      struct to_lower_placeholder_helper {
-        template <class Selector>
-        struct type : public impl::to_lower_transformer<Selector> {};
+struct to_lower_placeholder_helper {
+  template <class Selector>
+  struct type : public impl::to_lower_transformer<Selector> {};
 
-       private:
-        to_lower_placeholder_helper() {}
-        to_lower_placeholder_helper(to_lower_placeholder_helper const &) {}
-        friend to_lower_placeholder_helper boost::network::to_lower_(
-            to_lower_placeholder_helper);
-      };
-    }
+ private:
+  to_lower_placeholder_helper() {}
+  to_lower_placeholder_helper(to_lower_placeholder_helper const &) {}
+  friend to_lower_placeholder_helper boost::network::to_lower_(
+      to_lower_placeholder_helper);
+};
+}
 
-    typedef detail::to_lower_placeholder_helper (*to_lower_placeholder)(
-        detail::to_lower_placeholder_helper);
+typedef detail::to_lower_placeholder_helper (*to_lower_placeholder)(
+    detail::to_lower_placeholder_helper);
 
-    inline detail::to_lower_placeholder_helper to_lower_(
-        detail::to_lower_placeholder_helper) {
-      return detail::to_lower_placeholder_helper();
-    }
+inline detail::to_lower_placeholder_helper to_lower_(
+    detail::to_lower_placeholder_helper) {
+  return detail::to_lower_placeholder_helper();
+}
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

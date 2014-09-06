@@ -11,16 +11,16 @@
 #include <boost/network/message/directives/detail/string_directive.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      BOOST_NETWORK_STRING_DIRECTIVE(status_message, status_message_,
-                                     message.status_message(status_message_),
-                                     message.status_message = status_message_);
+BOOST_NETWORK_STRING_DIRECTIVE(status_message, status_message_,
+                               message.status_message(status_message_),
+                               message.status_message = status_message_);
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

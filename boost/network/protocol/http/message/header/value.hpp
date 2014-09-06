@@ -9,41 +9,41 @@
 #include <utility>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      struct request_header_narrow;
-      struct request_header_wide;
-      struct response_header_narrow;
-      struct response_header_wide;
+struct request_header_narrow;
+struct request_header_wide;
+struct response_header_narrow;
+struct response_header_wide;
 
-      template <class T1, class T2> T1& value(std::pair<T1, T2> const& p) {
-        return p.second;
-      }
+template <class T1, class T2> T1& value(std::pair<T1, T2> const& p) {
+  return p.second;
+}
 
-      inline request_header_narrow::string_type const& value(
-          request_header_narrow const& h) {
-        return h.value;
-      }
+inline request_header_narrow::string_type const& value(
+    request_header_narrow const& h) {
+  return h.value;
+}
 
-      inline request_header_wide::string_type const& value(
-          request_header_wide const& h) {
-        return h.value;
-      }
+inline request_header_wide::string_type const& value(
+    request_header_wide const& h) {
+  return h.value;
+}
 
-      inline response_header_narrow::string_type const& value(
-          response_header_narrow const& h) {
-        return h.value;
-      }
+inline response_header_narrow::string_type const& value(
+    response_header_narrow const& h) {
+  return h.value;
+}
 
-      inline response_header_wide::string_type const& value(
-          response_header_wide const& h) {
-        return h.value;
-      }
+inline response_header_wide::string_type const& value(
+    response_header_wide const& h) {
+  return h.value;
+}
 
-    } /* http */
+} /* http */
 
-  } /* network */
+} /* network */
 
 } /* boost */
 

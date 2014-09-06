@@ -48,33 +48,33 @@
 
 // forward declarations
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_request;
+template <class Tag> struct basic_request;
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 
 #include <boost/network/protocol/http/impl/request.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag, class Directive>
-      basic_request<Tag>& operator<<(basic_request<Tag>& message,
-                                     Directive const& directive) {
-        directive(message);
-        return message;
-      }
+template <class Tag, class Directive>
+basic_request<Tag>& operator<<(basic_request<Tag>& message,
+                               Directive const& directive) {
+  directive(message);
+  return message;
+}
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

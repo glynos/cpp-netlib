@@ -11,20 +11,20 @@
 #include <boost/network/support/is_async.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct async_message;
+template <class Tag> struct async_message;
 
-      template <class Tag> struct message_impl;
+template <class Tag> struct message_impl;
 
-      template <class Tag>
-      struct message_base
-          : mpl::if_<is_async<Tag>, async_message<Tag>, message_impl<Tag> > {};
+template <class Tag>
+struct message_base
+    : mpl::if_<is_async<Tag>, async_message<Tag>, message_impl<Tag> > {};
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

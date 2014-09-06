@@ -11,35 +11,35 @@
 #include <boost/thread/future.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_response;
+template <class Tag> struct basic_response;
 
-      namespace impl {
+namespace impl {
 
-        template <class Tag, class T>
-        void status_message(basic_response<Tag> &response, T const &value,
-                            mpl::false_ const &) {
-          response << boost::network::http::status_message(value);
-        }
+template <class Tag, class T>
+void status_message(basic_response<Tag> &response, T const &value,
+                    mpl::false_ const &) {
+  response << boost::network::http::status_message(value);
+}
 
-        template <class Tag, class T>
-        void status_message(basic_response<Tag> &response, T const &future,
-                            mpl::true_ const &) {
-          response.status_message(future);
-        }
+template <class Tag, class T>
+void status_message(basic_response<Tag> &response, T const &future,
+                    mpl::true_ const &) {
+  response.status_message(future);
+}
 
-      }  // namespace impl
+}  // namespace impl
 
-      template <class Tag, class T>
-      void status_message(basic_response<Tag> &response, T const &value) {
-        impl::status_message(response, value, is_async<Tag>());
-      }
+template <class Tag, class T>
+void status_message(basic_response<Tag> &response, T const &value) {
+  impl::status_message(response, value, is_async<Tag>());
+}
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

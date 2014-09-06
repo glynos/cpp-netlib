@@ -18,62 +18,56 @@
 #include <boost/variant/static_visitor.hpp>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    namespace impl {
+namespace impl {
 
-      template <class KeyType, class ValueType> struct header_directive {
+template <class KeyType, class ValueType> struct header_directive {
 
-        explicit header_directive(KeyType const& header_name,
-                                  ValueType const& header_value)
-            : _header_name(header_name), _header_value(header_value) {};
+  explicit header_directive(KeyType const& header_name,
+                            ValueType const& header_value)
+      : _header_name(header_name), _header_value(header_value) {};
 
-        template <class Message> struct pod_directive {
-          template <class T1, class T2>
-          static void eval(Message const& message, T1 const& key,
-                           T2 const& value) {
-            typedef typename Message::headers_container_type::value_type
-                value_type;
-            value_type value_ = {key, value};
-            message.headers.insert(message.headers.end(), value_);
-          }
-        };
-
-        template <class Message> struct normal_directive {
-          template <class T1, class T2>
-          static void eval(Message const& message, T1 const& key,
-                           T2 const& value) {
-            typedef typename Message::headers_container_type::value_type
-                value_type;
-            message.add_header(value_type(key, value));
-          }
-        };
-
-        template <class Message>
-        struct directive_impl
-            : mpl::if_<is_base_of<tags::pod, typename Message::tag>,
-                       pod_directive<Message>,
-                       normal_directive<Message> >::type {};
-
-        template <class Message> void operator()(Message const& msg) const {
-          typedef typename Message::headers_container_type::value_type
-              value_type;
-          directive_impl<Message>::eval(msg, _header_name, _header_value);
-        }
-
-       private:
-        KeyType const& _header_name;
-        ValueType const& _header_value;
-      };
-
-    }  // namespace impl
-
+  template <class Message> struct pod_directive {
     template <class T1, class T2>
-    inline impl::header_directive<T1, T2> header(T1 const& header_name,
-                                                 T2 const& header_value) {
-      return impl::header_directive<T1, T2>(header_name, header_value);
+    static void eval(Message const& message, T1 const& key, T2 const& value) {
+      typedef typename Message::headers_container_type::value_type value_type;
+      value_type value_ = {key, value};
+      message.headers.insert(message.headers.end(), value_);
     }
-  }  // namespace network
+  };
+
+  template <class Message> struct normal_directive {
+    template <class T1, class T2>
+    static void eval(Message const& message, T1 const& key, T2 const& value) {
+      typedef typename Message::headers_container_type::value_type value_type;
+      message.add_header(value_type(key, value));
+    }
+  };
+
+  template <class Message>
+  struct directive_impl
+      : mpl::if_<is_base_of<tags::pod, typename Message::tag>,
+                 pod_directive<Message>, normal_directive<Message> >::type {};
+
+  template <class Message> void operator()(Message const& msg) const {
+    typedef typename Message::headers_container_type::value_type value_type;
+    directive_impl<Message>::eval(msg, _header_name, _header_value);
+  }
+
+ private:
+  KeyType const& _header_name;
+  ValueType const& _header_value;
+};
+
+}  // namespace impl
+
+template <class T1, class T2>
+inline impl::header_directive<T1, T2> header(T1 const& header_name,
+                                             T2 const& header_value) {
+  return impl::header_directive<T1, T2>(header_name, header_value);
+}
+}  // namespace network
 }  // namespace boost
 
 #endif  // __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__

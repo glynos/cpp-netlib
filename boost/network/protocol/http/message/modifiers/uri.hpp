@@ -11,19 +11,19 @@
 #include <boost/thread/future.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      template <class Tag> struct basic_request;
+template <class Tag> struct basic_request;
 
-      template <class Tag, class T>
-      void uri(basic_request<Tag>& request, T const& value) {
-        request.uri(value);
-      }
+template <class Tag, class T>
+void uri(basic_request<Tag>& request, T const& value) {
+  request.uri(value);
+}
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

@@ -15,95 +15,94 @@
 #include <boost/scope_exit.hpp>
 
 namespace boost {
-  namespace network {
-    namespace utils {
+namespace network {
+namespace utils {
 
-      typedef boost::shared_ptr<boost::asio::io_service> io_service_ptr;
-      typedef boost::shared_ptr<boost::thread_group> worker_threads_ptr;
-      typedef boost::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
+typedef boost::shared_ptr<boost::asio::io_service> io_service_ptr;
+typedef boost::shared_ptr<boost::thread_group> worker_threads_ptr;
+typedef boost::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
 
-      template <class Tag> struct basic_thread_pool {
-        basic_thread_pool(std::size_t threads = 1,
-                          io_service_ptr io_service = io_service_ptr(),
-                          worker_threads_ptr worker_threads =
-                              worker_threads_ptr())
-            : threads_(threads),
-              io_service_(io_service),
-              worker_threads_(worker_threads),
-              sentinel_() {
-          bool commit = false;
-          BOOST_SCOPE_EXIT_TPL(
-              (&commit)(&io_service_)(&worker_threads_)(&sentinel_)) {
-            if (!commit) {
-              sentinel_.reset();
-              io_service_.reset();
-              if (worker_threads_.get()) {
-                worker_threads_->interrupt_all();
-                worker_threads_->join_all();
-              }
-              worker_threads_.reset();
-            }
-          }
-          BOOST_SCOPE_EXIT_END
-
-          if (!io_service_.get()) {
-            io_service_.reset(new boost::asio::io_service);
-          }
-
-          if (!worker_threads_.get()) {
-            worker_threads_.reset(new boost::thread_group);
-          }
-
-          if (!sentinel_.get()) {
-            sentinel_.reset(new boost::asio::io_service::work(*io_service_));
-          }
-
-          for (std::size_t counter = 0; counter < threads_; ++counter)
-            worker_threads_->create_thread(
-                boost::bind(&boost::asio::io_service::run, io_service_));
-
-          commit = true;
+template <class Tag> struct basic_thread_pool {
+  basic_thread_pool(std::size_t threads = 1,
+                    io_service_ptr io_service = io_service_ptr(),
+                    worker_threads_ptr worker_threads = worker_threads_ptr())
+      : threads_(threads),
+        io_service_(io_service),
+        worker_threads_(worker_threads),
+        sentinel_() {
+    bool commit = false;
+    BOOST_SCOPE_EXIT_TPL(
+        (&commit)(&io_service_)(&worker_threads_)(&sentinel_)) {
+      if (!commit) {
+        sentinel_.reset();
+        io_service_.reset();
+        if (worker_threads_.get()) {
+          worker_threads_->interrupt_all();
+          worker_threads_->join_all();
         }
+        worker_threads_.reset();
+      }
+    }
+    BOOST_SCOPE_EXIT_END
 
-        std::size_t thread_count() const { return threads_; }
+    if (!io_service_.get()) {
+      io_service_.reset(new boost::asio::io_service);
+    }
 
-        void post(boost::function<void()> f) { io_service_->post(f); }
+    if (!worker_threads_.get()) {
+      worker_threads_.reset(new boost::thread_group);
+    }
 
-        ~basic_thread_pool() throw() {
-          sentinel_.reset();
-          try {
-            worker_threads_->join_all();
-          }
-          catch (...) {
-            BOOST_ASSERT(false &&
-                         "A handler was not supposed to throw, but one did.");
-          }
-        }
+    if (!sentinel_.get()) {
+      sentinel_.reset(new boost::asio::io_service::work(*io_service_));
+    }
 
-        void swap(basic_thread_pool &other) {
-          std::swap(other.threads_, threads_);
-          std::swap(other.io_service_, io_service_);
-          std::swap(other.worker_threads_, worker_threads_);
-          std::swap(other.sentinel_, sentinel_);
-        }
+    for (std::size_t counter = 0; counter < threads_; ++counter)
+      worker_threads_->create_thread(
+          boost::bind(&boost::asio::io_service::run, io_service_));
 
-       protected:
-        std::size_t threads_;
-        io_service_ptr io_service_;
-        worker_threads_ptr worker_threads_;
-        sentinel_ptr sentinel_;
+    commit = true;
+  }
 
-       private:
-        basic_thread_pool(basic_thread_pool const &);     // no copies please
-        basic_thread_pool &operator=(basic_thread_pool);  // no assignment
-                                                          // please
-      };
+  std::size_t thread_count() const { return threads_; }
 
-      typedef basic_thread_pool<tags::default_> thread_pool;
+  void post(boost::function<void()> f) { io_service_->post(f); }
 
-    } /* utils */
+  ~basic_thread_pool() throw() {
+    sentinel_.reset();
+    try {
+      worker_threads_->join_all();
+    }
+    catch (...) {
+      BOOST_ASSERT(false &&
+                   "A handler was not supposed to throw, but one did.");
+    }
+  }
 
-  } /* network */
+  void swap(basic_thread_pool &other) {
+    std::swap(other.threads_, threads_);
+    std::swap(other.io_service_, io_service_);
+    std::swap(other.worker_threads_, worker_threads_);
+    std::swap(other.sentinel_, sentinel_);
+  }
+
+ protected:
+  std::size_t threads_;
+  io_service_ptr io_service_;
+  worker_threads_ptr worker_threads_;
+  sentinel_ptr sentinel_;
+
+ private:
+  basic_thread_pool(basic_thread_pool const &);     // no copies please
+  basic_thread_pool &operator=(basic_thread_pool);  // no assignment
+                                                    // please
+};
+
+typedef basic_thread_pool<tags::default_> thread_pool;
+
+} /* utils */
+
+} /* network */
 
 } /* boost */
 

@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
     try {
       DumpStructure(std::cout, argv[i], *rmp, std::string());
       //	std::ofstream out ( (std::string ( argv[i] ) + "-Results").c_str (),
-      //std::ios::binary );
+      // std::ios::binary );
       //	out << rmp;
     }
     catch (const std::runtime_error &err) {

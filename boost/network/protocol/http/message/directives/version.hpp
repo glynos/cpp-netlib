@@ -11,16 +11,15 @@
 #include <boost/network/message/directives/detail/string_directive.hpp>
 
 namespace boost {
-  namespace network {
-    namespace http {
+namespace network {
+namespace http {
 
-      BOOST_NETWORK_STRING_DIRECTIVE(version, version_,
-                                     message.version(version_),
-                                     message.version = version_);
+BOOST_NETWORK_STRING_DIRECTIVE(version, version_, message.version(version_),
+                               message.version = version_);
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

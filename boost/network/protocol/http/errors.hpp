@@ -11,20 +11,20 @@
 #include <exception>
 
 namespace boost {
-  namespace network {
-    namespace http {
-      namespace errors {
+namespace network {
+namespace http {
+namespace errors {
 
-        template <class Tag = tags::http_default_8bit_tcp_resolve>
-        struct connection_timeout_exception : std::runtime_error {};
+template <class Tag = tags::http_default_8bit_tcp_resolve>
+struct connection_timeout_exception : std::runtime_error {};
 
-        typedef connection_timeout_exception<> connection_timeout;
+typedef connection_timeout_exception<> connection_timeout;
 
-      }  // namespace errors
+}  // namespace errors
 
-    }  // namespace http
+}  // namespace http
 
-  }  // namespace network
+}  // namespace network
 
 }  // namespace boost
 

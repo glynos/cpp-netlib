@@ -11,17 +11,17 @@
 #include <boost/mpl/if.hpp>
 
 namespace boost {
-  namespace network {
+namespace network {
 
-    template <class Tag, class Enable = void> struct pod_or_normal {
-      typedef tags::normal type;
-    };
+template <class Tag, class Enable = void> struct pod_or_normal {
+  typedef tags::normal type;
+};
 
-    template <class Tag>
-    struct pod_or_normal<
-        Tag, typename enable_if<typename Tag::is_pod>::type> : tags::pod {};
+template <class Tag>
+struct pod_or_normal<
+    Tag, typename enable_if<typename Tag::is_pod>::type> : tags::pod {};
 
-  } /* network */
+} /* network */
 
 } /* boost */
 
