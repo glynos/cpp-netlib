@@ -73,10 +73,9 @@ struct basic_client_impl
                     optional<string_type> const& private_key_file,
                     boost::shared_ptr<boost::asio::io_service> service,
                     int timeout)
-      : base_type(cache_resolved, follow_redirect,
-                  always_verify_peer, timeout, service,
-                  certificate_filename, verify_path,
-                  certificate_file, private_key_file) {}
+      : base_type(cache_resolved, follow_redirect, always_verify_peer, timeout,
+                  service, certificate_filename, verify_path, certificate_file,
+                  private_key_file) {}
 
   ~basic_client_impl() {}
 };

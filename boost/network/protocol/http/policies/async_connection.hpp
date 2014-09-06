@@ -70,28 +70,28 @@ struct async_connection_policy : resolver_policy<Tag>::type {
       bool always_verify_peer,
       optional<string_type> const& certificate_filename =
           optional<string_type>(),
-      optional<string_type> const& verify_path =
-          optional<string_type>(),
-      optional<string_type> const& certificate_file =
-          optional<string_type>(),
+      optional<string_type> const& verify_path = optional<string_type>(),
+      optional<string_type> const& certificate_file = optional<string_type>(),
       optional<string_type> const& private_key_file = optional<string_type>()) {
     string_type protocol_ = protocol(request_);
     connection_ptr connection_(new connection_impl(
         follow_redirect_, always_verify_peer,
         boost::bind(&async_connection_policy<Tag, version_major,
                                              version_minor>::resolve,
-                    this, boost::arg<1>(), boost::arg<2>(),
-                    boost::arg<3>(), boost::arg<4>()),
+                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>(),
+                    boost::arg<4>()),
         resolver, boost::iequals(protocol_, string_type("https")), timeout_,
-        certificate_filename, verify_path,
-        certificate_file, private_key_file));
+        certificate_filename, verify_path, certificate_file, private_key_file));
     return connection_;
   }
 
   void cleanup() {}
 
-  async_connection_policy(bool cache_resolved, bool follow_redirect, int timeout)
-      : resolver_base(cache_resolved), follow_redirect_(follow_redirect), timeout_(timeout) {}
+  async_connection_policy(bool cache_resolved, bool follow_redirect,
+                          int timeout)
+      : resolver_base(cache_resolved),
+        follow_redirect_(follow_redirect),
+        timeout_(timeout) {}
 
   bool follow_redirect_;
   int timeout_;

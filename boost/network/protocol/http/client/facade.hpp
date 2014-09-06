@@ -37,14 +37,10 @@ struct basic_client_facade {
     init_pimpl(options);
   }
 
-  ~basic_client_facade() {
-    pimpl->wait_complete();
-  }
+  ~basic_client_facade() { pimpl->wait_complete(); }
 
   response head(request const& request) {
-    return pimpl->request_skeleton(request,
-                                   "HEAD",
-                                   false,
+    return pimpl->request_skeleton(request, "HEAD", false,
                                    body_callback_function_type(),
                                    body_generator_function_type());
   }
@@ -52,12 +48,11 @@ struct basic_client_facade {
   response get(request const& request,
                body_callback_function_type body_handler =
                    body_callback_function_type()) {
-    return pimpl->request_skeleton(
-        request, "GET", true, body_handler, body_generator_function_type());
+    return pimpl->request_skeleton(request, "GET", true, body_handler,
+                                   body_generator_function_type());
   }
 
-  response post(request request,
-                string_type const& body = string_type(),
+  response post(request request, string_type const& body = string_type(),
                 string_type const& content_type = string_type(),
                 body_callback_function_type body_handler =
                     body_callback_function_type(),
@@ -82,36 +77,33 @@ struct basic_client_facade {
         request << header("Content-Type", content_type);
       }
     }
-    return pimpl->request_skeleton(
-        request, "POST", true, body_handler, body_generator);
+    return pimpl->request_skeleton(request, "POST", true, body_handler,
+                                   body_generator);
   }
 
   response post(request const& request,
                 body_generator_function_type body_generator,
                 body_callback_function_type callback =
                     body_generator_function_type()) {
-    return pimpl->request_skeleton(
-        request, "POST", true, callback, body_generator);
+    return pimpl->request_skeleton(request, "POST", true, callback,
+                                   body_generator);
   }
 
-  response post(request const& request,
-                body_callback_function_type callback,
+  response post(request const& request, body_callback_function_type callback,
                 body_generator_function_type body_generator =
                     body_generator_function_type()) {
-    return post(
-        request, string_type(), string_type(), callback, body_generator);
+    return post(request, string_type(), string_type(), callback,
+                body_generator);
   }
 
-  response post(request const& request,
-                string_type const& body,
+  response post(request const& request, string_type const& body,
                 body_callback_function_type callback,
                 body_generator_function_type body_generator =
                     body_generator_function_type()) {
     return post(request, body, string_type(), callback, body_generator);
   }
 
-  response put(request request,
-               string_type const& body = string_type(),
+  response put(request request, string_type const& body = string_type(),
                string_type const& content_type = string_type(),
                body_callback_function_type body_handler =
                    body_callback_function_type(),
@@ -136,19 +128,17 @@ struct basic_client_facade {
         request << header("Content-Type", content_type);
       }
     }
-    return pimpl->request_skeleton(
-        request, "PUT", true, body_handler, body_generator);
+    return pimpl->request_skeleton(request, "PUT", true, body_handler,
+                                   body_generator);
   }
 
-  response put(request const& request,
-               body_callback_function_type callback,
+  response put(request const& request, body_callback_function_type callback,
                body_generator_function_type body_generator =
                    body_generator_function_type()) {
     return put(request, string_type(), string_type(), callback, body_generator);
   }
 
-  response put(request const& request,
-               string_type body,
+  response put(request const& request, string_type body,
                body_callback_function_type callback,
                body_generator_function_type body_generator =
                    body_generator_function_type()) {
@@ -158,26 +148,22 @@ struct basic_client_facade {
   response delete_(request const& request,
                    body_callback_function_type body_handler =
                        body_callback_function_type()) {
-    return pimpl->request_skeleton(
-        request, "DELETE", true, body_handler, body_generator_function_type());
+    return pimpl->request_skeleton(request, "DELETE", true, body_handler,
+                                   body_generator_function_type());
   }
 
   void clear_resolved_cache() { pimpl->clear_resolved_cache(); }
 
  protected:
-
   boost::shared_ptr<pimpl_type> pimpl;
 
   void init_pimpl(client_options<Tag> const& options) {
-    pimpl.reset(new pimpl_type(options.cache_resolved(),
-                               options.follow_redirects(),
-                               options.always_verify_peer(),
-                               options.openssl_certificate(),
-                               options.openssl_verify_path(),
-                               options.openssl_certificate_file(),
-                               options.openssl_private_key_file(),
-                               options.io_service(),
-                               options.timeout()));
+    pimpl.reset(new pimpl_type(
+        options.cache_resolved(), options.follow_redirects(),
+        options.always_verify_peer(), options.openssl_certificate(),
+        options.openssl_verify_path(), options.openssl_certificate_file(),
+        options.openssl_private_key_file(), options.io_service(),
+        options.timeout()));
   }
 };
 

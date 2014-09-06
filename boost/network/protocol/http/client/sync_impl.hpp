@@ -46,17 +46,14 @@ struct sync_client
   optional<string_type> private_key_file_;
   bool always_verify_peer_;
 
-  sync_client(bool cache_resolved, bool follow_redirect,
-              bool always_verify_peer, int timeout,
-              boost::shared_ptr<boost::asio::io_service> service,
-              optional<string_type> const& certificate_filename =
-                  optional<string_type>(),
-              optional<string_type> const& verify_path =
-                  optional<string_type>(),
-              optional<string_type> const& certificate_file =
-                  optional<string_type>(),
-              optional<string_type> const& private_key_file =
-                  optional<string_type>())
+  sync_client(
+      bool cache_resolved, bool follow_redirect, bool always_verify_peer,
+      int timeout, boost::shared_ptr<boost::asio::io_service> service,
+      optional<string_type> const& certificate_filename =
+          optional<string_type>(),
+      optional<string_type> const& verify_path = optional<string_type>(),
+      optional<string_type> const& certificate_file = optional<string_type>(),
+      optional<string_type> const& private_key_file = optional<string_type>())
       : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get() ? service
                                   : make_shared<boost::asio::io_service>()),
@@ -81,9 +78,8 @@ struct sync_client
                                        body_generator_function_type generator) {
     typename connection_base::connection_ptr connection_;
     connection_ = connection_base::get_connection(
-        resolver_, request_, always_verify_peer_,
-        certificate_filename_, verify_path_,
-        certificate_file_, private_key_file_);
+        resolver_, request_, always_verify_peer_, certificate_filename_,
+        verify_path_, certificate_file_, private_key_file_);
     return connection_->send_request(method, request_, get_body, callback,
                                      generator);
   }

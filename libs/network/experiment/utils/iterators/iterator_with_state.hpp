@@ -11,84 +11,67 @@
 // transforming state to an existing iterator, so that it can be used as
 // a base in the transform_width_with_state.
 
-namespace boost
-{
-  template <class Iterator, class State>
-  class iterator_with_state;
+namespace boost {
+template <class Iterator, class State>
+class iterator_with_state;
 
-  namespace detail
-  {
-    template <class Iterator, class State>
-    struct iterator_with_state_base
-    {
-        typedef iterator_adaptor<
-            iterator_with_state<Iterator, State>
-          , Iterator
-          , use_default
-          , typename mpl::if_<
-                is_convertible<
-                    typename iterator_traversal<Iterator>::type
-                  , random_access_traversal_tag
-                >
-              , bidirectional_traversal_tag
-              , use_default
-            >::type
-        > type;
-    };
-  }
-  
-  template <class Iterator, class State>
-  class iterator_with_state
-    : public detail::iterator_with_state_base<Iterator, State>::type
-  {
-      typedef typename detail::iterator_with_state_base<
-          Iterator, State
-      >::type super_t;
+namespace detail {
+template <class Iterator, class State>
+struct iterator_with_state_base {
+  typedef iterator_adaptor<
+      iterator_with_state<Iterator, State>, Iterator, use_default,
+      typename mpl::if_<
+          is_convertible<typename iterator_traversal<Iterator>::type,
+                         random_access_traversal_tag>,
+          bidirectional_traversal_tag, use_default>::type> type;
+};
+}
 
-      friend class iterator_core_access;
+template <class Iterator, class State>
+class iterator_with_state
+    : public detail::iterator_with_state_base<Iterator, State>::type {
+  typedef typename detail::iterator_with_state_base<Iterator, State>::type
+      super_t;
 
-   public:
-      iterator_with_state() {}
+  friend class iterator_core_access;
 
-      typedef State state_type;
+ public:
+  iterator_with_state() {}
 
-      iterator_with_state(Iterator x, Iterator end_, State & state_)
-          : super_t(x), m_end(end_), m_state(&state_) {}
+  typedef State state_type;
 
-      iterator_with_state(Iterator x) : super_t(x) {}
+  iterator_with_state(Iterator x, Iterator end_, State& state_)
+      : super_t(x), m_end(end_), m_state(&state_) {}
 
-      template<class OtherIterator>
-      iterator_with_state(
-          iterator_with_state<OtherIterator, State> const& t
-          , typename enable_if_convertible<OtherIterator, Iterator>::type* = 0
-          )
-          : super_t(t.base()), m_end(t.end()), m_state(&t.state()) {}
+  iterator_with_state(Iterator x) : super_t(x) {}
 
-      Iterator const & end() const { return m_end; }
+  template <class OtherIterator>
+  iterator_with_state(
+      iterator_with_state<OtherIterator, State> const& t,
+      typename enable_if_convertible<OtherIterator, Iterator>::type* = 0)
+      : super_t(t.base()), m_end(t.end()), m_state(&t.state()) {}
 
-      State const & state() const { return *m_state; }
+  Iterator const& end() const { return m_end; }
 
-      State & state() { return *m_state; }
+  State const& state() const { return *m_state; }
 
-   private:
-      void increment() {
-          ++this->base_reference();
-      }
+  State& state() { return *m_state; }
 
-      void decrement() {
-          --(this->base_reference());
-      }
+ private:
+  void increment() { ++this->base_reference(); }
 
-      Iterator m_end;
-      State * m_state;
-  };
+  void decrement() { --(this->base_reference()); }
 
-  template <class Iterator, class State>
-  iterator_with_state<Iterator, State>
-  make_iterator_with_state(Iterator x, Iterator end = Iterator(), State state = State()) {
-      return iterator_with_state<Iterator, State>(x, end, state);
-  }
+  Iterator m_end;
+  State* m_state;
+};
 
-} // namespace boost
+template <class Iterator, class State>
+iterator_with_state<Iterator, State> make_iterator_with_state(
+    Iterator x, Iterator end = Iterator(), State state = State()) {
+  return iterator_with_state<Iterator, State>(x, end, state);
+}
 
-#endif // BOOST_ITERATOR_WITH_STATE_HPP
+}  // namespace boost
+
+#endif  // BOOST_ITERATOR_WITH_STATE_HPP

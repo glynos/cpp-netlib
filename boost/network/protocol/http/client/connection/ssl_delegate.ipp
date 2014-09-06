@@ -14,8 +14,7 @@
 boost::network::http::impl::ssl_delegate::ssl_delegate(
     asio::io_service &service, bool always_verify_peer,
     optional<std::string> certificate_filename,
-    optional<std::string> verify_path,
-    optional<std::string> certificate_file,
+    optional<std::string> verify_path, optional<std::string> certificate_file,
     optional<std::string> private_key_file)
     : service_(service),
       certificate_filename_(certificate_filename),
@@ -41,11 +40,11 @@ void boost::network::http::impl::ssl_delegate::connect(
       context_->set_verify_mode(asio::ssl::context::verify_none);
   }
   if (certificate_file_)
-    context_->use_certificate_file(
-      *certificate_file_, boost::asio::ssl::context::pem);
+    context_->use_certificate_file(*certificate_file_,
+                                   boost::asio::ssl::context::pem);
   if (private_key_file_)
-    context_->use_private_key_file(
-      *private_key_file_, boost::asio::ssl::context::pem);
+    context_->use_private_key_file(*private_key_file_,
+                                   boost::asio::ssl::context::pem);
   socket_.reset(
       new asio::ssl::stream<asio::ip::tcp::socket>(service_, *context_));
   socket_->lowest_layer().async_connect(
@@ -81,7 +80,8 @@ void boost::network::http::impl::ssl_delegate::read_some(
 void boost::network::http::impl::ssl_delegate::disconnect() {
   if (socket_.get() && socket_->lowest_layer().is_open()) {
     boost::system::error_code ignored;
-    socket_->lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
+    socket_->lowest_layer().shutdown(
+        boost::asio::ip::tcp::socket::shutdown_both, ignored);
     if (!ignored) {
       socket_->lowest_layer().close(ignored);
     }

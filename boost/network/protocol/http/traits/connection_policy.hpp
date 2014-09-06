@@ -59,4 +59,3 @@ struct connection_policy<
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_CONNECTION_POLICY_20091214
-
