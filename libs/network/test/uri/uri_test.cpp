@@ -556,3 +556,9 @@ BOOST_AUTO_TEST_CASE(issue_161_test) {
   BOOST_CHECK_EQUAL(uri::decoded(queries["param2"]),
                     "some plus encoded text");
 }
+
+BOOST_AUTO_TEST_CASE(issue_364_test) {
+  uri::uri instance;
+  uri::schemes::http(instance) << uri::host("my.awesome.server.com");
+  BOOST_CHECK_EQUAL("my.awesome.server.com", uri::authority(instance));
+}
