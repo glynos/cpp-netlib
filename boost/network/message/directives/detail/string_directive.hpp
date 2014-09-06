@@ -32,7 +32,8 @@
 
 #ifndef BOOST_NETWORK_STRING_DIRECTIVE
 #define BOOST_NETWORK_STRING_DIRECTIVE(name, value, body, pod_body)         \
-  template <class ValueType> struct name##_directive {                      \
+  template <class ValueType>                                                \
+  struct name##_directive {                                                 \
     ValueType const& value;                                                 \
     explicit name##_directive(ValueType const& value_) : value(value_) {}   \
     name##_directive(name##_directive const& other) : value(other.value) {} \
@@ -48,7 +49,8 @@
     }                                                                       \
   };                                                                        \
                                                                             \
-  template <class T> inline name##_directive<T> name(T const& input) {      \
+  template <class T>                                                        \
+  inline name##_directive<T> name(T const& input) {                         \
     return name##_directive<T>(input);                                      \
   }
 #endif /* BOOST_NETWORK_STRING_DIRECTIVE */

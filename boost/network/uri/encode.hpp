@@ -16,7 +16,8 @@ namespace boost {
 namespace network {
 namespace uri {
 namespace detail {
-template <typename CharT> inline CharT hex_to_letter(CharT in) {
+template <typename CharT>
+inline CharT hex_to_letter(CharT in) {
   switch (in) {
     case 0:
     case 1:

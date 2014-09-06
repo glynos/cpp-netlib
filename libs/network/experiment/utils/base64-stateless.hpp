@@ -81,7 +81,8 @@ std::basic_string<Char> encode(InputRange const& value) {
   return result;
 }
 
-template <typename Char> std::basic_string<Char> encode(char const* value) {
+template <typename Char>
+std::basic_string<Char> encode(char const* value) {
   std::basic_string<Char> result;
   encode(value, std::back_inserter(result));
   return result;

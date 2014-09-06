@@ -33,10 +33,12 @@ remove_header(Message& message, KeyType const& key, Tag) {
   message.remove_header(key);
 }
 
-template <class KeyType> struct iequals_pred {
+template <class KeyType>
+struct iequals_pred {
   KeyType const& key;
   iequals_pred(KeyType const& key) : key(key) {}
-  template <class Header> bool operator()(Header& other) const {
+  template <class Header>
+  bool operator()(Header& other) const {
     return boost::iequals(key, name(other));
   }
 };

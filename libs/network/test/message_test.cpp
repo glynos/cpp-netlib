@@ -43,11 +43,14 @@ struct wstring_header_value {
 
 std::wstring wstring_header_value::string = L"Value";
 
-template <class Tag> struct header_name : string_header_name {};
+template <class Tag>
+struct header_name : string_header_name {};
 
-template <> struct header_name<tags::default_wstring> : wstring_header_name {};
+template <>
+struct header_name<tags::default_wstring> : wstring_header_name {};
 
-template <class Tag> struct header_value : string_header_value {};
+template <class Tag>
+struct header_value : string_header_value {};
 
 template <>
 struct header_value<tags::default_wstring> : wstring_header_value {};
@@ -66,9 +69,11 @@ struct wstring_body_data {
 std::wstring wstring_body_data::string =
     L"The quick brown fox jumps over the lazy dog.";
 
-template <class Tag> struct body_data : string_body_data {};
+template <class Tag>
+struct body_data : string_body_data {};
 
-template <> struct body_data<tags::default_wstring> : wstring_body_data {};
+template <>
+struct body_data<tags::default_wstring> : wstring_body_data {};
 
 struct string_source_data {
   static std::string string;
@@ -82,9 +87,11 @@ struct wstring_source_data {
 
 std::wstring wstring_source_data::string = L"Source";
 
-template <class Tag> struct source_data : string_source_data {};
+template <class Tag>
+struct source_data : string_source_data {};
 
-template <> struct source_data<tags::default_wstring> : wstring_body_data {};
+template <>
+struct source_data<tags::default_wstring> : wstring_body_data {};
 
 struct string_destination_data {
   static std::string string;
@@ -98,7 +105,8 @@ struct wstring_destination_data {
 
 std::wstring wstring_destination_data::string = L"Destination";
 
-template <class Tag> struct destination_data : string_destination_data {};
+template <class Tag>
+struct destination_data : string_destination_data {};
 
 template <>
 struct destination_data<tags::default_wstring> : wstring_destination_data {};

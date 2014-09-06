@@ -17,7 +17,8 @@ struct scheme_directive {
 
   explicit scheme_directive(const std::string &scheme) : scheme(scheme) {}
 
-  template <class Uri> void operator()(Uri &uri) const {
+  template <class Uri>
+  void operator()(Uri &uri) const {
     uri.append(scheme);
     if (opaque_schemes::exists(scheme)) {
       uri.append(":");

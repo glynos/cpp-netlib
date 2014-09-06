@@ -14,7 +14,8 @@ namespace boost {
 namespace network {
 namespace uri {
 namespace detail {
-template <class FwdIter> struct hierarchical_part {
+template <class FwdIter>
+struct hierarchical_part {
   optional<iterator_range<FwdIter> > user_info;
   optional<iterator_range<FwdIter> > host;
   optional<iterator_range<FwdIter> > port;
@@ -52,7 +53,8 @@ template <class FwdIter> struct hierarchical_part {
   }
 };
 
-template <class FwdIter> struct uri_parts {
+template <class FwdIter>
+struct uri_parts {
   iterator_range<FwdIter> scheme;
   hierarchical_part<FwdIter> hier_part;
   optional<iterator_range<FwdIter> > query;

@@ -24,11 +24,13 @@ namespace http {
 
 namespace impl {
 
-template <class Tag> struct ready_wrapper;
+template <class Tag>
+struct ready_wrapper;
 
 } /* impl */
 
-template <class Tag> struct async_message {
+template <class Tag>
+struct async_message {
 
   typedef typename string<Tag>::type string_type;
   typedef typename headers_container<Tag>::type headers_container_type;

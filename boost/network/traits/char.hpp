@@ -12,9 +12,11 @@
 namespace boost {
 namespace network {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
-template <class Tag, class Enable = void> struct char_ {
+template <class Tag, class Enable = void>
+struct char_ {
   typedef unsupported_tag<Tag> type;
 };
 

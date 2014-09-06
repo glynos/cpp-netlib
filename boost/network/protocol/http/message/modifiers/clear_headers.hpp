@@ -37,7 +37,8 @@ inline void clear_headers_impl(basic_request<Tag>& request, tags::server) {
   headers_container().swap(request.headers);
 }
 
-template <class Tag> inline void clear_headers(basic_request<Tag>& request) {
+template <class Tag>
+inline void clear_headers(basic_request<Tag>& request) {
   clear_headers_impl(request, typename client_or_server<Tag>::type());
 }
 

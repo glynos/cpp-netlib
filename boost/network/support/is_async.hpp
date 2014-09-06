@@ -13,7 +13,8 @@
 namespace boost {
 namespace network {
 
-template <class Tag, class Enable = void> struct is_async : mpl::false_ {};
+template <class Tag, class Enable = void>
+struct is_async : mpl::false_ {};
 
 template <class Tag>
 struct is_async<

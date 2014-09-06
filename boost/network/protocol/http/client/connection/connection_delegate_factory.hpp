@@ -23,7 +23,8 @@ struct ssl_delegate;
 
 struct normal_delegate;
 
-template <class Tag> struct connection_delegate_factory {
+template <class Tag>
+struct connection_delegate_factory {
   typedef shared_ptr<connection_delegate> connection_delegate_ptr;
   typedef typename string<Tag>::type string_type;
 

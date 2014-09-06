@@ -23,10 +23,13 @@ namespace network {
 
 namespace impl {
 
-template <class Selector> struct to_upper_transformer {};
+template <class Selector>
+struct to_upper_transformer {};
 
-template <> struct to_upper_transformer<selectors::source_selector> {
-  template <class Tag> void operator()(basic_message<Tag> &message_) const {
+template <>
+struct to_upper_transformer<selectors::source_selector> {
+  template <class Tag>
+  void operator()(basic_message<Tag> &message_) const {
     boost::to_upper(message_.source());
   }
 
@@ -34,8 +37,10 @@ template <> struct to_upper_transformer<selectors::source_selector> {
   ~to_upper_transformer() {};
 };
 
-template <> struct to_upper_transformer<selectors::destination_selector> {
-  template <class Tag> void operator()(basic_message<Tag> &message_) const {
+template <>
+struct to_upper_transformer<selectors::destination_selector> {
+  template <class Tag>
+  void operator()(basic_message<Tag> &message_) const {
     boost::to_upper(message_.destination());
   }
 

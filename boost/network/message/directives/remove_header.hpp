@@ -12,10 +12,12 @@
 namespace boost {
 namespace network {
 
-template <class Tag> struct basic_message;
+template <class Tag>
+struct basic_message;
 
 namespace impl {
-template <class T> struct remove_header_directive {
+template <class T>
+struct remove_header_directive {
 
   explicit remove_header_directive(T header_name)
       : header_name_(header_name) {};

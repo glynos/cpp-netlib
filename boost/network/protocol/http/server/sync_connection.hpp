@@ -66,7 +66,8 @@ struct sync_connection
 
  private:
   struct is_content_length {
-    template <class Header> bool operator()(Header const &header) {
+    template <class Header>
+    bool operator()(Header const &header) {
       return boost::to_lower_copy(header.name) == "content-length";
     }
   };

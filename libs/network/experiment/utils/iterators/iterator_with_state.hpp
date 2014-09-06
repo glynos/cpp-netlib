@@ -12,10 +12,12 @@
 // a base in the transform_width_with_state.
 
 namespace boost {
-template <class Iterator, class State> class iterator_with_state;
+template <class Iterator, class State>
+class iterator_with_state;
 
 namespace detail {
-template <class Iterator, class State> struct iterator_with_state_base {
+template <class Iterator, class State>
+struct iterator_with_state_base {
   typedef iterator_adaptor<
       iterator_with_state<Iterator, State>, Iterator, use_default,
       typename mpl::if_<

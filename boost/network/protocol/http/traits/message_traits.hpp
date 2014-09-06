@@ -17,23 +17,32 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct delimiters;
+template <class Tag>
+struct delimiters;
 
-template <class Tag> struct headers_;
+template <class Tag>
+struct headers_;
 
-template <class Tag> struct content;
+template <class Tag>
+struct content;
 
-template <class Tag> struct request_methods;
+template <class Tag>
+struct request_methods;
 
-template <class Tag> struct response_message;
+template <class Tag>
+struct response_message;
 
-template <class Tag> struct response_code;
+template <class Tag>
+struct response_code;
 
-template <class Tag> struct query_container;
+template <class Tag>
+struct query_container;
 
-template <class Tag> struct cookies_container;
+template <class Tag>
+struct cookies_container;
 
-template <class Tag> struct chunk_cache;
+template <class Tag>
+struct chunk_cache;
 
 }  // namespace http
 

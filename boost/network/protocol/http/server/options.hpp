@@ -20,7 +20,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag, class Handler> struct server_options {
+template <class Tag, class Handler>
+struct server_options {
   typedef typename string<Tag>::type string_type;
 
   explicit server_options(Handler &handler)

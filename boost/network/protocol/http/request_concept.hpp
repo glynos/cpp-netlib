@@ -17,7 +17,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class R> struct ServerRequest {
+template <class R>
+struct ServerRequest {
   typedef typename R::string_type string_type;
   typedef typename R::tag tag;
   typedef typename R::headers_container_type headers_container_type;
@@ -72,7 +73,8 @@ template <class R> struct ServerRequest {
   R request;
 };
 
-template <class R> struct ClientRequest : boost::network::Message<R> {
+template <class R>
+struct ClientRequest : boost::network::Message<R> {
   typedef typename R::string_type string_type;
   typedef typename R::port_type port_type;
 

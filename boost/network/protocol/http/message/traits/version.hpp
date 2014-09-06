@@ -19,9 +19,11 @@ namespace http {
 
 namespace traits {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
-template <class Message, class Enable = void> struct version {
+template <class Message, class Enable = void>
+struct version {
   typedef unsupported_tag<typename Message::tag> type;
 };
 

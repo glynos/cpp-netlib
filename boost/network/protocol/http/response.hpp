@@ -41,7 +41,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_response : public message_base<Tag>::type {
+template <class Tag>
+struct basic_response : public message_base<Tag>::type {
 
   typedef typename string<Tag>::type string_type;
 

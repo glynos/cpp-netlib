@@ -18,7 +18,8 @@ struct fragment_directive {
   explicit fragment_directive(const std::string &fragment)
       : fragment(fragment) {}
 
-  template <class Uri> void operator()(Uri &uri) const {
+  template <class Uri>
+  void operator()(Uri &uri) const {
     uri.append("#");
     uri.append(fragment);
   }

@@ -14,7 +14,8 @@ namespace boost {
 namespace network {
 namespace detail {
 
-template <class Tag> struct directive_base {
+template <class Tag>
+struct directive_base {
   typedef Tag tag;
   // explicit directive_base(basic_message<tag> & message_)
   //    : _message(message_)

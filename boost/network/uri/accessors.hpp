@@ -37,7 +37,8 @@ struct key_value_sequence : spirit::qi::grammar<uri::const_iterator, Map()> {
 };
 }  // namespace details
 
-template <class Map> inline Map &query_map(const uri &uri_, Map &map) {
+template <class Map>
+inline Map &query_map(const uri &uri_, Map &map) {
   const uri::string_type range = uri_.query();
   details::key_value_sequence<Map> parser;
   spirit::qi::parse(boost::begin(range), boost::end(range), parser, map);

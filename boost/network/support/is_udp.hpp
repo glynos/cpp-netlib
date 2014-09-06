@@ -15,7 +15,8 @@
 namespace boost {
 namespace network {
 
-template <class Tag, class Enable = void> struct is_udp : mpl::false_ {};
+template <class Tag, class Enable = void>
+struct is_udp : mpl::false_ {};
 
 template <class Tag>
 struct is_udp<Tag,

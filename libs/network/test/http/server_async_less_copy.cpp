@@ -24,7 +24,8 @@ typedef http::async_server<async_hello_world> server;
 struct async_hello_world {
 
   struct is_content_length {
-    template <class Header> bool operator()(Header const& header) {
+    template <class Header>
+    bool operator()(Header const& header) {
       return boost::iequals(name(header), "content-length");
     }
   };

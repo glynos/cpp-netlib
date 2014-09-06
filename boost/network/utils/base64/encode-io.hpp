@@ -46,7 +46,8 @@ namespace detail {
 // std::basic_ostream<Char> & output = ...;
 // output << input_wrapper<InputIterator>(value.begin(),
 // value.end());
-template <typename InputIterator> struct input_wrapper {
+template <typename InputIterator>
+struct input_wrapper {
   input_wrapper(InputIterator begin, InputIterator end)
       : begin(begin), end(end) {}
 

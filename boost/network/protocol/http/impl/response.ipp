@@ -27,7 +27,8 @@ namespace network {
 namespace http {
 
 /// A reply to be sent to a client.
-template <> struct basic_response<tags::http_server> {
+template <>
+struct basic_response<tags::http_server> {
   typedef tags::http_server tag;
   typedef response_header<tags::http_server>::type header_type;
 

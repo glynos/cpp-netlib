@@ -14,20 +14,24 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Message> struct headers_range {
+template <class Message>
+struct headers_range {
   typedef typename headers_container<typename Message::tag>::type
       headers_container_type;
   typedef typename boost::iterator_range<
       typename headers_container_type::const_iterator> type;
 };
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
-template <class Tag> struct basic_response;
+template <class Tag>
+struct basic_response;
 
 namespace impl {
 
-template <class Tag> struct request_headers_wrapper {
+template <class Tag>
+struct request_headers_wrapper {
   typedef typename string<Tag>::type string_type;
   typedef typename headers_range<basic_request<Tag> >::type range_type;
   typedef typename headers_container<Tag>::type headers_container_type;
@@ -61,7 +65,8 @@ template <class Tag> struct request_headers_wrapper {
   basic_request<Tag> const& message_;
 };
 
-template <class Tag> struct response_headers_wrapper {
+template <class Tag>
+struct response_headers_wrapper {
   typedef typename string<Tag>::type string_type;
   typedef typename headers_range<basic_response<Tag> >::type range_type;
   typedef typename headers_container<Tag>::type headers_container_type;

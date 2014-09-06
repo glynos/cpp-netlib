@@ -25,7 +25,8 @@ namespace network {
 namespace http {
 
 /// base class for HTTP messages (requests and responses)
-template <typename Tag> struct message_impl : public basic_message<Tag> {
+template <typename Tag>
+struct message_impl : public basic_message<Tag> {
 
   typedef typename string<Tag>::type string_type;
 

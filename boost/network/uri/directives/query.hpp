@@ -17,7 +17,8 @@ struct query_directive {
 
   explicit query_directive(const std::string &query) : query(query) {}
 
-  template <class Uri> void operator()(Uri &uri) const {
+  template <class Uri>
+  void operator()(Uri &uri) const {
     uri.append("?");
     uri.append(query);
   }
@@ -34,7 +35,8 @@ struct query_key_query_directive {
   query_key_query_directive(const std::string &key, const std::string &query)
       : key(key), query(query) {}
 
-  template <class Uri> void operator()(Uri &uri) const {
+  template <class Uri>
+  void operator()(Uri &uri) const {
     std::string encoded_key, encoded_query;
     if (boost::empty(uri.query())) {
       uri.append("?");

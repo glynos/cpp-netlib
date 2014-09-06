@@ -14,9 +14,11 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
-template <class Tag, class Enable = void> struct client_or_server {
+template <class Tag, class Enable = void>
+struct client_or_server {
   typedef unsupported_tag<Tag> type;
 };
 

@@ -20,7 +20,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_response;
+template <class Tag>
+struct basic_response;
 
 struct status_directive {
 
@@ -38,7 +39,8 @@ struct status_directive {
   struct value : mpl::if_<is_async<Tag>, boost::shared_future<boost::uint16_t>,
                           boost::uint16_t> {};
 
-  template <class Tag> struct status_visitor : boost::static_visitor<> {
+  template <class Tag>
+  struct status_visitor : boost::static_visitor<> {
     basic_response<Tag> const &response;
     status_visitor(basic_response<Tag> const &response) : response(response) {}
 
@@ -46,7 +48,8 @@ struct status_directive {
       response.status(status_);
     }
 
-    template <class T> void operator()(T const &) const {
+    template <class T>
+    void operator()(T const &) const {
       // FIXME fail here!
     }
   };
@@ -59,7 +62,8 @@ struct status_directive {
   }
 };
 
-template <class T> inline status_directive const status(T const &status_) {
+template <class T>
+inline status_directive const status(T const &status_) {
   return status_directive(status_);
 }
 

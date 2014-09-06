@@ -41,7 +41,8 @@ struct default_wstring {
   typedef mpl::true_::type is_default_wstring;
 };
 
-template <class Tag> struct components;
+template <class Tag>
+struct components;
 
 // Tag Definition Macro Helper
 #ifndef BOOST_NETWORK_DEFINE_TAG
@@ -50,7 +51,8 @@ template <class Tag> struct components;
       : mpl::inherit_linearly<name##_tags,                                    \
                               mpl::inherit<mpl::placeholders::_1,             \
                                            mpl::placeholders::_2> >::type {}; \
-  template <> struct components<name> {                                       \
+  template <>                                                                 \
+  struct components<name> {                                                   \
     typedef name##_tags type;                                                 \
   };
 #endif  // BOOST_NETWORK_DEFINE_TAG

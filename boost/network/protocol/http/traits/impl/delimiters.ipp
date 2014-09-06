@@ -14,7 +14,8 @@ namespace network {
 namespace http {
 
 // specialize on the tags::http_default_8bit_tcp_resolve type
-template <> struct delimiters<tags::http_default_8bit_tcp_resolve> {
+template <>
+struct delimiters<tags::http_default_8bit_tcp_resolve> {
   static char const* string_crlf() {
     static char const* const CRLF = "\x0D\x0A";
     return CRLF;

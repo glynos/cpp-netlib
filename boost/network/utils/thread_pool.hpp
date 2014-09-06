@@ -22,7 +22,8 @@ typedef boost::shared_ptr<boost::asio::io_service> io_service_ptr;
 typedef boost::shared_ptr<boost::thread_group> worker_threads_ptr;
 typedef boost::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
 
-template <class Tag> struct basic_thread_pool {
+template <class Tag>
+struct basic_thread_pool {
   basic_thread_pool(std::size_t threads = 1,
                     io_service_ptr io_service = io_service_ptr(),
                     worker_threads_ptr worker_threads = worker_threads_ptr())

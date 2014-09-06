@@ -16,7 +16,8 @@ namespace boost {
 namespace network {
 namespace impl {
 
-template <class Tag, class Enable = void> struct headers_container_impl {
+template <class Tag, class Enable = void>
+struct headers_container_impl {
   typedef std::multimap<typename string<Tag>::type, typename string<Tag>::type>
       type;
 };

@@ -16,7 +16,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct client_options {
+template <class Tag>
+struct client_options {
   typedef typename string<Tag>::type string_type;
 
   client_options()

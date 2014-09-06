@@ -17,7 +17,8 @@ struct user_info_directive {
   explicit user_info_directive(const std::string &user_info)
       : user_info(user_info) {}
 
-  template <class Uri> void operator()(Uri &uri) const {
+  template <class Uri>
+  void operator()(Uri &uri) const {
     uri.append(user_info);
     uri.append("@");
   }

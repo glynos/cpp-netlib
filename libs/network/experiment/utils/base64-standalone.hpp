@@ -50,7 +50,8 @@ namespace detail {
 
 // Picks a character from the output alphabet for another 6-bit value
 // from the input sequence to encode.
-template <typename Value> char encode_value(Value value) {
+template <typename Value>
+char encode_value(Value value) {
   static char const* encoding =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
       "+/";
@@ -68,7 +69,8 @@ template <typename Value> char encode_value(Value value) {
 // of octets which will be processed joined (as if the trailing rest
 // from
 // the previous one was at its beinning).
-template <typename Value> struct state {
+template <typename Value>
+struct state {
   state() : triplet_index(0), last_encoded_value(0) {}
 
   state(state<Value> const& source)
@@ -398,7 +400,8 @@ std::basic_string<Char> encode(InputRange const& value) {
 // character, which is the usual expectation.
 //
 // std::basic_string<Char> result = base64::encode<Char>("ab");
-template <typename Char> std::basic_string<Char> encode(char const* value) {
+template <typename Char>
+std::basic_string<Char> encode(char const* value) {
   std::basic_string<Char> result;
   encode(value, std::back_inserter(result));
   return result;

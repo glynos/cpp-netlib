@@ -51,7 +51,8 @@ namespace http {
   * object encapsulates a URI which is parsed at runtime.
   */
 
-template <class Tag> struct basic_request : public basic_message<Tag> {
+template <class Tag>
+struct basic_request : public basic_message<Tag> {
 
   mutable boost::network::uri::uri uri_;
   typedef basic_message<Tag> base_type;
@@ -121,7 +122,8 @@ template <class Tag> struct basic_request : public basic_message<Tag> {
  *  Reality check: This is not a POD because it contains a non-POD
  *  member, the headers vector. :(
  */
-template <class Tag> struct not_quite_pod_request_base {
+template <class Tag>
+struct not_quite_pod_request_base {
   typedef Tag tag;
   typedef typename string<Tag>::type string_type;
   typedef typename request_header<Tag>::type header_type;
@@ -158,7 +160,8 @@ template <>
 struct basic_request<tags::http_server> : not_quite_pod_request_base<
                                               tags::http_server> {};
 
-template <class R> struct ServerRequest;
+template <class R>
+struct ServerRequest;
 
 BOOST_CONCEPT_ASSERT((ServerRequest<basic_request<tags::http_async_server> >));
 BOOST_CONCEPT_ASSERT((ServerRequest<basic_request<tags::http_server> >));
@@ -173,7 +176,8 @@ inline void swap(basic_request<Tag>& lhs, basic_request<Tag>& rhs) {
 namespace http {
 namespace impl {
 
-template <> struct request_headers_wrapper<tags::http_server> {
+template <>
+struct request_headers_wrapper<tags::http_server> {
   basic_request<tags::http_server> const& request_;
   request_headers_wrapper(basic_request<tags::http_server> const& request_)
       : request_(request_) {}
@@ -181,7 +185,8 @@ template <> struct request_headers_wrapper<tags::http_server> {
   operator headers_container_type() { return request_.headers; }
 };
 
-template <> struct body_wrapper<basic_request<tags::http_server> > {
+template <>
+struct body_wrapper<basic_request<tags::http_server> > {
   typedef string<tags::http_server>::type string_type;
   basic_request<tags::http_server> const& request_;
   body_wrapper(basic_request<tags::http_server> const& request_)
@@ -189,7 +194,8 @@ template <> struct body_wrapper<basic_request<tags::http_server> > {
   operator string_type() { return request_.body; }
 };
 
-template <> struct request_headers_wrapper<tags::http_async_server> {
+template <>
+struct request_headers_wrapper<tags::http_async_server> {
   basic_request<tags::http_async_server> const& request_;
   request_headers_wrapper(
       basic_request<tags::http_async_server> const& request_)
@@ -199,7 +205,8 @@ template <> struct request_headers_wrapper<tags::http_async_server> {
   operator headers_container_type() { return request_.headers; }
 };
 
-template <> struct body_wrapper<basic_request<tags::http_async_server> > {
+template <>
+struct body_wrapper<basic_request<tags::http_async_server> > {
   typedef string<tags::http_async_server>::type string_type;
   basic_request<tags::http_async_server> const& request_;
   body_wrapper(basic_request<tags::http_async_server> const& request_)

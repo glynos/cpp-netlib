@@ -19,7 +19,8 @@ namespace network {
 namespace http {
 namespace policies {
 
-template <class Tag> struct sync_resolver {
+template <class Tag>
+struct sync_resolver {
 
   typedef typename resolver<Tag>::type resolver_type;
   typedef typename resolver_type::iterator resolver_iterator;

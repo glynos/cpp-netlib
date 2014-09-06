@@ -23,10 +23,13 @@ namespace network {
 
 namespace impl {
 
-template <class Selector> struct to_lower_transformer {};
+template <class Selector>
+struct to_lower_transformer {};
 
-template <> struct to_lower_transformer<selectors::source_selector> {
-  template <class Tag> void operator()(basic_message<Tag> &message_) const {
+template <>
+struct to_lower_transformer<selectors::source_selector> {
+  template <class Tag>
+  void operator()(basic_message<Tag> &message_) const {
     boost::to_lower(message_.source());
   }
 
@@ -34,8 +37,10 @@ template <> struct to_lower_transformer<selectors::source_selector> {
   ~to_lower_transformer() {}
 };
 
-template <> struct to_lower_transformer<selectors::destination_selector> {
-  template <class Tag> void operator()(basic_message<Tag> &message_) const {
+template <>
+struct to_lower_transformer<selectors::destination_selector> {
+  template <class Tag>
+  void operator()(basic_message<Tag> &message_) const {
     boost::to_lower(message_.destination());
   }
 

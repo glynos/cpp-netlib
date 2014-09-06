@@ -70,7 +70,8 @@ struct http_async_protocol_handler {
 
   struct to_http_headers {
     typedef typename string<Tag>::type string_type;
-    template <class U> string_type const operator()(U const& pair) const {
+    template <class U>
+    string_type const operator()(U const& pair) const {
       typedef typename ostringstream<Tag>::type ostringstream_type;
       typedef constants<Tag> constants;
       ostringstream_type header_line;

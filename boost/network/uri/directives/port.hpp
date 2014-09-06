@@ -21,7 +21,8 @@ struct port_directive {
   explicit port_directive(boost::uint16_t port)
       : port(boost::lexical_cast<std::string>(port)) {}
 
-  template <class Uri> void operator()(Uri &uri) const {
+  template <class Uri>
+  void operator()(Uri &uri) const {
     uri.append(":");
     uri.append(port);
   }

@@ -18,7 +18,8 @@ namespace network {
 
 namespace traits {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
 template <class Message>
 struct destination

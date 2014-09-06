@@ -10,13 +10,16 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_response;
+template <class Tag>
+struct basic_response;
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
 namespace impl {
 
-template <class Message> struct body_wrapper {
+template <class Message>
+struct body_wrapper {
   typedef typename string<typename Message::tag>::type string_type;
   Message const& message_;
   explicit body_wrapper(Message const& message) : message_(message) {}

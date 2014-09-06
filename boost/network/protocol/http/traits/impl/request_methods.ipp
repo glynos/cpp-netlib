@@ -13,7 +13,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <> struct request_methods<tags::http_default_8bit_tcp_resolve> {
+template <>
+struct request_methods<tags::http_default_8bit_tcp_resolve> {
   static char const* head() {
     static char const* const HEAD = "HEAD";
     return HEAD;

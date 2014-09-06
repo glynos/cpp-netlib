@@ -14,7 +14,8 @@ struct authority_directive {
   explicit authority_directive(const std::string &authority)
       : authority(authority) {}
 
-  template <class Uri> void operator()(Uri &uri) const {
+  template <class Uri>
+  void operator()(Uri &uri) const {
     uri.append(authority);
   }
 

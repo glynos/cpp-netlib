@@ -51,7 +51,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
 }  // namespace http
 

@@ -17,14 +17,16 @@ namespace boost {
 namespace network {
 
 /// Template metaprogram to get the range type for a message
-template <class Message> struct headers_range {
+template <class Message>
+struct headers_range {
   typedef typename headers_container<typename Message::tag>::type
       headers_container_type;
   typedef typename boost::iterator_range<
       typename headers_container_type::const_iterator> type;
 };
 
-template <class Tag> struct basic_message;
+template <class Tag>
+struct basic_message;
 
 /** headers wrapper for messages.
  *

@@ -37,7 +37,8 @@ class mime_parsing_error : public std::runtime_error {
       : std::runtime_error(msg) {}
 };
 
-template <class traits> class basic_mime;
+template <class traits>
+class basic_mime;
 
 namespace detail {
 
@@ -53,7 +54,8 @@ struct default_types {
   typedef std::vector<char> body_type;
 };
 
-template <typename string_type> struct find_mime_header {
+template <typename string_type>
+struct find_mime_header {
   find_mime_header(const char *str) : searchFor(str) {}
   bool operator()(const std::pair<std::string, string_type> &val) const {
     return boost::iequals(val.first, searchFor);
@@ -249,7 +251,8 @@ std::string get_boundary(const std::string &ctString) {
 typedef std::vector<char> sub_part_t;
 typedef std::vector<sub_part_t> sub_parts_t;
 
-template <typename bodyContainer> struct multipart_body_type {
+template <typename bodyContainer>
+struct multipart_body_type {
   bool prolog_is_missing;
   bodyContainer body_prolog;
   sub_parts_t sub_parts;
@@ -375,7 +378,8 @@ static boost::shared_ptr<basic_mime<traits> > parse_mime(
     const char *default_content_type = "text/plain");
 }
 
-template <class traits = detail::default_types> class basic_mime {
+template <class traits = detail::default_types>
+class basic_mime {
  public:
   typedef enum {
     simple_part,
@@ -570,7 +574,8 @@ template <class traits = detail::default_types> class basic_mime {
 
   std::size_t body_size() const { return m_body->size(); }
 
-  template <typename Iterator> void set_body(Iterator begin, Iterator end) {
+  template <typename Iterator>
+  void set_body(Iterator begin, Iterator end) {
     bodyContainer temp;
     std::copy(begin, end, std::back_inserter(temp));
     m_body->swap(temp);

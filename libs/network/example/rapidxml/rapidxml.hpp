@@ -90,7 +90,8 @@ class parse_error : public std::exception {
   // error.
   //! \return Pointer to location within the parsed string where error
   // occured.
-  template <class Ch> Ch *where() const {
+  template <class Ch>
+  Ch *where() const {
     return reinterpret_cast<Ch *>(m_where);
   }
 
@@ -136,9 +137,12 @@ class parse_error : public std::exception {
 
 namespace rapidxml {
 // Forward declarations
-template <class Ch> class xml_node;
-template <class Ch> class xml_attribute;
-template <class Ch> class xml_document;
+template <class Ch>
+class xml_node;
+template <class Ch>
+class xml_attribute;
+template <class Ch>
+class xml_document;
 
 //! Enumeration listing all node types produced by the parser.
 //! Use xml_node::type() function to query node type.
@@ -319,7 +323,8 @@ namespace internal {
 // Struct that contains lookup tables for the parser
 // It must be a template to allow correct linking (because it has static
 // data members, which are defined in a header file).
-template <int Dummy> struct lookup_tables {
+template <int Dummy>
+struct lookup_tables {
   static const unsigned char lookup_whitespace[256];         // Whitespace table
   static const unsigned char lookup_node_name[256];          // Node name table
   static const unsigned char lookup_text[256];               // Text table
@@ -350,7 +355,8 @@ template <int Dummy> struct lookup_tables {
 };
 
 // Find length of the string
-template <class Ch> inline std::size_t measure(const Ch *p) {
+template <class Ch>
+inline std::size_t measure(const Ch *p) {
   const Ch *tmp = p;
   while (*tmp) ++tmp;
   return tmp - p;
@@ -425,7 +431,8 @@ inline bool compare(const Ch *p1, std::size_t size1, const Ch *p2,
 //! to obtain best wasted memory to performance compromise.
 //! To do it, define their values before rapidxml.hpp file is included.
 //! \param Ch Character type of created nodes.
-template <class Ch = char> class memory_pool {
+template <class Ch = char>
+class memory_pool {
 
  public:
   //! \cond internal
@@ -701,7 +708,8 @@ template <class Ch = char> class memory_pool {
 //! Base class for xml_node and xml_attribute implementing common functions:
 //! name(), name_size(), value(), value_size() and parent().
 //! \param Ch Character type to use
-template <class Ch = char> class xml_base {
+template <class Ch = char>
+class xml_base {
 
  public:
   ///////////////////////////////////////////////////////////////////////////
@@ -840,7 +848,8 @@ template <class Ch = char> class xml_base {
 // interior of source text used for parsing.
 //! Thus, this text must persist in memory for the lifetime of attribute.
 //! \param Ch Character type to use.
-template <class Ch = char> class xml_attribute : public xml_base<Ch> {
+template <class Ch = char>
+class xml_attribute : public xml_base<Ch> {
 
   friend class xml_node<Ch>;
 
@@ -939,7 +948,8 @@ template <class Ch = char> class xml_attribute : public xml_base<Ch> {
 // interior of source text used for parsing.
 //! Thus, this text must persist in the memory for the lifetime of node.
 //! \param Ch Character type to use.
-template <class Ch = char> class xml_node : public xml_base<Ch> {
+template <class Ch = char>
+class xml_node : public xml_base<Ch> {
 
  public:
   ///////////////////////////////////////////////////////////////////////////
@@ -1426,7 +1436,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   // but does not clear memory pool.
   //! \param text XML data to parse; pointer is non-const to denote fact that
   // this data may be modified by the parser.
-  template <int Flags> void parse(Ch *text) {
+  template <int Flags>
+  void parse(Ch *text) {
     assert(text);
 
     // Remove current contents
@@ -1513,7 +1524,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   };
 
   // Detect attribute value character
-  template <Ch Quote> struct attribute_value_pred {
+  template <Ch Quote>
+  struct attribute_value_pred {
     static unsigned char test(Ch ch) {
       if (Quote == Ch('\''))
         return internal::lookup_tables<0>::lookup_attribute_data_1
@@ -1526,7 +1538,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   };
 
   // Detect attribute value character
-  template <Ch Quote> struct attribute_value_pure_pred {
+  template <Ch Quote>
+  struct attribute_value_pure_pred {
     static unsigned char test(Ch ch) {
       if (Quote == Ch('\''))
         return internal::lookup_tables<0>::lookup_attribute_data_1_pure
@@ -1585,7 +1598,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   }
 
   // Skip characters until predicate evaluates to true
-  template <class StopPred, int Flags> static void skip(Ch *&text) {
+  template <class StopPred, int Flags>
+  static void skip(Ch *&text) {
     Ch *tmp = text;
     while (StopPred::test(*tmp)) ++tmp;
     text = tmp;
@@ -1737,7 +1751,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   // Internal parsing functions
 
   // Parse BOM, if any
-  template <int Flags> void parse_bom(Ch *&text) {
+  template <int Flags>
+  void parse_bom(Ch *&text) {
     // UTF-8?
     if (static_cast<unsigned char>(text[0]) == 0xEF &&
         static_cast<unsigned char>(text[1]) == 0xBB &&
@@ -1747,7 +1762,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   }
 
   // Parse XML declaration (<?xml...)
-  template <int Flags> xml_node<Ch> *parse_xml_declaration(Ch *&text) {
+  template <int Flags>
+  xml_node<Ch> *parse_xml_declaration(Ch *&text) {
     // If parsing of declaration is disabled
     if (!(Flags & parse_declaration_node)) {
       // Skip until end of declaration
@@ -1777,7 +1793,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   }
 
   // Parse XML comment (<!--...)
-  template <int Flags> xml_node<Ch> *parse_comment(Ch *&text) {
+  template <int Flags>
+  xml_node<Ch> *parse_comment(Ch *&text) {
     // If parsing of comments is disabled
     if (!(Flags & parse_comment_nodes)) {
       // Skip until end of comment
@@ -1810,7 +1827,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   }
 
   // Parse DOCTYPE
-  template <int Flags> xml_node<Ch> *parse_doctype(Ch *&text) {
+  template <int Flags>
+  xml_node<Ch> *parse_doctype(Ch *&text) {
     // Remember value start
     Ch *value = text;
 
@@ -1869,7 +1887,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   }
 
   // Parse PI
-  template <int Flags> xml_node<Ch> *parse_pi(Ch *&text) {
+  template <int Flags>
+  xml_node<Ch> *parse_pi(Ch *&text) {
     // If creation of PI nodes is enabled
     if (Flags & parse_pi_nodes) {
       // Create pi node
@@ -1975,7 +1994,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   }
 
   // Parse CDATA
-  template <int Flags> xml_node<Ch> *parse_cdata(Ch *&text) {
+  template <int Flags>
+  xml_node<Ch> *parse_cdata(Ch *&text) {
     // If CDATA is disabled
     if (Flags & parse_no_data_nodes) {
       // Skip until end of cdata
@@ -2006,7 +2026,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   }
 
   // Parse element node
-  template <int Flags> xml_node<Ch> *parse_element(Ch *&text) {
+  template <int Flags>
+  xml_node<Ch> *parse_element(Ch *&text) {
     // Create element node
     xml_node<Ch> *element = this->allocate_node(node_element);
 
@@ -2042,7 +2063,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   }
 
   // Determine node type, and parse it
-  template <int Flags> xml_node<Ch> *parse_node(Ch *&text) {
+  template <int Flags>
+  xml_node<Ch> *parse_node(Ch *&text) {
     // Parse proper node type
     switch (text[0]) {
 
@@ -2117,7 +2139,8 @@ class xml_document : public xml_node<Ch>, public memory_pool<Ch> {
   }
 
   // Parse contents of the node - children, data etc.
-  template <int Flags> void parse_node_contents(Ch *&text, xml_node<Ch> *node) {
+  template <int Flags>
+  void parse_node_contents(Ch *&text, xml_node<Ch> *node) {
     // For all children and text
     while (1) {
       // Skip whitespace between > and node contents

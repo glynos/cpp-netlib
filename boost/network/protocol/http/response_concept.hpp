@@ -18,7 +18,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class R> struct Response : boost::network::Message<R> {
+template <class R>
+struct Response : boost::network::Message<R> {
   typedef typename R::string_type string_type;
 
   BOOST_CONCEPT_USAGE(Response) {

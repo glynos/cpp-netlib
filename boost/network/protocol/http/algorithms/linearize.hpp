@@ -23,12 +23,15 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct linearize_header {
+template <class Tag>
+struct linearize_header {
   typedef typename string<Tag>::type string_type;
 
-  template <class Arguments> struct result;
+  template <class Arguments>
+  struct result;
 
-  template <class This, class Arg> struct result<This(Arg)> {
+  template <class This, class Arg>
+  struct result<This(Arg)> {
     typedef string_type type;
   };
 

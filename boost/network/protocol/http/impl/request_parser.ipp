@@ -210,15 +210,18 @@ boost::tribool basic_request_parser<Tag>::consume(basic_request<Tag>& req,
   }
 }
 
-template <class Tag> bool basic_request_parser<Tag>::is_char(int c) {
+template <class Tag>
+bool basic_request_parser<Tag>::is_char(int c) {
   return c >= 0 && c <= 127;
 }
 
-template <class Tag> bool basic_request_parser<Tag>::is_ctl(int c) {
+template <class Tag>
+bool basic_request_parser<Tag>::is_ctl(int c) {
   return (c >= 0 && c <= 31) || (c == 127);
 }
 
-template <class Tag> bool basic_request_parser<Tag>::is_tspecial(int c) {
+template <class Tag>
+bool basic_request_parser<Tag>::is_tspecial(int c) {
   switch (c) {
     case '(':
     case ')':
@@ -245,7 +248,8 @@ template <class Tag> bool basic_request_parser<Tag>::is_tspecial(int c) {
   }
 }
 
-template <class Tag> bool basic_request_parser<Tag>::is_digit(int c) {
+template <class Tag>
+bool basic_request_parser<Tag>::is_digit(int c) {
   return c >= '0' && c <= '9';
 }
 

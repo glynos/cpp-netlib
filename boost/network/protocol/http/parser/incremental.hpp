@@ -20,7 +20,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct response_parser {
+template <class Tag>
+struct response_parser {
 
   enum state_t {
     http_response_begin,

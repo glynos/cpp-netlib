@@ -14,11 +14,13 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_response;
+template <class Tag>
+struct basic_response;
 
 namespace impl {
 
-template <class Tag> struct status_message_wrapper {
+template <class Tag>
+struct status_message_wrapper {
 
   typedef typename string<Tag>::type string_type;
 

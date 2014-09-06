@@ -16,7 +16,8 @@ namespace http {
 
 namespace traits {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
 template <class Message>
 struct status_message

@@ -16,9 +16,11 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
-template <class Tag> struct basic_response;
+template <class Tag>
+struct basic_response;
 
 template <class Tag, unsigned version_major, unsigned version_minor>
 struct basic_client_facade {

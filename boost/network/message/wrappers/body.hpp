@@ -14,7 +14,8 @@
 namespace boost {
 namespace network {
 
-template <class Message> struct body_range {
+template <class Message>
+struct body_range {
   typedef typename boost::iterator_range<
       typename Message::string_type::const_iterator> type;
 };

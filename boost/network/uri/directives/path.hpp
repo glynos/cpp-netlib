@@ -16,7 +16,10 @@ struct path_directive {
 
   explicit path_directive(const std::string &path) : path(path) {}
 
-  template <class Uri> void operator()(Uri &uri) const { uri.append(path); }
+  template <class Uri>
+  void operator()(Uri &uri) const {
+    uri.append(path);
+  }
 
   std::string path;
 };

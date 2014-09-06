@@ -11,7 +11,8 @@
 namespace rapidxml {
 
 //! Iterator of child nodes of xml_node
-template <class Ch> class node_iterator {
+template <class Ch>
+class node_iterator {
 
  public:
   typedef typename xml_node<Ch> value_type;
@@ -67,7 +68,8 @@ template <class Ch> class node_iterator {
 };
 
 //! Iterator of child attributes of xml_node
-template <class Ch> class attribute_iterator {
+template <class Ch>
+class attribute_iterator {
 
  public:
   typedef typename xml_attribute<Ch> value_type;

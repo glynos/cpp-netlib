@@ -14,7 +14,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
 template <class Tag>
 inline typename enable_if<is_server<Tag>, void>::type minor_version(

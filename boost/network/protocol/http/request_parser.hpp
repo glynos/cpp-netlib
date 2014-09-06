@@ -28,7 +28,8 @@ struct default_;
 }
 
 /// Parser for incoming requests.
-template <class Tag> class basic_request_parser {
+template <class Tag>
+class basic_request_parser {
  public:
   /// Construct ready to parse the request method.
   basic_request_parser() : state_(method_start) {}

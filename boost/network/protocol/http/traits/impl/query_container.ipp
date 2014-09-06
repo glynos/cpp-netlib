@@ -15,7 +15,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct query_container {
+template <class Tag>
+struct query_container {
   typedef std::multimap<typename string<Tag>::type, typename string<Tag>::type>
       type;
 };

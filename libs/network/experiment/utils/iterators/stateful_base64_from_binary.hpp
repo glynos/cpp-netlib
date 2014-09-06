@@ -19,7 +19,8 @@ namespace iterators {
 
 namespace detail {
 
-template <class CharType> struct from_6_bit {
+template <class CharType>
+struct from_6_bit {
   typedef CharType result_type;
   CharType operator()(CharType t) const {
     const char* lookup_table =

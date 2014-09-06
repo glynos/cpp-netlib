@@ -12,7 +12,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct async_message;
+template <class Tag>
+struct async_message;
 
 namespace impl {
 template <class Tag>
@@ -32,7 +33,8 @@ struct ready_wrapper
 };
 }  // namespace impl
 
-template <class Tag> inline bool ready(async_message<Tag> const& message) {
+template <class Tag>
+inline bool ready(async_message<Tag> const& message) {
   return impl::ready_wrapper<Tag>(message);
 }
 

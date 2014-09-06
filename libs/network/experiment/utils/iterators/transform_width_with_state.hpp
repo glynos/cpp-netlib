@@ -25,7 +25,8 @@ namespace network {
 namespace utils {
 namespace iterators {
 
-template <class Value, int BitsOut, int BitsIn> class transform_width_state {
+template <class Value, int BitsOut, int BitsIn>
+class transform_width_state {
  public:
   typedef Value value_type;
 

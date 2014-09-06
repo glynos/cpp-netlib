@@ -21,7 +21,8 @@ namespace http {
  * determine the type or change the values of the data no matter
  * what the tag type is provided.
  */
-template <class Tag> struct response_code {
+template <class Tag>
+struct response_code {
   static boost::uint16_t const OK = 200u;
   static boost::uint16_t const CREATED = 201u;
   static boost::uint16_t const NO_CONTENT = 204u;

@@ -9,7 +9,8 @@
 namespace boost {
 namespace network {
 
-template <class Tag> struct basic_message;
+template <class Tag>
+struct basic_message;
 
 }  // namespace boost
 }  // namespace network

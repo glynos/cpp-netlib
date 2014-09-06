@@ -31,7 +31,8 @@ struct client {
 
 using namespace boost::network::tags;
 
-template <class Tag> struct components;
+template <class Tag>
+struct components;
 
 typedef mpl::vector<http, client, simple, sync, tcp, default_string>
     http_default_8bit_tcp_resolve_tags;

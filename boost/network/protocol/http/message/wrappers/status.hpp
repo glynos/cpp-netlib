@@ -13,11 +13,13 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_response;
+template <class Tag>
+struct basic_response;
 
 namespace impl {
 
-template <class Tag> struct status_wrapper {
+template <class Tag>
+struct status_wrapper {
 
   basic_response<Tag> const& response_;
 
@@ -31,7 +33,8 @@ template <class Tag> struct status_wrapper {
 
 }  // namespace impl
 
-template <class R> struct Response;
+template <class R>
+struct Response;
 
 template <class Tag>
 inline impl::status_wrapper<Tag> status(basic_response<Tag> const& response) {

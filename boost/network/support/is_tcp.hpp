@@ -14,7 +14,8 @@
 namespace boost {
 namespace network {
 
-template <class Tag, class Enable = void> struct is_tcp : mpl::false_ {};
+template <class Tag, class Enable = void>
+struct is_tcp : mpl::false_ {};
 
 template <class Tag>
 struct is_tcp<Tag,

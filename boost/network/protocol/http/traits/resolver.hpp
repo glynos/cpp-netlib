@@ -21,7 +21,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
 template <class Tag>
 struct resolver

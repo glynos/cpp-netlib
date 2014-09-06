@@ -13,7 +13,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class T1, class T2> T1 &name(std::pair<T1, T2> const &p) {
+template <class T1, class T2>
+T1 &name(std::pair<T1, T2> const &p) {
   return p.first;
 }
 

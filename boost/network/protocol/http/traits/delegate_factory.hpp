@@ -15,13 +15,16 @@ namespace http {
 
 namespace impl {
 
-template <class Tag> struct connection_delegate_factory;
+template <class Tag>
+struct connection_delegate_factory;
 
 } /* impl */
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
-template <class Tag, class Enable = void> struct delegate_factory {
+template <class Tag, class Enable = void>
+struct delegate_factory {
   typedef unsupported_tag<Tag> type;
 };
 

@@ -205,7 +205,8 @@ struct async_connection
    *is
    *  then sent as soon as the first call to `write` or `flush` commences.
    */
-  template <class Range> void set_headers(Range headers) {
+  template <class Range>
+  void set_headers(Range headers) {
     lock_guard lock(headers_mutex);
     if (headers_in_progress || headers_already_sent)
       boost::throw_exception(
@@ -247,7 +248,8 @@ struct async_connection
     status = new_status;
   }
 
-  template <class Range> void write(Range const& range) {
+  template <class Range>
+  void write(Range const& range) {
     lock_guard lock(headers_mutex);
     if (error_encountered)
       boost::throw_exception(boost::system::system_error(*error_encountered));
@@ -358,7 +360,8 @@ struct async_connection
   optional<boost::system::system_error> error_encountered;
   pending_actions_list pending_actions;
 
-  template <class, class> friend struct async_server_base;
+  template <class, class>
+  friend struct async_server_base;
 
   enum state_t {
     method,

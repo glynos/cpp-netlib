@@ -12,16 +12,20 @@
 namespace boost {
 namespace network {
 
-template <> struct vector<http::tags::http_server> {
+template <>
+struct vector<http::tags::http_server> {
 
-  template <class Type> struct apply {
+  template <class Type>
+  struct apply {
     typedef std::vector<Type> type;
   };
 };
 
-template <> struct vector<http::tags::http_async_server> {
+template <>
+struct vector<http::tags::http_async_server> {
 
-  template <class Type> struct apply {
+  template <class Type>
+  struct apply {
     typedef std::vector<Type> type;
   };
 };

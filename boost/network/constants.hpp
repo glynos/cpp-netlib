@@ -14,7 +14,8 @@ namespace boost {
 namespace network {
 
 namespace impl {
-template <class Tag> struct constants_narrow {
+template <class Tag>
+struct constants_narrow {
 
   static char const* crlf() {
     static char crlf_[] = {'\r', '\n', 0};
@@ -115,7 +116,8 @@ template <class Tag> struct constants_narrow {
   }
 };
 
-template <class Tag> struct constants_wide {
+template <class Tag>
+struct constants_wide {
 
   static wchar_t const* https() {
     static wchar_t https_[] = L"https";

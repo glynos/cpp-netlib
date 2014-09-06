@@ -13,7 +13,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <> struct content<tags::http_default_8bit_tcp_resolve> {
+template <>
+struct content<tags::http_default_8bit_tcp_resolve> {
   static char const* type_html() {
     static char const* const TYPE_HTML = "text/html";
     return TYPE_HTML;

@@ -38,7 +38,8 @@ namespace network {
 
 /** The common message type.
  */
-template <class Tag> struct basic_message {
+template <class Tag>
+struct basic_message {
  public:
   typedef Tag tag;
 

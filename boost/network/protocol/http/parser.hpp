@@ -23,10 +23,12 @@ namespace network {
 namespace http {
 
 // forward declarations used to finish HTTP requests
-template <typename Tag> class basic_request;
+template <typename Tag>
+class basic_request;
 
 // forward declarations used to finish HTTP requests
-template <typename Tag> class basic_response;
+template <typename Tag>
+class basic_response;
 
 /// an incremental HTTP 1.0/1.1 protocol parser
 template <typename Tag, typename ParserTraits = parser_traits<Tag> >

@@ -13,7 +13,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct connection_keepalive : is_keepalive<Tag> {};
+template <class Tag>
+struct connection_keepalive : is_keepalive<Tag> {};
 
 } /* http */
 

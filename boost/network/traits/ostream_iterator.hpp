@@ -14,9 +14,11 @@
 namespace boost {
 namespace network {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
-template <class Tag, class Input> struct ostream_iterator;
+template <class Tag, class Input>
+struct ostream_iterator;
 
 template <class Tag, class Input>
 struct ostream_iterator

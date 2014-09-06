@@ -13,9 +13,11 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
-template <class Tag> struct method_wrapper {
+template <class Tag>
+struct method_wrapper {
   explicit method_wrapper(basic_request<Tag> const& message)
       : message_(message) {}
 

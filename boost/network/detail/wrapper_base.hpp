@@ -12,7 +12,8 @@ namespace network {
 
 namespace detail {
 
-template <class Tag, class Message> struct wrapper_base {
+template <class Tag, class Message>
+struct wrapper_base {
   explicit wrapper_base(Message& message_) : _message(message_) {};
 
  protected:
@@ -21,7 +22,8 @@ template <class Tag, class Message> struct wrapper_base {
   Message& _message;
 };
 
-template <class Tag, class Message> struct wrapper_base_const {
+template <class Tag, class Message>
+struct wrapper_base_const {
   explicit wrapper_base_const(Message const& message_) : _message(message_) {}
 
  protected:

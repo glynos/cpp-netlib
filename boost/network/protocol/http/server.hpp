@@ -18,7 +18,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag, class Handler, class Enable = void> struct server_base {
+template <class Tag, class Handler, class Enable = void>
+struct server_base {
   typedef unsupported_tag<Tag> type;
 };
 

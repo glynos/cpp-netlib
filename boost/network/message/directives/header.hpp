@@ -22,13 +22,15 @@ namespace network {
 
 namespace impl {
 
-template <class KeyType, class ValueType> struct header_directive {
+template <class KeyType, class ValueType>
+struct header_directive {
 
   explicit header_directive(KeyType const& header_name,
                             ValueType const& header_value)
       : _header_name(header_name), _header_value(header_value) {};
 
-  template <class Message> struct pod_directive {
+  template <class Message>
+  struct pod_directive {
     template <class T1, class T2>
     static void eval(Message const& message, T1 const& key, T2 const& value) {
       typedef typename Message::headers_container_type::value_type value_type;
@@ -37,7 +39,8 @@ template <class KeyType, class ValueType> struct header_directive {
     }
   };
 
-  template <class Message> struct normal_directive {
+  template <class Message>
+  struct normal_directive {
     template <class T1, class T2>
     static void eval(Message const& message, T1 const& key, T2 const& value) {
       typedef typename Message::headers_container_type::value_type value_type;
@@ -50,7 +53,8 @@ template <class KeyType, class ValueType> struct header_directive {
       : mpl::if_<is_base_of<tags::pod, typename Message::tag>,
                  pod_directive<Message>, normal_directive<Message> >::type {};
 
-  template <class Message> void operator()(Message const& msg) const {
+  template <class Message>
+  void operator()(Message const& msg) const {
     typedef typename Message::headers_container_type::value_type value_type;
     directive_impl<Message>::eval(msg, _header_name, _header_value);
   }

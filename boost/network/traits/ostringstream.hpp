@@ -16,9 +16,11 @@
 namespace boost {
 namespace network {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
-template <class Tag, class Enable = void> struct ostringstream {
+template <class Tag, class Enable = void>
+struct ostringstream {
   typedef unsupported_tag<Tag> type;
 };
 

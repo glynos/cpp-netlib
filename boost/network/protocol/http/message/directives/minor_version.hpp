@@ -14,13 +14,15 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
 struct minor_version_directive {
   boost::uint8_t minor_version;
   explicit minor_version_directive(boost::uint8_t minor_version)
       : minor_version(minor_version) {}
-  template <class Tag> void operator()(basic_request<Tag>& request) const {
+  template <class Tag>
+  void operator()(basic_request<Tag>& request) const {
     request.http_version_minor = minor_version;
   }
 };

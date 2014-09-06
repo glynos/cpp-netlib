@@ -15,7 +15,8 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct cookies_container {
+template <class Tag>
+struct cookies_container {
   typedef std::multimap<typename string<Tag>::type, typename string<Tag>::type>
       type;
 };

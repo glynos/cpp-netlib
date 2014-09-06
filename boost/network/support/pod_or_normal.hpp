@@ -13,7 +13,8 @@
 namespace boost {
 namespace network {
 
-template <class Tag, class Enable = void> struct pod_or_normal {
+template <class Tag, class Enable = void>
+struct pod_or_normal {
   typedef tags::normal type;
 };
 

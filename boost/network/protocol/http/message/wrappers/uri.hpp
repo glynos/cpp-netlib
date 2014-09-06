@@ -13,10 +13,12 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
 namespace impl {
-template <class Tag> struct uri_wrapper {
+template <class Tag>
+struct uri_wrapper {
   basic_request<Tag> const& message_;
   uri_wrapper(basic_request<Tag> const& message) : message_(message) {}
   typedef typename basic_request<Tag>::string_type string_type;

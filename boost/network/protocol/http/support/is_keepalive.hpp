@@ -13,9 +13,11 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
-template <class Tag, class Enable = void> struct is_keepalive : mpl::false_ {};
+template <class Tag, class Enable = void>
+struct is_keepalive : mpl::false_ {};
 
 template <class Tag>
 struct is_keepalive<

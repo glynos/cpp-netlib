@@ -11,11 +11,13 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
 namespace impl {
 
-template <class Tag> struct path_wrapper {
+template <class Tag>
+struct path_wrapper {
   basic_request<Tag> const& message_;
 
   path_wrapper(basic_request<Tag> const& message) : message_(message) {}

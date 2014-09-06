@@ -16,8 +16,10 @@
 
 namespace mpl = boost::mpl;
 
-template <unsigned major, unsigned minor> struct client_adapter {
-  template <class T1> struct apply {
+template <unsigned major, unsigned minor>
+struct client_adapter {
+  template <class T1>
+  struct apply {
     typedef boost::network::http::basic_client<T1, major, minor> type;
   };
 };

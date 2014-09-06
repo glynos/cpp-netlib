@@ -12,13 +12,17 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_response;
+template <class Tag>
+struct basic_response;
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
-template <class R> struct Request;
+template <class R>
+struct Request;
 
-template <class R> struct Response;
+template <class R>
+struct Response;
 
 BOOST_NETWORK_DEFINE_HTTP_WRAPPER(destination, destination, destination);
 

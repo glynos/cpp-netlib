@@ -12,9 +12,11 @@
 namespace boost {
 namespace network {
 
-template <class Tag> struct unsupported_tag;
+template <class Tag>
+struct unsupported_tag;
 
-template <class Tag> struct vector {
+template <class Tag>
+struct vector {
 
   template <class Type>
   struct apply : mpl::if_<is_default_string<Tag>, std::vector<Type>,

@@ -16,9 +16,11 @@ namespace boost {
 namespace network {
 namespace http {
 
-template <class Tag> struct basic_response;
+template <class Tag>
+struct basic_response;
 
-template <class Tag> struct basic_request;
+template <class Tag>
+struct basic_request;
 
 namespace impl {
 
@@ -40,7 +42,8 @@ inline void destination(basic_response<Tag> &response, T const &value) {
   impl::destination(response, value, is_async<Tag>());
 }
 
-template <class R> struct ServerRequest;
+template <class R>
+struct ServerRequest;
 
 template <class Tag, class T>
 inline void destination_impl(basic_request<Tag> &request, T const &value,
