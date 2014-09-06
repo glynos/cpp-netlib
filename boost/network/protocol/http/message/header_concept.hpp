@@ -8,33 +8,33 @@
 
 #include <boost/network/traits/string.hpp>
 
-namespace boost { namespace network { namespace http {
-    
-    template <class H>
-    struct Header
-        : DefaultConstructible<H>
-        , Assignable<H>
-        , CopyConstructible<H>
-    {
+namespace boost {
+  namespace network {
+    namespace http {
+
+      template <class H>
+      struct Header : DefaultConstructible<H>,
+                      Assignable<H>,
+                      CopyConstructible<H> {
 
         BOOST_CONCEPT_USAGE(Header) {
-            typedef typename H::string_type string_type;
-            string_type name_ = name(header);
-            string_type value_ = value(header);
-            H h1, h2;
-            swap(h1,h2); // ADL Swap!
-            (void)name_;
-            (void)value_;
+          typedef typename H::string_type string_type;
+          string_type name_ = name(header);
+          string_type value_ = value(header);
+          H h1, h2;
+          swap(h1, h2);  // ADL Swap!
+          (void)name_;
+          (void)value_;
         }
 
-    private:
+       private:
         H header;
-    };
+      };
 
-} /* http */
-    
-} /* network */
-    
+    } /* http */
+
+  } /* network */
+
 } /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_CONCEPT_HPP_20101028 */

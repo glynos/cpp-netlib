@@ -18,45 +18,45 @@
 #include <boost/mpl/not.hpp>
 
 namespace boost {
-namespace network {
-namespace http {
+  namespace network {
+    namespace http {
 
-template <class Tag>
-struct unsupported_tag;
+      template <class Tag> struct unsupported_tag;
 
-template <class Tag, unsigned version_major, unsigned version_minor,
-          class Enable = void>
-struct connection_policy {
-  typedef unsupported_tag<Tag> type;
-};
+      template <class Tag, unsigned version_major, unsigned version_minor,
+                class Enable = void>
+      struct connection_policy {
+        typedef unsupported_tag<Tag> type;
+      };
 
-template <class Tag, unsigned version_major, unsigned version_minor>
-struct connection_policy<Tag, version_major, version_minor,
-                         typename enable_if<is_async<Tag> >::type> {
-  typedef async_connection_policy<Tag, version_major, version_minor> type;
-};
+      template <class Tag, unsigned version_major, unsigned version_minor>
+      struct connection_policy<Tag, version_major, version_minor,
+                               typename enable_if<is_async<Tag> >::type> {
+        typedef async_connection_policy<Tag, version_major, version_minor> type;
+      };
 
-template <class Tag, unsigned version_major, unsigned version_minor>
-struct connection_policy<
-    Tag, version_major, version_minor,
-    typename enable_if<
-        mpl::and_<is_simple<Tag>, mpl::not_<is_async<Tag> > > >::type> {
-  typedef simple_connection_policy<Tag, version_major, version_minor> type;
-};
+      template <class Tag, unsigned version_major, unsigned version_minor>
+      struct connection_policy<
+          Tag, version_major, version_minor,
+          typename enable_if<
+              mpl::and_<is_simple<Tag>, mpl::not_<is_async<Tag> > > >::type> {
+        typedef simple_connection_policy<Tag, version_major, version_minor>
+            type;
+      };
 
-template <class Tag, unsigned version_major, unsigned version_minor>
-struct connection_policy<
-    Tag, version_major, version_minor,
-    typename enable_if<
-        mpl::and_<is_keepalive<Tag>, mpl::not_<is_async<Tag> > > >::type> {
-  typedef pooled_connection_policy<Tag, version_major, version_minor> type;
-};
+      template <class Tag, unsigned version_major, unsigned version_minor>
+      struct connection_policy<
+          Tag, version_major, version_minor,
+          typename enable_if<mpl::and_<is_keepalive<Tag>,
+                                       mpl::not_<is_async<Tag> > > >::type> {
+        typedef pooled_connection_policy<Tag, version_major, version_minor>
+            type;
+      };
 
-}  // namespace http
+    }  // namespace http
 
-}  // namespace network
+  }  // namespace network
 
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_CONNECTION_POLICY_20091214
-

@@ -9,44 +9,39 @@
 
 #include <boost/optional.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace boost {
+  namespace network {
+    namespace http {
 
-    template <class Tag>
-    struct basic_request;
+      template <class Tag> struct basic_request;
 
-    namespace impl {
+      namespace impl {
 
-        template <class Tag>
-        struct port_wrapper {
-            basic_request<Tag> const & message_;
+        template <class Tag> struct port_wrapper {
+          basic_request<Tag> const& message_;
 
-            port_wrapper(basic_request<Tag> const & message)
-                : message_(message) {}
+          port_wrapper(basic_request<Tag> const& message) : message_(message) {}
 
-            typedef typename basic_request<Tag>::port_type port_type;
+          typedef typename basic_request<Tag>::port_type port_type;
 
-            operator port_type() {
-                return message_.port();
-            }
+          operator port_type() { return message_.port(); }
 
-            operator boost::optional<boost::uint16_t> () {
-                return uri::port_us(message_.uri());
-            }
+          operator boost::optional<boost::uint16_t>() {
+            return uri::port_us(message_.uri());
+          }
         };
 
-    } // namespace impl
+      }  // namespace impl
 
-    template <class Tag>
-    inline
-    impl::port_wrapper<Tag>
-    port(basic_request<Tag> const & request) {
+      template <class Tag>
+      inline impl::port_wrapper<Tag> port(basic_request<Tag> const& request) {
         return impl::port_wrapper<Tag>(request);
-    }
+      }
 
-} // namespace http
+    }  // namespace http
 
-} // namespace network
+  }  // namespace network
 
-} // namespace boost
+}  // namespace boost
 
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_PORT_HPP_20100618
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_PORT_HPP_20100618

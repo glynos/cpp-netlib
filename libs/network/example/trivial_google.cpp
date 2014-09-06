@@ -10,7 +10,7 @@
 
 namespace http = boost::network::http;
 
-int main(int, char*[]) {
+int main(int, char * []) {
   http::client client;
   http::client::request request("https://www.google.com/");
   http::client::response response = client.get(request);

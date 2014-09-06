@@ -9,36 +9,37 @@
 
 #include <boost/network/protocol/http/tags.hpp>
 
-namespace boost { namespace network { namespace http {
+namespace boost {
+  namespace network {
+    namespace http {
 
-    template <>
-        struct content<tags::http_default_8bit_tcp_resolve> {
-            static char const * type_html() {
-                static char const * const TYPE_HTML = "text/html";
-                return TYPE_HTML;
-            };
-
-            static char const * type_text() {
-                static char const * const TYPE_TEXT = "text/plain";
-                return TYPE_TEXT;
-            };
-
-            static char const * type_xml() {
-                static char const * const TYPE_XML = "text/xml";
-                return TYPE_XML;
-            };
-
-            static char const * type_urlencoded() {
-                static char const * const TYPE_URLENCODED = "application/x-www-form-urlencoded";
-                return TYPE_URLENCODED;
-            };
+      template <> struct content<tags::http_default_8bit_tcp_resolve> {
+        static char const* type_html() {
+          static char const* const TYPE_HTML = "text/html";
+          return TYPE_HTML;
         };
 
-} // namespace http
+        static char const* type_text() {
+          static char const* const TYPE_TEXT = "text/plain";
+          return TYPE_TEXT;
+        };
 
-} // namespace network
+        static char const* type_xml() {
+          static char const* const TYPE_XML = "text/xml";
+          return TYPE_XML;
+        };
 
-} // namespace boost
+        static char const* type_urlencoded() {
+          static char const* const TYPE_URLENCODED =
+              "application/x-www-form-urlencoded";
+          return TYPE_URLENCODED;
+        };
+      };
 
-#endif // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_CONTENT_IPP
+    }  // namespace http
 
+  }  // namespace network
+
+}  // namespace boost
+
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_CONTENT_IPP

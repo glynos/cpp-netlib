@@ -13,35 +13,31 @@
 #include <boost/thread/future.hpp>
 #include <boost/mpl/if.hpp>
 
-namespace boost { namespace network {
+namespace boost {
+  namespace network {
 
     namespace traits {
 
-        template <class Tag>
-        struct unsupported_tag;
+      template <class Tag> struct unsupported_tag;
 
-        template <class Message>
-        struct destination :
-            mpl::if_<
+      template <class Message>
+      struct destination
+          : mpl::if_<
                 is_async<typename Message::tag>,
-                boost::shared_future<typename string<typename Message::tag>::type>,
+                boost::shared_future<
+                    typename string<typename Message::tag>::type>,
                 typename mpl::if_<
                     mpl::or_<
                         is_sync<typename Message::tag>,
                         is_same<typename Message::tag, tags::default_string>,
-                        is_same<typename Message::tag, tags::default_wstring>
-                    >,
+                        is_same<typename Message::tag, tags::default_wstring> >,
                     typename string<typename Message::tag>::type,
-                    unsupported_tag<typename Message::tag>
-                >::type
-            >
-        {};
+                    unsupported_tag<typename Message::tag> >::type> {};
 
-    } // namespace traits
-    
-} /* network */
-    
+    }  // namespace traits
+
+  } /* network */
+
 } /* boost */
 
-#endif // BOOST_NETWORK_MESSAGE_TRAITS_DESTINATION_HPP_20100903
-
+#endif  // BOOST_NETWORK_MESSAGE_TRAITS_DESTINATION_HPP_20100903

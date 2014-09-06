@@ -9,16 +9,17 @@
 #include <boost/network/tags.hpp>
 #include <boost/utility/enable_if.hpp>
 
-namespace boost { namespace network {
+namespace boost {
+  namespace network {
 
-    template <class Tag, class Enable = void>
-    struct is_http : mpl::false_ {};
-    
+    template <class Tag, class Enable = void> struct is_http : mpl::false_ {};
+
     template <class Tag>
-    struct is_http<Tag, typename enable_if<typename Tag::is_http>::type> : mpl::true_ {};
-    
-} // namespace network
+    struct is_http<
+        Tag, typename enable_if<typename Tag::is_http>::type> : mpl::true_ {};
 
-} // namespace boost
+  }  // namespace network
 
-#endif // BOOST_NETWORK_SUPPORT_IS_HTTP_HPP_20100622
+}  // namespace boost
+
+#endif  // BOOST_NETWORK_SUPPORT_IS_HTTP_HPP_20100622

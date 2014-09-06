@@ -19,9 +19,7 @@
 
 // the main entry point does nothing; the tests are run by constructors
 // of testing classes, which are executed by global variables
-int main(int argc, char const * argv[]) {
-    return 0;
-}
+int main(int argc, char const* argv[]) { return 0; }
 
 using namespace boost::network::utils;
 
@@ -32,17 +30,17 @@ using namespace boost::network::utils;
 #define concatenate(x, y) concatenate_internal(x, y)
 
 #ifdef NDEBUG
-    // testing block sizes (im MB) which let the tests run approximately
-    // 5s on my machine in the optimized mode
-    #define single_block_size    160
-    #define multiple_block_size  320
-    #define multiple_block_count 1280
+// testing block sizes (im MB) which let the tests run approximately
+// 5s on my machine in the optimized mode
+#define single_block_size 160
+#define multiple_block_size 320
+#define multiple_block_count 1280
 #else
-    // testing block sizes (im MB) which let the tests run approximately
-    // 5s on my machine in the not optimized mode
-    #define single_block_size    16
-    #define multiple_block_size  64
-    #define multiple_block_count 256
+// testing block sizes (im MB) which let the tests run approximately
+// 5s on my machine in the not optimized mode
+#define single_block_size 16
+#define multiple_block_size 64
+#define multiple_block_count 256
 #endif
 
 // the class name of a test suite; base64 has to be defined as a namespace
@@ -52,15 +50,16 @@ using namespace boost::network::utils;
 // the code which actually performs the encoding; base64 has to be defined
 // as a namespace name - see above
 #define encode_single_block std::string result = base64::encode<char>(buffer)
-#define encode_multiple_blocks \
-    std::string result; \
-    std::back_insert_iterator<std::string> result_encoder(result); \
-    base64::state<unsigned char> rest; \
-    for (unsigned block_index = 0; block_index < buffers.size(); ++block_index) { \
-        std::vector<unsigned char> const & buffer = buffers[block_index]; \
-        base64::encode(buffer.begin(), buffer.end(), result_encoder, rest); \
-    } \
-    base64::encode_rest(result_encoder, rest)
+#define encode_multiple_blocks                                          \
+  std::string result;                                                   \
+  std::back_insert_iterator<std::string> result_encoder(result);        \
+  base64::state<unsigned char> rest;                                    \
+  for (unsigned block_index = 0; block_index < buffers.size();          \
+       ++block_index) {                                                 \
+    std::vector<unsigned char> const& buffer = buffers[block_index];    \
+    base64::encode(buffer.begin(), buffer.end(), result_encoder, rest); \
+  }                                                                     \
+  base64::encode_rest(result_encoder, rest)
 
 // testing the code from experimental/base64-stateless.hpp
 // NOTE(dberris): Only do this if we're NOT using libc++.
@@ -102,16 +101,17 @@ using namespace boost::network::utils;
 #undef encode_single_block
 #undef encode_multiple_blocks
 #define test_name concatenate(concatenate(base64, _standalone_io), _test)
-#define encode_single_block std::stringstream result; \
-    result << base64::io::encode(buffer) << \
-              base64::io::encode_rest<unsigned char>
-#define encode_multiple_blocks \
-    std::stringstream result; \
-    for (unsigned block_index = 0; block_index < buffers.size(); ++block_index) { \
-        std::vector<unsigned char> const & buffer = buffers[block_index]; \
-        result << base64::io::encode(buffer.begin(), buffer.end()); \
-    } \
-    result << base64::io::encode_rest<unsigned char>
+#define encode_single_block \
+  std::stringstream result; \
+  result << base64::io::encode(buffer) << base64::io::encode_rest<unsigned char>
+#define encode_multiple_blocks                                       \
+  std::stringstream result;                                          \
+  for (unsigned block_index = 0; block_index < buffers.size();       \
+       ++block_index) {                                              \
+    std::vector<unsigned char> const& buffer = buffers[block_index]; \
+    result << base64::io::encode(buffer.begin(), buffer.end());      \
+  }                                                                  \
+  result << base64::io::encode_rest<unsigned char>
 
 // testing the iostream implementation with the code from
 // boost/network/utils/base64/encode.hpp

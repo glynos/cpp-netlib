@@ -10,31 +10,26 @@
 #include <boost/cstdint.hpp>
 #include <boost/network/tags.hpp>
 
-namespace boost { namespace network { namespace http {
-    
-    namespace traits {
+namespace boost {
+  namespace network {
+    namespace http {
 
-        template <class Tag>
-        struct unsupported_tag;
+      namespace traits {
+
+        template <class Tag> struct unsupported_tag;
 
         template <class Message>
         struct status
-        : mpl::if_<
-            is_async<typename Message::tag>,
-            boost::shared_future<boost::uint16_t>,
-            typename mpl::if_<
-                is_sync<typename Message::tag>,
-                boost::uint16_t,
-                unsupported_tag<typename Message::tag>
-            >::type
-        >
-        {};
+            : mpl::if_<is_async<typename Message::tag>,
+                       boost::shared_future<boost::uint16_t>,
+                       typename mpl::if_<
+                           is_sync<typename Message::tag>, boost::uint16_t,
+                           unsupported_tag<typename Message::tag> >::type> {};
 
-    } /* traits */
+      } /* traits */
 
-} /* http */
-} /* network */
+    } /* http */
+  }   /* network */
 } /* boost */
 
 #endif
-

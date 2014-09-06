@@ -4,16 +4,14 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef __2008817MESSAGE_FWD_INC__
-# define __2008817MESSAGE_FWD_INC__
+#define __2008817MESSAGE_FWD_INC__
 
 namespace boost {
-namespace network {
+  namespace network {
 
-template <class Tag>
-struct basic_message;
+    template <class Tag> struct basic_message;
 
-} // namespace boost
-} // namespace network
+  }  // namespace boost
+}  // namespace network
 
-
-#endif // __2008817MESSAGE_FWD_INC__
+#endif  // __2008817MESSAGE_FWD_INC__

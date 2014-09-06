@@ -553,8 +553,7 @@ BOOST_AUTO_TEST_CASE(issue_161_test) {
   BOOST_CHECK_EQUAL(queries["param1"], "-");
   BOOST_CHECK_EQUAL(queries["param2"], "some+plus+encoded+text");
   BOOST_CHECK_EQUAL(queries["param3"], "~");
-  BOOST_CHECK_EQUAL(uri::decoded(queries["param2"]),
-                    "some plus encoded text");
+  BOOST_CHECK_EQUAL(uri::decoded(queries["param2"]), "some plus encoded text");
 }
 
 BOOST_AUTO_TEST_CASE(issue_364_test) {
