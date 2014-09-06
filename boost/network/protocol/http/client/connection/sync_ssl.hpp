@@ -117,7 +117,7 @@ struct https_sync_connection
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
       timer_.async_wait(boost::bind(&this_type::handle_timeout,
                                     this_type::shared_from_this(),
-                                    _1));
+                                    boost::arg<1>()));
     }
   }
 

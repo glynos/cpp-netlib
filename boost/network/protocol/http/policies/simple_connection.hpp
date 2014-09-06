@@ -124,7 +124,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
         lexical_cast<string_type>(request_.port()),
         boost::bind(&simple_connection_policy<Tag, version_major,
                                               version_minor>::resolve,
-                    this, _1, _2, _3),
+                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
         boost::iequals(request_.protocol(), string_type("https")), timeout_,
         certificate_filename, verify_path,
         certificate_file, private_key_file));
