@@ -31,13 +31,13 @@ struct port_wrapper {
 
   operator port_type() const { return message_.port(); }
 
-#if (_MSC_VER == 1600)
+#if (_MSC_VER >= 1600)
   // We hack this so that we don't run into the issue of MSVC 2010 not doing the
   // right thing when converting/copying Boost.Optional objects.
   struct optional_wrapper {
     boost::optional<boost::uint16_t> o_;
     explicit optional_wrapper(boost::optional<boost::uint16_t> o) : o_(o) {}
-    operator boost::optional<boost::uint16_t>() { return o_; }
+    operator boost::optional<boost::uint16_t>() const { return o_; }
   };
 
   operator optional_wrapper() const {
