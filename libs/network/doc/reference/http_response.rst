@@ -15,7 +15,7 @@ with the HTTP Response objects.
 Response Concept
 ----------------
 
-A type models the Response Concept if it models the `Message Concept`_ and also 
+A type models the Response Concept if it models the `Message Concept`_ and also
 supports the following constructs.
 
 **Legend**
@@ -80,8 +80,8 @@ supports the following constructs.
 Directives
 ----------
 
-This section details the provided directives that are provided by 
-:mod:`cpp-netlib`. The section was written to assume that an appropriately 
+This section details the provided directives that are provided by
+:mod:`cpp-netlib`. The section was written to assume that an appropriately
 constructed response instance is either of the following:
 
 .. code-block:: c++
@@ -109,13 +109,13 @@ Directives are meant to be used in the following manner:
 
     response << directive(...);
 
-.. warning:: There are four versions of directives, those that are applicable 
+.. warning:: There are four versions of directives, those that are applicable
    to messages that support narrow strings (``std::string``), those that are
    applicable to messages that support wide strings (``std::wstring``), those
    that are applicable to messages that support future-wrapped narrow and wide
    strings (``boost::shared_future<std::string>`` and
-   ``boost::shared_future<std::wstring>``). 
-   
+   ``boost::shared_future<std::wstring>``).
+
    The :mod:`cpp-netlib` implementation still does not convert wide strings into
    UTF-8 encoded narrow strings. This will be implemented in subsequent
    library releases.
@@ -124,25 +124,25 @@ Directives are meant to be used in the following manner:
    do not implement things correctly.
 
 *unspecified* ``source(std::string const & source_)``
-    Create a source directive with a ``std::string`` as a parameter, to be set 
+    Create a source directive with a ``std::string`` as a parameter, to be set
     as the source of the response.
 *unspecified* ``source(std::wstring const & source_)``
     Create a source directive with a ``std::wstring`` as a parameter, to be set
     as the source of the response.
 *unspecified* ``source(boost::shared_future<std::string> const & source_)``
-    Create a source directive with a ``boost::shared_future<std::string>`` as a parameter, to be set 
+    Create a source directive with a ``boost::shared_future<std::string>`` as a parameter, to be set
     as the source of the response.
 *unspecified* ``source(boost::shared_future<std::wstring> const & source_)``
     Create a source directive with a ``boost::shared_future<std::wstring>`` as a parameter, to be set
     as the source of the response.
 *unspecified* ``destination(std::string const & source_)``
-    Create a destination directive with a ``std::string`` as a parameter, to be 
+    Create a destination directive with a ``std::string`` as a parameter, to be
     set as the destination of the response.
 *unspecified* ``destination(std::wstring const & source_)``
     Create a destination directive with a ``std::wstring`` as a parameter, to be
     set as the destination of the response.
 *unspecified* ``destination(boost::shared_future<std::string> const & destination_)``
-    Create a destination directive with a ``boost::shared_future<std::string>`` as a parameter, to be set 
+    Create a destination directive with a ``boost::shared_future<std::string>`` as a parameter, to be set
     as the destination of the response.
 *unspecified* ``destination(boost::shared_future<std::wstring> const & destination_)``
     Create a destination directive with a ``boost::shared_future<std::wstring>`` as a parameter, to be set
@@ -225,7 +225,7 @@ Directives are meant to be used in the following manner:
 Modifiers
 ---------
 
-This section details the provided modifiers that are provided by 
+This section details the provided modifiers that are provided by
 :mod:`cpp-netlib`.
 
 ``template <class Tag> inline void source(basic_response<Tag> & response, typename string<Tag>::type const & source_)``
@@ -248,10 +248,10 @@ This section details the provided modifiers that are provided by
     Removes a header from the given ``response``. The type of the ``name``
     parameter is dependent on the ``Tag`` specialization of ``basic_response``.
 ``template <class Tag> inline void headers(basic_response<Tag> & response, typename headers_container<basic_response<Tag> >::type const & headers_)``
-    Sets the whole headers contained in ``response`` as the given parameter 
+    Sets the whole headers contained in ``response`` as the given parameter
     ``headers_``.
 ``template <class Tag> inline void headers(basic_response<Tag> & response, boost::shared_future<typename headers_container<basic_response<Tag> >::type> const & headers_)``
-    Sets the whole headers contained in ``response`` as the given parameter 
+    Sets the whole headers contained in ``response`` as the given parameter
     ``headers_``.
 ``template <class Tag> inline void clear_headers(basic_response<Tag> & response)``
     Removes all headers from the given ``response``.
@@ -281,7 +281,7 @@ section assumes that the following using namespace directives are in
 effect:
 
 .. code-block:: c++
-    
+
     using namespace boost::network;
     using namespace boost::network::http;
 
