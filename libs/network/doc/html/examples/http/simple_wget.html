@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -74,7 +75,7 @@ clone.  It&#8217;s very similar to the previous example, but introduces the
 <span class="k">namespace</span> <span class="p">{</span>
 <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">get_filename</span><span class="p">(</span><span class="k">const</span> <span class="n">uri</span><span class="o">::</span><span class="n">uri</span> <span class="o">&amp;</span><span class="n">url</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">path</span> <span class="o">=</span> <span class="n">uri</span><span class="o">::</span><span class="n">path</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
-    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">index</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="sc">&#39;/&#39;</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">index</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="sc">&#39;/&#39;</span><span class="p">);</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
     <span class="k">return</span> <span class="n">filename</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="o">?</span> <span class="s">&quot;index.html&quot;</span> <span class="o">:</span> <span class="n">filename</span><span class="p">;</span>
 <span class="p">}</span>
@@ -87,7 +88,7 @@ clone.  It&#8217;s very similar to the previous example, but introduces the
         <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="n">try</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
@@ -134,7 +135,7 @@ To retrieve the URI resource&#8217;s file name, the following function is
 provided:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">get_filename</span><span class="p">(</span><span class="k">const</span> <span class="n">uri</span><span class="o">::</span><span class="n">uri</span> <span class="o">&amp;</span><span class="n">url</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">path</span> <span class="o">=</span> <span class="n">uri</span><span class="o">::</span><span class="n">path</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
-    <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">index</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="sc">&#39;/&#39;</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">size_t</span> <span class="n">index</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="sc">&#39;/&#39;</span><span class="p">);</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
     <span class="k">return</span> <span class="n">filename</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="o">?</span> <span class="s">&quot;index.html&quot;</span> <span class="o">:</span> <span class="n">filename</span><span class="p">;</span>
 <span class="p">}</span>
@@ -203,8 +204,8 @@ resource name.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Sep 01, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Last updated on Sep 08, 2014.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -96,10 +97,10 @@ factory function:</p>
 <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">base</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">strategy</span><span class="p">(</span><span class="kt">int</span> <span class="n">input</span><span class="p">,</span> <span class="n">Tag</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">base</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">ptr</span><span class="p">;</span>
     <span class="k">switch</span><span class="p">(</span><span class="n">input</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="mi">0</span>: <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">derived0</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="mi">1</span>: <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">derived1</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">derived0</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">derived1</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
         <span class="c1">// ...</span>
-        <span class="nl">default:</span> <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="o">:</span> <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">ptr</span><span class="p">;</span>
 <span class="p">}</span>
@@ -119,10 +120,10 @@ done like the following:</p>
     <span class="k">static</span> <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">base</span><span class="o">&lt;</span><span class="n">default_</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">create</span><span class="p">(</span><span class="kt">int</span> <span class="n">input</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">base</span><span class="o">&lt;</span><span class="n">default_</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">ptr</span><span class="p">;</span>
         <span class="k">switch</span><span class="p">(</span><span class="n">input</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="mi">0</span>: <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">derived0</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="mi">1</span>: <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">derived1</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">derived0</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">derived1</span><span class="p">());</span> <span class="k">break</span><span class="p">;</span>
             <span class="c1">//...</span>
-            <span class="nl">default:</span> <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+            <span class="k">default</span><span class="o">:</span> <span class="n">ptr</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">ptr</span><span class="p">;</span>
     <span class="p">}</span>
@@ -182,8 +183,8 @@ object oriented programming with dynamic polymorphism.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Sep 01, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Last updated on Sep 08, 2014.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

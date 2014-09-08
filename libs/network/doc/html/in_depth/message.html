@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -46,7 +47,7 @@
           <a href="../in_depth.html" title="An in-depth look at the cpp-netlib"
              accesskey="P">previous</a> |</li>
         <li><a href="../contents.html">cpp-netlib v0.11.1</a> &raquo;</li>
-          <li><a href="../in_depth.html" accesskey="U">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a> &raquo;</li> 
+          <li><a href="../in_depth.html" accesskey="U">An in-depth look at the <tt class="docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">cpp-netlib</span></tt></a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -243,7 +244,7 @@ typically implemented:</p>
     <span class="p">}</span>
 <span class="p">};</span>
 
-<span class="n">foo_directive</span> <span class="k">const</span> <span class="nf">foo</span><span class="p">()</span> <span class="p">{</span>
+<span class="n">foo_directive</span> <span class="k">const</span> <span class="n">foo</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">foo_directive</span><span class="p">();</span>
 <span class="p">}</span>
 
@@ -278,7 +279,7 @@ the <tt class="docutils literal"><span class="pre">source_wrapper</span></tt> wo
 <div class="highlight-c++"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="p">,</span> <span class="k">template</span> <span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Message</span><span class="o">&gt;</span>
 <span class="k">struct</span> <span class="n">source_wrapper</span> <span class="p">{</span>
     <span class="n">Message</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">m</span><span class="p">;</span>
-    <span class="k">explicit</span> <span class="nf">source_wrapper</span><span class="p">(</span><span class="n">Message</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">m</span><span class="p">)</span>
+    <span class="k">explicit</span> <span class="n">source_wrapper</span><span class="p">(</span><span class="n">Message</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">m</span><span class="p">)</span>
     <span class="o">:</span> <span class="n">m</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="p">{}</span>
     <span class="k">typedef</span> <span class="k">typename</span> <span class="n">source</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;::</span><span class="n">type</span> <span class="n">source_type</span><span class="p">;</span>
     <span class="k">operator</span> <span class="n">source_type</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="p">()</span> <span class="p">{</span>
@@ -356,7 +357,7 @@ POD type.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="../in_depth.html"
-                        title="previous chapter">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a></p>
+                        title="previous chapter">An in-depth look at the <tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">cpp-netlib</span></tt></a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="uri.html"
                         title="next chapter">The URI class</a></p>
@@ -387,13 +388,13 @@ POD type.</p>
           <a href="../in_depth.html" title="An in-depth look at the cpp-netlib"
              >previous</a> |</li>
         <li><a href="../contents.html">cpp-netlib v0.11.1</a> &raquo;</li>
-          <li><a href="../in_depth.html" >An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a> &raquo;</li> 
+          <li><a href="../in_depth.html" >An in-depth look at the <tt class="docutils literal docutils literal docutils literal docutils literal docutils literal"><span class="pre">cpp-netlib</span></tt></a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Sep 01, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Last updated on Sep 08, 2014.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
