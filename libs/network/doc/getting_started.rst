@@ -230,7 +230,7 @@ CMake projects
 
 Projects using CMake can add the following lines in their ``CMakeLists.txt`` to
 be able to use :mod:`cpp-netlib`::
-    
+
    set ( CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ~/cpp-netlib-build )
    find_package ( cppnetlib 0.11.0 REQUIRED )
    include_directories ( ${CPPNETLIB_INCLUDE_DIRS} )
@@ -240,7 +240,7 @@ be able to use :mod:`cpp-netlib`::
    is not installed to a location that CMake searches.  When :mod:`cpp-netlib`
    is installed to the default location (``/usr/local``), ``CMake`` can find it.
 
-.. note:: We assume that ``MyApplication`` is the application that you are 
+.. note:: We assume that ``MyApplication`` is the application that you are
    building and which depends on :mod:`cpp-netlib`.
 
 
