@@ -302,7 +302,7 @@ effect:
     Returns a wrapper convertible to ``typename string<Tag>::type`` that
     provides the version of the given response.
 ``template <class Tag>`` *unspecified* ``status(basic_response<Tag> const & response)``
-    Returns a wrapper convertible to ``typename string<Tag>::type`` that
+    Returns a wrapper convertible to ``typename boost::uint16_t`` that
     provides the status of the given response.
 ``template <class Tag>`` *unspecified* ``status_message(basic_response<Tag> const & response)``
     Returns a wrapper convertible to ``typename string<Tag>::type`` that
