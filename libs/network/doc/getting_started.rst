@@ -126,10 +126,12 @@ additional parameters::
     >       -DCMAKE_CXX_COMPILER=g++ \
     >       ../cpp-netlib
 
-.. note:: While it's not compulsory, it's recommended that
-          :mod:`cpp-netlib` is built outside the source directory.
-          For the purposes of documentation, we'll assume that all
-          builds are done in ``~/cpp-netlib-build``.
+.. note::
+
+    While it's not compulsory, it's recommended that
+    :mod:`cpp-netlib` is built outside the source directory.
+    For the purposes of documentation, we'll assume that all
+    builds are done in ``~/cpp-netlib-build``.
 
 If you intend to use the SSL support when using the HTTP client libraries in
 :mod:`cpp-netlib`, you may need to build it with OpenSSL_ installed or at least

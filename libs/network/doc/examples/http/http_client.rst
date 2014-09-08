@@ -50,11 +50,13 @@ You can then run this to get the Boost_ website:
 
 .. _Boost: http://www.boost.org/
 
-.. note:: The instructions for all these examples assume that
-          :mod:`cpp-netlib` is build outside the source tree,
-          according to `CMake conventions`_.  For the sake of
-          consistency we assume that this is in the
-          ``~/cpp-netlib-build`` directory.
+.. note::
+
+    The instructions for all these examples assume that
+    :mod:`cpp-netlib` is build outside the source tree,
+    according to `CMake conventions`_.  For the sake of
+    consistency we assume that this is in the
+    ``~/cpp-netlib-build`` directory.
 
 .. _`CMake conventions`: http://www.cmake.org/Wiki/CMake_FAQ#What_is_an_.22out-of-source.22_build.3F
 

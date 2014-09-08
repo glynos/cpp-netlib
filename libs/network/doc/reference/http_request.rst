@@ -152,15 +152,17 @@ Directives are meant to be used in the following manner:
 
     request << directive(...);
 
-.. warning:: There are two versions of directives, those that are applicable to
-   messages that support narrow strings (``std::string``) and those that are
-   applicable to messages that support wide strings (``std::wstring``). The
-   :mod:`cpp-netlib` implementation still does not convert wide strings into
-   UTF-8 encoded narrow strings. This will be implemented in subsequent
-   library releases.
+.. warning::
 
-   For now all the implemented directives are listed, even if some of them still
-   do not implement things correctly.
+    There are two versions of directives, those that are applicable to
+    messages that support narrow strings (``std::string``) and those that are
+    applicable to messages that support wide strings (``std::wstring``). The
+    :mod:`cpp-netlib` implementation still does not convert wide strings into
+    UTF-8 encoded narrow strings. This will be implemented in subsequent
+    library releases.
+
+    For now all the implemented directives are listed, even if some of them still
+    do not implement things correctly.
 
 *unspecified* ``source(std::string const & source_)``
     Create a source directive with a ``std::string`` as a parameter, to be set
