@@ -172,6 +172,7 @@ struct basic_response<tags::http_server> {
           "<body><h1>203 Non-Authoritative Information</h1></body>"
           "</html>";		
       case basic_response<tags::http_server>::no_content:
+        return
           "<html>"
           "<head><title>No Content</title></head>"
           "<body><h1>204 Content</h1></body>"
