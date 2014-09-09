@@ -87,7 +87,7 @@ struct basic_response<tags::http_server> {
     space_unavailable = 507,
     network_authentication_required = 511
   } status;
-  
+
   /// The headers to be included in the reply.
   typedef vector<tags::http_server>::apply<header_type>::type headers_vector;
   headers_vector headers;
@@ -511,7 +511,6 @@ struct basic_response<tags::http_server> {
         return trim_null(buffer("HTTP/1.1 500 Internal Server Error\r\n"));
     }
   }
-
 };
 
 }  // namespace http
