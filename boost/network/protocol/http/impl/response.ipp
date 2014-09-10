@@ -2,6 +2,7 @@
 // Copyright (c) 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 // Copyright (c) 2009 Dean Michael Berris (mikhailberis@gmail.com)
 // Copyright (c) 2009 Tarroo, Inc.
+// Copyright (c) 2014 Jussi Lyytinen (jussi@lyytinen.org)
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -148,260 +149,366 @@ struct basic_response<tags::http_server> {
 
  private:
   static string_type to_string(status_type status) {
-    static const char ok[] = "";
-    static const char created[] =
-        "<html>"
-        "<head><title>Created</title></head>"
-        "<body><h1>201 Created</h1></body>"
-        "</html>";
-    static const char accepted[] =
-        "<html>"
-        "<head><title>Accepted</title></head>"
-        "<body><h1>202 Accepted</h1></body>"
-        "</html>";
-    static const char no_content[] =
-        "<html>"
-        "<head><title>No Content</title></head>"
-        "<body><h1>204 Content</h1></body>"
-        "</html>";
-    static const char multiple_choices[] =
-        "<html>"
-        "<head><title>Multiple Choices</title></head>"
-        "<body><h1>300 Multiple Choices</h1></body>"
-        "</html>";
-    static const char moved_permanently[] =
-        "<html>"
-        "<head><title>Moved Permanently</title></head>"
-        "<body><h1>301 Moved Permanently</h1></body>"
-        "</html>";
-    static const char moved_temporarily[] =
-        "<html>"
-        "<head><title>Moved Temporarily</title></head>"
-        "<body><h1>302 Moved Temporarily</h1></body>"
-        "</html>";
-    static const char not_modified[] =
-        "<html>"
-        "<head><title>Not Modified</title></head>"
-        "<body><h1>304 Not Modified</h1></body>"
-        "</html>";
-    static const char bad_request[] =
-        "<html>"
-        "<head><title>Bad Request</title></head>"
-        "<body><h1>400 Bad Request</h1></body>"
-        "</html>";
-    static const char unauthorized[] =
-        "<html>"
-        "<head><title>Unauthorized</title></head>"
-        "<body><h1>401 Unauthorized</h1></body>"
-        "</html>";
-    static const char forbidden[] =
-        "<html>"
-        "<head><title>Forbidden</title></head>"
-        "<body><h1>403 Forbidden</h1></body>"
-        "</html>";
-    static const char not_found[] =
-        "<html>"
-        "<head><title>Not Found</title></head>"
-        "<body><h1>404 Not Found</h1></body>"
-        "</html>";
-    static const char not_supported[] =
-        "<html>"
-        "<head><title>Method Not Supported</title></head>"
-        "<body><h1>Method Not Supported</h1></body>"
-        "</html>";
-    static const char not_acceptable[] =
-        "<html>"
-        "<head><title>Request Not Acceptable</title></head>"
-        "<body><h1>Request Not Acceptable</h1></body>"
-        "</html>";
-    static const char internal_server_error[] =
-        "<html>"
-        "<head><title>Internal Server Error</title></head>"
-        "<body><h1>500 Internal Server Error</h1></body>"
-        "</html>";
-    static const char not_implemented[] =
-        "<html>"
-        "<head><title>Not Implemented</title></head>"
-        "<body><h1>501 Not Implemented</h1></body>"
-        "</html>";
-    static const char bad_gateway[] =
-        "<html>"
-        "<head><title>Bad Gateway</title></head>"
-        "<body><h1>502 Bad Gateway</h1></body>"
-        "</html>";
-    static const char service_unavailable[] =
-        "<html>"
-        "<head><title>Service Unavailable</title></head>"
-        "<body><h1>503 Service Unavailable</h1></body>"
-        "</html>";
-    static const char space_unavailable[] =
-        "<html>"
-        "<head><title>Space Unavailable</title></head>"
-        "<body><h1>HTTP/1.0 507 Insufficient Space to Store "
-        "Resource</h1></body>"
-        "</html>";
-    static const char partial_content[] =
-        "<html>"
-        "<head><title>Partial Content</title></head>"
-        "<body><h1>HTTP/1.1 206 Partial Content</h1></body>"
-        "</html>";
-    static const char request_timeout[] =
-        "<html>"
-        "<head><title>Request Timeout</title></head>"
-        "<body><h1>HTTP/1.1 408 Request Timeout</h1></body>"
-        "</html>";
-    static const char precondition_failed[] =
-        "<html>"
-        "<head><title>Precondition Failed</title></head>"
-        "<body><h1>HTTP/1.1 412 Precondition Failed</h1></body>"
-        "</html>";
-    static const char unsatisfiable_range[] =
-        "<html>"
-        "<head><title>Unsatisfiable Range</title></head>"
-        "<body><h1>HTTP/1.1 416 Requested Range Not "
-        "Satisfiable</h1></body>"
-        "</html>";
-
     switch (status) {
+      // 2xx Success
       case basic_response<tags::http_server>::ok:
-        return ok;
+        return "";		
       case basic_response<tags::http_server>::created:
-        return created;
+        return
+          "<html>"
+          "<head><title>Created</title></head>"
+          "<body><h1>201 Created</h1></body>"
+          "</html>";		
       case basic_response<tags::http_server>::accepted:
-        return accepted;
+        return
+          "<html>"
+          "<head><title>Accepted</title></head>"
+          "<body><h1>202 Accepted</h1></body>"
+          "</html>";	
+      case basic_response<tags::http_server>::non_authoritative_information:
+        return
+          "<html>"
+          "<head><title>Non-Authoritative Information</title></head>"
+          "<body><h1>203 Non-Authoritative Information</h1></body>"
+          "</html>";		
       case basic_response<tags::http_server>::no_content:
-        return no_content;
-      case basic_response<tags::http_server>::multiple_choices:
-        return multiple_choices;
-      case basic_response<tags::http_server>::moved_permanently:
-        return moved_permanently;
-      case basic_response<tags::http_server>::moved_temporarily:
-        return moved_temporarily;
-      case basic_response<tags::http_server>::not_modified:
-        return not_modified;
-      case basic_response<tags::http_server>::bad_request:
-        return bad_request;
-      case basic_response<tags::http_server>::unauthorized:
-        return unauthorized;
-      case basic_response<tags::http_server>::forbidden:
-        return forbidden;
-      case basic_response<tags::http_server>::not_found:
-        return not_found;
-      case basic_response<tags::http_server>::not_supported:
-        return not_supported;
-      case basic_response<tags::http_server>::not_acceptable:
-        return not_acceptable;
-      case basic_response<tags::http_server>::internal_server_error:
-        return internal_server_error;
-      case basic_response<tags::http_server>::not_implemented:
-        return not_implemented;
-      case basic_response<tags::http_server>::bad_gateway:
-        return bad_gateway;
-      case basic_response<tags::http_server>::service_unavailable:
-        return service_unavailable;
-      case basic_response<tags::http_server>::space_unavailable:
-        return space_unavailable;
+        return
+          "<html>"
+          "<head><title>No Content</title></head>"
+          "<body><h1>204 Content</h1></body>"
+          "</html>";
+      case basic_response<tags::http_server>::reset_content:
+        return
+          "<html>"
+          "<head><title>Reset Content</title></head>"
+          "<body><h1>205 Reset Content</h1></body>"
+          "</html>";		
       case basic_response<tags::http_server>::partial_content:
-        return partial_content;
+        return
+          "<html>"
+          "<head><title>Partial Content</title></head>"
+          "<body><h1>206 Partial Content</h1></body>"
+          "</html>";	
+		
+      // 3xx Redirection		
+      case basic_response<tags::http_server>::multiple_choices:
+        return
+          "<html>"
+          "<head><title>Multiple Choices</title></head>"
+          "<body><h1>300 Multiple Choices</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::moved_permanently:
+        return
+          "<html>"
+          "<head><title>Moved Permanently</title></head>"
+          "<body><h1>301 Moved Permanently</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::moved_temporarily:
+        return
+          "<html>"
+          "<head><title>Moved Temporarily</title></head>"
+          "<body><h1>302 Moved Temporarily</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::see_other:
+        return
+          "<html>"
+          "<head><title>See Other</title></head>"
+          "<body><h1>303 See Other</h1></body>"
+          "</html>";
+      case basic_response<tags::http_server>::not_modified:
+        return
+          "<html>"
+          "<head><title>Not Modified</title></head>"
+          "<body><h1>304 Not Modified</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::use_proxy:
+        return
+          "<html>"
+          "<head><title>Use Proxy</title></head>"
+          "<body><h1>305 Use Proxy</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::temporary_redirect:
+        return
+          "<html>"
+          "<head><title>Temporary Redirect</title></head>"
+          "<body><h1>307 Temporary Redirect</h1></body>"
+          "</html>";
+		
+      // 4xx Client Error
+      case basic_response<tags::http_server>::bad_request:
+        return
+          "<html>"
+          "<head><title>Bad Request</title></head>"
+          "<body><h1>400 Bad Request</h1></body>"
+          "</html>";
+      case basic_response<tags::http_server>::unauthorized:
+        return
+          "<html>"
+          "<head><title>Unauthorized</title></head>"
+          "<body><h1>401 Unauthorized</h1></body>"
+          "</html>";			
+      case basic_response<tags::http_server>::forbidden:
+        return
+          "<html>"
+          "<head><title>Forbidden</title></head>"
+          "<body><h1>403 Forbidden</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::not_found:
+        return
+          "<html>"
+          "<head><title>Not Found</title></head>"
+          "<body><h1>404 Not Found</h1></body>"
+          "</html>";
+      case basic_response<tags::http_server>::not_supported:
+        return
+          "<html>"
+          "<head><title>Method Not Supported</title></head>"
+          "<body><h1>405 Method Not Supported</h1></body>"
+          "</html>";
+      case basic_response<tags::http_server>::not_acceptable:
+        return
+          "<html>"
+          "<head><title>Not Acceptable\r\n</title></head>"
+          "<body><h1>406 Not Acceptable</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::proxy_authentication_required:
+        return
+          "<html>"
+          "<head><title>Proxy Authentication Required</title></head>"
+          "<body><h1>407 Proxy Authentication Required</h1></body>"
+          "</html>";
       case basic_response<tags::http_server>::request_timeout:
-        return request_timeout;
-      case basic_response<tags::http_server>::unsatisfiable_range:
-        return unsatisfiable_range;
+        return
+          "<html>"
+          "<head><title>Request Timeout</title></head>"
+          "<body><h1>408 Request Timeout</h1></body>"
+          "</html>";
+      case basic_response<tags::http_server>::conflict:
+        return
+          "<html>"
+          "<head><title>Conflict</title></head>"
+          "<body><h1>409 Conflict</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::gone:
+        return
+          "<html>"
+          "<head><title>Gone</title></head>"
+          "<body><h1>410 Gone</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::length_required:
+        return
+          "<html>"
+          "<head><title>Length Required</title></head>"
+          "<body><h1>411 Length Required</h1></body>"
+          "</html>";			
       case basic_response<tags::http_server>::precondition_failed:
-        return precondition_failed;
+        return
+          "<html>"
+          "<head><title>Precondition Failed</title></head>"
+          "<body><h1>412 Precondition Failed</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::request_entity_too_large:
+        return
+          "<html>"
+          "<head><title>Request Entity Too Large</title></head>"
+          "<body><h1>413 Request Entity Too Large</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::request_uri_too_large:
+        return
+          "<html>"
+          "<head><title>Request-URI Too Large</title></head>"
+          "<body><h1>414 Request-URI Too Large</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::unsupported_media_type:
+        return
+          "<html>"
+          "<head><title>Unsupported Media Type</title></head>"
+          "<body><h1>415 Unsupported Media Type</h1></body>"
+          "</html>";			
+      case basic_response<tags::http_server>::unsatisfiable_range:
+        return
+          "<html>"
+          "<head><title>Unsatisfiable Range</title></head>"
+          "<body><h1>416 Requested Range Not "
+          "Satisfiable</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::expectation_failed:
+        return
+          "<html>"
+          "<head><title>Expectation Failed</title></head>"
+          "<body><h1>417 Expectation Failed</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::precondition_required:
+        return
+          "<html>"
+          "<head><title>Precondition Required</title></head>"
+          "<body><h1>428 Precondition Required</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::too_many_requests:
+        return
+          "<html>"
+          "<head><title>Too Many Requests</title></head>"
+          "<body><h1>429 Too Many Requests</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::request_header_fields_too_large:
+        return
+          "<html>"
+          "<head><title>Request Header Fields Too Large</title></head>"
+          "<body><h1>431 Request Header Fields Too Large</h1></body>"
+          "</html>";		
+		
+      // 5xx Server Error			
+      case basic_response<tags::http_server>::internal_server_error:
+        return
+          "<html>"
+          "<head><title>Internal Server Error</title></head>"
+          "<body><h1>500 Internal Server Error</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::not_implemented:
+        return
+          "<html>"
+          "<head><title>Not Implemented</title></head>"
+          "<body><h1>501 Not Implemented</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::bad_gateway:
+        return
+          "<html>"
+          "<head><title>Bad Gateway</title></head>"
+          "<body><h1>502 Bad Gateway</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::service_unavailable:
+        return
+          "<html>"
+          "<head><title>Service Unavailable</title></head>"
+          "<body><h1>503 Service Unavailable</h1></body>"
+          "</html>";		
+      case basic_response<tags::http_server>::gateway_timeout:
+        return
+          "<html>"
+          "<head><title>Gateway Timeout</title></head>"
+          "<body><h1>504 Gateway Timeout</h1></body>"
+          "</html>";
+      case basic_response<tags::http_server>::http_version_not_supported:
+        return
+          "<html>"
+          "<head><title>HTTP Version Not Supported</title></head>"
+          "<body><h1>505 HTTP Version Not Supported</h1></body>"
+          "</html>";		  
+      case basic_response<tags::http_server>::space_unavailable:
+        return
+          "<html>"
+          "<head><title>Space Unavailable</title></head>"
+          "<body><h1>507 Insufficient Space to Store "
+          "Resource</h1></body>"
+          "</html>"; 		
+		
       default:
-        return internal_server_error;
+        return
+          "<html>"
+          "<head><title>Internal Server Error</title></head>"
+          "<body><h1>500 Internal Server Error</h1></body>"
+          "</html>";	
     }
+  }
+  
+  boost::asio::const_buffer trim_null(boost::asio::const_buffer buffer) {
+    std::size_t size = boost::asio::buffer_size(buffer);
+    return boost::asio::buffer(buffer, size - 1);
   }
 
   boost::asio::const_buffer to_buffer(status_type status) {
     using boost::asio::buffer;
-    static const string_type ok = "HTTP/1.0 200 OK\r\n";
-    static const string_type created = "HTTP/1.0 201 Created\r\n";
-    static const string_type accepted = "HTTP/1.0 202 Accepted\r\n";
-    static const string_type no_content = "HTTP/1.0 204 No Content\r\n";
-    static const string_type multiple_choices =
-        "HTTP/1.0 300 Multiple Choices\r\n";
-    static const string_type moved_permanently =
-        "HTTP/1.0 301 Moved Permanently\r\n";
-    static const string_type moved_temporarily =
-        "HTTP/1.0 302 Moved Temporarily\r\n";
-    static const string_type not_modified = "HTTP/1.0 304 Not Modified\r\n";
-    static const string_type bad_request = "HTTP/1.0 400 Bad Request\r\n";
-    static const string_type unauthorized = "HTTP/1.0 401 Unauthorized\r\n";
-    static const string_type forbidden = "HTTP/1.0 403 Forbidden\r\n";
-    static const string_type not_found = "HTTP/1.0 404 Not Found\r\n";
-    static const string_type not_supported =
-        "HTTP/1.0 405 Method Not Supported\r\n";
-    static const string_type not_acceptable =
-        "HTTP/1.0 406 Method Not Acceptable\r\n";
-    static const string_type internal_server_error =
-        "HTTP/1.0 500 Internal Server Error\r\n";
-    static const string_type not_implemented =
-        "HTTP/1.0 501 Not Implemented\r\n";
-    static const string_type bad_gateway = "HTTP/1.0 502 Bad Gateway\r\n";
-    static const string_type service_unavailable =
-        "HTTP/1.0 503 Service Unavailable\r\n";
-    static const string_type space_unavailable =
-        "HTTP/1.0 507 Insufficient Space to Store Resource\r\n";
-    static const string_type partial_content =
-        "HTTP/1.1 206 Partial Content\r\n";
-    static const string_type request_timeout =
-        "HTTP/1.1 408 Request Timeout\r\n";
-    static const string_type precondition_failed =
-        "HTTP/1.1 412 Precondition Failed\r\n";
-    static const string_type unsatisfiable_range =
-        "HTTP/1.1 416 Requested Range Not Satisfiable\r\n";
-
-    switch (status) {
+    switch (status) {      
+      // 2xx Success
       case basic_response<tags::http_server>::ok:
-        return buffer(ok);
+        return trim_null(buffer("HTTP/1.1 200 OK\r\n"));
       case basic_response<tags::http_server>::created:
-        return buffer(created);
+        return trim_null(buffer("HTTP/1.1 201 Created\r\n"));
       case basic_response<tags::http_server>::accepted:
-        return buffer(accepted);
+        return trim_null(buffer("HTTP/1.1 202 Accepted\r\n"));
+      case basic_response<tags::http_server>::non_authoritative_information:
+        return trim_null(buffer("HTTP/1.1 203 Non-Authoritative Information\r\n"));		
       case basic_response<tags::http_server>::no_content:
-        return buffer(no_content);
-      case basic_response<tags::http_server>::multiple_choices:
-        return buffer(multiple_choices);
-      case basic_response<tags::http_server>::moved_permanently:
-        return buffer(moved_permanently);
-      case basic_response<tags::http_server>::moved_temporarily:
-        return buffer(moved_temporarily);
-      case basic_response<tags::http_server>::not_modified:
-        return buffer(not_modified);
-      case basic_response<tags::http_server>::bad_request:
-        return buffer(bad_request);
-      case basic_response<tags::http_server>::unauthorized:
-        return buffer(unauthorized);
-      case basic_response<tags::http_server>::forbidden:
-        return buffer(forbidden);
-      case basic_response<tags::http_server>::not_found:
-        return buffer(not_found);
-      case basic_response<tags::http_server>::not_supported:
-        return buffer(not_supported);
-      case basic_response<tags::http_server>::not_acceptable:
-        return buffer(not_acceptable);
-      case basic_response<tags::http_server>::internal_server_error:
-        return buffer(internal_server_error);
-      case basic_response<tags::http_server>::not_implemented:
-        return buffer(not_implemented);
-      case basic_response<tags::http_server>::bad_gateway:
-        return buffer(bad_gateway);
-      case basic_response<tags::http_server>::service_unavailable:
-        return buffer(service_unavailable);
-      case basic_response<tags::http_server>::space_unavailable:
-        return buffer(space_unavailable);
+        return trim_null(buffer("HTTP/1.1 204 No Content\r\n"));
+      case basic_response<tags::http_server>::reset_content:
+        return trim_null(buffer("HTTP/1.1 205 Reset Content\r\n"));		
       case basic_response<tags::http_server>::partial_content:
-        return buffer(partial_content);
+        return trim_null(buffer("HTTP/1.1 206 Partial Content\r\n"));		
+	
+      // 3xx Redirection	
+      case basic_response<tags::http_server>::multiple_choices:
+        return trim_null(buffer("HTTP/1.1 300 Multiple Choices\r\n"));
+      case basic_response<tags::http_server>::moved_permanently:
+        return trim_null(buffer("HTTP/1.1 301 Moved Permanently\r\n"));
+      case basic_response<tags::http_server>::moved_temporarily:
+        return trim_null(buffer("HTTP/1.1 302 Moved Temporarily\r\n"));
+      case basic_response<tags::http_server>::see_other:
+        return trim_null(buffer("HTTP/1.1 303 See Other\r\n"));		
+      case basic_response<tags::http_server>::not_modified:
+        return trim_null(buffer("HTTP/1.1 304 Not Modified\r\n"));
+      case basic_response<tags::http_server>::use_proxy:
+        return trim_null(buffer("HTTP/1.1 305 Use Proxy\r\n"));
+      case basic_response<tags::http_server>::temporary_redirect:
+        return trim_null(buffer("HTTP/1.1 307 Temporary Redirect\r\n"));		
+
+      // 4xx Client Error		
+      case basic_response<tags::http_server>::bad_request:
+        return trim_null(buffer("HTTP/1.1 400 Bad Request\r\n"));
+      case basic_response<tags::http_server>::unauthorized:
+        return trim_null(buffer("HTTP/1.1 401 Unauthorized\r\n"));
+      case basic_response<tags::http_server>::forbidden:
+        return trim_null(buffer("HTTP/1.1 403 Forbidden\r\n"));
+      case basic_response<tags::http_server>::not_found:
+        return trim_null(buffer("HTTP/1.1 404 Not Found\r\n"));
+      case basic_response<tags::http_server>::not_supported:
+        return trim_null(buffer("HTTP/1.1 405 Method Not Supported\r\n"));
+      case basic_response<tags::http_server>::not_acceptable:
+        return trim_null(buffer("HTTP/1.1 406 Method Not Acceptable\r\n"));
+      case basic_response<tags::http_server>::proxy_authentication_required:
+        return trim_null(buffer("HTTP/1.1 407 Proxy Authentication Required\r\n"));
       case basic_response<tags::http_server>::request_timeout:
-        return buffer(request_timeout);
-      case basic_response<tags::http_server>::unsatisfiable_range:
-        return buffer(unsatisfiable_range);
+        return trim_null(buffer("HTTP/1.1 408 Request Timeout\r\n"));		
+      case basic_response<tags::http_server>::conflict:
+        return trim_null(buffer("HTTP/1.1 409 Conflict\r\n"));
+      case basic_response<tags::http_server>::gone:
+        return trim_null(buffer("HTTP/1.1 410 Gone\r\n"));
+      case basic_response<tags::http_server>::length_required:
+        return trim_null(buffer("HTTP/1.1 411 Length Required\r\n"));		
       case basic_response<tags::http_server>::precondition_failed:
-        return buffer(precondition_failed);
+        return trim_null(buffer("HTTP/1.1 412 Precondition Failed\r\n"));
+      case basic_response<tags::http_server>::request_entity_too_large:
+        return trim_null(buffer("HTTP/1.1 413 Request Entity Too Large\r\n"));
+      case basic_response<tags::http_server>::request_uri_too_large:
+        return trim_null(buffer("HTTP/1.1 414 Request-URI Too Large\r\n"));
+      case basic_response<tags::http_server>::unsupported_media_type:
+        return trim_null(buffer("HTTP/1.1 415 Unsupported Media Type\r\n"));
+      case basic_response<tags::http_server>::unsatisfiable_range:
+        return trim_null(buffer("HTTP/1.1 416 Requested Range Not Satisfiable\r\n"));	
+      case basic_response<tags::http_server>::precondition_required:
+        return trim_null(buffer("HTTP/1.1 428 Precondition Required\r\n"));
+      case basic_response<tags::http_server>::too_many_requests:
+        return trim_null(buffer("HTTP/1.1 429 Too Many Requests\r\n"));	
+      case basic_response<tags::http_server>::request_header_fields_too_large:
+        return trim_null(buffer("HTTP/1.1 431 Request Header Fields Too Large\r\n"));		
+	
+      // 5xx Server Error		
+      case basic_response<tags::http_server>::internal_server_error:
+        return trim_null(buffer("HTTP/1.1 500 Internal Server Error\r\n"));
+      case basic_response<tags::http_server>::not_implemented:
+        return trim_null(buffer("HTTP/1.1 501 Not Implemented\r\n"));
+      case basic_response<tags::http_server>::bad_gateway:
+        return trim_null(buffer("HTTP/1.1 502 Bad Gateway\r\n"));      
+      case basic_response<tags::http_server>::service_unavailable:
+        return trim_null(buffer("HTTP/1.1 503 Service Unavailable\r\n"));
+      case basic_response<tags::http_server>::gateway_timeout:
+        return trim_null(buffer("HTTP/1.1 504 Gateway Timeout\r\n"));      
+      case basic_response<tags::http_server>::http_version_not_supported:
+        return trim_null(buffer("HTTP/1.1 505 HTTP Version Not Supported\r\n"));		
+      case basic_response<tags::http_server>::space_unavailable:
+        return trim_null(buffer("HTTP/1.1 507 Insufficient Space to Store Resource\r\n"));
+
       default:
-        return buffer(internal_server_error);
+        return trim_null(buffer("HTTP/1.1 500 Internal Server Error\r\n"));
     }
   }
 };
