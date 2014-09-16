@@ -4,6 +4,7 @@
 // Copyright 2010, 2014 Dean Michael Berris <dberris@google.com>
 // Copyright 2010 (c) Sinefunc, Inc.
 // Copyright 2014 Google, Inc.
+// Copyright 2014 Jussi Lyytinen
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -31,23 +32,20 @@ struct port_wrapper {
 
   operator port_type() const { return message_.port(); }
 
-#if (_MSC_VER >= 1600)
-  // We hack this so that we don't run into the issue of MSVC 2010 not doing the
-  // right thing when converting/copying Boost.Optional objects.
-  struct optional_wrapper {
-    boost::optional<boost::uint16_t> o_;
-    explicit optional_wrapper(boost::optional<boost::uint16_t> o) : o_(o) {}
-    operator boost::optional<boost::uint16_t>() const { return o_; }
-  };
-
-  operator optional_wrapper() const {
-    return optional_wrapper(uri::port_us(message_.uri()));
-  }
-#else
+#if !defined(_MSC_VER)
+  // Because of a breaking change in Boost 1.56 to boost::optional, implicit
+  // conversions no longer work correctly with MSVC. The conversion therefore
+  // has to be done explicitly with as_optional(). This method is here just
+  // to maintain backwards compatibility with compilers not affected by the
+  // change.
   operator boost::optional<boost::uint16_t>() const {
     return uri::port_us(message_.uri());
   }
 #endif
+  
+  boost::optional<boost::uint16_t> as_optional() const {
+    return uri::port_us(message_.uri());
+  }
 
 };
 

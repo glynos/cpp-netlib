@@ -2,6 +2,7 @@
 #define BOOST_NETWORK_PROTOCOL_HTTP_ALGORITHMS_LINEARIZE_HPP_20101028
 
 // Copyright 2010 Dean Michael Berris.
+// Copyright 2014 Jussi Lyytinen
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -137,7 +138,7 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
     *oi = consts::colon_char();
     *oi = consts::space_char();
     boost::copy(request.host(), oi);
-    boost::optional<boost::uint16_t> port_ = port(request);
+    boost::optional<boost::uint16_t> port_ = port(request).as_optional();
     if (port_) {
       string_type port_str = boost::lexical_cast<string_type>(*port_);
       *oi = consts::colon_char();
