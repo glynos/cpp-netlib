@@ -46,7 +46,6 @@ struct iequals_pred {
 template <class Message, class KeyType, class Tag>
 inline typename enable_if<is_pod<Tag>, void>::type remove_header(
     Message& message, KeyType const& key, Tag) {
-  typedef typename Message::headers_container_type headers;
   message.headers.erase(
       boost::remove_if(message.headers, iequals_pred<KeyType>(key)),
       message.headers.end());

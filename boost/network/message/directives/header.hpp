@@ -55,7 +55,6 @@ struct header_directive {
 
   template <class Message>
   void operator()(Message const& msg) const {
-    typedef typename Message::headers_container_type::value_type value_type;
     directive_impl<Message>::eval(msg, _header_name, _header_value);
   }
 

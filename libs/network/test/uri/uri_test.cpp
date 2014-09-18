@@ -561,3 +561,8 @@ BOOST_AUTO_TEST_CASE(issue_364_test) {
   uri::schemes::http(instance) << uri::host("my.awesome.server.com");
   BOOST_CHECK_EQUAL("my.awesome.server.com", uri::authority(instance));
 }
+
+BOOST_AUTO_TEST_CASE(issue_447_test) {
+  uri::uri instance("http://[www.foo.com/");
+  BOOST_REQUIRE(!uri::valid(instance));
+}

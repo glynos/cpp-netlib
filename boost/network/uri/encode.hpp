@@ -126,8 +126,6 @@ template <class InputIterator, class OutputIterator>
 OutputIterator encode(const InputIterator &in_begin,
                       const InputIterator &in_end,
                       const OutputIterator &out_begin) {
-  typedef typename boost::iterator_value<InputIterator>::type value_type;
-
   InputIterator it = in_begin;
   OutputIterator out = out_begin;
   while (it != in_end) {

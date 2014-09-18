@@ -222,7 +222,6 @@ struct async_connection
              << consts::space() << status << consts::space()
              << status_message(status) << consts::crlf();
       if (!boost::empty(headers)) {
-        typedef typename Range::const_iterator iterator;
         typedef typename string<Tag>::type string_type;
         boost::transform(headers, std::ostream_iterator<string_type>(stream),
                          linearize_header<Tag>());
