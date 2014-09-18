@@ -12,6 +12,7 @@
 #include <boost/optional.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/network/uri/accessors.hpp>
+#include <boost/version.hpp>
 
 namespace boost {
 namespace network {
@@ -32,21 +33,19 @@ struct port_wrapper {
 
   operator port_type() const { return message_.port(); }
 
-#if !defined(_MSC_VER)
+#if (_MSC_VER >= 1600 && BOOST_VERSION > 105500)
   // Because of a breaking change in Boost 1.56 to boost::optional, implicit
   // conversions no longer work correctly with MSVC. The conversion therefore
-  // has to be done explicitly with as_optional(). This method is here just
-  // to maintain backwards compatibility with compilers not affected by the
-  // change.
+  // has to be done explicitly with as_optional().
+  boost::optional<boost::uint16_t> as_optional() const {
+    return uri::port_us(message_.uri());
+  }
+#else
   operator boost::optional<boost::uint16_t>() const {
     return uri::port_us(message_.uri());
   }
 #endif
-  
-  boost::optional<boost::uint16_t> as_optional() const {
-    return uri::port_us(message_.uri());
-  }
-
+ 
 };
 
 }  // namespace impl

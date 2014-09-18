@@ -19,6 +19,7 @@
 #include <boost/optional.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/algorithm/string/compare.hpp>
+#include <boost/version.hpp>
 
 namespace boost {
 namespace network {
@@ -138,7 +139,12 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
     *oi = consts::colon_char();
     *oi = consts::space_char();
     boost::copy(request.host(), oi);
-    boost::optional<boost::uint16_t> port_ = port(request).as_optional();
+    boost::optional<boost::uint16_t> port_ =
+#if (_MSC_VER >= 1600 && BOOST_VERSION > 105500)
+      port(request).as_optional();
+#else
+      port(request);
+#endif
     if (port_) {
       string_type port_str = boost::lexical_cast<string_type>(*port_);
       *oi = consts::colon_char();
