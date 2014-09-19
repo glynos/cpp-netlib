@@ -34,9 +34,6 @@ struct Message : DefaultConstructible<M>, CopyConstructible<M>, Assignable<M> {
     typedef typename traits::source<M>::type source_type;
     typedef typename traits::destination<M>::type destination_type;
 
-    typedef typename traits::header_key<M>::type header_key_type;
-    typedef typename traits::header_value<M>::type header_value_type;
-
     headers_container_type headers_ = headers(message);
     string_type body_ = body(message);
     string_type source_ = source(message);

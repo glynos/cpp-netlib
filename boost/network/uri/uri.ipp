@@ -84,19 +84,42 @@ struct uri_grammar
     ipvfuture %=
         qi::lit('v') >> +qi::xdigit >> '.' >> +(unreserved | sub_delims | ':');
 
-    ipv6address %=
-        qi::raw[qi::repeat(6)[h16 >> ':'] >> ls32 |
-                "::" >> qi::repeat(5)[h16 >> ':'] >> ls32 |
-                qi::raw[h16] >> "::" >> qi::repeat(4)[h16 >> ':'] >> ls32 |
-                qi::raw[+(*(h16 >> ':')) >> h16] >> "::" >>
-                    qi::repeat(3)[h16 >> ':'] >> ls32 |
-                qi::raw[qi::repeat(2)[*(h16 >> ':')] >> h16] >> "::" >>
-                    qi::repeat(2)[h16 >> ':'] >> ls32 |
-                qi::raw[qi::repeat(3)[*(h16 >> ':')] >> h16] >> "::" >> h16 >>
-                    ':' >> ls32 |
-                qi::raw[qi::repeat(4)[*(h16 >> ':')] >> h16] >> "::" >> ls32 |
-                qi::raw[qi::repeat(5)[*(h16 >> ':')] >> h16] >> "::" >> h16 |
-                qi::raw[qi::repeat(6)[*(h16 >> ':')] >> h16] >> "::"];
+    ipv6address %= qi::raw
+        [qi::repeat(6)[h16 >> ':'] >> ls32 |
+         "::" >> qi::repeat(5)[h16 >> ':'] >> ls32 |
+         -qi::raw[h16] >> "::" >> qi::repeat(4)[h16 >> ':'] >> ls32 |
+         -qi::raw[h16] >> "::" >> qi::repeat(3)[h16 >> ':'] >> ls32 |
+         -qi::raw[h16] >> "::" >> qi::repeat(2)[h16 >> ':'] >> ls32 |
+         -qi::raw[h16] >> "::" >> h16 >> ':' >> ls32 |
+         -qi::raw[h16] >> "::" >> ls32 | -qi::raw[h16] >> "::" >> h16 |
+         -qi::raw[h16] >> "::" |
+         -qi::raw[qi::repeat(1)[(h16 >> ':')] >> h16] >> "::" >>
+             qi::repeat(3)[h16 >> ':'] >> ls32 |
+         -qi::raw[qi::repeat(1)[(h16 >> ':')] >> h16] >> "::" >>
+             qi::repeat(2)[h16 >> ':'] >> ls32 |
+         -qi::raw[qi::repeat(1)[(h16 >> ':')] >> h16] >> "::" >> h16 >>
+             ':' >> ls32 |
+         -qi::raw[qi::repeat(1)[(h16 >> ':')] >> h16] >> "::" >> ls32 |
+         -qi::raw[qi::repeat(1)[(h16 >> ':')] >> h16] >> "::" >> h16 |
+         -qi::raw[qi::repeat(1)[(h16 >> ':')] >> h16] >> "::" |
+         -qi::raw[qi::repeat(2)[(h16 >> ':')] >> h16] >> "::" >>
+             qi::repeat(2)[h16 >> ':'] >> ls32 |
+         -qi::raw[qi::repeat(2)[(h16 >> ':')] >> h16] >> "::" >> h16 >>
+             ':' >> ls32 |
+         -qi::raw[qi::repeat(2)[(h16 >> ':')] >> h16] >> "::" >> ls32 |
+         -qi::raw[qi::repeat(2)[(h16 >> ':')] >> h16] >> "::" >> h16 |
+         -qi::raw[qi::repeat(2)[(h16 >> ':')] >> h16] >> "::" |
+         -qi::raw[qi::repeat(3)[(h16 >> ':')] >> h16] >> "::" >> h16 >>
+             ':' >> ls32 |
+         -qi::raw[qi::repeat(3)[(h16 >> ':')] >> h16] >> "::" >> ls32 |
+         -qi::raw[qi::repeat(3)[(h16 >> ':')] >> h16] >> "::" >> h16 |
+         -qi::raw[qi::repeat(3)[(h16 >> ':')] >> h16] >> "::" |
+         -qi::raw[qi::repeat(4)[(h16 >> ':')] >> h16] >> "::" >> ls32 |
+         -qi::raw[qi::repeat(4)[(h16 >> ':')] >> h16] >> "::" >> h16 |
+         -qi::raw[qi::repeat(4)[(h16 >> ':')] >> h16] >> "::" |
+         -qi::raw[qi::repeat(5)[(h16 >> ':')] >> h16] >> "::" >> h16 |
+         -qi::raw[qi::repeat(5)[(h16 >> ':')] >> h16] >> "::" |
+         -qi::raw[qi::repeat(6)[(h16 >> ':')] >> h16] >> "::"];
 
     // ls32 = ( h16 ":" h16 ) / IPv4address
     ls32 %= (h16 >> ':' >> h16) | ipv4address;
