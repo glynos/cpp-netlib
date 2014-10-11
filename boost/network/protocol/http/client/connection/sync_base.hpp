@@ -235,36 +235,34 @@ struct sync_connection_base {
       resolver_function_type;
   typedef function<bool(string_type&)> body_generator_function_type;
 
-  // FIXME make the certificate filename and verify path parameters be optional
+  // FIXME make the certificate filename and verify path parameters be
+  // optional
   // ranges
   static sync_connection_base<Tag, version_major, version_minor>*
-  new_connection(resolver_type& resolver, resolver_function_type resolve,
-                 bool https, bool always_verify_peer, int timeout,
-                 optional<string_type> const& certificate_filename =
-                     optional<string_type>(),
-                 optional<string_type> const& verify_path =
-                     optional<string_type>(),
-                 optional<string_type> const& certificate_file =
-                     optional<string_type>(),
-                 optional<string_type> const& private_key_file =
-                     optional<string_type>()) {
+  new_connection(
+      resolver_type& resolver, resolver_function_type resolve, bool https,
+      bool always_verify_peer, int timeout,
+      optional<string_type> const& certificate_filename =
+          optional<string_type>(),
+      optional<string_type> const& verify_path = optional<string_type>(),
+      optional<string_type> const& certificate_file = optional<string_type>(),
+      optional<string_type> const& private_key_file = optional<string_type>()) {
     if (https) {
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
       return dynamic_cast<
           sync_connection_base<Tag, version_major, version_minor>*>(
           new https_sync_connection<Tag, version_major, version_minor>(
               resolver, resolve, always_verify_peer, timeout,
-              certificate_filename, verify_path,
-              certificate_file, private_key_file));
+              certificate_filename, verify_path, certificate_file,
+              private_key_file));
 #else
       throw std::runtime_error("HTTPS not supported.");
 #endif
     }
     return dynamic_cast<
         sync_connection_base<Tag, version_major, version_minor>*>(
-        new http_sync_connection<Tag, version_major, version_minor>(resolver,
-                                                                    resolve,
-                                                                    timeout));
+        new http_sync_connection<Tag, version_major, version_minor>(
+            resolver, resolve, timeout));
   }
 
   virtual void init_socket(string_type const& hostname,

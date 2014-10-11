@@ -14,25 +14,25 @@
 #include <boost/asio/buffer.hpp>
 #include <boost/network/protocol/http/client/connection/normal_delegate.hpp>
 
-boost::network::http::impl::normal_delegate::normal_delegate(asio::io_service & service)
-  : service_(service)
-{}
+boost::network::http::impl::normal_delegate::normal_delegate(
+    asio::io_service &service)
+    : service_(service) {}
 
 void boost::network::http::impl::normal_delegate::connect(
-    asio::ip::tcp::endpoint & endpoint,
+    asio::ip::tcp::endpoint &endpoint,
     function<void(system::error_code const &)> handler) {
   socket_.reset(new asio::ip::tcp::socket(service_));
   socket_->async_connect(endpoint, handler);
 }
 
 void boost::network::http::impl::normal_delegate::write(
-    asio::streambuf & command_streambuf,
+    asio::streambuf &command_streambuf,
     function<void(system::error_code const &, size_t)> handler) {
   asio::async_write(*socket_, command_streambuf, handler);
 }
 
 void boost::network::http::impl::normal_delegate::read_some(
-    asio::mutable_buffers_1 const & read_buffer,
+    asio::mutable_buffers_1 const &read_buffer,
     function<void(system::error_code const &, size_t)> handler) {
   socket_->async_read_some(read_buffer, handler);
 }
@@ -49,4 +49,5 @@ void boost::network::http::impl::normal_delegate::disconnect() {
 
 boost::network::http::impl::normal_delegate::~normal_delegate() {}
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_IPP_20110819 */
+#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_IPP_20110819 \
+          */

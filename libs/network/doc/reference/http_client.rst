@@ -39,8 +39,19 @@ only in the following situations:
     code.** It is best to define this either at compile-time of all code using
     the library, or before including any of the client headers.
 
-.. _OpenSSL: http://www.openssl.org/
+To use the client implementations that support HTTPS URIs, you may explicitly
+do the following:
 
+.. code-block:: c++
+
+   #define BOOST_NETWORK_ENABLE_HTTPS
+   #include <boost/network/include/http/client.hpp>
+
+This forces HTTPS support to be enabled and forces a dependency on OpenSSL_.
+This dependency is imposed by `Boost.Asio`_
+
+.. _OpenSSL: http://www.openssl.org/
+.. _`Boost.Asio`: http://www.boost.org/libs/asio
 
 Implementations
 ---------------

@@ -16,7 +16,7 @@ include(GNUInstallDirs)
 if(WIN32 AND NOT CYGWIN)
     set(DEF_INSTALL_CMAKE_DIR CMake)
 else()
-    set(DEF_INSTALL_CMAKE_DIR lib/CMake/cppnetlib)
+    set(DEF_INSTALL_CMAKE_DIR lib/cmake/cppnetlib)
 endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
 

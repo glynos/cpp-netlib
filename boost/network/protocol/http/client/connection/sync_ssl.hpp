@@ -34,7 +34,8 @@ template <class Tag, unsigned version_major, unsigned version_minor>
 struct https_sync_connection
     : public virtual sync_connection_base<Tag, version_major, version_minor>,
       sync_connection_base_impl<Tag, version_major, version_minor>,
-      boost::enable_shared_from_this<https_sync_connection<Tag, version_major, version_minor> > {
+      boost::enable_shared_from_this<
+          https_sync_connection<Tag, version_major, version_minor> > {
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename string<Tag>::type string_type;
@@ -48,18 +49,14 @@ struct https_sync_connection
 
   // FIXME make the certificate filename and verify path parameters be
   // optional ranges
-  https_sync_connection(resolver_type& resolver,
-                        resolver_function_type resolve,
-                        bool always_verify_peer,
-                        int timeout,
-                        optional<string_type> const& certificate_filename =
-                            optional<string_type>(),
-                        optional<string_type> const& verify_path =
-                            optional<string_type>(),
-                        optional<string_type> const& certificate_file =
-                            optional<string_type>(),
-                        optional<string_type> const& private_key_file =
-                            optional<string_type>())
+  https_sync_connection(
+      resolver_type& resolver, resolver_function_type resolve,
+      bool always_verify_peer, int timeout,
+      optional<string_type> const& certificate_filename =
+          optional<string_type>(),
+      optional<string_type> const& verify_path = optional<string_type>(),
+      optional<string_type> const& certificate_file = optional<string_type>(),
+      optional<string_type> const& private_key_file = optional<string_type>())
       : connection_base(),
         timeout_(timeout),
         timer_(resolver.get_io_service()),
@@ -70,7 +67,8 @@ struct https_sync_connection
         socket_(resolver.get_io_service(), context_) {
     if (certificate_filename || verify_path) {
       context_.set_verify_mode(boost::asio::ssl::context::verify_peer);
-      // FIXME make the certificate filename and verify path parameters be
+      // FIXME make the certificate filename and verify path parameters
+      // be
       // optional ranges
       if (certificate_filename)
         context_.load_verify_file(*certificate_filename);
@@ -82,11 +80,11 @@ struct https_sync_connection
         context_.set_verify_mode(boost::asio::ssl::context_base::verify_none);
     }
     if (certificate_file)
-      context_.use_certificate_file(
-        *certificate_file, boost::asio::ssl::context::pem);
+      context_.use_certificate_file(*certificate_file,
+                                    boost::asio::ssl::context::pem);
     if (private_key_file)
-      context_.use_private_key_file(
-        *private_key_file, boost::asio::ssl::context::pem);
+      context_.use_private_key_file(*private_key_file,
+                                    boost::asio::ssl::context::pem);
   }
 
   void init_socket(string_type const& hostname, string_type const& port) {
@@ -117,7 +115,7 @@ struct https_sync_connection
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
       timer_.async_wait(boost::bind(&this_type::handle_timeout,
                                     this_type::shared_from_this(),
-                                    _1));
+                                    boost::arg<1>()));
     }
   }
 
@@ -158,7 +156,7 @@ struct https_sync_connection
   ~https_sync_connection() { close_socket(); }
 
  private:
-  void handle_timeout(boost::system::error_code const &ec) {
+  void handle_timeout(boost::system::error_code const& ec) {
     if (!ec) close_socket();
   }
 

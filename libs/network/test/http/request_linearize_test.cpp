@@ -14,15 +14,13 @@
 
 namespace http = boost::network::http;
 namespace tags = boost::network::http::tags;
-namespace mpl  = boost::mpl;
-namespace net  = boost::network;
+namespace mpl = boost::mpl;
+namespace net = boost::network;
 
-typedef mpl::list<
-    tags::http_default_8bit_tcp_resolve
-    , tags::http_default_8bit_udp_resolve
-    , tags::http_async_8bit_tcp_resolve
-    , tags::http_async_8bit_udp_resolve
-    > tag_types;
+typedef mpl::list<tags::http_default_8bit_tcp_resolve,
+                  tags::http_default_8bit_udp_resolve,
+                  tags::http_async_8bit_tcp_resolve,
+                  tags::http_async_8bit_udp_resolve> tag_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(linearize_request, T, tag_types) {
   http::basic_request<T> request("http://www.boost.org");
@@ -47,8 +45,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(linearize_request, T, tag_types) {
   BOOST_CHECK_EQUAL(output_1_1, http_1_1_output);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(linearize_request_override_headers,
-                              T,
+BOOST_AUTO_TEST_CASE_TEMPLATE(linearize_request_override_headers, T,
                               tag_types) {
   http::basic_request<T> request("http://www.boost.org");
   // We can override the defaulted headers and test that here.
@@ -71,4 +68,3 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(linearize_request_override_headers,
   linearize(request, "GET", 1, 1, std::back_inserter(output_1_1));
   BOOST_CHECK_EQUAL(output_1_1, http_1_1_no_accept_output);
 }
-

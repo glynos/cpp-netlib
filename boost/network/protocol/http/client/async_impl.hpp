@@ -57,14 +57,12 @@ struct async_client
         always_verify_peer_(always_verify_peer) {
     connection_base::resolver_strand_.reset(
         new boost::asio::io_service::strand(service_));
-    if(!service)
-        lifetime_thread_.reset(new boost::thread(
-            boost::bind(&boost::asio::io_service::run, &service_)));
+    if (!service)
+      lifetime_thread_.reset(new boost::thread(
+          boost::bind(&boost::asio::io_service::run, &service_)));
   }
 
-  ~async_client() throw() {
-    sentinel_.reset();
-  }
+  ~async_client() throw() { sentinel_.reset(); }
 
   void wait_complete() {
     sentinel_.reset();
@@ -80,9 +78,8 @@ struct async_client
       body_generator_function_type generator) {
     typename connection_base::connection_ptr connection_;
     connection_ = connection_base::get_connection(
-        resolver_, request_, always_verify_peer_,
-        certificate_filename_, verify_path_,
-        certificate_file_, private_key_file_);
+        resolver_, request_, always_verify_peer_, certificate_filename_,
+        verify_path_, certificate_file_, private_key_file_);
     return connection_->send_request(method, request_, get_body, callback,
                                      generator);
   }

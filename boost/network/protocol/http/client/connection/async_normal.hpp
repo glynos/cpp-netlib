@@ -79,8 +79,10 @@ struct http_async_connection
         request_strand_(resolver.get_io_service()),
         delegate_(delegate) {}
 
-  // This is the main entry point for the connection/request pipeline. We're
-  // overriding async_connection_base<...>::start(...) here which is called
+  // This is the main entry point for the connection/request pipeline.
+  // We're
+  // overriding async_connection_base<...>::start(...) here which is
+  // called
   // by the client.
   virtual response start(request const& request, string_type const& method,
                          bool get_body, body_callback_function_type callback,
@@ -92,16 +94,16 @@ struct http_async_connection
                   &command_streambuf));
     this->method = method;
     boost::uint16_t port_ = port(request);
-    resolve_(resolver_, host(request), port_,
-             request_strand_.wrap(boost::bind(
-                 &this_type::handle_resolved, this_type::shared_from_this(),
-                 port_, get_body, callback, generator, _1, _2)));
+    resolve_(
+        resolver_, host(request), port_,
+        request_strand_.wrap(boost::bind(
+            &this_type::handle_resolved, this_type::shared_from_this(), port_,
+            get_body, callback, generator, boost::arg<1>(), boost::arg<2>())));
     if (timeout_ > 0) {
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
       timer_.async_wait(request_strand_.wrap(
-                            boost::bind(&this_type::handle_timeout,
-                                        this_type::shared_from_this(),
-                                        _1)));
+          boost::bind(&this_type::handle_timeout, this_type::shared_from_this(),
+                      boost::arg<1>())));
     }
     return response_;
   }
@@ -121,7 +123,7 @@ struct http_async_connection
     this->timer_.cancel();
   }
 
-  void handle_timeout(boost::system::error_code const &ec) {
+  void handle_timeout(boost::system::error_code const& ec) {
     if (!ec) delegate_->disconnect();
     is_timedout_ = true;
   }
@@ -132,7 +134,8 @@ struct http_async_connection
                        boost::system::error_code const& ec,
                        resolver_iterator_pair endpoint_range) {
     if (!ec && !boost::empty(endpoint_range)) {
-      // Here we deal with the case that there was an error encountered and
+      // Here we deal with the case that there was an error encountered
+      // and
       // that there's still more endpoints to try connecting to.
       resolver_iterator iter = boost::begin(endpoint_range);
       asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
@@ -197,11 +200,13 @@ struct http_async_connection
                            std::size_t bytes_transferred) {
     if (!is_timedout_ && !ec) {
       if (generator) {
-        // Here we write some more data that the generator provides, before
+        // Here we write some more data that the generator provides,
+        // before
         // we wait for data from the server.
         string_type chunk;
         if (generator(chunk)) {
-          // At this point this means we have more data to write, so we write
+          // At this point this means we have more data to write, so we
+          // write
           // it out.
           std::copy(chunk.begin(), chunk.end(),
                     std::ostreambuf_iterator<typename char_<Tag>::type>(
@@ -272,8 +277,10 @@ struct http_async_connection
               bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case headers:
-          // In the following, remainder is the number of bytes that remain
-          // in the buffer. We need this in the body processing to make sure
+          // In the following, remainder is the number of bytes that
+          // remain
+          // in the buffer. We need this in the body processing to make
+          // sure
           // that the data remaining in the buffer is dealt with before
           // another call to get more data for the body is scheduled.
           fusion::tie(parsed_ok, remainder) = this->parse_headers(
@@ -309,13 +316,15 @@ struct http_async_connection
             typename protocol_base::buffer_type::const_iterator end = begin;
             std::advance(end, remainder);
 
-            // We're setting the body promise here to an empty string because
+            // We're setting the body promise here to an empty string
+            // because
             // this can be used as a signaling mechanism for the user to
             // determine that the body is now ready for processing, even
             // though the callback is already provided.
             this->body_promise.set_value("");
 
-            // The invocation of the callback is synchronous to allow us to
+            // The invocation of the callback is synchronous to allow us
+            // to
             // wait before scheduling another read.
             callback(make_iterator_range(begin, end), ec);
 
@@ -341,8 +350,10 @@ struct http_async_connection
         case body:
           if (ec == boost::asio::error::eof || is_ssl_short_read_error) {
             // Here we're handling the case when the connection has been
-            // closed from the server side, or at least that the end of file
-            // has been reached while reading the socket. This signals the end
+            // closed from the server side, or at least that the end of
+            // file
+            // has been reached while reading the socket. This signals
+            // the end
             // of the body processing chain.
             if (callback) {
               typename protocol_base::buffer_type::const_iterator
@@ -350,8 +361,10 @@ struct http_async_connection
                   end = begin;
               std::advance(end, bytes_transferred);
 
-              // We call the callback function synchronously passing the error
-              // condition (in this case, end of file) so that it can handle
+              // We call the callback function synchronously passing the
+              // error
+              // condition (in this case, end of file) so that it can
+              // handle
               // it appropriately.
               callback(make_iterator_range(begin, end), ec);
             } else {
@@ -370,12 +383,14 @@ struct http_async_connection
             this->response_parser_.reset();
             this->timer_.cancel();
           } else {
-            // This means the connection has not been closed yet and we want
+            // This means the connection has not been closed yet and we
+            // want
             // to get more
             // data.
             if (callback) {
               // Here we have a body_handler callback. Let's invoke the
-              // callback from here and make sure we're getting more data
+              // callback from here and make sure we're getting more
+              // data
               // right after.
               typename protocol_base::buffer_type::const_iterator begin =
                   this->part.begin();
@@ -408,7 +423,8 @@ struct http_async_connection
           BOOST_ASSERT(false && "Bug, report this to the developers!");
       }
     } else {
-      boost::system::system_error error(is_timedout_ ? asio::error::timed_out : ec);
+      boost::system::system_error error(is_timedout_ ? asio::error::timed_out
+                                                     : ec);
       this->source_promise.set_exception(boost::copy_exception(error));
       this->destination_promise.set_exception(boost::copy_exception(error));
       switch (state) {

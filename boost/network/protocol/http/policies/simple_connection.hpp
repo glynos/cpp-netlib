@@ -40,19 +40,15 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
   typedef function<bool(string_type&)> body_generator_function_type;
 
   struct connection_impl {
-    connection_impl(resolver_type& resolver, bool follow_redirect,
-                    bool always_verify_peer, string_type const& hostname,
-                    string_type const& port, resolver_function_type resolve,
-                    bool https,
-                    int timeout,
-                    optional<string_type> const& certificate_filename =
-                        optional<string_type>(),
-                    optional<string_type> const& verify_path =
-                        optional<string_type>(),
-                    optional<string_type> const& certificate_file =
-                        optional<string_type>(),
-                    optional<string_type> const& private_key_file =
-                        optional<string_type>())
+    connection_impl(
+        resolver_type& resolver, bool follow_redirect, bool always_verify_peer,
+        string_type const& hostname, string_type const& port,
+        resolver_function_type resolve, bool https, int timeout,
+        optional<string_type> const& certificate_filename =
+            optional<string_type>(),
+        optional<string_type> const& verify_path = optional<string_type>(),
+        optional<string_type> const& certificate_file = optional<string_type>(),
+        optional<string_type> const& private_key_file = optional<string_type>())
         : pimpl(), follow_redirect_(follow_redirect) {
       pimpl.reset(impl::sync_connection_base<
           Tag, version_major,
@@ -108,33 +104,32 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
   };
 
   typedef boost::shared_ptr<connection_impl> connection_ptr;
-  connection_ptr get_connection(resolver_type& resolver,
-                                basic_request<Tag> const& request_,
-                                bool always_verify_peer,
-                                optional<string_type> const& certificate_filename =
-                                    optional<string_type>(),
-                                optional<string_type> const& verify_path =
-                                    optional<string_type>(),
-                                optional<string_type> const& certificate_file =
-                                    optional<string_type>(),
-                                optional<string_type> const& private_key_file =
-                                    optional<string_type>()) {
+  connection_ptr get_connection(
+      resolver_type& resolver, basic_request<Tag> const& request_,
+      bool always_verify_peer,
+      optional<string_type> const& certificate_filename =
+          optional<string_type>(),
+      optional<string_type> const& verify_path = optional<string_type>(),
+      optional<string_type> const& certificate_file = optional<string_type>(),
+      optional<string_type> const& private_key_file = optional<string_type>()) {
     connection_ptr connection_(new connection_impl(
         resolver, follow_redirect_, always_verify_peer, request_.host(),
         lexical_cast<string_type>(request_.port()),
         boost::bind(&simple_connection_policy<Tag, version_major,
                                               version_minor>::resolve,
-                    this, _1, _2, _3),
+                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
         boost::iequals(request_.protocol(), string_type("https")), timeout_,
-        certificate_filename, verify_path,
-        certificate_file, private_key_file));
+        certificate_filename, verify_path, certificate_file, private_key_file));
     return connection_;
   }
 
   void cleanup() {}
 
-  simple_connection_policy(bool cache_resolved, bool follow_redirect, int timeout)
-      : resolver_base(cache_resolved), follow_redirect_(follow_redirect), timeout_(timeout) {}
+  simple_connection_policy(bool cache_resolved, bool follow_redirect,
+                           int timeout)
+      : resolver_base(cache_resolved),
+        follow_redirect_(follow_redirect),
+        timeout_(timeout) {}
 
   // member variables
   bool follow_redirect_;
@@ -146,4 +141,3 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_SIMPLE_CONNECTION_20091214
-
