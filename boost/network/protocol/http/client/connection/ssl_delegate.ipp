@@ -25,6 +25,7 @@ boost::network::http::impl::ssl_delegate::ssl_delegate(
 
 void boost::network::http::impl::ssl_delegate::connect(
     asio::ip::tcp::endpoint &endpoint,
+	std::string host,
     function<void(system::error_code const &)> handler) {
   context_.reset(
       new asio::ssl::context(service_, asio::ssl::context::sslv23_client));
@@ -47,6 +48,7 @@ void boost::network::http::impl::ssl_delegate::connect(
                                    boost::asio::ssl::context::pem);
   socket_.reset(
       new asio::ssl::stream<asio::ip::tcp::socket>(service_, *context_));
+  socket_->set_verify_callback(boost::asio::ssl::rfc2818_verification(host));
   socket_->lowest_layer().async_connect(
       endpoint,
       ::boost::bind(
