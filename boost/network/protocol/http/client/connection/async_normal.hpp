@@ -128,7 +128,7 @@ struct http_async_connection
     is_timedout_ = true;
   }
 
-  void handle_resolved(boost::uint16_t port, bool get_body,
+  void handle_resolved(string_type host, boost::uint16_t port, bool get_body,
                        body_callback_function_type callback,
                        body_generator_function_type generator,
                        boost::system::error_code const& ec,
@@ -140,9 +140,9 @@ struct http_async_connection
       resolver_iterator iter = boost::begin(endpoint_range);
       asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
       delegate_->connect(
-          endpoint, request_strand_.wrap(boost::bind(
+          endpoint, host, request_strand_.wrap(boost::bind(
                         &this_type::handle_connected,
-                        this_type::shared_from_this(), port, get_body, callback,
+                        this_type::shared_from_this(), host, port, get_body, callback,
                         generator, std::make_pair(++iter, resolver_iterator()),
                         placeholders::error)));
     } else {
@@ -152,7 +152,7 @@ struct http_async_connection
     }
   }
 
-  void handle_connected(boost::uint16_t port, bool get_body,
+  void handle_connected(string_type host, boost::uint16_t port, bool get_body,
                         body_callback_function_type callback,
                         body_generator_function_type generator,
                         resolver_iterator_pair endpoint_range,
@@ -173,9 +173,10 @@ struct http_async_connection
         asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
         delegate_->connect(
             endpoint,
+			host,
             request_strand_.wrap(boost::bind(
                 &this_type::handle_connected, this_type::shared_from_this(),
-                port, get_body, callback, generator,
+                host, port, get_body, callback, generator,
                 std::make_pair(++iter, resolver_iterator()),
                 placeholders::error)));
       } else {
