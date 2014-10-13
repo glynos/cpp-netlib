@@ -13,7 +13,7 @@ namespace http {
 namespace impl {
 
 struct connection_delegate {
-  virtual void connect(asio::ip::tcp::endpoint &endpoint,
+  virtual void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
                        function<void(system::error_code const &)> handler) = 0;
   virtual void write(
       asio::streambuf &command_streambuf,
