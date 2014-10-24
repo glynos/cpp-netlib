@@ -322,7 +322,7 @@ struct http_async_connection
             // this can be used as a signaling mechanism for the user to
             // determine that the body is now ready for processing, even
             // though the callback is already provided.
-            this->body_promise.set_value("");
+            //this->body_promise.set_value("");
 
             // The invocation of the callback is synchronous to allow us
             // to
