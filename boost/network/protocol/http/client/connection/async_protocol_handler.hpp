@@ -46,6 +46,8 @@ struct http_async_protocol_handler {
 
   template <class ResponseType>
   void init_response(ResponseType& response_, bool get_body) {
+    (void)get_body;
+
     boost::shared_future<string_type> source_future(
         source_promise.get_future());
     source(response_, source_future);
