@@ -49,20 +49,26 @@ struct http_async_protocol_handler {
     boost::shared_future<string_type> source_future(
         source_promise.get_future());
     source(response_, source_future);
+
     boost::shared_future<string_type> destination_future(
         destination_promise.get_future());
     destination(response_, destination_future);
+
     boost::shared_future<typename headers_container<Tag>::type> headers_future(
         headers_promise.get_future());
     headers(response_, headers_future);
+
     boost::shared_future<string_type> body_future(body_promise.get_future());
     body(response_, body_future);
+
     boost::shared_future<string_type> version_future(
         version_promise.get_future());
     version(response_, version_future);
+
     boost::shared_future<boost::uint16_t> status_future(
         status_promise.get_future());
     status(response_, status_future);
+
     boost::shared_future<string_type> status_message_future(
         status_message_promise.get_future());
     status_message(response_, status_message_future);
