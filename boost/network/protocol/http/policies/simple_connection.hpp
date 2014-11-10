@@ -51,6 +51,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
         optional<string_type> const& private_key_file = optional<string_type>())
         : pimpl(), follow_redirect_(follow_redirect) {
 
+      // TODO(dberris): review parameter necessity.
       (void)hostname;
       (void)port;
 
@@ -66,6 +67,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
                                      basic_request<Tag> request_, bool get_body,
                                      body_callback_function_type callback,
                                      body_generator_function_type generator) {
+      // TODO(dberris): review parameter necessity.
       (void)callback;
 
       basic_response<Tag> response_;

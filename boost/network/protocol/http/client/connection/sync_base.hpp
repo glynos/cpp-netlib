@@ -102,6 +102,7 @@ struct sync_connection_base_impl {
   template <class Socket>
   void send_request_impl(Socket& socket_, string_type const& method,
                          boost::asio::streambuf& request_buffer) {
+    // TODO(dberris): review parameter necessity.
     (void)method;
 
     write(socket_, request_buffer);
@@ -111,6 +112,7 @@ struct sync_connection_base_impl {
   void read_body_normal(Socket& socket_, basic_response<Tag>& response_,
                         boost::asio::streambuf& response_buffer,
                         typename ostringstream<Tag>::type& body_stream) {
+    // TODO(dberris): review parameter necessity.
     (void)response_;
 
     boost::system::error_code error;
