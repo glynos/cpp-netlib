@@ -46,6 +46,7 @@ struct http_async_protocol_handler {
 
   template <class ResponseType>
   void init_response(ResponseType& response_, bool get_body) {
+    // TODO(dberris): review parameter necessity.
     (void)get_body;
 
     boost::shared_future<string_type> source_future(

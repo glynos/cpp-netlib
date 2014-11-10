@@ -22,6 +22,7 @@ void boost::network::http::impl::normal_delegate::connect(
     asio::ip::tcp::endpoint &endpoint, std::string host,
     function<void(system::error_code const &)> handler) {
 
+  // TODO(dberris): review parameter necessity.
   (void)host;
 
   socket_.reset(new asio::ip::tcp::socket(service_));
