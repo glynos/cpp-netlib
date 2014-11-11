@@ -65,7 +65,12 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
           certificate_filename_(certificate_filename),
           verify_path_(verify_path),
           certificate_file_(certificate_file),
-          private_key_file_(private_key_file) {}
+          private_key_file_(private_key_file) {
+
+      // TODO(dberris): review parameter necessity.
+      (void)host;
+      (void)port;
+    }
 
     basic_response<Tag> send_request(string_type const& method,
                                      basic_request<Tag> request_, bool get_body,
@@ -79,6 +84,9 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         string_type const& method, basic_request<Tag> request_, bool get_body,
         body_callback_function_type callback,
         body_generator_function_type generator) {
+      // TODO(dberris): review parameter necessity.
+      (void)callback;
+
       boost::uint8_t count = 0;
       bool retry = false;
       do {

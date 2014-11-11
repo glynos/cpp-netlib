@@ -199,6 +199,9 @@ struct http_async_connection
                            body_generator_function_type generator,
                            boost::system::error_code const& ec,
                            std::size_t bytes_transferred) {
+    // TODO(dberris): review parameter necessity.
+    (void)bytes_transferred;
+
     if (!is_timedout_ && !ec) {
       if (generator) {
         // Here we write some more data that the generator provides,
