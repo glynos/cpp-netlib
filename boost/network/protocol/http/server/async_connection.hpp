@@ -294,11 +294,12 @@ struct async_connection
     if (new_start != read_buffer_.begin()) {
       input_range input =
           boost::make_iterator_range(new_start, read_buffer_.end());
+      buffer_type::iterator start_tmp = new_start;
+      new_start = read_buffer_.begin();
       thread_pool().post(
           boost::bind(callback, input, boost::system::error_code(),
-                      std::distance(new_start, data_end),
+                      std::distance(start_tmp, data_end),
                       async_connection<Tag, Handler>::shared_from_this()));
-      new_start = read_buffer_.begin();
       return;
     }
 
