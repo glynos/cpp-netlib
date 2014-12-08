@@ -53,7 +53,7 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
       }
     }
 
-    typename resolver_type::query q(resolver_type::protocol_type::v4(), host,
+    typename resolver_type::query q(host,
                                     lexical_cast<string_type>(port));
     resolver_.async_resolve(q, resolver_strand_->wrap(boost::bind(
                                    &async_resolver<Tag>::handle_resolve,
