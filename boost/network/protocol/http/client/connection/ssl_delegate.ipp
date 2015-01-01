@@ -34,8 +34,11 @@ void boost::network::http::impl::ssl_delegate::connect(
       context_->load_verify_file(*certificate_filename_);
     if (verify_path_) context_->add_verify_path(*verify_path_);
   } else {
-    if (always_verify_peer_)
-      context_->set_verify_mode(asio::ssl::context::verify_peer);
+	  if ( always_verify_peer_ )
+	  {
+		  context_->set_verify_mode( asio::ssl::context::verify_peer );
+		  context_->set_default_verify_paths();	// use openssl default verify paths.  uses openssl environment variables SSL_CERT_DIR, SSL_CERT_FILE
+	  }
     else
       context_->set_verify_mode(asio::ssl::context::verify_none);
   }
