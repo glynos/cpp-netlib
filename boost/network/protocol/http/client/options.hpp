@@ -95,6 +95,11 @@ struct client_options {
     return *this;
   }
 
+  client_options& always_verify_peer(bool v) {
+    always_verify_peer_ = v;
+    return *this;
+  }
+
   client_options& timeout(int v) {
     timeout_ = v;
     return *this;
