@@ -76,7 +76,6 @@ void test_roundtrip(const char *fileName) {
   BOOST_CHECK_EQUAL(readfile(fileName), from_mime(mp));
 }
 
-void test_expected_parse_fail(const char *) {}
 }
 
 using namespace boost::unit_test;
