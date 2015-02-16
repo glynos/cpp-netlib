@@ -477,7 +477,12 @@ struct async_connection
           } else if (parsed_ok == true) {
             partial_parsed.append(boost::begin(result_range),
                                   boost::end(result_range));
-            parse_headers(partial_parsed, request_.headers);
+            try {
+              parse_headers(partial_parsed, request_.headers);
+            } catch (...) {
+              client_error();
+              break;
+            }
             new_start = boost::end(result_range);
             thread_pool().post(boost::bind(
                 &Handler::operator(), &handler, cref(request_),
