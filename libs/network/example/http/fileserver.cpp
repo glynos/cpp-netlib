@@ -12,6 +12,7 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 #include <iostream>
+#include <cassert>
 
 namespace http = boost::network::http;
 namespace utils = boost::network::utils;
@@ -142,7 +143,8 @@ struct connection_handler : boost::enable_shared_from_this<connection_handler> {
   void handle_chunk(std::pair<void *, std::size_t> mmaped_region, off_t offset,
                     server::connection_ptr connection,
                     boost::system::error_code const &ec) {
-    if (!ec && offset < mmaped_region.second)
+    assert(offset>=0);
+    if (!ec && static_cast<std::size_t>(offset) < mmaped_region.second)
       send_file(mmaped_region, offset, connection);
   }
 
