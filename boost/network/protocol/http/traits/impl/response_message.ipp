@@ -16,58 +16,58 @@ namespace http {
 template <>
 struct response_message<tags::http_default_8bit_tcp_resolve> {
   static char const* ok() {
-    static char const* const OK = "OK";
-    return OK;
+    static char const* const RC_OK = "OK";
+    return RC_OK;
   };
 
   static char const* created() {
-    static char const* const CREATED = "Created";
-    return CREATED;
+    static char const* const RC_CREATED = "Created";
+    return RC_CREATED;
   };
 
   static char const* no_content() {
-    static char const* const NO_CONTENT = "NO Content";
-    return NO_CONTENT;
+    static char const* const RC_NO_CONTENT = "NO Content";
+    return RC_NO_CONTENT;
   };
 
   static char const* unauthorized() {
-    static char const* const UNAUTHORIZED = "Unauthorized";
-    return UNAUTHORIZED;
+    static char const* const RC_UNAUTHORIZED = "Unauthorized";
+    return RC_UNAUTHORIZED;
   };
 
   static char const* forbidden() {
-    static char const* const FORBIDDEN = "Fobidden";
-    return FORBIDDEN;
+    static char const* const RC_FORBIDDEN = "Fobidden";
+    return RC_FORBIDDEN;
   };
 
   static char const* not_found() {
-    static char const* const NOT_FOUND = "Not Found";
-    return NOT_FOUND;
+    static char const* const RC_NOT_FOUND = "Not Found";
+    return RC_NOT_FOUND;
   };
 
   static char const* method_not_allowed() {
-    static char const* const METHOD_NOT_ALLOWED = "Method Not Allowed";
-    return METHOD_NOT_ALLOWED;
+    static char const* const RC_METHOD_NOT_ALLOWED = "Method Not Allowed";
+    return RC_METHOD_NOT_ALLOWED;
   };
 
   static char const* not_modified() {
-    static char const* const NOT_MODIFIED = "Not Modified";
-    return NOT_MODIFIED;
+    static char const* const RC_NOT_MODIFIED = "Not Modified";
+    return RC_NOT_MODIFIED;
   };
 
   static char const* bad_request() {
-    static char const* const BAD_REQUEST = "Bad Request";
-    return BAD_REQUEST;
+    static char const* const RC_BAD_REQUEST = "Bad Request";
+    return RC_BAD_REQUEST;
   };
 
   static char const* server_error() {
-    static char const* const SERVER_ERROR = "Server Error";
-    return SERVER_ERROR;
+    static char const* const RC_SERVER_ERROR = "Server Error";
+    return RC_SERVER_ERROR;
   };
 
   static char const* not_implemented() {
-    static char const* const NOT_IMPLEMENTED = "Not Implemented";
-    return NOT_IMPLEMENTED;
+    static char const* const RC_NOT_IMPLEMENTED = "Not Implemented";
+    return RC_NOT_IMPLEMENTED;
   };
 };
 

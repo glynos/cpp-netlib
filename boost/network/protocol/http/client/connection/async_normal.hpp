@@ -442,7 +442,12 @@ struct http_async_connection
         case headers:
           this->headers_promise.set_exception(boost::copy_exception(error));
         case body:
-          this->body_promise.set_exception(boost::copy_exception(error));
+          if (!callback) {
+            // N.B. if callback is non-null, then body_promise has
+            // already been set to value "" to indicate body is
+            // handled by streaming handler so no exception should be set
+            this->body_promise.set_exception(boost::copy_exception(error));
+          }
           break;
         default:
           BOOST_ASSERT(false && "Bug, report this to the developers!");
