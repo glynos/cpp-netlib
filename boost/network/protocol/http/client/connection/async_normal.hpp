@@ -94,11 +94,11 @@ struct http_async_connection
                   &command_streambuf));
     this->method = method;
     boost::uint16_t port_ = port(request);
-    resolve_(
-        resolver_, host(request), port_,
-        request_strand_.wrap(boost::bind(
-            &this_type::handle_resolved, this_type::shared_from_this(), string_type(host(request)), port_,
-            get_body, callback, generator, boost::arg<1>(), boost::arg<2>())));
+    resolve_(resolver_, host(request), port_,
+             request_strand_.wrap(boost::bind(
+                 &this_type::handle_resolved, this_type::shared_from_this(),
+                 string_type(host(request)), port_, get_body, callback,
+                 generator, boost::arg<1>(), boost::arg<2>())));
     if (timeout_ > 0) {
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
       timer_.async_wait(request_strand_.wrap(
@@ -140,11 +140,12 @@ struct http_async_connection
       resolver_iterator iter = boost::begin(endpoint_range);
       asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
       delegate_->connect(
-          endpoint, host, request_strand_.wrap(boost::bind(
-                        &this_type::handle_connected,
-                        this_type::shared_from_this(), host, port, get_body, callback,
-                        generator, std::make_pair(++iter, resolver_iterator()),
-                        placeholders::error)));
+          endpoint, host,
+          request_strand_.wrap(boost::bind(
+              &this_type::handle_connected, this_type::shared_from_this(), host,
+              port, get_body, callback, generator,
+              std::make_pair(++iter, resolver_iterator()),
+              placeholders::error)));
     } else {
       set_errors(ec ? ec : boost::asio::error::host_not_found);
       boost::iterator_range<const char*> range;
@@ -172,8 +173,7 @@ struct http_async_connection
         resolver_iterator iter = boost::begin(endpoint_range);
         asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
         delegate_->connect(
-            endpoint,
-			host,
+            endpoint, host,
             request_strand_.wrap(boost::bind(
                 &this_type::handle_connected, this_type::shared_from_this(),
                 host, port, get_body, callback, generator,
@@ -254,6 +254,7 @@ struct http_async_connection
       size_t remainder;
       switch (state) {
         case version:
+          if (ec == boost::asio::error::eof) return;
           parsed_ok = this->parse_version(
               delegate_,
               request_strand_.wrap(boost::bind(
@@ -263,6 +264,7 @@ struct http_async_connection
               bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status:
+          if (ec == boost::asio::error::eof) return;
           parsed_ok = this->parse_status(
               delegate_,
               request_strand_.wrap(boost::bind(
@@ -272,6 +274,7 @@ struct http_async_connection
               bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case status_message:
+          if (ec == boost::asio::error::eof) return;
           parsed_ok = this->parse_status_message(
               delegate_, request_strand_.wrap(boost::bind(
                              &this_type::handle_received_data,
@@ -281,6 +284,7 @@ struct http_async_connection
               bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) return;
         case headers:
+          if (ec == boost::asio::error::eof) return;
           // In the following, remainder is the number of bytes that
           // remain
           // in the buffer. We need this in the body processing to make
