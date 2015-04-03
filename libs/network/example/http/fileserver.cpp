@@ -134,7 +134,7 @@ struct connection_handler : boost::enable_shared_from_this<connection_handler> {
     connection->write(
         boost::asio::const_buffers_1(
             static_cast<char const *>(mmaped_region.first) + offset,
-            rightmost_bound),
+            rightmost_bound - offset),
         boost::bind(&connection_handler::handle_chunk,
                     connection_handler::shared_from_this(), mmaped_region,
                     rightmost_bound, connection, _1));
