@@ -8,7 +8,7 @@
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
 
-file(GLOB_RECURSE CPP-NETLIB_HEADERS 
+file(GLOB_RECURSE CPP-NETLIB_HEADERS
     "${CPP-NETLIB_SOURCE_DIR}/boost/" "*.hpp")
 
 set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp)
@@ -45,7 +45,7 @@ if (OPENSSL_FOUND)
     target_link_libraries(cppnetlib-client-connections ${OPENSSL_LIBRARIES})
 endif ()
 if (Boost_FOUND)
-    target_link_libraries(cppnetlib-client-connections ${Boost_System_LIBRARY})
+    target_link_libraries(cppnetlib-client-connections ${Boost_LIBRARIES})
 endif ()
 install(TARGETS cppnetlib-client-connections
     EXPORT cppnetlibTargets
