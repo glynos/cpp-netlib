@@ -21,7 +21,7 @@ before_install:
         sudo apt-get update;
       fi
     - if [ "${CXX}" == "clang++" ] && [ ${BUILD_SHARED_LIBS} = "ON" ]; then
-        curl -s http://cznic.dl.sourceforge.net/project/boost/boost/${BOOST_VER}/boost_${BOOST_VER//./_}.tar.bz2|tar xfj - -C ..;
+        svn export http://svn.boost.org/svn/boost/tags/release/Boost_${BOOST_VER//./_} ../boost_${BOOST_VER//./_};
         export BOOST_ROOT=$TRAVIS_BUILD_DIR/../boost_${BOOST_VER//./_};
       fi
 
