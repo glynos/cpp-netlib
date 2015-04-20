@@ -566,3 +566,16 @@ BOOST_AUTO_TEST_CASE(issue_447_test) {
   uri::uri instance("http://[www.foo.com/");
   BOOST_REQUIRE(!uri::valid(instance));
 }
+
+BOOST_AUTO_TEST_CASE(issue_499_test) {
+  uri::uri instance(
+      "http://www.example.com/path?param1&param2=&param3=value");
+  BOOST_REQUIRE(uri::valid(instance));
+
+  std::map<std::string, std::string> queries;
+  uri::query_map(instance, queries);
+  BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(3));
+  BOOST_CHECK_EQUAL(queries["param1"], "");
+  BOOST_CHECK_EQUAL(queries["param2"], "");
+  BOOST_CHECK_EQUAL(queries["param3"], "value");
+}
