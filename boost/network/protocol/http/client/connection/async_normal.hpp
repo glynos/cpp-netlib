@@ -94,10 +94,11 @@ struct http_async_connection
                   &command_streambuf));
     this->method = method;
     boost::uint16_t port_ = port(request);
-    resolve_(resolver_, host(request), port_,
+	string_type host_ = host(request);
+    resolve_(resolver_, host_, port_,
              request_strand_.wrap(boost::bind(
                  &this_type::handle_resolved, this_type::shared_from_this(),
-                 string_type(host(request)), port_, get_body, callback,
+                 host_, port_, get_body, callback,
                  generator, boost::arg<1>(), boost::arg<2>())));
     if (timeout_ > 0) {
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
