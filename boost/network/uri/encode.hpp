@@ -115,7 +115,7 @@ void encode_char(CharT in, OutputIterator &out) {
       break;
     default:
       out++ = '%';
-      out++ = hex_to_letter(in >> 4);
+      out++ = hex_to_letter((in >> 4) & 0x0f);
       out++ = hex_to_letter(in & 0x0f);
       ;
   }
