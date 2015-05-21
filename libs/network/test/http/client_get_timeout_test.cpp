@@ -25,8 +25,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_1_0, client, client_types) {
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_with_options, client,
                               client_types) {
   typename client::request request(
-      "http://cznic.dl.sourceforge.net/project/boost/boost/1.55.0/"
-      "boost_1_55_0.tar.bz2");
+      "http://releases.ubuntu.com/14.04.2/ubuntu-14.04.2-desktop-amd64.iso");
   typename client::response response;
   typename client::options options;
   client client_(options.timeout(1));
