@@ -68,13 +68,20 @@ struct http_test_server {
 
     // if executed from $CPP_NETLIB_HOME
     path server_path = base_path / "libs/network/test/server" / script_name;
-    if (!exists(server_path)) {
-      // if executed from $CPP_NETLIB_HOME/libs/network/test
-      server_path = base_path / "server" / script_name;
-      if (!exists(server_path)) return path();
-    }
+    if (exists(server_path))
+      return server_path;
 
-    return server_path;
+    // if executed from $CPP_NETLIB_HOME/libs/network/test
+    server_path = base_path / "server" / script_name;
+    if (exists(server_path))
+      return server_path;
+
+    // if executed from $CPP_NETLIB_HOME/libs/network/test/*
+    server_path = base_path / "../server" / script_name;
+    if (exists(server_path))
+      return server_path;
+
+    return path();
   }
 
   script_handle_t launch_python_script(

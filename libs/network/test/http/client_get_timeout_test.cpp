@@ -8,8 +8,23 @@
 #include <boost/network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
 #include "client_types.hpp"
+#include "http_test_server.hpp"
 
-namespace http = boost::network::http;
+struct localhost_server_fixture {
+  localhost_server_fixture() {
+    if (!server.start())
+      std::cout << "Failed to start HTTP server for test!" << std::endl;
+  }
+
+  ~localhost_server_fixture() {
+    if (!server.stop())
+      std::cout << "Failed to stop HTTP server for test!" << std::endl;
+  }
+
+  http_test_server server;
+};
+
+BOOST_GLOBAL_FIXTURE(localhost_server_fixture);
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_1_0, client, client_types) {
   typename client::request request("http://localhost:12121/");
@@ -22,11 +37,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_1_0, client, client_types) {
                     , std::exception);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_with_options, client,
-                              client_types) {
-  typename client::request request(
-      "http://cznic.dl.sourceforge.net/project/boost/boost/1.55.0/"
-      "boost_1_55_0.tar.bz2");
+BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_with_options, client, client_types) {
+  typename client::request request("http://localhost:8000/cgi-bin/sleep.py?3");
   typename client::response response;
   typename client::options options;
   client client_(options.timeout(1));
@@ -37,10 +49,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_timeout_with_options, client,
 
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(https_get_test_timeout_with_options, client,
-                              client_types) {
-  typename client::request request(
-      "https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.8.2.tar.bz2");
+BOOST_AUTO_TEST_CASE_TEMPLATE(https_get_test_timeout_with_options, client, client_types) {
+  typename client::request request("https://localhost:8000/cgi-bin/sleep.py?3");
   typename client::response response;
   typename client::options options;
   client client_(options.timeout(1));
