@@ -32,7 +32,7 @@ void boost::network::http::impl::ssl_delegate::connect(
     asio::ip::tcp::endpoint &endpoint, std::string host,
     function<void(system::error_code const &)> handler) {
   context_.reset(
-      new asio::ssl::context(service_, asio::ssl::context::tlsv1_client));
+      new asio::ssl::context(service_, asio::ssl::context::sslv23_client));
   if (ciphers_) {
     ::SSL_CTX_set_cipher_list(context_->native_handle(), ciphers_->c_str());
   }
@@ -47,7 +47,7 @@ void boost::network::http::impl::ssl_delegate::connect(
   } else {
     if (always_verify_peer_) {
       context_->set_verify_mode(asio::ssl::context::verify_peer);
-	   	// use openssl default verify paths.  uses openssl environment variables
+      // use openssl default verify paths.  uses openssl environment variables
       // SSL_CERT_DIR, SSL_CERT_FILE
       context_->set_default_verify_paths();
 	 } else

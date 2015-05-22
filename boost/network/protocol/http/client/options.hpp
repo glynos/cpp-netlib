@@ -102,7 +102,7 @@ struct client_options {
   }
 
   client_options& openssl_options(long o) {
-    openssl_options_ ^= o;
+    openssl_options_ = o;
     return *this;
   }
 
