@@ -43,7 +43,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     typedef function<shared_ptr<connection_impl>(
         resolver_type&, basic_request<Tag> const&, optional<string_type> const&,
         optional<string_type> const&, optional<string_type> const&,
-        optional<string_type> const&)> get_connection_function;
+        optional<string_type> const&, optional<string_type> const&)>
+        get_connection_function;
 
     connection_impl(
         resolver_type& resolver, bool follow_redirect, string_type const& host,
@@ -54,19 +55,23 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
             optional<string_type>(),
         optional<string_type> const& verify_path = optional<string_type>(),
         optional<string_type> const& certificate_file = optional<string_type>(),
-        optional<string_type> const& private_key_file = optional<string_type>())
+        optional<string_type> const& private_key_file = optional<string_type>(),
+        optional<string_type> const& ciphers = optional<string_type>(),
+        long ssl_options = 0)
         : pimpl(impl::sync_connection_base<Tag, version_major, version_minor>::
                     new_connection(resolver, resolve, https, always_verify_peer,
                                    timeout, certificate_filename, verify_path,
-                                   certificate_file, private_key_file)),
+                                   certificate_file, private_key_file, ciphers,
+                                   ssl_options)),
           resolver_(resolver),
           connection_follow_redirect_(follow_redirect),
           get_connection_(get_connection),
           certificate_filename_(certificate_filename),
           verify_path_(verify_path),
           certificate_file_(certificate_file),
-          private_key_file_(private_key_file) {
-
+          private_key_file_(private_key_file),
+          ciphers_(ciphers),
+          ssl_options_(ssl_options) {
       // TODO(dberris): review parameter necessity.
       (void)host;
       (void)port;
@@ -150,7 +155,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
               connection_ptr connection_;
               connection_ = get_connection_(
                   resolver_, request_, certificate_filename_, verify_path_,
-                  certificate_file_, private_key_file_);
+                  certificate_file_, private_key_file_, ciphers_);
               ++count;
               continue;
             } else
@@ -171,6 +176,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     optional<string_type> verify_path_;
     optional<string_type> certificate_file_;
     optional<string_type> private_key_file_;
+    optional<string_type> ciphers_;
+    long ssl_options_;
   };
 
   typedef shared_ptr<connection_impl> connection_ptr;
@@ -187,7 +194,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
-      optional<string_type> const& private_key_file = optional<string_type>()) {
+      optional<string_type> const& private_key_file = optional<string_type>(),
+      optional<string_type> const& ciphers = optional<string_type>()) {
     string_type index =
         (request_.host() + ':') + lexical_cast<string_type>(request_.port());
     connection_ptr connection_;
@@ -203,10 +211,10 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                                                 version_minor>::get_connection,
                       this, boost::arg<1>(), boost::arg<2>(),
                       always_verify_peer, boost::arg<3>(), boost::arg<4>(),
-                      boost::arg<5>(), boost::arg<6>()),
+                      boost::arg<5>(), boost::arg<6>(), boost::arg<7>()),
           boost::iequals(request_.protocol(), string_type("https")),
           always_verify_peer, timeout_, certificate_filename, verify_path,
-          certificate_file, private_key_file));
+          certificate_file, private_key_file, ciphers, 0));
       host_connections.insert(std::make_pair(index, connection_));
       return connection_;
     }

@@ -14,20 +14,31 @@
 boost::network::http::impl::ssl_delegate::ssl_delegate(
     asio::io_service &service, bool always_verify_peer,
     optional<std::string> certificate_filename,
-    optional<std::string> verify_path, optional<std::string> certificate_file,
-    optional<std::string> private_key_file)
+    optional<std::string> verify_path,
+    optional<std::string> certificate_file,
+    optional<std::string> private_key_file,
+    optional<std::string> ciphers,
+    long ssl_options)
     : service_(service),
       certificate_filename_(certificate_filename),
       verify_path_(verify_path),
       certificate_file_(certificate_file),
       private_key_file_(private_key_file),
+      ciphers_(ciphers),
+      ssl_options_(ssl_options),
       always_verify_peer_(always_verify_peer) {}
 
 void boost::network::http::impl::ssl_delegate::connect(
     asio::ip::tcp::endpoint &endpoint, std::string host,
     function<void(system::error_code const &)> handler) {
   context_.reset(
-      new asio::ssl::context(service_, asio::ssl::context::sslv23_client));
+      new asio::ssl::context(service_, asio::ssl::context::tlsv1_client));
+  if (ciphers_) {
+    ::SSL_CTX_set_cipher_list(context_->native_handle(), ciphers_->c_str());
+  }
+  if (ssl_options_ != 0) {
+    context_->set_options(ssl_options_);
+  }
   if (certificate_filename_ || verify_path_) {
     context_->set_verify_mode(asio::ssl::context::verify_peer);
     if (certificate_filename_)
@@ -36,9 +47,10 @@ void boost::network::http::impl::ssl_delegate::connect(
   } else {
     if (always_verify_peer_) {
       context_->set_verify_mode(asio::ssl::context::verify_peer);
-	  context_->set_default_verify_paths();	// use openssl default verify paths.  uses openssl environment variables SSL_CERT_DIR, SSL_CERT_FILE
-	}
-    else
+	   	// use openssl default verify paths.  uses openssl environment variables
+      // SSL_CERT_DIR, SSL_CERT_FILE
+      context_->set_default_verify_paths();
+	 } else
       context_->set_verify_mode(asio::ssl::context::verify_none);
   }
   if (certificate_file_)
