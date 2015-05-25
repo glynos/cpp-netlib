@@ -162,8 +162,8 @@ struct basic_client_facade {
         options.cache_resolved(), options.follow_redirects(),
         options.always_verify_peer(), options.openssl_certificate(),
         options.openssl_verify_path(), options.openssl_certificate_file(),
-        options.openssl_private_key_file(), options.io_service(),
-        options.timeout()));
+        options.openssl_private_key_file(), options.openssl_ciphers(),
+        options.openssl_options(), options.io_service(), options.timeout()));
   }
 };
 

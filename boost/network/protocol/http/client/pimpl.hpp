@@ -71,11 +71,12 @@ struct basic_client_impl
                     optional<string_type> const& verify_path,
                     optional<string_type> const& certificate_file,
                     optional<string_type> const& private_key_file,
+                    optional<string_type> const& ciphers, long ssl_options,
                     boost::shared_ptr<boost::asio::io_service> service,
                     int timeout)
       : base_type(cache_resolved, follow_redirect, always_verify_peer, timeout,
                   service, certificate_filename, verify_path, certificate_file,
-                  private_key_file) {}
+                  private_key_file, ciphers, ssl_options) {}
 
   ~basic_client_impl() {}
 };

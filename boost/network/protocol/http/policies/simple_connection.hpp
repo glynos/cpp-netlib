@@ -48,9 +48,10 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
             optional<string_type>(),
         optional<string_type> const& verify_path = optional<string_type>(),
         optional<string_type> const& certificate_file = optional<string_type>(),
-        optional<string_type> const& private_key_file = optional<string_type>())
+        optional<string_type> const& private_key_file = optional<string_type>(),
+        optional<string_type> const& ciphers = optional<string_type>(),
+        long ssl_options = 0)
         : pimpl(), follow_redirect_(follow_redirect) {
-
       // TODO(dberris): review parameter necessity.
       (void)hostname;
       (void)port;
@@ -60,7 +61,8 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
           version_minor>::new_connection(resolver, resolve, https,
                                          always_verify_peer, timeout,
                                          certificate_filename, verify_path,
-                                         certificate_file, private_key_file));
+                                         certificate_file, private_key_file,
+                                         ciphers, ssl_options));
     }
 
     basic_response<Tag> send_request(string_type const& method,
@@ -119,7 +121,9 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
-      optional<string_type> const& private_key_file = optional<string_type>()) {
+      optional<string_type> const& private_key_file = optional<string_type>(),
+      optional<string_type> const& ciphers = optional<string_type>(),
+      long ssl_options = 0) {
     connection_ptr connection_(new connection_impl(
         resolver, follow_redirect_, always_verify_peer, request_.host(),
         lexical_cast<string_type>(request_.port()),
@@ -127,7 +131,8 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
                                               version_minor>::resolve,
                     this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
         boost::iequals(request_.protocol(), string_type("https")), timeout_,
-        certificate_filename, verify_path, certificate_file, private_key_file));
+        certificate_filename, verify_path, certificate_file, private_key_file,
+        ciphers, ssl_options));
     return connection_;
   }
 

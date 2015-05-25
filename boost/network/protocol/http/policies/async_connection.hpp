@@ -42,13 +42,15 @@ struct async_connection_policy : resolver_policy<Tag>::type {
                     optional<string_type> const& certificate_filename,
                     optional<string_type> const& verify_path,
                     optional<string_type> const& certificate_file,
-                    optional<string_type> const& private_key_file) {
+                    optional<string_type> const& private_key_file,
+                    optional<string_type> const& ciphers, long ssl_options) {
       pimpl = impl::async_connection_base<
           Tag, version_major,
           version_minor>::new_connection(resolve, resolver, follow_redirect,
                                          always_verify_peer, https, timeout,
                                          certificate_filename, verify_path,
-                                         certificate_file, private_key_file);
+                                         certificate_file, private_key_file,
+                                         ciphers, ssl_options);
     }
 
     basic_response<Tag> send_request(string_type const& method,
@@ -72,7 +74,9 @@ struct async_connection_policy : resolver_policy<Tag>::type {
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
-      optional<string_type> const& private_key_file = optional<string_type>()) {
+      optional<string_type> const& private_key_file = optional<string_type>(),
+      optional<string_type> const& ciphers = optional<string_type>(),
+      long ssl_options = 0) {
     string_type protocol_ = protocol(request_);
     connection_ptr connection_(new connection_impl(
         follow_redirect_, always_verify_peer,
@@ -81,7 +85,8 @@ struct async_connection_policy : resolver_policy<Tag>::type {
                     this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>(),
                     boost::arg<4>()),
         resolver, boost::iequals(protocol_, string_type("https")), timeout_,
-        certificate_filename, verify_path, certificate_file, private_key_file));
+        certificate_filename, verify_path, certificate_file, private_key_file,
+        ciphers, ssl_options));
     return connection_;
   }
 

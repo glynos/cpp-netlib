@@ -56,7 +56,9 @@ struct https_sync_connection
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
-      optional<string_type> const& private_key_file = optional<string_type>())
+      optional<string_type> const& private_key_file = optional<string_type>(),
+      optional<string_type> const& ciphers = optional<string_type>(),
+      long ssl_options = 0)
       : connection_base(),
         timeout_(timeout),
         timer_(resolver.get_io_service()),
@@ -65,6 +67,12 @@ struct https_sync_connection
         context_(resolver.get_io_service(),
                  boost::asio::ssl::context::sslv23_client),
         socket_(resolver.get_io_service(), context_) {
+    if (ciphers) {
+      ::SSL_CTX_set_cipher_list(context_.native_handle(), ciphers->c_str());
+    }
+    if (ssl_options != 0) {
+      context_.set_options(ssl_options);
+    }
     if (certificate_filename || verify_path) {
       context_.set_verify_mode(boost::asio::ssl::context::verify_peer);
       // FIXME make the certificate filename and verify path parameters

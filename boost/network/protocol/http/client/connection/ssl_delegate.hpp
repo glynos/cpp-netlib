@@ -26,7 +26,8 @@ struct ssl_delegate : connection_delegate,
                optional<std::string> certificate_filename,
                optional<std::string> verify_path,
                optional<std::string> certificate_file,
-               optional<std::string> private_key_file);
+               optional<std::string> private_key_file,
+               optional<std::string> ciphers, long ssl_options);
 
   virtual void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
                        function<void(system::error_code const &)> handler);
@@ -45,6 +46,8 @@ struct ssl_delegate : connection_delegate,
   optional<std::string> verify_path_;
   optional<std::string> certificate_file_;
   optional<std::string> private_key_file_;
+  optional<std::string> ciphers_;
+  long ssl_options_;
   scoped_ptr<asio::ssl::context> context_;
   scoped_ptr<asio::ssl::stream<asio::ip::tcp::socket> > socket_;
   bool always_verify_peer_;
