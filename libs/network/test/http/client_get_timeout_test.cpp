@@ -5,6 +5,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_TEST_MODULE HTTP Client Get Timeout Test
+#include <cstdlib>
 #include <boost/network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
 #include "client_types.hpp"
@@ -12,13 +13,17 @@
 
 struct localhost_server_fixture {
   localhost_server_fixture() {
-    if (!server.start())
+    if (!server.start()) {
       std::cout << "Failed to start HTTP server for test!" << std::endl;
+      std::abort();
+    }
   }
 
   ~localhost_server_fixture() {
-    if (!server.stop())
+    if (!server.stop()) {
       std::cout << "Failed to stop HTTP server for test!" << std::endl;
+      std::abort();
+    }
   }
 
   http_test_server server;

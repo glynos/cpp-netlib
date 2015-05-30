@@ -39,5 +39,8 @@ if (Boost_FOUND)
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-${test})
     endforeach (test)
 
+    # Also copy the server directory to the root of the build directory.
+    file(COPY server DESTINATION ${CPP-NETLIB_BINARY_DIR}/libs/network/test/)
+
 endif()
 
