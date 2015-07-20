@@ -10,7 +10,7 @@
 
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/socket_base.hpp>
-#include <boost/asio/ssl.hpp>
+#include <boost/network/protocol/stream_handler.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/utils/thread_pool.hpp>
 #include <boost/optional.hpp>
@@ -81,7 +81,7 @@ struct server_options {
     swap(context_, other.context_);
   }
 
-  server_options &context(boost::shared_ptr<boost::asio::ssl::context> v) {
+  server_options &context(boost::shared_ptr<ssl_context> v) {
     context_ = v;
     return *this;
   }
@@ -172,7 +172,7 @@ struct server_options {
   boost::shared_ptr<utils::thread_pool> thread_pool() const {
     return thread_pool_;
   }
-  boost::shared_ptr<boost::asio::ssl::context> context() const {
+  boost::shared_ptr<ssl_context> context() const {
     return context_;
   }
 
@@ -194,7 +194,7 @@ struct server_options {
   boost::optional<boost::asio::socket_base::send_low_watermark>
       send_low_watermark_;
   boost::shared_ptr<utils::thread_pool> thread_pool_;
-  boost::shared_ptr<boost::asio::ssl::context> context_;
+  boost::shared_ptr<ssl_context> context_;
 };
 
 template <class Tag, class Handler>

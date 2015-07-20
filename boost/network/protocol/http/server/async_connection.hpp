@@ -174,14 +174,18 @@ struct async_connection
  public:
   async_connection(asio::io_service& io_service, Handler& handler,
                    utils::thread_pool& thread_pool,
-                   boost::shared_ptr<boost::asio::ssl::context> ctx =
-                       boost::shared_ptr<boost::asio::ssl::context>())
+                   boost::shared_ptr<ssl_context> ctx =
+                       boost::shared_ptr<ssl_context>())
       : strand(io_service),
         handler(handler),
         thread_pool_(thread_pool),
         headers_buffer(
             BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE),
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
         socket_(io_service, ctx),
+#else
+        socket_(io_service),
+#endif
         handshake_done(false),
         headers_already_sent(false),
         headers_in_progress(false) {
@@ -379,6 +383,7 @@ struct async_connection
   }
 
   void read_more(state_t state) {
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
     if (socket_.is_ssl_enabled() && !handshake_done) {
       socket_.async_handshake(
           boost::asio::ssl::stream_base::server,
@@ -386,6 +391,7 @@ struct async_connection
                       async_connection<Tag, Handler>::shared_from_this(),
                       boost::asio::placeholders::error, state));
     } else {
+#endif
       socket_.async_read_some(
           asio::buffer(read_buffer_),
           strand.wrap(
@@ -393,7 +399,9 @@ struct async_connection
                           async_connection<Tag, Handler>::shared_from_this(),
                           state, boost::asio::placeholders::error,
                           boost::asio::placeholders::bytes_transferred)));
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
     }
+#endif
   }
 
   void handle_read_data(state_t state, boost::system::error_code const& ec,

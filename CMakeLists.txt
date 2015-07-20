@@ -10,6 +10,7 @@ option( CPP-NETLIB_BUILD_SHARED_LIBS "Build cpp-netlib as shared libraries." OFF
 option( CPP-NETLIB_BUILD_TESTS "Build the cpp-netlib project tests." ON)
 option( CPP-NETLIB_BUILD_EXPERIMENTS "Build the cpp-netlib project experiments." ON)
 option( CPP-NETLIB_BUILD_EXAMPLES "Build the cpp-netlib project examples." ON)
+option( CPP-NETLIB_ENABLE_HTTPS "Build cpp-netlib with support for https if OpenSSL is found." ON)
 
 include(GNUInstallDirs)
 
@@ -43,7 +44,11 @@ set(Boost_USE_MULTI_THREADED ON)
 find_package( Boost 1.54.0
     REQUIRED unit_test_framework system regex date_time thread filesystem
     program_options chrono atomic )
-find_package( OpenSSL )
+
+if (CPP-NETLIB_ENABLE_HTTPS)
+    find_package( OpenSSL )
+endif()
+
 find_package( Threads )
 set(CMAKE_VERBOSE_MAKEFILE true)
 

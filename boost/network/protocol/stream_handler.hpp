@@ -14,7 +14,9 @@
 #include <boost/asio/detail/throw_error.hpp>
 #include <boost/asio/error.hpp>
 #include <boost/asio.hpp>
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
 #include <boost/asio/ssl.hpp>
+#endif
 #include <boost/asio/detail/push_options.hpp>
 #include <boost/asio/detail/config.hpp>
 #include <boost/asio/detail/handler_type_requirements.hpp>
@@ -28,8 +30,15 @@
 namespace boost {
 namespace network {
 
-typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
 typedef boost::asio::ip::tcp::socket tcp_socket;
+
+#ifndef BOOST_NETWORK_ENABLE_HTTPS
+typedef tcp_socket stream_handler;
+typedef void ssl_context;
+#else
+
+typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
+typedef boost::asio::ssl::context ssl_context;
 
 struct stream_handler {
  public:
@@ -42,8 +51,8 @@ struct stream_handler {
       : ssl_sock_(socket), ssl_enabled(true) {}
 
   stream_handler(boost::asio::io_service& io,
-                 boost::shared_ptr<boost::asio::ssl::context> ctx =
-                     boost::shared_ptr<boost::asio::ssl::context>()) {
+                 boost::shared_ptr<ssl_context> ctx =
+                     boost::shared_ptr<ssl_context>()) {
     tcp_sock_ = boost::make_shared<tcp_socket>(boost::ref(io));
     ssl_enabled = false;
     if (ctx) {
@@ -172,6 +181,7 @@ struct stream_handler {
   boost::shared_ptr<ssl_socket> ssl_sock_;
   bool ssl_enabled;
 };
+#endif
 }
 }
 

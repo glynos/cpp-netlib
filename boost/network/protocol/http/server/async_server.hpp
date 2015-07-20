@@ -89,7 +89,7 @@ struct async_server_base : server_storage_base, socket_options_base {
   boost::mutex listening_mutex_;
   boost::mutex stopping_mutex_;
   bool listening;
-  boost::shared_ptr<boost::asio::ssl::context> ctx_;
+  boost::shared_ptr<ssl_context> ctx_;
 
   void handle_stop() {
     scoped_mutex_lock stopping_lock(stopping_mutex_);
@@ -111,12 +111,20 @@ struct async_server_base : server_storage_base, socket_options_base {
       BOOST_NETWORK_MESSAGE("Error accepting connection, reason: " << ec);
     }
 
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
     socket_options_base::socket_options(new_connection->socket().next_layer());
+#else
+    socket_options_base::socket_options(new_connection->socket());
+#endif
 
     new_connection->start();
     new_connection.reset(new connection(service_, handler, *thread_pool, ctx_));
     acceptor.async_accept(
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
         new_connection->socket().next_layer(),
+#else
+        new_connection->socket(),
+#endif
         boost::bind(&async_server_base<Tag, Handler>::handle_accept, this,
                     boost::asio::placeholders::error));
   }
@@ -155,7 +163,11 @@ struct async_server_base : server_storage_base, socket_options_base {
     }
     new_connection.reset(new connection(service_, handler, *thread_pool, ctx_));
     acceptor.async_accept(
+#ifdef BOOST_NETWORK_ENABLE_HTTPS
         new_connection->socket().next_layer(),
+#else
+        new_connection->socket(),
+#endif
         boost::bind(&async_server_base<Tag, Handler>::handle_accept, this,
                     boost::asio::placeholders::error));
     listening = true;
