@@ -8,7 +8,7 @@
 #
 
 VERSION="$1"
-if [ "$VERSION" == "" ]; then
+if [ "$VERSION" = "" ]; then
   VERSION="`git log --format=oneline | awk '{print $1}' | head -1`"
 fi
 
