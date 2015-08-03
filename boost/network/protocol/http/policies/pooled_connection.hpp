@@ -135,7 +135,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         typename headers_range<basic_response<Tag> >::type connection_range =
             headers(response_)["Connection"];
         if (version_major == 1 && version_minor == 1 &&
-            !empty(connection_range) &&
+            !boost::empty(connection_range) &&
             boost::begin(connection_range)->second == string_type("close")) {
           pimpl->close_socket();
         } else if (version_major == 1 && version_minor == 0) {

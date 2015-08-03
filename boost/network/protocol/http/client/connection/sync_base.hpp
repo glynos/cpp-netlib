@@ -133,10 +133,10 @@ struct sync_connection_base_impl {
     // look for the content-length header
     typename headers_range<basic_response<Tag> >::type content_length_range =
         headers(response_)["Content-Length"];
-    if (empty(content_length_range)) {
+    if (boost::empty(content_length_range)) {
       typename headers_range<basic_response<Tag> >::type
           transfer_encoding_range = headers(response_)["Transfer-Encoding"];
-      if (empty(transfer_encoding_range)) {
+      if (boost::empty(transfer_encoding_range)) {
         read_body_normal(socket_, response_, response_buffer, body_stream);
         return;
       }

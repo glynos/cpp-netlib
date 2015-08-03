@@ -262,7 +262,7 @@ struct http_async_protocol_handler {
     typename headers_range<basic_response<Tag> >::type transfer_encoding_range =
         headers.equal_range("Transfer-Encoding");
     is_chunk_encoding =
-        !empty(transfer_encoding_range) &&
+        !boost::empty(transfer_encoding_range) &&
         boost::iequals(boost::begin(transfer_encoding_range)->second,
                        "chunked");
     headers_promise.set_value(headers);
