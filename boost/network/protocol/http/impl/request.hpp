@@ -55,6 +55,7 @@ template <class Tag>
 struct basic_request : public basic_message<Tag> {
 
   mutable boost::network::uri::uri uri_;
+  unsigned short source_port_;
   typedef basic_message<Tag> base_type;
 
  public:
@@ -62,18 +63,18 @@ struct basic_request : public basic_message<Tag> {
   typedef typename string<tag>::type string_type;
   typedef boost::uint16_t port_type;
 
-  explicit basic_request(string_type const& uri_) : uri_(uri_) {}
+  explicit basic_request(string_type const& uri_) : uri_(uri_), source_port_(0) {}
 
-  explicit basic_request(boost::network::uri::uri const& uri_) : uri_(uri_) {}
+  explicit basic_request(boost::network::uri::uri const& uri_) : uri_(uri_), source_port_(0) {}
 
   void uri(string_type const& new_uri) { uri_ = new_uri; }
 
   void uri(boost::network::uri::uri const& new_uri) { uri_ = new_uri; }
 
-  basic_request() : base_type() {}
+  basic_request() : base_type(), source_port_(0) {}
 
   basic_request(basic_request const& other)
-      : base_type(other), uri_(other.uri_) {}
+      : base_type(other), uri_(other.uri_), source_port_(other.source_port_) {}
 
   basic_request& operator=(basic_request rhs) {
     rhs.swap(*this);
@@ -85,6 +86,7 @@ struct basic_request : public basic_message<Tag> {
     basic_request<Tag>& this_ref(*this);
     base_ref.swap(this_ref);
     boost::swap(other.uri_, this->uri_);
+    boost::swap(other.source_port_, this->source_port_);
   }
 
   string_type const host() const { return uri_.host(); }
@@ -110,6 +112,10 @@ struct basic_request : public basic_message<Tag> {
   void uri(string_type const& new_uri) const { uri_ = new_uri; }
 
   boost::network::uri::uri const& uri() const { return uri_; }
+
+  void setSourcePort(const unsigned short port) { source_port_ = port; }
+
+  unsigned short getSourcePort() const { return source_port_; }
 };
 
 /** This is the implementation of a POD request type
