@@ -10,6 +10,7 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <cassert>
+#include <stdexcept>
 
 namespace boost {
 namespace network {
