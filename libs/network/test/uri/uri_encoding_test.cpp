@@ -52,5 +52,5 @@ BOOST_AUTO_TEST_CASE(decoding_throw_test) {
   const std::string encoded("%");
 
   std::string instance;
-  BOOST_CHECK_THROW(uri::decoded(encoded), std::runtime_error);
+  BOOST_CHECK_THROW(uri::decoded(encoded), std::out_of_range);
 }
