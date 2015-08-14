@@ -59,15 +59,9 @@ OutputIterator decode(const InputIterator &in_begin,
   OutputIterator out = out_begin;
   while (it != in_end) {
     if (*it == '%') {
-      ++it;
-	  if (it == in_end) {
-		throw std::runtime_error("decoding fail because of '%'");
-	  }
+	  if (++it == in_end) throw std::runtime_error("decoding fail because of '%'");
       value_type v0 = detail::letter_to_hex(*it);
-      ++it;
-	  if (it == in_end) {
-		throw std::runtime_error("decoding fail because of '%'");
-	  }
+	  if (++it == in_end) throw std::runtime_error("decoding fail because of '%'");
       value_type v1 = detail::letter_to_hex(*it);
       ++it;
       *out++ = 0x10 * v0 + v1;
