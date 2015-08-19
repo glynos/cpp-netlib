@@ -95,7 +95,7 @@ struct http_async_connection
     this->method = method;
     boost::uint16_t port_ = port(request);
 	string_type host_ = host(request);
-	boost::uint16_t source_port = request.getSourcePort();
+	boost::uint16_t source_port = request.source_port();
 
     resolve_(resolver_, host_, port_,
              request_strand_.wrap(boost::bind(
