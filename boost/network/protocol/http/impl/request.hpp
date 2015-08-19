@@ -113,9 +113,9 @@ struct basic_request : public basic_message<Tag> {
 
   boost::network::uri::uri const& uri() const { return uri_; }
 
-  void setSourcePort(const unsigned short port) { source_port_ = port; }
+  void source_port(const unsigned short port) { source_port_ = port; }
 
-  unsigned short getSourcePort() const { return source_port_; }
+  unsigned short source_port() const { return source_port_; }
 };
 
 /** This is the implementation of a POD request type
