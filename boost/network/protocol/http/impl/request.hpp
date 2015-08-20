@@ -55,7 +55,7 @@ template <class Tag>
 struct basic_request : public basic_message<Tag> {
 
   mutable boost::network::uri::uri uri_;
-  unsigned short source_port_;
+  boost::uint16_t source_port_;
   typedef basic_message<Tag> base_type;
 
  public:
@@ -113,9 +113,9 @@ struct basic_request : public basic_message<Tag> {
 
   boost::network::uri::uri const& uri() const { return uri_; }
 
-  void source_port(const unsigned short port) { source_port_ = port; }
+  void source_port(const boost::uint16_t port) { source_port_ = port; }
 
-  unsigned short source_port() const { return source_port_; }
+  boost::uint16_t source_port() const { return source_port_; }
 };
 
 /** This is the implementation of a POD request type
