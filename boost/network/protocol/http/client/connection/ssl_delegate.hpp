@@ -29,7 +29,7 @@ struct ssl_delegate : connection_delegate,
                optional<std::string> private_key_file,
                optional<std::string> ciphers, long ssl_options);
 
-  virtual void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
+  virtual void connect(asio::ip::tcp::endpoint &endpoint, std::string host, boost::uint16_t source_port,
                        function<void(system::error_code const &)> handler);
   virtual void write(
       asio::streambuf &command_streambuf,
@@ -49,7 +49,8 @@ struct ssl_delegate : connection_delegate,
   optional<std::string> ciphers_;
   long ssl_options_;
   scoped_ptr<asio::ssl::context> context_;
-  scoped_ptr<asio::ssl::stream<asio::ip::tcp::socket> > socket_;
+  scoped_ptr<asio::ip::tcp::socket> tcp_socket_;
+  scoped_ptr<asio::ssl::stream<asio::ip::tcp::socket&> > socket_;
   bool always_verify_peer_;
 
   ssl_delegate(ssl_delegate const &);     // = delete

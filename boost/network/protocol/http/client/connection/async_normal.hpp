@@ -95,10 +95,12 @@ struct http_async_connection
     this->method = method;
     boost::uint16_t port_ = port(request);
 	string_type host_ = host(request);
+	boost::uint16_t source_port = request.source_port();
+
     resolve_(resolver_, host_, port_,
              request_strand_.wrap(boost::bind(
                  &this_type::handle_resolved, this_type::shared_from_this(),
-                 host_, port_, get_body, callback,
+                 host_, port_, source_port, get_body, callback,
                  generator, boost::arg<1>(), boost::arg<2>())));
     if (timeout_ > 0) {
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
@@ -129,7 +131,7 @@ struct http_async_connection
     is_timedout_ = true;
   }
 
-  void handle_resolved(string_type host, boost::uint16_t port, bool get_body,
+  void handle_resolved(string_type host, boost::uint16_t port, boost::uint16_t source_port, bool get_body,
                        body_callback_function_type callback,
                        body_generator_function_type generator,
                        boost::system::error_code const& ec,
@@ -141,10 +143,10 @@ struct http_async_connection
       resolver_iterator iter = boost::begin(endpoint_range);
       asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
       delegate_->connect(
-          endpoint, host,
+          endpoint, host, source_port,
           request_strand_.wrap(boost::bind(
               &this_type::handle_connected, this_type::shared_from_this(), host,
-              port, get_body, callback, generator,
+              port, source_port, get_body, callback, generator,
               std::make_pair(++iter, resolver_iterator()),
               placeholders::error)));
     } else {
@@ -154,7 +156,7 @@ struct http_async_connection
     }
   }
 
-  void handle_connected(string_type host, boost::uint16_t port, bool get_body,
+  void handle_connected(string_type host, boost::uint16_t port, boost::uint16_t source_port, bool get_body,
                         body_callback_function_type callback,
                         body_generator_function_type generator,
                         resolver_iterator_pair endpoint_range,
@@ -174,10 +176,10 @@ struct http_async_connection
         resolver_iterator iter = boost::begin(endpoint_range);
         asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
         delegate_->connect(
-            endpoint, host,
+            endpoint, host, source_port,
             request_strand_.wrap(boost::bind(
                 &this_type::handle_connected, this_type::shared_from_this(),
-                host, port, get_body, callback, generator,
+                host, port, source_port, get_body, callback, generator,
                 std::make_pair(++iter, resolver_iterator()),
                 placeholders::error)));
       } else {
