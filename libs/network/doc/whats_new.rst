@@ -7,6 +7,31 @@
 :mod:`cpp-netlib` 0.11
 ----------------------
 
+v0.11.2
+~~~~~~~
+* Support a source_port setting for connections made by the client per-request.
+* Allow using cpp-netlib without OpenSSL.
+* Fix build breakage for Visual Studio 2015.
+* Add more options for HTTP client use of SSL/TLS options/ciphers.
+* Made client_get_timeout_test less flaky.
+* Fixes to URI encoding issues with multibyte strings.
+* Make cpp-netlib not crash on unstable networks.
+* Allow parsing empty query parameters (`#499`_).
+* CMake build changes to simplify dependencies on cppnetlib-client-connections.
+* Handle EOF correctly (`#496`_).
+* Fix fileserver example to chunk data correctly.
+* Copy hostname to avoid dangling reference to a temporary request object. (`#482`_)
+* Catch exceptions in parse_headers to avoid propagating issues in parsing upwards.
+* Fix some GCC warnings on signed/unsigned comparison.
+* Support environment variable-based peer verification (via OpenSSL).
+* Support IPv6 connections.
+* Support certificate-based verification, and option to always verify hosts.
+
+.. _`#499`: https://github.com/cpp-netlib/cpp-netlib/issues/499
+.. _`#496`: https://github.com/cpp-netlib/cpp-netlib/issues/496
+.. _`#482`: https://github.com/cpp-netlib/cpp-netlib/issues/482
+
+
 v0.11.1
 ~~~~~~~
 * Add support for request timeouts.
