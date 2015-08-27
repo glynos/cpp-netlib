@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -7,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>What’s New &mdash; cpp-netlib v0.11.1</title>
+    <title>What’s New &mdash; cpp-netlib v0.11.2</title>
     
     <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '0.11.1',
+        URL_ROOT:    './',
+        VERSION:     '0.11.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.11.1" href="index.html" />
+    <link rel="top" title="cpp-netlib v0.11.2" href="index.html" />
     <link rel="next" title="Getting Started" href="getting_started.html" />
     <link rel="prev" title="Getting cpp-netlib" href="index.html" />
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
@@ -45,7 +44,7 @@
         <li class="right" >
           <a href="index.html" title="Getting cpp-netlib"
              accesskey="P">previous</a> |</li>
-        <li><a href="contents.html">cpp-netlib v0.11.1</a> &raquo;</li> 
+        <li><a href="contents.html">cpp-netlib v0.11.2</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -58,6 +57,28 @@
 <span id="whats-new"></span><h1>What&#8217;s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="cpp-netlib-0-11">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> 0.11<a class="headerlink" href="#cpp-netlib-0-11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="v0-11-2">
+<h3>v0.11.2<a class="headerlink" href="#v0-11-2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Support a source_port setting for connections made by the client per-request.</li>
+<li>Allow using cpp-netlib without OpenSSL.</li>
+<li>Fix build breakage for Visual Studio 2015.</li>
+<li>Add more options for HTTP client use of SSL/TLS options/ciphers.</li>
+<li>Made client_get_timeout_test less flaky.</li>
+<li>Fixes to URI encoding issues with multibyte strings.</li>
+<li>Make cpp-netlib not crash on unstable networks.</li>
+<li>Allow parsing empty query parameters (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/499">#499</a>).</li>
+<li>CMake build changes to simplify dependencies on cppnetlib-client-connections.</li>
+<li>Handle EOF correctly (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/496">#496</a>).</li>
+<li>Fix fileserver example to chunk data correctly.</li>
+<li>Copy hostname to avoid dangling reference to a temporary request object. (<a class="reference external" href="https://github.com/cpp-netlib/cpp-netlib/issues/482">#482</a>)</li>
+<li>Catch exceptions in parse_headers to avoid propagating issues in parsing upwards.</li>
+<li>Fix some GCC warnings on signed/unsigned comparison.</li>
+<li>Support environment variable-based peer verification (via OpenSSL).</li>
+<li>Support IPv6 connections.</li>
+<li>Support certificate-based verification, and option to always verify hosts.</li>
+</ul>
+</div>
 <div class="section" id="v0-11-1">
 <h3>v0.11.1<a class="headerlink" href="#v0-11-1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -250,6 +271,7 @@ the asynchronous client in 0.7 already has all the parts available.</li>
   <ul>
 <li><a class="reference internal" href="#">What&#8217;s New</a><ul>
 <li><a class="reference internal" href="#cpp-netlib-0-11"><tt class="docutils literal"><span class="pre">cpp-netlib</span></tt> 0.11</a><ul>
+<li><a class="reference internal" href="#v0-11-2">v0.11.2</a></li>
 <li><a class="reference internal" href="#v0-11-1">v0.11.1</a></li>
 <li><a class="reference internal" href="#v0-11-0">v0.11.0</a></li>
 </ul>
@@ -308,13 +330,13 @@ the asynchronous client in 0.7 already has all the parts available.</li>
         <li class="right" >
           <a href="index.html" title="Getting cpp-netlib"
              >previous</a> |</li>
-        <li><a href="contents.html">cpp-netlib v0.11.1</a> &raquo;</li> 
+        <li><a href="contents.html">cpp-netlib v0.11.2</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Sep 08, 2014.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on Aug 27, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
