@@ -47,3 +47,10 @@ BOOST_AUTO_TEST_CASE(decoding_multibyte_test) {
   uri::decode(encoded, std::back_inserter(instance));
   BOOST_CHECK_EQUAL(instance, unencoded);
 }
+
+BOOST_AUTO_TEST_CASE(decoding_throw_test) {
+  const std::string encoded("%");
+
+  std::string instance;
+  BOOST_CHECK_THROW(uri::decoded(encoded), std::out_of_range);
+}
