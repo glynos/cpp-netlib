@@ -34,6 +34,7 @@ git diff boost/network/version.hpp CMakeLists.txt
 
 # Commit the change
 git add boost/network/version.hpp
+git add CMakeLists.txt
 git commit -m"Bumping release number to $VERSION"
 
 TAG="cpp-netlib-$VERSION"
