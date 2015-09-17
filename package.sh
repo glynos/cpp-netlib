@@ -25,12 +25,16 @@ echo $BOOST_NETLIB_VERSION_INCREMENT
 sed -i '' 's/BOOST_NETLIB_VERSION_MAJOR [0-9]*/BOOST_NETLIB_VERSION_MAJOR '$BOOST_NETLIB_VERSION_MAJOR'/g' boost/network/version.hpp
 sed -i '' 's/BOOST_NETLIB_VERSION_MINOR [0-9]*/BOOST_NETLIB_VERSION_MINOR '$BOOST_NETLIB_VERSION_MINOR'/g' boost/network/version.hpp
 sed -i '' 's/BOOST_NETLIB_VERSION_INCREMENT [0-9]*/BOOST_NETLIB_VERSION_INCREMENT '$BOOST_NETLIB_VERSION_INCREMENT'/g' boost/network/version.hpp
+sed -i '' 's/CPPNETLIB_VERSION_MAJOR [0-9]+/CPPNETLIB_VERSION_MAJOR '$BOOST_NETLIB_VERSION_MAJOR'/g' CMakeLists.txt
+sed -i '' 's/CPPNETLIB_VERSION_MINOR [0-9]+/CPPNETLIB_VERSION_MINOR '$BOOST_NETLIB_VERSION_MINOR'/g' CMakeLists.txt
+sed -i '' 's/CPPNETLIB_VERSION_PATCH [0-9]+/CPPNETLIB_VERSION_PATCH '$BOOST_NETLIB_VERSION_INCREMENT'/g' CMakeLists.txt
 
 # Show the diff
-git diff boost/network/version.hpp
+git diff boost/network/version.hpp CMakeLists.txt
 
 # Commit the change
 git add boost/network/version.hpp
+git add CMakeLists.txt
 git commit -m"Bumping release number to $VERSION"
 
 TAG="cpp-netlib-$VERSION"
