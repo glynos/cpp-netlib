@@ -9,3 +9,4 @@ Testing
 libs/mime/test/mime-roundtrip
 *.a
 _build
+/.project
