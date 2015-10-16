@@ -108,44 +108,60 @@ class BOOST_URI_DECL uri {
     return uri_parts_.fragment ? uri_parts_.fragment.get() : const_range_type();
   }
 
+// hackfix by Simon Haegler, Esri R&D Zurich
+// this workaround is needed to avoid running into the "incompatible string iterator" assertion
+// triggered by the default-constructed string iterators employed by cpp-netlib (see uri.ipp qi::rule declarations)
+#if defined(_MSC_VER) && defined(_DEBUG)
+#	define CATCH_EMPTY_ITERATOR_RANGE if (range.begin()._Getcont() == 0 || range.end()._Getcont() == 0) { return string_type(); }
+#else
+#	define CATCH_EMPTY_ITERATOR_RANGE
+#endif
+
   string_type scheme() const {
     const_range_type range = scheme_range();
-    return range ? string_type(boost::begin(range), boost::end(range))
+    CATCH_EMPTY_ITERATOR_RANGE
+	return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
 
   string_type user_info() const {
     const_range_type range = user_info_range();
+    CATCH_EMPTY_ITERATOR_RANGE
     return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
 
   string_type host() const {
     const_range_type range = host_range();
+    CATCH_EMPTY_ITERATOR_RANGE
     return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
 
   string_type port() const {
     const_range_type range = port_range();
+    CATCH_EMPTY_ITERATOR_RANGE
     return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
 
   string_type path() const {
     const_range_type range = path_range();
+    CATCH_EMPTY_ITERATOR_RANGE
     return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
 
   string_type query() const {
     const_range_type range = query_range();
+    CATCH_EMPTY_ITERATOR_RANGE
     return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
 
   string_type fragment() const {
     const_range_type range = fragment_range();
+    CATCH_EMPTY_ITERATOR_RANGE
     return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
