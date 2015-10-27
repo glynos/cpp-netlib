@@ -334,7 +334,7 @@ struct async_connection
   }
 
   void default_error(boost::system::error_code const& ec) {
-    error_encountered = in_place<boost::system::system_error>(ec);
+    if (ec) error_encountered = in_place<boost::system::system_error>(ec);
   }
 
   typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
