@@ -8,6 +8,7 @@
 #define NETWORK_MESSAGE_DIRECTIVES_REMOVE_HEADER_HPP
 
 #include <boost/network/traits/string.hpp>
+#include <string>
 
 namespace boost {
 namespace network {
@@ -34,14 +35,15 @@ struct remove_header_directive {
 }  // namespace impl
 
 inline impl::remove_header_directive<std::string> remove_header(
-    std::string  /*header_name*/ame*/) {
+    const std::string& header_name) {
   return impl::remove_header_directive<std::string>(header_name);
 }
 
 inline impl::remove_header_directive<std::wstring> remove_header(
-    std::wstring header_name) {
+    const std::wstring& header_name) {
   return impl::remove_header_directive<std::wstring>(header_name);
 }
+
 }  // namespace network
 }  // namespace boost
 

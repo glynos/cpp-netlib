@@ -7,8 +7,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_sync.hpp>s_sync.hpp>
-#include <boost/network/tags.hpp>espace boost {
+#include <boost/mpl/bool.hpp>
+#include <boost/network/support/is_sync.hpp>
+#include <boost/network/tags.hpp>
+
+namespace boost {
 namespace network {
 
 template <class Tag, class Enable = void>
@@ -19,7 +22,6 @@ struct is_async<
     Tag, typename enable_if<typename Tag::is_async>::type> : mpl::true_ {};
 
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_SUPPORT_IS_ASYNC_HPP_2010608

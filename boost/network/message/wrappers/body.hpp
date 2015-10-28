@@ -4,11 +4,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
-#define __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
+#ifndef BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
+#define BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
 
-#include <boost/network/detail/wrapper_base.hpp>e.hpp>
-#include <boost/network/traits/string.hpp>ude <boost/range/iterator.hpp>
+#include <boost/network/detail/wrapper_base.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/range/iterator_range.hpp>
+#include <boost/network/message_fwd.hpp>
 
 namespace boost {
 namespace network {
@@ -71,7 +73,7 @@ struct body_wrapper_const
 };
 
 template <class Tag>
-inline std::ostream& operator<<(std::ostream&  /*os*/*os*/,
+inline std::ostream& operator<<(std::ostream& os,
                                 body_wrapper<Tag> const& body) {
   os << static_cast<typename body_wrapper<Tag>::string_type>(body);
   return os;
@@ -101,4 +103,4 @@ inline impl::body_wrapper_const<Tag> const body(
 
 }  // namespace boost
 
-#endif  // __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
+#endif  // BOOST_NETWORK_MESSAGE_WRAPPERS_BODY_HPP__

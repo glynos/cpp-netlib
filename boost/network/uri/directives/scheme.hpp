@@ -9,13 +9,14 @@
 #include <boost/network/uri/schemes.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <string>
 
 namespace boost {
 namespace network {
 namespace uri {
 struct scheme_directive {
 
-  explicit scheme_directive(const std::string & /*scheme*/) : scheme(scheme) {}
+  explicit scheme_directive(const std::string &scheme) : scheme(scheme) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {

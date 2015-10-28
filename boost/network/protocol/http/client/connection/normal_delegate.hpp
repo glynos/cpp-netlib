@@ -7,9 +7,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/placeholders.hpp>
+#include <boost/asio/streambuf.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
-#include <boost/scoped_ptr.hpp>
+#include <boost/function.hpp>
+#include <memory>
 
 namespace boost {
 namespace network {
@@ -19,8 +22,8 @@ namespace impl {
 struct normal_delegate : connection_delegate {
   explicit normal_delegate(asio::io_service &service);
 
-  virtual void connect(asio::ip::tcp::endpoint &endpoint, std::string host, boost::uint16_t source_port,
-                       function<void(system::error_code const &)> handler);
+  void connect(asio::ip::tcp::endpoint &endpoint, std::string host, boost::uint16_t source_port,
+                       function<void(system::error_code const &)> handler) override;
   void write(
       asio::streambuf &command_streambuf,
       function<void(system::error_code const &, size_t)> handler) override;
@@ -32,27 +35,15 @@ struct normal_delegate : connection_delegate {
 
  private:
   asio::io_service &service_;
-  scoped_ptr<asio::ip::tcp::socket> socket_;
+  std::unique_ptr<asio::ip::tcp::socket> socket_;
 
   normal_delegate(normal_delegate const &);     // = delete
   normal_delegate &operator=(normal_delegate);  // = delete
 };
 
 } // namespace impl
- /* impl */
-
 } // namespace http
- /* http */
-
 }  // namespace network
- /* network */
-
 } // namespace boost
- /* boost */
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/normal_delegate.ipp>
-#endif /* BOOST_NETWORK_NO_LIB */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819 \
-          */
+#endif // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_20110819

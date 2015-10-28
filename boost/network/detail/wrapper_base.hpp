@@ -17,8 +17,7 @@ struct wrapper_base {
   explicit wrapper_base(Message& message_) : _message(message_) {};
 
  protected:
-  ~wrapper_base() = default;default;;  // for extending only
-
+  ~wrapper_base() = default;  // for extending only
   Message& _message;
 };
 
@@ -27,8 +26,7 @@ struct wrapper_base_const {
   explicit wrapper_base_const(Message const& message_) : _message(message_) {}
 
  protected:
-  ~wrapper_base_const() = default;default;;  // for extending only
-
+  ~wrapper_base_const() = default;  // for extending only
   Message const& _message;
 };
 

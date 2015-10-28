@@ -3,25 +3,26 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __BOOST_NETWORK_URI_DIRECTIVES_HOST_INC__
-#define __BOOST_NETWORK_URI_DIRECTIVES_HOST_INC__
+#ifndef BOOST_NETWORK_URI_DIRECTIVES_HOST_INC__
+#define BOOST_NETWORK_URI_DIRECTIVES_HOST_INC__
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <string>
 
 namespace boost {
 namespace network {
 namespace uri {
 struct host_directive {
 
-  explicit host_directive(const std::string & /*host*/) : host(host) {}
+  explicit host_directive(const std::string & host) : host_(host) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {
-    uri.append(host);
+    uri.append(host_);
   }
 
-  std::string host;
+  std::string host_;
 };
 
 inline host_directive host(const std::string &host) {
@@ -31,4 +32,4 @@ inline host_directive host(const std::string &host) {
 }  // namespace network
 }  // namespace boost
 
-#endif  // __BOOST_NETWORK_URI_DIRECTIVES_HOST_INC__
+#endif  // BOOST_NETWORK_URI_DIRECTIVES_HOST_INC__

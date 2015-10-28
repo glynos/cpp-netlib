@@ -8,9 +8,12 @@
 #ifndef BOOST_NETWORK_TRAITS_HEADERS_CONTAINER_INC
 #define BOOST_NETWORK_TRAITS_HEADERS_CONTAINER_INC
 
-#include <boost/network/tags.hpp>t/network/tags.hpp>
-#include <boost/network/traits/string.hpp>ring.hpp>
-#include <map>e network {
+#include <boost/network/tags.hpp>
+#include <boost/network/traits/string.hpp>
+#include <map>
+
+namespace boost {
+namespace network {
 namespace impl {
 
 template <class Tag, class Enable = void>

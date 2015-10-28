@@ -19,13 +19,16 @@ boost::network::http::impl::normal_delegate::normal_delegate(
     : service_(service) {}
 
 void boost::network::http::impl::normal_delegate::connect(
-    asio::ip::tcp::endpoint &endpoint, std::string host, boost::uint16_t source_port, 
+    asio::ip::tcp::endpoint &endpoint, std::string host,
+    boost::uint16_t source_port,
     function<void(system::error_code const &)> handler) {
 
   // TODO(dberris): review parameter necessity.
   (void)host;
- 
-  socket_.reset(new asio::ip::tcp::socket(service_, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), source_port)));
+
+  socket_.reset(new asio::ip::tcp::socket(
+      service_,
+      asio::ip::tcp::endpoint(asio::ip::address(), source_port)));
   socket_->async_connect(endpoint, handler);
 }
 
@@ -53,5 +56,4 @@ void boost::network::http::impl::normal_delegate::disconnect() {
 
 boost::network::http::impl::normal_delegate::~normal_delegate() {}
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_IPP_20110819 \
-          */
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_IPP_20110819

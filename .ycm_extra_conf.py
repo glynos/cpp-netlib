@@ -17,7 +17,7 @@ flags = [
     '-Wall',
     '-Wextra',
     '-Werror',
-    '-std=c++03',
+    '-std=c++11',
     '-isystem',
     '.',
     '-isystem',

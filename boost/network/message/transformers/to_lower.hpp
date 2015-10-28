@@ -4,10 +4,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__
-#define __NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__
+#ifndef BOOST_NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__
+#define BOOST_NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__
 
 #include <boost/algorithm/string.hpp>
+#include <boost/network/message/transformers/selectors.hpp>
+#include <boost/network/message_fwd.hpp>
 
 /** to_lower.hpp
  *
@@ -34,7 +36,7 @@ struct to_lower_transformer<selectors::source_selector> {
   }
 
  protected:
-  ~to_lower_transformer() = default;default;
+  ~to_lower_transformer() = default;
 };
 
 template <>
@@ -45,17 +47,17 @@ struct to_lower_transformer<selectors::destination_selector> {
   }
 
  protected:
-  ~to_lower_transformer() = default;default;;
+  ~to_lower_transformer() = default;
 };
 
 }  // namespace impl
 
 namespace detail {
 struct to_lower_placeholder_helper;
-} // namespace detail // namespace detail
+}  // namespace detail
 
 detail::to_lower_placeholder_helper to_lower_(
-    detail::to_lower_placeholder_helper /*unused*/ /*unused*/);
+    detail::to_lower_placeholder_helper /*unused*/);
 
 namespace detail {
 
@@ -64,23 +66,22 @@ struct to_lower_placeholder_helper {
   struct type : public impl::to_lower_transformer<Selector> {};
 
  private:
-  to_lower_placeholder_helper() = default;default;
-  to_lower_placeholder_helper(to_lower_placeholder_helper const & /*unused*/ /*unused*/) {}
+  to_lower_placeholder_helper() = default;
+  to_lower_placeholder_helper(to_lower_placeholder_helper const & /*unused*/) {}
   friend to_lower_placeholder_helper boost::network::to_lower_(
-      to_lower_placeholder_helper /*unused*/ /*unused*/);
+      to_lower_placeholder_helper /*unused*/);
 };
-}  // namespace detail // namespace detail
+}  // namespace detail
 
 typedef detail::to_lower_placeholder_helper (*to_lower_placeholder)(
     detail::to_lower_placeholder_helper);
 
 inline detail::to_lower_placeholder_helper to_lower_(
-    detail::to_lower_placeholder_helper /*unused*/ /*unused*/) {
+    detail::to_lower_placeholder_helper /*unused*/) {
   return detail::to_lower_placeholder_helper();
 }
 
 }  // namespace network
-
 }  // namespace boost
 
-#endif  // __NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__
+#endif  // BOOST_NETWORK_MESSAGE_TRANSFORMERS_TO_LOWER_HPP__

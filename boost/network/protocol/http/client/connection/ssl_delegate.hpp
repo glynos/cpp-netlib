@@ -14,6 +14,7 @@
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
 #include <boost/optional.hpp>
+#include <memory>
 
 namespace boost {
 namespace network {
@@ -29,14 +30,15 @@ struct ssl_delegate : connection_delegate,
                optional<std::string> private_key_file,
                optional<std::string> ciphers, long ssl_options);
 
-  virtual void connect(asio::ip::tcp::endpoint &endpoint, std::string host, boost::uint16_t source_port,
-                       function<void(system::error_code const &)> handler);
-  void write(
-      asio::streambuf &command_streambuf,
-      function<void(system::error_code const &, size_t)> handler) override;
-  void read_some(
-      asio::mutable_buffers_1 const &read_buffer,
-      function<void(system::error_code const &, size_t)> handler) override;
+  void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
+                       boost::uint16_t source_port,
+                       function<void(system::error_code const &)> handler) override;
+  void write(asio::streambuf &command_streambuf,
+             function<void(system::error_code const &, size_t)> handler)
+      override;
+  void read_some(asio::mutable_buffers_1 const &read_buffer,
+                 function<void(system::error_code const &, size_t)> handler)
+      override;
   void disconnect() override;
   ~ssl_delegate() override;
 
@@ -48,9 +50,9 @@ struct ssl_delegate : connection_delegate,
   optional<std::string> private_key_file_;
   optional<std::string> ciphers_;
   long ssl_options_;
-  scoped_ptr<asio::ssl::context> context_;
-  scoped_ptr<asio::ip::tcp::socket> tcp_socket_;
-  scoped_ptr<asio::ssl::stream<asio::ip::tcp::socket&> > socket_;
+  std::unique_ptr<asio::ssl::context> context_;
+  std::unique_ptr<asio::ip::tcp::socket> tcp_socket_;
+  std::unique_ptr<asio::ssl::stream<asio::ip::tcp::socket &> > socket_;
   bool always_verify_peer_;
 
   ssl_delegate(ssl_delegate const &);     // = delete
@@ -61,16 +63,9 @@ struct ssl_delegate : connection_delegate,
 };
 
 }  // namespace impl
- /* impl */
-
-} // namespace http
- /* http */
-
-} // namespace network
- /* network */
-
+}  // namespace http
+}  // namespace network
 }  // namespace boost
- /* boost */
 
 #ifdef BOOST_NETWORK_NO_LIB
 #include <boost/network/protocol/http/client/connection/ssl_delegate.ipp>

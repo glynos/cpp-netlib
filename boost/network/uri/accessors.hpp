@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
-#define __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
+#ifndef BOOST_NETWORK_URI_URI_ACCESSORS_INC__
+#define BOOST_NETWORK_URI_URI_ACCESSORS_INC__
 
 #include <boost/network/uri/encode.hpp>
 #include <boost/network/uri/uri.hpp>
@@ -22,7 +22,7 @@ struct key_value_sequence : spirit::qi::grammar<uri::const_iterator, Map()> {
   typedef typename Map::mapped_type mapped_type;
   typedef std::pair<key_type, mapped_type> pair_type;
 
-  key_value_sequence() : key_value_sequence::base_type(query) = default;
+  key_value_sequence() : key_value_sequence::base_type(query) {};
 
   spirit::qi::rule<uri::const_iterator, Map()> query;
   spirit::qi::rule<uri::const_iterator, pair_type()> pair;
@@ -86,4 +86,4 @@ inline uri::string_type decoded_fragment(const uri &uri_) {
 }  // namespace network
 }  // namespace boost
 
-#endif  // __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
+#endif  // BOOST_NETWORK_URI_URI_ACCESSORS_INC__

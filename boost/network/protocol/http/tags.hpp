@@ -6,7 +6,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/mpl/if.hpp>space boost {
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/network/tags.hpp>
+
+namespace boost {
 namespace network {
 namespace http {
 namespace tags {
@@ -27,27 +31,37 @@ struct client {
   typedef mpl::true_::type is_client;
 };
 
-using namespace boost::network::tags;
-
 template <class Tag>
 struct components;
 
-typedef mpl::vector<http, client, simple, sync, tcp, default_string>
-    http_default_8bit_tcp_resolve_tags;
-typedef mpl::vector<http, client, simple, sync, udp, default_string>
-    http_default_8bit_udp_resolve_tags;
-typedef mpl::vector<http, client, keepalive, sync, tcp, default_string>
+typedef mpl::vector<
+    http, client, simple, boost::network::tags::sync, boost::network::tags::tcp,
+    boost::network::tags::default_string> http_default_8bit_tcp_resolve_tags;
+typedef mpl::vector<
+    http, client, simple, boost::network::tags::sync, boost::network::tags::udp,
+    boost::network::tags::default_string> http_default_8bit_udp_resolve_tags;
+typedef mpl::vector<http, client, keepalive, boost::network::tags::sync,
+                    boost::network::tags::tcp,
+                    boost::network::tags::default_string>
     http_keepalive_8bit_tcp_resolve_tags;
-typedef mpl::vector<http, client, keepalive, sync, udp, default_string>
+typedef mpl::vector<http, client, keepalive, boost::network::tags::sync,
+                    boost::network::tags::udp,
+                    boost::network::tags::default_string>
     http_keepalive_8bit_udp_resolve_tags;
-typedef mpl::vector<http, client, simple, async, udp, default_string>
+typedef mpl::vector<http, client, simple, boost::network::tags::async,
+                    boost::network::tags::udp,
+                    boost::network::tags::default_string>
     http_async_8bit_udp_resolve_tags;
-typedef mpl::vector<http, client, simple, async, tcp, default_string>
+typedef mpl::vector<http, client, simple, boost::network::tags::async,
+                    boost::network::tags::tcp,
+                    boost::network::tags::default_string>
     http_async_8bit_tcp_resolve_tags;
-typedef mpl::vector<http, simple, sync, pod, default_string, server>
-    http_server_tags;
-typedef mpl::vector<http, simple, async, pod, default_string, server>
-    http_async_server_tags;
+typedef mpl::vector<
+    http, simple, boost::network::tags::sync, boost::network::tags::pod,
+    boost::network::tags::default_string, server> http_server_tags;
+typedef mpl::vector<
+    http, simple, boost::network::tags::async, boost::network::tags::pod,
+    boost::network::tags::default_string, server> http_async_server_tags;
 
 BOOST_NETWORK_DEFINE_TAG(http_default_8bit_tcp_resolve);
 BOOST_NETWORK_DEFINE_TAG(http_default_8bit_udp_resolve);
@@ -59,19 +73,8 @@ BOOST_NETWORK_DEFINE_TAG(http_server);
 BOOST_NETWORK_DEFINE_TAG(http_async_server);
 
 }  // namespace tags
-  // namespace tags
- /* tags */
-
 }  // namespace http
- // namespace http
- /* http */
-
-} // namespace network
- // namespace network
- /* network */
-
+}  // namespace network
 }  // namespace boost
-  // namespace boost
- /* boost */
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_TAGS_HPP_20101019 */
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_TAGS_HPP_20101019
