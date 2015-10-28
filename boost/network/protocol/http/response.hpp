@@ -25,8 +25,8 @@
 #include <boost/network/protocol/http/message/modifiers/headers.hpp>
 #include <boost/network/protocol/http/message/modifiers/body.hpp>
 
-#include <boost/network/protocol/http/message/wrappers/version.hpp>
 #include <boost/network/protocol/http/message/wrappers/status.hpp>
+#include <boost/network/protocol/http/message/wrappers/version.hpp>
 #include <boost/network/protocol/http/message/wrappers/status_message.hpp>
 #include <boost/network/protocol/http/message/wrappers/destination.hpp>
 #include <boost/network/protocol/http/message/wrappers/source.hpp>

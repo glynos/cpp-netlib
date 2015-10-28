@@ -6,11 +6,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <cstddef>
 #include <boost/network/tags.hpp>
+#include <cstddef>
 #include <boost/thread/thread.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/scope_exit.hpp>
 
@@ -24,9 +24,9 @@ typedef boost::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
 
 template <class Tag>
 struct basic_thread_pool {
-  basic_thread_pool(std::size_t threads = 1,
-                    io_service_ptr io_service = io_service_ptr(),
-                    worker_threads_ptr worker_threads = worker_threads_ptr())
+  explicit basic_thread_pool(std::size_t  /*threads*/,
+                    io_service_ptr  /*io_service*/ io_service_ptr(),
+                    worker_threads_ptr  /*worker_threads*/ worker_threads_ptr())
       : threads_(threads),
         io_service_(io_service),
         worker_threads_(worker_threads),
@@ -67,7 +67,7 @@ struct basic_thread_pool {
 
   std::size_t thread_count() const { return threads_; }
 
-  void post(boost::function<void()> f) { io_service_->post(f); }
+  void post(boost::function<void()>  /*f*/) { io_service_->post(f); }
 
   ~basic_thread_pool() throw() {
     sentinel_.reset();
@@ -101,10 +101,13 @@ struct basic_thread_pool {
 
 typedef basic_thread_pool<tags::default_> thread_pool;
 
-} /* utils */
+}  // namespace utils
+ /* utils */
 
-} /* network */
+}  // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_UTILS_THREAD_POOL_HPP_20101020 */

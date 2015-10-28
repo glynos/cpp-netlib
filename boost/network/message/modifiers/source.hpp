@@ -16,13 +16,13 @@ namespace impl {
 
 template <class Message, class ValueType, class Tag>
 inline void source(Message const &message, ValueType const &source_,
-                   Tag const &, mpl::false_ const &) {
+                   Tag const & /*unused*/ /*unused*/, mpl::false_ const & /*unused*/ /*unused*/) {
   message.source(source_);
 }
 
 template <class Message, class ValueType, class Tag>
 inline void source(Message const &message, ValueType const &source_,
-                   Tag const &, mpl::true_ const &) {
+                   Tag const & /*unused*/ /*unused*/, mpl::true_ const & /*unused*/ /*unused*/) {
   message.source(source_);
 }
 

@@ -7,13 +7,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
-#include <boost/network/traits/string.hpp>
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_sync.hpp>
-#include <boost/thread/future.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/or.hpp>
+#include <boost/mpl/if.hpp>ude <boost/mpl/or<boost/network/message/directives.hpp>p>
+#include <boost/network/message/transformers.hpp>.hpp>
+#include <boost/network/message/wrappers.hpp>appers.hpp>
+#include <boost/network/support/is_async.hpp>port/is_async.hpp>
+#include <boost/network/support/is_sync.hpp>port/is_sync.hpp>
 
 namespace boost {
 namespace network {
@@ -49,8 +47,12 @@ struct header_value
 
 }  // namespace traits
 
-} /* network */
+} // namespace network
+  // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ // namespace boost
+ /* boost */
 
 #endif  // BOOST_NETWORK_MESSAGE_TRAITS_HEADERS_HPP_20100903

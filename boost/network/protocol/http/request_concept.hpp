@@ -8,9 +8,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/concept_check.hpp>
-#include <boost/network/message/message_concept.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/network/message/message_concept.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
 namespace boost {

@@ -42,10 +42,13 @@ inline response_header_wide::string_type const& value(
   return h.value;
 }
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_VALUE_HPP_20101028 */

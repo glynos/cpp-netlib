@@ -6,11 +6,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/tags.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/network/protocol/http/tags.hpp>
 #include <boost/asio/ip/udp.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/network/support/is_tcp.hpp>
 #include <boost/network/support/is_udp.hpp>

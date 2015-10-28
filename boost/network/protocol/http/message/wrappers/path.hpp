@@ -20,13 +20,13 @@ template <class Tag>
 struct path_wrapper {
   basic_request<Tag> const& message_;
 
-  path_wrapper(basic_request<Tag> const& message) : message_(message) {}
+  explicit path_wrapper(basic_request<Tag> const& message) : message_(message) {}
 
   typedef typename basic_request<Tag>::string_type string_type;
 
   operator string_type() { return message_.path(); }
 };
-}
+} // namespace impl
 
 template <class Tag>
 inline impl::path_wrapper<Tag> path(basic_request<Tag> const& request) {

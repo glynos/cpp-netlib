@@ -14,7 +14,7 @@ namespace network {
 namespace uri {
 struct user_info_directive {
 
-  explicit user_info_directive(const std::string &user_info)
+  explicit user_info_directive(const std::string & /*user_info*/)
       : user_info(user_info) {}
 
   template <class Uri>

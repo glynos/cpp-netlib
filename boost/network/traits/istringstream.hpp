@@ -7,10 +7,10 @@
 #ifndef BOOST_NETWORK_TRAITS_ISTRINGSTREAM_INC
 #define BOOST_NETWORK_TRAITS_ISTRINGSTREAM_INC
 
-#include <sstream>
-#include <boost/network/tags.hpp>
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
+#include <boost/network/tags.hpp>
+#include <sstream>
 
 namespace boost {
 namespace network {

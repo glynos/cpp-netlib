@@ -34,7 +34,7 @@ struct remove_header_directive {
 }  // namespace impl
 
 inline impl::remove_header_directive<std::string> remove_header(
-    std::string header_name) {
+    std::string  /*header_name*/ame*/) {
   return impl::remove_header_directive<std::string>(header_name);
 }
 

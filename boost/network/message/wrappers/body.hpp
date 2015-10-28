@@ -7,9 +7,8 @@
 #ifndef __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
 #define __NETWORK_MESSAGE_WRAPPERS_BODY_HPP__
 
-#include <boost/network/traits/string.hpp>
-#include <boost/network/detail/wrapper_base.hpp>
-#include <boost/range/iterator.hpp>
+#include <boost/network/detail/wrapper_base.hpp>e.hpp>
+#include <boost/network/traits/string.hpp>ude <boost/range/iterator.hpp>
 
 namespace boost {
 namespace network {
@@ -72,7 +71,7 @@ struct body_wrapper_const
 };
 
 template <class Tag>
-inline std::ostream& operator<<(std::ostream& os,
+inline std::ostream& operator<<(std::ostream&  /*os*/*os*/,
                                 body_wrapper<Tag> const& body) {
   os << static_cast<typename body_wrapper<Tag>::string_type>(body);
   return os;

@@ -141,7 +141,7 @@ inline OutputIterator encode(const SinglePassRange &range,
   return encode(boost::begin(range), boost::end(range), out);
 }
 
-inline std::string encoded(const std::string &input) {
+inline std::string encoded(const std::string & /*input*/) {
   std::string encoded;
   encode(input, std::back_inserter(encoded));
   return encoded;

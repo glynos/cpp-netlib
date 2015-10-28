@@ -20,12 +20,12 @@ namespace impl {
 template <class Tag>
 struct uri_wrapper {
   basic_request<Tag> const& message_;
-  uri_wrapper(basic_request<Tag> const& message) : message_(message) {}
+  explicit uri_wrapper(basic_request<Tag> const& message) : message_(message) {}
   typedef typename basic_request<Tag>::string_type string_type;
   operator string_type() { return message_.uri().raw(); }
   operator boost::network::uri::uri() { return message_.uri(); }
 };
-}
+} // namespace impl
 
 template <class Tag>
 inline impl::uri_wrapper<Tag> uri(basic_request<Tag> const& request) {

@@ -18,7 +18,8 @@ namespace impl {
 template <class Tag>
 struct connection_delegate_factory;
 
-} /* impl */
+} // namespace impl
+ /* impl */
 
 template <class Tag>
 struct unsupported_tag;
@@ -33,8 +34,11 @@ struct delegate_factory<Tag, typename enable_if<is_async<Tag> >::type> {
   typedef impl::connection_delegate_factory<Tag> type;
 };
 
-} /* http */
-} /* network */
-} /* boost */
+} // namespace http
+ /* http */
+}  // namespace network
+ /* network */
+} // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_DELEGATE_FACTORY_HPP_20110819 */

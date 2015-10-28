@@ -8,8 +8,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
+#include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/delegate_factory.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
 
@@ -40,8 +40,8 @@ struct async_connection_base {
   static connection_ptr new_connection(
       resolve_function resolve, resolver_type &resolver, bool follow_redirect,
       bool always_verify_peer, bool https, int timeout,
-      optional<string_type> certificate_filename = optional<string_type>(),
-      optional<string_type> const &verify_path = optional<string_type>(),
+      optional<string_type>  /*certificate_filename*/ optional<string_type>(),
+      optional<string_type>  /*unused*/const &verify_path = optional<string_type>(),
       optional<string_type> certificate_file = optional<string_type>(),
       optional<string_type> private_key_file = optional<string_type>(),
       optional<string_type> ciphers = optional<string_type>(),
@@ -66,7 +66,7 @@ struct async_connection_base {
                          bool get_body, body_callback_function_type callback,
                          body_generator_function_type generator) = 0;
 
-  virtual ~async_connection_base() {}
+  virtual ~async_connection_base() = default;
 };
 
 }  // namespace impl

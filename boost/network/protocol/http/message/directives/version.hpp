@@ -7,8 +7,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
 #include <boost/network/message/directives/detail/string_directive.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost {
 namespace network {

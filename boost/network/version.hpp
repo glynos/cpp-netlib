@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/config.hpp>
+#include <boost/network/version.hpp>
 
 #define BOOST_NETLIB_VERSION_MAJOR 0
 #define BOOST_NETLIB_VERSION_MINOR 11

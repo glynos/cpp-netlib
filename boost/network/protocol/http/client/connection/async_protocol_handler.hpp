@@ -24,9 +24,9 @@ struct http_async_protocol_handler {
 #ifdef BOOST_NETWORK_DEBUG
   struct debug_escaper {
     string_type& string;
-    explicit debug_escaper(string_type& string_) : string(string_) {}
+    explicit debug_escaper(string_type&  /*string_*/) : string(string_) {}
     debug_escaper(debug_escaper const& other) : string(other.string) {}
-    void operator()(typename string_type::value_type input) {
+    void operator()(typename string_type:: /*value_type*/ input) {
       if (!algorithm::is_print()(input)) {
         typename ostringstream<Tag>::type escaped_stream;
         if (input == '\r') {
@@ -228,7 +228,7 @@ struct http_async_protocol_handler {
     return parsed_ok;
   }
 
-  void parse_headers_real(string_type& headers_part) {
+  void parse_headers_real(string_type&  /*headers_part*/) {
     typename boost::iterator_range<typename string_type::const_iterator>
         input_range = boost::make_iterator_range(headers_part),
         result_range;
@@ -318,7 +318,7 @@ struct http_async_protocol_handler {
 
   template <class Delegate, class Callback>
   void parse_body(Delegate& delegate_, Callback callback, size_t bytes) {
-    // TODO: we should really not use a string for the partial body
+    // TODO(dberris): we should really not use a string for the partial body
     // buffer.
     partial_parsed.append(part_begin, bytes);
     part_begin = part.begin();
@@ -327,7 +327,7 @@ struct http_async_protocol_handler {
   }
 
   typedef response_parser<Tag> response_parser_type;
-  // TODO: make 1024 go away and become a configurable value.
+  // TODO(dberris): make 1024 go away and become a configurable value.
   typedef boost::array<typename char_<Tag>::type, 1024> buffer_type;
 
   response_parser_type response_parser_;
@@ -344,13 +344,17 @@ struct http_async_protocol_handler {
   bool is_chunk_encoding;
 };
 
-} /* impl */
+}  // namespace impl
+ /* impl */
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_20101015 \
           */

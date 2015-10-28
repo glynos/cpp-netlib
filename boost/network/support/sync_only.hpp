@@ -7,10 +7,10 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/mpl/replace.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/inherit_linearly.hpp>
-#include <boost/network/tags.hpp>
 #include <boost/mpl/placeholders.hpp>
+#include <boost/network/tags.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost {
 namespace network {
@@ -23,8 +23,10 @@ struct sync_only
                                    tags::sync>::type,
           mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2> > {};
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_SUPPORT_SYNC_ONLY_HPP_20100927 */

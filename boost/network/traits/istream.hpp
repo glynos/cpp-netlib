@@ -33,8 +33,10 @@ struct istream<Tag, typename enable_if<is_default_wstring<Tag> >::type> {
   typedef std::wistream type;
 };
 
-} /* network */
+}  // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_TRAITS_ISTREAM_HPP_20100924 */

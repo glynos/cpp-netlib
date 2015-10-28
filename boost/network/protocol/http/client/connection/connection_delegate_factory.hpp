@@ -7,9 +7,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/throw_exception.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/network/protocol/http/client/connection/normal_delegate.hpp>
+#include <boost/throw_exception.hpp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
 #endif /* BOOST_NETWORK_ENABLE_HTTPS */
@@ -30,12 +30,12 @@ struct connection_delegate_factory {
 
   // This is the factory method that actually returns the delegate
   // instance.
-  // TODO Support passing in proxy settings when crafting connections.
+  // TODO(dberris): Support passing in proxy settings when crafting connections.
   static connection_delegate_ptr new_connection_delegate(
       asio::io_service& service, bool https, bool always_verify_peer,
-      optional<string_type> certificate_filename,
-      optional<string_type> verify_path, optional<string_type> certificate_file,
-      optional<string_type> private_key_file, optional<string_type> ciphers,
+      optional<string_type>  /*certificate_filename*/,
+      optional<string_type>  /*verify_path*/, optional<string_type>  /*certificate_file*/,
+      optional<string_type>  /*private_key_file*/, optional<string_type>  /*ciphers*/,
       long ssl_options) {
     connection_delegate_ptr delegate;
     if (https) {
@@ -53,10 +53,14 @@ struct connection_delegate_factory {
   }
 };
 
-} /* impl */
-} /* http */
-} /* network */
-} /* boost */
+}  // namespace impl
+ /* impl */
+} // namespace http
+ /* http */
+} // namespace network
+ /* network */
+} // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_DELEGATE_FACTORY_HPP_20110819 \
           */

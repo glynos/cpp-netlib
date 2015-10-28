@@ -7,11 +7,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_pod.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
+#include <boost/mpl/a<boost/mpl/not<boost/network/support/is_async.hpp>nc.hpp>
+#include <boost/network/support/is_pod.hpp>ort/is_pod.hpp>
+#include <boost/utility/enable_if.hpp>le_if.hpp>
 
 namespace boost {
 namespace network {
@@ -38,7 +36,7 @@ inline typename enable_if<is_pod<Tag>, void>::type add_header(
   typename Message::header_type header = {key, value};
   message.headers.insert(message.headers.end(), header);
 }
-}
+} // namespace impl  // namespace impl
 
 template <class Tag, template <class> class Message, class KeyType,
           class ValueType>

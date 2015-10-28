@@ -10,10 +10,10 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_IPP
 
-#include <boost/network/protocol/http/message.hpp>
 #include <boost/lexical_cast.hpp>
-#include <cstdlib>
+#include <boost/network/protocol/http/message.hpp>
 #include <cstdio>
+#include <cstdlib>
 
 namespace boost {
 namespace network {
@@ -41,7 +41,7 @@ typename message_impl<Tag>::string_type const message_impl<Tag>::url_decode(
           decode_buf[0] = str[++pos];
           decode_buf[1] = str[++pos];
           decode_buf[2] = '\0';
-          result += static_cast<char>(strtol(decode_buf, 0, 16));
+          result += static_cast<char>(strtol(decode_buf, nullptr, 16));
         } else {
           // recover from error by not decoding character
           result += '%';
@@ -120,8 +120,9 @@ message_impl<Tag>::make_query_string(
   for (typename query_container<Tag>::type::const_iterator i =
            query_params.begin();
        i != query_params.end(); ++i) {
-    if (i != query_params.begin()) query_string += '&';
-    query_string += url_encode(i->first);
+    if (i != query_params.begin()) { query_string += '&';
+    
+}query_string += url_encode(i->first);
     query_string += '=';
     query_string += url_encode(i->second);
   }
@@ -196,14 +197,17 @@ bool message_impl<Tag>::base64_decode(
     char base64code3;
 
     base64code0 = decoding_data[static_cast<int>(input_ptr[i])];
-    if (base64code0 == nop)  // non base64 character
+    if (base64code0 == nop) {  // non base64 character
       return false;
-    if (!(++i < input_length))  // we need at least two input bytes for
+}
+    if (!(++i < input_length)) {  // we need at least two input bytes for
                                 // first byte output
       return false;
+}
     base64code1 = decoding_data[static_cast<int>(input_ptr[i])];
-    if (base64code1 == nop)  // non base64 character
+    if (base64code1 == nop) {  // non base64 character
       return false;
+}
 
     output += ((base64code0 << 2) | ((base64code1 >> 4) & 0x3));
 
@@ -214,8 +218,9 @@ bool message_impl<Tag>::base64_decode(
         return true;
       }
       base64code2 = decoding_data[static_cast<int>(input_ptr[i])];
-      if (base64code2 == nop)  // non base64 character
+      if (base64code2 == nop) {  // non base64 character
         return false;
+}
 
       output += ((base64code1 << 4) & 0xf0) | ((base64code2 >> 2) & 0x0f);
     }
@@ -227,8 +232,9 @@ bool message_impl<Tag>::base64_decode(
         return true;
       }
       base64code3 = decoding_data[static_cast<int>(input_ptr[i])];
-      if (base64code3 == nop)  // non base64 character
+      if (base64code3 == nop) {  // non base64 character
         return false;
+}
 
       output += (((base64code2 << 6) & 0xc0) | base64code3);
     }

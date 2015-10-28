@@ -7,10 +7,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/client/pimpl.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
-#include <boost/network/protocol/http/client/pimpl.hpp>
-#include <boost/network/protocol/http/client/options.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 namespace boost {
 namespace network {
@@ -46,13 +46,13 @@ struct basic_client_facade {
   }
 
   response get(request const& request,
-               body_callback_function_type body_handler =
+               body_callback_function_type  /*body_handler*/
                    body_callback_function_type()) {
     return pimpl->request_skeleton(request, "GET", true, body_handler,
                                    body_generator_function_type());
   }
 
-  response post(request request, string_type const& body = string_type(),
+  response post(request request, string_type  /*unused*/const& body = string_type(),
                 string_type const& content_type = string_type(),
                 body_callback_function_type body_handler =
                     body_callback_function_type(),
@@ -83,13 +83,13 @@ struct basic_client_facade {
 
   response post(request const& request,
                 body_generator_function_type body_generator,
-                body_callback_function_type callback =
+                body_callback_function_type  /*callback*/ =
                     body_generator_function_type()) {
     return pimpl->request_skeleton(request, "POST", true, callback,
                                    body_generator);
   }
 
-  response post(request const& request, body_callback_function_type callback,
+  response post(request const& request, body_callback_function_type  /*callback*/,
                 body_generator_function_type body_generator =
                     body_generator_function_type()) {
     return post(request, string_type(), string_type(), callback,
@@ -103,7 +103,7 @@ struct basic_client_facade {
     return post(request, body, string_type(), callback, body_generator);
   }
 
-  response put(request request, string_type const& body = string_type(),
+  response put(request request, string_type  /*unused*/const& body = string_type(),
                string_type const& content_type = string_type(),
                body_callback_function_type body_handler =
                    body_callback_function_type(),
@@ -132,7 +132,7 @@ struct basic_client_facade {
                                    body_generator);
   }
 
-  response put(request const& request, body_callback_function_type callback,
+  response put(request const& request, body_callback_function_type  /*callback*/,
                body_generator_function_type body_generator =
                    body_generator_function_type()) {
     return put(request, string_type(), string_type(), callback, body_generator);
@@ -146,7 +146,7 @@ struct basic_client_facade {
   }
 
   response delete_(request const& request,
-                   body_callback_function_type body_handler =
+                   body_callback_function_type  /*body_handler*/
                        body_callback_function_type()) {
     return pimpl->request_skeleton(request, "DELETE", true, body_handler,
                                    body_generator_function_type());

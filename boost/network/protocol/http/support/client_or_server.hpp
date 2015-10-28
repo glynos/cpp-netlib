@@ -8,7 +8,7 @@
 
 #include <boost/network/protocol/http/support/is_server.hpp>
 #include <boost/network/protocol/http/support/is_client.hpp>
-#include <boost/mpl/if.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace network {
@@ -32,10 +32,13 @@ struct client_or_server<Tag, typename enable_if<is_client<Tag> >::type> {
   typedef tags::client type;
 };
 
-} /* http */
+}  // namespace http
+ /* http */
 
-} /* network */
+}  // namespace network
+ /* network */
 
-} /* boost */
+} // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_SUPPORT_CLIENT_OR_SERVER_HPP_20101127 */

@@ -12,7 +12,5 @@ namespace network {
 template <class Tag>
 struct basic_message;
 
-}  // namespace boost
-}  // namespace network
-
-#endif  // __2008817MESSAGE_FWD_INC__
+} // namespace networkk
+} // namespace boostendif  // __2008817MESSAGE_FWD_INC__

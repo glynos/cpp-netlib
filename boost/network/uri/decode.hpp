@@ -81,7 +81,7 @@ inline OutputIterator decode(const SinglePassRange &range,
   return decode(boost::begin(range), boost::end(range), out);
 }
 
-inline std::string decoded(const std::string &input) {
+inline std::string decoded(const std::string & /*input*/) {
   std::string decoded;
   decode(input, std::back_inserter(decoded));
   return decoded;

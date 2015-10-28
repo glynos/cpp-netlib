@@ -7,14 +7,10 @@
 #ifndef BOOST_NETWORK_TRAITS_OSTRINGSTREAM_INC
 #define BOOST_NETWORK_TRAITS_OSTRINGSTREAM_INC
 
-#include <sstream>
-#include <boost/network/tags.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/network/support/is_default_string.hpp>
-#include <boost/network/support/is_default_wstring.hpp>
-
-namespace boost {
-namespace network {
+#include <boost/mpl/if.hpp>l/if.hpp>
+#include <boost/network/support/is_default_string.hpp>s_default_string.hpp>
+#include <boost/network/support/is_default_wstring.hpp>port/is_default_wstring.hpp>
+#include <boost/networ<sstream> {
 
 template <class Tag>
 struct unsupported_tag;

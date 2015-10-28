@@ -15,7 +15,7 @@
 #include <iostream>
 #ifndef BOOST_NETWORK_MESSAGE
 #define BOOST_NETWORK_MESSAGE(msg)                                      \
-  std::cerr << "[DEBUG " << __FILE__ << ':' << __LINE__ << "]: " << msg \
+  std::cerr << "[DEBUG " << __FILE__ << ':' << __LINE__ << "]: " << (msg) \
             << std::endl;
 #endif
 #else

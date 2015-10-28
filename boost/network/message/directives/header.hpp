@@ -7,17 +7,13 @@
 #ifndef __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__
 #define __NETWORK_MESSAGE_DIRECTIVES_HEADER_HPP__
 
-#include <boost/network/traits/string.hpp>
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_sync.hpp>
-#include <boost/thread/future.hpp>
+#include <boost/network/support/is_async.hpp>pp>
+#include <boost/network/traits/string.hpp>nclude <boost/utility/enable_if.hpp>ude <boost/thread/future.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
-#include <boost/variant/variant.hpp>
-#include <boost/variant/apply_visitor.hpp>
-#include <boost/variant/static_visitor.hpp>
-
-namespace boost {
+#include <boost/variant/apply_visitor.hpp>r.hpp>
+#include <boost/variant/static_visitor.hpp>>
+#include <boost/variant/variant.hpp>pace boost {
 namespace network {
 
 namespace impl {

@@ -6,8 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/placeholders.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/strand.hpp>
 
 namespace boost {
@@ -40,7 +40,7 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
   explicit async_resolver(bool cache_resolved)
       : cache_resolved_(cache_resolved), endpoint_cache_() {}
 
-  void resolve(resolver_type &resolver_, string_type const &host,
+  void resolve(resolver_type &resolver_, string_type  /*unused*/const &host,
                boost::uint16_t port,
                resolve_completion_function once_resolved) {
     if (cache_resolved_) {
@@ -63,7 +63,7 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
                                    boost::asio::placeholders::iterator)));
   }
 
-  void handle_resolve(string_type const &host,
+  void handle_resolve(string_type  /*unused*/const &host,
                       resolve_completion_function once_resolved,
                       boost::system::error_code const &ec,
                       resolver_iterator endpoint_iterator) {

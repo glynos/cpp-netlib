@@ -6,8 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_async.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/network/support/is_async.hpp>
 #include <boost/network/tags.hpp>
 
 namespace boost {
@@ -27,10 +27,14 @@ struct status
           typename mpl::if_<is_sync<typename Message::tag>, boost::uint16_t,
                             unsupported_tag<typename Message::tag> >::type> {};
 
-} /* traits */
+}  // namespace traits
+ /* traits */
 
-} /* http */
-} /* network */
-} /* boost */
+}  // namespace http
+ /* http */
+} // namespace network
+ /* network */
+} // namespace boost
+ /* boost */
 
 #endif

@@ -8,12 +8,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
-#include <boost/range.hpp>
-#include <boost/fusion/tuple.hpp>
-#include <boost/network/traits/string.hpp>
-#include <boost/logic/tribool.hpp>
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/fusion/tuple.hpp>
+#include <boost/logic/tribool.hpp>
+#include <boost/network/tags.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/range.hpp>
 #include <utility>
 
 namespace boost {
@@ -53,7 +53,7 @@ struct response_parser {
 
   response_parser(response_parser const& other) : state_(other.state_) {}
 
-  ~response_parser() {}
+  ~response_parser() = default;
 
   void swap(response_parser& other) { std::swap(other.state_, this->state_); }
 
@@ -290,7 +290,8 @@ struct response_parser {
 
       local_range = boost::make_iterator_range(current, end);
     }
-    if (state_ == stop_state) parsed_ok = true;
+    if (state_ == stop_state) { parsed_ok = true;
+}
     return fusion::make_tuple(parsed_ok,
                               boost::make_iterator_range(start, current));
   }
@@ -303,10 +304,13 @@ struct response_parser {
   state_t state_;
 };
 
-} /* http */
+}  // namespace http
+ /* http */
 
-} /* network */
+}  // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif

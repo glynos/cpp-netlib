@@ -7,8 +7,8 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_RESPONSE_CODE_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_RESPONSE_CODE_IPP
 
-#include <boost/network/tags.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost {
 namespace network {

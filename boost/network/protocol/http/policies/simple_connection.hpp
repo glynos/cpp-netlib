@@ -8,19 +8,19 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/function.hpp>
+#include <boost/cstdint.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/protocol/http/traits/resolver_policy.hpp>
+#include <boost/network/protocol/http/traits/vector.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/version.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/network/protocol/http/tags.hpp>
-#include <boost/network/protocol/http/traits/vector.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/protocol/http/client/connection/sync_base.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/optional/optional.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/bind.hpp>
-#include <boost/algorithm/string/predicate.hpp>
 
 namespace boost {
 namespace network {
@@ -42,7 +42,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
   struct connection_impl {
     connection_impl(
         resolver_type& resolver, bool follow_redirect, bool always_verify_peer,
-        string_type const& hostname, string_type const& port,
+        string_type  /*unused*/const& hostname, string_type const& port,
         resolver_function_type resolve, bool https, int timeout,
         optional<string_type> const& certificate_filename =
             optional<string_type>(),
@@ -65,7 +65,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
                                          ciphers, ssl_options));
     }
 
-    basic_response<Tag> send_request(string_type const& method,
+    basic_response<Tag> send_request(string_type  /*unused*/const& method,
                                      basic_request<Tag> request_, bool get_body,
                                      body_callback_function_type callback,
                                      body_generator_function_type generator) {
@@ -99,10 +99,12 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
             } else
               throw std::runtime_error(
                   "Location header not defined in redirect response.");
-          } else
+          } else {
             break;
-        } else
+}
+        } else {
           break;
+}
       } while (true);
       return response_;
     }
@@ -117,7 +119,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
   connection_ptr get_connection(
       resolver_type& resolver, basic_request<Tag> const& request_,
       bool always_verify_peer,
-      optional<string_type> const& certificate_filename =
+      optional<string_type>  /*unused*/const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),

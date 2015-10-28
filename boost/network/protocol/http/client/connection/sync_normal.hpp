@@ -50,11 +50,11 @@ struct http_sync_connection
         resolve_(resolve),
         socket_(resolver.get_io_service()) {}
 
-  void init_socket(string_type const& hostname, string_type const& port) {
+  void init_socket(string_type  /*unused*/const& hostname, string_type const& port) {
     connection_base::init_socket(socket_, resolver_, hostname, port, resolve_);
   }
 
-  void send_request_impl(string_type const& method,
+  void send_request_impl(string_type  /*unused*/const& method,
                          basic_request<Tag> const& request_,
                          body_generator_function_type generator) {
     boost::asio::streambuf request_buffer;
@@ -107,16 +107,19 @@ struct http_sync_connection
 
   void close_socket() {
     timer_.cancel();
-    if (!is_open()) return;
+    if (!is_open()) { return;
+}
     boost::system::error_code ignored;
     socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
-    if (ignored) return;
+    if (ignored != nullptr) { return;
+}
     socket_.close(ignored);
   }
 
  private:
   void handle_timeout(boost::system::error_code const& ec) {
-    if (!ec) close_socket();
+    if (!ec) { close_socket();
+}
   }
 
   int timeout_;
@@ -127,8 +130,8 @@ struct http_sync_connection
 };
 
 }  // namespace impl
-}  // nmaespace http
+} // namespace http
 }  // namespace network
-}  // nmaespace boost
+}  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_SYNC_CONNECTION_20100

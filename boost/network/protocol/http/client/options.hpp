@@ -1,10 +1,10 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP_20130128
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP_20130128
 
-#include <boost/network/traits/string.hpp>
-#include <boost/smart_ptr/shared_ptr.hpp>
-#include <boost/optional/optional.hpp>
 #include <boost/asio/io_service.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/optional/optional.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 // Copyright 2013 Google, Inc.
 // Copyright 2013 Dean Michael Berris <dberris@google.com>
@@ -76,27 +76,27 @@ struct client_options {
     return *this;
   }
 
-  client_options& openssl_certificate(string_type const& v) {
+  client_options& openssl_certificate(string_type  /*unused*/const& v) {
     openssl_certificate_ = v;
     return *this;
   }
 
-  client_options& openssl_verify_path(string_type const& v) {
+  client_options& openssl_verify_path(string_type  /*unused*/const& v) {
     openssl_verify_path_ = v;
     return *this;
   }
 
-  client_options& openssl_certificate_file(string_type const& v) {
+  client_options& openssl_certificate_file(string_type  /*unused*/const& v) {
     openssl_certificate_file_ = v;
     return *this;
   }
 
-  client_options& openssl_private_key_file(string_type const& v) {
+  client_options& openssl_private_key_file(string_type  /*unused*/const& v) {
     openssl_private_key_file_ = v;
     return *this;
   }
 
-  client_options& openssl_ciphers(string_type const& v) {
+  client_options& openssl_ciphers(string_type  /*unused*/const& v) {
     openssl_ciphers_ = v;
     return *this;
   }
@@ -106,7 +106,7 @@ struct client_options {
     return *this;
   }
 
-  client_options& io_service(boost::shared_ptr<boost::asio::io_service> v) {
+  client_options& io_service(boost::shared_ptr<boost::asio::io_service>  /*v*/) {
     io_service_ = v;
     return *this;
   }
@@ -174,8 +174,11 @@ inline void swap(client_options<Tag>& a, client_options<Tag>& b) {
   a.swap(b);
 }
 
-} /* http */
-} /* network */
-} /* boost */
+} // namespace http
+ /* http */
+}  // namespace network
+ /* network */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP_20130128 */

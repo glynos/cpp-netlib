@@ -7,7 +7,7 @@
 #define BOOST_NETWORK_SUPPORT_WSTRING_CHECK_20100808
 
 #include <boost/network/tags.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/network/traits/ostringstream.hpp>stream.hpp>
 
 namespace boost {
 namespace network {

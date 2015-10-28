@@ -14,7 +14,7 @@ namespace network {
 namespace uri {
 struct host_directive {
 
-  explicit host_directive(const std::string &host) : host(host) {}
+  explicit host_directive(const std::string & /*host*/) : host(host) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {

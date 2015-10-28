@@ -34,7 +34,7 @@ struct to_lower_transformer<selectors::source_selector> {
   }
 
  protected:
-  ~to_lower_transformer() {}
+  ~to_lower_transformer() = default;default;
 };
 
 template <>
@@ -45,17 +45,17 @@ struct to_lower_transformer<selectors::destination_selector> {
   }
 
  protected:
-  ~to_lower_transformer() {};
+  ~to_lower_transformer() = default;default;;
 };
 
 }  // namespace impl
 
 namespace detail {
 struct to_lower_placeholder_helper;
-}
+} // namespace detail // namespace detail
 
 detail::to_lower_placeholder_helper to_lower_(
-    detail::to_lower_placeholder_helper);
+    detail::to_lower_placeholder_helper /*unused*/ /*unused*/);
 
 namespace detail {
 
@@ -64,18 +64,18 @@ struct to_lower_placeholder_helper {
   struct type : public impl::to_lower_transformer<Selector> {};
 
  private:
-  to_lower_placeholder_helper() {}
-  to_lower_placeholder_helper(to_lower_placeholder_helper const &) {}
+  to_lower_placeholder_helper() = default;default;
+  to_lower_placeholder_helper(to_lower_placeholder_helper const & /*unused*/ /*unused*/) {}
   friend to_lower_placeholder_helper boost::network::to_lower_(
-      to_lower_placeholder_helper);
+      to_lower_placeholder_helper /*unused*/ /*unused*/);
 };
-}
+}  // namespace detail // namespace detail
 
 typedef detail::to_lower_placeholder_helper (*to_lower_placeholder)(
     detail::to_lower_placeholder_helper);
 
 inline detail::to_lower_placeholder_helper to_lower_(
-    detail::to_lower_placeholder_helper) {
+    detail::to_lower_placeholder_helper /*unused*/ /*unused*/) {
   return detail::to_lower_placeholder_helper();
 }
 

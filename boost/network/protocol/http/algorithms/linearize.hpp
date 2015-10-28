@@ -9,16 +9,16 @@
 
 #include <algorithm>
 #include <bitset>
-#include <boost/network/traits/string.hpp>
+#include <boost/algorithm/string/compare.hpp>
+#include <boost/concept/requires.hpp>
+#include <boost/network/constants.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
 #include <boost/network/protocol/http/message/header_concept.hpp>
 #include <boost/network/protocol/http/request_concept.hpp>
-#include <boost/network/constants.hpp>
-#include <boost/concept/requires.hpp>
+#include <boost/network/traits/string.hpp>
 #include <boost/optional.hpp>
 #include <boost/range/algorithm/copy.hpp>
-#include <boost/algorithm/string/compare.hpp>
 #include <boost/version.hpp>
 
 namespace boost {
@@ -69,8 +69,9 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
                      connection = consts::connection(), close = consts::close();
   boost::copy(method, oi);
   *oi = consts::space_char();
-  if (request.path().empty() || request.path()[0] != consts::slash_char())
+  if (request.path().empty() || request.path()[0] != consts::slash_char()) {
     *oi = consts::slash_char();
+}
   boost::copy(request.path(), oi);
   if (!request.query().empty()) {
     *oi = consts::question_mark_char();
@@ -183,10 +184,13 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
   return boost::copy(body_data, oi);
 }
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* net */
+}  // namespace network
+ /* net */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_ALGORITHMS_LINEARIZE_HPP_20101028 */

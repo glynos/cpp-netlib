@@ -18,11 +18,11 @@ namespace impl {
 template <class Tag>
 struct anchor_wrapper {
   basic_request<Tag> const& message_;
-  anchor_wrapper(basic_request<Tag> const& message) : message_(message) {}
+  explicit anchor_wrapper(basic_request<Tag> const& message) : message_(message) {}
   typedef typename basic_request<Tag>::string_type string_type;
   operator string_type() { return message_.anchor(); }
 };
-}
+} // namespace impl
 
 template <class Tag>
 inline impl::anchor_wrapper<Tag> anchor(basic_request<Tag> const& request) {
@@ -33,6 +33,6 @@ inline impl::anchor_wrapper<Tag> anchor(basic_request<Tag> const& request) {
 
 }  // namespace network
 
-}  // nmaespace boost
+} // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_ANCHOR_HPP_20100618

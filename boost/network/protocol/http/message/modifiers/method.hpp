@@ -22,10 +22,13 @@ inline typename enable_if<is_server<Tag>, void>::type method(
   request.method = method_;
 }
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+}  // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_METHOD_HPP_20101118 */

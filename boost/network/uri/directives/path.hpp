@@ -14,7 +14,7 @@ namespace network {
 namespace uri {
 struct path_directive {
 
-  explicit path_directive(const std::string &path) : path(path) {}
+  explicit path_directive(const std::string & /*path*/) : path(path) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {
@@ -26,7 +26,7 @@ struct path_directive {
 
 struct encoded_path_directive {
 
-  explicit encoded_path_directive(const std::string &path) : path(path) {}
+  explicit encoded_path_directive(const std::string & /*path*/) : path(path) {}
 
   void operator()(uri &uri_) const {
     std::string encoded_path;
@@ -41,7 +41,7 @@ inline path_directive path(const std::string &path) {
   return path_directive(path);
 }
 
-inline encoded_path_directive encoded_path(const std::string &path) {
+inline encoded_path_directive encoded_path(const std::string & /*path*/) {
   return encoded_path_directive(path);
 }
 }  // namespace uri

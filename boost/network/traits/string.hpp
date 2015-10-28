@@ -7,9 +7,9 @@
 #ifndef BOOST_NETWORK_TRAITS_STRING_INC
 #define BOOST_NETWORK_TRAITS_STRING_INC
 
+#include <boost/network/support/is_default_string.hpp>etwork/tags.hpp>
 #include <string>
-#include <boost/network/tags.hpp>
-#include <boost/network/support/is_default_string.hpp>
+#include <string>
 #include <boost/network/support/is_default_wstring.hpp>
 
 #ifndef BOOST_NETWORK_DEFAULT_STRING

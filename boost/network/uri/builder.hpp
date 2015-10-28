@@ -6,8 +6,8 @@
 #ifndef __BOOST_NETWORK_URI_BUILDER_INC__
 #define __BOOST_NETWORK_URI_BUILDER_INC__
 
-#include <boost/network/uri/uri.hpp>
 #include <boost/asio/ip/address.hpp>
+#include <boost/network/uri/uri.hpp>
 
 namespace boost {
 namespace network {
@@ -17,7 +17,7 @@ class builder {
   typedef uri::string_type string_type;
 
  public:
-  builder(uri &uri_) : uri_(uri_) {}
+  explicit builder(uri &uri_) : uri_(uri_) {}
 
   builder &set_scheme(const string_type &scheme) {
     uri_.uri_.append(scheme);

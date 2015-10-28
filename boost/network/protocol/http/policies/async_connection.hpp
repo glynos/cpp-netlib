@@ -9,16 +9,16 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/cstdint.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/network/protocol/http/client/connection/async_base.hpp>
+#include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/version.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/network/protocol/http/client/connection/async_base.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <boost/function.hpp>
-#include <boost/bind.hpp>
+#include <boost/tuple/tuple.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/bind.hpp>
 
 namespace boost {
 namespace network {
@@ -39,7 +39,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
     connection_impl(bool follow_redirect, bool always_verify_peer,
                     resolve_function resolve, resolver_type& resolver,
                     bool https, int timeout,
-                    optional<string_type> const& certificate_filename,
+                    optional<string_type>  /*unused*/const& certificate_filename,
                     optional<string_type> const& verify_path,
                     optional<string_type> const& certificate_file,
                     optional<string_type> const& private_key_file,
@@ -53,7 +53,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
                                          ciphers, ssl_options);
     }
 
-    basic_response<Tag> send_request(string_type const& method,
+    basic_response<Tag> send_request(string_type  /*unused*/const& method,
                                      basic_request<Tag> const& request_,
                                      bool get_body,
                                      body_callback_function_type callback,
@@ -70,7 +70,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
   connection_ptr get_connection(
       resolver_type& resolver, basic_request<Tag> const& request_,
       bool always_verify_peer,
-      optional<string_type> const& certificate_filename =
+      optional<string_type>  /*unused*/const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),

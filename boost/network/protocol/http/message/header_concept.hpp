@@ -29,10 +29,13 @@ struct Header : DefaultConstructible<H>, Assignable<H>, CopyConstructible<H> {
   H header;
 };
 
-} /* http */
+}  // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+} // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_CONCEPT_HPP_20101028 */

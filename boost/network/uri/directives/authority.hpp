@@ -11,7 +11,7 @@ namespace network {
 namespace uri {
 struct authority_directive {
 
-  explicit authority_directive(const std::string &authority)
+  explicit authority_directive(const std::string & /*authority*/)
       : authority(authority) {}
 
   template <class Uri>

@@ -9,23 +9,23 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/version.hpp>
 #include <boost/network/detail/debug.hpp>
-#include <boost/thread/future.hpp>
-#include <boost/throw_exception.hpp>
+#include <boost/network/version.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/range/algorithm/transform.hpp>
+#include <boost/thread/future.hpp>
+#include <boost/throw_exception.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/network/traits/ostream_iterator.hpp>
 #include <boost/network/traits/istream.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/network/protocol/http/parser/incremental.hpp>
-#include <boost/network/protocol/http/message/wrappers/uri.hpp>
 #include <boost/network/protocol/http/client/connection/async_protocol_handler.hpp>
-#include <boost/network/protocol/http/algorithms/linearize.hpp>
+#include <boost/network/protocol/http/message/wrappers/uri.hpp>
 #include <boost/array.hpp>
 #include <boost/assert.hpp>
+#include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/bind/protect.hpp>
 #include <iterator>
 
@@ -201,7 +201,7 @@ struct http_async_connection
   void handle_sent_request(bool get_body, body_callback_function_type callback,
                            body_generator_function_type generator,
                            boost::system::error_code const& ec,
-                           std::size_t bytes_transferred) {
+                           std::size_t  /*bytes_transferred*/) {
     // TODO(dberris): review parameter necessity.
     (void)bytes_transferred;
 
@@ -242,7 +242,7 @@ struct http_async_connection
   void handle_received_data(state_t state, bool get_body,
                             body_callback_function_type callback,
                             boost::system::error_code const& ec,
-                            std::size_t bytes_transferred) {
+                            std::size_t  /*bytes_transferred*/) {
     static const long short_read_error = 335544539;
     bool is_ssl_short_read_error =
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
@@ -265,7 +265,8 @@ struct http_async_connection
                   this_type::shared_from_this(), version, get_body, callback,
                   placeholders::error, placeholders::bytes_transferred)),
               bytes_transferred);
-          if (!parsed_ok || indeterminate(parsed_ok)) return;
+          if (!parsed_ok || indeterminate(parsed_ok) != nullptr) { return;
+}
         case status:
           if (ec == boost::asio::error::eof) return;
           parsed_ok = this->parse_status(
@@ -275,7 +276,8 @@ struct http_async_connection
                   this_type::shared_from_this(), status, get_body, callback,
                   placeholders::error, placeholders::bytes_transferred)),
               bytes_transferred);
-          if (!parsed_ok || indeterminate(parsed_ok)) return;
+          if (!parsed_ok || indeterminate(parsed_ok) != nullptr) { return;
+}
         case status_message:
           if (ec == boost::asio::error::eof) return;
           parsed_ok = this->parse_status_message(
@@ -285,7 +287,8 @@ struct http_async_connection
                              get_body, callback, placeholders::error,
                              placeholders::bytes_transferred)),
               bytes_transferred);
-          if (!parsed_ok || indeterminate(parsed_ok)) return;
+          if (!parsed_ok || indeterminate(parsed_ok) != nullptr) { return;
+}
         case headers:
           if (ec == boost::asio::error::eof) return;
           // In the following, remainder is the number of bytes that
@@ -302,7 +305,8 @@ struct http_async_connection
                   placeholders::error, placeholders::bytes_transferred)),
               bytes_transferred);
 
-          if (!parsed_ok || indeterminate(parsed_ok)) return;
+          if (!parsed_ok || indeterminate(parsed_ok) != nullptr) { return;
+}
 
           if (!get_body) {
             // We short-circuit here because the user does not
@@ -382,12 +386,13 @@ struct http_async_connection
               string_type body_string;
               std::swap(body_string, this->partial_parsed);
               body_string.append(this->part.begin(), bytes_transferred);
-              if (this->is_chunk_encoding)
+              if (this->is_chunk_encoding) {
                 this->body_promise.set_value(parse_chunk_encoding(body_string));
-              else
+              } else {
                 this->body_promise.set_value(body_string);
+}
             }
-            // TODO set the destination value somewhere!
+            // TODO(dberris): set the destination value somewhere!
             this->destination_promise.set_value("");
             this->source_promise.set_value("");
             this->part.assign('\0');
@@ -473,12 +478,14 @@ struct http_async_connection
          iter =
              std::search(begin, body_string.end(), crlf.begin(), crlf.end())) {
       string_type line(begin, iter);
-      if (line.empty()) break;
+      if (line.empty()) { break;
+}
       std::stringstream stream(line);
       int len;
       stream >> std::hex >> len;
       std::advance(iter, 2);
-      if (!len) break;
+      if (len == 0) { break;
+}
       if (len <= body_string.end() - iter) {
         body.insert(body.end(), iter, iter + len);
         std::advance(iter, len + 2);

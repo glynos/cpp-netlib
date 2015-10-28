@@ -21,10 +21,13 @@ struct sync_only
                                    tags::sync>::type,
           mpl::inherit<mpl::placeholders::_1, mpl::placeholders::_2> > {};
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+}  // namespace network
+ /* network */
 
-} /* boost */
+} // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_SUPPORT_SYNC_ONLY_HPP_20100927 */

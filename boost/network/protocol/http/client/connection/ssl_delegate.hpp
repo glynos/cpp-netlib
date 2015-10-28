@@ -9,11 +9,11 @@
 
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ssl.hpp>
-#include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
-#include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
+#include <boost/optional.hpp>
 
 namespace boost {
 namespace network {
@@ -31,14 +31,14 @@ struct ssl_delegate : connection_delegate,
 
   virtual void connect(asio::ip::tcp::endpoint &endpoint, std::string host, boost::uint16_t source_port,
                        function<void(system::error_code const &)> handler);
-  virtual void write(
+  void write(
       asio::streambuf &command_streambuf,
-      function<void(system::error_code const &, size_t)> handler);
-  virtual void read_some(
+      function<void(system::error_code const &, size_t)> handler) override;
+  void read_some(
       asio::mutable_buffers_1 const &read_buffer,
-      function<void(system::error_code const &, size_t)> handler);
-  virtual void disconnect();
-  ~ssl_delegate();
+      function<void(system::error_code const &, size_t)> handler) override;
+  void disconnect() override;
+  ~ssl_delegate() override;
 
  private:
   asio::io_service &service_;
@@ -60,13 +60,17 @@ struct ssl_delegate : connection_delegate,
                         function<void(system::error_code const &)> handler);
 };
 
-} /* impl */
+}  // namespace impl
+ /* impl */
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #ifdef BOOST_NETWORK_NO_LIB
 #include <boost/network/protocol/http/client/connection/ssl_delegate.ipp>

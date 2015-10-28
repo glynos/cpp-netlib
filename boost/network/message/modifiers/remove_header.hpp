@@ -9,9 +9,8 @@
 
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_pod.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/range/algorithm/remove_if.hpp>
-#include <boost/algorithm/string/predicate.hpp>
+#include <boost/range/algorithm/remove_if.hpp>_if.hpp>
+#include <boost/utility/enable_if.hpp>e <boost/algorithm/string/predicate.hpp>
 #include <boost/mpl/not.hpp>
 
 namespace boost {

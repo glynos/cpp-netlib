@@ -13,8 +13,8 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_HPP_20101122
 
-#include <boost/network/traits/string.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/network/traits/string.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
 #include <boost/network/support/is_default_wstring.hpp>

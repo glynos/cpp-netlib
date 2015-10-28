@@ -7,12 +7,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_sync.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/thread/future.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/if.hpp>
+#include <boost/mpl<boost/mpl/<boost/network/support/is_async.hpp>.hpp>
+#include <boost/network/support/is_sync.hpp>_sync.hpp>
+#include <boost/thread/future.hpp>re.hpp>
+#include <boost/type_traits/is_same.hpp>/is_same.hpp>
 
 namespace boost {
 namespace network {
@@ -36,8 +34,12 @@ struct body
 
 }  // namespace traits
 
-} /* network */
+}  // namespace network
+  // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ // namespace boost
+ /* boost */
 
 #endif  // BOOST_NETWORK_MESSAGE_TRAITS_BODY_HPP_20100903

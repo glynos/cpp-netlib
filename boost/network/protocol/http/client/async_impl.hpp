@@ -11,8 +11,8 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/thread/thread.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 
 namespace boost {
@@ -38,7 +38,7 @@ struct async_client
 
   async_client(bool cache_resolved, bool follow_redirect,
                bool always_verify_peer, int timeout,
-               boost::shared_ptr<boost::asio::io_service> service,
+               boost::shared_ptr<boost::asio::io_service>  /*service*/,
                optional<string_type> const& certificate_filename,
                optional<string_type> const& verify_path,
                optional<string_type> const& certificate_file,
@@ -65,7 +65,7 @@ struct async_client
           boost::bind(&boost::asio::io_service::run, &service_)));
   }
 
-  ~async_client() throw() { sentinel_.reset(); }
+  ~async_client() throw() = default;
 
   void wait_complete() {
     sentinel_.reset();
@@ -77,8 +77,8 @@ struct async_client
 
   basic_response<Tag> const request_skeleton(
       basic_request<Tag> const& request_, string_type const& method,
-      bool get_body, body_callback_function_type callback,
-      body_generator_function_type generator) {
+      bool get_body, body_callback_function_type  /*callback*/,
+      body_generator_function_type  /*generator*/) {
     typename connection_base::connection_ptr connection_;
     connection_ = connection_base::get_connection(
         resolver_, request_, always_verify_peer_, certificate_filename_,

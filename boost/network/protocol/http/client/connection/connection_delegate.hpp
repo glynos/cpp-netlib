@@ -22,16 +22,20 @@ struct connection_delegate {
       asio::mutable_buffers_1 const &read_buffer,
       function<void(system::error_code const &, size_t)> handler) = 0;
   virtual void disconnect() = 0;
-  virtual ~connection_delegate() {}
+  virtual ~connection_delegate() = default;
 };
 
-} /* impl */
+}  // namespace impl
+ /* impl */
 
-} /* http */
+}  // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+} // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_CONNECTION_DELEGATE_HPP_ \
           */

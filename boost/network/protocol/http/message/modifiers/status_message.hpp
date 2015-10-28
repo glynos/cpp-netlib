@@ -21,13 +21,13 @@ namespace impl {
 
 template <class Tag, class T>
 void status_message(basic_response<Tag> &response, T const &value,
-                    mpl::false_ const &) {
+                    mpl::false_ const & /*unused*/) {
   response << boost::network::http::status_message(value);
 }
 
 template <class Tag, class T>
 void status_message(basic_response<Tag> &response, T const &future,
-                    mpl::true_ const &) {
+                    mpl::true_ const & /*unused*/) {
   response.status_message(future);
 }
 

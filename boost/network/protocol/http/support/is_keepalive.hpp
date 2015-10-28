@@ -23,10 +23,13 @@ template <class Tag>
 struct is_keepalive<
     Tag, typename enable_if<typename Tag::is_keepalive>::type> : mpl::true_ {};
 
-} /* http */
+}  // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+} // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_SUPPORT_IS_KEEPALIVE_HPP_20100927 */

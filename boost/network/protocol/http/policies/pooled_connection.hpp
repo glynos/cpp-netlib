@@ -9,11 +9,11 @@
 
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 
-#include <boost/unordered_map.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/protocol/http/response.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/unordered_map.hpp>
 #include <utility>
 
 #ifndef BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
@@ -47,7 +47,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         get_connection_function;
 
     connection_impl(
-        resolver_type& resolver, bool follow_redirect, string_type const& host,
+        resolver_type& resolver, bool follow_redirect, string_type  /*unused*/const& host,
         string_type const& port, resolver_function_type resolve,
         get_connection_function get_connection, bool https,
         bool always_verify_peer, int timeout,
@@ -77,7 +77,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       (void)port;
     }
 
-    basic_response<Tag> send_request(string_type const& method,
+    basic_response<Tag> send_request(string_type  /*unused*/const& method,
                                      basic_request<Tag> request_, bool get_body,
                                      body_callback_function_type callback,
                                      body_generator_function_type generator) {
@@ -86,7 +86,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
 
    private:
     basic_response<Tag> send_request_impl(
-        string_type const& method, basic_request<Tag> request_, bool get_body,
+        string_type  /*unused*/const& method, basic_request<Tag> request_, bool get_body,
         body_callback_function_type callback,
         body_generator_function_type generator) {
       // TODO(dberris): review parameter necessity.
@@ -190,7 +190,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
   connection_ptr get_connection(
       resolver_type& resolver, basic_request<Tag> const& request_,
       bool always_verify_peer,
-      optional<string_type> const& certificate_filename =
+      optional<string_type>  /*unused*/const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),

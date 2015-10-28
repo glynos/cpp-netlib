@@ -6,9 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
-
-namespace boost {
+#include <boost/mpl/if.hpp>space boost {
 namespace network {
 namespace http {
 namespace tags {
@@ -60,12 +58,20 @@ BOOST_NETWORK_DEFINE_TAG(http_async_8bit_tcp_resolve);
 BOOST_NETWORK_DEFINE_TAG(http_server);
 BOOST_NETWORK_DEFINE_TAG(http_async_server);
 
-} /* tags */
+}  // namespace tags
+  // namespace tags
+ /* tags */
 
-} /* http */
+}  // namespace http
+ // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_TAGS_HPP_20101019 */

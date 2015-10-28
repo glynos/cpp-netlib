@@ -12,9 +12,9 @@
 #include <boost/network/uri/config.hpp>
 #include <boost/network/uri/detail/uri_parts.hpp>
 #include <boost/network/uri/schemes.hpp>
-#include <boost/utility/swap.hpp>
-#include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/range/algorithm/equal.hpp>
+#include <boost/utility/swap.hpp>
 #include <boost/range/as_literal.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/lexical_cast.hpp>
@@ -46,7 +46,7 @@ class BOOST_URI_DECL uri {
   //    parse();
   //}
 
-  uri(const string_type &uri) : uri_(uri), is_valid_(false) { parse(); }
+  explicit uri(const string_type &uri) : uri_(uri), is_valid_(false) { parse(); }
 
   template <class FwdIter>
   uri(const FwdIter &first, const FwdIter &last)
@@ -66,7 +66,7 @@ class BOOST_URI_DECL uri {
     return *this;
   }
 
-  ~uri() {}
+  ~uri() = default;
 
   void swap(uri &other) {
     boost::swap(uri_, other.uri_);

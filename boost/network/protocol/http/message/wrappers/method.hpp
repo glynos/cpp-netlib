@@ -6,8 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/utility/enable_if.hpp>
 #include <boost/network/protocol/http/support/is_server.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace network {
@@ -34,10 +34,13 @@ method(basic_request<Tag> const& message) {
   return method_wrapper<Tag>(message);
 }
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_WRAPPERS_METHOD_HPP_20101118 */

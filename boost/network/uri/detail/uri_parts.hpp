@@ -7,8 +7,8 @@
 #ifndef BOOST_NETWORK_URL_DETAIL_URL_PARTS_HPP_
 #define BOOST_NETWORK_URL_DETAIL_URL_PARTS_HPP_
 
-#include <boost/range/iterator_range.hpp>
 #include <boost/optional.hpp>
+#include <boost/range/iterator_range.hpp>
 
 namespace boost {
 namespace network {

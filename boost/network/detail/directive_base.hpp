@@ -20,7 +20,7 @@ struct directive_base {
   // explicit directive_base(basic_message<tag> & message_)
   //    : _message(message_)
  protected:
-  ~directive_base() {};  // can only be extended
+  ~directive_base() = default;default;;  // can only be extended
 
   //    mutable basic_message<tag> & _message;
 };

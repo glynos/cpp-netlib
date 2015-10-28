@@ -7,9 +7,8 @@
 #ifndef __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
 #define __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
 
-#include <boost/network/traits/string.hpp>
-#include <boost/network/traits/headers_container.hpp>
-#include <boost/range/iterator_range.hpp>
+#include <boost/network/traits/headers_container.hpp>tainer.hpp>
+#include <boost/network/traits/string.hpp>boost/range/iterator_range.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/network/detail/wrapper_base.hpp>
 
@@ -60,12 +59,12 @@ struct headers_wrapper
   explicit headers_wrapper(basic_message<Tag> const& message_)
       : wrapper_base(message_) {};
 
-  range_type operator[](string_type const& key) const {
+  range_type operator[](string_type  /*unused*/ /*unused*/const& key) const {
     return headers_wrapper<Tag>::_message.headers().equal_range(key);
   };
 
   typename message_type::headers_container_type::size_type count(
-      string_type const& key) const {
+      string_type  /*unused*/ /*unused*/const& key) const {
     return headers_wrapper<Tag>::_message.headers().count(key);
   };
 

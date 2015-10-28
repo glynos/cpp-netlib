@@ -32,10 +32,13 @@ inline std::wstring const &name(response_header_wide const &h) {
   return h.name;
 }
 
-} /* http */
+}  // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HEADER_NAME_HPP_20101028 */

@@ -30,8 +30,10 @@ struct vector<http::tags::http_async_server> {
   };
 };
 
-} /* network */
+}  // namespace network
+ /* network */
 
-} /* boost */
+} // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_TRAITS_VECTOR_HPP_20101019 */

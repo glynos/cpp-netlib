@@ -90,7 +90,7 @@ struct message_impl : public basic_message<Tag> {
         status_(other.status_),
         status_message_(other.status_message_) {}
 
-  void version(string_type const &version) const { version_ = version; }
+  void version(string_type  /*unused*/const &version) const { version_ = version; }
 
   string_type const version() const { return version_; }
 

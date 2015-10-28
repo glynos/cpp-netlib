@@ -7,8 +7,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/support/is_async.hpp>
-#include <boost/network/traits/string.hpp>
 #include <boost/network/tags.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost {
 namespace network {
@@ -31,10 +31,14 @@ struct status_message
               typename string<typename Message::tag>::type,
               unsupported_tag<typename Message::tag> >::type> {};
 
-} /* traits */
+} // namespace traits
+ /* traits */
 
-} /* http */
-} /* network */
-} /* boost */
+} // namespace http
+ /* http */
+} // namespace network
+ /* network */
+} // namespace boost
+ /* boost */
 
 #endif

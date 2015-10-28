@@ -9,8 +9,8 @@
 
 #include <boost/concept_check.hpp>
 #include <boost/network/message/message_concept.hpp>
-#include <boost/network/protocol/http/message/traits/version.hpp>
 #include <boost/network/protocol/http/message/traits/status.hpp>
+#include <boost/network/protocol/http/message/traits/version.hpp>
 #include <boost/network/protocol/http/message/traits/status_message.hpp>
 #include <boost/cstdint.hpp>
 

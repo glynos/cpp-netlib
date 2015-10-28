@@ -15,7 +15,7 @@ namespace network {
 namespace uri {
 struct fragment_directive {
 
-  explicit fragment_directive(const std::string &fragment)
+  explicit fragment_directive(const std::string & /*fragment*/)
       : fragment(fragment) {}
 
   template <class Uri>

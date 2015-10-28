@@ -9,9 +9,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/optional.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/network/uri/accessors.hpp>
+#include <boost/optional.hpp>
 #include <boost/version.hpp>
 
 namespace boost {
@@ -27,7 +27,7 @@ template <class Tag>
 struct port_wrapper {
   basic_request<Tag> const& message_;
 
-  port_wrapper(basic_request<Tag> const& message) : message_(message) {}
+  explicit port_wrapper(basic_request<Tag> const& message) : message_(message) {}
 
   typedef typename basic_request<Tag>::port_type port_type;
 

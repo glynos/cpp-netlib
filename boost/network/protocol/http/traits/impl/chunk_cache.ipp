@@ -19,7 +19,7 @@ namespace http {
 
 template <class Tag>
 struct chunk_cache {
-  // TODO define the allocator using an allocator_traits?
+  // TODO(dberris): define the allocator using an allocator_traits?
   typedef std::list<std::vector<typename char_<Tag>::type> > type;
 };
 

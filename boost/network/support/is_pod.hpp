@@ -19,8 +19,12 @@ template <class Tag>
 struct is_pod<Tag,
               typename enable_if<typename Tag::is_pod>::type> : mpl::true_ {};
 
-} /* network */
+} // namespace network
+ // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_SUPPORT_IS_POD_HPP_20101120 */

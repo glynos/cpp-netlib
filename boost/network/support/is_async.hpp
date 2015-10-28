@@ -7,10 +7,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
-#include <boost/utility/enable_if.hpp>
-
-namespace boost {
+#include <boost/network/support/is_sync.hpp>s_sync.hpp>
+#include <boost/network/tags.hpp>espace boost {
 namespace network {
 
 template <class Tag, class Enable = void>
