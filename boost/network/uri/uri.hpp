@@ -46,7 +46,7 @@ class BOOST_URI_DECL uri {
   //    parse();
   //}
 
-  uri(const string_type &uri) : uri_(uri), is_valid_(false) { parse(); }
+  uri(const string_type &str) : uri_(str), is_valid_(false) { parse(); }
 
   template <class FwdIter>
   uri(const FwdIter &first, const FwdIter &last)
@@ -109,8 +109,9 @@ class BOOST_URI_DECL uri {
   }
 
 // hackfix by Simon Haegler, Esri R&D Zurich
-// this workaround is needed to avoid running into the "incompatible string iterator" assertion
-// triggered by the default-constructed string iterators employed by cpp-netlib (see uri.ipp qi::rule declarations)
+// this workaround is needed to avoid running into the "incompatible string
+// iterator" assertion triggered by the default-constructed string iterators
+// employed by cpp-netlib (see uri.ipp qi::rule declarations)
 #if defined(_MSC_VER) && defined(_DEBUG)
 #	define CATCH_EMPTY_ITERATOR_RANGE if (range.begin()._Getcont() == 0 || range.end()._Getcont() == 0) { return string_type(); }
 #else
@@ -120,7 +121,7 @@ class BOOST_URI_DECL uri {
   string_type scheme() const {
     const_range_type range = scheme_range();
     CATCH_EMPTY_ITERATOR_RANGE
-	return range ? string_type(boost::begin(range), boost::end(range))
+    return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
 
@@ -165,6 +166,10 @@ class BOOST_URI_DECL uri {
     return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
+
+#ifdef CATCH_EMPTY_ITERATOR_RANGE
+#undef CATCH_EMPTY_ITERATOR_RANGE
+#endif
 
   string_type string() const { return uri_; }
 

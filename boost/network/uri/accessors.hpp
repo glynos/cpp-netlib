@@ -22,7 +22,13 @@ struct key_value_sequence : spirit::qi::grammar<uri::const_iterator, Map()> {
   typedef typename Map::mapped_type mapped_type;
   typedef std::pair<key_type, mapped_type> pair_type;
 
-  key_value_sequence() : key_value_sequence::base_type(query) {};
+  key_value_sequence() : key_value_sequence::base_type(query) {
+    query = pair >> *((spirit::qi::lit(';') | '&') >> pair);
+    pair = key >> -('=' >> value);
+    key =
+        spirit::qi::char_("a-zA-Z_") >> *spirit::qi::char_("-+.~a-zA-Z_0-9/%");
+    value = *spirit::qi::char_("-+.~a-zA-Z_0-9/%");
+  };
 
   spirit::qi::rule<uri::const_iterator, Map()> query;
   spirit::qi::rule<uri::const_iterator, pair_type()> pair;
