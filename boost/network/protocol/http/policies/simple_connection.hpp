@@ -13,7 +13,6 @@
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/network/protocol/http/traits/vector.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/version.hpp>
 #include <boost/shared_ptr.hpp>

@@ -9,6 +9,14 @@
 #include <boost/asio/placeholders.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/strand.hpp>
+#include <boost/network/protocol/http/traits/resolver.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/unordered/unordered_map.hpp>
+#include <boost/function.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/fusion/tuple/tuple_tie.hpp>
+#include <boost/bind/bind.hpp>
 
 namespace boost {
 namespace network {
@@ -40,7 +48,7 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
   explicit async_resolver(bool cache_resolved)
       : cache_resolved_(cache_resolved), endpoint_cache_() {}
 
-  void resolve(resolver_type &resolver_, string_type  /*unused*/const &host,
+  void resolve(resolver_type &resolver_, string_type const &host,
                boost::uint16_t port,
                resolve_completion_function once_resolved) {
     if (cache_resolved_) {
@@ -81,11 +89,8 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
 };
 
 }  // namespace policies
-
 }  // namespace http
-
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_RESOLVER_20100622

@@ -17,9 +17,11 @@
 #include <boost/network/protocol/http/message/header_concept.hpp>
 #include <boost/network/protocol/http/request_concept.hpp>
 #include <boost/network/traits/string.hpp>
+#include <boost/network/traits/ostringstream.hpp>
 #include <boost/optional.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/version.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace boost {
 namespace network {
@@ -71,7 +73,7 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
   *oi = consts::space_char();
   if (request.path().empty() || request.path()[0] != consts::slash_char()) {
     *oi = consts::slash_char();
-}
+  }
   boost::copy(request.path(), oi);
   if (!request.query().empty()) {
     *oi = consts::question_mark_char();
@@ -113,7 +115,7 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
 
   typedef typename headers_range<Request>::type headers_range;
   typedef typename range_value<headers_range>::type headers_value;
-  BOOST_FOREACH(const headers_value & header, headers(request)) {
+  for (const headers_value& header : headers(request)) {
     string_type header_name = name(header), header_value = value(header);
     // Here we check that we have not seen an override to the defaulted
     // headers.
@@ -142,9 +144,9 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
     boost::copy(request.host(), oi);
     boost::optional<boost::uint16_t> port_ =
 #if (_MSC_VER >= 1600 && BOOST_VERSION > 105500)
-      port(request).as_optional();
+        port(request).as_optional();
 #else
-      port(request);
+        port(request);
 #endif
     if (port_) {
       string_type port_str = boost::lexical_cast<string_type>(*port_);
@@ -184,13 +186,8 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
   return boost::copy(body_data, oi);
 }
 
-} // namespace http
- /* http */
-
+}  // namespace http
 }  // namespace network
- /* net */
-
 }  // namespace boost
- /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_ALGORITHMS_LINEARIZE_HPP_20101028 */

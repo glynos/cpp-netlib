@@ -12,6 +12,7 @@
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/delegate_factory.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
+#include <boost/network/protocol/http/traits/resolver_policy.hpp>
 
 namespace boost {
 namespace network {
@@ -34,14 +35,13 @@ struct async_connection_base {
   typedef shared_ptr<this_type> connection_ptr;
 
   // This is the factory function which constructs the appropriate async
-  // connection implementation with the correct delegate chosen based on
-  // the
+  // connection implementation with the correct delegate chosen based on the
   // tag.
   static connection_ptr new_connection(
       resolve_function resolve, resolver_type &resolver, bool follow_redirect,
       bool always_verify_peer, bool https, int timeout,
-      optional<string_type>  /*certificate_filename*/ optional<string_type>(),
-      optional<string_type>  /*unused*/const &verify_path = optional<string_type>(),
+      optional<string_type> certificate_filename = optional<string_type>(),
+      optional<string_type> const &verify_path = optional<string_type>(),
       optional<string_type> certificate_file = optional<string_type>(),
       optional<string_type> private_key_file = optional<string_type>(),
       optional<string_type> ciphers = optional<string_type>(),
@@ -70,11 +70,8 @@ struct async_connection_base {
 };
 
 }  // namespace impl
-
 }  // namespace http
-
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ASYNC_CONNECTION_BASE_20100529

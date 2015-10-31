@@ -7,6 +7,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/mpl/if.hpp>
+#include <boost/network/tags.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 
 #ifndef BOOST_NETWORK_DEFINE_HTTP_WRAPPER
 #define BOOST_NETWORK_DEFINE_HTTP_WRAPPER(name, accessor, pod_field)          \
@@ -29,8 +31,8 @@
                                                                               \
   template <class Tag>                                                        \
   struct name##_wrapper_impl                                                  \
-      : mpl::if_<is_base_of<tags::pod, Tag>, name##_pod_accessor,             \
-                 name##_member_accessor> {};                                  \
+      : mpl::if_<is_base_of<boost::network::tags::pod, Tag>,                  \
+                 name##_pod_accessor, name##_member_accessor> {};             \
                                                                               \
   template <class Message>                                                    \
   struct name##_wrapper : name##_wrapper_impl<typename Message::tag>::type {  \

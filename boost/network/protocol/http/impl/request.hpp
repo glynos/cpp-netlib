@@ -5,25 +5,21 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
-#define __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
+#ifndef BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
+#define BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
 
-#include <boost/network/protocol/http/message.hpp>
-#include <boost/network/protocol/http/message/header.hpp>
-
+#include <boost/cstdint.hpp>
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
-
 #include <boost/network/constants.hpp>
-#include <boost/network/traits/vector.hpp>
-#include <boost/network/uri/uri.hpp>
-
+#include <boost/network/protocol/http/message.hpp>
 #include <boost/network/protocol/http/message/async_message.hpp>
+#include <boost/network/protocol/http/message/header.hpp>
 #include <boost/network/protocol/http/support/sync_only.hpp>
 #include <boost/network/support/is_async.hpp>
-
-#include <boost/cstdint.hpp>
+#include <boost/network/traits/vector.hpp>
+#include <boost/network/uri/uri.hpp>
 
 namespace boost {
 namespace network {
@@ -228,4 +224,4 @@ struct body_wrapper<basic_request<tags::http_async_server> > {
 
 }  // namespace boost
 
-#endif  // __NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__

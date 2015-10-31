@@ -8,8 +8,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/fusion/tuple/tuple.hpp>
+#include <boost/fusion/tuple/tuple_tie.hpp>
+#include <boost/logic/tribool.hpp>
 #include <boost/network/detail/debug.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
+#include <boost/network/protocol/http/parser/incremental.hpp>
+#include <boost/network/protocol/http/request_parser.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost {
 namespace network {
@@ -23,22 +29,23 @@ struct http_async_protocol_handler {
 
 #ifdef BOOST_NETWORK_DEBUG
   struct debug_escaper {
-    string_type& string;
-    explicit debug_escaper(string_type&  /*string_*/) : string(string_) {}
-    debug_escaper(debug_escaper const& other) : string(other.string) {}
-    void operator()(typename string_type:: /*value_type*/ input) {
+    string_type& string_;
+    explicit debug_escaper(string_type& string) : string_(string) {}
+    debug_escaper(debug_escaper const&) = default;
+    debug_escaper(debug_escaper&&) noexcept = default;
+    void operator()(typename string_type::value_type input) {
       if (!algorithm::is_print()(input)) {
         typename ostringstream<Tag>::type escaped_stream;
         if (input == '\r') {
-          string.append("\\r");
+          string_.append("\\r");
         } else if (input == '\n') {
-          string.append("\\n");
+          string_.append("\\n");
         } else {
           escaped_stream << "\\x" << static_cast<int>(input);
-          string.append(escaped_stream.str());
+          string_.append(escaped_stream.str());
         }
       } else {
-        string.push_back(input);
+        string_.push_back(input);
       }
     }
   };
@@ -228,7 +235,7 @@ struct http_async_protocol_handler {
     return parsed_ok;
   }
 
-  void parse_headers_real(string_type&  /*headers_part*/) {
+  void parse_headers_real(string_type& headers_part) {
     typename boost::iterator_range<typename string_type::const_iterator>
         input_range = boost::make_iterator_range(headers_part),
         result_range;
@@ -345,16 +352,8 @@ struct http_async_protocol_handler {
 };
 
 }  // namespace impl
- /* impl */
-
-} // namespace http
- /* http */
-
-} // namespace network
- /* network */
-
+}  // namespace http
+}  // namespace network
 }  // namespace boost
- /* boost */
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_20101015 \
-          */
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_20101015 

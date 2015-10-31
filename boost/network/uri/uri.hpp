@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __BOOST_NETWORK_URI_INC__
-#define __BOOST_NETWORK_URI_INC__
+#ifndef BOOST_NETWORK_URI_INC__
+#define BOOST_NETWORK_URI_INC__
 
 #pragma once
 
@@ -46,7 +46,7 @@ class BOOST_URI_DECL uri {
   //    parse();
   //}
 
-  explicit uri(const string_type &uri) : uri_(uri), is_valid_(false) { parse(); }
+  uri(const string_type &uri) : uri_(uri), is_valid_(false) { parse(); }
 
   template <class FwdIter>
   uri(const FwdIter &first, const FwdIter &last)
@@ -384,4 +384,4 @@ inline uri from_file(const filesystem::path &path_) {
 }  // namespace network
 }  // namespace boost
 
-#endif  // __BOOST_NETWORK_URI_INC__
+#endif  // BOOST_NETWORK_URI_INC__

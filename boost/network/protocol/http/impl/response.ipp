@@ -18,10 +18,10 @@
 
 #include <boost/asio/buffer.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/network/protocol/http/tags.hpp>
-#include <boost/network/protocol/http/traits/vector.hpp>
-#include <boost/network/traits/string.hpp>
+#include <boost/network/traits/vector.hpp>
 #include <boost/network/protocol/http/message/header.hpp>
+#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost {
 namespace network {

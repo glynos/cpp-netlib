@@ -10,7 +10,8 @@
 #include <boost/network/protocol/http/support/client_or_server.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/pod_or_normal.hpp>
-#include <boost/network/tags.hpp>
+#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/message/directives.hpp>
 #include <boost/thread/future.hpp>
 
 namespace boost {
@@ -54,13 +55,13 @@ inline void destination_impl(basic_request<Tag> &request, T const &value,
 
 template <class Tag, class T>
 inline void destination_impl(basic_request<Tag> &request, T const &value,
-                             tags::pod /*unused*/) {
+                             boost::network::tags::pod /*unused*/) {
   request.destination = value;
 }
 
 template <class Tag, class T>
 inline void destination_impl(basic_request<Tag> &request, T const &value,
-                             tags::normal /*unused*/) {
+                             boost::network::tags::normal /*unused*/) {
   request.destination(value);
 }
 
@@ -85,11 +86,8 @@ inline void destination(Message const &message, ValueType const &destination_,
   message.destination = destination_;
 }
 
-} // namespace impl
- /* impl */
-
+}  // namespace impl
 }  // namespace network
-
 }  // namespace boost
 
 #include <boost/network/message/modifiers/destination.hpp>

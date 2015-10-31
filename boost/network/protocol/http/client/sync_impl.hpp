@@ -1,21 +1,22 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SYNC_IMPL_HPP_20100623
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SYNC_IMPL_HPP_20100623
 
-#include <boost/function.hpp>
-#include <boost/bind/bind.hpp>
-#include <boost/network/protocol/http/client/options.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/tags.hpp>
-#include <boost/network/protocol/http/traits/connection_policy.hpp>
-#include <boost/network/protocol/http/traits/vector.hpp>
-#include <boost/network/traits/string.hpp>
-#include <boost/optional/optional.hpp>
-
 // Copyright 2013 Google, Inc.
 // Copyright 2010 Dean Michael Berris <dberris@google.com>
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#include <boost/bind/bind.hpp>
+#include <boost/function.hpp>
+#include <boost/network/protocol/http/client/options.hpp>
+#include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/protocol/http/traits/connection_policy.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/optional/optional.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 namespace boost {
 namespace network {
@@ -50,8 +51,8 @@ struct sync_client
 
   sync_client(
       bool cache_resolved, bool follow_redirect, bool always_verify_peer,
-      int timeout, boost::shared_ptr<boost::asio::io_service>  /*service*/,
-      optional<string_type>  /*unused*/const& certificate_filename =
+      int timeout, boost::shared_ptr<boost::asio::io_service> service,
+      optional<string_type> const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
@@ -76,8 +77,8 @@ struct sync_client
   void wait_complete() {}
 
   basic_response<Tag> request_skeleton(basic_request<Tag> const& request_,
-                                       string_type  /*method*/, bool get_body,
-                                       body_callback_function_type  /*callback*/,
+                                       string_type method, bool get_body,
+                                       body_callback_function_type callback,
                                        body_generator_function_type generator) {
     typename connection_base::connection_ptr connection_;
     connection_ = connection_base::get_connection(
