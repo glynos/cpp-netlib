@@ -6,7 +6,7 @@ if [ ! -d "${HOME}/${CC}-boost_${BOOST_VERSION}/include" ]; then
   tar jxf boost_${BOOST_VERSION}.tar.bz2
   cd boost_${BOOST_VERSION}
   ./bootstrap.sh --with-toolset=$TOOLSET --prefix=${HOME}/${CC}-boost_${BOOST_VERSION}
-  travis_wait ./b2 --stagedir=. -j2 --build-type=complete --layout=tagged cxxflags='-std=c++11' install >boost-build.log 2>&1 
+  ./b2 --stagedir=. -j2 --build-type=complete --layout=tagged cxxflags='-std=c++11' install >boost-build.log 2>&1 
   cd ..
   rm -rf boost_${BOOST_VERSION}
   rm -rf boost_${BOOST_VERSION}.tar.bz2
