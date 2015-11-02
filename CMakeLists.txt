@@ -27,21 +27,22 @@ if(NOT IS_ABSOLUTE "${INSTALL_CMAKE_DIR}")
     set(INSTALL_CMAKE_DIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}")
 endif()
 
-
 if(CPP-NETLIB_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
   message (STATUS "Linking boost testing libs dynamically...")
-  set(Boost_USE_STATIC_LIBS OFF)
   set(CPP-NETLIB_BUILD_SHARED_LIBS ON)
   set(BUILD_SHARED_LIBS ON)
   add_definitions(-DBOOST_TEST_DYN_LINK)
 else()
-  set(Boost_USE_STATIC_LIBS ON)
   set(CPP-NETLIB_BUILD_SHARED_LIBS OFF)
   set(BUILD_SHARED_LIBS OFF)
 endif()
 
+# Always use Boost's shared libraries.
+set(Boost_USE_STATIC_LIBS OFF)
+
+# Always use multi-threaded Boost libraries.
 set(Boost_USE_MULTI_THREADED ON)
-find_package( Boost 1.54.0
+find_package( Boost 1.57.0
     REQUIRED unit_test_framework system regex date_time thread filesystem
     program_options chrono atomic )
 
