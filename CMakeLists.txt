@@ -31,7 +31,6 @@ if(CPP-NETLIB_BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
   message (STATUS "Linking boost testing libs dynamically...")
   set(CPP-NETLIB_BUILD_SHARED_LIBS ON)
   set(BUILD_SHARED_LIBS ON)
-  add_definitions(-DBOOST_TEST_DYN_LINK)
 else()
   set(CPP-NETLIB_BUILD_SHARED_LIBS OFF)
   set(BUILD_SHARED_LIBS OFF)
@@ -40,8 +39,12 @@ endif()
 # Always use Boost's shared libraries.
 set(Boost_USE_STATIC_LIBS OFF)
 
+# We need this for all tests to use the dynamic version.
+add_definitions(-DBOOST_TEST_DYN_LINK)
+
 # Always use multi-threaded Boost libraries.
 set(Boost_USE_MULTI_THREADED ON)
+
 find_package( Boost 1.57.0
     REQUIRED unit_test_framework system regex date_time thread filesystem
     program_options chrono atomic )
