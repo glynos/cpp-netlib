@@ -35,8 +35,8 @@ struct basic_thread_pool {
                     io_service_ptr io_service = io_service_ptr(),
                     worker_threads_ptr worker_threads = worker_threads_ptr())
       : threads_(threads),
-        io_service_(io_service),
-        worker_threads_(worker_threads),
+        io_service_(std::move(io_service)),
+        worker_threads_(std::move(worker_threads)),
         sentinel_() {
     bool commit = false;
     BOOST_SCOPE_EXIT_TPL(

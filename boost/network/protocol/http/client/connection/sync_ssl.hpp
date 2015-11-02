@@ -63,7 +63,7 @@ struct https_sync_connection
         timeout_(timeout),
         timer_(resolver.get_io_service()),
         resolver_(resolver),
-        resolve_(resolve),
+        resolve_(std::move(resolve)),
         context_(resolver.get_io_service(),
                  boost::asio::ssl::context::sslv23_client),
         socket_(resolver.get_io_service(), context_) {

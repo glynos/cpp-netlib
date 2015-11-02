@@ -21,7 +21,7 @@ template <class T>
 struct remove_header_directive {
 
   explicit remove_header_directive(T header_name)
-      : header_name_(header_name) {};
+      : header_name_(std::move(header_name)) {};
 
   template <class MessageTag>
   void operator()(basic_message<MessageTag>& msg) const {

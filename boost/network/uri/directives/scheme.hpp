@@ -16,7 +16,7 @@ namespace network {
 namespace uri {
 struct scheme_directive {
 
-  explicit scheme_directive(const std::string &scheme) : scheme(scheme) {}
+  explicit scheme_directive(std::string scheme) : scheme(std::move(scheme)) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {

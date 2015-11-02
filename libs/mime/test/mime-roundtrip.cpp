@@ -107,7 +107,7 @@ test_suite *init_unit_test_suite(int, char **)
 #ifdef BOOST_TEST_DYN_LINK
       true;
 #else
-      0;
+      nullptr;
 #endif
 }
 

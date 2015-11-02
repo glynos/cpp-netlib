@@ -47,7 +47,7 @@ struct http_sync_connection
         timeout_(timeout),
         timer_(resolver.get_io_service()),
         resolver_(resolver),
-        resolve_(resolve),
+        resolve_(std::move(resolve)),
         socket_(resolver.get_io_service()) {}
 
   void init_socket(string_type  /*unused*/const& hostname, string_type const& port) {

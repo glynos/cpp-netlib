@@ -78,9 +78,9 @@ struct http_async_connection
         is_timedout_(false),
         follow_redirect_(follow_redirect),
         resolver_(resolver),
-        resolve_(resolve),
+        resolve_(std::move(resolve)),
         request_strand_(resolver.get_io_service()),
-        delegate_(delegate) {}
+        delegate_(std::move(delegate)) {}
 
   // This is the main entry point for the connection/request pipeline.
   // We're

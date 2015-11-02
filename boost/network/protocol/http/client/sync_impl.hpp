@@ -52,23 +52,23 @@ struct sync_client
   sync_client(
       bool cache_resolved, bool follow_redirect, bool always_verify_peer,
       int timeout, boost::shared_ptr<boost::asio::io_service> service,
-      optional<string_type> const& certificate_filename =
+      optional<string_type>  certificate_filename =
           optional<string_type>(),
-      optional<string_type> const& verify_path = optional<string_type>(),
-      optional<string_type> const& certificate_file = optional<string_type>(),
-      optional<string_type> const& private_key_file = optional<string_type>(),
-      optional<string_type> const& ciphers = optional<string_type>(),
+      optional<string_type>  verify_path = optional<string_type>(),
+      optional<string_type>  certificate_file = optional<string_type>(),
+      optional<string_type>  private_key_file = optional<string_type>(),
+      optional<string_type>  ciphers = optional<string_type>(),
       long ssl_options = 0)
       : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get() ? service
                                   : make_shared<boost::asio::io_service>()),
         service_(*service_ptr),
         resolver_(service_),
-        certificate_filename_(certificate_filename),
-        verify_path_(verify_path),
-        certificate_file_(certificate_file),
-        private_key_file_(private_key_file),
-        ciphers_(ciphers),
+        certificate_filename_(std::move(certificate_filename)),
+        verify_path_(std::move(verify_path)),
+        certificate_file_(std::move(certificate_file)),
+        private_key_file_(std::move(private_key_file)),
+        ciphers_(std::move(ciphers)),
         ssl_options_(ssl_options),
         always_verify_peer_(always_verify_peer) {}
 

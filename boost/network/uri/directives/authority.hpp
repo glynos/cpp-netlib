@@ -14,8 +14,8 @@ namespace uri {
 
 struct authority_directive {
 
-  explicit authority_directive(const std::string &authority)
-      : authority_(authority) {}
+  explicit authority_directive(std::string authority)
+      : authority_(std::move(authority)) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {

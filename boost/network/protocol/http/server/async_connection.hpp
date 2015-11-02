@@ -559,7 +559,7 @@ struct async_connection
       headers_buffer.consume(headers_buffer.size());
       headers_already_sent = true;
       thread_pool().post(callback);
-      pending_actions_list::iterator start = pending_actions.begin(),
+      auto start = pending_actions.begin(),
                                      end = pending_actions.end();
       while (start != end) {
         thread_pool().post(*start++);

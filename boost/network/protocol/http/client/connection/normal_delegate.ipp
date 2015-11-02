@@ -54,6 +54,4 @@ void boost::network::http::impl::normal_delegate::disconnect() {
   }
 }
 
-boost::network::http::impl::normal_delegate::~normal_delegate() {}
-
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_NORMAL_DELEGATE_IPP_20110819

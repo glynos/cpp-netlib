@@ -108,8 +108,7 @@ struct basic_response<tags::http_server> {
     static const char crlf[] = {'\r', '\n'};
     std::vector<const_buffer> buffers;
     buffers.push_back(to_buffer(status));
-    for (std::size_t i = 0; i < headers.size(); ++i) {
-      header_type &h = headers[i];
+    for (auto & h : headers) {
       buffers.push_back(buffer(h.name));
       buffers.push_back(buffer(name_value_separator));
       buffers.push_back(buffer(h.value));

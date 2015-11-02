@@ -46,7 +46,7 @@ class BOOST_URI_DECL uri {
   //    parse();
   //}
 
-  uri(const string_type &str) : uri_(str), is_valid_(false) { parse(); }
+  uri(string_type str) : uri_(std::move(str)), is_valid_(false) { parse(); }
 
   template <class FwdIter>
   uri(const FwdIter &first, const FwdIter &last)

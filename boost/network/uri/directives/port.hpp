@@ -16,7 +16,7 @@ namespace network {
 namespace uri {
 struct port_directive {
 
-  explicit port_directive(const std::string &port) : port_(port) {}
+  explicit port_directive(std::string port) : port_(std::move(port)) {}
 
   explicit port_directive(boost::uint16_t port)
       : port_(boost::lexical_cast<std::string>(port)) {}

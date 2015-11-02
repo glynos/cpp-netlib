@@ -20,11 +20,11 @@ boost::network::http::impl::ssl_delegate::ssl_delegate(
     optional<std::string> ciphers,
     long ssl_options)
     : service_(service),
-      certificate_filename_(certificate_filename),
-      verify_path_(verify_path),
-      certificate_file_(certificate_file),
-      private_key_file_(private_key_file),
-      ciphers_(ciphers),
+      certificate_filename_(std::move(certificate_filename)),
+      verify_path_(std::move(verify_path)),
+      certificate_file_(std::move(certificate_file)),
+      private_key_file_(std::move(private_key_file)),
+      ciphers_(std::move(ciphers)),
       ssl_options_(ssl_options),
       always_verify_peer_(always_verify_peer) {}
 

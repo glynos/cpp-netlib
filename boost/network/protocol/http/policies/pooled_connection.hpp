@@ -65,7 +65,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                                    ssl_options)),
           resolver_(resolver),
           connection_follow_redirect_(follow_redirect),
-          get_connection_(get_connection),
+          get_connection_(std::move(get_connection)),
           certificate_filename_(certificate_filename),
           verify_path_(verify_path),
           certificate_file_(certificate_file),
