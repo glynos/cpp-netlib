@@ -28,7 +28,7 @@ void boost::network::http::impl::normal_delegate::connect(
 
   socket_.reset(new asio::ip::tcp::socket(
       service_,
-      asio::ip::tcp::endpoint(asio::ip::address(), source_port)));
+      asio::ip::tcp::endpoint(asio::ip::v4(), source_port)));
   socket_->async_connect(endpoint, handler);
 }
 
