@@ -8,7 +8,7 @@ cmake -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE \
   -DCPP-NETLIB_ENABLE_HTTPS=$ENABLE_HTTPS \
   -DBOOST_INCLUDEDIR="${HOME}/${CC}-boost_${BOOST_VERSION}/include" \
   -DBOOST_LIBRARYDIR="${HOME}/${CC}-boost_${BOOST_VERSION}/lib" \
-  -DCMAKE_CXX_FLAGS='-std=c++11' \
+  -DCMAKE_CXX_FLAGS="-std=c++11 ${CMAKE_CXX_FLAGS}" \
   ..
 make -j2
 make test
