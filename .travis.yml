@@ -42,7 +42,7 @@ script:
 - pwd
 - sh -x build.sh
 after_failure:
-- cat Testing/Temporary/LastTest.log
+- cat build/Testing/Temporary/LastTest.log
 addons:
   apt:
     sources:
