@@ -40,6 +40,7 @@ addons:
     - gcc-4.8
     - g++-4.8
     - clang-3.6
+    - ninja-build
 notifications:
   slack:
     secure: Y7lLjqZ83+b/jaJ5+EKwvgCDeERi4bVbDn9tLp8sieTdu+ENsPI+JmLYSXZXPpe7JrItrXW6uJJXN2wG1h7au4mpVVTghd31HBzuzrqVxDphWPhp16NYzvbAgQQRBXvFVvfSdW/Kb/n2fX6xDApY0t6vNREb/GKg0GyzESb4ZjU=
