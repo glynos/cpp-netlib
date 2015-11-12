@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_TEST_MODULE HTTP 1.0 Get Test
+#define BOOST_TEST_MODULE HTTP Get Test
 #include <boost/network/include/http/client.hpp>
 #include <boost/test/unit_test.hpp>
 #include "client_types.hpp"
@@ -16,10 +16,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_get_test, client, client_types) {
   client client_;
   typename client::response response;
   BOOST_REQUIRE_NO_THROW(response = client_.get(request));
-  typename net::headers_range<typename client::response>::type range =
-      headers(response)["Content-Type"];
   try {
     auto data = body(response);
+    std::cout << data;
   } catch (...) {
     BOOST_ASSERT(false);
   }
@@ -34,12 +33,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(https_client_get_test, client, client_types) {
   typename client::request request("https://www.github.com/");
   client client_;
   typename client::response response = client_.get(request);
-  typename net::headers_range<typename client::response>::type range =
-      headers(response)["Content-Type"];
   BOOST_CHECK(response.status() == 200 ||
               (response.status() >= 300 && response.status() < 400));
   try {
     auto data = body(response);
+    std::cout << data;
   } catch (...) {
     BOOST_ASSERT(false);
   }
@@ -48,14 +46,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(https_client_get_test, client, client_types) {
 #endif
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_temp_client_get_test, client, client_types) {
-  typename client::request request("http://www.google.co.kr");
+  typename client::request request("http://cpp-netlib.org/");
   typename client::response response;
   BOOST_REQUIRE_NO_THROW(response = client().get(request));
-  typename net::headers_range<typename client::response>::type range =
-      headers(response)["Content-Type"];
+  auto range = headers(response);
   BOOST_CHECK(!boost::empty(range));
-  BOOST_REQUIRE_NO_THROW(BOOST_CHECK(body(response).size() != 0));
+  try {
+    auto data = body(response);
+    std::cout << data;
+  } catch (...) {
+    BOOST_ASSERT(false);
+  }
   BOOST_CHECK_EQUAL(response.version().substr(0, 7), std::string("HTTP/1."));
-  BOOST_CHECK_EQUAL(response.status(), 200u);
-  BOOST_CHECK_EQUAL(response.status_message(), std::string("OK"));
+  BOOST_CHECK(response.status() == 200u ||
+              (response.status() >= 300 && response.status() < 400));
 }
