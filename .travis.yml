@@ -36,6 +36,7 @@ addons:
     sources:
     - ubuntu-toolchain-r-test
     - llvm-toolchain-precise-3.6
+    - kalakris-cmake
     packages:
     - gcc-4.8
     - g++-4.8
