@@ -9,8 +9,7 @@ cmake -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE \
   -DBOOST_INCLUDEDIR="${HOME}/${CC}-boost_${BOOST_VERSION}/include" \
   -DBOOST_LIBRARYDIR="${HOME}/${CC}-boost_${BOOST_VERSION}/lib" \
   -DCMAKE_CXX_FLAGS='-std=c++11' \
-  -G Ninja \
   ..
-ninja
-ninja test
+make -j4
+make test
 cd ..
