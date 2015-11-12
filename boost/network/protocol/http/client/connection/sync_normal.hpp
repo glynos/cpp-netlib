@@ -8,10 +8,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/algorithms/linearize.hpp>
-#include <iterator>
-
 #include <boost/asio/deadline_timer.hpp>
+#include <boost/network/protocol/http/algorithms/linearize.hpp>
+#include <boost/network/protocol/http/response.hpp>
+#include <boost/network/protocol/http/traits/resolver_policy.hpp>
+#include <boost/network/traits/string.hpp>
+#include <iterator>
 
 namespace boost {
 namespace network {
@@ -50,11 +52,11 @@ struct http_sync_connection
         resolve_(std::move(resolve)),
         socket_(resolver.get_io_service()) {}
 
-  void init_socket(string_type  /*unused*/const& hostname, string_type const& port) {
+  void init_socket(string_type const& hostname, string_type const& port) {
     connection_base::init_socket(socket_, resolver_, hostname, port, resolve_);
   }
 
-  void send_request_impl(string_type  /*unused*/const& method,
+  void send_request_impl(string_type const& method,
                          basic_request<Tag> const& request_,
                          body_generator_function_type generator) {
     boost::asio::streambuf request_buffer;
@@ -130,7 +132,7 @@ struct http_sync_connection
 };
 
 }  // namespace impl
-} // namespace http
+}  // namespace http
 }  // namespace network
 }  // namespace boost
 

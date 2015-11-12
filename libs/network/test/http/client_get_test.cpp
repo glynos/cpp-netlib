@@ -12,29 +12,37 @@ namespace net = boost::network;
 namespace http = boost::network::http;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_get_test, client, client_types) {
-  typename client::request request("http://www.boost.org");
+  typename client::request request("http://cpp-netlib.org/");
   client client_;
   typename client::response response;
   BOOST_REQUIRE_NO_THROW(response = client_.get(request));
   typename net::headers_range<typename client::response>::type range =
       headers(response)["Content-Type"];
-  BOOST_CHECK(!boost::empty(range));
-  BOOST_REQUIRE_NO_THROW(BOOST_CHECK(body(response).size() != 0));
+  try {
+    auto data = body(response);
+  } catch (...) {
+    BOOST_ASSERT(false);
+  }
   BOOST_CHECK_EQUAL(response.version().substr(0, 7), std::string("HTTP/1."));
-  BOOST_CHECK_EQUAL(response.status(), 200u);
-  BOOST_CHECK_EQUAL(response.status_message(), std::string("OK"));
+  BOOST_CHECK(response.status() == 200u ||
+              (response.status() >= 300 && response.status() < 400));
 }
 
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(https_client_get_test, client, client_types) {
-  typename client::request request("https://www.google.com/");
+  typename client::request request("https://www.github.com/");
   client client_;
-  typename client::response response_ = client_.get(request);
+  typename client::response response = client_.get(request);
   typename net::headers_range<typename client::response>::type range =
-      headers(response_)["Content-Type"];
-  BOOST_CHECK(boost::begin(range) != boost::end(range));
-  BOOST_CHECK(body(response_).size() != 0);
+      headers(response)["Content-Type"];
+  BOOST_CHECK(response.status() == 200 ||
+              (response.status() >= 300 && response.status() < 400));
+  try {
+    auto data = body(response);
+  } catch (...) {
+    BOOST_ASSERT(false);
+  }
 }
 
 #endif

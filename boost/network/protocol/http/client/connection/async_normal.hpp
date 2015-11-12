@@ -50,6 +50,9 @@ struct http_async_connection
       protected http_async_protocol_handler<Tag, version_major, version_minor>,
       boost::enable_shared_from_this<
           http_async_connection<Tag, version_major, version_minor> > {
+
+  http_async_connection(http_async_connection const&) = delete;
+
   typedef async_connection_base<Tag, version_major, version_minor> base;
   typedef http_async_protocol_handler<Tag, version_major, version_minor>
       protocol_base;
@@ -115,7 +118,6 @@ struct http_async_connection
   }
 
  private:
-  http_async_connection(http_async_connection const&);  // = delete
 
   void set_errors(boost::system::error_code const& ec) {
     boost::system::system_error error(ec);

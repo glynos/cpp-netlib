@@ -40,11 +40,11 @@ struct async_client
   async_client(bool cache_resolved, bool follow_redirect,
                bool always_verify_peer, int timeout,
                boost::shared_ptr<boost::asio::io_service> service,
-               optional<string_type>  certificate_filename,
-               optional<string_type>  verify_path,
-               optional<string_type>  certificate_file,
-               optional<string_type>  private_key_file,
-               optional<string_type>  ciphers, long ssl_options)
+               optional<string_type> certificate_filename,
+               optional<string_type> verify_path,
+               optional<string_type> certificate_file,
+               optional<string_type> private_key_file,
+               optional<string_type> ciphers, long ssl_options)
       : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get()
                         ? service

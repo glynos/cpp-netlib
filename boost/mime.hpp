@@ -9,21 +9,21 @@
 #ifndef _BOOST_MIME_HPP
 #define _BOOST_MIME_HPP
 
+#include <iosfwd>
 #include <list>
 #include <string>
 #include <vector>
-#include <iosfwd>
 
-#include <boost/spirit/include/qi.hpp>
+#include <boost/fusion/adapted/struct.hpp>
 #include <boost/fusion/include/std_pair.hpp>
 #include <boost/spirit/include/phoenix.hpp>  // pulls in all of Phoenix
+#include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/support_istream_iterator.hpp>
-#include <boost/fusion/adapted/struct.hpp>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/format.hpp>
-#include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/format.hpp>
+#include <boost/shared_ptr.hpp>
 
 // #define	DUMP_MIME_DATA	1
 
@@ -321,7 +321,8 @@ static void read_multipart_body(Iterator &begin, Iterator end,
                        "= %d %s") %
                    mp_body.body_prolog.size() % mp_body.sub_parts.size() %
                    mp_body.body_epilog.size() %
-                   (mp_body.prolog_is_missing ? "(missing)" : "")) << std::endl;
+                   (mp_body.prolog_is_missing ? "(missing)" : ""))
+            << std::endl;
   std::cout << std::endl << "****** Multipart Body Prolog *******" << std::endl;
   std::copy(mp_body.body_prolog.begin(), mp_body.body_prolog.end(),
             std::ostream_iterator<char>(std::cout));
@@ -381,11 +382,7 @@ static boost::shared_ptr<basic_mime<traits> > parse_mime(
 template <class traits = detail::default_types>
 class basic_mime {
  public:
-  typedef enum {
-    simple_part,
-    multi_part,
-    message_part
-  } part_kind;
+  typedef enum { simple_part, multi_part, message_part } part_kind;
   //	Types for headers
   typedef typename traits::string_type string_type;
   typedef std::pair<std::string, string_type> headerEntry;
@@ -618,8 +615,7 @@ class basic_mime {
       std::string boundary;
       try {
         boundary = detail::get_boundary(get_content_type_header());
-      }
-      catch (std::runtime_error &) {
+      } catch (std::runtime_error &) {
         //	FIXME: Make boundary strings (more?) unique
         boundary = str(boost::format("------=_NextPart-%s.%08ld") %
                        detail::k_package_name % std::clock());
@@ -707,9 +703,8 @@ class basic_mime {
     else if (get_part_kind() == multi_part) {
       if (idx >= m_subparts.size())
         throw std::runtime_error(
-            str(boost::format(
-                    "Trying to access part %d (of %d) sub-part to a "
-                    "multipart/xxx mime part") %
+            str(boost::format("Trying to access part %d (of %d) sub-part to a "
+                              "multipart/xxx mime part") %
                 idx % m_subparts.size()));
     } else {  // message-part
       if (get_part_kind() == message_part)
@@ -720,9 +715,8 @@ class basic_mime {
 
       if (idx >= m_subparts.size())
         throw std::runtime_error(
-            str(boost::format(
-                    "Trying to access part %d (of %d) sub-part to a "
-                    "message/xxx mime part") %
+            str(boost::format("Trying to access part %d (of %d) sub-part to a "
+                              "message/xxx mime part") %
                 idx % m_subparts.size()));
     }
   }
@@ -764,12 +758,14 @@ static boost::shared_ptr<basic_mime<traits> > parse_mime(
 #ifdef DUMP_MIME_DATA
   std::cout << "Content-Type: " << content_type << std::endl;
   std::cout << str(boost::format("retVal->get_part_kind () = %d") %
-                   ((int)retVal->get_part_kind())) << std::endl;
+                   ((int)retVal->get_part_kind()))
+            << std::endl;
 #endif
 
   if (retVal->get_part_kind() == mime_part::simple_part)
-    retVal->set_body(detail::read_simplepart_body<
-        typename mime_part::bodyContainer, Iterator>(begin, end));
+    retVal->set_body(
+        detail::read_simplepart_body<typename mime_part::bodyContainer,
+                                     Iterator>(begin, end));
   else if (retVal->get_part_kind() == mime_part::message_part) {
     //	If we've got a message/xxxx, then there is no body, and we have
     // a single
