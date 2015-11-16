@@ -3,26 +3,24 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_HPP__
-#define __NETWORK_MESSAGE_HPP__
+#ifndef BOOST_NETWORK_MESSAGE_HPP__
+#define BOOST_NETWORK_MESSAGE_HPP__
 
-#include <boost/network/message_fwd.hpp>
-#include <boost/network/traits/string.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/network/detail/directive_base.hpp>
 #include <boost/network/detail/wrapper_base.hpp>
 #include <boost/network/message/directives.hpp>
-#include <boost/network/message/wrappers.hpp>
-#include <boost/network/message/transformers.hpp>
-
-#include <boost/network/message/modifiers/add_header.hpp>
-#include <boost/network/message/modifiers/remove_header.hpp>
-#include <boost/network/message/modifiers/clear_headers.hpp>
-#include <boost/network/message/modifiers/source.hpp>
-#include <boost/network/message/modifiers/destination.hpp>
-#include <boost/network/message/modifiers/body.hpp>
-
 #include <boost/network/message/message_concept.hpp>
+#include <boost/network/message/modifiers/add_header.hpp>
+#include <boost/network/message/modifiers/body.hpp>
+#include <boost/network/message/modifiers/clear_headers.hpp>
+#include <boost/network/message/modifiers/destination.hpp>
+#include <boost/network/message/modifiers/remove_header.hpp>
+#include <boost/network/message/modifiers/source.hpp>
+#include <boost/network/message/transformers.hpp>
+#include <boost/network/message/wrappers.hpp>
+#include <boost/network/message_fwd.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/utility/enable_if.hpp>
 
 /** message.hpp
  *
@@ -46,72 +44,67 @@ struct basic_message {
   typedef typename headers_container_type::value_type header_type;
   typedef typename string<Tag>::type string_type;
 
-  basic_message() : _headers(), _body(), _source(), _destination() {}
-
-  basic_message(const basic_message& other)
-      : _headers(other._headers),
-        _body(other._body),
-        _source(other._source),
-        _destination(other._destination) {}
-
-  basic_message& operator=(basic_message<Tag> rhs) {
-    rhs.swap(*this);
-    return *this;
-  }
+  basic_message() = default;
+  basic_message(const basic_message&) = default;
+  basic_message(basic_message&&) noexcept = default;
+  basic_message& operator=(basic_message const&) = default;
+  basic_message& operator=(basic_message&&) = default;
+  ~basic_message() = default;
 
   void swap(basic_message<Tag>& other) {
-    std::swap(other._headers, _headers);
-    std::swap(other._body, _body);
-    std::swap(other._source, _source);
-    std::swap(other._destination, _destination);
+    using std::swap;
+    swap(other.headers_, headers_);
+    swap(other.body_, body_);
+    swap(other.source_, source_);
+    swap(other.destination_, destination_);
   }
 
-  headers_container_type& headers() { return _headers; }
+  headers_container_type& headers() { return headers_; }
 
-  void headers(headers_container_type const& headers_) const {
-    _headers = headers_;
+  void headers(headers_container_type headers) const {
+    headers_ = std::move(headers);
   }
 
-  void add_header(typename headers_container_type::value_type const& pair_)
-      const {
-    _headers.insert(pair_);
+  void add_header(
+      typename headers_container_type::value_type const& pair_) const {
+    headers_.insert(pair_);
   }
 
-  void remove_header(typename headers_container_type::key_type const& key)
-      const {
-    _headers.erase(key);
+  void remove_header(
+      typename headers_container_type::key_type const& key) const {
+    headers_.erase(key);
   }
 
-  headers_container_type const& headers() const { return _headers; }
+  headers_container_type const& headers() const { return headers_; }
 
-  string_type& body() { return _body; }
+  string_type& body() { return body_; }
 
-  void body(string_type const& body_) const { _body = body_; }
+  void body(string_type body) const { body_ = std::move(body); }
 
-  string_type const& body() const { return _body; }
+  string_type const& body() const { return body_; }
 
-  string_type& source() { return _source; }
+  string_type& source() { return source_; }
 
-  void source(string_type const& source_) const { _source = source_; }
+  void source(string_type source) const { source_ = std::move(source); }
 
-  string_type const& source() const { return _source; }
+  string_type const& source() const { return source_; }
 
-  string_type& destination() { return _destination; }
+  string_type& destination() { return destination_; }
 
-  void destination(string_type const& destination_) const {
-    _destination = destination_;
+  void destination(string_type destination) const {
+    destination_ = std::move(destination);
   }
 
-  string_type const& destination() const { return _destination; }
+  string_type const& destination() const { return destination_; }
 
  private:
   friend struct detail::directive_base<Tag>;
   friend struct detail::wrapper_base<Tag, basic_message<Tag> >;
 
-  mutable headers_container_type _headers;
-  mutable string_type _body;
-  mutable string_type _source;
-  mutable string_type _destination;
+  mutable headers_container_type headers_;
+  mutable string_type body_;
+  mutable string_type source_;
+  mutable string_type destination_;
 };
 
 template <class Tag>
@@ -131,4 +124,4 @@ typedef basic_message<tags::default_wstring> wmessage;
 }  // namespace network
 }  // namespace boost
 
-#endif  // __NETWORK_MESSAGE_HPP__
+#endif  // BOOST_NETWORK_MESSAGE_HPP__
