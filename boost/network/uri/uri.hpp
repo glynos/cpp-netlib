@@ -310,9 +310,9 @@ inline bool operator==(const uri::string_type &lhs, const uri &rhs) {
 }
 
 inline bool operator==(const uri &lhs, const uri::value_type *rhs) {
-  auto rlen = strlen(rhs);
-  auto llen = std::distance(lhs.begin(), lhs.end());
-  if (rlen != std::abs(llen)) return false;
+  auto rlen = std::strlen(rhs);
+  size_t llen = std::labs(std::distance(lhs.begin(), lhs.end()));
+  if (rlen != llen) return false;
   return boost::equal(lhs, boost::make_iterator_range(rhs, rhs + rlen));
 }
 
