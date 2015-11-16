@@ -9,6 +9,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/asio/deadline_timer.hpp>
+#include <boost/asio/streambuf.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
@@ -97,7 +98,8 @@ struct http_sync_connection
     connection_base::read_body(socket_, response_, response_buffer);
     typename headers_range<basic_response<Tag> >::type connection_range =
         headers(response_)["Connection"];
-    if (version_major == 1 && version_minor == 1 && !boost::empty(connection_range) &&
+    if (version_major == 1 && version_minor == 1 &&
+        !boost::empty(connection_range) &&
         boost::iequals(boost::begin(connection_range)->second, "close")) {
       close_socket();
     } else if (version_major == 1 && version_minor == 0) {
@@ -109,19 +111,22 @@ struct http_sync_connection
 
   void close_socket() {
     timer_.cancel();
-    if (!is_open()) { return;
-}
+    if (!is_open()) {
+      return;
+    }
     boost::system::error_code ignored;
     socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
-    if (ignored != nullptr) { return;
-}
+    if (ignored != nullptr) {
+      return;
+    }
     socket_.close(ignored);
   }
 
  private:
   void handle_timeout(boost::system::error_code const& ec) {
-    if (!ec) { close_socket();
-}
+    if (!ec) {
+      close_socket();
+    }
   }
 
   int timeout_;
