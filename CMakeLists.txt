@@ -76,7 +76,11 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
 elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   # We want to link in C++11 mode in Clang too, but also set a high enough
   # template depth for the template metaprogramming.
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -ftemplate-depth=256 -std=c++11 -stdlib=libc++")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -ftemplate-depth=256 -std=c++11")
+  if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    # Use libc++ only in OS X.
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+  endif()
 endif()
 
 
