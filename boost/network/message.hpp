@@ -46,7 +46,7 @@ struct basic_message {
 
   basic_message() = default;
   basic_message(const basic_message&) = default;
-  basic_message(basic_message&&) noexcept = default;
+  basic_message(basic_message&&) = default;
   basic_message& operator=(basic_message const&) = default;
   basic_message& operator=(basic_message&&) = default;
   ~basic_message() = default;
