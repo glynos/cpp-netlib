@@ -132,8 +132,8 @@ struct async_server_base : server_storage_base, socket_options_base {
   void start_listening() {
     using boost::asio::ip::tcp;
     system::error_code error;
-    service_.reset();  // this allows repeated cycles of run -> stop ->
-                       // run
+    // this allows repeated cycles of run -> stop -> run
+    service_.reset();
     tcp::resolver resolver(service_);
     tcp::resolver::query query(address_, port_);
     tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
