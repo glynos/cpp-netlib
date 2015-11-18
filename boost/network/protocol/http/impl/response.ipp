@@ -18,10 +18,10 @@
 
 #include <boost/asio/buffer.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/network/traits/vector.hpp>
+#include <boost/network/protocol/http/message/header.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/traits/string.hpp>
-#include <boost/network/protocol/http/traits/vector.hpp>
-#include <boost/network/protocol/http/message/header.hpp>
 
 namespace boost {
 namespace network {
@@ -108,8 +108,7 @@ struct basic_response<tags::http_server> {
     static const char crlf[] = {'\r', '\n'};
     std::vector<const_buffer> buffers;
     buffers.push_back(to_buffer(status));
-    for (std::size_t i = 0; i < headers.size(); ++i) {
-      header_type &h = headers[i];
+    for (auto & h : headers) {
       buffers.push_back(buffer(h.name));
       buffers.push_back(buffer(name_value_separator));
       buffers.push_back(buffer(h.value));

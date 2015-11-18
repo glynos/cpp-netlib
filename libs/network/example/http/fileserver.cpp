@@ -30,7 +30,7 @@ struct file_cache {
   meta_map file_headers;
   boost::shared_mutex cache_mutex;
 
-  explicit file_cache(std::string const &doc_root) : doc_root_(doc_root) {}
+  explicit file_cache(std::string doc_root) : doc_root_(std::move(doc_root)) {}
 
   ~file_cache() throw() {
     BOOST_FOREACH(region_map::value_type const & region, regions) {
@@ -85,9 +85,9 @@ struct file_cache {
       std::string const &path) {
     boost::shared_lock<boost::shared_mutex> lock(cache_mutex);
     static std::vector<server::response_header> empty_vector;
-    meta_map::iterator headers = file_headers.find(doc_root_ + path);
+    auto headers = file_headers.find(doc_root_ + path);
     if (headers != file_headers.end()) {
-      std::vector<server::response_header>::iterator begin = headers->second
+      auto begin = headers->second
                                                                  .begin(),
                                                      end =
                                                          headers->second.end();

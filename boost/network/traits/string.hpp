@@ -7,10 +7,9 @@
 #ifndef BOOST_NETWORK_TRAITS_STRING_INC
 #define BOOST_NETWORK_TRAITS_STRING_INC
 
-#include <string>
-#include <boost/network/tags.hpp>
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
+#include <string>
 
 #ifndef BOOST_NETWORK_DEFAULT_STRING
 #define BOOST_NETWORK_DEFAULT_STRING std::string
@@ -42,7 +41,6 @@ struct string<Tag, typename enable_if<is_default_wstring<Tag> >::type> {
 };
 
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_TRAITS_STRING_INC

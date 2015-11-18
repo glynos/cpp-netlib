@@ -7,6 +7,8 @@
 #ifndef __NETWORK_DETAIL_DIRECTIVE_BASE_HPP__
 #define __NETWORK_DETAIL_DIRECTIVE_BASE_HPP__
 
+#include <boost/network/message_fwd.hpp>
+
 /** Defines the base type from which all directives inherit
  * to allow friend access to message and other types' internals.
  */
@@ -17,12 +19,13 @@ namespace detail {
 template <class Tag>
 struct directive_base {
   typedef Tag tag;
-  // explicit directive_base(basic_message<tag> & message_)
-  //    : _message(message_)
- protected:
-  ~directive_base() {};  // can only be extended
+  explicit directive_base(basic_message<tag> & message)
+      : message_(message) {}
 
-  //    mutable basic_message<tag> & _message;
+ protected:
+  ~directive_base() = default;  // can only be extended
+
+  basic_message<tag> & message_;
 };
 
 }  // namespace detail

@@ -6,9 +6,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/cstdint.hpp>
 #include <boost/network/protocol/http/support/is_server.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/cstdint.hpp>
 
 namespace boost {
 namespace network {
@@ -31,11 +31,14 @@ inline major_version_directive major_version(boost::uint8_t major_version_) {
   return major_version_directive(major_version_);
 }
 
-} /* http */
+}  // namespace http
+ /* http */
 
-} /* network */
+}  // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_MAJOR_VERSION_HPP_20101120 \
           */

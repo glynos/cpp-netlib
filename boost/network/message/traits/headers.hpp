@@ -7,13 +7,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
-#include <boost/network/traits/string.hpp>
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_sync.hpp>
-#include <boost/thread/future.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/network/message/directives.hpp>
+#include <boost/network/message/transformers.hpp>
+#include <boost/network/message/wrappers.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_sync.hpp>
 
 namespace boost {
 namespace network {
@@ -48,9 +48,7 @@ struct header_value
               unsupported_tag<typename Message::tag> >::type> {};
 
 }  // namespace traits
-
-} /* network */
-
-} /* boost */
+}  // namespace network
+}  // namespace boost
 
 #endif  // BOOST_NETWORK_MESSAGE_TRAITS_HEADERS_HPP_20100903

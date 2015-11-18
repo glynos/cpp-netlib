@@ -1,21 +1,22 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SYNC_IMPL_HPP_20100623
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_SYNC_IMPL_HPP_20100623
 
-#include <boost/function.hpp>
-#include <boost/bind/bind.hpp>
-#include <boost/optional/optional.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/network/traits/string.hpp>
-#include <boost/network/protocol/http/tags.hpp>
-#include <boost/network/protocol/http/traits/vector.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/traits/connection_policy.hpp>
-
 // Copyright 2013 Google, Inc.
 // Copyright 2010 Dean Michael Berris <dberris@google.com>
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#include <boost/bind/bind.hpp>
+#include <boost/function.hpp>
+#include <boost/network/protocol/http/client/options.hpp>
+#include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/protocol/http/traits/connection_policy.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/optional/optional.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 namespace boost {
 namespace network {
@@ -51,30 +52,27 @@ struct sync_client
   sync_client(
       bool cache_resolved, bool follow_redirect, bool always_verify_peer,
       int timeout, boost::shared_ptr<boost::asio::io_service> service,
-      optional<string_type> const& certificate_filename =
+      optional<string_type>  certificate_filename =
           optional<string_type>(),
-      optional<string_type> const& verify_path = optional<string_type>(),
-      optional<string_type> const& certificate_file = optional<string_type>(),
-      optional<string_type> const& private_key_file = optional<string_type>(),
-      optional<string_type> const& ciphers = optional<string_type>(),
+      optional<string_type>  verify_path = optional<string_type>(),
+      optional<string_type>  certificate_file = optional<string_type>(),
+      optional<string_type>  private_key_file = optional<string_type>(),
+      optional<string_type>  ciphers = optional<string_type>(),
       long ssl_options = 0)
       : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get() ? service
                                   : make_shared<boost::asio::io_service>()),
         service_(*service_ptr),
         resolver_(service_),
-        certificate_filename_(certificate_filename),
-        verify_path_(verify_path),
-        certificate_file_(certificate_file),
-        private_key_file_(private_key_file),
-        ciphers_(ciphers),
+        certificate_filename_(std::move(certificate_filename)),
+        verify_path_(std::move(verify_path)),
+        certificate_file_(std::move(certificate_file)),
+        private_key_file_(std::move(private_key_file)),
+        ciphers_(std::move(ciphers)),
         ssl_options_(ssl_options),
         always_verify_peer_(always_verify_peer) {}
 
-  ~sync_client() {
-    connection_base::cleanup();
-    service_ptr.reset();
-  }
+  ~sync_client() = default;
 
   void wait_complete() {}
 

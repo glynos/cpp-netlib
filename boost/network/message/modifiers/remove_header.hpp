@@ -7,12 +7,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/mpl/not.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_pod.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/range/algorithm/remove_if.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/mpl/not.hpp>
 
 namespace boost {
 namespace network {
@@ -39,7 +39,7 @@ struct iequals_pred {
   iequals_pred(KeyType const& key) : key(key) {}
   template <class Header>
   bool operator()(Header& other) const {
-    return boost::iequals(key, name(other));
+    return boost::algorithm::iequals(key, name(other));
   }
 };
 

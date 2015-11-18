@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_HPP__
-#define __NETWORK_HPP__
+#ifndef BOOST_NETWORK_HPP__
+#define BOOST_NETWORK_HPP__
 
 // Include all headers in network/
 // Author: Dean Michael Berris
@@ -14,4 +14,4 @@
 #include <boost/network/message.hpp>   // message type implementation
 #include <boost/network/protocol.hpp>  // protocols implementation
 
-#endif  // __NETWORK_HPP__
+#endif  // BOOST_NETWORK_HPP__

@@ -20,13 +20,13 @@ template <class Tag>
 struct host_wrapper {
   basic_request<Tag> const& message_;
 
-  host_wrapper(basic_request<Tag> const& message) : message_(message) {}
+  explicit host_wrapper(basic_request<Tag> const& message) : message_(message) {}
 
   typedef typename basic_request<Tag>::string_type string_type;
 
   operator string_type() { return message_.host(); }
 };
-}
+} // namespace impl
 
 template <class Tag>
 inline impl::host_wrapper<Tag> host(basic_request<Tag> const& request) {

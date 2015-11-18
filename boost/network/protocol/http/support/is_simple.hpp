@@ -20,10 +20,13 @@ template <class Tag>
 struct is_simple<
     Tag, typename enable_if<typename Tag::is_simple>::type> : mpl::true_ {};
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+} // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_SUPPORT_IS_SIMPLE_HPP_20100927 */

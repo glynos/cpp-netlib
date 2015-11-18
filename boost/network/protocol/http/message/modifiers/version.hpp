@@ -7,10 +7,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/mpl/if.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_sync.hpp>
 #include <boost/thread/future.hpp>
-#include <boost/mpl/if.hpp>
 
 namespace boost {
 namespace network {
@@ -23,13 +23,13 @@ namespace impl {
 
 template <class Tag, class T>
 void version(basic_response<Tag> &response, T const &value,
-             mpl::false_ const &) {
+             mpl::false_ const & /*unused*/) {
   response << boost::network::http::version(value);
 }
 
 template <class Tag, class T>
 void version(basic_response<Tag> &response, T const &future,
-             mpl::true_ const &) {
+             mpl::true_ const & /*unused*/) {
   response.version(future);
 }
 

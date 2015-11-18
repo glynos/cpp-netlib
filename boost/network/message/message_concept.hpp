@@ -14,9 +14,9 @@
 #include <boost/network/message/traits/source.hpp>
 #include <boost/network/message/traits/destination.hpp>
 #include <boost/network/message/traits/headers.hpp>
-#include <boost/network/message/wrappers.hpp>
-#include <boost/network/message/transformers.hpp>
-#include <boost/network/message/directives.hpp>
+#include <boost/network/tags.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {

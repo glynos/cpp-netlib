@@ -6,13 +6,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <cstddef>
-#include <boost/network/tags.hpp>
-#include <boost/thread/thread.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
 #include <boost/asio/io_service.hpp>
+#include <boost/function.hpp>
+#include <boost/network/tags.hpp>
 #include <boost/scope_exit.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/thread/thread.hpp>
+#include <cstddef>
 
 namespace boost {
 namespace network {
@@ -24,12 +24,19 @@ typedef boost::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
 
 template <class Tag>
 struct basic_thread_pool {
-  basic_thread_pool(std::size_t threads = 1,
+  basic_thread_pool(basic_thread_pool const &) = delete;
+  basic_thread_pool &operator=(basic_thread_pool) = delete;
+  basic_thread_pool(basic_thread_pool&&) noexcept = default;
+  basic_thread_pool &operator=(basic_thread_pool&&) = default;
+
+  basic_thread_pool() : basic_thread_pool(1) {}
+
+  explicit basic_thread_pool(std::size_t threads,
                     io_service_ptr io_service = io_service_ptr(),
                     worker_threads_ptr worker_threads = worker_threads_ptr())
       : threads_(threads),
-        io_service_(io_service),
-        worker_threads_(worker_threads),
+        io_service_(std::move(io_service)),
+        worker_threads_(std::move(worker_threads)),
         sentinel_() {
     bool commit = false;
     BOOST_SCOPE_EXIT_TPL(
@@ -81,10 +88,11 @@ struct basic_thread_pool {
   }
 
   void swap(basic_thread_pool &other) {
-    std::swap(other.threads_, threads_);
-    std::swap(other.io_service_, io_service_);
-    std::swap(other.worker_threads_, worker_threads_);
-    std::swap(other.sentinel_, sentinel_);
+    using std::swap;
+    swap(other.threads_, threads_);
+    swap(other.io_service_, io_service_);
+    swap(other.worker_threads_, worker_threads_);
+    swap(other.sentinel_, sentinel_);
   }
 
  protected:
@@ -93,18 +101,17 @@ struct basic_thread_pool {
   worker_threads_ptr worker_threads_;
   sentinel_ptr sentinel_;
 
- private:
-  basic_thread_pool(basic_thread_pool const &);     // no copies please
-  basic_thread_pool &operator=(basic_thread_pool);  // no assignment
-                                                    // please
 };
+
+template <class T>
+void swap(basic_thread_pool<T> &a, basic_thread_pool<T> &b) {
+  a.swap(b);
+}
 
 typedef basic_thread_pool<tags::default_> thread_pool;
 
-} /* utils */
-
-} /* network */
-
-} /* boost */
+}  // namespace utils
+}  // namespace network
+}  // namespace boost
 
 #endif /* BOOST_NETWORK_UTILS_THREAD_POOL_HPP_20101020 */

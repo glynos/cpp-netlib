@@ -84,7 +84,7 @@ struct sync_connection
       if (done) {
         if (request_.method[0] == 'P') {
           // look for the content-length header
-          typename std::vector<typename request_header<Tag>::type>::iterator
+          auto
               it = std::find_if(request_.headers.begin(),
                                 request_.headers.end(), is_content_length());
           if (it == request_.headers.end()) {

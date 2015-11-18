@@ -30,11 +30,11 @@ struct get_real_algorithm {
 
 template <class Algorithm, class Selector>
 struct transform_impl : public get_real_algorithm<Algorithm, Selector>::type {};
-}  // namspace impl
+} // namespace impl
 
 template <class Algorithm, class Selector>
-inline impl::transform_impl<Algorithm, Selector> transform(Algorithm,
-                                                           Selector) {
+inline impl::transform_impl<Algorithm, Selector> transform(Algorithm /*unused*/ /*unused*/,
+                                                           Selector /*unused*/ /*unused*/) {
   return impl::transform_impl<Algorithm, Selector>();
 }
 

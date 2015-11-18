@@ -6,9 +6,17 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/placeholders.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/strand.hpp>
+#include <boost/network/protocol/http/traits/resolver.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/unordered/unordered_map.hpp>
+#include <boost/function.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/fusion/tuple/tuple_tie.hpp>
+#include <boost/bind/bind.hpp>
 
 namespace boost {
 namespace network {
@@ -63,7 +71,7 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
                                    boost::asio::placeholders::iterator)));
   }
 
-  void handle_resolve(string_type const &host,
+  void handle_resolve(string_type  /*unused*/const &host,
                       resolve_completion_function once_resolved,
                       boost::system::error_code const &ec,
                       resolver_iterator endpoint_iterator) {
@@ -81,11 +89,8 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
 };
 
 }  // namespace policies
-
 }  // namespace http
-
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_POLICIES_ASYNC_RESOLVER_20100622

@@ -41,11 +41,11 @@ struct request_headers_wrapper {
   explicit request_headers_wrapper(basic_request<Tag> const& message)
       : message_(message) {}
 
-  range_type operator[](string_type const& key) const {
+  range_type operator[](string_type  /*unused*/const& key) const {
     return message_.headers().equal_range(key);
   }
 
-  typename headers_container_type::size_type count(string_type const& key)
+  typename headers_container_type::size_type count(string_type  /*unused*/const& key)
       const {
     return message_.headers().count(key);
   }
@@ -76,11 +76,11 @@ struct response_headers_wrapper {
   explicit response_headers_wrapper(basic_response<Tag> const& message)
       : message_(message) {}
 
-  range_type operator[](string_type const& key) const {
+  range_type operator[](string_type  /*unused*/const& key) const {
     return message_.headers().equal_range(key);
   }
 
-  typename headers_container_type::size_type count(string_type const& key)
+  typename headers_container_type::size_type count(string_type  /*unused*/const& key)
       const {
     return message_.headers().count(key);
   }
@@ -114,7 +114,7 @@ inline impl::response_headers_wrapper<Tag> headers(
   return impl::response_headers_wrapper<Tag>(response_);
 }
 
-}  // namepace http
+}  // namespace http
 
 }  // namespace network
 

@@ -7,14 +7,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
-#include <boost/network/support/is_async.hpp>
-#include <boost/thread/future.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/variant/variant.hpp>
-#include <boost/variant/static_visitor.hpp>
-#include <boost/variant/apply_visitor.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/network/tags.hpp>
+#include <boost/thread/future.hpp>
+#include <boost/variant/apply_visitor.hpp>
+#include <boost/variant/static_visitor.hpp>
+#include <boost/variant/variant.hpp>
 
 namespace boost {
 namespace network {
@@ -42,14 +42,14 @@ struct status_directive {
   template <class Tag>
   struct status_visitor : boost::static_visitor<> {
     basic_response<Tag> const &response;
-    status_visitor(basic_response<Tag> const &response) : response(response) {}
+    explicit status_visitor(basic_response<Tag> const &response) : response(response) {}
 
     void operator()(typename value<Tag>::type const &status_) const {
       response.status(status_);
     }
 
     template <class T>
-    void operator()(T const &) const {
+    void operator()(T const & /*unused*/) const {
       // FIXME fail here!
     }
   };

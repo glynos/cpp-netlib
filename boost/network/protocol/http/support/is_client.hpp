@@ -6,8 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/mpl/if.hpp>
 #include <boost/network/protocol/http/tags.hpp>
-#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace network {
@@ -20,10 +20,13 @@ template <class Tag>
 struct is_client<
     Tag, typename enable_if<typename Tag::is_client>::type> : mpl::true_ {};
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_SUPPORT_IS_CLIENT_HPP_20101118 */

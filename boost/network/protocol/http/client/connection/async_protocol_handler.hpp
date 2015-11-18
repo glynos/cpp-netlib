@@ -8,8 +8,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/fusion/tuple/tuple.hpp>
+#include <boost/fusion/tuple/tuple_tie.hpp>
+#include <boost/logic/tribool.hpp>
 #include <boost/network/detail/debug.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
+#include <boost/network/protocol/http/parser/incremental.hpp>
+#include <boost/network/protocol/http/request_parser.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost {
 namespace network {
@@ -23,22 +29,23 @@ struct http_async_protocol_handler {
 
 #ifdef BOOST_NETWORK_DEBUG
   struct debug_escaper {
-    string_type& string;
-    explicit debug_escaper(string_type& string_) : string(string_) {}
-    debug_escaper(debug_escaper const& other) : string(other.string) {}
+    string_type& string_;
+    explicit debug_escaper(string_type& string) : string_(string) {}
+    debug_escaper(debug_escaper const&) = default;
+    debug_escaper(debug_escaper&&) noexcept = default;
     void operator()(typename string_type::value_type input) {
       if (!algorithm::is_print()(input)) {
         typename ostringstream<Tag>::type escaped_stream;
         if (input == '\r') {
-          string.append("\\r");
+          string_.append("\\r");
         } else if (input == '\n') {
-          string.append("\\n");
+          string_.append("\\n");
         } else {
           escaped_stream << "\\x" << static_cast<int>(input);
-          string.append(escaped_stream.str());
+          string_.append(escaped_stream.str());
         }
       } else {
-        string.push_back(input);
+        string_.push_back(input);
       }
     }
   };
@@ -318,7 +325,7 @@ struct http_async_protocol_handler {
 
   template <class Delegate, class Callback>
   void parse_body(Delegate& delegate_, Callback callback, size_t bytes) {
-    // TODO: we should really not use a string for the partial body
+    // TODO(dberris): we should really not use a string for the partial body
     // buffer.
     partial_parsed.append(part_begin, bytes);
     part_begin = part.begin();
@@ -327,7 +334,7 @@ struct http_async_protocol_handler {
   }
 
   typedef response_parser<Tag> response_parser_type;
-  // TODO: make 1024 go away and become a configurable value.
+  // TODO(dberris): make 1024 go away and become a configurable value.
   typedef boost::array<typename char_<Tag>::type, 1024> buffer_type;
 
   response_parser_type response_parser_;
@@ -344,13 +351,9 @@ struct http_async_protocol_handler {
   bool is_chunk_encoding;
 };
 
-} /* impl */
+}  // namespace impl
+}  // namespace http
+}  // namespace network
+}  // namespace boost
 
-} /* http */
-
-} /* network */
-
-} /* boost */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_20101015 \
-          */
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_20101015 

@@ -7,10 +7,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/network/protocol/http/client/pimpl.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
-#include <boost/network/protocol/http/client/pimpl.hpp>
-#include <boost/network/protocol/http/client/options.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+#include <boost/function.hpp>
 
 namespace boost {
 namespace network {

@@ -3,11 +3,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
-#define __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
+#ifndef BOOST_NETWORK_URI_URI_ACCESSORS_INC__
+#define BOOST_NETWORK_URI_URI_ACCESSORS_INC__
 
-#include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/encode.hpp>
+#include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/decode.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/fusion/include/std_pair.hpp>
@@ -28,7 +28,7 @@ struct key_value_sequence : spirit::qi::grammar<uri::const_iterator, Map()> {
     key =
         spirit::qi::char_("a-zA-Z_") >> *spirit::qi::char_("-+.~a-zA-Z_0-9/%");
     value = *spirit::qi::char_("-+.~a-zA-Z_0-9/%");
-  }
+  };
 
   spirit::qi::rule<uri::const_iterator, Map()> query;
   spirit::qi::rule<uri::const_iterator, pair_type()> pair;
@@ -92,4 +92,4 @@ inline uri::string_type decoded_fragment(const uri &uri_) {
 }  // namespace network
 }  // namespace boost
 
-#endif  // __BOOST_NETWORK_URI_URI_ACCESSORS_INC__
+#endif  // BOOST_NETWORK_URI_URI_ACCESSORS_INC__

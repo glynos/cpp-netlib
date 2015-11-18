@@ -21,7 +21,6 @@ struct is_default_string<
     typename enable_if<typename Tag::is_default_string>::type> : mpl::true_ {};
 
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_SUPPORT_STRING_CHECK_20100808

@@ -4,14 +4,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
-#define __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
+#ifndef BOOST_NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
+#define BOOST_NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
 
-#include <boost/network/traits/string.hpp>
 #include <boost/network/traits/headers_container.hpp>
-#include <boost/range/iterator_range.hpp>
+#include <boost/network/traits/string.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/network/detail/wrapper_base.hpp>
+#include <boost/range/iterator_range.hpp>
 
 namespace boost {
 namespace network {
@@ -98,4 +98,4 @@ inline impl::headers_wrapper<Tag> headers(basic_message<Tag> const& message_) {
 
 }  // namespace boost
 
-#endif  // __NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__
+#endif  // BOOST_NETWORK_MESSAGE_WRAPPERS_HEADERS_HPP__

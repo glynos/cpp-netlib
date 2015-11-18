@@ -10,10 +10,11 @@
 
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
-#include <boost/thread/thread.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/bind.hpp>
+#include <boost/make_shared.hpp>
+#include <boost/network/protocol/http/traits/connection_policy.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/thread/thread.hpp>
 
 namespace boost {
 namespace network {
@@ -39,11 +40,11 @@ struct async_client
   async_client(bool cache_resolved, bool follow_redirect,
                bool always_verify_peer, int timeout,
                boost::shared_ptr<boost::asio::io_service> service,
-               optional<string_type> const& certificate_filename,
-               optional<string_type> const& verify_path,
-               optional<string_type> const& certificate_file,
-               optional<string_type> const& private_key_file,
-               optional<string_type> const& ciphers, long ssl_options)
+               optional<string_type> certificate_filename,
+               optional<string_type> verify_path,
+               optional<string_type> certificate_file,
+               optional<string_type> private_key_file,
+               optional<string_type> ciphers, long ssl_options)
       : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get()
                         ? service
@@ -51,11 +52,11 @@ struct async_client
         service_(*service_ptr),
         resolver_(service_),
         sentinel_(new boost::asio::io_service::work(service_)),
-        certificate_filename_(certificate_filename),
-        verify_path_(verify_path),
-        certificate_file_(certificate_file),
-        private_key_file_(private_key_file),
-        ciphers_(ciphers),
+        certificate_filename_(std::move(certificate_filename)),
+        verify_path_(std::move(verify_path)),
+        certificate_file_(std::move(certificate_file)),
+        private_key_file_(std::move(private_key_file)),
+        ciphers_(std::move(ciphers)),
         ssl_options_(ssl_options),
         always_verify_peer_(always_verify_peer) {
     connection_base::resolver_strand_.reset(
@@ -65,7 +66,7 @@ struct async_client
           boost::bind(&boost::asio::io_service::run, &service_)));
   }
 
-  ~async_client() throw() { sentinel_.reset(); }
+  ~async_client() throw() = default;
 
   void wait_complete() {
     sentinel_.reset();
@@ -101,6 +102,7 @@ struct async_client
   long ssl_options_;
   bool always_verify_peer_;
 };
+
 }  // namespace impl
 }  // namespace http
 }  // namespace network

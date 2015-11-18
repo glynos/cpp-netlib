@@ -6,12 +6,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <utility>
 #include <boost/network/protocol/http/traits/resolver.hpp>
+#include <utility>
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/fusion/include/tuple.hpp>
-#include <boost/network/traits/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/network/traits/string.hpp>
 #include <boost/unordered_map.hpp>
 
 namespace boost {
@@ -35,10 +35,10 @@ struct sync_resolver {
   resolved_cache endpoint_cache_;
   bool cache_resolved_;
 
-  sync_resolver(bool cache_resolved) : cache_resolved_(cache_resolved) {}
+  explicit sync_resolver(bool cache_resolved) : cache_resolved_(cache_resolved) {}
 
   resolver_iterator_pair resolve(resolver_type& resolver_,
-                                 string_type const& hostname,
+                                 string_type  /*unused*/const& hostname,
                                  string_type const& port) {
     if (cache_resolved_) {
       typename resolved_cache::iterator cached_iterator =

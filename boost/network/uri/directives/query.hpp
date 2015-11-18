@@ -3,27 +3,29 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __BOOST_NETWORK_URI_DIRECTIVES_QUERY_INC__
-#define __BOOST_NETWORK_URI_DIRECTIVES_QUERY_INC__
+#ifndef BOOST_NETWORK_URI_DIRECTIVES_QUERY_INC__
+#define BOOST_NETWORK_URI_DIRECTIVES_QUERY_INC__
 
 #include <boost/network/uri/encode.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
+#include <boost/range/empty.hpp>
+#include <string>
 
 namespace boost {
 namespace network {
 namespace uri {
 struct query_directive {
 
-  explicit query_directive(const std::string &query) : query(query) {}
+  explicit query_directive(std::string  query) : query_(std::move(query)) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {
     uri.append("?");
-    uri.append(query);
+    uri.append(query_);
   }
 
-  std::string query;
+  std::string query_;
 };
 
 inline query_directive query(const std::string &query) {
@@ -32,8 +34,8 @@ inline query_directive query(const std::string &query) {
 
 struct query_key_query_directive {
 
-  query_key_query_directive(const std::string &key, const std::string &query)
-      : key(key), query(query) {}
+  query_key_query_directive(std::string  key, std::string  query)
+      : key_(std::move(key)), query_(std::move(query)) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {
@@ -43,13 +45,13 @@ struct query_key_query_directive {
     } else {
       uri.append("&");
     }
-    uri.append(key);
+    uri.append(key_);
     uri.append("=");
-    uri.append(query);
+    uri.append(query_);
   }
 
-  std::string key;
-  std::string query;
+  std::string key_;
+  std::string query_;
 };
 
 inline query_key_query_directive query(const std::string &key,
@@ -60,4 +62,4 @@ inline query_key_query_directive query(const std::string &key,
 }  // namespace network
 }  // namespace boost
 
-#endif  // __BOOST_NETWORK_URI_DIRECTIVES_QUERY_INC__
+#endif  // BOOST_NETWORK_URI_DIRECTIVES_QUERY_INC__

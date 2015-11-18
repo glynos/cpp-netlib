@@ -7,7 +7,6 @@
 #define BOOST_NETWORK_SUPPORT_WSTRING_CHECK_20100808
 
 #include <boost/network/tags.hpp>
-#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace network {
@@ -21,7 +20,6 @@ struct is_default_wstring<
     typename enable_if<typename Tag::is_default_wstring>::type> : mpl::true_ {};
 
 }  // namespace network
-
 }  // namespace boost
 
-#endif  // BOOST_NETWORK_SUPPORT_STRING_CHECK_20100808
+#endif  // BOOST_NETWORK_SUPPORT_WSTRING_CHECK_20100808

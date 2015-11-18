@@ -3,23 +3,26 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __BOOST_NETWORK_URI_DIRECTIVES_AUTHORITY_INC__
-#define __BOOST_NETWORK_URI_DIRECTIVES_AUTHORITY_INC__
+#ifndef BOOST_NETWORK_URI_DIRECTIVES_AUTHORITY_INC__
+#define BOOST_NETWORK_URI_DIRECTIVES_AUTHORITY_INC__
+
+#include <string>
 
 namespace boost {
 namespace network {
 namespace uri {
+
 struct authority_directive {
 
-  explicit authority_directive(const std::string &authority)
-      : authority(authority) {}
+  explicit authority_directive(std::string authority)
+      : authority_(std::move(authority)) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {
-    uri.append(authority);
+    uri.append(authority_);
   }
 
-  std::string authority;
+  std::string authority_;
 };
 
 inline authority_directive authority(const std::string &authority) {
@@ -29,4 +32,4 @@ inline authority_directive authority(const std::string &authority) {
 }  // namespace network
 }  // namespace boost
 
-#endif  // __BOOST_NETWORK_URI_DIRECTIVES_AUTHORITY_INC__
+#endif  // BOOST_NETWORK_URI_DIRECTIVES_AUTHORITY_INC__

@@ -6,12 +6,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/tags.hpp>
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/protocol/http/support/client_or_server.hpp>
-#include <boost/thread/future.hpp>
 #include <boost/concept/requires.hpp>
 #include <boost/network/message/directives.hpp>
+#include <boost/network/protocol/http/support/client_or_server.hpp>
+#include <boost/network/protocol/http/tags.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {
@@ -26,15 +26,15 @@ struct basic_request;
 namespace impl {
 
 template <class Tag, class T>
-void body(basic_response<Tag> &response, T const &value, mpl::false_ const &) {
+void body(basic_response<Tag> &response, T const &value, mpl::false_ const & /*unused*/) {
   response << ::boost::network::body(value);
 }
 
 template <class Tag, class T>
-void body(basic_response<Tag> &response, T const &future, mpl::true_ const &) {
+void body(basic_response<Tag> &response, T const &future, mpl::true_ const & /*unused*/) {
   response.body(future);
 }
-}
+}  // namespace impl
 
 template <class Tag, class T>
 inline void body(basic_response<Tag> &response, T const &value) {
@@ -43,13 +43,13 @@ inline void body(basic_response<Tag> &response, T const &value) {
 
 template <class Tag, class T>
 inline void body_impl(basic_request<Tag> &request, T const &value,
-                      tags::server) {
+                      tags::server /*unused*/) {
   request.body = value;
 }
 
 template <class Tag, class T>
 inline void body_impl(basic_request<Tag> &request, T const &value,
-                      tags::client) {
+                      tags::client /*unused*/) {
   request << ::boost::network::body(value);
 }
 
@@ -64,11 +64,12 @@ namespace impl {
 
 template <class Message, class ValueType, class Async>
 inline void body(Message const &message, ValueType const &body_,
-                 http::tags::http_server, Async) {
+                 http::tags::http_server /*unused*/, Async /*unused*/) {
   message.body = body_;
 }
 
-} /* impl */
+} // namespace impl
+ /* impl */
 
 }  // namespace network
 

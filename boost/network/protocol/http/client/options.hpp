@@ -1,16 +1,16 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP_20130128
 #define BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP_20130128
 
-#include <boost/network/traits/string.hpp>
-#include <boost/smart_ptr/shared_ptr.hpp>
-#include <boost/optional/optional.hpp>
-#include <boost/asio/io_service.hpp>
-
 // Copyright 2013 Google, Inc.
 // Copyright 2013 Dean Michael Berris <dberris@google.com>
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+#include <boost/asio/io_service.hpp>
+#include <boost/network/traits/string.hpp>
+#include <boost/optional/optional.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 namespace boost {
 namespace network {
@@ -174,8 +174,8 @@ inline void swap(client_options<Tag>& a, client_options<Tag>& b) {
   a.swap(b);
 }
 
-} /* http */
-} /* network */
-} /* boost */
+}  // namespace http
+}  // namespace network
+}  // namespace boost
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP_20130128 */
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_OPTIONS_HPP_20130128

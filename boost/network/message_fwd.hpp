@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __2008817MESSAGE_FWD_INC__
-#define __2008817MESSAGE_FWD_INC__
+#ifndef BOST_NETWORK_MESSAGE_FWD_HPP
+#define BOST_NETWORK_MESSAGE_FWD_HPP
 
 namespace boost {
 namespace network {
@@ -12,7 +12,7 @@ namespace network {
 template <class Tag>
 struct basic_message;
 
-}  // namespace boost
-}  // namespace network
+} // namespace networkk
+} // namespace boost
 
-#endif  // __2008817MESSAGE_FWD_INC__
+#endif // BOST_NETWORK_MESSAGE_FWD_HPP

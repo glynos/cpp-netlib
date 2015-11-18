@@ -8,10 +8,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
+#include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/delegate_factory.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
+#include <boost/network/protocol/http/traits/resolver_policy.hpp>
 
 namespace boost {
 namespace network {
@@ -34,8 +35,7 @@ struct async_connection_base {
   typedef shared_ptr<this_type> connection_ptr;
 
   // This is the factory function which constructs the appropriate async
-  // connection implementation with the correct delegate chosen based on
-  // the
+  // connection implementation with the correct delegate chosen based on the
   // tag.
   static connection_ptr new_connection(
       resolve_function resolve, resolver_type &resolver, bool follow_redirect,
@@ -66,15 +66,12 @@ struct async_connection_base {
                          bool get_body, body_callback_function_type callback,
                          body_generator_function_type generator) = 0;
 
-  virtual ~async_connection_base() {}
+  virtual ~async_connection_base() = default;
 };
 
 }  // namespace impl
-
 }  // namespace http
-
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_ASYNC_CONNECTION_BASE_20100529

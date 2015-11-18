@@ -8,9 +8,9 @@
 #ifndef BOOST_NETWORK_TRAITS_HEADERS_CONTAINER_INC
 #define BOOST_NETWORK_TRAITS_HEADERS_CONTAINER_INC
 
-#include <map>
 #include <boost/network/tags.hpp>
 #include <boost/network/traits/string.hpp>
+#include <map>
 
 namespace boost {
 namespace network {

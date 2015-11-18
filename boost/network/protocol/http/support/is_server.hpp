@@ -20,10 +20,13 @@ template <class Tag>
 struct is_server<
     Tag, typename enable_if<typename Tag::is_server>::type> : mpl::true_ {};
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* boost */
+}  // namespace boost
+ /* boost */
 
 #endif /* BOOST_NETWORK_PROTOCOL_SUPPORT_IS_SERVER_HPP_20101118 */

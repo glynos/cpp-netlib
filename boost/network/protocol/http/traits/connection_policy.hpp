@@ -7,15 +7,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/protocol/http/policies/simple_connection.hpp>
+#include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/protocol/http/policies/pooled_connection.hpp>
 #include <boost/network/protocol/http/policies/async_connection.hpp>
 #include <boost/network/protocol/http/support/is_simple.hpp>
-#include <boost/network/protocol/http/support/is_keepalive.hpp>
-#include <boost/network/support/is_async.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/network/protocol/http/support/is_keepalive.hpp>
+#include <boost/network/support/is_async.hpp>
 
 namespace boost {
 namespace network {

@@ -6,22 +6,22 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/version.hpp>
-#include <boost/network/traits/ostringstream.hpp>
+#include <boost/config.hpp>
 #include <boost/network/protocol/http/message.hpp>
-#include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
+#include <boost/network/protocol/http/response.hpp>
+#include <boost/network/traits/ostringstream.hpp>
 
 #include <boost/asio/io_service.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/foreach.hpp>
-#include <ostream>
+#include <boost/lexical_cast.hpp>
 #include <istream>
-#include <string>
-#include <stdexcept>
 #include <map>
+#include <ostream>
+#include <stdexcept>
+#include <string>
 
 #include <boost/network/protocol/http/client/facade.hpp>
 #include <boost/network/protocol/http/client/macros.hpp>

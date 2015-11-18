@@ -6,9 +6,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/mpl/if.hpp>
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
-#include <boost/mpl/if.hpp>
 
 namespace boost {
 namespace network {
@@ -124,7 +124,7 @@ struct constants_wide {
     return https_;
   }
 };
-}
+} // namespace impl
 
 template <class Tag>
 struct constants

@@ -4,17 +4,17 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef __BOOST_NETWORK_URI_INC__
-#define __BOOST_NETWORK_URI_INC__
+#ifndef BOOST_NETWORK_URI_INC__
+#define BOOST_NETWORK_URI_INC__
 
 #pragma once
 
 #include <boost/network/uri/config.hpp>
 #include <boost/network/uri/detail/uri_parts.hpp>
 #include <boost/network/uri/schemes.hpp>
-#include <boost/utility/swap.hpp>
-#include <boost/range/algorithm/equal.hpp>
 #include <boost/range/algorithm/copy.hpp>
+#include <boost/range/algorithm/equal.hpp>
+#include <boost/utility/swap.hpp>
 #include <boost/range/as_literal.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/lexical_cast.hpp>
@@ -46,7 +46,7 @@ class BOOST_URI_DECL uri {
   //    parse();
   //}
 
-  uri(const string_type &uri) : uri_(uri), is_valid_(false) { parse(); }
+  uri(string_type str) : uri_(std::move(str)), is_valid_(false) { parse(); }
 
   template <class FwdIter>
   uri(const FwdIter &first, const FwdIter &last)
@@ -66,7 +66,7 @@ class BOOST_URI_DECL uri {
     return *this;
   }
 
-  ~uri() {}
+  ~uri() = default;
 
   void swap(uri &other) {
     boost::swap(uri_, other.uri_);
@@ -109,8 +109,9 @@ class BOOST_URI_DECL uri {
   }
 
 // hackfix by Simon Haegler, Esri R&D Zurich
-// this workaround is needed to avoid running into the "incompatible string iterator" assertion
-// triggered by the default-constructed string iterators employed by cpp-netlib (see uri.ipp qi::rule declarations)
+// this workaround is needed to avoid running into the "incompatible string
+// iterator" assertion triggered by the default-constructed string iterators
+// employed by cpp-netlib (see uri.ipp qi::rule declarations)
 #if defined(_MSC_VER) && defined(_DEBUG)
 #	define CATCH_EMPTY_ITERATOR_RANGE if (range.begin()._Getcont() == 0 || range.end()._Getcont() == 0) { return string_type(); }
 #else
@@ -120,7 +121,7 @@ class BOOST_URI_DECL uri {
   string_type scheme() const {
     const_range_type range = scheme_range();
     CATCH_EMPTY_ITERATOR_RANGE
-	return range ? string_type(boost::begin(range), boost::end(range))
+    return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
 
@@ -165,6 +166,10 @@ class BOOST_URI_DECL uri {
     return range ? string_type(boost::begin(range), boost::end(range))
                  : string_type();
   }
+
+#ifdef CATCH_EMPTY_ITERATOR_RANGE
+#undef CATCH_EMPTY_ITERATOR_RANGE
+#endif
 
   string_type string() const { return uri_; }
 
@@ -305,7 +310,10 @@ inline bool operator==(const uri::string_type &lhs, const uri &rhs) {
 }
 
 inline bool operator==(const uri &lhs, const uri::value_type *rhs) {
-  return boost::equal(lhs, boost::as_literal(rhs));
+  auto rlen = std::strlen(rhs);
+  size_t llen = std::labs(std::distance(lhs.begin(), lhs.end()));
+  if (rlen != llen) return false;
+  return boost::equal(lhs, boost::make_iterator_range(rhs, rhs + rlen));
 }
 
 inline bool operator==(const uri::value_type *lhs, const uri &rhs) {
@@ -384,4 +392,4 @@ inline uri from_file(const filesystem::path &path_) {
 }  // namespace network
 }  // namespace boost
 
-#endif  // __BOOST_NETWORK_URI_INC__
+#endif  // BOOST_NETWORK_URI_INC__

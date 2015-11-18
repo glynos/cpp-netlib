@@ -13,11 +13,14 @@ namespace http {
 BOOST_NETWORK_STRING_DIRECTIVE(method, method_, message.method(method_),
                                message.method = method_);
 
-} /* http */
+} // namespace http
+ /* http */
 
-} /* network */
+} // namespace network
+ /* network */
 
-} /* booet */
+} // namespace boost
+ /* booet */
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_DIRECTIVES_METHOD_HPP_20101120 \
           */

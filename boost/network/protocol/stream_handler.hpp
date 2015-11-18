@@ -10,22 +10,23 @@
 #pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
-#include <cstddef>
+#include <boost/asio.hpp>
+#include <boost/asio/async_result.hpp>
+#include <boost/asio/async_result.hpp>
+#include <boost/asio/basic_socket.hpp>
+#include <boost/asio/detail/config.hpp>
+#include <boost/asio/detail/config.hpp>
+#include <boost/asio/detail/handler_type_requirements.hpp>
+#include <boost/asio/detail/push_options.hpp>
 #include <boost/asio/detail/throw_error.hpp>
 #include <boost/asio/error.hpp>
-#include <boost/asio.hpp>
+#include <boost/asio/stream_socket_service.hpp>
+#include <boost/make_shared.hpp>
+#include <cstddef>
+
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
 #include <boost/asio/ssl.hpp>
 #endif
-#include <boost/asio/detail/push_options.hpp>
-#include <boost/asio/detail/config.hpp>
-#include <boost/asio/detail/handler_type_requirements.hpp>
-#include <boost/asio/stream_socket_service.hpp>
-#include <boost/asio/async_result.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/asio/detail/config.hpp>
-#include <boost/asio/async_result.hpp>
-#include <boost/asio/basic_socket.hpp>
 
 namespace boost {
 namespace network {
@@ -43,12 +44,12 @@ typedef boost::asio::ssl::context ssl_context;
 struct stream_handler {
  public:
   stream_handler(boost::shared_ptr<tcp_socket> socket)
-      : tcp_sock_(socket), ssl_enabled(false) {}
+      : tcp_sock_(std::move(socket)), ssl_enabled(false) {}
 
-  ~stream_handler() {}
+  ~stream_handler() = default;
 
   stream_handler(boost::shared_ptr<ssl_socket> socket)
-      : ssl_sock_(socket), ssl_enabled(true) {}
+      : ssl_sock_(std::move(socket)), ssl_enabled(true) {}
 
   stream_handler(boost::asio::io_service& io,
                  boost::shared_ptr<ssl_context> ctx =

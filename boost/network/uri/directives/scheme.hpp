@@ -6,16 +6,17 @@
 #ifndef __BOOST_NETWORK_URI_DIRECTIVES_SCHEME_INC__
 #define __BOOST_NETWORK_URI_DIRECTIVES_SCHEME_INC__
 
+#include <boost/network/uri/schemes.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/network/uri/schemes.hpp>
+#include <string>
 
 namespace boost {
 namespace network {
 namespace uri {
 struct scheme_directive {
 
-  explicit scheme_directive(const std::string &scheme) : scheme(scheme) {}
+  explicit scheme_directive(std::string scheme) : scheme(std::move(scheme)) {}
 
   template <class Uri>
   void operator()(Uri &uri) const {

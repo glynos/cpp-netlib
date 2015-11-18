@@ -6,15 +6,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/mpl/if.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_sync.hpp>
-#include <boost/type_traits/is_same.hpp>
+#include <boost/network/traits/string.hpp>
 #include <boost/thread/future.hpp>
-#include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost {
 namespace network {
-
 namespace traits {
 
 template <class Tag>
@@ -33,9 +33,7 @@ struct source
               unsupported_tag<typename Message::tag> >::type> {};
 
 }  // namespace traits
-
-} /* network */
-
-} /* boost */
+}  // namespace network
+}  // namespace boost
 
 #endif  // BOOST_NETWORK_MESSAGE_TRAITS_SOURCE_HPP_20100903

@@ -6,16 +6,18 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/support/is_async.hpp>
-#include <boost/network/support/is_sync.hpp>
-#include <boost/mpl/not.hpp>
+#include <boost/asio/io_service.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/static_assert.hpp>
-
-#include <boost/network/protocol/http/traits/connection_policy.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/network/protocol/http/client/async_impl.hpp>
 #include <boost/network/protocol/http/client/sync_impl.hpp>
+#include <boost/network/protocol/http/traits/connection_policy.hpp>
+#include <boost/network/support/is_async.hpp>
+#include <boost/network/support/is_sync.hpp>
+#include <boost/optional/optional.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <boost/static_assert.hpp>
 
 namespace boost {
 namespace network {
@@ -78,13 +80,11 @@ struct basic_client_impl
                   service, certificate_filename, verify_path, certificate_file,
                   private_key_file, ciphers, ssl_options) {}
 
-  ~basic_client_impl() {}
+  ~basic_client_impl() = default;
 };
 
 }  // namespace http
-
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_PIMPL_HPP_20100623

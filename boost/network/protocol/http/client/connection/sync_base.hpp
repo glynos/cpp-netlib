@@ -8,14 +8,14 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/network/traits/ostringstream.hpp>
 #include <boost/network/traits/istringstream.hpp>
+#include <boost/network/traits/ostringstream.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <boost/asio/read.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/asio/read_until.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <boost/network/protocol/http/response.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #include <boost/network/protocol/http/client/connection/sync_normal.hpp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
@@ -39,7 +39,7 @@ struct sync_connection_base_impl {
 
   template <class Socket>
   void init_socket(Socket& socket_, resolver_type& resolver_,
-                   string_type const& hostname, string_type const& port,
+                   string_type  /*unused*/const& hostname, string_type const& port,
                    resolver_function_type resolve_) {
     using boost::asio::ip::tcp;
     boost::system::error_code error = boost::asio::error::host_not_found;
@@ -100,7 +100,7 @@ struct sync_connection_base_impl {
   }
 
   template <class Socket>
-  void send_request_impl(Socket& socket_, string_type const& method,
+  void send_request_impl(Socket& socket_, string_type  /*unused*/const& method,
                          boost::asio::streambuf& request_buffer) {
     // TODO(dberris): review parameter necessity.
     (void)method;
@@ -198,7 +198,8 @@ struct sync_connection_base_impl {
       size_t length =
           lexical_cast<size_t>(boost::begin(content_length_range)->second) -
           already_read;
-      if (length == 0) return;
+      if (length == 0) { return;
+}
       size_t bytes_read = 0;
       while ((bytes_read = boost::asio::read(socket_, response_buffer,
                                              boost::asio::transfer_at_least(1),
@@ -214,15 +215,16 @@ struct sync_connection_base_impl {
   void read_body(Socket& socket_, basic_response<Tag>& response_,
                  boost::asio::streambuf& response_buffer) {
     typename ostringstream<Tag>::type body_stream;
-    // TODO tag dispatch based on whether it's HTTP 1.0 or HTTP 1.1
+    // TODO(dberris): tag dispatch based on whether it's HTTP 1.0 or HTTP 1.1
     if (version_major == 1 && version_minor == 0) {
       read_body_normal(socket_, response_, response_buffer, body_stream);
     } else if (version_major == 1 && version_minor == 1) {
-      if (response_.version() == "HTTP/1.0")
+      if (response_.version() == "HTTP/1.0") {
         read_body_normal(socket_, response_, response_buffer, body_stream);
-      else
+      } else {
         read_body_transfer_chunk_encoding(socket_, response_, response_buffer,
                                           body_stream);
+}
     } else {
       throw std::runtime_error("Unsupported HTTP version number.");
     }
@@ -248,7 +250,7 @@ struct sync_connection_base {
       new_connection(
           resolver_type& resolver, resolver_function_type resolve, bool https,
           bool always_verify_peer, int timeout,
-          optional<string_type> const& certificate_filename =
+          optional<string_type>  /*unused*/const& certificate_filename =
               optional<string_type>(),
           optional<string_type> const& verify_path = optional<string_type>(),
           optional<string_type> const& certificate_file =
@@ -288,10 +290,10 @@ struct sync_connection_base {
                          boost::asio::streambuf& response_buffer) = 0;
   virtual bool is_open() = 0;
   virtual void close_socket() = 0;
-  virtual ~sync_connection_base() {}
+  virtual ~sync_connection_base() = default;
 
  protected:
-  sync_connection_base() {}
+  sync_connection_base() = default;
 };
 
 }  // namespace impl

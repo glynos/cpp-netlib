@@ -13,9 +13,9 @@
 #include <boost/asio/ssl/context_base.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <boost/function.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/optional/optional.hpp>
-#include <boost/network/traits/string.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 
@@ -52,7 +52,7 @@ struct https_sync_connection
   https_sync_connection(
       resolver_type& resolver, resolver_function_type resolve,
       bool always_verify_peer, int timeout,
-      optional<string_type> const& certificate_filename =
+      optional<string_type>  /*unused*/const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
@@ -63,7 +63,7 @@ struct https_sync_connection
         timeout_(timeout),
         timer_(resolver.get_io_service()),
         resolver_(resolver),
-        resolve_(resolve),
+        resolve_(std::move(resolve)),
         context_(resolver.get_io_service(),
                  boost::asio::ssl::context::sslv23_client),
         socket_(resolver.get_io_service(), context_) {
@@ -95,13 +95,13 @@ struct https_sync_connection
                                     boost::asio::ssl::context::pem);
   }
 
-  void init_socket(string_type const& hostname, string_type const& port) {
+  void init_socket(string_type  /*unused*/const& hostname, string_type const& port) {
     connection_base::init_socket(socket_.lowest_layer(), resolver_, hostname,
                                  port, resolve_);
     socket_.handshake(boost::asio::ssl::stream_base::client);
   }
 
-  void send_request_impl(string_type const& method,
+  void send_request_impl(string_type  /*unused*/const& method,
                          basic_request<Tag> const& request_,
                          body_generator_function_type generator) {
     boost::asio::streambuf request_buffer;
@@ -157,7 +157,8 @@ struct https_sync_connection
     boost::system::error_code ignored;
     socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both,
                                     ignored);
-    if (ignored) return;
+    if (ignored != nullptr) { return;
+}
     socket_.lowest_layer().close(ignored);
   }
 
@@ -165,7 +166,8 @@ struct https_sync_connection
 
  private:
   void handle_timeout(boost::system::error_code const& ec) {
-    if (!ec) close_socket();
+    if (!ec) { close_socket();
+}
   }
 
   int timeout_;

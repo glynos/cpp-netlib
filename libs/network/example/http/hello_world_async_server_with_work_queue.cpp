@@ -35,8 +35,8 @@ struct request_data {
 
   typedef boost::shared_ptr<request_data> pointer;
 
-  request_data(server::request const& req, const server::connection_ptr& conn)
-      : req(req), conn(conn) {}
+  request_data(server::request  req, server::connection_ptr  conn)
+      : req(std::move(req)), conn(std::move(conn)) {}
 };
 
 /**

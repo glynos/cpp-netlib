@@ -18,11 +18,11 @@ namespace impl {
 template <class Tag>
 struct protocol_wrapper {
   basic_request<Tag> const& message_;
-  protocol_wrapper(basic_request<Tag> const& message) : message_(message) {}
+  explicit protocol_wrapper(basic_request<Tag> const& message) : message_(message) {}
   typedef typename basic_request<Tag>::string_type string_type;
   operator string_type() { return message_.protocol(); }
 };
-}
+} // namespace impl
 
 template <class Tag>
 inline impl::protocol_wrapper<Tag> protocol(basic_request<Tag> const& request) {

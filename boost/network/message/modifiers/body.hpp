@@ -13,13 +13,13 @@ namespace boost {
 namespace network {
 
 template <class Tag, template <class> class Message, class ValueType>
-inline void body_impl(Message<Tag>& message, ValueType const& body, tags::pod) {
+inline void body_impl(Message<Tag>& message, ValueType const& body, tags::pod /*unused*/ /*unused*/) {
   message.body = body;
 }
 
 template <class Tag, template <class> class Message, class ValueType>
 inline void body_impl(Message<Tag>& message, ValueType const& body,
-                      tags::normal) {
+                      tags::normal /*unused*/ /*unused*/) {
   message.body(body);
 }
 

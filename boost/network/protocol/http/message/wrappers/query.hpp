@@ -20,7 +20,7 @@ template <class Tag>
 struct query_wrapper {
   basic_request<Tag> const& message_;
 
-  query_wrapper(basic_request<Tag> const& message) : message_(message) {}
+  explicit query_wrapper(basic_request<Tag> const& message) : message_(message) {}
 
   typedef typename basic_request<Tag>::string_type string_type;
 

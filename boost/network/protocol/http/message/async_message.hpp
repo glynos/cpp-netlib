@@ -9,13 +9,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/thread/future.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/optional.hpp>
+#include <boost/thread/future.hpp>
 
 // FIXME move this out to a trait
-#include <set>
 #include <boost/foreach.hpp>
+#include <set>
 #include <boost/network/detail/wrapper_base.hpp>
 
 namespace boost {
@@ -27,7 +27,8 @@ namespace impl {
 template <class Tag>
 struct ready_wrapper;
 
-} /* impl */
+} // namespace impl
+ /* impl */
 
 template <class Tag>
 struct async_message {

@@ -11,6 +11,7 @@
 #include <boost/range/end.hpp>
 #include <cassert>
 #include <stdexcept>
+#include <string>
 
 namespace boost {
 namespace network {
@@ -59,9 +60,9 @@ OutputIterator decode(const InputIterator &in_begin,
   OutputIterator out = out_begin;
   while (it != in_end) {
     if (*it == '%') {
-	  if (++it == in_end) throw std::out_of_range("unexpected end of stream");
+      if (++it == in_end) throw std::out_of_range("unexpected end of stream");
       value_type v0 = detail::letter_to_hex(*it);
-	  if (++it == in_end) throw std::out_of_range("unexpected end of stream");
+      if (++it == in_end) throw std::out_of_range("unexpected end of stream");
       value_type v1 = detail::letter_to_hex(*it);
       ++it;
       *out++ = 0x10 * v0 + v1;
@@ -86,6 +87,7 @@ inline std::string decoded(const std::string &input) {
   decode(input, std::back_inserter(decoded));
   return decoded;
 }
+
 }  // namespace uri
 }  // namespace network
 }  // namespace boost

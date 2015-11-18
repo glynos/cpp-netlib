@@ -17,16 +17,16 @@ namespace impl {
 
 template <class Message, class ValueType, class Tag>
 inline void destination(Message const &message, ValueType const &destination_,
-                        Tag const &, mpl::false_ const &) {
+                        Tag const & /*unused*/ /*unused*/, mpl::false_ const & /*unused*/ /*unused*/) {
   message.destination(destination_);
 }
 
 template <class Message, class ValueType, class Tag>
 inline void destination(Message const &message, ValueType const &destination_,
-                        Tag const &, mpl::true_ const &) {
+                        Tag const & /*unused*/ /*unused*/, mpl::true_ const & /*unused*/ /*unused*/) {
   message.destination(destination_);
 }
-}
+} // namespace impl // namespace impl
 
 template <class Tag, template <class> class Message, class ValueType>
 inline void destination(Message<Tag> const &message,

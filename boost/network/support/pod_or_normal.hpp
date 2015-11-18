@@ -8,7 +8,7 @@
 
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/support/is_pod.hpp>
-#include <boost/mpl/if.hpp>
+#include <boost/network/tags.hpp>
 
 namespace boost {
 namespace network {
@@ -22,8 +22,7 @@ template <class Tag>
 struct pod_or_normal<
     Tag, typename enable_if<typename Tag::is_pod>::type> : tags::pod {};
 
-} /* network */
-
-} /* boost */
+}  // namespace network
+}  // namespace boost
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_SUPPORT_POD_OR_NORMAL_HPP_20101128 */

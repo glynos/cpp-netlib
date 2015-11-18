@@ -7,13 +7,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/traits/resolver_policy.hpp>
-
-#include <boost/unordered_map.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/protocol/http/response.hpp>
+#include <boost/network/protocol/http/traits/resolver_policy.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/unordered_map.hpp>
 #include <utility>
 
 #ifndef BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
@@ -37,7 +37,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                         system::error_code const&)> body_callback_function_type;
   typedef function<bool(string_type&)> body_generator_function_type;
 
-  void cleanup() { host_connection_map().swap(host_connections); }
+  void cleanup() { host_connection_map().swap(host_connections_); }
 
   struct connection_impl {
     typedef function<shared_ptr<connection_impl>(
@@ -47,10 +47,10 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         get_connection_function;
 
     connection_impl(
-        resolver_type& resolver, bool follow_redirect, string_type const& host,
-        string_type const& port, resolver_function_type resolve,
-        get_connection_function get_connection, bool https,
-        bool always_verify_peer, int timeout,
+        resolver_type& resolver, bool follow_redirect,
+        string_type /*unused*/ const& host, string_type const& port,
+        resolver_function_type resolve, get_connection_function get_connection,
+        bool https, bool always_verify_peer, int timeout,
         optional<string_type> const& certificate_filename =
             optional<string_type>(),
         optional<string_type> const& verify_path = optional<string_type>(),
@@ -65,7 +65,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                                    ssl_options)),
           resolver_(resolver),
           connection_follow_redirect_(follow_redirect),
-          get_connection_(get_connection),
+          get_connection_(std::move(get_connection)),
           certificate_filename_(certificate_filename),
           verify_path_(verify_path),
           certificate_file_(certificate_file),
@@ -113,8 +113,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
 
         try {
           pimpl->read_status(response_, response_buffer);
-        }
-        catch (boost::system::system_error& e) {
+        } catch (boost::system::system_error& e) {
           if (!retry && e.code() == boost::asio::error::eof) {
             retry = true;
             pimpl->init_socket(request_.host(),
@@ -182,8 +181,9 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
 
   typedef shared_ptr<connection_impl> connection_ptr;
 
-  typedef unordered_map<string_type, connection_ptr> host_connection_map;
-  host_connection_map host_connections;
+  typedef unordered_map<string_type, weak_ptr<connection_impl>> host_connection_map;
+  boost::mutex host_mutex_;
+  host_connection_map host_connections_;
   bool follow_redirect_;
   int timeout_;
 
@@ -198,33 +198,40 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& ciphers = optional<string_type>()) {
     string_type index =
         (request_.host() + ':') + lexical_cast<string_type>(request_.port());
-    connection_ptr connection_;
-    typename host_connection_map::iterator it = host_connections.find(index);
-    if (it == host_connections.end()) {
-      connection_.reset(new connection_impl(
-          resolver, follow_redirect_, request_.host(),
-          lexical_cast<string_type>(request_.port()),
-          boost::bind(&pooled_connection_policy<Tag, version_major,
-                                                version_minor>::resolve,
-                      this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
-          boost::bind(&pooled_connection_policy<Tag, version_major,
-                                                version_minor>::get_connection,
-                      this, boost::arg<1>(), boost::arg<2>(),
-                      always_verify_peer, boost::arg<3>(), boost::arg<4>(),
-                      boost::arg<5>(), boost::arg<6>(), boost::arg<7>()),
-          boost::iequals(request_.protocol(), string_type("https")),
-          always_verify_peer, timeout_, certificate_filename, verify_path,
-          certificate_file, private_key_file, ciphers, 0));
-      host_connections.insert(std::make_pair(index, connection_));
-      return connection_;
+    boost::mutex::scoped_lock lock(host_mutex_);
+    auto it = host_connections_.find(index);
+    if (it != host_connections_.end()) {
+      // We've found an existing connection; but we should check if that
+      // connection hasn't been deleted yet.
+      auto result = it->second.lock();
+      if (!result) return result;
     }
-    return it->second;
+
+    connection_ptr connection(new connection_impl(
+        resolver, follow_redirect_, request_.host(),
+        lexical_cast<string_type>(request_.port()),
+        // resolver function
+        boost::bind(&pooled_connection_policy<Tag, version_major,
+                                              version_minor>::resolve,
+                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
+        // connection factory
+        boost::bind(&pooled_connection_policy<Tag, version_major,
+                                              version_minor>::get_connection,
+                    this, boost::arg<1>(), boost::arg<2>(), always_verify_peer,
+                    boost::arg<3>(), boost::arg<4>(), boost::arg<5>(),
+                    boost::arg<6>(), boost::arg<7>()),
+        boost::iequals(request_.protocol(), string_type("https")),
+        always_verify_peer, timeout_, certificate_filename, verify_path,
+        certificate_file, private_key_file, ciphers, 0));
+    host_connections_.insert(std::make_pair(index, connection));
+    return connection;
   }
 
   pooled_connection_policy(bool cache_resolved, bool follow_redirect,
                            int timeout)
       : resolver_base(cache_resolved),
-        host_connections(),
+        host_mutex_(),
+        host_connections_(),
         follow_redirect_(follow_redirect),
         timeout_(timeout) {}
 };

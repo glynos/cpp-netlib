@@ -6,10 +6,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/tags.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/network/tags.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace network {
