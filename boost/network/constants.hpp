@@ -127,6 +127,9 @@ struct constants_wide {
 } // namespace impl
 
 template <class Tag>
+struct unsupported_tag;
+
+template <class Tag>
 struct constants
     : mpl::if_<
           is_default_string<Tag>, impl::constants_narrow<Tag>,

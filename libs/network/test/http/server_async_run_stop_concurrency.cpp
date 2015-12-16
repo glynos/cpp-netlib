@@ -11,7 +11,7 @@ namespace http = boost::network::http;
 namespace util = boost::network::utils;
 
 struct dummy_async_handler;
-typedef http::async_server<dummy_async_handler> async_server;
+typedef http::server<dummy_async_handler> async_server;
 
 struct dummy_async_handler {
   void operator()(async_server::request const& req,

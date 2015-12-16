@@ -33,8 +33,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_get_streaming_test, client,
   {
     client client_;
     BOOST_CHECK_NO_THROW(response = client_.get(request, handler_instance));
-    typename net::headers_range<typename client::response>::type range =
-        headers(response)["Content-Type"];
+    auto range = headers(response)["Content-Type"];
     BOOST_CHECK(!boost::empty(range));
     BOOST_CHECK_EQUAL(body(response).size(), 0u);
     BOOST_CHECK_EQUAL(response.version().substr(0, 7), std::string("HTTP/1."));

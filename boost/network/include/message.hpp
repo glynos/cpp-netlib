@@ -8,7 +8,10 @@
 //
 // This is the modular include file for using the basic message type
 
-#include <boost/network/tags.hpp>
 #include <boost/network/message.hpp>
+#include <boost/network/message/directives.hpp>
+#include <boost/network/message/transformers.hpp>
+#include <boost/network/message/wrappers.hpp>
+#include <boost/network/tags.hpp>
 
 #endif  // BOOST_NETWORK_INCLUDE_MESSAGE_HPP_

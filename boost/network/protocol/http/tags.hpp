@@ -35,19 +35,11 @@ template <class Tag>
 struct components;
 
 typedef mpl::vector<
-    http, client, simple, boost::network::tags::sync, boost::network::tags::tcp,
+    http, client, simple, boost::network::tags::async, boost::network::tags::tcp,
     boost::network::tags::default_string> http_default_8bit_tcp_resolve_tags;
 typedef mpl::vector<
-    http, client, simple, boost::network::tags::sync, boost::network::tags::udp,
+    http, client, simple, boost::network::tags::async, boost::network::tags::udp,
     boost::network::tags::default_string> http_default_8bit_udp_resolve_tags;
-typedef mpl::vector<http, client, keepalive, boost::network::tags::sync,
-                    boost::network::tags::tcp,
-                    boost::network::tags::default_string>
-    http_keepalive_8bit_tcp_resolve_tags;
-typedef mpl::vector<http, client, keepalive, boost::network::tags::sync,
-                    boost::network::tags::udp,
-                    boost::network::tags::default_string>
-    http_keepalive_8bit_udp_resolve_tags;
 typedef mpl::vector<http, client, simple, boost::network::tags::async,
                     boost::network::tags::udp,
                     boost::network::tags::default_string>
@@ -57,20 +49,14 @@ typedef mpl::vector<http, client, simple, boost::network::tags::async,
                     boost::network::tags::default_string>
     http_async_8bit_tcp_resolve_tags;
 typedef mpl::vector<
-    http, simple, boost::network::tags::sync, boost::network::tags::pod,
-    boost::network::tags::default_string, server> http_server_tags;
-typedef mpl::vector<
     http, simple, boost::network::tags::async, boost::network::tags::pod,
-    boost::network::tags::default_string, server> http_async_server_tags;
+    boost::network::tags::default_string, server> http_server_tags;
 
 BOOST_NETWORK_DEFINE_TAG(http_default_8bit_tcp_resolve);
 BOOST_NETWORK_DEFINE_TAG(http_default_8bit_udp_resolve);
-BOOST_NETWORK_DEFINE_TAG(http_keepalive_8bit_tcp_resolve);
-BOOST_NETWORK_DEFINE_TAG(http_keepalive_8bit_udp_resolve);
 BOOST_NETWORK_DEFINE_TAG(http_async_8bit_udp_resolve);
 BOOST_NETWORK_DEFINE_TAG(http_async_8bit_tcp_resolve);
 BOOST_NETWORK_DEFINE_TAG(http_server);
-BOOST_NETWORK_DEFINE_TAG(http_async_server);
 
 }  // namespace tags
 }  // namespace http

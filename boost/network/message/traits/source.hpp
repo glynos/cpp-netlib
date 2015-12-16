@@ -9,6 +9,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_sync.hpp>
+#include <boost/network/tags.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -22,15 +23,16 @@ struct unsupported_tag;
 
 template <class Message>
 struct source
-    : mpl::if_<
-          is_async<typename Message::tag>,
-          boost::shared_future<typename string<typename Message::tag>::type>,
-          typename mpl::if_<
-              mpl::or_<is_sync<typename Message::tag>,
-                       is_same<typename Message::tag, tags::default_string>,
-                       is_same<typename Message::tag, tags::default_wstring> >,
-              typename string<typename Message::tag>::type,
-              unsupported_tag<typename Message::tag> >::type> {};
+    : mpl::if_<is_async<typename Message::tag>,
+               shared_future<typename string<typename Message::tag>::type>,
+               typename mpl::if_<
+                   mpl::or_<is_sync<typename Message::tag>,
+                            is_same<typename Message::tag,
+                                    ::boost::network::tags::default_string>,
+                            is_same<typename Message::tag,
+                                    ::boost::network::tags::default_wstring> >,
+                   typename string<typename Message::tag>::type,
+                   unsupported_tag<typename Message::tag> >::type> {};
 
 }  // namespace traits
 }  // namespace network

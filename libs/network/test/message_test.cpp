@@ -5,18 +5,17 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_TEST_MODULE message test
-#include <boost/config/warning_disable.hpp>
-#include <boost/test/unit_test.hpp>
-#include <boost/network.hpp>
 #include <algorithm>
+#include <boost/config/warning_disable.hpp>
 #include <boost/mpl/list.hpp>
+#include <boost/network/include/message.hpp>
+#include <boost/network/protocol/http/tags.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace boost::network;
 
 typedef boost::mpl::list<http::tags::http_default_8bit_tcp_resolve,
                          http::tags::http_default_8bit_udp_resolve,
-                         http::tags::http_keepalive_8bit_tcp_resolve,
-                         http::tags::http_keepalive_8bit_udp_resolve,
                          tags::default_string, tags::default_wstring> tag_types;
 
 struct string_header_name {
@@ -122,7 +121,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(copy_constructor_test, T, tag_types) {
   basic_message<T> copy(instance);
   BOOST_CHECK_EQUAL(headers(copy).count(header_name<T>::string),
                     static_cast<std::size_t>(1));
-  typename headers_range<basic_message<T> >::type range =
+  typename headers_range<decltype(instance)>::type range =
       headers(copy)[header_name<T>::string];
   BOOST_CHECK(boost::begin(range) != boost::end(range));
 }
@@ -143,7 +142,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(headers_directive_test, T, tag_types) {
   instance << header(header_name<T>::string, header_value<T>::string);
   BOOST_CHECK_EQUAL(headers(instance).count(header_name<T>::string),
                     static_cast<std::size_t>(1));
-  typename headers_range<basic_message<T> >::type range =
+  typename headers_range<decltype(instance)>::type range =
       headers(instance)[header_name<T>::string];
   BOOST_CHECK(boost::begin(range) != boost::end(range));
 }
@@ -172,6 +171,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(remove_header_directive_test, T, tag_types) {
   basic_message<T> instance;
   instance << header(header_name<T>::string, header_value<T>::string)
            << remove_header(header_name<T>::string);
-  typename headers_range<basic_message<T> >::type range = headers(instance);
+  typename headers_range<decltype(instance)>::type range = headers(instance);
   BOOST_CHECK(boost::begin(range) == boost::end(range));
 }

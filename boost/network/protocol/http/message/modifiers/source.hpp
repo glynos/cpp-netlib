@@ -73,7 +73,8 @@ namespace impl {
 
 template <class Message, class ValueType, class Async>
 inline void source(Message const &message, ValueType const &source_,
-                   http::tags::http_server const & /*unused*/, Async const & /*unused*/) {
+                   http::tags::http_server const & /*unused*/,
+                   Async const & /*unused*/) {
   message.source = source_;
 }
 

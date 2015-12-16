@@ -18,7 +18,7 @@ namespace http = boost::network::http;
 namespace utils = boost::network::utils;
 
 struct file_server;
-typedef http::async_server<file_server> server;
+typedef http::server<file_server> server;
 
 struct file_cache {
 
@@ -112,7 +112,7 @@ struct connection_handler : boost::enable_shared_from_this<connection_handler> {
     }
   }
 
-  void not_found(std::string const &path, server::connection_ptr connection) {
+  void not_found(std::string const &, server::connection_ptr connection) {
     static server::response_header headers[] = {{"Connection", "close"},
                                                 {"Content-Type", "text/plain"}};
     connection->set_status(server::connection::not_found);
@@ -175,7 +175,7 @@ struct file_server {
   file_cache &cache_;
 };
 
-int main(int argc, char *argv[]) {
+int main(int, char *[]) {
   file_cache cache(".");
   file_server handler(cache);
   server::options options(handler);
@@ -183,5 +183,4 @@ int main(int argc, char *argv[]) {
                       .address("0.0.0.0")
                       .port("8000"));
   instance.run();
-  return 0;
 }
