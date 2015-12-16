@@ -7,17 +7,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
 #include <boost/asio/ssl.hpp>
 #include <boost/bind.hpp>
+#include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
 
 boost::network::http::impl::ssl_delegate::ssl_delegate(
     asio::io_service &service, bool always_verify_peer,
     optional<std::string> certificate_filename,
-    optional<std::string> verify_path,
-    optional<std::string> certificate_file,
-    optional<std::string> private_key_file,
-    optional<std::string> ciphers,
+    optional<std::string> verify_path, optional<std::string> certificate_file,
+    optional<std::string> private_key_file, optional<std::string> ciphers,
     long ssl_options)
     : service_(service),
       certificate_filename_(std::move(certificate_filename)),
@@ -29,15 +27,19 @@ boost::network::http::impl::ssl_delegate::ssl_delegate(
       always_verify_peer_(always_verify_peer) {}
 
 void boost::network::http::impl::ssl_delegate::connect(
-    asio::ip::tcp::endpoint &endpoint, std::string host, boost::uint16_t source_port,
+    asio::ip::tcp::endpoint &endpoint, std::string host,
+    boost::uint16_t source_port,
     function<void(system::error_code const &)> handler) {
   context_.reset(
-      new asio::ssl::context(service_, asio::ssl::context::sslv23_client));
+      new asio::ssl::context(asio::ssl::context::method::sslv23_client));
   if (ciphers_) {
     ::SSL_CTX_set_cipher_list(context_->native_handle(), ciphers_->c_str());
   }
   if (ssl_options_ != 0) {
     context_->set_options(ssl_options_);
+  } else {
+    // By default, disable v3 support.
+    context_->set_options(asio::ssl::context::no_sslv3);
   }
   if (certificate_filename_ || verify_path_) {
     context_->set_verify_mode(asio::ssl::context::verify_peer);
@@ -50,8 +52,9 @@ void boost::network::http::impl::ssl_delegate::connect(
       // use openssl default verify paths.  uses openssl environment variables
       // SSL_CERT_DIR, SSL_CERT_FILE
       context_->set_default_verify_paths();
-	 } else
+    } else {
       context_->set_verify_mode(asio::ssl::context::verify_none);
+    }
   }
   if (certificate_file_)
     context_->use_certificate_file(*certificate_file_,
@@ -60,9 +63,10 @@ void boost::network::http::impl::ssl_delegate::connect(
     context_->use_private_key_file(*private_key_file_,
                                    boost::asio::ssl::context::pem);
 
-  tcp_socket_.reset(new asio::ip::tcp::socket(service_, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), source_port)));
-  socket_.reset(
-      new asio::ssl::stream<asio::ip::tcp::socket&>(*(tcp_socket_.get()), *context_));
+  tcp_socket_.reset(new asio::ip::tcp::socket(
+      service_, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), source_port)));
+  socket_.reset(new asio::ssl::stream<asio::ip::tcp::socket &>(
+      *(tcp_socket_.get()), *context_));
 
   if (always_verify_peer_)
     socket_->set_verify_callback(boost::asio::ssl::rfc2818_verification(host));
@@ -109,5 +113,4 @@ void boost::network::http::impl::ssl_delegate::disconnect() {
 
 boost::network::http::impl::ssl_delegate::~ssl_delegate() {}
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_IPP_20110819 \
-          */
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_IPP_20110819
