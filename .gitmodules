@@ -1,0 +1,6 @@
+[submodule "deps/googletest"]
+	path = deps/googletest
+	url = https://github.com/google/googletest.git
+[submodule "deps/googlemock"]
+	path = deps/googlemock
+	url = https://github.com/google/googlemock.git

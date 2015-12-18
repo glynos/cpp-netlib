@@ -101,6 +101,18 @@ struct basic_message {
   friend struct detail::directive_base<Tag>;
   friend struct detail::wrapper_base<Tag, basic_message<Tag> >;
 
+  // Define an equality operator that's only available via ADL.
+  friend bool operator==(basic_message const& l, basic_message const& r) {
+    return l.headers_ == r.headers_ && l.source_ == r.source_ &&
+           l.destination_ == r.destination_ && l.body_ == r.body_;
+  }
+
+  // Define an inequality operator that's only available via ADL in terms of
+  // equality defined above.
+  friend bool operator!=(basic_message const& l, basic_message const& r) {
+    return !(l == r);
+  }
+
   mutable headers_container_type headers_;
   mutable string_type body_;
   mutable string_type source_;

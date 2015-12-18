@@ -30,6 +30,10 @@ flags = [
     '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/c++/v1',
     '-I',
     os.environ['BOOST_ROOT'],
+    # add dependency to googletest and googlemock
+    '-I', 'deps/googletest/googletest/include',
+    '-I', 'deps/googletest/googlemock/include',
+
     # Always enable debugging for the project when building for semantic
     # completion.
     '-DBOOST_NETWORK_DEBUG',
