@@ -23,8 +23,6 @@ class MessageTest : public ::testing::Test {
 
 using TagTypes = ::testing::Types<http::tags::http_default_8bit_tcp_resolve,
                                   http::tags::http_default_8bit_udp_resolve,
-                                  http::tags::http_keepalive_8bit_tcp_resolve,
-                                  http::tags::http_keepalive_8bit_udp_resolve,
                                   network::tags::default_string>;
 TYPED_TEST_CASE(MessageTest, TagTypes);
 
