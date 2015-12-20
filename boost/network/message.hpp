@@ -1,24 +1,15 @@
-//          Copyright Dean Michael Berris 2007.
+// Copyright Dean Michael Berris 2007.
+// Copyright Google, Inc. 2015
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_NETWORK_MESSAGE_HPP__
 #define BOOST_NETWORK_MESSAGE_HPP__
 
 #include <boost/network/detail/directive_base.hpp>
 #include <boost/network/detail/wrapper_base.hpp>
-#include <boost/network/message/directives.hpp>
-#include <boost/network/message/message_concept.hpp>
-#include <boost/network/message/modifiers/add_header.hpp>
-#include <boost/network/message/modifiers/body.hpp>
-#include <boost/network/message/modifiers/clear_headers.hpp>
-#include <boost/network/message/modifiers/destination.hpp>
-#include <boost/network/message/modifiers/remove_header.hpp>
-#include <boost/network/message/modifiers/source.hpp>
-#include <boost/network/message/transformers.hpp>
-#include <boost/network/message/wrappers.hpp>
-#include <boost/network/message_fwd.hpp>
+#include <boost/network/traits/headers_container.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -125,11 +116,6 @@ inline void swap(basic_message<Tag>& left, basic_message<Tag>& right) {
   left.swap(right);
 }
 
-// Commenting this out as we don't need to do this anymore.
-// BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_string>
-// >));
-// BOOST_CONCEPT_ASSERT((Message<basic_message<boost::network::tags::default_wstring>
-// >));
 typedef basic_message<tags::default_string> message;
 typedef basic_message<tags::default_wstring> wmessage;
 

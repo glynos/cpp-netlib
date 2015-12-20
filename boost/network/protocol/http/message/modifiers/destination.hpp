@@ -82,7 +82,8 @@ namespace impl {
 
 template <class Message, class ValueType, class Async>
 inline void destination(Message const &message, ValueType const &destination_,
-                        http::tags::http_server /*unused*/, Async /*unused*/) {
+                        http::tags::http_server /*unused*/,
+                        Async /*unused*/) {
   message.destination = destination_;
 }
 

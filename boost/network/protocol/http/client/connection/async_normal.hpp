@@ -23,6 +23,7 @@
 #include <boost/network/detail/debug.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/client/connection/async_protocol_handler.hpp>
+#include <boost/network/protocol/http/message/wrappers/host.hpp>
 #include <boost/network/protocol/http/message/wrappers/uri.hpp>
 #include <boost/network/protocol/http/parser/incremental.hpp>
 #include <boost/network/protocol/http/traits/delegate_factory.hpp>
@@ -50,7 +51,6 @@ struct http_async_connection
       protected http_async_protocol_handler<Tag, version_major, version_minor>,
       boost::enable_shared_from_this<
           http_async_connection<Tag, version_major, version_minor> > {
-
   http_async_connection(http_async_connection const&) = delete;
 
   typedef async_connection_base<Tag, version_major, version_minor> base;
@@ -64,10 +64,10 @@ struct http_async_connection
   typedef typename base::string_type string_type;
   typedef typename base::request request;
   typedef typename base::resolver_base::resolve_function resolve_function;
-  typedef typename base::body_callback_function_type
-      body_callback_function_type;
-  typedef typename base::body_generator_function_type
-      body_generator_function_type;
+  typedef
+      typename base::body_callback_function_type body_callback_function_type;
+  typedef
+      typename base::body_generator_function_type body_generator_function_type;
   typedef http_async_connection<Tag, version_major, version_minor> this_type;
   typedef typename delegate_factory<Tag>::type delegate_factory_type;
   typedef typename delegate_factory_type::connection_delegate_ptr
@@ -118,7 +118,6 @@ struct http_async_connection
   }
 
  private:
-
   void set_errors(boost::system::error_code const& ec) {
     boost::system::system_error error(ec);
     this->version_promise.set_exception(boost::copy_exception(error));
@@ -196,13 +195,7 @@ struct http_async_connection
     }
   }
 
-  enum state_t {
-    version,
-    status,
-    status_message,
-    headers,
-    body
-  };
+  enum state_t { version, status, status_message, headers, body };
 
   void handle_sent_request(bool get_body, body_callback_function_type callback,
                            body_generator_function_type generator,
@@ -295,10 +288,10 @@ struct http_async_connection
           }
         case headers:
           if (ec == boost::asio::error::eof) return;
-	  // In the following, remainder is the number of bytes that remain in
-	  // the buffer. We need this in the body processing to make sure that
-	  // the data remaining in the buffer is dealt with before another call
-	  // to get more data for the body is scheduled.
+          // In the following, remainder is the number of bytes that remain in
+          // the buffer. We need this in the body processing to make sure that
+          // the data remaining in the buffer is dealt with before another call
+          // to get more data for the body is scheduled.
           fusion::tie(parsed_ok, remainder) = this->parse_headers(
               delegate_,
               request_strand_.wrap(boost::bind(
@@ -312,8 +305,8 @@ struct http_async_connection
           }
 
           if (!get_body) {
-	    // We short-circuit here because the user does not want to get the
-	    // body (in the case of a HEAD request).
+            // We short-circuit here because the user does not want to get the
+            // body (in the case of a HEAD request).
             this->body_promise.set_value("");
             this->destination_promise.set_value("");
             this->source_promise.set_value("");
@@ -323,23 +316,23 @@ struct http_async_connection
           }
 
           if (callback) {
-	    // Here we deal with the spill-over data from the headers
-	    // processing. This means the headers data has already been parsed
-	    // appropriately and we're looking to treat everything that remains
-	    // in the buffer.
+            // Here we deal with the spill-over data from the headers
+            // processing. This means the headers data has already been parsed
+            // appropriately and we're looking to treat everything that remains
+            // in the buffer.
             typename protocol_base::buffer_type::const_iterator begin =
                 this->part_begin;
             typename protocol_base::buffer_type::const_iterator end = begin;
             std::advance(end, remainder);
 
-	    // We're setting the body promise here to an empty string because
-	    // this can be used as a signaling mechanism for the user to
-	    // determine that the body is now ready for processing, even though
-	    // the callback is already provided.
+            // We're setting the body promise here to an empty string because
+            // this can be used as a signaling mechanism for the user to
+            // determine that the body is now ready for processing, even though
+            // the callback is already provided.
             this->body_promise.set_value("");
 
-	    // The invocation of the callback is synchronous to allow us to
-	    // wait before scheduling another read.
+            // The invocation of the callback is synchronous to allow us to
+            // wait before scheduling another read.
             callback(make_iterator_range(begin, end), ec);
 
             delegate_->read_some(
@@ -350,8 +343,8 @@ struct http_async_connection
                     this_type::shared_from_this(), body, get_body, callback,
                     placeholders::error, placeholders::bytes_transferred)));
           } else {
-	    // Here we handle the body data ourself and append to an
-	    // ever-growing string buffer.
+            // Here we handle the body data ourself and append to an
+            // ever-growing string buffer.
             this->parse_body(
                 delegate_,
                 request_strand_.wrap(boost::bind(
@@ -363,19 +356,19 @@ struct http_async_connection
           return;
         case body:
           if (ec == boost::asio::error::eof || is_ssl_short_read_error) {
-	    // Here we're handling the case when the connection has been closed
-	    // from the server side, or at least that the end of file has been
-	    // reached while reading the socket. This signals the end of the
-	    // body processing chain.
+            // Here we're handling the case when the connection has been closed
+            // from the server side, or at least that the end of file has been
+            // reached while reading the socket. This signals the end of the
+            // body processing chain.
             if (callback) {
               typename protocol_base::buffer_type::const_iterator
                   begin = this->part.begin(),
                   end = begin;
               std::advance(end, bytes_transferred);
 
-	      // We call the callback function synchronously passing the error
-	      // condition (in this case, end of file) so that it can handle it
-	      // appropriately.
+              // We call the callback function synchronously passing the error
+              // condition (in this case, end of file) so that it can handle it
+              // appropriately.
               callback(make_iterator_range(begin, end), ec);
             } else {
               string_type body_string;
@@ -394,12 +387,12 @@ struct http_async_connection
             this->response_parser_.reset();
             this->timer_.cancel();
           } else {
-	    // This means the connection has not been closed yet and we want to
-	    // get more data.
+            // This means the connection has not been closed yet and we want to
+            // get more data.
             if (callback) {
-	      // Here we have a body_handler callback. Let's invoke the
-	      // callback from here and make sure we're getting more data right
-	      // after.
+              // Here we have a body_handler callback. Let's invoke the
+              // callback from here and make sure we're getting more data right
+              // after.
               typename protocol_base::buffer_type::const_iterator begin =
                   this->part.begin();
               typename protocol_base::buffer_type::const_iterator end = begin;
@@ -413,9 +406,9 @@ struct http_async_connection
                       this_type::shared_from_this(), body, get_body, callback,
                       placeholders::error, placeholders::bytes_transferred)));
             } else {
-	      // Here we don't have a body callback. Let's make sure that we
-	      // deal with the remainder from the headers part in case we do
-	      // have data that's still in the buffer.
+              // Here we don't have a body callback. Let's make sure that we
+              // deal with the remainder from the headers part in case we do
+              // have data that's still in the buffer.
               this->parse_body(
                   delegate_,
                   request_strand_.wrap(boost::bind(
@@ -446,9 +439,9 @@ struct http_async_connection
           this->headers_promise.set_exception(boost::copy_exception(error));
         case body:
           if (!callback) {
-	    // N.B. if callback is non-null, then body_promise has already been
-	    // set to value "" to indicate body is handled by streaming handler
-	    // so no exception should be set
+            // N.B. if callback is non-null, then body_promise has already been
+            // set to value "" to indicate body is handled by streaming handler
+            // so no exception should be set
             this->body_promise.set_exception(boost::copy_exception(error));
           }
           break;

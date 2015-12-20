@@ -32,7 +32,7 @@ template <>
 struct to_upper_transformer<selectors::source_selector> {
   template <class Tag>
   void operator()(basic_message<Tag> &message_) const {
-    boost::to_upper(message_.source());
+    ::boost::to_upper(message_.source());
   }
 
  protected:
@@ -43,7 +43,7 @@ template <>
 struct to_upper_transformer<selectors::destination_selector> {
   template <class Tag>
   void operator()(basic_message<Tag> &message_) const {
-    boost::to_upper(message_.destination());
+    ::boost::to_upper(message_.destination());
   }
 
  protected:

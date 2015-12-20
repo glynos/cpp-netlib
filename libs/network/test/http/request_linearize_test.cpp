@@ -5,10 +5,11 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #define BOOST_TEST_MODULE HTTP Request Linearize Test
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/algorithms/linearize.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/mpl/list.hpp>
+#include <boost/network/message/directives/header.hpp>
+#include <boost/network/protocol/http/algorithms/linearize.hpp>
+#include <boost/network/protocol/http/request.hpp>
+#include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <iterator>
 

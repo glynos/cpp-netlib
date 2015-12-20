@@ -2,17 +2,19 @@
 #define CLIENT_TYPES_ROOWQCLE
 
 // Copyright 2010 Dean Michael Berris.
+// Copyright 2015 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "tag_types.hpp"
-#include <boost/mpl/joint_view.hpp>
 #include <boost/mpl/bind.hpp>
-#include <boost/mpl/transform.hpp>
-#include <boost/mpl/remove_if.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/mpl/joint_view.hpp>
+#include <boost/mpl/remove_if.hpp>
+#include <boost/mpl/transform.hpp>
+#include <boost/network/protocol/http/client.hpp>
 #include <boost/network/support/is_sync.hpp>
+#include "tag_types.hpp"
 
 namespace mpl = boost::mpl;
 

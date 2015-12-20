@@ -13,8 +13,6 @@ namespace http = boost::network::http;
 
 typedef boost::mpl::vector<http::tags::http_default_8bit_tcp_resolve,
                            http::tags::http_default_8bit_udp_resolve,
-                           http::tags::http_keepalive_8bit_tcp_resolve,
-                           http::tags::http_keepalive_8bit_udp_resolve,
                            http::tags::http_async_8bit_udp_resolve,
                            http::tags::http_async_8bit_tcp_resolve> tag_types;
 

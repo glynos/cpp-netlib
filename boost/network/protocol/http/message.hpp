@@ -1,6 +1,7 @@
 // This file is part of the Boost Network library
 // Based on the Pion Network Library (r421)
 // Copyright Atomic Labs, Inc. 2007-2008
+// Copyright 2015 Google, Inc.
 // See http://cpp-netlib.sourceforge.net for library home page.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -15,7 +16,6 @@
 #include <boost/network/protocol/http/traits.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
-#include <boost/network/protocol/http/message/header_concept.hpp>
 #include <boost/network/message.hpp>
 #include <boost/network/tags.hpp>
 #include <string>

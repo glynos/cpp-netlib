@@ -9,16 +9,17 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/bind.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/function.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/network/protocol/http/client/connection/async_base.hpp>
+#include <boost/network/protocol/http/message/wrappers/protocol.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/version.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/bind.hpp>
 
 namespace boost {
 namespace network {

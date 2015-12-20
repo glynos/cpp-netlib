@@ -32,7 +32,7 @@ template <>
 struct to_lower_transformer<selectors::source_selector> {
   template <class Tag>
   void operator()(basic_message<Tag> &message_) const {
-    boost::to_lower(message_.source());
+    ::boost::to_lower(message_.source());
   }
 
  protected:
@@ -43,7 +43,7 @@ template <>
 struct to_lower_transformer<selectors::destination_selector> {
   template <class Tag>
   void operator()(basic_message<Tag> &message_) const {
-    boost::to_lower(message_.destination());
+    ::boost::to_lower(message_.destination());
   }
 
  protected:

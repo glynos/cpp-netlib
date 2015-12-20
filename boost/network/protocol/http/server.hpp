@@ -1,6 +1,7 @@
 // Copyright 2009 (c) Tarro, Inc.
 // Copyright 2009 (c) Dean Michael Berris <mikhailberis@gmail.com>
 // Copyright 2010 (c) Glyn Matthews
+// Copyright Google, Inc. 2015
 // Copyright 2003-2008 (c) Chris Kholhoff
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -44,19 +45,8 @@ struct server : server_base<tags::http_server, Handler>::type {
   explicit server(options const &options) : server_base(options) {}
 };
 
-template <class Handler>
-struct async_server : server_base<tags::http_async_server, Handler>::type {
-  typedef typename server_base<tags::http_async_server, Handler>::type
-      server_base;
-  typedef server_options<tags::http_async_server, Handler> options;
-
-  explicit async_server(options const &options) : server_base(options) {}
-};
-
 }  // namespace http
-
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_HTTP_SERVER_HPP_

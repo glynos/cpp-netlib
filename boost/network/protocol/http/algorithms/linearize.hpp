@@ -3,6 +3,7 @@
 
 // Copyright 2010 Dean Michael Berris.
 // Copyright 2014 Jussi Lyytinen
+// Copyright 2015 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -11,17 +12,20 @@
 #include <bitset>
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/concept/requires.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/network/constants.hpp>
+#include <boost/network/message/wrappers/body.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
-#include <boost/network/protocol/http/message/header_concept.hpp>
-#include <boost/network/protocol/http/request_concept.hpp>
-#include <boost/network/traits/string.hpp>
+#include <boost/network/protocol/http/message/wrappers/headers.hpp>
+#include <boost/network/protocol/http/message/wrappers/port.hpp>
+#include <boost/network/protocol/http/traits/connection_keepalive.hpp>
+#include <boost/network/traits/headers_container.hpp>
 #include <boost/network/traits/ostringstream.hpp>
+#include <boost/network/traits/string.hpp>
 #include <boost/optional.hpp>
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/version.hpp>
-#include <boost/lexical_cast.hpp>
 
 namespace boost {
 namespace network {
@@ -40,9 +44,7 @@ struct linearize_header {
   };
 
   template <class ValueType>
-  BOOST_CONCEPT_REQUIRES(((Header<typename boost::remove_cv<ValueType>::type>)),
-                         (string_type))
-  operator()(ValueType& header) {
+  string_type operator()(ValueType& header) {
     typedef typename ostringstream<Tag>::type output_stream;
     typedef constants<Tag> consts;
     output_stream header_line;
@@ -53,11 +55,10 @@ struct linearize_header {
 };
 
 template <class Request, class OutputIterator>
-BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
-    linearize(Request const& request,
-              typename Request::string_type const& method,
-              unsigned version_major, unsigned version_minor,
-              OutputIterator oi) {
+OutputIterator linearize(Request const& request,
+                         typename Request::string_type const& method,
+                         unsigned version_major, unsigned version_minor,
+                         OutputIterator oi) {
   typedef typename Request::tag Tag;
   typedef constants<Tag> consts;
   typedef typename string<Tag>::type string_type;
@@ -97,13 +98,7 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
   // We need to determine whether we've seen any of the following headers
   // before setting the defaults. We use a bitset to keep track of the
   // defaulted headers.
-  enum {
-    ACCEPT,
-    ACCEPT_ENCODING,
-    HOST,
-    CONNECTION,
-    MAX
-  };
+  enum { ACCEPT, ACCEPT_ENCODING, HOST, CONNECTION, MAX };
   std::bitset<MAX> found_headers;
   static char const* defaulted_headers[][2] = {
       {consts::accept(), consts::accept() + std::strlen(consts::accept())},
@@ -182,7 +177,7 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
   }
 
   boost::copy(crlf, oi);
-  typename body_range<Request>::type body_data = body(request).range();
+  auto body_data = body(request).range();
   return boost::copy(body_data, oi);
 }
 
@@ -190,4 +185,4 @@ BOOST_CONCEPT_REQUIRES(((ClientRequest<Request>)), (OutputIterator))
 }  // namespace network
 }  // namespace boost
 
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_ALGORITHMS_LINEARIZE_HPP_20101028 */
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_ALGORITHMS_LINEARIZE_HPP_20101028

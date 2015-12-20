@@ -62,4 +62,3 @@ TYPED_TEST(MessageTest, Inequality) {
 }
 
 }  // namespace
-

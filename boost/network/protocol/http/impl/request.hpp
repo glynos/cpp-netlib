@@ -1,13 +1,22 @@
 
-//          Copyright Dean Michael Berris 2007,2009,2010.
-//          Copyright Michael Dickey 2008.
+// Copyright Dean Michael Berris 2007,2009,2010.
+// Copyright Michael Dickey 2008.
+// Copyright Google, Inc. 2015
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
 #define BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__
 
+/** request.hpp
+  *
+  * This file implements the basic request object required
+  * by the HTTP client implementation. The basic_request
+  * object encapsulates a URI which is parsed at runtime.
+  */
+
+#include <boost/algorithm/string.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
@@ -16,7 +25,8 @@
 #include <boost/network/protocol/http/message.hpp>
 #include <boost/network/protocol/http/message/async_message.hpp>
 #include <boost/network/protocol/http/message/header.hpp>
-#include <boost/network/protocol/http/support/sync_only.hpp>
+#include <boost/network/protocol/http/message/wrappers/body.hpp>
+#include <boost/network/protocol/http/message/wrappers/headers.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/traits/vector.hpp>
 #include <boost/network/uri/uri.hpp>
@@ -26,44 +36,36 @@ namespace network {
 
 /** Specialize the traits for the http_server tag. */
 template <>
-struct headers_container<
-    http::tags::http_server> : vector<http::tags::http_server>::
-                                   apply<http::request_header<
-                                       http::tags::http_server>::type> {};
-
-template <>
-struct headers_container<
-    http::tags::
-        http_async_server> : vector<http::tags::http_async_server>::
-                                 apply<http::request_header<
-                                     http::tags::http_async_server>::type> {};
+struct headers_container<http::tags::http_server>
+    : vector<http::tags::http_server>::apply<
+          http::request_header<http::tags::http_server>::type> {};
 
 namespace http {
 
-/** request.hpp
-  *
-  * This file implements the basic request object required
-  * by the HTTP client implementation. The basic_request
-  * object encapsulates a URI which is parsed at runtime.
-  */
-
+/**
+ * basic_request
+ *
+ * This is the basic implementation of an HTTP request object.
+ *
+ */
 template <class Tag>
 struct basic_request : public basic_message<Tag> {
-
   mutable boost::network::uri::uri uri_;
   boost::uint16_t source_port_;
   typedef basic_message<Tag> base_type;
 
  public:
-  typedef typename sync_only<Tag>::type tag;
+  typedef Tag tag;
   typedef typename string<tag>::type string_type;
   typedef boost::uint16_t port_type;
 
-  explicit basic_request(string_type  /*unused*/const& uri_) : uri_(uri_), source_port_(0) {}
+  explicit basic_request(string_type const& uri_)
+      : uri_(uri_), source_port_(0) {}
 
-  explicit basic_request(boost::network::uri::uri const& uri_) : uri_(uri_), source_port_(0) {}
+  explicit basic_request(boost::network::uri::uri const& uri_)
+      : uri_(uri_), source_port_(0) {}
 
-  void uri(string_type  /*unused*/const& new_uri) { uri_ = new_uri; }
+  void uri(string_type const& new_uri) { uri_ = new_uri; }
 
   void uri(boost::network::uri::uri const& new_uri) { uri_ = new_uri; }
 
@@ -155,18 +157,8 @@ struct not_quite_pod_request_base {
 };
 
 template <>
-struct basic_request<tags::http_async_server> : not_quite_pod_request_base<
-                                                    tags::http_async_server> {};
-
-template <>
-struct basic_request<tags::http_server> : not_quite_pod_request_base<
-                                              tags::http_server> {};
-
-template <class R>
-struct ServerRequest;
-
-BOOST_CONCEPT_ASSERT((ServerRequest<basic_request<tags::http_async_server> >));
-BOOST_CONCEPT_ASSERT((ServerRequest<basic_request<tags::http_server> >));
+struct basic_request<tags::http_server>
+    : not_quite_pod_request_base<tags::http_server> {};
 
 template <class Tag>
 inline void swap(basic_request<Tag>& lhs, basic_request<Tag>& rhs) {
@@ -181,7 +173,8 @@ namespace impl {
 template <>
 struct request_headers_wrapper<tags::http_server> {
   basic_request<tags::http_server> const& request_;
-  explicit request_headers_wrapper(basic_request<tags::http_server> const& request_)
+  explicit request_headers_wrapper(
+      basic_request<tags::http_server> const& request_)
       : request_(request_) {}
   typedef headers_container<tags::http_server>::type headers_container_type;
   operator headers_container_type() { return request_.headers; }
@@ -196,32 +189,9 @@ struct body_wrapper<basic_request<tags::http_server> > {
   operator string_type() { return request_.body; }
 };
 
-template <>
-struct request_headers_wrapper<tags::http_async_server> {
-  basic_request<tags::http_async_server> const& request_;
-  explicit request_headers_wrapper(
-      basic_request<tags::http_async_server> const& request_)
-      : request_(request_) {}
-  typedef headers_container<tags::http_async_server>::type
-      headers_container_type;
-  operator headers_container_type() { return request_.headers; }
-};
-
-template <>
-struct body_wrapper<basic_request<tags::http_async_server> > {
-  typedef string<tags::http_async_server>::type string_type;
-  basic_request<tags::http_async_server> const& request_;
-  explicit body_wrapper(basic_request<tags::http_async_server> const& request_)
-      : request_(request_) {}
-  operator string_type() { return request_.body; }
-};
-
 }  // namespace impl
-
 }  // namespace http
-
 }  // namespace network
-
 }  // namespace boost
 
 #endif  // BOOST_NETWORK_PROTOCOL_HTTP_REQUEST_IMPL_20070908_1_HPP__

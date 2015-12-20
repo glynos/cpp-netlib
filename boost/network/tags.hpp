@@ -1,8 +1,9 @@
-//          Copyright Dean Michael Berris 2008, 2009.
-//                    Glyn Matthews 2009
+// Copyright Dean Michael Berris 2008, 2009.
+// Copyright Google, Inc. 2015
+// Glyn Matthews 2009
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_NETWORK_TAG_INCLUDED_20100808
 #define BOOST_NETWORK_TAG_INCLUDED_20100808
@@ -30,9 +31,6 @@ struct tcp {
 };
 struct udp {
   typedef mpl::true_::type is_udp;
-};
-struct sync {
-  typedef mpl::true_::type is_sync;
 };
 struct default_string {
   typedef mpl::true_::type is_default_string;

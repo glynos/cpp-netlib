@@ -82,7 +82,8 @@ target_link_libraries(trivial_google
 
 target_link_libraries(hello_world_server
     ${BOOST_SERVER_LIBS}
-    ${CMAKE_THREAD_LIBS_INIT})
+    ${CMAKE_THREAD_LIBS_INIT}
+    cppnetlib-server-parsers)
 
 target_link_libraries(hello_world_client
     ${BOOST_CLIENT_LIBS}

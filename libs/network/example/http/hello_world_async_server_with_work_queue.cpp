@@ -24,7 +24,7 @@
   } while (false)
 
 struct handler;
-typedef boost::network::http::async_server<handler> server;
+typedef boost::network::http::server<handler> server;
 
 /**
  * request + connection encapsulation (work item)
@@ -93,7 +93,7 @@ struct handler {
  * @param signal
  * @param p_server_instance
  */
-void shut_me_down(const boost::system::error_code& error, int signal,
+void shut_me_down(const boost::system::error_code& error, int,
                   boost::shared_ptr<server> p_server_instance) {
   if (!error) p_server_instance->stop();
 }

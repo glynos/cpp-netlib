@@ -72,9 +72,9 @@ int main(int argc, char* argv[]) {
               << std::endl;
 
   if (show_headers) {
-    headers_range<http::client::response>::type headers_ = response.headers();
+    auto headers_ = response.headers();
     typedef std::pair<std::string, std::string> header_type;
-    BOOST_FOREACH(header_type const & header, headers_) {
+    for (auto const& header : headers_) {
       std::cout << header.first << ": " << header.second << std::endl;
     }
     std::cout << std::endl;
