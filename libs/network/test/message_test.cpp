@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <boost/network/include/message.hpp>
 #include <boost/network/message/directives.hpp>
+#include <boost/network/protocol/http/tags.hpp>
 
 namespace {
 
