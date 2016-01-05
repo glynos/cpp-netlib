@@ -635,6 +635,14 @@ struct async_connection
       write_vec_impl(seq, callback, temporaries, buffers);
     };
     if (!headers_already_sent && !headers_in_progress) {
+      typedef constants<Tag> consts;
+      {
+        std::ostream stream(&headers_buffer);
+        stream << consts::http_slash() << 1 << consts::dot() << 1
+               << consts::space() << status << consts::space()
+               << status_message(status) << consts::crlf();
+        stream << consts::crlf();
+      }
       write_headers_only(continuation);
       return;
     }
