@@ -1,17 +1,15 @@
-//
-//          Copyright Divye Kapoor 2008.
+// Copyright Divye Kapoor 2008.
+// Copyright 2016 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // Changes by Kim Grasman 2008
-// Changes by Dean Michael Berris 2008, 2010
+// Changes by Dean Michael Berris 2008, 2010, 2016
 
-#define BOOST_TEST_MODULE http 1.0 localhost tests
-
+#include <gtest/gtest.h>
 #include <boost/config/warning_disable.hpp>
 #include <boost/config.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/network/include/http/client.hpp>
 #include <boost/range.hpp>
 #include <boost/cast.hpp>
@@ -19,6 +17,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "client_types.hpp"
 #include "http_test_server.hpp"
 
 using std::cout;
@@ -28,15 +27,14 @@ namespace {
 const std::string base_url = "http://localhost:8000";
 const std::string cgi_url = base_url + "/cgi-bin/requestinfo.py";
 
-struct running_server_fixture {
-  // NOTE: Can't use BOOST_REQUIRE_MESSAGE here, as Boost.Test data structures
-  // are not fully set up when the global fixture runs.
-  running_server_fixture() {
+class RunningServerEnvironment : public ::testing::Environment {
+ public:
+  void SetUp() override {
     if (!server.start())
       cout << "Failed to start HTTP server for test!" << endl;
   }
 
-  ~running_server_fixture() {
+  void TearDown() override {
     if (!server.stop()) cout << "Failed to stop HTTP server for test!" << endl;
   }
 
@@ -85,72 +83,75 @@ std::string get_content_length(std::string const& content) {
 // BOOST_AUTO_TEST_CASE_EXPECTED_FAILURES(text_query_preserves_crlf, 2);
 #endif
 
-BOOST_GLOBAL_FIXTURE(running_server_fixture);
+auto *local_env = ::testing::AddGlobalTestEnvironment(new RunningServerEnvironment());
 
-BOOST_AUTO_TEST_CASE(body_test) {
+TYPED_TEST_CASE(HTTPClientTest, ClientTypes);
+
+TYPED_TEST(HTTPClientTest, BodyTest) {
   // Tests presence of body in http responses
   using namespace boost::network;
-  http::client::request request_(base_url);
-  http::client client_;
-  http::client::response response_;
-  BOOST_REQUIRE_NO_THROW(response_ = client_.get(request_));
-  BOOST_CHECK(body(response_).size() != 0);
+  using client = TypeParam;
+  typename client::request request_(base_url);
+  client client_;
+  typename client::response response_;
+  ASSERT_NO_THROW(response_ = client_.get(request_));
+  EXPECT_NE(0, body(response_).size());
 }
 
-BOOST_AUTO_TEST_CASE(text_content_type_test) {
+TYPED_TEST(HTTPClientTest, TextContentTypeTest) {
   // Tests correct parsing of the content-type header sent by the server
   using namespace boost::network;
-  http::client::request request_(base_url);
-  http::client client_;
-  http::client::response response_;
-  BOOST_REQUIRE_NO_THROW(response_ = client_.get(request_));
-  BOOST_REQUIRE(headers(response_).count("Content-type") != 0);
-  headers_range<http::client::response>::type range =
-      headers(response_)["Content-type"];
-  BOOST_CHECK(boost::begin(range)->first == "Content-type");
-  BOOST_CHECK(boost::begin(range)->second == "text/html");
+  using client = TypeParam;
+  typename client::request request_(base_url);
+  client client_;
+  typename client::response response_;
+  ASSERT_NO_THROW(response_ = client_.get(request_));
+  ASSERT_NE(0, headers(response_).count("Content-type"));
+  auto range = headers(response_)["Content-type"];
+  EXPECT_EQ("Content-type", boost::begin(range)->first);
+  EXPECT_EQ("text/html", boost::begin(range)->second);
 }
 
-BOOST_AUTO_TEST_CASE(binary_content_type_test) {
+TYPED_TEST(HTTPClientTest, BinaryContentTypeTest) {
   // Tests correct parsing of content-type for binary files such as .zip files
   using namespace boost::network;
-  http::client::request request_(base_url + "/boost.jpg");
-  http::client client_;
-  http::client::response response_;
-  BOOST_REQUIRE_NO_THROW(response_ = client_.get(request_));
-  BOOST_REQUIRE(headers(response_).count("Content-type") != 0);
-  headers_range<http::client::response>::type range =
-      headers(response_)["Content-type"];
-  BOOST_CHECK(boost::begin(range)->first == "Content-type");
-  BOOST_CHECK(boost::begin(range)->second == "image/jpeg");
+  using client = TypeParam;
+  typename client::request request_(base_url + "/boost.jpg");
+  client client_;
+  typename client::response response_;
+  ASSERT_NO_THROW(response_ = client_.get(request_));
+  ASSERT_NE(0, headers(response_).count("Content-type"));
+  auto range = headers(response_)["Content-type"];
+  EXPECT_EQ("Content-type", boost::begin(range)->first);
+  EXPECT_EQ("image/jpeg", boost::begin(range)->second);
 }
 
-BOOST_AUTO_TEST_CASE(content_length_header_test) {
+TYPED_TEST(HTTPClientTest, ContentLengthHeaderTypest) {
   // Uses the test.xml file to ensure that the file was received at the correct
   // length for a text encoding
   using namespace boost::network;
-  http::client::request request_(base_url + "/test.xml");
-  http::client client_;
-  http::client::response response_;
-  BOOST_REQUIRE_NO_THROW(response_ = client_.get(request_));
-  BOOST_REQUIRE(headers(response_).count("Content-Length") != 0);
-  headers_range<http::client::response>::type range =
-      headers(response_)["Content-Length"];
-  BOOST_CHECK_EQUAL(boost::begin(range)->first, "Content-Length");
-  BOOST_CHECK_EQUAL(boost::begin(range)->second, "113");
-  BOOST_CHECK(body(response_).size() != 0);
+  using client = TypeParam;
+  typename client::request request_(base_url + "/test.xml");
+  client client_;
+  typename client::response response_;
+  ASSERT_NO_THROW(response_ = client_.get(request_));
+  ASSERT_NE(0, headers(response_).count("Content-Length"));
+  auto range = headers(response_)["Content-Length"];
+  EXPECT_EQ("Content-Length", boost::begin(range)->first);
+  EXPECT_EQ("113", boost::begin(range)->second);
+  EXPECT_NE(0, body(response_).size());
 }
 
-BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
+TYPED_TEST(HTTPClientTest, TextQueryPreservesCRLFTest) {
   // Tests proper transfer of a text file
   using namespace boost::network;
-  http::client::request request_(base_url + "/test.xml");
-  http::client client_;
-  http::client::response response_;
-  BOOST_REQUIRE_NO_THROW(response_ = client_.get(request_));
-
+  using client = TypeParam;
+  typename client::request request_(base_url + "/test.xml");
+  client client_;
+  typename client::response response_;
+  ASSERT_NO_THROW(response_ = client_.get(request_));
   http::client::response::string_type body_ = body(response_);
-  BOOST_CHECK(body(response_).size() != 0);
+  ASSERT_NE(0, body(response_).size());
 
   using std::ios;
 
@@ -161,34 +162,34 @@ BOOST_AUTO_TEST_CASE(text_query_preserves_crlf) {
     file.open("server/test.xml", ios::in | ios::binary);
   }
 
-  BOOST_REQUIRE_MESSAGE(file, "Could not open local test.xml");
+  ASSERT_TRUE(file) << "Could not open local test.xml";
 
   std::vector<char> memblock;
   std::size_t size = readfile(file, memblock);
 
-  BOOST_CHECK(size != 0);
-  BOOST_CHECK_EQUAL(body_.size(), size);
+  EXPECT_NE(0, size);
+  EXPECT_EQ(size, body_.size());
 
   if (body(response_).size() == size) {
-    std::pair<std::vector<char>::iterator, std::string::const_iterator>
-        diff_pos =
-            std::mismatch(memblock.begin(), memblock.end(), body_.begin());
-    BOOST_CHECK_EQUAL(
+    auto diff_pos =
+        std::mismatch(memblock.begin(), memblock.end(), body_.begin());
+    EXPECT_EQ(
         boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()),
         size);
   }
 }
 
-BOOST_AUTO_TEST_CASE(binary_file_query) {
+TYPED_TEST(HTTPClientTest, BinaryFileQueryTest) {
   // Tests proper transfer of a binary image
   using namespace boost::network;
-  http::client::request request_(base_url + "/boost.jpg");
-  http::client client_;
-  http::client::response response_;
+  using client = TypeParam;
+  typename client::request request_(base_url + "/boost.jpg");
+  client client_;
+  typename client::response response_;
   BOOST_REQUIRE_NO_THROW(response_ = client_.get(request_));
 
   http::client::response::string_type body_ = body(response_);
-  BOOST_CHECK(body_.size() != 0);
+  EXPECT_NE(0, body_.size());
 
   using std::ios;
 
@@ -199,168 +200,169 @@ BOOST_AUTO_TEST_CASE(binary_file_query) {
     file.open("server/boost.jpg", ios::in | ios::binary);
   }
 
-  BOOST_REQUIRE_MESSAGE(file, "Could not open boost.jpg locally");
+  ASSERT_TRUE(file) << "Could not open boost.jpg locally";
 
   std::vector<char> memblock;
   std::size_t size = readfile(file, memblock);
 
-  BOOST_CHECK(size != 0);
-  BOOST_CHECK_EQUAL(body_.size(), size);
+  EXPECT_NE(0, size);
+  EXPECT_EQ(size, body_.size());
 
-  std::pair<std::vector<char>::iterator, std::string::const_iterator> diff_pos =
+  auto diff_pos =
       std::mismatch(memblock.begin(), memblock.end(), body_.begin());
-  BOOST_CHECK_EQUAL(
-      boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()),
-      size);
+  EXPECT_EQ(boost::numeric_cast<std::size_t>(diff_pos.first - memblock.begin()),
+            size);
 }
 
-BOOST_AUTO_TEST_CASE(cgi_query) {
+TYPED_TEST(HTTPClientTest, CGIQueryTest) {
   // Get a dynamic request with no Content-Length header
   // Ensure that we have a body
   using namespace boost::network;
+  using client = TypeParam;
 
-  http::client::request req(cgi_url + "?query=1");
-  http::client c;
-  http::client::response r;
-  BOOST_REQUIRE_NO_THROW(r = c.get(req));
-  BOOST_CHECK(body(r).size() != 0);
-  BOOST_CHECK(boost::empty(headers(r)["Content-Length"]));
+  typename client::request req(cgi_url + "?query=1");
+  client c;
+  typename client::response r;
+  ASSERT_NO_THROW(r = c.get(req));
+  EXPECT_NE(0, body(r).size());
+  EXPECT_TRUE(boost::empty(headers(r)["Content-Length"]));
 }
 
-BOOST_AUTO_TEST_CASE(cgi_multi_line_headers) {
+TYPED_TEST(HTTPClientTest, CGIMultiLineHeaderTest) {
   using namespace boost::network;
+  using client = TypeParam;
 
-  http::client::request req(base_url + "/cgi-bin/multiline-header.py?query=1");
-  http::client c;
-  http::client::response r;
-  BOOST_REQUIRE_NO_THROW(r = c.get(req));
-  BOOST_CHECK(body(r).size() != 0);
-  BOOST_CHECK(boost::empty(headers(r)["Content-Type"]));
-  headers_range<http::client::response>::type range =
-      headers(r)["X-CppNetlib-Test"];
-  BOOST_REQUIRE(boost::begin(range) != boost::end(range));
-  BOOST_REQUIRE(distance(range) == 2);
-  BOOST_CHECK_EQUAL(boost::begin(range)->second,
-                    std::string("multi-line-header"));
-  BOOST_CHECK_EQUAL((++boost::begin(range))->second,
-                    std::string("that-should-concatenate"));
+  typename client::request req(base_url + "/cgi-bin/multiline-header.py?query=1");
+  client c;
+  typename client::response r;
+  ASSERT_NO_THROW(r = c.get(req));
+  EXPECT_NE(0, body(r).size());
+  EXPECT_TRUE(boost::empty(headers(r)["Content-Type"]));
+  auto range = headers(r)["X-CppNetlib-Test"];
+  ASSERT_TRUE(boost::begin(range) != boost::end(range));
+  ASSERT_EQ(2, distance(range));
+  EXPECT_EQ("multi-line-header", boost::begin(range)->second);
+  EXPECT_EQ("that-should-concatenate", (++boost::begin(range))->second);
 }
 
-BOOST_AUTO_TEST_CASE(file_not_found) {
+TYPED_TEST(HTTPClientTest, FileNotFoundTest) {
   // Request for a non existing file.
   // Ensure that we have a body even in the presence of an error response
   using namespace boost::network;
+  using client = TypeParam;
 
-  http::client::request req(base_url + "/file_not_found");
-  http::client c;
-  http::client::response r = c.get(req);
+  typename client::request req(base_url + "/file_not_found");
+  client c;
+  typename client::response r = c.get(req);
 
-  BOOST_CHECK(body(r).size() != 0);
+  EXPECT_NE(0, body(r).size());
 }
 
-BOOST_AUTO_TEST_CASE(head_test) {
+TYPED_TEST(HTTPClientTest, HeadTest) {
   using namespace boost::network;
-  http::client::request request_(base_url + "/test.xml");
-  http::client client_;
-  http::client::response response_;
-  BOOST_REQUIRE_NO_THROW(response_ = client_.head(request_));
-  BOOST_REQUIRE(headers(response_).count("Content-Length") != 0);
-  headers_range<http::client::response>::type range =
-      headers(response_)["Content-Length"];
-  BOOST_CHECK_EQUAL(boost::begin(range)->first, "Content-Length");
-  BOOST_CHECK_EQUAL(boost::begin(range)->second, "113");
-  BOOST_CHECK(body(response_).size() == 0);
+  using client = TypeParam;
+  typename client::request request_(base_url + "/test.xml");
+  client client_;
+  typename client::response response_;
+  ASSERT_NO_THROW(response_ = client_.head(request_));
+  ASSERT_NE(0, headers(response_).count("Content-Length"));
+  auto range = headers(response_)["Content-Length"];
+  EXPECT_EQ("Content-Length", boost::begin(range)->first);
+  EXPECT_EQ("113", boost::begin(range)->second);
+  EXPECT_EQ(0, body(response_).size());
 }
 
-BOOST_AUTO_TEST_CASE(post_with_explicit_headers) {
+TYPED_TEST(HTTPClientTest, PostWithExplicitHeadersTest) {
   // This test checks that the headers echoed through echo_headers.py
   // are in fact the same as what are sent through the POST request
   using namespace boost::network;
+  using client = TypeParam;
 
   const std::string postdata = "empty";
   const std::string content_length = get_content_length(postdata);
   const std::string content_type = "application/x-www-form-urlencoded";
 
-  http::client::request req(base_url + "/cgi-bin/echo_headers.py");
+  typename client::request req(base_url + "/cgi-bin/echo_headers.py");
   req << header("Content-Length", content_length);
   req << header("Content-Type", content_type);
   req << body(postdata);
 
-  http::client c;
-  http::client::response r;
-  BOOST_REQUIRE_NO_THROW(r = c.post(req));
+  client c;
+  typename client::response r;
+  ASSERT_NO_THROW(r = c.post(req));
 
   std::map<std::string, std::string> headers = parse_headers(body(r));
-  BOOST_CHECK_EQUAL(headers["content-length"], content_length);
-  BOOST_CHECK_EQUAL(headers["content-type"], content_type);
+  EXPECT_EQ(content_length, headers["content-length"]);
+  EXPECT_EQ(content_type, headers["content-type"]);
 }
 
-BOOST_AUTO_TEST_CASE(post_with_implicit_headers) {
+TYPED_TEST(HTTPClientTest, PostWithImplicitHeadersTest) {
   // This test checks that post(request, body) derives Content-Length
   // and Content-Type
   using namespace boost::network;
+  using client = TypeParam;
 
   const std::string postdata = "empty";
 
-  http::client::request req(base_url + "/cgi-bin/echo_headers.py");
-
-  http::client c;
-  http::client::response r;
-  BOOST_REQUIRE_NO_THROW(r = c.post(req, postdata));
+  typename client::request req(base_url + "/cgi-bin/echo_headers.py");
+  client c;
+  typename client::response r;
+  ASSERT_NO_THROW(r = c.post(req, postdata));
 
   std::map<std::string, std::string> headers = parse_headers(body(r));
-  BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
-  BOOST_CHECK_EQUAL(headers["content-type"], "x-application/octet-stream");
+  EXPECT_EQ(get_content_length(postdata), headers["content-length"]);
+  EXPECT_EQ("x-application/octet-stream", headers["content-type"]);
 }
 
-BOOST_AUTO_TEST_CASE(post_with_explicit_content_type) {
+TYPED_TEST(HTTPClientTest, PostWithExplicitContentTypeTest) {
   // This test checks that post(request, content_type, body) derives
   // Content-Length,
   // and keeps Content-Type
   using namespace boost::network;
+  using client = TypeParam;
 
   const std::string postdata = "empty";
   const std::string content_type = "application/x-my-content-type";
 
-  http::client::request req(base_url + "/cgi-bin/echo_headers.py");
-
-  http::client c;
-  http::client::response r;
-  BOOST_REQUIRE_NO_THROW(r = c.post(req, content_type, postdata));
+  typename client::request req(base_url + "/cgi-bin/echo_headers.py");
+  client c;
+  typename client::response r;
+  ASSERT_NO_THROW(r = c.post(req, content_type, postdata));
 
   std::map<std::string, std::string> headers = parse_headers(body(r));
-  BOOST_CHECK_EQUAL(headers["content-length"], get_content_length(postdata));
-  BOOST_CHECK_EQUAL(headers["content-type"], content_type);
+  EXPECT_EQ(get_content_length(postdata),headers["content-length"]);
+  EXPECT_EQ(content_type, headers["content-type"]);
 }
 
-BOOST_AUTO_TEST_CASE(post_body_default_content_type) {
+TYPED_TEST(HTTPClientTest, PostBodyDefaultContentType) {
   // This test checks that post(request, body) gets the post data
   // through to the server
   using namespace boost::network;
+  using client = TypeParam;
 
   const std::string postdata = "firstname=bill&lastname=badger";
 
-  http::client::request req(base_url + "/cgi-bin/echo_body.py");
-
-  http::client c;
-  http::client::response r;
-  BOOST_REQUIRE_NO_THROW(r = c.post(req, postdata));
+  typename client::request req(base_url + "/cgi-bin/echo_body.py");
+  client c;
+  typename client::response r;
+  ASSERT_NO_THROW(r = c.post(req, postdata));
   http::client::response::string_type body_ = body(r);
-  BOOST_CHECK_EQUAL(postdata, body_);
+  EXPECT_EQ(postdata, body_);
 }
 
-BOOST_AUTO_TEST_CASE(post_with_custom_headers) {
+TYPED_TEST(HTTPClientTest, PostWithCustomHeadersTest) {
   // This test checks that custom headers pass through to the server
   // when posting
   using namespace boost::network;
+  using client = TypeParam;
 
-  http::client::request req(base_url + "/cgi-bin/echo_headers.py");
+  typename client::request req(base_url + "/cgi-bin/echo_headers.py");
   req << header("X-Cpp-Netlib", "rocks!");
 
-  http::client c;
-  http::client::response r;
-  BOOST_REQUIRE_NO_THROW(r = c.post(req, std::string()));
+  client c;
+  typename client::response r;
+  ASSERT_NO_THROW(r = c.post(req, std::string()));
 
   std::map<std::string, std::string> headers = parse_headers(body(r));
-  BOOST_CHECK_EQUAL(headers["x-cpp-netlib"], "rocks!");
+  EXPECT_EQ("rocks!", headers["x-cpp-netlib"]);
 }

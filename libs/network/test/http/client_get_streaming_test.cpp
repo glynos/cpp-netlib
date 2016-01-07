@@ -1,11 +1,11 @@
 // Copyright 2011 Dean Michael Berris &lt;mikhailberis@gmail.com&gt;.
+// Copyright 2016 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_TEST_MODULE HTTP 1.1 Get Streaming Test
+#include <gtest/gtest.h>
 #include <boost/network/include/http/client.hpp>
-#include <boost/test/unit_test.hpp>
 #include <iostream>
 #include "client_types.hpp"
 
@@ -13,33 +13,34 @@ namespace net = boost::network;
 namespace http = boost::network::http;
 
 struct body_handler {
-
   explicit body_handler(std::string& body) : body(body) {}
 
   BOOST_NETWORK_HTTP_BODY_CALLBACK(operator(), range, error) {
+    (void)error;
     body.append(boost::begin(range), boost::end(range));
   }
 
   std::string& body;
 };
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_client_get_streaming_test, client,
-                              async_only_client_types) {
-  typename client::request request("http://www.boost.org");
-  typename client::response response;
-  typename client::string_type body_string;
-  typename client::string_type dummy_body;
+TYPED_TEST_CASE(HTTPClientTest, ClientTypes);
+
+TYPED_TEST(HTTPClientTest, GetStreamingTest) {
+  typename TypeParam::request request("http://www.boost.org");
+  typename TypeParam::response response;
+  typename TypeParam::string_type body_string;
+  typename TypeParam::string_type dummy_body;
   body_handler handler_instance(body_string);
   {
-    client client_;
-    BOOST_CHECK_NO_THROW(response = client_.get(request, handler_instance));
+    TypeParam client_;
+    ASSERT_NO_THROW(response = client_.get(request, handler_instance));
     auto range = headers(response)["Content-Type"];
-    BOOST_CHECK(!boost::empty(range));
-    BOOST_CHECK_EQUAL(body(response).size(), 0u);
-    BOOST_CHECK_EQUAL(response.version().substr(0, 7), std::string("HTTP/1."));
-    BOOST_CHECK_EQUAL(response.status(), 200u);
-    BOOST_CHECK_EQUAL(response.status_message(), std::string("OK"));
+    ASSERT_TRUE(!boost::empty(range));
+    EXPECT_EQ(0u, body(response).size());
+    EXPECT_EQ("HTTP/1.", response.version().substr(0, 7));
+    EXPECT_EQ(200u, response.status());
+    EXPECT_EQ("OK", response.status_message());
     dummy_body = body(response);
   }
-  BOOST_CHECK(dummy_body == typename client::string_type());
+  EXPECT_EQ(dummy_body, typename TypeParam::string_type());
 }

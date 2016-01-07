@@ -1,11 +1,11 @@
 // Copyright 2010 Dean Michael Berris.
+// Copyright 2016 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_TEST_MODULE HTTP Incremental Request Parser Test
+#include <gtest/gtest.h>
 #include <boost/config/warning_disable.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/range.hpp>
@@ -29,11 +29,11 @@ namespace logic = boost::logic;
 namespace fusion = boost::fusion;
 using namespace boost::network::http;
 
-BOOST_AUTO_TEST_CASE(incremental_parser_constructor) {
+TEST(IncrementalRequestParserTest, Constructor) {
   request_parser<tags::default_string> p;  // default constructible
 }
 
-BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_method) {
+TEST(IncrementalRequestParserTest, ParseMethod) {
   request_parser<tags::default_string> p;
   logic::tribool parsed_ok = false;
   typedef request_parser<tags::default_string> request_parser_type;
@@ -43,8 +43,8 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_method) {
   std::string valid_http_method = "GET ";
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::method_done, valid_http_method);
-  BOOST_CHECK_EQUAL(parsed_ok, true);
-  BOOST_CHECK(!boost::empty(result_range));
+  EXPECT_TRUE(parsed_ok);
+  EXPECT_FALSE(boost::empty(result_range));
   std::string parsed(boost::begin(result_range), boost::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
@@ -53,13 +53,13 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_method) {
   p.reset();
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::method_done, invalid_http_method);
-  BOOST_CHECK_EQUAL(parsed_ok, false);
+  EXPECT_EQ(false, parsed_ok);
   parsed.assign(boost::begin(result_range), boost::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 }
 
-BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_uri) {
+TEST(IncrementalRequestParserTest, ParseURI) {
   request_parser<tags::default_string> p;
   logic::tribool parsed_ok = false;
   typedef request_parser<tags::default_string> request_parser_type;
@@ -69,8 +69,8 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_uri) {
   std::string valid_http_request = "GET / HTTP/1.1\r\n";
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::uri_done, valid_http_request);
-  BOOST_CHECK_EQUAL(parsed_ok, true);
-  BOOST_CHECK(!boost::empty(result_range));
+  EXPECT_EQ(true, parsed_ok);
+  EXPECT_FALSE(boost::empty(result_range));
   std::string parsed(boost::begin(result_range), boost::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
@@ -79,13 +79,13 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_uri) {
   p.reset();
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::uri_done, invalid_http_request);
-  BOOST_CHECK_EQUAL(parsed_ok, false);
+  EXPECT_EQ(false, parsed_ok);
   parsed.assign(boost::begin(result_range), boost::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 }
 
-BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
+TEST(IncrementalRequestParserTest, ParseHTTPVersion) {
   request_parser<tags::default_string> p;
   logic::tribool parsed_ok = false;
   typedef request_parser<tags::default_string> request_parser_type;
@@ -95,8 +95,8 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
   std::string valid_http_request = "GET / HTTP/1.1\r\n";
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::version_done, valid_http_request);
-  BOOST_CHECK_EQUAL(parsed_ok, true);
-  BOOST_CHECK(!boost::empty(result_range));
+  EXPECT_EQ(true, parsed_ok);
+  EXPECT_FALSE(boost::empty(result_range));
   std::string parsed(boost::begin(result_range), boost::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
@@ -105,13 +105,13 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_version) {
   p.reset();
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::version_done, invalid_http_request);
-  BOOST_CHECK_EQUAL(parsed_ok, false);
+  EXPECT_EQ(false, parsed_ok);
   parsed.assign(boost::begin(result_range), boost::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 }
 
-BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_headers) {
+TEST(IncrementalRequestParserTest, ParseHTTPHeaders) {
   request_parser<tags::default_string> p;
   logic::tribool parsed_ok = false;
   typedef request_parser<tags::default_string> request_parser_type;
@@ -122,8 +122,8 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_headers) {
       "GET / HTTP/1.1\r\nHost: cpp-netlib.org\r\n\r\n";
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::headers_done, valid_http_request);
-  BOOST_CHECK_EQUAL(parsed_ok, true);
-  BOOST_CHECK(!boost::empty(result_range));
+  EXPECT_EQ(true, parsed_ok);
+  EXPECT_FALSE(boost::empty(result_range));
   std::string parsed(boost::begin(result_range), boost::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
@@ -133,8 +133,8 @@ BOOST_AUTO_TEST_CASE(incremental_parser_parse_http_headers) {
   p.reset();
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::headers_done, valid_http_request);
-  BOOST_CHECK_EQUAL(parsed_ok, true);
-  BOOST_CHECK(!boost::empty(result_range));
+  EXPECT_EQ(true, parsed_ok);
+  EXPECT_FALSE(boost::empty(result_range));
   parsed.assign(boost::begin(result_range), boost::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;

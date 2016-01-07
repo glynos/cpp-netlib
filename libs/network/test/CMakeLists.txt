@@ -10,11 +10,7 @@ add_subdirectory(uri)
 add_subdirectory(http)
 
 if (Boost_FOUND)
-    set(
-        TESTS
-        message_test
-        message_transform_test
-        utils_thread_pool
+    set(TESTS message_test message_transform_test utils_thread_pool
 	# utils_base64_test -- turn on when ready.
         )
     foreach (test ${TESTS})
@@ -23,7 +19,7 @@ if (Boost_FOUND)
 	  PROPERTIES COMPILE_FLAGS "-Wall")
       endif()
       add_executable(cpp-netlib-${test} ${test}.cpp)
-      add_dependencies(cpp-netlib-${test} cppnetlib-uri)
+      add_dependencies(cpp-netlib-${test} cppnetlib-uri gtest_main)
       target_link_libraries(cpp-netlib-${test}
 	${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY}
 	${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri gtest_main)
@@ -44,6 +40,5 @@ if (Boost_FOUND)
 
     # Also copy the server directory to the root of the build directory.
     file(COPY server DESTINATION ${CPP-NETLIB_BINARY_DIR}/libs/network/test/)
-
 endif()
 

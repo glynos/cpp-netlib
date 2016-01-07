@@ -1,23 +1,24 @@
 
 // Copyright 2010 Dean Michael Berris.
+// Copyright 2016 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_TEST_MODULE HTTP Client Get Different Port Test
+#include <gtest/gtest.h>
 #include <boost/network/include/http/client.hpp>
-#include <boost/test/unit_test.hpp>
 #include "client_types.hpp"
 
 namespace net = boost::network;
 namespace http = boost::network::http;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(http_get_test_different_port, client,
-                              client_types) {
-  typename client::request request("http://www.boost.org:80/");
-  client client_;
-  typename client::response response_ = client_.get(request);
+TYPED_TEST_CASE(HTTPClientTest, ClientTypes);
+
+TYPED_TEST(HTTPClientTest, GetDifferentPort) {
+  TypeParam client;
+  typename TypeParam::request r("http://www.boost.org:80/");
+  auto response_ = client.get(r);
   auto range = headers(response_)["Content-Type"];
-  BOOST_CHECK(boost::begin(range) != boost::end(range));
-  BOOST_CHECK(body(response_).size() != 0);
+  EXPECT_TRUE(boost::begin(range) != boost::end(range));
+  EXPECT_NE(0, body(response_).size());
 }

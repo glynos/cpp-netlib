@@ -1,10 +1,4 @@
-#define BOOST_TEST_MODULE HTTP Asynchronous Server Tests
-#ifdef BOOST_TEST_DYN_LINK
-#define BOOST_TEST_NO_MAIN
-#endif /* BOOST_TEST_DYN_LINK */
-
 #include <boost/network/include/http/server.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
 
 namespace http = boost::network::http;
@@ -14,8 +8,8 @@ struct dummy_async_handler;
 typedef http::server<dummy_async_handler> async_server;
 
 struct dummy_async_handler {
-  void operator()(async_server::request const& req,
-                  async_server::connection_ptr conn) {
+  void operator()(async_server::request const&,
+                  async_server::connection_ptr) {
     // Really, this is just for testing purposes
   }
 };
@@ -23,7 +17,7 @@ struct dummy_async_handler {
 // In this batch of tests we ensure that calling run and stop on an
 // async_server, in any sequence, is thread safe.
 
-int main(int argc, char* argv[]) {
+int main(int, char*[]) {
   dummy_async_handler async_handler;
 
 #define ASYNC_SERVER_TEST_CONFIG \
@@ -149,6 +143,3 @@ int main(int argc, char* argv[]) {
 
   return 0;
 }
-#ifdef BOOST_TEST_DYN_LINK
-#undef BOOST_TEST_NO_MAIN
-#endif /* BOOST_TEST_DYN_LINK */
