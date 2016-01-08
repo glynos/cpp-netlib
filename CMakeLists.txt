@@ -1,7 +1,8 @@
-#            Copyright (c) Dean Michael Berris 2010.
+# Copyright (c) Dean Michael Berris 2010.
+# Copyright 2016 Google, Inc.
 # Distributed under the Boost Software License, Version 1.0.
-#    (See accompanying file LICENSE_1_0.txt or copy at
-#          http://www.boost.org/LICENSE_1_0.txt)
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 2.8)
 project(CPP-NETLIB)
@@ -45,9 +46,9 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 # Always use multi-threaded Boost libraries.
 set(Boost_USE_MULTI_THREADED ON)
 
-find_package( Boost 1.57.0
-    REQUIRED unit_test_framework system regex date_time thread filesystem
-    program_options chrono atomic )
+find_package(Boost 1.57.0
+  REQUIRED system regex date_time thread filesystem program_options chrono
+  atomic)
 
 if (CPP-NETLIB_ENABLE_HTTPS)
     find_package( OpenSSL )

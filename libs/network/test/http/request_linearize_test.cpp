@@ -1,30 +1,30 @@
 
 // Copyright 2010 Dean Michael Berris.
+// Copyright 2016 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_TEST_MODULE HTTP Request Linearize Test
-#include <boost/mpl/list.hpp>
+#include <gtest/gtest.h>
 #include <boost/network/message/directives/header.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/request.hpp>
-#include <boost/test/unit_test.hpp>
 #include <iostream>
 #include <iterator>
+#include "tag_types.hpp"
 
 namespace http = boost::network::http;
 namespace tags = boost::network::http::tags;
 namespace mpl = boost::mpl;
 namespace net = boost::network;
 
-typedef mpl::list<tags::http_default_8bit_tcp_resolve,
-                  tags::http_default_8bit_udp_resolve,
-                  tags::http_async_8bit_tcp_resolve,
-                  tags::http_async_8bit_udp_resolve> tag_types;
+template <class T>
+class LinearizeTest : public ::testing::Test {};
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(linearize_request, T, tag_types) {
-  http::basic_request<T> request("http://www.boost.org");
+TYPED_TEST_CASE(LinearizeTest, TagTypes);
+
+TYPED_TEST(LinearizeTest, LinearizeRequest) {
+  http::basic_request<TypeParam> request("http://www.boost.org");
   static char http_1_0_output[] =
       "GET / HTTP/1.0\r\n"
       "Host: www.boost.org\r\n"
@@ -38,17 +38,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(linearize_request, T, tag_types) {
       "Accept-Encoding: identity;q=1.0, *;q=0\r\n"
       "Connection: Close\r\n"
       "\r\n";
-  typename http::basic_request<T>::string_type output_1_0;
+  typename http::basic_request<TypeParam>::string_type output_1_0;
   linearize(request, "GET", 1, 0, std::back_inserter(output_1_0));
-  BOOST_CHECK_EQUAL(output_1_0, http_1_0_output);
-  typename http::basic_request<T>::string_type output_1_1;
+  EXPECT_EQ(http_1_0_output, output_1_0);
+  typename http::basic_request<TypeParam>::string_type output_1_1;
   linearize(request, "GET", 1, 1, std::back_inserter(output_1_1));
-  BOOST_CHECK_EQUAL(output_1_1, http_1_1_output);
+  EXPECT_EQ(http_1_1_output, output_1_1);
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(linearize_request_override_headers, T,
-                              tag_types) {
-  http::basic_request<T> request("http://www.boost.org");
+TYPED_TEST(LinearizeTest, OverrideHeaders) {
+  http::basic_request<TypeParam> request("http://www.boost.org");
   // We can override the defaulted headers and test that here.
   request << net::header("Accept", "");
   static char http_1_0_no_accept_output[] =
@@ -62,10 +61,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(linearize_request_override_headers, T,
       "Accept-Encoding: identity;q=1.0, *;q=0\r\n"
       "Connection: Close\r\n"
       "\r\n";
-  typename http::basic_request<T>::string_type output_1_0;
+  typename http::basic_request<TypeParam>::string_type output_1_0;
   linearize(request, "GET", 1, 0, std::back_inserter(output_1_0));
-  BOOST_CHECK_EQUAL(output_1_0, http_1_0_no_accept_output);
-  typename http::basic_request<T>::string_type output_1_1;
+  EXPECT_EQ(http_1_0_no_accept_output, output_1_0);
+  typename http::basic_request<TypeParam>::string_type output_1_1;
   linearize(request, "GET", 1, 1, std::back_inserter(output_1_1));
-  BOOST_CHECK_EQUAL(output_1_1, http_1_1_no_accept_output);
+  EXPECT_EQ(http_1_1_no_accept_output, output_1_1);
 }

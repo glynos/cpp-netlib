@@ -1,12 +1,12 @@
 // Copyright 2009, 2010, 2011 Dean Michael Berris, Jeroen Habraken, Glyn
 // Matthews.
+// Copyright 2016 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_TEST_MODULE URL Test
+#include <gtest/gtest.h>
 #include <boost/config/warning_disable.hpp>
-#include <boost/test/unit_test.hpp>
 #include <boost/network/uri.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/uri_io.hpp>
@@ -18,564 +18,559 @@
 
 using namespace boost::network;
 
-BOOST_AUTO_TEST_CASE(basic_uri_scheme_test) {
+TEST(URITest, basic_uri_scheme_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("http", uri::scheme(instance));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_user_info_test) {
+TEST(URITest, basic_uri_user_info_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::user_info(instance), "");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("", uri::user_info(instance));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_host_test) {
+TEST(URITest, basic_uri_host_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("www.example.com", uri::host(instance));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_port_test) {
+TEST(URITest, basic_uri_port_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::port(instance), "");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("", uri::port(instance));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_path_test) {
+TEST(URITest, basic_uri_path_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::path(instance), "/");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("/", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_query_test) {
+TEST(URITest, basic_uri_query_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::query(instance), "");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("", uri::query(instance));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_fragment_test) {
+TEST(URITest, basic_uri_fragment_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::fragment(instance), "");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("", uri::fragment(instance));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_value_semantics_test) {
+TEST(URITest, basic_uri_value_semantics_test) {
   uri::uri original;
   uri::uri assigned;
   assigned = original;
-  BOOST_CHECK(original == assigned);
+  EXPECT_TRUE(original == assigned);
   assigned = "http://www.example.com/";
-  BOOST_CHECK(original != assigned);
+  EXPECT_TRUE(original != assigned);
   uri::uri copy(assigned);
-  BOOST_CHECK(copy == assigned);
+  EXPECT_TRUE(copy == assigned);
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_range_scheme_test) {
+TEST(URITest, basic_uri_range_scheme_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.scheme_range());
-  BOOST_CHECK(instance.begin() == boost::begin(instance.scheme_range()));
-  BOOST_CHECK(boost::equal(instance.scheme_range(), boost::as_literal("http")));
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.scheme_range());
+  EXPECT_TRUE(instance.begin() == boost::begin(instance.scheme_range()));
+  EXPECT_TRUE(boost::equal(instance.scheme_range(), boost::as_literal("http")));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_range_user_info_test) {
+TEST(URITest, basic_uri_range_user_info_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(!instance.user_info_range());
-  BOOST_CHECK(boost::begin(instance.host_range()) ==
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(!instance.user_info_range());
+  EXPECT_TRUE(boost::begin(instance.host_range()) ==
               boost::begin(instance.user_info_range()));
-  BOOST_CHECK(boost::begin(instance.host_range()) ==
+  EXPECT_TRUE(boost::begin(instance.host_range()) ==
               boost::end(instance.user_info_range()));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_range_host_test) {
+TEST(URITest, basic_uri_range_host_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.host_range());
-  BOOST_CHECK(boost::equal(instance.host_range(),
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.host_range());
+  EXPECT_TRUE(boost::equal(instance.host_range(),
                            boost::as_literal("www.example.com")));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_range_port_test) {
+TEST(URITest, basic_uri_range_port_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(!instance.port_range());
-  BOOST_CHECK(boost::end(instance.host_range()) ==
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(!instance.port_range());
+  EXPECT_TRUE(boost::end(instance.host_range()) ==
               boost::begin(instance.port_range()));
-  BOOST_CHECK(boost::end(instance.host_range()) ==
+  EXPECT_TRUE(boost::end(instance.host_range()) ==
               boost::end(instance.port_range()));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_range_path_test) {
+TEST(URITest, basic_uri_range_path_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.path_range());
-  BOOST_CHECK(boost::equal(instance.path_range(), boost::as_literal("/")));
-  BOOST_CHECK(instance.end() == boost::end(instance.path_range()));
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.path_range());
+  EXPECT_TRUE(boost::equal(instance.path_range(), boost::as_literal("/")));
+  EXPECT_TRUE(instance.end() == boost::end(instance.path_range()));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_range_query_test) {
+TEST(URITest, basic_uri_range_query_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(!instance.query_range());
-  BOOST_CHECK(instance.end() == boost::begin(instance.query_range()));
-  BOOST_CHECK(instance.end() == boost::end(instance.query_range()));
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(!instance.query_range());
+  EXPECT_TRUE(instance.end() == boost::begin(instance.query_range()));
+  EXPECT_TRUE(instance.end() == boost::end(instance.query_range()));
 }
 
-BOOST_AUTO_TEST_CASE(basic_uri_range_fragment_test) {
+TEST(URITest, basic_uri_range_fragment_test) {
   uri::uri instance("http://www.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(!instance.fragment_range());
-  BOOST_CHECK(instance.end() == boost::begin(instance.fragment_range()));
-  BOOST_CHECK(instance.end() == boost::end(instance.fragment_range()));
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(!instance.fragment_range());
+  EXPECT_TRUE(instance.end() == boost::begin(instance.fragment_range()));
+  EXPECT_TRUE(instance.end() == boost::end(instance.fragment_range()));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_scheme_test) {
+TEST(URITest, full_uri_scheme_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("http", uri::scheme(instance));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_user_info_test) {
+TEST(URITest, full_uri_user_info_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::user_info(instance), "user:password");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("user:password", uri::user_info(instance));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_host_test) {
+TEST(URITest, full_uri_host_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("www.example.com", uri::host(instance));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_port_test) {
+TEST(URITest, full_uri_port_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::port(instance), "80");
-  BOOST_CHECK(uri::port_us(instance));
-  BOOST_CHECK_EQUAL(uri::port_us(instance).get(), 80);
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("80", uri::port(instance));
+  EXPECT_TRUE(uri::port_us(instance));
+  EXPECT_EQ(80, uri::port_us(instance).get());
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_path_test) {
+TEST(URITest, full_uri_path_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::path(instance), "/path");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("/path", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_query_test) {
+TEST(URITest, full_uri_query_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::query(instance), "query");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("query", uri::query(instance));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_fragment_test) {
+TEST(URITest, full_uri_fragment_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::fragment(instance), "fragment");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("fragment", uri::fragment(instance));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_range_scheme_test) {
+TEST(URITest, full_uri_range_scheme_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.scheme_range());
-  BOOST_CHECK(instance.begin() == boost::begin(instance.scheme_range()));
-  BOOST_CHECK(boost::equal(instance.scheme_range(), boost::as_literal("http")));
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.scheme_range());
+  EXPECT_TRUE(instance.begin() == boost::begin(instance.scheme_range()));
+  EXPECT_TRUE(boost::equal(instance.scheme_range(), boost::as_literal("http")));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_range_user_info_test) {
+TEST(URITest, full_uri_range_user_info_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.user_info_range());
-  BOOST_CHECK(boost::equal(instance.user_info_range(),
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.user_info_range());
+  EXPECT_TRUE(boost::equal(instance.user_info_range(),
                            boost::as_literal("user:password")));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_range_host_test) {
+TEST(URITest, full_uri_range_host_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.host_range());
-  BOOST_CHECK(boost::equal(instance.host_range(),
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.host_range());
+  EXPECT_TRUE(boost::equal(instance.host_range(),
                            boost::as_literal("www.example.com")));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_range_port_test) {
+TEST(URITest, full_uri_range_port_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.port_range());
-  BOOST_CHECK(boost::equal(instance.port_range(), boost::as_literal("80")));
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.port_range());
+  EXPECT_TRUE(boost::equal(instance.port_range(), boost::as_literal("80")));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_range_path_test) {
+TEST(URITest, full_uri_range_path_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.path_range());
-  BOOST_CHECK(boost::equal(instance.path_range(), boost::as_literal("/path")));
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.path_range());
+  EXPECT_TRUE(boost::equal(instance.path_range(), boost::as_literal("/path")));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_range_query_test) {
+TEST(URITest, full_uri_range_query_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.query_range());
-  BOOST_CHECK(boost::equal(instance.query_range(), boost::as_literal("query")));
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.query_range());
+  EXPECT_TRUE(boost::equal(instance.query_range(), boost::as_literal("query")));
 }
 
-BOOST_AUTO_TEST_CASE(full_uri_range_fragment_test) {
+TEST(URITest, full_uri_range_fragment_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(instance.fragment_range());
-  BOOST_CHECK(
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(instance.fragment_range());
+  EXPECT_TRUE(
       boost::equal(instance.fragment_range(), boost::as_literal("fragment")));
-  BOOST_CHECK(instance.end() == boost::end(instance.fragment_range()));
+  EXPECT_TRUE(instance.end() == boost::end(instance.fragment_range()));
 }
 
-BOOST_AUTO_TEST_CASE(mailto_test) {
+TEST(URITest, mailto_test) {
   uri::uri instance("mailto:john.doe@example.com");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "mailto");
-  BOOST_CHECK_EQUAL(uri::path(instance), "john.doe@example.com");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("mailto", uri::scheme(instance));
+  EXPECT_EQ("john.doe@example.com", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(file_test) {
+TEST(URITest, file_test) {
   uri::uri instance("file:///bin/bash");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "file");
-  BOOST_CHECK_EQUAL(uri::path(instance), "/bin/bash");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("file", uri::scheme(instance));
+  EXPECT_EQ("/bin/bash", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(xmpp_test) {
+TEST(URITest, xmpp_test) {
   uri::uri instance(
       "xmpp:example-node@example.com?message;subject=Hello%20World");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "xmpp");
-  BOOST_CHECK_EQUAL(uri::path(instance), "example-node@example.com");
-  BOOST_CHECK_EQUAL(uri::query(instance), "message;subject=Hello%20World");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("xmpp", uri::scheme(instance));
+  EXPECT_EQ("example-node@example.com", uri::path(instance));
+  EXPECT_EQ("message;subject=Hello%20World", uri::query(instance));
 }
 
-BOOST_AUTO_TEST_CASE(ipv4_address_test) {
+TEST(URITest, ipv4_address_test) {
   uri::uri instance("http://129.79.245.252/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
-  BOOST_CHECK_EQUAL(uri::host(instance), "129.79.245.252");
-  BOOST_CHECK_EQUAL(uri::path(instance), "/");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("http", uri::scheme(instance));
+  EXPECT_EQ("129.79.245.252", uri::host(instance));
+  EXPECT_EQ("/", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(ipv4_loopback_test) {
+TEST(URITest, ipv4_loopback_test) {
   uri::uri instance("http://127.0.0.1/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
-  BOOST_CHECK_EQUAL(uri::host(instance), "127.0.0.1");
-  BOOST_CHECK_EQUAL(uri::path(instance), "/");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("http", uri::scheme(instance));
+  EXPECT_EQ("127.0.0.1", uri::host(instance));
+  EXPECT_EQ("/", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(ipv6_address_test_1) {
+TEST(URITest, ipv6_address_test_1) {
   uri::uri instance("http://[1080:0:0:0:8:800:200C:417A]/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
-  BOOST_CHECK_EQUAL(uri::host(instance), "[1080:0:0:0:8:800:200C:417A]");
-  BOOST_CHECK_EQUAL(uri::path(instance), "/");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("http", uri::scheme(instance));
+  EXPECT_EQ("[1080:0:0:0:8:800:200C:417A]", uri::host(instance));
+  EXPECT_EQ("/", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(ipv6_address_test_2) {
+TEST(URITest, ipv6_address_test_2) {
   uri::uri instance("http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
-  BOOST_CHECK_EQUAL(uri::host(instance),
-                    "[2001:db8:85a3:8d3:1319:8a2e:370:7348]");
-  BOOST_CHECK_EQUAL(uri::path(instance), "/");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("http", uri::scheme(instance));
+  EXPECT_EQ("[2001:db8:85a3:8d3:1319:8a2e:370:7348]", uri::host(instance));
+  EXPECT_EQ("/", uri::path(instance));
 }
 
-// BOOST_AUTO_TEST_CASE(ipv6_loopback_test) {
+// TEST(URITest, ipv6_loopback_test) {
 //    uri::uri instance("http://[::1]/");
-//    BOOST_REQUIRE(uri::valid(instance));
-//    BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
-//    BOOST_CHECK_EQUAL(uri::host(instance), "[::1]");
-//    BOOST_CHECK_EQUAL(uri::path(instance), "/");
+//    ASSERT_TRUE(uri::valid(instance));
+//    EXPECT_EQ("http", uri::scheme(instance));
+//    EXPECT_EQ("[::1]", uri::host(instance));
+//    EXPECT_EQ("/", uri::path(instance));
 //}
 
-BOOST_AUTO_TEST_CASE(ftp_test) {
+TEST(URITest, ftp_test) {
   uri::uri instance("ftp://john.doe@ftp.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "ftp");
-  BOOST_CHECK_EQUAL(uri::user_info(instance), "john.doe");
-  BOOST_CHECK_EQUAL(uri::host(instance), "ftp.example.com");
-  BOOST_CHECK_EQUAL(uri::path(instance), "/");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("ftp", uri::scheme(instance));
+  EXPECT_EQ("john.doe", uri::user_info(instance));
+  EXPECT_EQ("ftp.example.com", uri::host(instance));
+  EXPECT_EQ("/", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(news_test) {
+TEST(URITest, news_test) {
   uri::uri instance("news:comp.infosystems.www.servers.unix");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "news");
-  BOOST_CHECK_EQUAL(uri::path(instance), "comp.infosystems.www.servers.unix");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("news", uri::scheme(instance));
+  EXPECT_EQ("comp.infosystems.www.servers.unix", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(tel_test) {
+TEST(URITest, tel_test) {
   uri::uri instance("tel:+1-816-555-1212");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "tel");
-  BOOST_CHECK_EQUAL(uri::path(instance), "+1-816-555-1212");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("tel", uri::scheme(instance));
+  EXPECT_EQ("+1-816-555-1212", uri::path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(encoded_uri_test) {
+TEST(URITest, encoded_uri_test) {
   uri::uri instance(
       "http://www.example.com/"
       "Path%20With%20%28Some%29%20Encoded%20Characters%21");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::scheme(instance), "http");
-  BOOST_CHECK_EQUAL(uri::host(instance), "www.example.com");
-  BOOST_CHECK_EQUAL(uri::path(instance),
-                    "/Path%20With%20%28Some%29%20Encoded%20Characters%21");
-  BOOST_CHECK_EQUAL(uri::decoded_path(instance),
-                    "/Path With (Some) Encoded Characters!");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("http", uri::scheme(instance));
+  EXPECT_EQ("www.example.com", uri::host(instance));
+  EXPECT_EQ("/Path%20With%20%28Some%29%20Encoded%20Characters%21", uri::path(instance));
+  EXPECT_EQ("/Path With (Some) Encoded Characters!",uri::decoded_path(instance));
 }
 
-BOOST_AUTO_TEST_CASE(copy_constructor_test) {
+TEST(URITest, copy_constructor_test) {
   uri::uri instance("http://www.example.com/");
   uri::uri copy = instance;
-  BOOST_CHECK_EQUAL(instance, copy);
+  EXPECT_EQ(instance, copy);
 }
 
-BOOST_AUTO_TEST_CASE(assignment_test) {
+TEST(URITest, assignment_test) {
   uri::uri instance("http://www.example.com/");
   uri::uri copy;
   copy = instance;
-  BOOST_CHECK_EQUAL(instance, copy);
+  EXPECT_EQ(instance, copy);
 }
 
-BOOST_AUTO_TEST_CASE(swap_test) {
+TEST(URITest, swap_test) {
   uri::uri instance("http://www.example.com/");
   uri::uri copy("http://www.example.org/");
   uri::swap(instance, copy);
-  BOOST_CHECK_EQUAL(instance.string(), "http://www.example.org/");
-  BOOST_CHECK_EQUAL(copy.string(), "http://www.example.com/");
+  EXPECT_EQ("http://www.example.org/", instance.string());
+  EXPECT_EQ("http://www.example.com/", copy.string());
 }
 
-BOOST_AUTO_TEST_CASE(equality_test) {
+TEST(URITest, equality_test) {
   uri::uri uri_1("http://www.example.com/");
   uri::uri uri_2("http://www.example.com/");
-  BOOST_CHECK(uri_1 == uri_2);
+  EXPECT_TRUE(uri_1 == uri_2);
 }
 
-BOOST_AUTO_TEST_CASE(equality_test_1) {
-  uri::uri uri_1("http://www.example.com/");
-  std::string uri_2("http://www.example.com/");
-  BOOST_CHECK(uri_1 == uri_2);
-}
-
-BOOST_AUTO_TEST_CASE(equality_test_2) {
-  std::string uri_1("http://www.example.com/");
-  uri::uri uri_2("http://www.example.com/");
-  BOOST_CHECK(uri_1 == uri_2);
-}
-
-BOOST_AUTO_TEST_CASE(equality_test_3) {
+TEST(URITest, equality_test_1) {
   uri::uri uri_1("http://www.example.com/");
   std::string uri_2("http://www.example.com/");
-  BOOST_CHECK(uri_1 == uri_2.c_str());
+  EXPECT_TRUE(uri_1 == uri_2);
 }
 
-BOOST_AUTO_TEST_CASE(equality_test_4) {
+TEST(URITest, equality_test_2) {
   std::string uri_1("http://www.example.com/");
   uri::uri uri_2("http://www.example.com/");
-  BOOST_CHECK(uri_1.c_str() == uri_2);
+  EXPECT_TRUE(uri_1 == uri_2);
 }
 
-BOOST_AUTO_TEST_CASE(inequality_test) {
+TEST(URITest, equality_test_3) {
+  uri::uri uri_1("http://www.example.com/");
+  std::string uri_2("http://www.example.com/");
+  EXPECT_TRUE(uri_1 == uri_2.c_str());
+}
+
+TEST(URITest, equality_test_4) {
+  std::string uri_1("http://www.example.com/");
+  uri::uri uri_2("http://www.example.com/");
+  EXPECT_TRUE(uri_1.c_str() == uri_2);
+}
+
+TEST(URITest, inequality_test) {
   uri::uri uri_1("http://www.example.com/");
   uri::uri uri_2("http://www.example.com/");
-  BOOST_CHECK(!(uri_1 != uri_2));
+  EXPECT_TRUE(!(uri_1 != uri_2));
 }
 
-BOOST_AUTO_TEST_CASE(less_than_test) {
+TEST(URITest, less_than_test) {
   // uri_1 is lexicographically less than uri_2
   uri::uri uri_1("http://www.example.com/");
   uri::uri uri_2("http://www.example.org/");
-  BOOST_CHECK(uri_1 < uri_2);
+  EXPECT_TRUE(uri_1 < uri_2);
 }
 
-BOOST_AUTO_TEST_CASE(username_test) {
+TEST(URITest, username_test) {
   uri::uri instance("ftp://john.doe@ftp.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::username(instance), "john.doe");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("john.doe", uri::username(instance));
 }
 
-BOOST_AUTO_TEST_CASE(pasword_test) {
+TEST(URITest, pasword_test) {
   uri::uri instance("ftp://john.doe:password@ftp.example.com/");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::password(instance), "password");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("password", uri::password(instance));
 }
 
-BOOST_AUTO_TEST_CASE(hierarchical_part_test) {
+TEST(URITest, hierarchical_part_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::hierarchical_part(instance),
-                    "user:password@www.example.com:80/path");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("user:password@www.example.com:80/path", uri::hierarchical_part(instance));
 }
 
-BOOST_AUTO_TEST_CASE(partial_hierarchical_part_test) {
+TEST(URITest, partial_hierarchical_part_test) {
   uri::uri instance("http://www.example.com?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::hierarchical_part(instance), "www.example.com");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("www.example.com", uri::hierarchical_part(instance));
 }
 
-BOOST_AUTO_TEST_CASE(authority_test) {
+TEST(URITest, authority_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::authority(instance),
-                    "user:password@www.example.com:80");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("user:password@www.example.com:80", uri::authority(instance));
 }
 
-BOOST_AUTO_TEST_CASE(partial_authority_test) {
+TEST(URITest, partial_authority_test) {
   uri::uri instance("http://www.example.com/path?query#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK_EQUAL(uri::authority(instance), "www.example.com");
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_EQ("www.example.com", uri::authority(instance));
 }
 
-BOOST_AUTO_TEST_CASE(http_query_map_test) {
+TEST(URITest, http_query_map_test) {
   uri::uri instance(
       "http://user:password@www.example.com:80/path?query=something#fragment");
-  BOOST_REQUIRE(uri::valid(instance));
+  ASSERT_TRUE(uri::valid(instance));
 
   std::map<std::string, std::string> queries;
   uri::query_map(instance, queries);
-  BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(1));
-  BOOST_CHECK_EQUAL(queries.begin()->first, "query");
-  BOOST_CHECK_EQUAL(queries.begin()->second, "something");
+  ASSERT_EQ(queries.size(), std::size_t(1));
+  EXPECT_EQ("query", queries.begin()->first);
+  EXPECT_EQ("something", queries.begin()->second);
 }
 
-BOOST_AUTO_TEST_CASE(xmpp_query_map_test) {
+TEST(URITest, xmpp_query_map_test) {
   uri::uri instance(
       "xmpp:example-node@example.com?message;subject=Hello%20World");
-  BOOST_REQUIRE(uri::valid(instance));
+  ASSERT_TRUE(uri::valid(instance));
 
   std::map<std::string, std::string> queries;
   uri::query_map(instance, queries);
-  BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(2));
-  BOOST_CHECK_EQUAL(queries.begin()->first, "message");
-  BOOST_CHECK_EQUAL(queries.begin()->second, "");
-  BOOST_CHECK_EQUAL((++queries.begin())->first, "subject");
-  BOOST_CHECK_EQUAL((++queries.begin())->second, "Hello%20World");
+  ASSERT_EQ(queries.size(), std::size_t(2));
+  EXPECT_EQ("message", queries.begin()->first);
+  EXPECT_EQ("", queries.begin()->second);
+  EXPECT_EQ("subject", (++queries.begin())->first);
+  EXPECT_EQ("Hello%20World", (++queries.begin())->second);
 }
 
-BOOST_AUTO_TEST_CASE(range_test) {
+TEST(URITest, range_test) {
   const std::string url("http://www.example.com/");
   uri::uri instance(url);
-  BOOST_REQUIRE(uri::valid(instance));
-  BOOST_CHECK(boost::equal(instance, url));
+  ASSERT_TRUE(uri::valid(instance));
+  EXPECT_TRUE(boost::equal(instance, url));
 }
 
-BOOST_AUTO_TEST_CASE(issue_67_test) {
+TEST(URITest, issue_67_test) {
   // https://github.com/cpp-netlib/cpp-netlib/issues/67
   const std::string site_name("http://www.google.com");
   uri::uri bar0;
   uri::uri bar1 = site_name;
   bar0 = site_name;
-  BOOST_CHECK(uri::is_valid(bar0));
-  BOOST_CHECK(uri::is_valid(bar1));
+  EXPECT_TRUE(uri::is_valid(bar0));
+  EXPECT_TRUE(uri::is_valid(bar1));
 }
 
-BOOST_AUTO_TEST_CASE(from_parts_1) {
-  BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path?query#fragment"),
+TEST(URITest, from_parts_1) {
+  EXPECT_EQ(uri::uri("http://www.example.com/path?query#fragment"),
                     uri::from_parts(uri::uri("http://www.example.com"), "/path",
                                     "query", "fragment"));
 }
 
-BOOST_AUTO_TEST_CASE(from_parts_2) {
-  BOOST_CHECK_EQUAL(
+TEST(URITest, from_parts_2) {
+  EXPECT_EQ(
       uri::uri("http://www.example.com/path?query#fragment"),
       uri::from_parts("http://www.example.com", "/path", "query", "fragment"));
 }
 
-BOOST_AUTO_TEST_CASE(from_parts_3) {
-  BOOST_CHECK_EQUAL(
+TEST(URITest, from_parts_3) {
+  EXPECT_EQ(
       uri::uri("http://www.example.com/path?query"),
       uri::from_parts("http://www.example.com", "/path", "query"));
 }
 
-BOOST_AUTO_TEST_CASE(from_parts_4) {
-  BOOST_CHECK_EQUAL(uri::uri("http://www.example.com/path"),
+TEST(URITest, from_parts_4) {
+  EXPECT_EQ(uri::uri("http://www.example.com/path"),
                     uri::from_parts("http://www.example.com", "/path"));
 }
 
-BOOST_AUTO_TEST_CASE(from_file) {
+TEST(URITest, from_file) {
   boost::filesystem::path path("/a/path/to/a/file.txt");
-  BOOST_CHECK_EQUAL(uri::uri("file:///a/path/to/a/file.txt"),
+  EXPECT_EQ(uri::uri("file:///a/path/to/a/file.txt"),
                     uri::from_file(path));
 }
 
-BOOST_AUTO_TEST_CASE(issue_104_test) {
+TEST(URITest, issue_104_test) {
   // https://github.com/cpp-netlib/cpp-netlib/issues/104
   boost::scoped_ptr<uri::uri> instance(new uri::uri("http://www.example.com/"));
   uri::uri copy = *instance;
   instance.reset();
-  BOOST_CHECK_EQUAL(uri::scheme(copy), "http");
+  EXPECT_EQ("http", uri::scheme(copy));
 }
 
-BOOST_AUTO_TEST_CASE(uri_set_test) {
+TEST(URITest, uri_set_test) {
   std::set<uri::uri> uri_set;
   uri_set.insert(uri::uri("http://www.example.com/"));
-  BOOST_REQUIRE(!uri_set.empty());
-  BOOST_CHECK_EQUAL((*uri_set.begin()), uri::uri("http://www.example.com/"));
+  ASSERT_TRUE(!uri_set.empty());
+  EXPECT_EQ(uri::uri("http://www.example.com/"), (*uri_set.begin()));
 }
 
-BOOST_AUTO_TEST_CASE(uri_unordered_set_test) {
+TEST(URITest, uri_unordered_set_test) {
   boost::unordered_set<uri::uri> uri_set;
   uri_set.insert(uri::uri("http://www.example.com/"));
-  BOOST_REQUIRE(!uri_set.empty());
-  BOOST_CHECK_EQUAL((*uri_set.begin()), uri::uri("http://www.example.com/"));
+  ASSERT_TRUE(!uri_set.empty());
+  EXPECT_EQ(uri::uri("http://www.example.com/"), (*uri_set.begin()));
 }
 
-BOOST_AUTO_TEST_CASE(issue_161_test) {
+TEST(URITest, issue_161_test) {
   uri::uri instance(
       "http://www.example.com/"
       "path?param1=-&param2=some+plus+encoded+text&param3=~");
-  BOOST_REQUIRE(uri::valid(instance));
+  ASSERT_TRUE(uri::valid(instance));
 
   std::map<std::string, std::string> queries;
   uri::query_map(instance, queries);
-  BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(3));
-  BOOST_CHECK_EQUAL(queries["param1"], "-");
-  BOOST_CHECK_EQUAL(queries["param2"], "some+plus+encoded+text");
-  BOOST_CHECK_EQUAL(queries["param3"], "~");
-  BOOST_CHECK_EQUAL(uri::decoded(queries["param2"]), "some plus encoded text");
+  ASSERT_EQ(3, queries.size());
+  EXPECT_EQ("-", queries["param1"]);
+  EXPECT_EQ("some+plus+encoded+text", queries["param2"]);
+  EXPECT_EQ("~", queries["param3"]);
+  EXPECT_EQ("some plus encoded text", uri::decoded(queries["param2"]));
 }
 
-BOOST_AUTO_TEST_CASE(issue_364_test) {
+TEST(URITest, issue_364_test) {
   uri::uri instance;
   uri::schemes::http(instance) << uri::host("my.awesome.server.com");
-  BOOST_CHECK_EQUAL("my.awesome.server.com", uri::authority(instance));
+  EXPECT_EQ("my.awesome.server.com", uri::authority(instance));
 }
 
-BOOST_AUTO_TEST_CASE(issue_447_test) {
+TEST(URITest, issue_447_test) {
   uri::uri instance("http://[www.foo.com/");
-  BOOST_REQUIRE(!uri::valid(instance));
+  ASSERT_TRUE(!uri::valid(instance));
 }
 
-BOOST_AUTO_TEST_CASE(issue_499_test) {
+TEST(URITest, issue_499_test) {
   uri::uri instance(
       "http://www.example.com/path?param1&param2=&param3=value");
-  BOOST_REQUIRE(uri::valid(instance));
+  ASSERT_TRUE(uri::valid(instance));
 
   std::map<std::string, std::string> queries;
   uri::query_map(instance, queries);
-  BOOST_REQUIRE_EQUAL(queries.size(), std::size_t(3));
-  BOOST_CHECK_EQUAL(queries["param1"], "");
-  BOOST_CHECK_EQUAL(queries["param2"], "");
-  BOOST_CHECK_EQUAL(queries["param3"], "value");
+  ASSERT_EQ(3, queries.size());
+  EXPECT_EQ("", queries["param1"]);
+  EXPECT_EQ("", queries["param2"]);
+  EXPECT_EQ("value", queries["param3"]);
 }
