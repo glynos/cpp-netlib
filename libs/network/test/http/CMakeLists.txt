@@ -84,7 +84,7 @@ if (Boost_FOUND)
     add_dependencies(cpp-netlib-http-server_async_run_stop_concurrency
       cppnetlib-server-parsers)
     target_link_libraries(cpp-netlib-http-server_async_run_stop_concurrency
-      ${Boost_LIBRARIES} cppnetlib-server-parsers)
+      ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
     if (OPENSSL_FOUND)
       target_link_libraries(cpp-netlib-http-server_async_run_stop_concurrency
 	${OPENSSL_LIBRARIES})
