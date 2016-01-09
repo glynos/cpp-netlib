@@ -4,3 +4,6 @@
 [submodule "deps/googlemock"]
 	path = deps/googlemock
 	url = https://github.com/google/googlemock.git
+[submodule "libs/network/doc/_ext/breathe"]
+	path = libs/network/doc/_ext/breathe
+	url = https://github.com/michaeljones/breathe.git

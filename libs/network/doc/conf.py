@@ -17,6 +17,9 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.append(os.path.abspath('_ext'))
+sys.path.append(os.path.abspath('_ext/breathe'))
+
+# Use breathe for doxygen integration
 
 # -- General configuration -----------------------------------------------------
 
@@ -27,9 +30,16 @@ extensions = ['sphinx.ext.todo',
               'sphinx.ext.autodoc',
               'sphinx.ext.doctest',
               'sphinx.ext.coverage',
+              'breathe',
               ]
 
 todo_include_todos = True
+
+# Tell breathe about the doxygen project.
+breathe_projects = { 'cppnetlib': os.path.abspath('doxygen/xml') }
+
+# Default breathe project
+breathe_default_project = 'cppnetlib'
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']
@@ -70,7 +80,9 @@ unused_docs = [ '' ]
 
 # List of directories, relative to source directory, that shouldn't be searched
 # for source files.
-exclude_trees = ['build', 'doxyxml', 'ext']
+exclude_trees = ['_build', 'doxygen', '_ext']
+
+exclude_patterns = ['_ext/breathe/*']
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 # add_function_parentheses = True

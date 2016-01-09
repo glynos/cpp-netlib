@@ -11,3 +11,5 @@ libs/mime/test/mime-roundtrip
 _build
 /.project
 build/
+libs/network/doc/doxygen/
+.DS_Store

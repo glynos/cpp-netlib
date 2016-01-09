@@ -17,7 +17,8 @@ namespace network {
 namespace http {
 
 template <class Tag>
-struct client_options {
+class client_options {
+ public:
   typedef typename string<Tag>::type string_type;
 
   client_options()
