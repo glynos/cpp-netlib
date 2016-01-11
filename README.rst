@@ -1,6 +1,12 @@
 C++ Network Library
 ===================
 
+Modern C++ network programming libraries.
+
+Join us on Slack: http://slack.cpp-netlib.org/
+
+Subscribe to the mailing list: https://groups.google.com/forum/#!forum/cpp-netlib
+
 Introduction
 ------------
 
@@ -67,34 +73,6 @@ list`_.
 
 .. _`developers mailing list`: cpp-netlib@googlegroups.com
 
-Building with Boost.Build
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you don't already have Boost.Build set up on your system, follow the steps
-indicated in the Boost Getting Started Guide [#]_ -- you will particularly want
-to copy the ``bjam`` executable to a directory that is already in your ``PATH``
-so that you don't have to go hunting for it all the time. A good place to put it
-is in ``/usr/local/bin``.
-
-.. [#] http://www.boost.org/doc/libs/release/more/getting_started/
-
-Building and running the tests can be as simple as doing the following::
-
-    $ cd ~/cpp-netlib
-    $ bjam
-
-Doing this will already build all the tests and run them as they are built. In
-case you encounter any problems and would like to report it to the developers,
-please do the following::
-
-    $ cd ~/cpp-netlib
-    $ bjam 2>&1 >build-test.log
-
-And then attach the ``build-test.log`` file to the email you will send to the
-cpp-netlib `developers mailing list`_.
-
-.. _`developers mailing list`: cpp-netlib@googlegroups.com
-
 Running Tests
 -------------
 
@@ -137,7 +115,7 @@ but code that is not self-explanatory typically at least requires a rationale
 documentation in comments explaining "why" the code is written that way.
 
 The main "upstream" repository is the one hosted by the original maintainer of
-the project (Dean Michael Berris) at http://github.com/mikhailberis/cpp-netlib.
+the project (Dean Michael Berris) at http://github.com/deanberris/cpp-netlib.
 The "official" release repository is maintained at
 http://github.com/cpp-netlib/cpp-netlib -- which is a fork of the upstream
 repository. It is recommended that forks be made against the upstream repostory
@@ -150,6 +128,8 @@ Contact and Support
 In case you have any questions or would like to make feature requests, you can
 contact the development team through the `developers mailing list`_
 or by filing issues at http://github.com/cpp-netlib/cpp-netlib/issues.
+
+Join us on Slack: http://slack.cpp-netlib.org/
 
 .. _`developers mailing list`: cpp-netlib@googlegroups.com
 
