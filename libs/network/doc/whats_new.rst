@@ -4,6 +4,19 @@
  What's New
 ************
 
+:mod:`cpp-netlib` 0.12
+----------------------
+
+* Require C++11 for builds, removes support for non-C++11 compilers.
+* Update documentation for hello_world_server
+* Use googletest for tests
+* Fix XCode-generated debug binaries caused by URI parser complexity
+* Remove synchronous client implementation.
+* Remove support for connection keepalive (only supported in synchronous client).
+* Disable SSLv3 by default.
+* Use sanitisers in continuous integration (address and thread sanitiser).
+* Update minimum Boost to 1.57. Always use shared libs from Boost.
+
 :mod:`cpp-netlib` 0.11
 ----------------------
 
