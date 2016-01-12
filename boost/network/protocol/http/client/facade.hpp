@@ -24,14 +24,37 @@ template <class Tag>
 struct basic_response;
 
 template <class Tag, unsigned version_major, unsigned version_minor>
-struct basic_client_facade {
-
-  typedef typename string<Tag>::type string_type;
-  typedef basic_request<Tag> request;
-  typedef basic_response<Tag> response;
+class basic_client_facade {
   typedef basic_client_impl<Tag, version_major, version_minor> pimpl_type;
+ public:
+  /**
+   * The type to use for strings associated with this client. Typically resolves
+   * to `std::string`.
+   */
+  typedef typename string<Tag>::type string_type;
+
+  /** The request type. This models the HTTP Request concept. */
+  typedef basic_request<Tag> request;
+
+  /** The response type. This models the HTTP Response concept.*/
+  typedef basic_response<Tag> response;
+
+  /**
+   * This callback is invoked with a range representing part of the response's
+   * body as it comes in. In case of errors, the second argument is an error
+   * code.
+   */
   typedef function<void(iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
+
+  /**
+   * Functions that model this signature will be used to generate part of the
+   * body while the request is being performed. This allows users to provide a
+   * generator function that will generate the body of the request piece-wise.
+   *
+   * Implementations should return `true` if there is more to the body of the
+   * request, and `false` otherwise.
+   */
   typedef function<bool(string_type&)> body_generator_function_type;
 
   explicit basic_client_facade(client_options<Tag> const& options) {
@@ -40,12 +63,25 @@ struct basic_client_facade {
 
   ~basic_client_facade() { pimpl->wait_complete(); }
 
+  /**
+   * Perform a HEAD request.
+   */
   response head(request const& request) {
     return pimpl->request_skeleton(request, "HEAD", false,
                                    body_callback_function_type(),
                                    body_generator_function_type());
   }
 
+  /**
+   * Perform a GET request.
+   *
+   * @param[in] request The request object including the URI and headers.
+   * @param[in] body_handler If provided, a callback invoked for parts of the
+   *   response's body.
+   * @returns A response object.
+   * @throw std::exception May throw exceptions on errors, derived from
+   *   `std::exception`.
+   */
   response get(request const& request,
                body_callback_function_type body_handler =
                    body_callback_function_type()) {
@@ -53,6 +89,23 @@ struct basic_client_facade {
                                    body_generator_function_type());
   }
 
+  /**
+   * Perform a POST request.
+   *
+   * @param[in] request A copy of the request object including the URI and
+   *   headers.
+   * @param[in] body The whole contents of the body. If provided, this overrides
+   *   the body in the `request`.
+   * @param[in] content_type The content type for the request. This overrides
+   *   the content type in the `request`.
+   * @param[in] body_handler The callback invoked for parts of the response body
+   *   as they come in.
+   * @param[in] body_generator If provided, is invoked to generate parts of the
+   *   request's body as it is being sent.
+   * @returns A response object.
+   * @throws std::exception May throw exceptions on errors, derived from
+   *   `std::exception`.
+   */
   response post(request request, string_type const& body = string_type(),
                 string_type const& content_type = string_type(),
                 body_callback_function_type body_handler =
@@ -82,28 +135,82 @@ struct basic_client_facade {
                                    body_generator);
   }
 
+  /**
+   * Perform a POST request.
+   *
+   * @param[in] request The request including the URI and headers.
+   * @param[in] body_generator The function to call to generate part of the body
+   *   while the request is being performed.
+   * @param[in] callback If provided, the function to call for parts of the
+   *   response's body as they come in.
+   * @returns A response object.
+   * @throws std::exception May throw exceptions derived from std::exception in
+   *   case of errors.
+   */
   response post(request const& request,
                 body_generator_function_type body_generator,
-                body_callback_function_type callback =
-                    body_generator_function_type()) {
-    return pimpl->request_skeleton(request, "POST", true, callback,
-                                   body_generator);
+                body_callback_function_type body_handler =
+                    body_callback_function_type()) {
+    return pimpl->request_skeleton(request, "POST", true, body_handler,
+	body_generator);
   }
 
-  response post(request const& request, body_callback_function_type callback,
+  /**
+   * Perform a POST request.
+   *
+   * @param[in] request The request including the URI and headers.
+   * @param[in] body_generator The function to call to generate part of the body
+   *   while the request is being performed.
+   * @param[in] callback If provided, the function to call for parts of the
+   *   response's body as they come in.
+   * @returns A response object.
+   * @throws std::exception May throw exceptions derived from std::exception in
+   *   case of errors.
+   */
+  response post(request const& request, body_callback_function_type body_handler,
                 body_generator_function_type body_generator =
                     body_generator_function_type()) {
-    return post(request, string_type(), string_type(), callback,
-                body_generator);
+    return post(request, string_type(), string_type(), body_handler,
+	body_generator);
   }
 
+  /**
+   * Perform a POST request.
+   *
+   * @param[in] request The request object including the URI and headers.
+   * @param[in] body The whole contents of the body.
+   * @param[in] body_handler The callback invoked for parts of the response body
+   *   as they come in.
+   * @param[in] body_generator If provided, is invoked to generate parts of the
+   *   request's body as it is being sent.
+   * @returns A response object.
+   * @throws std::exception May throw exceptions on errors, derived from
+   *   `std::exception`.
+   */
   response post(request const& request, string_type const& body,
-                body_callback_function_type callback,
+                body_callback_function_type body_handler,
                 body_generator_function_type body_generator =
                     body_generator_function_type()) {
-    return post(request, body, string_type(), callback, body_generator);
+    return post(request, body, string_type(), body_handler, body_generator);
   }
 
+  /**
+   * Perform a PUT request.
+   *
+   * @param[in] request A copy of the request object including the URI and
+   *   headers.
+   * @param[in] body The whole contents of the body. If provided, this overrides
+   *   the body in the `request`.
+   * @param[in] content_type The content type for the request. This overrides
+   *   the content type in the `request`.
+   * @param[in] body_handler The callback invoked for parts of the response body
+   *   as they come in.
+   * @param[in] body_generator If provided, is invoked to generate parts of the
+   *   request's body as it is being sent.
+   * @returns A response object.
+   * @throws std::exception May throw exceptions on errors, derived from
+   *   `std::exception`.
+   */
   response put(request request, string_type const& body = string_type(),
                string_type const& content_type = string_type(),
                body_callback_function_type body_handler =
@@ -133,26 +240,62 @@ struct basic_client_facade {
                                    body_generator);
   }
 
+  /**
+   * Perform a PUT request.
+   *
+   * @param[in] request The request including the URI and headers.
+   * @param[in] callback If provided, the function to call for parts of the
+   *   response's body as they come in.
+   * @param[in] body_generator The function to call to generate part of the body
+   *   while the request is being performed.
+   * @returns A response object.
+   * @throws std::exception May throw exceptions derived from std::exception in
+   *   case of errors.
+   */
   response put(request const& request, body_callback_function_type callback,
                body_generator_function_type body_generator =
                    body_generator_function_type()) {
     return put(request, string_type(), string_type(), callback, body_generator);
   }
 
+  /**
+   * Perform a POST request.
+   *
+   * @param[in] request The request object including the URI and headers.
+   * @param[in] body The whole contents of the body.
+   * @param[in] body_handler The callback invoked for parts of the response body
+   *   as they come in.
+   * @param[in] body_generator If provided, is invoked to generate parts of the
+   *   request's body as it is being sent.
+   * @returns A response object.
+   * @throws std::exception May throw exceptions on errors, derived from
+   *   `std::exception`.
+   */
   response put(request const& request, string_type body,
-               body_callback_function_type callback,
-               body_generator_function_type body_generator =
-                   body_generator_function_type()) {
-    return put(request, body, string_type(), callback, body_generator);
+               body_callback_function_type body_handler,
+               body_generator_function_type body_generator = {}) {
+    return put(request, body, string_type(), body_handler, body_generator);
   }
 
+  /**
+   * Perform a DELETE request.
+   *
+   * @param[in] request The request object including the URI and the headers.
+   * @param[in] body_handler The callback invoked for parts of the response body
+   *   as they come in, if provided.
+   * @returns A response object.
+   * @throws std::exception May throw exceptions on errors, derived from
+   *   `std::exception`.
+   */
   response delete_(request const& request,
-                   body_callback_function_type body_handler =
-                       body_callback_function_type()) {
+                   body_callback_function_type body_handler = {}) {
     return pimpl->request_skeleton(request, "DELETE", true, body_handler,
                                    body_generator_function_type());
   }
 
+  /**
+   * Clears the cache of resolved endpoints.
+   */
   void clear_resolved_cache() { pimpl->clear_resolved_cache(); }
 
  protected:

@@ -55,7 +55,7 @@ struct client_base<Tag, version_major, version_minor,
 }  // namespace impl
 
 template <class Tag, unsigned version_major, unsigned version_minor>
-struct basic_client;
+class basic_client;
 
 template <class Tag, unsigned version_major, unsigned version_minor>
 struct basic_client_impl
