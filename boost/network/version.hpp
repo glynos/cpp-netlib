@@ -10,8 +10,8 @@
 #include <boost/network/version.hpp>
 
 #define BOOST_NETLIB_VERSION_MAJOR 0
-#define BOOST_NETLIB_VERSION_MINOR 11
-#define BOOST_NETLIB_VERSION_INCREMENT 2
+#define BOOST_NETLIB_VERSION_MINOR 12
+#define BOOST_NETLIB_VERSION_INCREMENT 0rc0
 
 #ifndef BOOST_NETLIB_VERSION
 #define BOOST_NETLIB_VERSION                                       \
