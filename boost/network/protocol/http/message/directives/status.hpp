@@ -8,7 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <future>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <boost/mpl/if.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/tags.hpp>
@@ -25,19 +25,19 @@ struct basic_response;
 
 struct status_directive {
 
-  boost::variant<boost::uint16_t, std::shared_future<boost::uint16_t> >
+  boost::variant<std::uint16_t, std::shared_future<std::uint16_t> >
       status_;
 
-  explicit status_directive(boost::uint16_t status) : status_(status) {}
+  explicit status_directive(std::uint16_t status) : status_(status) {}
 
-  explicit status_directive(std::shared_future<boost::uint16_t> const &status)
+  explicit status_directive(std::shared_future<std::uint16_t> const &status)
       : status_(status) {}
 
   status_directive(status_directive const &other) : status_(other.status_) {}
 
   template <class Tag>
-  struct value : mpl::if_<is_async<Tag>, std::shared_future<boost::uint16_t>,
-                          boost::uint16_t> {};
+  struct value : mpl::if_<is_async<Tag>, std::shared_future<std::uint16_t>,
+                          std::uint16_t> {};
 
   template <class Tag>
   struct status_visitor : boost::static_visitor<> {

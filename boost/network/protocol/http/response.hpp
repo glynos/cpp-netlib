@@ -8,7 +8,6 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_RESPONSE_HPP
 
-#include <boost/cstdint.hpp>
 #include <boost/network/protocol/http/message.hpp>
 #include <boost/network/protocol/http/message/async_message.hpp>
 #include <boost/network/protocol/http/message/directives/status.hpp>

@@ -6,7 +6,7 @@
 #ifndef BOOST_NETWORK_URI_DIRECTIVES_PORT_INC__
 #define BOOST_NETWORK_URI_DIRECTIVES_PORT_INC__
 
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <boost/lexical_cast.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
@@ -18,7 +18,7 @@ struct port_directive {
 
   explicit port_directive(std::string port) : port_(std::move(port)) {}
 
-  explicit port_directive(boost::uint16_t port)
+  explicit port_directive(std::uint16_t port)
       : port_(boost::lexical_cast<std::string>(port)) {}
 
   template <class Uri>
@@ -34,7 +34,7 @@ inline port_directive port(const std::string &port) {
   return port_directive(port);
 }
 
-inline port_directive port(boost::uint16_t port) {
+inline port_directive port(std::uint16_t port) {
   return port_directive(port);
 }
 

@@ -7,6 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <cstdint>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <boost/asio/write.hpp>
@@ -20,7 +21,7 @@ boost::network::http::impl::normal_delegate::normal_delegate(
 
 void boost::network::http::impl::normal_delegate::connect(
     asio::ip::tcp::endpoint &endpoint, std::string host,
-    boost::uint16_t source_port,
+    std::uint16_t source_port,
     function<void(system::error_code const &)> handler) {
 
   // TODO(dberris): review parameter necessity.

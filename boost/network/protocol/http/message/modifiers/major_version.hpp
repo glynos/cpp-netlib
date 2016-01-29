@@ -6,7 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <boost/network/protocol/http/support/is_server.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -19,7 +19,7 @@ struct basic_request;
 
 template <class Tag>
 inline typename enable_if<is_server<Tag>, void>::type major_version(
-    basic_request<Tag>& request, boost::uint8_t major_version_) {
+    basic_request<Tag>& request, std::uint8_t major_version_) {
   request.http_version_major = major_version_;
 }
 

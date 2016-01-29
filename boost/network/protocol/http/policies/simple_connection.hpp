@@ -9,8 +9,8 @@
 
 #include <iterator>
 #include <memory>
+#include <cstdint>
 #include <boost/function.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/tags.hpp>
@@ -87,7 +87,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
         if (get_body) pimpl->read_body(response_, response_buffer);
 
         if (follow_redirect_) {
-          boost::uint16_t status = response_.status();
+          std::uint16_t status = response_.status();
           if (status >= 300 && status <= 307) {
             typename headers_range<http::basic_response<Tag> >::type
                 location_range = headers(response_)["Location"];

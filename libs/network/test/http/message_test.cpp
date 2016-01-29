@@ -27,7 +27,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(request_constructor_test, T, tag_types) {
   http::basic_request<T> request("http://boost.org");
   typedef typename http::basic_request<T>::string_type string_type;
   string_type host = http::host(request);
-  boost::uint16_t port = http::port(request);
+  std::uint16_t port = http::port(request);
   string_type path = http::path(request);
   string_type query = http::query(request);
   string_type anchor = http::anchor(request);
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(request_copy_constructor_test, T, tag_types) {
   http::basic_request<T> copy(request);
   typedef typename http::basic_request<T>::string_type string_type;
   string_type orig_host = http::host(request), copy_host = http::host(copy);
-  boost::uint16_t orig_port = http::port(request), copy_port = http::port(copy);
+  std::uint16_t orig_port = http::port(request), copy_port = http::port(copy);
   string_type orig_path = http::path(request), copy_path = http::path(copy);
   string_type orig_body = body(request), copy_body = body(copy);
   BOOST_CHECK_EQUAL(orig_host, copy_host);
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(request_assignment_test, T, tag_types) {
   copy = request;
   typedef typename http::basic_request<T>::string_type string_type;
   string_type orig_host = http::host(request), copy_host = http::host(copy);
-  boost::uint16_t orig_port = http::port(request), copy_port = http::port(copy);
+  std::uint16_t orig_port = http::port(request), copy_port = http::port(copy);
   string_type orig_path = http::path(request), copy_path = http::path(copy);
   string_type orig_body = body(request), copy_body = body(copy);
   BOOST_CHECK_EQUAL(orig_host, copy_host);
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(request_swap_test, T, tag_types) {
   typedef typename http::basic_request<T>::string_type string_type;
   string_type orig_host = http::host(request), orig_path = http::path(request),
               copy_host = http::host(other), copy_path = http::path(other);
-  boost::uint16_t orig_port = http::port(request),
+  std::uint16_t orig_port = http::port(request),
                   copy_port = http::port(request);
   BOOST_CHECK_EQUAL(orig_host, "");
   BOOST_CHECK_EQUAL(orig_port, 80u);
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(response_copy_construct_test, T, tag_types) {
                                                     version(response),
                                                 version_copy = version(copy);
   BOOST_CHECK_EQUAL(version_orig, version_copy);
-  boost::uint16_t status_orig = status(response), status_copy = status(copy);
+  std::uint16_t status_orig = status(response), status_copy = status(copy);
   BOOST_CHECK_EQUAL(status_orig, status_copy);
   typename http::basic_response<T>::string_type status_message_orig =
                                                     status_message(response),
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(response_assignment_construct_test, T,
   typedef typename http::basic_response<T>::string_type string_type;
   string_type version_orig = version(response), version_copy = version(copy);
   BOOST_CHECK_EQUAL(version_orig, version_copy);
-  boost::uint16_t status_orig = status(response), status_copy = status(copy);
+  std::uint16_t status_orig = status(response), status_copy = status(copy);
   BOOST_CHECK_EQUAL(status_orig, status_copy);
   string_type status_message_orig = status_message(response),
               status_message_copy = status_message(copy);

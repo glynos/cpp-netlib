@@ -10,7 +10,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <future>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <boost/optional.hpp>
 
 // FIXME move this out to a trait
@@ -66,7 +66,7 @@ struct async_message {
     version_ = future;
   }
 
-  boost::uint16_t status() const { return status_.get(); }
+  std::uint16_t status() const { return status_.get(); }
 
   void status(std::shared_future<uint16_t> const& future) const {
     status_ = future;
@@ -134,7 +134,7 @@ struct async_message {
  private:
   mutable std::shared_future<string_type> status_message_, version_, source_,
       destination_;
-  mutable std::shared_future<boost::uint16_t> status_;
+  mutable std::shared_future<std::uint16_t> status_;
   mutable std::shared_future<headers_container_type> headers_;
   mutable headers_container_type added_headers;
   mutable std::set<string_type> removed_headers;

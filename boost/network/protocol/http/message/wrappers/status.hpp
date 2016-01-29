@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/cstdint.hpp>
+#include <cstdint>
 
 namespace boost {
 namespace network {
@@ -28,7 +28,7 @@ struct status_wrapper {
 
   status_wrapper(status_wrapper const& other) : response_(other.response_) {}
 
-  operator boost::uint16_t() { return response_.status(); }
+  operator std::uint16_t() { return response_.status(); }
 };
 
 }  // namespace impl

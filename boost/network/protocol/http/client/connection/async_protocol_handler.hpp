@@ -9,6 +9,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <iterator>
+#include <cstdint>
 #include <boost/fusion/tuple/tuple.hpp>
 #include <boost/fusion/tuple/tuple_tie.hpp>
 #include <boost/logic/tribool.hpp>
@@ -76,7 +77,7 @@ struct http_async_protocol_handler {
         version_promise.get_future());
     version(response_, version_future);
 
-    std::shared_future<boost::uint16_t> status_future(
+    std::shared_future<std::uint16_t> status_future(
         status_promise.get_future());
     status(response_, status_future);
 
@@ -161,7 +162,7 @@ struct http_async_protocol_handler {
       std::swap(status, partial_parsed);
       status.append(std::begin(result_range), std::end(result_range));
       trim(status);
-      boost::uint16_t status_int = lexical_cast<boost::uint16_t>(status);
+      std::uint16_t status_int = lexical_cast<std::uint16_t>(status);
       status_promise.set_value(status_int);
       part_begin = std::end(result_range);
     } else if (parsed_ok == false) {
@@ -340,7 +341,7 @@ struct http_async_protocol_handler {
 
   response_parser_type response_parser_;
   std::promise<string_type> version_promise;
-  std::promise<boost::uint16_t> status_promise;
+  std::promise<std::uint16_t> status_promise;
   std::promise<string_type> status_message_promise;
   std::promise<typename headers_container<Tag>::type> headers_promise;
   std::promise<string_type> source_promise;

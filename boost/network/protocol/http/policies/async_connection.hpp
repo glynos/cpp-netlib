@@ -12,7 +12,6 @@
 #include <memory>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/bind.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/function.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/network/protocol/http/client/connection/async_base.hpp>

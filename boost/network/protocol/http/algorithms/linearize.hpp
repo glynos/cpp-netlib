@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <bitset>
+#include <cstdint>
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/concept/requires.hpp>
 #include <boost/lexical_cast.hpp>
@@ -137,7 +138,7 @@ OutputIterator linearize(Request const& request,
     *oi = consts::colon_char();
     *oi = consts::space_char();
     boost::copy(request.host(), oi);
-    boost::optional<boost::uint16_t> port_ =
+    boost::optional<std::uint16_t> port_ =
 #if (_MSC_VER >= 1600 && BOOST_VERSION > 105500)
         port(request).as_optional();
 #else

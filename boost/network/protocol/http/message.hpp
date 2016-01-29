@@ -13,12 +13,13 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_HPP
 
+#include <string>
+#include <cstdint>
 #include <boost/network/protocol/http/traits.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
 #include <boost/network/protocol/http/message/header/value.hpp>
 #include <boost/network/message.hpp>
 #include <boost/network/tags.hpp>
-#include <string>
 
 namespace boost {
 namespace network {
@@ -75,7 +76,7 @@ struct message_impl : public basic_message<Tag> {
 
  protected:
   mutable string_type version_;
-  mutable boost::uint16_t status_;
+  mutable std::uint16_t status_;
   mutable string_type status_message_;
 
  private:
@@ -94,9 +95,9 @@ struct message_impl : public basic_message<Tag> {
 
   string_type const version() const { return version_; }
 
-  void status(boost::uint16_t status) const { status_ = status; }
+  void status(std::uint16_t status) const { status_ = status; }
 
-  boost::uint16_t status() const { return status_; }
+  std::uint16_t status() const { return status_; }
 
   void status_message(string_type const &status_message) const {
     status_message_ = status_message;

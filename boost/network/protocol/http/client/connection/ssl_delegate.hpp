@@ -7,13 +7,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
+#include <cstdint>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ssl.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
 #include <boost/optional.hpp>
-#include <memory>
 
 namespace boost {
 namespace network {
@@ -30,7 +31,7 @@ struct ssl_delegate : connection_delegate,
                optional<std::string> ciphers, long ssl_options);
 
   void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
-                       boost::uint16_t source_port,
+                       std::uint16_t source_port,
                        function<void(system::error_code const &)> handler) override;
   void write(asio::streambuf &command_streambuf,
              function<void(system::error_code const &, size_t)> handler)

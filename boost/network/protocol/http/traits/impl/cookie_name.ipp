@@ -7,6 +7,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_PARSER_TRAITS_COOKIE_NAME_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_TRAITS_COOKIE_NAME_IPP
 
+#include <cstdint>
 #include <boost/network/tags.hpp>
 
 namespace boost {
@@ -15,7 +16,7 @@ namespace http {
 
 template <>
 struct cookie_name<tags::http_default_8bit_tcp_resolve> {
-  static boost::uint32_t const MAX = 1024u;
+  static std::uint32_t const MAX = 1024u;
 };
 
 }  // namespace http

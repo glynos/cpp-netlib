@@ -10,6 +10,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <iterator>
+#include <cstdint>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/array.hpp>
 #include <boost/asio/deadline_timer.hpp>
@@ -18,7 +19,6 @@
 #include <boost/asio/streambuf.hpp>
 #include <boost/assert.hpp>
 #include <boost/bind/protect.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/network/detail/debug.hpp>
@@ -98,9 +98,9 @@ struct http_async_connection
               std::ostreambuf_iterator<typename char_<Tag>::type>(
                   &command_streambuf));
     this->method = method;
-    boost::uint16_t port_ = port(request);
+    std::uint16_t port_ = port(request);
     string_type host_ = host(request);
-    boost::uint16_t source_port = request.source_port();
+    std::uint16_t source_port = request.source_port();
 
     resolve_(resolver_, host_, port_,
              request_strand_.wrap(boost::bind(
@@ -134,8 +134,8 @@ struct http_async_connection
     is_timedout_ = true;
   }
 
-  void handle_resolved(string_type host, boost::uint16_t port,
-                       boost::uint16_t source_port, bool get_body,
+  void handle_resolved(string_type host, std::uint16_t port,
+                       std::uint16_t source_port, bool get_body,
                        body_callback_function_type callback,
                        body_generator_function_type generator,
                        boost::system::error_code const& ec,
@@ -159,8 +159,8 @@ struct http_async_connection
     }
   }
 
-  void handle_connected(string_type host, boost::uint16_t port,
-                        boost::uint16_t source_port, bool get_body,
+  void handle_connected(string_type host, std::uint16_t port,
+                        std::uint16_t source_port, bool get_body,
                         body_callback_function_type callback,
                         body_generator_function_type generator,
                         resolver_iterator_pair endpoint_range,

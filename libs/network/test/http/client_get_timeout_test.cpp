@@ -40,7 +40,7 @@ TYPED_TEST(HTTPClientTest, GetTimeoutTest) {
   typename client::request request("http://localhost:12121/");
   typename client::response response_;
   client client_;
-  boost::uint16_t port_ = port(request);
+  std::uint16_t port_ = port(request);
   typename client::response::string_type temp;
   EXPECT_EQ(12121, port_);
   EXPECT_THROW(response_ = client_.get(request); temp = body(response_);

@@ -7,6 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <cstdint>
 #include <boost/asio/ssl.hpp>
 #include <boost/bind.hpp>
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
@@ -28,7 +29,7 @@ boost::network::http::impl::ssl_delegate::ssl_delegate(
 
 void boost::network::http::impl::ssl_delegate::connect(
     asio::ip::tcp::endpoint &endpoint, std::string host,
-    boost::uint16_t source_port,
+    std::uint16_t source_port,
     function<void(system::error_code const &)> handler) {
   context_.reset(
       new asio::ssl::context(asio::ssl::context::method::sslv23_client));

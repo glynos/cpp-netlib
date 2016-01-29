@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <cstdint>
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/network/protocol/http/traits/resolver.hpp>
@@ -36,7 +37,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
   typedef boost::function<
       void(boost::system::error_code const &, resolver_iterator_pair)>
       resolve_completion_function;
-  typedef boost::function<void(resolver_type &, string_type, boost::uint16_t,
+  typedef boost::function<void(resolver_type &, string_type, std::uint16_t,
                                resolve_completion_function)> resolve_function;
 
  protected:
@@ -49,7 +50,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
       : cache_resolved_(cache_resolved), endpoint_cache_() {}
 
   void resolve(resolver_type &resolver_, string_type const &host,
-               boost::uint16_t port,
+               std::uint16_t port,
                resolve_completion_function once_resolved) {
     if (cache_resolved_) {
       typename endpoint_cache::iterator iter =

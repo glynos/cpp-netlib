@@ -9,11 +9,12 @@
 
 #include <mutex>
 #include <unordered_map>
+#include <cstdint>
+#include <utility>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <utility>
 
 #ifndef BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
 #define BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT 5
@@ -91,7 +92,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       // TODO(dberris): review parameter necessity.
       (void)callback;
 
-      boost::uint8_t count = 0;
+      std::uint8_t count = 0;
       bool retry = false;
       do {
         if (count >= BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT)
@@ -141,7 +142,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         }
 
         if (connection_follow_redirect_) {
-          boost::uint16_t status = response_.status();
+          std::uint16_t status = response_.status();
           if (status >= 300 && status <= 307) {
             typename headers_range<basic_response<Tag> >::type location_range =
                 headers(response_)["Location"];
