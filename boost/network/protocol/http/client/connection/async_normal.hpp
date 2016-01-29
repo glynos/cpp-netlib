@@ -9,6 +9,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iterator>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/array.hpp>
 #include <boost/asio/deadline_timer.hpp>
@@ -33,7 +34,6 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/thread/future.hpp>
 #include <boost/throw_exception.hpp>
-#include <iterator>
 
 namespace boost {
 namespace network {

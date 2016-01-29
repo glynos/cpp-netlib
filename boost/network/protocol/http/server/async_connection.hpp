@@ -8,6 +8,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iterator>
+#include <list>
+#include <vector>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/strand.hpp>
@@ -28,9 +31,6 @@
 #include <boost/throw_exception.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/typed_in_place_factory.hpp>
-#include <iterator>
-#include <list>
-#include <vector>
 
 #ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE
 /** Here we define a page's worth of header connection buffer data.
@@ -429,13 +429,13 @@ struct async_connection
             break;
           } else if (parsed_ok == true) {
             swap(partial_parsed, request_.method);
-            request_.method.append(boost::begin(result_range),
-                                   boost::end(result_range));
+            request_.method.append(std::begin(result_range),
+                                   std::end(result_range));
             trim(request_.method);
-            new_start = boost::end(result_range);
+            new_start = std::end(result_range);
           } else {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             new_start = read_buffer_.begin();
             read_more(method);
             break;
@@ -449,13 +449,13 @@ struct async_connection
             break;
           } else if (parsed_ok == true) {
             swap(partial_parsed, request_.destination);
-            request_.destination.append(boost::begin(result_range),
-                                        boost::end(result_range));
+            request_.destination.append(std::begin(result_range),
+                                        std::end(result_range));
             trim(request_.destination);
-            new_start = boost::end(result_range);
+            new_start = std::end(result_range);
           } else {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             new_start = read_buffer_.begin();
             read_more(uri);
             break;
@@ -469,16 +469,16 @@ struct async_connection
             break;
           } else if (parsed_ok == true) {
             fusion::tuple<uint8_t, uint8_t> version_pair;
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             parse_version(partial_parsed, version_pair);
             request_.http_version_major = fusion::get<0>(version_pair);
             request_.http_version_minor = fusion::get<1>(version_pair);
-            new_start = boost::end(result_range);
+            new_start = std::end(result_range);
             partial_parsed.clear();
           } else {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             new_start = read_buffer_.begin();
             read_more(version);
             break;
@@ -491,21 +491,21 @@ struct async_connection
             client_error();
             break;
           } else if (parsed_ok == true) {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             try {
               parse_headers(partial_parsed, request_.headers);
             } catch (...) {
               client_error();
               break;
             }
-            new_start = boost::end(result_range);
+            new_start = std::end(result_range);
             auto self = this->shared_from_this();
             thread_pool().post([this, self] { handler(request_, self); });
             return;
           } else {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             new_start = read_buffer_.begin();
             read_more(headers);
             break;
@@ -606,7 +606,7 @@ struct async_connection
     buffers->reserve((range_size / connection_buffer_size) +
                      ((range_size % connection_buffer_size) ? 1 : 0));
     std::size_t slice_size = std::min(range_size, connection_buffer_size);
-    auto start = boost::begin(range), end = boost::end(range);
+    auto start = std::begin(range), end = std::end(range);
     while (slice_size != 0) {
       using boost::adaptors::sliced;
       shared_ptr<array> new_array = make_shared<array>();

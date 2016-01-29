@@ -8,6 +8,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iterator>
 #include <boost/fusion/tuple/tuple.hpp>
 #include <boost/fusion/tuple/tuple_tie.hpp>
 #include <boost/logic/tribool.hpp>
@@ -112,10 +113,10 @@ struct http_async_protocol_handler {
     if (parsed_ok == true) {
       string_type version;
       std::swap(version, partial_parsed);
-      version.append(boost::begin(result_range), boost::end(result_range));
+      version.append(std::begin(result_range), std::end(result_range));
       algorithm::trim(version);
       version_promise.set_value(version);
-      part_begin = boost::end(result_range);
+      part_begin = std::end(result_range);
     } else if (parsed_ok == false) {
 #ifdef BOOST_NETWORK_DEBUG
       string_type escaped;
@@ -134,8 +135,8 @@ struct http_async_protocol_handler {
       destination_promise.set_exception(boost::copy_exception(error));
       body_promise.set_exception(boost::copy_exception(error));
     } else {
-      partial_parsed.append(boost::begin(result_range),
-                            boost::end(result_range));
+      partial_parsed.append(std::begin(result_range),
+                            std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
           boost::asio::mutable_buffers_1(part.c_array(), part.size()),
@@ -158,11 +159,11 @@ struct http_async_protocol_handler {
     if (parsed_ok == true) {
       string_type status;
       std::swap(status, partial_parsed);
-      status.append(boost::begin(result_range), boost::end(result_range));
+      status.append(std::begin(result_range), std::end(result_range));
       trim(status);
       boost::uint16_t status_int = lexical_cast<boost::uint16_t>(status);
       status_promise.set_value(status_int);
-      part_begin = boost::end(result_range);
+      part_begin = std::end(result_range);
     } else if (parsed_ok == false) {
 #ifdef BOOST_NETWORK_DEBUG
       string_type escaped;
@@ -180,8 +181,8 @@ struct http_async_protocol_handler {
       destination_promise.set_exception(boost::copy_exception(error));
       body_promise.set_exception(boost::copy_exception(error));
     } else {
-      partial_parsed.append(boost::begin(result_range),
-                            boost::end(result_range));
+      partial_parsed.append(std::begin(result_range),
+                            std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
           boost::asio::mutable_buffers_1(part.c_array(), part.size()),
@@ -204,11 +205,11 @@ struct http_async_protocol_handler {
     if (parsed_ok == true) {
       string_type status_message;
       std::swap(status_message, partial_parsed);
-      status_message.append(boost::begin(result_range),
-                            boost::end(result_range));
+      status_message.append(std::begin(result_range),
+                            std::end(result_range));
       algorithm::trim(status_message);
       status_message_promise.set_value(status_message);
-      part_begin = boost::end(result_range);
+      part_begin = std::end(result_range);
     } else if (parsed_ok == false) {
 #ifdef BOOST_NETWORK_DEBUG
       string_type escaped;
@@ -225,8 +226,8 @@ struct http_async_protocol_handler {
       destination_promise.set_exception(boost::copy_exception(error));
       body_promise.set_exception(boost::copy_exception(error));
     } else {
-      partial_parsed.append(boost::begin(result_range),
-                            boost::end(result_range));
+      partial_parsed.append(std::begin(result_range),
+                            std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
           boost::asio::mutable_buffers_1(part.c_array(), part.size()),
@@ -250,12 +251,12 @@ struct http_async_protocol_handler {
       if (headers_parser.state() != response_parser_type::http_header_colon)
         break;
       header_pair.first =
-          string_type(boost::begin(result_range), boost::end(result_range));
+          string_type(std::begin(result_range), std::end(result_range));
       input_range.advance_begin(boost::distance(result_range));
       fusion::tie(parsed_ok, result_range) = headers_parser.parse_until(
           response_parser_type::http_header_line_done, input_range);
       header_pair.second =
-          string_type(boost::begin(result_range), boost::end(result_range));
+          string_type(std::begin(result_range), std::end(result_range));
       input_range.advance_begin(boost::distance(result_range));
 
       trim(header_pair.first);
@@ -270,7 +271,7 @@ struct http_async_protocol_handler {
         headers.equal_range("Transfer-Encoding");
     is_chunk_encoding =
         !boost::empty(transfer_encoding_range) &&
-        boost::iequals(boost::begin(transfer_encoding_range)->second,
+        boost::iequals(std::begin(transfer_encoding_range)->second,
                        "chunked");
     headers_promise.set_value(headers);
   }
@@ -290,9 +291,9 @@ struct http_async_protocol_handler {
     if (parsed_ok == true) {
       string_type headers_string;
       std::swap(headers_string, partial_parsed);
-      headers_string.append(boost::begin(result_range),
-                            boost::end(result_range));
-      part_begin = boost::end(result_range);
+      headers_string.append(std::begin(result_range),
+                            std::end(result_range));
+      part_begin = std::end(result_range);
       this->parse_headers_real(headers_string);
     } else if (parsed_ok == false) {
 // We want to output the contents of the buffer that caused
@@ -312,15 +313,15 @@ struct http_async_protocol_handler {
       source_promise.set_exception(boost::copy_exception(error));
       destination_promise.set_exception(boost::copy_exception(error));
     } else {
-      partial_parsed.append(boost::begin(result_range),
-                            boost::end(result_range));
+      partial_parsed.append(std::begin(result_range),
+                            std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
           boost::asio::mutable_buffers_1(part.c_array(), part.size()),
           callback);
     }
     return fusion::make_tuple(
-        parsed_ok, std::distance(boost::end(result_range), part_end));
+        parsed_ok, std::distance(std::end(result_range), part_end));
   }
 
   template <class Delegate, class Callback>
@@ -356,4 +357,4 @@ struct http_async_protocol_handler {
 }  // namespace network
 }  // namespace boost
 
-#endif  // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_20101015 
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_IMPL_HTTP_ASYNC_PROTOCOL_HANDLER_HPP_20101015

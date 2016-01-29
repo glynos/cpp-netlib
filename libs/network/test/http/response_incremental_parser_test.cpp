@@ -85,7 +85,7 @@ TEST(IncrementalResponseParserTest, ParseHTTPVersion) {
       response_parser_type::http_version_done, valid_http_version);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
-  std::string parsed(boost::begin(result_range), boost::end(result_range));
+  std::string parsed(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
   p.reset();
   valid_http_version = "HTTP/1.1 ";
@@ -93,7 +93,7 @@ TEST(IncrementalResponseParserTest, ParseHTTPVersion) {
       response_parser_type::http_version_done, valid_http_version);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
-  parsed.assign(boost::begin(result_range), boost::end(result_range));
+  parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
   p.reset();
@@ -102,7 +102,7 @@ TEST(IncrementalResponseParserTest, ParseHTTPVersion) {
   fusion::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_version_done, invalid_http_version);
   EXPECT_EQ(false, parsed_ok);
-  parsed.assign(boost::begin(result_range), boost::end(result_range));
+  parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
   p.reset();
@@ -111,7 +111,7 @@ TEST(IncrementalResponseParserTest, ParseHTTPVersion) {
   fusion::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_version_done, valid_http_version);
   EXPECT_EQ(true, parsed_ok);
-  parsed.assign(boost::begin(result_range), boost::end(result_range));
+  parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
 
@@ -140,7 +140,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatus) {
       p.parse_until(response_parser_type::http_status_done, valid_status);
   EXPECT_EQ(true, parsed_ok);
   std::string parsed =
-      std::string(boost::begin(result_range), boost::end(result_range));
+      std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
   p.reset(response_parser_type::http_version_done);
@@ -148,14 +148,14 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatus) {
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_status_done, invalid_status);
   EXPECT_EQ(false, parsed_ok);
-  parsed = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
   valid_status = "200" + TypeParam::literal;
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_status_done, valid_status);
   EXPECT_EQ(true, parsed_ok);
-  parsed = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
 
@@ -174,7 +174,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
   std::string parsed =
-      std::string(boost::begin(result_range), boost::end(result_range));
+      std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
   p.reset(response_parser_type::http_status_done);
@@ -182,7 +182,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
   fusion::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
-  parsed = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
   p.reset(response_parser_type::http_status_done);
@@ -190,7 +190,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
   fusion::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
-  parsed = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
   p.reset(response_parser_type::http_status_done);
@@ -198,7 +198,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
   fusion::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
-  parsed = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
   p.reset(response_parser_type::http_status_done);
@@ -206,7 +206,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
   fusion::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
-  parsed = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 }
 
@@ -227,18 +227,18 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   std::string parsed1 =
-      std::string(boost::begin(result_range), boost::end(result_range));
+      std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed1 << " state=" << p.state() << std::endl;
   p.reset(response_parser_type::http_status_message_done);
   std::string::const_iterator end = valid_headers.end();
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   std::string parsed2 =
-      std::string(boost::begin(result_range), boost::end(result_range));
+      std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
@@ -252,17 +252,17 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed1 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed1 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed1 << " state=" << p.state() << std::endl;
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed2 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
@@ -276,17 +276,17 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed1 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed1 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed1 << " state=" << p.state() << std::endl;
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed2 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
@@ -299,17 +299,17 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed1 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed1 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed1 << " state=" << p.state() << std::endl;
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed2 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
@@ -323,17 +323,17 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed1 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed1 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed1 << " state=" << p.state() << std::endl;
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed2 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
@@ -346,17 +346,17 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed1 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed1 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed1 << " state=" << p.state() << std::endl;
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
-  parsed2 = std::string(boost::begin(result_range), boost::end(result_range));
+  parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
-  valid_headers.assign(boost::end(result_range), end);
+  valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);

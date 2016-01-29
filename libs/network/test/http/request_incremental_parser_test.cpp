@@ -45,7 +45,7 @@ TEST(IncrementalRequestParserTest, ParseMethod) {
       p.parse_until(request_parser_type::method_done, valid_http_method);
   EXPECT_TRUE(parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
-  std::string parsed(boost::begin(result_range), boost::end(result_range));
+  std::string parsed(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 
@@ -54,7 +54,7 @@ TEST(IncrementalRequestParserTest, ParseMethod) {
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::method_done, invalid_http_method);
   EXPECT_EQ(false, parsed_ok);
-  parsed.assign(boost::begin(result_range), boost::end(result_range));
+  parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 }
@@ -71,7 +71,7 @@ TEST(IncrementalRequestParserTest, ParseURI) {
       p.parse_until(request_parser_type::uri_done, valid_http_request);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
-  std::string parsed(boost::begin(result_range), boost::end(result_range));
+  std::string parsed(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 
@@ -80,7 +80,7 @@ TEST(IncrementalRequestParserTest, ParseURI) {
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::uri_done, invalid_http_request);
   EXPECT_EQ(false, parsed_ok);
-  parsed.assign(boost::begin(result_range), boost::end(result_range));
+  parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 }
@@ -97,7 +97,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPVersion) {
       p.parse_until(request_parser_type::version_done, valid_http_request);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
-  std::string parsed(boost::begin(result_range), boost::end(result_range));
+  std::string parsed(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 
@@ -106,7 +106,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPVersion) {
   fusion::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::version_done, invalid_http_request);
   EXPECT_EQ(false, parsed_ok);
-  parsed.assign(boost::begin(result_range), boost::end(result_range));
+  parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 }
@@ -124,7 +124,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPHeaders) {
       p.parse_until(request_parser_type::headers_done, valid_http_request);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
-  std::string parsed(boost::begin(result_range), boost::end(result_range));
+  std::string parsed(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 
@@ -135,7 +135,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPHeaders) {
       p.parse_until(request_parser_type::headers_done, valid_http_request);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
-  parsed.assign(boost::begin(result_range), boost::end(result_range));
+  parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
 }

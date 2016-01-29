@@ -6,6 +6,7 @@
 #ifndef __BOOST_NETWORK_URI_DIRECTIVES_INC__
 #define __BOOST_NETWORK_URI_DIRECTIVES_INC__
 
+#include <iterator>
 #include <boost/network/uri/uri.hpp>
 
 namespace boost {
@@ -13,7 +14,7 @@ namespace network {
 namespace uri {
 inline uri &operator<<(uri &uri_, const uri &root_uri) {
   if (empty(uri_) && valid(root_uri)) {
-    uri_.append(boost::begin(root_uri), boost::end(root_uri));
+    uri_.append(std::begin(root_uri), std::end(root_uri));
   }
   return uri_;
 }

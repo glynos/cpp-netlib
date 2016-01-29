@@ -3,8 +3,6 @@
 
 #include <boost/network/utils/base64/encode.hpp>
 #include <boost/archive/iterators/ostream_iterator.hpp>
-#include <boost/range/begin.hpp>
-#include <boost/range/end.hpp>
 #include <iterator>
 
 namespace boost {
@@ -185,8 +183,8 @@ template <typename InputRange>
 detail::input_wrapper<typename boost::range_const_iterator<InputRange>::type>
 encode(InputRange const &value) {
   typedef typename boost::range_const_iterator<InputRange>::type InputIterator;
-  return detail::input_wrapper<InputIterator>(boost::begin(value),
-                                              boost::end(value));
+  return detail::input_wrapper<InputIterator>(std::begin(value),
+                                              std::end(value));
 }
 
 // Encoding ostream manipulator processing string literals; the usual

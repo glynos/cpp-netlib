@@ -135,7 +135,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
             headers(response_)["Connection"];
         if (version_major == 1 && version_minor == 1 &&
             !boost::empty(connection_range) &&
-            boost::begin(connection_range)->second == string_type("close")) {
+            std::begin(connection_range)->second == string_type("close")) {
           pimpl->close_socket();
         } else if (version_major == 1 && version_minor == 0) {
           pimpl->close_socket();
@@ -148,8 +148,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
                 headers(response_)["Location"];
             typename range_iterator<
                 typename headers_range<basic_request<Tag> >::type>::type
-                location_header = boost::begin(location_range);
-            if (location_header != boost::end(location_range)) {
+                location_header = std::begin(location_range);
+            if (location_header != std::end(location_range)) {
               request_.uri(location_header->second);
               connection_ptr connection_;
               connection_ = get_connection_(

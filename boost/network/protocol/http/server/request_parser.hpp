@@ -6,6 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iterator>
 #include <utility>
 #include <boost/range/iterator_range.hpp>
 #include <boost/logic/tribool.hpp>
@@ -58,13 +59,13 @@ struct request_parser {
   parse_until(state_t stop_state, Range& range) {
     logic::tribool parsed_ok = logic::indeterminate;
     typedef typename range_iterator<Range>::type iterator;
-    iterator start = boost::begin(range), end = boost::end(range),
+    iterator start = std::begin(range), end = std::end(range),
              current_iterator = start;
     iterator_range<iterator> local_range =
         boost::make_iterator_range(start, end);
     while (!boost::empty(local_range) && stop_state != internal_state &&
            indeterminate(parsed_ok)) {
-      current_iterator = boost::begin(local_range);
+      current_iterator = std::begin(local_range);
       switch (internal_state) {
         case method_start:
           if (algorithm::is_upper()(*current_iterator))

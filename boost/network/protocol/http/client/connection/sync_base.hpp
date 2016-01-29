@@ -140,7 +140,7 @@ struct sync_connection_base_impl {
         read_body_normal(socket_, response_, response_buffer, body_stream);
         return;
       }
-      if (boost::iequals(boost::begin(transfer_encoding_range)->second,
+      if (boost::iequals(std::begin(transfer_encoding_range)->second,
                          "chunked")) {
         bool stopping = false;
         do {
@@ -196,7 +196,7 @@ struct sync_connection_base_impl {
       size_t already_read = response_buffer.size();
       if (already_read) body_stream << &response_buffer;
       size_t length =
-          lexical_cast<size_t>(boost::begin(content_length_range)->second) -
+          lexical_cast<size_t>(std::begin(content_length_range)->second) -
           already_read;
       if (length == 0) { return;
 }

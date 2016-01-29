@@ -6,6 +6,7 @@
 #ifndef __BOOST_NETWORK_URI_DECODE_INC__
 #define __BOOST_NETWORK_URI_DECODE_INC__
 
+#include <iterator>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
@@ -79,7 +80,7 @@ OutputIterator decode(const InputIterator &in_begin,
 template <class SinglePassRange, class OutputIterator>
 inline OutputIterator decode(const SinglePassRange &range,
                              const OutputIterator &out) {
-  return decode(boost::begin(range), boost::end(range), out);
+  return decode(std::begin(range), std::end(range), out);
 }
 
 inline std::string decoded(const std::string &input) {

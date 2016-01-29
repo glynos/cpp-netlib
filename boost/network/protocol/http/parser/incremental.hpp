@@ -8,6 +8,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iterator>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/fusion/tuple.hpp>
 #include <boost/logic/tribool.hpp>
@@ -66,8 +67,8 @@ struct response_parser {
   fusion::tuple<logic::tribool, iterator_range<typename Range::const_iterator> >
   parse_until(state_t stop_state, Range& range_) {
     logic::tribool parsed_ok(logic::indeterminate);
-    typename Range::const_iterator start = boost::begin(range_),
-                                   current = start, end = boost::end(range_);
+    typename Range::const_iterator start = std::begin(range_),
+                                   current = start, end = std::end(range_);
     boost::iterator_range<typename Range::const_iterator> local_range =
         boost::make_iterator_range(start, end);
     while (!boost::empty(local_range) && indeterminate(parsed_ok)) {

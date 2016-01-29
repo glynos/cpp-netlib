@@ -295,7 +295,7 @@ OutputIterator encode(InputIterator begin, InputIterator end,
 template <typename InputRange, typename OutputIterator, typename State>
 OutputIterator encode(InputRange const& input, OutputIterator output,
                       State& rest) {
-  return encode(boost::begin(input), boost::end(input), output, rest);
+  return encode(std::begin(input), std::end(input), output, rest);
 }
 
 // Encodes an entire string literal to BASE64, writing it to the output
@@ -342,7 +342,7 @@ OutputIterator encode(char const* value, OutputIterator output,
 // base64::encode(buffer, std::back_inserter(result));
 template <typename InputRange, typename OutputIterator>
 OutputIterator encode(InputRange const& value, OutputIterator output) {
-  return encode(boost::begin(value), boost::end(value), output);
+  return encode(std::begin(value), std::end(value), output);
 }
 
 // Encodes an entire string literal to BASE64 writing it to the output

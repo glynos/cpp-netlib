@@ -7,6 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iterator>
 #include <boost/function.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/lexical_cast.hpp>
@@ -92,8 +93,8 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
                 location_range = headers(response_)["Location"];
             typename range_iterator<
                 typename headers_range<http::basic_response<Tag> >::type>::type
-                location_header = boost::begin(location_range);
-            if (location_header != boost::end(location_range)) {
+                location_header = std::begin(location_range);
+            if (location_header != std::end(location_range)) {
               request_.uri(location_header->second);
             } else
               throw std::runtime_error(

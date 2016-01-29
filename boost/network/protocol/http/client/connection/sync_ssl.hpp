@@ -143,7 +143,7 @@ struct https_sync_connection
     typename headers_range<basic_response<Tag> >::type connection_range =
         headers(response_)["Connection"];
     if (version_major == 1 && version_minor == 1 && !boost::empty(connection_range) &&
-        boost::iequals(boost::begin(connection_range)->second, "close")) {
+        boost::iequals(std::begin(connection_range)->second, "close")) {
       close_socket();
     } else if (version_major == 1 && version_minor == 0) {
       close_socket();

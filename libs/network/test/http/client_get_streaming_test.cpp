@@ -17,7 +17,7 @@ struct body_handler {
 
   BOOST_NETWORK_HTTP_BODY_CALLBACK(operator(), range, error) {
     (void)error;
-    body.append(boost::begin(range), boost::end(range));
+    body.append(std::begin(range), std::end(range));
   }
 
   std::string& body;
