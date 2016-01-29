@@ -9,6 +9,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/bind.hpp>
 #include <boost/cstdint.hpp>
@@ -18,7 +19,6 @@
 #include <boost/network/protocol/http/message/wrappers/protocol.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/version.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/tuple/tuple.hpp>
 
 namespace boost {
@@ -63,11 +63,11 @@ struct async_connection_policy : resolver_policy<Tag>::type {
     }
 
    private:
-    shared_ptr<http::impl::async_connection_base<Tag, version_major,
+    std::shared_ptr<http::impl::async_connection_base<Tag, version_major,
                                                  version_minor> > pimpl;
   };
 
-  typedef boost::shared_ptr<connection_impl> connection_ptr;
+  typedef std::shared_ptr<connection_impl> connection_ptr;
   connection_ptr get_connection(
       resolver_type& resolver, basic_request<Tag> const& request_,
       bool always_verify_peer,

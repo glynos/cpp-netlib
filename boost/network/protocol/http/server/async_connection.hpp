@@ -11,11 +11,11 @@
 #include <iterator>
 #include <list>
 #include <vector>
+#include <memory>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/asio/streambuf.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/network/protocol/stream_handler.hpp>
@@ -68,7 +68,7 @@ extern void parse_headers(std::string const& input,
 
 template <class Tag, class Handler>
 struct async_connection
-    : boost::enable_shared_from_this<async_connection<Tag, Handler> > {
+    : std::enable_shared_from_this<async_connection<Tag, Handler> > {
 
   enum status_t {
     ok = 200,
@@ -98,7 +98,7 @@ struct async_connection
 
   typedef typename string<Tag>::type string_type;
   typedef basic_request<Tag> request;
-  typedef shared_ptr<async_connection> connection_ptr;
+  typedef std::shared_ptr<async_connection> connection_ptr;
 
  private:
   static char const* status_message(status_t status) {
@@ -180,8 +180,8 @@ struct async_connection
  public:
   async_connection(asio::io_service& io_service, Handler& handler,
                    utils::thread_pool& thread_pool,
-                   boost::shared_ptr<ssl_context> ctx =
-                       boost::shared_ptr<ssl_context>())
+                   std::shared_ptr<ssl_context> ctx =
+                       std::shared_ptr<ssl_context>())
       : strand(io_service),
         handler(handler),
         thread_pool_(thread_pool),
@@ -347,9 +347,9 @@ struct async_connection
 
   typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
       array;
-  typedef std::list<shared_ptr<array> > array_list;
-  typedef boost::shared_ptr<array_list> shared_array_list;
-  typedef boost::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
+  typedef std::list<std::shared_ptr<array> > array_list;
+  typedef std::shared_ptr<array_list> shared_array_list;
+  typedef std::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
   typedef request_parser<Tag> request_parser_type;
   typedef boost::lock_guard<boost::recursive_mutex> lock_guard;
   typedef std::list<boost::function<void()> > pending_actions_list;
@@ -598,9 +598,9 @@ struct async_connection
 
     static std::size_t const connection_buffer_size =
         BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
-    shared_array_list temporaries = boost::make_shared<array_list>();
+    shared_array_list temporaries = std::make_shared<array_list>();
     shared_buffers buffers =
-        boost::make_shared<std::vector<asio::const_buffer> >(0);
+        std::make_shared<std::vector<asio::const_buffer> >(0);
 
     std::size_t range_size = boost::distance(range);
     buffers->reserve((range_size / connection_buffer_size) +
@@ -609,7 +609,7 @@ struct async_connection
     auto start = std::begin(range), end = std::end(range);
     while (slice_size != 0) {
       using boost::adaptors::sliced;
-      shared_ptr<array> new_array = make_shared<array>();
+      std::shared_ptr<array> new_array = std::make_shared<array>();
       boost::copy(range | sliced(0, slice_size), new_array->begin());
       temporaries->push_back(new_array);
       buffers->push_back(asio::buffer(new_array->data(), slice_size));

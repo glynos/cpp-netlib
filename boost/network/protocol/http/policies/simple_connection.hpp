@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <iterator>
+#include <memory>
 #include <boost/function.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/lexical_cast.hpp>
@@ -16,7 +17,6 @@
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/version.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/optional/optional.hpp>
@@ -110,12 +110,12 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
     }
 
    private:
-    shared_ptr<http::impl::sync_connection_base<Tag, version_major,
+    std::shared_ptr<http::impl::sync_connection_base<Tag, version_major,
                                                 version_minor> > pimpl;
     bool follow_redirect_;
   };
 
-  typedef boost::shared_ptr<connection_impl> connection_ptr;
+  typedef std::shared_ptr<connection_impl> connection_ptr;
   connection_ptr get_connection(
       resolver_type& resolver, basic_request<Tag> const& request_,
       bool always_verify_peer,

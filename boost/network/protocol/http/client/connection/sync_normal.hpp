@@ -31,7 +31,7 @@ template <class Tag, unsigned version_major, unsigned version_minor>
 struct http_sync_connection
     : public virtual sync_connection_base<Tag, version_major, version_minor>,
       sync_connection_base_impl<Tag, version_major, version_minor>,
-      boost::enable_shared_from_this<
+      std::enable_shared_from_this<
           http_sync_connection<Tag, version_major, version_minor> > {
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;

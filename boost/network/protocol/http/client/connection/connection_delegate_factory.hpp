@@ -28,7 +28,7 @@ struct normal_delegate;
 
 template <class Tag>
 struct connection_delegate_factory {
-  typedef shared_ptr<connection_delegate> connection_delegate_ptr;
+  typedef std::shared_ptr<connection_delegate> connection_delegate_ptr;
   typedef typename string<Tag>::type string_type;
 
   // This is the factory method that actually returns the delegate

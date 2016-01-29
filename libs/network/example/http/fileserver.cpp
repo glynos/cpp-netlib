@@ -3,6 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/network/include/http/server.hpp>
 #include <boost/thread.hpp>
 #include <boost/lexical_cast.hpp>
@@ -97,7 +98,7 @@ struct file_cache {
   }
 };
 
-struct connection_handler : boost::enable_shared_from_this<connection_handler> {
+struct connection_handler : std::enable_shared_from_this<connection_handler> {
   explicit connection_handler(file_cache &cache) : file_cache_(cache) {}
 
   void operator()(std::string const &path, server::connection_ptr connection,
@@ -157,10 +158,10 @@ struct file_server {
   void operator()(server::request const &request,
                   server::connection_ptr connection) {
     if (request.method == "HEAD") {
-      boost::shared_ptr<connection_handler> h(new connection_handler(cache_));
+      std::shared_ptr<connection_handler> h(new connection_handler(cache_));
       (*h)(request.destination, connection, false);
     } else if (request.method == "GET") {
-      boost::shared_ptr<connection_handler> h(new connection_handler(cache_));
+      std::shared_ptr<connection_handler> h(new connection_handler(cache_));
       (*h)(request.destination, connection, true);
     } else {
       static server::response_header error_headers[] = {
@@ -179,7 +180,7 @@ int main(int, char *[]) {
   file_cache cache(".");
   file_server handler(cache);
   server::options options(handler);
-  server instance(options.thread_pool(boost::make_shared<utils::thread_pool>(4))
+  server instance(options.thread_pool(std::make_shared<utils::thread_pool>(4))
                       .address("0.0.0.0")
                       .port("8000"));
   instance.run();

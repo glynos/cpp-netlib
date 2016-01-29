@@ -6,8 +6,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/asio/placeholders.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/network/traits/string.hpp>
@@ -24,7 +24,7 @@ namespace http {
 namespace policies {
 
 template <class Tag>
-struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
+struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
   typedef typename resolver<Tag>::type resolver_type;
   typedef typename resolver_type::iterator resolver_iterator;
   typedef typename resolver_type::query resolver_query;
@@ -42,8 +42,8 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
  protected:
   bool cache_resolved_;
   endpoint_cache endpoint_cache_;
-  boost::shared_ptr<boost::asio::io_service> service_;
-  boost::shared_ptr<boost::asio::io_service::strand> resolver_strand_;
+  std::shared_ptr<boost::asio::io_service> service_;
+  std::shared_ptr<boost::asio::io_service::strand> resolver_strand_;
 
   explicit async_resolver(bool cache_resolved)
       : cache_resolved_(cache_resolved), endpoint_cache_() {}

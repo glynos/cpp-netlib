@@ -13,7 +13,7 @@
 #define BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE 1024uL
 #endif
 
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
 #include <boost/network/protocol/http/request_parser.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
@@ -34,7 +34,7 @@ namespace http {
 
 template <class Tag, class Handler>
 struct sync_connection
-    : boost::enable_shared_from_this<sync_connection<Tag, Handler> > {
+    : std::enable_shared_from_this<sync_connection<Tag, Handler> > {
 
   sync_connection(boost::asio::io_service &service, Handler &handler)
       : service_(service),

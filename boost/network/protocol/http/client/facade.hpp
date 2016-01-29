@@ -7,6 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/network/protocol/http/client/pimpl.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
@@ -299,7 +300,7 @@ class basic_client_facade {
   void clear_resolved_cache() { pimpl->clear_resolved_cache(); }
 
  protected:
-  boost::shared_ptr<pimpl_type> pimpl;
+  std::shared_ptr<pimpl_type> pimpl;
 
   void init_pimpl(client_options<Tag> const& options) {
     pimpl.reset(new pimpl_type(

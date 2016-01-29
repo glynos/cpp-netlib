@@ -49,7 +49,7 @@ template <class Tag, unsigned version_major, unsigned version_minor>
 struct http_async_connection
     : async_connection_base<Tag, version_major, version_minor>,
       protected http_async_protocol_handler<Tag, version_major, version_minor>,
-      boost::enable_shared_from_this<
+      std::enable_shared_from_this<
           http_async_connection<Tag, version_major, version_minor> > {
   http_async_connection(http_async_connection const&) = delete;
 

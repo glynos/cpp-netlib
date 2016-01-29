@@ -10,11 +10,11 @@
  * http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <memory>
 #include <boost/network/include/http/server.hpp>
 
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
-#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <signal.h>
 
@@ -34,7 +34,7 @@ struct request_data {
   const server::request req;
   server::connection_ptr conn;
 
-  typedef boost::shared_ptr<request_data> pointer;
+  typedef std::shared_ptr<request_data> pointer;
 
   request_data(server::request const& req, const server::connection_ptr& conn)
       : req(req), conn(conn) {}
@@ -56,19 +56,19 @@ struct handler {
  * @param p_server_instance
  */
 void shut_me_down(const boost::system::error_code& error, int signal,
-                  boost::shared_ptr<server> p_server_instance) {
+                  std::shared_ptr<server> p_server_instance) {
   if (!error) p_server_instance->stop();
 }
 
 int main(void) try {
 
   // setup asio::io_service
-  boost::shared_ptr<boost::asio::io_service> p_io_service(
-      boost::make_shared<boost::asio::io_service>());
+  std::shared_ptr<boost::asio::io_service> p_io_service(
+      std::make_shared<boost::asio::io_service>());
 
   // Initialize SSL context
-  boost::shared_ptr<boost::asio::ssl::context> ctx =
-      boost::make_shared<boost::asio::ssl::context>(
+  std::shared_ptr<boost::asio::ssl::context> ctx =
+      std::make_shared<boost::asio::ssl::context>(
           boost::asio::ssl::context::sslv23);
   ctx->set_options(boost::asio::ssl::context::default_workarounds |
                    boost::asio::ssl::context::no_sslv2 |
@@ -82,14 +82,14 @@ int main(void) try {
 
   // setup the async server
   handler request_handler;
-  boost::shared_ptr<server> p_server_instance(boost::make_shared<server>(
+  std::shared_ptr<server> p_server_instance(std::make_shared<server>(
       server::options(request_handler)
           .address("0.0.0.0")
           .port("8442")
           .io_service(p_io_service)
           .reuse_address(true)
           .thread_pool(
-               boost::make_shared<boost::network::utils::thread_pool>(2))
+               std::make_shared<boost::network::utils::thread_pool>(2))
           .context(ctx)));
 
   // setup clean shutdown

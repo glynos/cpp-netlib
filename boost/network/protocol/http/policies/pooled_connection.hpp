@@ -11,7 +11,6 @@
 #include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/unordered_map.hpp>
 #include <utility>
@@ -40,7 +39,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
   void cleanup() { host_connection_map().swap(host_connections_); }
 
   struct connection_impl {
-    typedef function<shared_ptr<connection_impl>(
+    typedef function<std::shared_ptr<connection_impl>(
         resolver_type&, basic_request<Tag> const&, optional<string_type> const&,
         optional<string_type> const&, optional<string_type> const&,
         optional<string_type> const&, optional<string_type> const&)>
@@ -166,7 +165,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       } while (true);
     }
 
-    shared_ptr<http::impl::sync_connection_base<Tag, version_major,
+    std::shared_ptr<http::impl::sync_connection_base<Tag, version_major,
                                                 version_minor> > pimpl;
     resolver_type& resolver_;
     bool connection_follow_redirect_;
@@ -179,9 +178,9 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     long ssl_options_;
   };
 
-  typedef shared_ptr<connection_impl> connection_ptr;
+  typedef std::shared_ptr<connection_impl> connection_ptr;
 
-  typedef unordered_map<string_type, weak_ptr<connection_impl>> host_connection_map;
+  typedef unordered_map<string_type, std::weak_ptr<connection_impl>> host_connection_map;
   boost::mutex host_mutex_;
   host_connection_map host_connections_;
   bool follow_redirect_;

@@ -9,7 +9,6 @@
 
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ssl.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
@@ -22,7 +21,7 @@ namespace http {
 namespace impl {
 
 struct ssl_delegate : connection_delegate,
-                      enable_shared_from_this<ssl_delegate> {
+                      std::enable_shared_from_this<ssl_delegate> {
   ssl_delegate(asio::io_service &service, bool always_verify_peer,
                optional<std::string> certificate_filename,
                optional<std::string> verify_path,

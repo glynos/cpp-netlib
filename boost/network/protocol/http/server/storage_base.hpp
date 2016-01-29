@@ -6,8 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
 #include <boost/network/protocol/http/server/options.hpp>
 
 namespace boost {
@@ -23,10 +22,10 @@ struct server_storage_base {
   explicit server_storage_base(server_options<Tag, Handler> const& options)
       : self_service_(options.io_service()
                           ? options.io_service()
-                          : boost::make_shared<boost::asio::io_service>()),
+                          : std::make_shared<boost::asio::io_service>()),
         service_(*self_service_) {}
 
-  boost::shared_ptr<asio::io_service> self_service_;
+  std::shared_ptr<asio::io_service> self_service_;
   asio::io_service& service_;
 };
 

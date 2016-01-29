@@ -32,7 +32,7 @@ struct async_connection_base {
   typedef function<void(char_const_range const &, system::error_code const &)>
       body_callback_function_type;
   typedef function<bool(string_type &)> body_generator_function_type;
-  typedef shared_ptr<this_type> connection_ptr;
+  typedef std::shared_ptr<this_type> connection_ptr;
 
   // This is the factory function which constructs the appropriate async
   // connection implementation with the correct delegate chosen based on the

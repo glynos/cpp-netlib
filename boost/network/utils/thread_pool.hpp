@@ -6,11 +6,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/asio/io_service.hpp>
 #include <boost/function.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/scope_exit.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
 #include <cstddef>
 
@@ -18,9 +18,9 @@ namespace boost {
 namespace network {
 namespace utils {
 
-typedef boost::shared_ptr<boost::asio::io_service> io_service_ptr;
-typedef boost::shared_ptr<boost::thread_group> worker_threads_ptr;
-typedef boost::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
+typedef std::shared_ptr<boost::asio::io_service> io_service_ptr;
+typedef std::shared_ptr<boost::thread_group> worker_threads_ptr;
+typedef std::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
 
 template <class Tag>
 struct basic_thread_pool {

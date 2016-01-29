@@ -9,12 +9,11 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <thread>
+#include <memory>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/bind.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/network/protocol/http/traits/connection_policy.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace boost {
 namespace network {
@@ -39,7 +38,7 @@ struct async_client
 
   async_client(bool cache_resolved, bool follow_redirect,
                bool always_verify_peer, int timeout,
-               boost::shared_ptr<boost::asio::io_service> service,
+               std::shared_ptr<boost::asio::io_service> service,
                optional<string_type> certificate_filename,
                optional<string_type> verify_path,
                optional<string_type> certificate_file,
@@ -48,7 +47,7 @@ struct async_client
       : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get()
                         ? service
-                        : boost::make_shared<boost::asio::io_service>()),
+                        : std::make_shared<boost::asio::io_service>()),
         service_(*service_ptr),
         resolver_(service_),
         sentinel_(new boost::asio::io_service::work(service_)),
@@ -88,11 +87,11 @@ struct async_client
                                      generator);
   }
 
-  boost::shared_ptr<boost::asio::io_service> service_ptr;
+  std::shared_ptr<boost::asio::io_service> service_ptr;
   boost::asio::io_service& service_;
   resolver_type resolver_;
-  boost::shared_ptr<boost::asio::io_service::work> sentinel_;
-  boost::shared_ptr<std::thread> lifetime_thread_;
+  std::shared_ptr<boost::asio::io_service::work> sentinel_;
+  std::shared_ptr<std::thread> lifetime_thread_;
   optional<string_type> certificate_filename_;
   optional<string_type> verify_path_;
   optional<string_type> certificate_file_;

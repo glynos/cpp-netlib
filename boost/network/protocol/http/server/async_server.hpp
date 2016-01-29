@@ -7,6 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/network/detail/debug.hpp>
 #include <boost/network/protocol/http/server/async_connection.hpp>
 #include <boost/thread/mutex.hpp>
@@ -26,7 +27,7 @@ struct async_server_base : server_storage_base, socket_options_base {
   typedef typename boost::network::http::response_header<Tag>::type
       response_header;
   typedef async_connection<Tag, Handler> connection;
-  typedef shared_ptr<connection> connection_ptr;
+  typedef std::shared_ptr<connection> connection_ptr;
   typedef boost::unique_lock<boost::mutex> scoped_mutex_lock;
 
   explicit async_server_base(server_options<Tag, Handler> const &options)
@@ -37,7 +38,7 @@ struct async_server_base : server_storage_base, socket_options_base {
         port_(options.port()),
         thread_pool(options.thread_pool()
                         ? options.thread_pool()
-                        : boost::make_shared<utils::thread_pool>()),
+                        : std::make_shared<utils::thread_pool>()),
         acceptor(server_storage_base::service_),
         stopping(false),
         new_connection(),
@@ -82,14 +83,14 @@ struct async_server_base : server_storage_base, socket_options_base {
  private:
   Handler &handler;
   string_type address_, port_;
-  boost::shared_ptr<utils::thread_pool> thread_pool;
+  std::shared_ptr<utils::thread_pool> thread_pool;
   asio::ip::tcp::acceptor acceptor;
   bool stopping;
   connection_ptr new_connection;
   boost::mutex listening_mutex_;
   boost::mutex stopping_mutex_;
   bool listening;
-  boost::shared_ptr<ssl_context> ctx_;
+  std::shared_ptr<ssl_context> ctx_;
 
   void handle_stop() {
     scoped_mutex_lock stopping_lock(stopping_mutex_);

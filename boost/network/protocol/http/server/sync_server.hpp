@@ -8,8 +8,8 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 #define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 
+#include <memory>
 #include <boost/network/detail/debug.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/network/protocol/http/response.hpp>
@@ -66,7 +66,7 @@ struct sync_server_base : server_storage_base, socket_options_base {
   Handler& handler_;
   string_type address_, port_;
   boost::asio::ip::tcp::acceptor acceptor_;
-  boost::shared_ptr<sync_connection<Tag, Handler> > new_connection;
+  std::shared_ptr<sync_connection<Tag, Handler> > new_connection;
   boost::mutex listening_mutex_;
   bool listening_;
 

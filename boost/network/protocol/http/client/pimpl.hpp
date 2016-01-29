@@ -6,6 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/asio/io_service.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/if.hpp>
@@ -16,7 +17,6 @@
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_sync.hpp>
 #include <boost/optional/optional.hpp>
-#include <boost/smart_ptr/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
 
 namespace boost {
@@ -74,7 +74,7 @@ struct basic_client_impl
                     optional<string_type> const& certificate_file,
                     optional<string_type> const& private_key_file,
                     optional<string_type> const& ciphers, long ssl_options,
-                    boost::shared_ptr<boost::asio::io_service> service,
+                    std::shared_ptr<boost::asio::io_service> service,
                     int timeout)
       : base_type(cache_resolved, follow_redirect, always_verify_peer, timeout,
                   service, certificate_filename, verify_path, certificate_file,

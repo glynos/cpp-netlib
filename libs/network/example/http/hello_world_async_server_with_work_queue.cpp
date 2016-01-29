@@ -7,13 +7,13 @@
  * http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <memory>
 #include <boost/network/include/http/server.hpp>
 #include <boost/network/uri.hpp>
 
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <list>
 #include <signal.h>
@@ -33,7 +33,7 @@ struct request_data {
   const server::request req;
   server::connection_ptr conn;
 
-  typedef boost::shared_ptr<request_data> pointer;
+  typedef std::shared_ptr<request_data> pointer;
 
   request_data(server::request  req, server::connection_ptr  conn)
       : req(std::move(req)), conn(std::move(conn)) {}
@@ -82,7 +82,7 @@ struct handler {
    */
   void operator()(server::request const& req,
                   const server::connection_ptr& conn) {
-    queue.put(boost::make_shared<request_data>(req, conn));
+    queue.put(std::make_shared<request_data>(req, conn));
   }
 };
 
@@ -94,7 +94,7 @@ struct handler {
  * @param p_server_instance
  */
 void shut_me_down(const boost::system::error_code& error, int,
-                  boost::shared_ptr<server> p_server_instance) {
+                  std::shared_ptr<server> p_server_instance) {
   if (!error) p_server_instance->stop();
 }
 
@@ -121,14 +121,14 @@ void process_request(work_queue& queue) {
 
 int main(void) try {
   // the thread group
-  boost::shared_ptr<boost::thread_group> p_threads(
-      boost::make_shared<boost::thread_group>());
+  std::shared_ptr<boost::thread_group> p_threads(
+      std::make_shared<boost::thread_group>());
 
   // setup asio::io_service
-  boost::shared_ptr<boost::asio::io_service> p_io_service(
-      boost::make_shared<boost::asio::io_service>());
-  boost::shared_ptr<boost::asio::io_service::work> p_work(
-      boost::make_shared<boost::asio::io_service::work>(
+  std::shared_ptr<boost::asio::io_service> p_io_service(
+      std::make_shared<boost::asio::io_service>());
+  std::shared_ptr<boost::asio::io_service::work> p_work(
+      std::make_shared<boost::asio::io_service::work>(
           boost::ref(*p_io_service)));
 
   // io_service threads
@@ -153,13 +153,13 @@ int main(void) try {
 
   // setup the async server
   handler request_handler(queue);
-  boost::shared_ptr<server> p_server_instance(boost::make_shared<server>(
+  std::shared_ptr<server> p_server_instance(std::make_shared<server>(
       server::options(request_handler)
           .address("0.0.0.0")
           .port("8800")
           .io_service(p_io_service)
           .reuse_address(true)
-          .thread_pool(boost::make_shared<boost::network::utils::thread_pool>(
+          .thread_pool(std::make_shared<boost::network::utils::thread_pool>(
                2, p_io_service, p_threads))));
 
   // setup clean shutdown
