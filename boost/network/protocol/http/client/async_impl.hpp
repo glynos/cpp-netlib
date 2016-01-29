@@ -8,13 +8,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <thread>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/bind.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/network/protocol/http/traits/connection_policy.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/thread/thread.hpp>
 
 namespace boost {
 namespace network {
@@ -62,8 +62,7 @@ struct async_client
     connection_base::resolver_strand_.reset(
         new boost::asio::io_service::strand(service_));
     if (!service)
-      lifetime_thread_.reset(new boost::thread(
-          boost::bind(&boost::asio::io_service::run, &service_)));
+      lifetime_thread_.reset(new std::thread([this] () { service_.run(); }));
   }
 
   ~async_client() throw() = default;
@@ -93,7 +92,7 @@ struct async_client
   boost::asio::io_service& service_;
   resolver_type resolver_;
   boost::shared_ptr<boost::asio::io_service::work> sentinel_;
-  boost::shared_ptr<boost::thread> lifetime_thread_;
+  boost::shared_ptr<std::thread> lifetime_thread_;
   optional<string_type> certificate_filename_;
   optional<string_type> verify_path_;
   optional<string_type> certificate_file_;

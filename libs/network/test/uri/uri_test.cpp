@@ -11,7 +11,7 @@
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/uri_io.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 #include <map>
 #include <set>
 #include <boost/unordered_set.hpp>
@@ -516,7 +516,7 @@ TEST(URITest, from_file) {
 
 TEST(URITest, issue_104_test) {
   // https://github.com/cpp-netlib/cpp-netlib/issues/104
-  boost::scoped_ptr<uri::uri> instance(new uri::uri("http://www.example.com/"));
+  std::unique_ptr<uri::uri> instance(new uri::uri("http://www.example.com/"));
   uri::uri copy = *instance;
   instance.reset();
   EXPECT_EQ("http", uri::scheme(copy));
