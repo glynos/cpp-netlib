@@ -10,6 +10,7 @@
 #pragma once
 
 #include <iterator>
+#include <functional>
 #include <boost/network/uri/config.hpp>
 #include <boost/network/uri/detail/uri_parts.hpp>
 #include <boost/network/uri/schemes.hpp>
@@ -297,7 +298,29 @@ inline std::size_t hash_value(const uri &uri_) {
   }
   return seed;
 }
+} // namespace uri
+} // namespace network
+} // namespace boost
 
+namespace std {
+template <>
+struct hash<boost::network::uri::uri> {
+
+  std::size_t operator()(const boost::network::uri::uri &uri_) const {
+    std::size_t seed = 0;
+    std::for_each(std::begin(uri_), std::end(uri_),
+                  [&seed](boost::network::uri::uri::value_type v) {
+                    std::hash<boost::network::uri::uri::value_type> hasher;
+                    seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                  });
+    return seed;
+  }
+};
+}  // namespace std
+
+namespace boost {
+namespace network {
+namespace uri {
 inline bool operator==(const uri &lhs, const uri &rhs) {
   return boost::equal(lhs, rhs);
 }

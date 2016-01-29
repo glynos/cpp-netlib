@@ -7,11 +7,11 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <memory>
+#include <unordered_map>
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/network/traits/string.hpp>
-#include <boost/unordered/unordered_map.hpp>
 #include <boost/function.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/lexical_cast.hpp>
@@ -31,7 +31,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
   typedef std::pair<resolver_iterator, resolver_iterator>
       resolver_iterator_pair;
   typedef typename string<Tag>::type string_type;
-  typedef boost::unordered_map<string_type, resolver_iterator_pair>
+  typedef std::unordered_map<string_type, resolver_iterator_pair>
       endpoint_cache;
   typedef boost::function<
       void(boost::system::error_code const &, resolver_iterator_pair)>

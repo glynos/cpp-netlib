@@ -14,7 +14,7 @@
 #include <memory>
 #include <map>
 #include <set>
-#include <boost/unordered_set.hpp>
+#include <unordered_set>
 
 using namespace boost::network;
 
@@ -530,7 +530,7 @@ TEST(URITest, uri_set_test) {
 }
 
 TEST(URITest, uri_unordered_set_test) {
-  boost::unordered_set<uri::uri> uri_set;
+  std::unordered_set<uri::uri> uri_set;
   uri_set.insert(uri::uri("http://www.example.com/"));
   ASSERT_TRUE(!uri_set.empty());
   EXPECT_EQ(uri::uri("http://www.example.com/"), (*uri_set.begin()));
