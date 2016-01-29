@@ -12,7 +12,6 @@
 #include <boost/network/support/pod_or_normal.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/message/directives.hpp>
-#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {

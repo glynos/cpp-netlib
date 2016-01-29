@@ -57,30 +57,30 @@ struct http_async_protocol_handler {
     // TODO(dberris): review parameter necessity.
     (void)get_body;
 
-    boost::shared_future<string_type> source_future(
+    std::shared_future<string_type> source_future(
         source_promise.get_future());
     source(response_, source_future);
 
-    boost::shared_future<string_type> destination_future(
+    std::shared_future<string_type> destination_future(
         destination_promise.get_future());
     destination(response_, destination_future);
 
-    boost::shared_future<typename headers_container<Tag>::type> headers_future(
+    std::shared_future<typename headers_container<Tag>::type> headers_future(
         headers_promise.get_future());
     headers(response_, headers_future);
 
-    boost::shared_future<string_type> body_future(body_promise.get_future());
+    std::shared_future<string_type> body_future(body_promise.get_future());
     body(response_, body_future);
 
-    boost::shared_future<string_type> version_future(
+    std::shared_future<string_type> version_future(
         version_promise.get_future());
     version(response_, version_future);
 
-    boost::shared_future<boost::uint16_t> status_future(
+    std::shared_future<boost::uint16_t> status_future(
         status_promise.get_future());
     status(response_, status_future);
 
-    boost::shared_future<string_type> status_message_future(
+    std::shared_future<string_type> status_message_future(
         status_message_promise.get_future());
     status_message(response_, status_message_future);
   }
@@ -127,13 +127,13 @@ struct http_async_protocol_handler {
                                        << "\"");
 #endif
       std::runtime_error error("Invalid Version Part.");
-      version_promise.set_exception(boost::copy_exception(error));
-      status_promise.set_exception(boost::copy_exception(error));
-      status_message_promise.set_exception(boost::copy_exception(error));
-      headers_promise.set_exception(boost::copy_exception(error));
-      source_promise.set_exception(boost::copy_exception(error));
-      destination_promise.set_exception(boost::copy_exception(error));
-      body_promise.set_exception(boost::copy_exception(error));
+      version_promise.set_exception(std::make_exception_ptr(error));
+      status_promise.set_exception(std::make_exception_ptr(error));
+      status_message_promise.set_exception(std::make_exception_ptr(error));
+      headers_promise.set_exception(std::make_exception_ptr(error));
+      source_promise.set_exception(std::make_exception_ptr(error));
+      destination_promise.set_exception(std::make_exception_ptr(error));
+      body_promise.set_exception(std::make_exception_ptr(error));
     } else {
       partial_parsed.append(std::begin(result_range),
                             std::end(result_range));
@@ -174,12 +174,12 @@ struct http_async_protocol_handler {
                                        << "\"");
 #endif
       std::runtime_error error("Invalid status part.");
-      status_promise.set_exception(boost::copy_exception(error));
-      status_message_promise.set_exception(boost::copy_exception(error));
-      headers_promise.set_exception(boost::copy_exception(error));
-      source_promise.set_exception(boost::copy_exception(error));
-      destination_promise.set_exception(boost::copy_exception(error));
-      body_promise.set_exception(boost::copy_exception(error));
+      status_promise.set_exception(std::make_exception_ptr(error));
+      status_message_promise.set_exception(std::make_exception_ptr(error));
+      headers_promise.set_exception(std::make_exception_ptr(error));
+      source_promise.set_exception(std::make_exception_ptr(error));
+      destination_promise.set_exception(std::make_exception_ptr(error));
+      body_promise.set_exception(std::make_exception_ptr(error));
     } else {
       partial_parsed.append(std::begin(result_range),
                             std::end(result_range));
@@ -220,11 +220,11 @@ struct http_async_protocol_handler {
                                        << "\"");
 #endif
       std::runtime_error error("Invalid status message part.");
-      status_message_promise.set_exception(boost::copy_exception(error));
-      headers_promise.set_exception(boost::copy_exception(error));
-      source_promise.set_exception(boost::copy_exception(error));
-      destination_promise.set_exception(boost::copy_exception(error));
-      body_promise.set_exception(boost::copy_exception(error));
+      status_message_promise.set_exception(std::make_exception_ptr(error));
+      headers_promise.set_exception(std::make_exception_ptr(error));
+      source_promise.set_exception(std::make_exception_ptr(error));
+      destination_promise.set_exception(std::make_exception_ptr(error));
+      body_promise.set_exception(std::make_exception_ptr(error));
     } else {
       partial_parsed.append(std::begin(result_range),
                             std::end(result_range));
@@ -308,10 +308,10 @@ struct http_async_protocol_handler {
                                        << boost::distance(result_range));
 #endif
       std::runtime_error error("Invalid header part.");
-      headers_promise.set_exception(boost::copy_exception(error));
-      body_promise.set_exception(boost::copy_exception(error));
-      source_promise.set_exception(boost::copy_exception(error));
-      destination_promise.set_exception(boost::copy_exception(error));
+      headers_promise.set_exception(std::make_exception_ptr(error));
+      body_promise.set_exception(std::make_exception_ptr(error));
+      source_promise.set_exception(std::make_exception_ptr(error));
+      destination_promise.set_exception(std::make_exception_ptr(error));
     } else {
       partial_parsed.append(std::begin(result_range),
                             std::end(result_range));
@@ -339,13 +339,13 @@ struct http_async_protocol_handler {
   typedef boost::array<typename char_<Tag>::type, 1024> buffer_type;
 
   response_parser_type response_parser_;
-  boost::promise<string_type> version_promise;
-  boost::promise<boost::uint16_t> status_promise;
-  boost::promise<string_type> status_message_promise;
-  boost::promise<typename headers_container<Tag>::type> headers_promise;
-  boost::promise<string_type> source_promise;
-  boost::promise<string_type> destination_promise;
-  boost::promise<string_type> body_promise;
+  std::promise<string_type> version_promise;
+  std::promise<boost::uint16_t> status_promise;
+  std::promise<string_type> status_message_promise;
+  std::promise<typename headers_container<Tag>::type> headers_promise;
+  std::promise<string_type> source_promise;
+  std::promise<string_type> destination_promise;
+  std::promise<string_type> body_promise;
   buffer_type part;
   typename buffer_type::const_iterator part_begin;
   string_type partial_parsed;

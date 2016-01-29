@@ -32,7 +32,6 @@
 #include <boost/network/traits/ostream_iterator.hpp>
 #include <boost/network/version.hpp>
 #include <boost/range/algorithm/transform.hpp>
-#include <boost/thread/future.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -120,13 +119,13 @@ struct http_async_connection
  private:
   void set_errors(boost::system::error_code const& ec) {
     boost::system::system_error error(ec);
-    this->version_promise.set_exception(boost::copy_exception(error));
-    this->status_promise.set_exception(boost::copy_exception(error));
-    this->status_message_promise.set_exception(boost::copy_exception(error));
-    this->headers_promise.set_exception(boost::copy_exception(error));
-    this->source_promise.set_exception(boost::copy_exception(error));
-    this->destination_promise.set_exception(boost::copy_exception(error));
-    this->body_promise.set_exception(boost::copy_exception(error));
+    this->version_promise.set_exception(std::make_exception_ptr(error));
+    this->status_promise.set_exception(std::make_exception_ptr(error));
+    this->status_message_promise.set_exception(std::make_exception_ptr(error));
+    this->headers_promise.set_exception(std::make_exception_ptr(error));
+    this->source_promise.set_exception(std::make_exception_ptr(error));
+    this->destination_promise.set_exception(std::make_exception_ptr(error));
+    this->body_promise.set_exception(std::make_exception_ptr(error));
     this->timer_.cancel();
   }
 
@@ -425,24 +424,24 @@ struct http_async_connection
     } else {
       boost::system::system_error error(is_timedout_ ? asio::error::timed_out
                                                      : ec);
-      this->source_promise.set_exception(boost::copy_exception(error));
-      this->destination_promise.set_exception(boost::copy_exception(error));
+      this->source_promise.set_exception(std::make_exception_ptr(error));
+      this->destination_promise.set_exception(std::make_exception_ptr(error));
       switch (state) {
         case version:
-          this->version_promise.set_exception(boost::copy_exception(error));
+          this->version_promise.set_exception(std::make_exception_ptr(error));
         case status:
-          this->status_promise.set_exception(boost::copy_exception(error));
+          this->status_promise.set_exception(std::make_exception_ptr(error));
         case status_message:
           this->status_message_promise.set_exception(
-              boost::copy_exception(error));
+              std::make_exception_ptr(error));
         case headers:
-          this->headers_promise.set_exception(boost::copy_exception(error));
+          this->headers_promise.set_exception(std::make_exception_ptr(error));
         case body:
           if (!callback) {
             // N.B. if callback is non-null, then body_promise has already been
             // set to value "" to indicate body is handled by streaming handler
             // so no exception should be set
-            this->body_promise.set_exception(boost::copy_exception(error));
+            this->body_promise.set_exception(std::make_exception_ptr(error));
           }
           break;
         default:

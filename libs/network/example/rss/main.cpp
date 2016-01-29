@@ -5,7 +5,6 @@
 
 #include "rss.hpp"
 #include <boost/network/protocol/http/client.hpp>
-#include <boost/foreach.hpp>
 #include <iostream>
 
 int main(int argc, char *argv[]) {
@@ -25,7 +24,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Channel: " << channel.title() << " (" << channel.description()
               << ")" << std::endl;
-    BOOST_FOREACH(const rss::item & item, channel) {
+    for (const rss::item & item : channel) {
       std::cout << item.title() << " (" << item.author() << ")" << std::endl;
     }
   }

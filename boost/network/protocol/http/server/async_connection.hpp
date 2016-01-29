@@ -12,6 +12,7 @@
 #include <list>
 #include <vector>
 #include <memory>
+#include <mutex>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/strand.hpp>
@@ -26,8 +27,6 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
-#include <boost/thread/locks.hpp>
-#include <boost/thread/recursive_mutex.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/typed_in_place_factory.hpp>
@@ -351,7 +350,7 @@ struct async_connection
   typedef std::shared_ptr<array_list> shared_array_list;
   typedef std::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
   typedef request_parser<Tag> request_parser_type;
-  typedef boost::lock_guard<boost::recursive_mutex> lock_guard;
+  typedef std::lock_guard<std::recursive_mutex> lock_guard;
   typedef std::list<boost::function<void()> > pending_actions_list;
 
   asio::io_service::strand strand;
@@ -362,7 +361,7 @@ struct async_connection
   bool handshake_done;
   volatile bool headers_already_sent, headers_in_progress;
 
-  boost::recursive_mutex headers_mutex;
+  std::recursive_mutex headers_mutex;
   buffer_type read_buffer_;
   status_t status;
   request_parser_type parser;

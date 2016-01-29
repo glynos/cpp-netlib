@@ -5,7 +5,6 @@
 
 #include "atom.hpp"
 #include <boost/network/protocol/http/client.hpp>
-#include <boost/foreach.hpp>
 #include <iostream>
 
 int main(int argc, char *argv[]) {
@@ -25,7 +24,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Feed: " << feed.title() << " (" << feed.subtitle() << ")"
               << std::endl;
-    BOOST_FOREACH(const atom::entry & entry, feed) {
+    for (const atom::entry & entry : feed) {
       std::cout << entry.title() << " (" << entry.published() << ")"
                 << std::endl;
     }

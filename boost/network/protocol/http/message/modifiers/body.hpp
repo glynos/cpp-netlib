@@ -11,7 +11,6 @@
 #include <boost/network/protocol/http/support/client_or_server.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/support/is_async.hpp>
-#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {

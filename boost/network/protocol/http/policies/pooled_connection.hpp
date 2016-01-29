@@ -197,7 +197,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& ciphers = optional<string_type>()) {
     string_type index =
         (request_.host() + ':') + lexical_cast<string_type>(request_.port());
-    std::unique_lock<mutex> lock(host_mutex_);
+    std::unique_lock<std::mutex> lock(host_mutex_);
     auto it = host_connections_.find(index);
     if (it != host_connections_.end()) {
       // We've found an existing connection; but we should check if that

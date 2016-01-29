@@ -10,7 +10,6 @@
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/thread/future.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/variant/apply_visitor.hpp>
@@ -50,7 +49,7 @@ struct header_directive {
 
   template <class Message>
   struct directive_impl
-      : mpl::if_<is_base_of<tags::pod, typename Message::tag>,
+    : mpl::if_<std::is_base_of<tags::pod, typename Message::tag>,
                  pod_directive<Message>, normal_directive<Message> >::type {};
 
   template <class Message>

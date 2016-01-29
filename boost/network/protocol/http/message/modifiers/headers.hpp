@@ -8,7 +8,6 @@
 
 #include <boost/concept/requires.hpp>
 #include <boost/network/support/is_async.hpp>
-#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {

@@ -23,7 +23,7 @@ template <class Message>
 struct status
     : mpl::if_<
           is_async<typename Message::tag>,
-          boost::shared_future<boost::uint16_t>,
+          std::shared_future<boost::uint16_t>,
           typename mpl::if_<is_sync<typename Message::tag>, boost::uint16_t,
                             unsupported_tag<typename Message::tag> >::type> {};
 
