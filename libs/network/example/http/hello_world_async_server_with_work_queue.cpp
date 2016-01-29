@@ -8,6 +8,7 @@
  */
 
 #include <memory>
+#include <mutex>
 #include <boost/network/include/http/server.hpp>
 #include <boost/network/uri.hpp>
 
@@ -46,16 +47,16 @@ struct work_queue {
   typedef std::list<request_data::pointer> list;
 
   list requests;
-  boost::mutex mutex;
+  std::mutex mutex;
 
   inline void put(const request_data::pointer& p_rd) {
-    boost::unique_lock<boost::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
     requests.push_back(p_rd);
     (void)lock;
   }
 
   inline request_data::pointer get() {
-    boost::unique_lock<boost::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
     request_data::pointer p_ret;
     if (!requests.empty()) {

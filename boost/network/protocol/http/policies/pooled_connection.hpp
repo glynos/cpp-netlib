@@ -7,11 +7,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <mutex>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/thread/mutex.hpp>
 #include <boost/unordered_map.hpp>
 #include <utility>
 
@@ -181,7 +181,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
   typedef std::shared_ptr<connection_impl> connection_ptr;
 
   typedef unordered_map<string_type, std::weak_ptr<connection_impl>> host_connection_map;
-  boost::mutex host_mutex_;
+  std::mutex host_mutex_;
   host_connection_map host_connections_;
   bool follow_redirect_;
   int timeout_;
@@ -197,7 +197,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& ciphers = optional<string_type>()) {
     string_type index =
         (request_.host() + ':') + lexical_cast<string_type>(request_.port());
-    boost::mutex::scoped_lock lock(host_mutex_);
+    std::unique_lock<mutex> lock(host_mutex_);
     auto it = host_connections_.find(index);
     if (it != host_connections_.end()) {
       // We've found an existing connection; but we should check if that

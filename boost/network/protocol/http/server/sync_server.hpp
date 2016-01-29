@@ -9,6 +9,7 @@
 #define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 
 #include <memory>
+#include <mutex>
 #include <boost/network/detail/debug.hpp>
 #include <boost/bind.hpp>
 #include <boost/asio/ip/tcp.hpp>
@@ -19,7 +20,6 @@
 #include <boost/network/protocol/http/server/socket_options_base.hpp>
 #include <boost/network/protocol/http/server/options.hpp>
 #include <boost/network/traits/string.hpp>
-#include <boost/thread/mutex.hpp>
 
 namespace boost {
 namespace network {
@@ -58,7 +58,7 @@ struct sync_server_base : server_storage_base, socket_options_base {
   }
 
   void listen() {
-    boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
+    std::unique_lock<std::mutex> listening_lock(listening_mutex_);
     if (!listening_) start_listening();
   }
 
@@ -67,7 +67,7 @@ struct sync_server_base : server_storage_base, socket_options_base {
   string_type address_, port_;
   boost::asio::ip::tcp::acceptor acceptor_;
   std::shared_ptr<sync_connection<Tag, Handler> > new_connection;
-  boost::mutex listening_mutex_;
+  std::mutex listening_mutex_;
   bool listening_;
 
   void handle_accept(boost::system::error_code const& ec) {

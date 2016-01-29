@@ -8,9 +8,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <memory>
+#include <mutex>
 #include <boost/network/detail/debug.hpp>
 #include <boost/network/protocol/http/server/async_connection.hpp>
-#include <boost/thread/mutex.hpp>
 #include <boost/network/protocol/http/server/storage_base.hpp>
 #include <boost/network/protocol/http/server/socket_options_base.hpp>
 #include <boost/network/utils/thread_pool.hpp>
@@ -28,7 +28,7 @@ struct async_server_base : server_storage_base, socket_options_base {
       response_header;
   typedef async_connection<Tag, Handler> connection;
   typedef std::shared_ptr<connection> connection_ptr;
-  typedef boost::unique_lock<boost::mutex> scoped_mutex_lock;
+  typedef std::unique_lock<std::mutex> scoped_mutex_lock;
 
   explicit async_server_base(server_options<Tag, Handler> const &options)
       : server_storage_base(options),
@@ -87,8 +87,8 @@ struct async_server_base : server_storage_base, socket_options_base {
   asio::ip::tcp::acceptor acceptor;
   bool stopping;
   connection_ptr new_connection;
-  boost::mutex listening_mutex_;
-  boost::mutex stopping_mutex_;
+  std::mutex listening_mutex_;
+  std::mutex stopping_mutex_;
   bool listening;
   std::shared_ptr<ssl_context> ctx_;
 
