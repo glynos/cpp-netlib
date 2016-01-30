@@ -6,21 +6,22 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <cstddef>
 #include <memory>
 #include <functional>
 #include <boost/asio/io_service.hpp>
 #include <boost/function.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/scope_exit.hpp>
-#include <boost/thread/thread.hpp>
-#include <cstddef>
+//#include <boost/thread/thread.hpp>
+#include <boost/network/utils/thread_group.hpp>
 
 namespace boost {
 namespace network {
 namespace utils {
 
 typedef std::shared_ptr<boost::asio::io_service> io_service_ptr;
-typedef std::shared_ptr<boost::thread_group> worker_threads_ptr;
+typedef std::shared_ptr<utils::thread_group> worker_threads_ptr;
 typedef std::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
 
 template <class Tag>
@@ -46,7 +47,7 @@ struct basic_thread_pool {
         sentinel_.reset();
         io_service_.reset();
         if (worker_threads_.get()) {
-          worker_threads_->interrupt_all();
+          // worker_threads_->interrupt_all();
           worker_threads_->join_all();
         }
         worker_threads_.reset();
@@ -59,7 +60,7 @@ struct basic_thread_pool {
     }
 
     if (!worker_threads_.get()) {
-      worker_threads_.reset(new boost::thread_group);
+      worker_threads_.reset(new utils::thread_group);
     }
 
     if (!sentinel_.get()) {
