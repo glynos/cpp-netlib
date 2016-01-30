@@ -91,6 +91,11 @@ if (Boost_FOUND)
       add_definitions(-D_WIN32_WINNT=0x0501)
     endif(WIN32)
     include_directories(${Boost_INCLUDE_DIRS})
+
+    # Asio
+    add_definitions(-DASIO_HEADER_ONLY)
+    include_directories(deps/asio/asio/include)
+
     enable_testing()
     add_subdirectory(libs/network/src)
     if (CPP-NETLIB_BUILD_TESTS)

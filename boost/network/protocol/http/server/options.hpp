@@ -9,8 +9,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <memory>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/socket_base.hpp>
+#include <asio/io_service.hpp>
+#include <asio/socket_base.hpp>
 #include <boost/network/protocol/stream_handler.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/utils/thread_pool.hpp>
@@ -85,7 +85,7 @@ struct server_options {
     context_ = v;
     return *this;
   }
-  server_options &io_service(std::shared_ptr<boost::asio::io_service> v) {
+  server_options &io_service(std::shared_ptr<asio::io_service> v) {
     io_service_ = v;
     return *this;
   }
@@ -118,22 +118,22 @@ struct server_options {
     return *this;
   }
   server_options &receive_buffer_size(
-      boost::asio::socket_base::receive_buffer_size v) {
+      asio::socket_base::receive_buffer_size v) {
     receive_buffer_size_ = v;
     return *this;
   }
   server_options &send_buffer_size(
-      boost::asio::socket_base::send_buffer_size v) {
+      asio::socket_base::send_buffer_size v) {
     send_buffer_size_ = v;
     return *this;
   }
   server_options &receive_low_watermark(
-      boost::asio::socket_base::receive_low_watermark v) {
+      asio::socket_base::receive_low_watermark v) {
     receive_low_watermark_ = v;
     return *this;
   }
   server_options &send_low_watermark(
-      boost::asio::socket_base::send_low_watermark v) {
+      asio::socket_base::send_low_watermark v) {
     send_low_watermark_ = v;
     return *this;
   }
@@ -142,7 +142,7 @@ struct server_options {
     return *this;
   }
 
-  std::shared_ptr<boost::asio::io_service> io_service() const {
+  std::shared_ptr<asio::io_service> io_service() const {
     return io_service_;
   }
   string_type address() const { return address_; }
@@ -153,19 +153,19 @@ struct server_options {
   bool non_blocking_io() const { return non_blocking_io_; }
   bool linger() const { return linger_; }
   size_t linger_timeout() const { return linger_timeout_; }
-  boost::optional<boost::asio::socket_base::receive_buffer_size>
+  boost::optional<asio::socket_base::receive_buffer_size>
   receive_buffer_size() const {
     return receive_buffer_size_;
   }
-  boost::optional<boost::asio::socket_base::send_buffer_size> send_buffer_size()
+  boost::optional<asio::socket_base::send_buffer_size> send_buffer_size()
       const {
     return send_buffer_size_;
   }
-  boost::optional<boost::asio::socket_base::receive_low_watermark>
+  boost::optional<asio::socket_base::receive_low_watermark>
   receive_low_watermark() const {
     return receive_low_watermark_;
   }
-  boost::optional<boost::asio::socket_base::send_low_watermark>
+  boost::optional<asio::socket_base::send_low_watermark>
   send_low_watermark() const {
     return send_low_watermark_;
   }
@@ -177,7 +177,7 @@ struct server_options {
   }
 
  private:
-  std::shared_ptr<boost::asio::io_service> io_service_;
+  std::shared_ptr<asio::io_service> io_service_;
   Handler &handler_;
   string_type address_;
   string_type port_;
@@ -186,12 +186,12 @@ struct server_options {
   bool non_blocking_io_;
   bool linger_;
   size_t linger_timeout_;
-  boost::optional<boost::asio::socket_base::receive_buffer_size>
+  boost::optional<asio::socket_base::receive_buffer_size>
       receive_buffer_size_;
-  boost::optional<boost::asio::socket_base::send_buffer_size> send_buffer_size_;
-  boost::optional<boost::asio::socket_base::receive_low_watermark>
+  boost::optional<asio::socket_base::send_buffer_size> send_buffer_size_;
+  boost::optional<asio::socket_base::receive_low_watermark>
       receive_low_watermark_;
-  boost::optional<boost::asio::socket_base::send_low_watermark>
+  boost::optional<asio::socket_base::send_low_watermark>
       send_low_watermark_;
   std::shared_ptr<utils::thread_pool> thread_pool_;
   std::shared_ptr<ssl_context> context_;

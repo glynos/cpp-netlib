@@ -10,8 +10,8 @@
 #include <unordered_map>
 #include <cstdint>
 #include <functional>
-#include <boost/asio/placeholders.hpp>
-#include <boost/asio/strand.hpp>
+#include <asio/placeholders.hpp>
+#include <asio/strand.hpp>
 #include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
@@ -32,7 +32,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
   typedef std::unordered_map<string_type, resolver_iterator_pair>
       endpoint_cache;
   typedef std::function<
-      void(boost::system::error_code const &, resolver_iterator_pair)>
+      void(std::error_code const &, resolver_iterator_pair)>
       resolve_completion_function;
   typedef std::function<void(resolver_type &, string_type, std::uint16_t,
                              resolve_completion_function)> resolve_function;
@@ -40,8 +40,8 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
  protected:
   bool cache_resolved_;
   endpoint_cache endpoint_cache_;
-  std::shared_ptr<boost::asio::io_service> service_;
-  std::shared_ptr<boost::asio::io_service::strand> resolver_strand_;
+  std::shared_ptr<asio::io_service> service_;
+  std::shared_ptr<asio::io_service::strand> resolver_strand_;
 
   explicit async_resolver(bool cache_resolved)
       : cache_resolved_(cache_resolved), endpoint_cache_() {}
@@ -53,7 +53,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
       typename endpoint_cache::iterator iter =
           endpoint_cache_.find(boost::to_lower_copy(host));
       if (iter != endpoint_cache_.end()) {
-        boost::system::error_code ignored;
+        std::error_code ignored;
         once_resolved(ignored, iter->second);
         return;
       }
@@ -62,7 +62,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
     typename resolver_type::query q(host,
                                     std::to_string(port));
     auto self = this->shared_from_this();
-    resolver_.async_resolve(q, resolver_strand_->wrap([=] (boost::system::error_code const &ec,
+    resolver_.async_resolve(q, resolver_strand_->wrap([=] (std::error_code const &ec,
                                                            resolver_iterator endpoint_iterator) {
                                                         self->handle_resolve(boost::to_lower_copy(host),
                                                                              once_resolved,
@@ -72,7 +72,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
 
   void handle_resolve(string_type  /*unused*/const &host,
                       resolve_completion_function once_resolved,
-                      boost::system::error_code const &ec,
+                      std::error_code const &ec,
                       resolver_iterator endpoint_iterator) {
     typename endpoint_cache::iterator iter;
     bool inserted = false;

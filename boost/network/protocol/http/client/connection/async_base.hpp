@@ -30,7 +30,7 @@ struct async_connection_base {
   typedef basic_request<Tag> request;
   typedef basic_response<Tag> response;
   typedef iterator_range<char const *> char_const_range;
-  typedef std::function<void(char_const_range const &, system::error_code const &)>
+  typedef std::function<void(char_const_range const &, std::error_code const &)>
       body_callback_function_type;
   typedef std::function<bool(string_type &)> body_generator_function_type;
   typedef std::shared_ptr<this_type> connection_ptr;

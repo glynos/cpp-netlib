@@ -130,17 +130,17 @@ struct connection_handler : std::enable_shared_from_this<connection_handler> {
     off_t rightmost_bound = std::min(mmaped_region.second, adjusted_offset);
     auto self = this->shared_from_this();
     connection->write(
-        boost::asio::const_buffers_1(
+        asio::const_buffers_1(
             static_cast<char const *>(mmaped_region.first) + offset,
             rightmost_bound - offset),
-        [=] (boost::system::error_code const &ec) {
+        [=] (std::error_code const &ec) {
           self->handle_chunk(mmaped_region, rightmost_bound, connection, ec);
         });
   }
 
   void handle_chunk(std::pair<void *, std::size_t> mmaped_region, off_t offset,
                     server::connection_ptr connection,
-                    boost::system::error_code const &ec) {
+                    std::error_code const &ec) {
     assert(offset>=0);
     if (!ec && static_cast<std::size_t>(offset) < mmaped_region.second)
       send_file(mmaped_region, offset, connection);

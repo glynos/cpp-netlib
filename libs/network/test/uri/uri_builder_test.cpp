@@ -112,7 +112,7 @@ TEST(BuilderTest, MailtoScheme) {
 }
 
 TEST(BuilderTest, IPv4) {
-  using namespace boost::asio::ip;
+  using namespace asio::ip;
   uri::uri instance;
   uri::builder builder(instance);
   builder.scheme("http").host(address_v4::loopback()).path("/");
@@ -121,7 +121,7 @@ TEST(BuilderTest, IPv4) {
 }
 
 // TEST(BuilderTest, IPv6) {
-//    using namespace boost::asio::ip;
+//    using namespace asio::ip;
 //    uri::uri instance;
 //    uri::builder builder(instance);
 //    builder

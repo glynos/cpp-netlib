@@ -13,8 +13,8 @@
 #include <memory>
 #include <boost/network/include/http/server.hpp>
 
-#include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
+#include <asio.hpp>
+#include <asio/ssl.hpp>
 #include <iostream>
 #include <signal.h>
 
@@ -23,7 +23,7 @@ typedef boost::network::http::async_server<handler> server;
 
 std::string password_callback(
     std::size_t max_length,
-    boost::asio::ssl::context_base::password_purpose purpose) {
+    asio::ssl::context_base::password_purpose purpose) {
   return std::string("test");
 }
 
@@ -55,7 +55,7 @@ struct handler {
  * @param signal
  * @param p_server_instance
  */
-void shut_me_down(const boost::system::error_code& error, int signal,
+void shut_me_down(const std::error_code& error, int signal,
                   std::shared_ptr<server> p_server_instance) {
   if (!error) p_server_instance->stop();
 }
@@ -63,21 +63,21 @@ void shut_me_down(const boost::system::error_code& error, int signal,
 int main(void) try {
 
   // setup asio::io_service
-  std::shared_ptr<boost::asio::io_service> p_io_service(
-      std::make_shared<boost::asio::io_service>());
+  std::shared_ptr<asio::io_service> p_io_service(
+      std::make_shared<asio::io_service>());
 
   // Initialize SSL context
-  std::shared_ptr<boost::asio::ssl::context> ctx =
-      std::make_shared<boost::asio::ssl::context>(
-          boost::asio::ssl::context::sslv23);
-  ctx->set_options(boost::asio::ssl::context::default_workarounds |
-                   boost::asio::ssl::context::no_sslv2 |
-                   boost::asio::ssl::context::single_dh_use);
+  std::shared_ptr<asio::ssl::context> ctx =
+      std::make_shared<asio::ssl::context>(
+          asio::ssl::context::sslv23);
+  ctx->set_options(asio::ssl::context::default_workarounds |
+                   asio::ssl::context::no_sslv2 |
+                   asio::ssl::context::single_dh_use);
 
   // Set keys
   ctx->set_password_callback(password_callback);
   ctx->use_certificate_chain_file("server.pem");
-  ctx->use_private_key_file("server.pem", boost::asio::ssl::context::pem);
+  ctx->use_private_key_file("server.pem", asio::ssl::context::pem);
   ctx->use_tmp_dh_file("dh512.pem");
 
   // setup the async server
@@ -93,8 +93,8 @@ int main(void) try {
           .context(ctx)));
 
   // setup clean shutdown
-  boost::asio::signal_set signals(*p_io_service, SIGINT, SIGTERM);
-  signals.async_wait([=] (boost::system::error_code const &ec, int signal) {
+  asio::signal_set signals(*p_io_service, SIGINT, SIGTERM);
+  signals.async_wait([=] (std::error_code const &ec, int signal) {
       shut_me_down(ec, signal, p_server_instance);
     });
 

@@ -12,7 +12,6 @@
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/traits/ostringstream.hpp>
 
-#include <boost/asio/io_service.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <istream>
