@@ -221,7 +221,7 @@ struct http_async_connection
         }
       }
       delegate_->read_some(
-          boost::asio::mutable_buffers_1(this->part.c_array(),
+          boost::asio::mutable_buffers_1(this->part.data(),
                                          this->part.size()),
           request_strand_.wrap(boost::bind(
               &this_type::handle_received_data, this_type::shared_from_this(),
@@ -309,7 +309,8 @@ struct http_async_connection
             this->body_promise.set_value("");
             this->destination_promise.set_value("");
             this->source_promise.set_value("");
-            this->part.assign('\0');
+            // this->part.assign('\0');
+            boost::copy("\0", std::begin(this->part));
             this->response_parser_.reset();
             return;
           }
@@ -335,7 +336,7 @@ struct http_async_connection
             callback(make_iterator_range(begin, end), ec);
 
             delegate_->read_some(
-                boost::asio::mutable_buffers_1(this->part.c_array(),
+                boost::asio::mutable_buffers_1(this->part.data(),
                                                this->part.size()),
                 request_strand_.wrap(boost::bind(
                     &this_type::handle_received_data,
@@ -382,7 +383,8 @@ struct http_async_connection
             // TODO(dberris): set the destination value somewhere!
             this->destination_promise.set_value("");
             this->source_promise.set_value("");
-            this->part.assign('\0');
+            // this->part.assign('\0');
+            boost::copy("\0", std::begin(this->part));
             this->response_parser_.reset();
             this->timer_.cancel();
           } else {
@@ -398,7 +400,7 @@ struct http_async_connection
               std::advance(end, bytes_transferred);
               callback(make_iterator_range(begin, end), ec);
               delegate_->read_some(
-                  boost::asio::mutable_buffers_1(this->part.c_array(),
+                  boost::asio::mutable_buffers_1(this->part.data(),
                                                  this->part.size()),
                   request_strand_.wrap(boost::bind(
                       &this_type::handle_received_data,

@@ -10,6 +10,7 @@
 
 #include <iterator>
 #include <cstdint>
+#include <array>
 #include <boost/fusion/tuple/tuple.hpp>
 #include <boost/fusion/tuple/tuple_tie.hpp>
 #include <boost/logic/tribool.hpp>
@@ -140,7 +141,7 @@ struct http_async_protocol_handler {
                             std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
-          boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+          boost::asio::mutable_buffers_1(part.data(), part.size()),
           callback);
     }
     return parsed_ok;
@@ -186,7 +187,7 @@ struct http_async_protocol_handler {
                             std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
-          boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+          boost::asio::mutable_buffers_1(part.data(), part.size()),
           callback);
     }
     return parsed_ok;
@@ -231,7 +232,7 @@ struct http_async_protocol_handler {
                             std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
-          boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+          boost::asio::mutable_buffers_1(part.data(), part.size()),
           callback);
     }
     return parsed_ok;
@@ -318,7 +319,7 @@ struct http_async_protocol_handler {
                             std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
-          boost::asio::mutable_buffers_1(part.c_array(), part.size()),
+          boost::asio::mutable_buffers_1(part.data(), part.size()),
           callback);
     }
     return fusion::make_tuple(
@@ -332,12 +333,12 @@ struct http_async_protocol_handler {
     partial_parsed.append(part_begin, bytes);
     part_begin = part.begin();
     delegate_->read_some(
-        boost::asio::mutable_buffers_1(part.c_array(), part.size()), callback);
+        boost::asio::mutable_buffers_1(part.data(), part.size()), callback);
   }
 
   typedef response_parser<Tag> response_parser_type;
   // TODO(dberris): make 1024 go away and become a configurable value.
-  typedef boost::array<typename char_<Tag>::type, 1024> buffer_type;
+  typedef std::array<typename char_<Tag>::type, 1024> buffer_type;
 
   response_parser_type response_parser_;
   std::promise<string_type> version_promise;

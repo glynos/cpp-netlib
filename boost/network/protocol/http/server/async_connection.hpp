@@ -13,6 +13,7 @@
 #include <vector>
 #include <memory>
 #include <mutex>
+#include <array>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/strand.hpp>
@@ -287,7 +288,7 @@ struct async_connection
   }
 
  private:
-  typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
+  typedef std::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
       buffer_type;
 
  public:
@@ -344,7 +345,7 @@ struct async_connection
     if (ec) error_encountered = in_place<boost::system::system_error>(ec);
   }
 
-  typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
+  typedef std::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
       array;
   typedef std::list<std::shared_ptr<array> > array_list;
   typedef std::shared_ptr<array_list> shared_array_list;

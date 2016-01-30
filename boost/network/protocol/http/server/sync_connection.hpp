@@ -14,6 +14,7 @@
 #endif
 
 #include <memory>
+#include <array>
 #include <boost/network/protocol/http/request_parser.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
@@ -23,7 +24,6 @@
 #include <boost/asio/read.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/asio/placeholders.hpp>
-#include <boost/array.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/bind.hpp>
@@ -215,7 +215,7 @@ struct sync_connection
   boost::asio::ip::tcp::socket socket_;
   boost::asio::io_service::strand wrapper_;
 
-  typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
+  typedef std::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
       buffer_type;
   buffer_type buffer_;
   typedef basic_request_parser<Tag> request_parser;
