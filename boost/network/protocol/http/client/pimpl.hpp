@@ -17,7 +17,6 @@
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_sync.hpp>
 #include <boost/optional/optional.hpp>
-#include <boost/static_assert.hpp>
 
 namespace boost {
 namespace network {
@@ -60,8 +59,8 @@ class basic_client;
 template <class Tag, unsigned version_major, unsigned version_minor>
 struct basic_client_impl
     : impl::client_base<Tag, version_major, version_minor>::type {
-  BOOST_STATIC_ASSERT(
-      (mpl::not_<mpl::and_<is_async<Tag>, is_sync<Tag> > >::value));
+  static_assert(mpl::not_<mpl::and_<is_async<Tag>, is_sync<Tag> > >::value,
+                "Client can only be synchronous our asynchronous.");
 
   typedef typename impl::client_base<Tag, version_major, version_minor>::type
       base_type;
