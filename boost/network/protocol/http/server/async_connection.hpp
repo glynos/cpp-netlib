@@ -14,6 +14,7 @@
 #include <memory>
 #include <mutex>
 #include <array>
+#include <functional>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/strand.hpp>
@@ -293,7 +294,7 @@ struct async_connection
 
  public:
   typedef iterator_range<buffer_type::const_iterator> input_range;
-  typedef boost::function<
+  typedef std::function<
       void(input_range, boost::system::error_code, std::size_t, connection_ptr)>
       read_callback_function;
 
@@ -352,7 +353,7 @@ struct async_connection
   typedef std::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
   typedef request_parser<Tag> request_parser_type;
   typedef std::lock_guard<std::recursive_mutex> lock_guard;
-  typedef std::list<boost::function<void()> > pending_actions_list;
+  typedef std::list<std::function<void()> > pending_actions_list;
 
   asio::io_service::strand strand;
   Handler& handler;
@@ -544,7 +545,7 @@ struct async_connection
     }
   }
 
-  void write_headers_only(boost::function<void()> callback) {
+  void write_headers_only(std::function<void()> callback) {
     if (headers_in_progress) return;
     headers_in_progress = true;
     auto self = this->shared_from_this();
@@ -555,7 +556,7 @@ struct async_connection
 	  }));
   }
 
-  void handle_write_headers(boost::function<void()> callback,
+  void handle_write_headers(std::function<void()> callback,
                             boost::system::error_code const& ec, std::size_t) {
     lock_guard lock(headers_mutex);
     if (!ec) {
@@ -573,7 +574,7 @@ struct async_connection
   }
 
   void handle_write(
-      boost::function<void(boost::system::error_code const&)> callback,
+      std::function<void(boost::system::error_code const&)> callback,
       shared_array_list, shared_buffers, boost::system::error_code const& ec,
       std::size_t) {
     // we want to forget the temporaries and buffers
@@ -582,7 +583,7 @@ struct async_connection
 
   template <class Range>
   void write_impl(Range range,
-                  boost::function<void(boost::system::error_code)> callback) {
+                  std::function<void(boost::system::error_code)> callback) {
     // linearize the whole range into a vector
     // of fixed-sized buffers, then schedule an asynchronous
     // write of these buffers -- make sure they are live

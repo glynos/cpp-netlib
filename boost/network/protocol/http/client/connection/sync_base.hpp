@@ -7,6 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <functional>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/traits/istringstream.hpp>
 #include <boost/network/traits/ostringstream.hpp>
@@ -33,7 +34,7 @@ struct sync_connection_base_impl {
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename string<Tag>::type string_type;
-  typedef function<typename resolver_base::resolver_iterator_pair(
+  typedef std::function<typename resolver_base::resolver_iterator_pair(
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
 
@@ -237,10 +238,10 @@ struct sync_connection_base {
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename string<Tag>::type string_type;
-  typedef function<typename resolver_base::resolver_iterator_pair(
+  typedef std::function<typename resolver_base::resolver_iterator_pair(
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   // FIXME make the certificate filename and verify path parameters be
   // optional

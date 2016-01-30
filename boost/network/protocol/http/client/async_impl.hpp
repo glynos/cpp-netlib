@@ -10,9 +10,9 @@
 
 #include <thread>
 #include <memory>
+#include <functional>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
-#include <boost/bind.hpp>
 #include <boost/network/protocol/http/traits/connection_policy.hpp>
 
 namespace boost {
@@ -31,10 +31,10 @@ struct async_client
   typedef typename resolver<Tag>::type resolver_type;
   typedef typename string<Tag>::type string_type;
 
-  typedef function<void(boost::iterator_range<char const*> const&,
+  typedef std::function<void(boost::iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
 
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   async_client(bool cache_resolved, bool follow_redirect,
                bool always_verify_peer, int timeout,

@@ -8,13 +8,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iterator>
+#include <functional>
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/traits/string.hpp>
-#include <iterator>
 
 namespace boost {
 namespace network {
@@ -36,13 +37,13 @@ struct http_sync_connection
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename string<Tag>::type string_type;
-  typedef function<typename resolver_base::resolver_iterator_pair(
+  typedef std::function<typename resolver_base::resolver_iterator_pair(
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
   typedef http_sync_connection<Tag, version_major, version_minor> this_type;
   typedef sync_connection_base_impl<Tag, version_major, version_minor>
       connection_base;
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   http_sync_connection(resolver_type& resolver, resolver_function_type resolve,
                        int timeout)

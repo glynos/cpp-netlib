@@ -8,6 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cstdint>
+#include <functional>
 #include <boost/asio/ssl.hpp>
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
 
@@ -29,7 +30,7 @@ boost::network::http::impl::ssl_delegate::ssl_delegate(
 void boost::network::http::impl::ssl_delegate::connect(
     asio::ip::tcp::endpoint &endpoint, std::string host,
     std::uint16_t source_port,
-    function<void(system::error_code const &)> handler) {
+    std::function<void(system::error_code const &)> handler) {
   context_.reset(
       new asio::ssl::context(asio::ssl::context::method::sslv23_client));
   if (ciphers_) {
@@ -80,7 +81,7 @@ void boost::network::http::impl::ssl_delegate::connect(
 
 void boost::network::http::impl::ssl_delegate::handle_connected(
     system::error_code const &ec,
-    function<void(system::error_code const &)> handler) {
+    std::function<void(system::error_code const &)> handler) {
   if (!ec) {
     socket_->async_handshake(asio::ssl::stream_base::client, handler);
   } else {
@@ -90,13 +91,13 @@ void boost::network::http::impl::ssl_delegate::handle_connected(
 
 void boost::network::http::impl::ssl_delegate::write(
     asio::streambuf &command_streambuf,
-    function<void(system::error_code const &, size_t)> handler) {
+    std::function<void(system::error_code const &, size_t)> handler) {
   asio::async_write(*socket_, command_streambuf, handler);
 }
 
 void boost::network::http::impl::ssl_delegate::read_some(
     asio::mutable_buffers_1 const &read_buffer,
-    function<void(system::error_code const &, size_t)> handler) {
+    std::function<void(system::error_code const &, size_t)> handler) {
   socket_->async_read_some(read_buffer, handler);
 }
 

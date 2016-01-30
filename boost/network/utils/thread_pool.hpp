@@ -7,6 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <memory>
+#include <functional>
 #include <boost/asio/io_service.hpp>
 #include <boost/function.hpp>
 #include <boost/network/tags.hpp>
@@ -74,7 +75,7 @@ struct basic_thread_pool {
 
   std::size_t thread_count() const { return threads_; }
 
-  void post(boost::function<void()> f) { io_service_->post(f); }
+  void post(std::function<void()> f) { io_service_->post(f); }
 
   ~basic_thread_pool() throw() {
     sentinel_.reset();

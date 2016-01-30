@@ -29,9 +29,9 @@ struct async_connection_policy : resolver_policy<Tag>::type {
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename resolver_base::resolve_function resolve_function;
-  typedef function<void(iterator_range<char const*> const&,
+  typedef std::function<void(iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   struct connection_impl {
     connection_impl(bool follow_redirect, bool always_verify_peer,

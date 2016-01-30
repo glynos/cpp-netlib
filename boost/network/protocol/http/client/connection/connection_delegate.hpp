@@ -8,9 +8,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cstdint>
+#include <functional>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/streambuf.hpp>
-#include <boost/function.hpp>
 
 namespace boost {
 namespace network {
@@ -20,13 +20,13 @@ namespace impl {
 struct connection_delegate {
   virtual void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
                        std::uint16_t source_port,
-                       function<void(system::error_code const &)> handler) = 0;
+                       std::function<void(system::error_code const &)> handler) = 0;
   virtual void write(
       asio::streambuf &command_streambuf,
-      function<void(system::error_code const &, size_t)> handler) = 0;
+      std::function<void(system::error_code const &, size_t)> handler) = 0;
   virtual void read_some(
       asio::mutable_buffers_1 const &read_buffer,
-      function<void(system::error_code const &, size_t)> handler) = 0;
+      std::function<void(system::error_code const &, size_t)> handler) = 0;
   virtual void disconnect() = 0;
   virtual ~connection_delegate() = default;
 };

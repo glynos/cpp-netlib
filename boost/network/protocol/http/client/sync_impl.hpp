@@ -8,8 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <memory>
-#include <boost/bind/bind.hpp>
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/network/protocol/http/client/options.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/tags.hpp>
@@ -32,9 +31,9 @@ struct sync_client
   typedef typename connection_policy<Tag, version_major, version_minor>::type
       connection_base;
   typedef typename resolver<Tag>::type resolver_type;
-  typedef function<void(iterator_range<char const*> const&,
+  typedef std::function<void(iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
   friend struct basic_client_impl<Tag, version_major, version_minor>;
 
   std::shared_ptr<boost::asio::io_service> service_ptr;

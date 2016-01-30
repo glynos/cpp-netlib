@@ -31,17 +31,17 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
   typedef typename string<Tag>::type string_type;
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
-  typedef function<typename resolver_base::resolver_iterator_pair(
+  typedef std::function<typename resolver_base::resolver_iterator_pair(
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
-  typedef function<void(iterator_range<char const*> const&,
+  typedef std::function<void(iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   void cleanup() { host_connection_map().swap(host_connections_); }
 
   struct connection_impl {
-    typedef function<std::shared_ptr<connection_impl>(
+    typedef std::function<std::shared_ptr<connection_impl>(
         resolver_type&, basic_request<Tag> const&, optional<string_type> const&,
         optional<string_type> const&, optional<string_type> const&,
         optional<string_type> const&, optional<string_type> const&)>

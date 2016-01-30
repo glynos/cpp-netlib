@@ -9,11 +9,11 @@
 #include <memory>
 #include <unordered_map>
 #include <cstdint>
+#include <functional>
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/network/traits/string.hpp>
-#include <boost/function.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/fusion/tuple/tuple_tie.hpp>
 
@@ -32,11 +32,11 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
   typedef typename string<Tag>::type string_type;
   typedef std::unordered_map<string_type, resolver_iterator_pair>
       endpoint_cache;
-  typedef boost::function<
+  typedef std::function<
       void(boost::system::error_code const &, resolver_iterator_pair)>
       resolve_completion_function;
-  typedef boost::function<void(resolver_type &, string_type, std::uint16_t,
-                               resolve_completion_function)> resolve_function;
+  typedef std::function<void(resolver_type &, string_type, std::uint16_t,
+                             resolve_completion_function)> resolve_function;
 
  protected:
   bool cache_resolved_;
