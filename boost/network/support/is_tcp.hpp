@@ -8,7 +8,6 @@
 
 #include <boost/mpl/not.hpp>
 #include <boost/network/tags.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {

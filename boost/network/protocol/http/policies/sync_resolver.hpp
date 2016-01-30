@@ -6,13 +6,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/protocol/http/traits/resolver.hpp>
+#include <unordered_map>
 #include <utility>
-#include <boost/fusion/adapted/std_pair.hpp>
-#include <boost/fusion/include/tuple.hpp>
+#include <tuple>
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/network/traits/string.hpp>
-#include <boost/unordered_map.hpp>
 
 namespace boost {
 namespace network {
@@ -30,7 +29,7 @@ struct sync_resolver {
 
  protected:
   typedef typename string<Tag>::type string_type;
-  typedef boost::unordered_map<string_type, resolver_iterator_pair>
+  typedef std::unordered_map<string_type, resolver_iterator_pair>
       resolved_cache;
   resolved_cache endpoint_cache_;
   bool cache_resolved_;
@@ -45,7 +44,7 @@ struct sync_resolver {
           endpoint_cache_.find(hostname);
       if (cached_iterator == endpoint_cache_.end()) {
         bool inserted = false;
-        boost::fusion::tie(cached_iterator, inserted) =
+        std::tie(cached_iterator, inserted) =
             endpoint_cache_.insert(std::make_pair(
                 boost::to_lower_copy(hostname),
                 std::make_pair(

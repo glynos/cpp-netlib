@@ -13,7 +13,8 @@
 #define BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE 1024uL
 #endif
 
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
+#include <array>
 #include <boost/network/protocol/http/request_parser.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
@@ -23,10 +24,7 @@
 #include <boost/asio/read.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/asio/placeholders.hpp>
-#include <boost/array.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
-#include <boost/bind.hpp>
 
 namespace boost {
 namespace network {
@@ -34,7 +32,7 @@ namespace http {
 
 template <class Tag, class Handler>
 struct sync_connection
-    : boost::enable_shared_from_this<sync_connection<Tag, Handler> > {
+    : std::enable_shared_from_this<sync_connection<Tag, Handler> > {
 
   sync_connection(boost::asio::io_service &service, Handler &handler)
       : service_(service),
@@ -55,13 +53,13 @@ struct sync_connection
     socket_.set_option(tcp::no_delay(true), option_error);
     if (option_error)
       handler_.log(boost::system::system_error(option_error).what());
+    auto self = this->shared_from_this();
     socket_.async_read_some(
         boost::asio::buffer(buffer_),
-        wrapper_.wrap(
-            boost::bind(&sync_connection<Tag, Handler>::handle_read_headers,
-                        sync_connection<Tag, Handler>::shared_from_this(),
-                        boost::asio::placeholders::error,
-                        boost::asio::placeholders::bytes_transferred)));
+        wrapper_.wrap([=] (boost::system::error_code const &ec,
+                           std::size_t bytes_transferred) {
+                        self->handle_read_headers(ec, bytes_transferred);
+                      }));
   }
 
  private:
@@ -90,29 +88,29 @@ struct sync_connection
           if (it == request_.headers.end()) {
             response_ = basic_response<Tag>::stock_reply(
                 basic_response<Tag>::bad_request);
+            auto self = this->shared_from_this();
             boost::asio::async_write(
                 socket_, response_.to_buffers(),
-                wrapper_.wrap(boost::bind(
-                    &sync_connection<Tag, Handler>::handle_write,
-                    sync_connection<Tag, Handler>::shared_from_this(),
-                    boost::asio::placeholders::error)));
+                wrapper_.wrap([=] (boost::system::error_code const &ec) {
+                    self->handle_write(ec);
+                  }));
             return;
           }
 
           size_t content_length = 0;
 
           try {
-            content_length = boost::lexical_cast<size_t>(it->value);
+            content_length = std::stoul(it->value);
           }
           catch (...) {
             response_ = basic_response<Tag>::stock_reply(
                 basic_response<Tag>::bad_request);
+            auto self = this->shared_from_this();
             boost::asio::async_write(
                 socket_, response_.to_buffers(),
-                wrapper_.wrap(boost::bind(
-                    &sync_connection<Tag, Handler>::handle_write,
-                    sync_connection<Tag, Handler>::shared_from_this(),
-                    boost::asio::placeholders::error)));
+                wrapper_.wrap([=] (boost::system::error_code const &ec) {
+                    self->handle_write(ec);
+                  }));
             return;
           }
 
@@ -124,50 +122,51 @@ struct sync_connection
                   std::distance(new_start, buffer_.begin() + bytes_transferred);
             }
             if (content_length > 0) {
+              auto self = this->shared_from_this();
               socket_.async_read_some(
                   boost::asio::buffer(buffer_),
-                  wrapper_.wrap(boost::bind(
-                      &sync_connection<Tag, Handler>::handle_read_body_contents,
-                      sync_connection<Tag, Handler>::shared_from_this(),
-                      boost::asio::placeholders::error, content_length,
-                      boost::asio::placeholders::bytes_transferred)));
+                  wrapper_.wrap([=] (boost::system::error_code const &ec,
+                                     std::size_t bytes_transferred) {
+                                  self->handle_read_body_contents(ec, content_length,
+                                                                  bytes_transferred);
+                                }));
               return;
             }
           }
 
           handler_(request_, response_);
+          auto self = this->shared_from_this();
           boost::asio::async_write(
               socket_, response_.to_buffers(),
-              wrapper_.wrap(
-                  boost::bind(&sync_connection<Tag, Handler>::handle_write,
-                              sync_connection<Tag, Handler>::shared_from_this(),
-                              boost::asio::placeholders::error)));
+              wrapper_.wrap([=] (boost::system::error_code const &ec) {
+                  self->handle_write(ec);
+                }));
         } else {
           handler_(request_, response_);
+          auto self = this->shared_from_this();
           boost::asio::async_write(
               socket_, response_.to_buffers(),
-              wrapper_.wrap(
-                  boost::bind(&sync_connection<Tag, Handler>::handle_write,
-                              sync_connection<Tag, Handler>::shared_from_this(),
-                              boost::asio::placeholders::error)));
+              wrapper_.wrap([=] (boost::system::error_code const &ec) {
+                  self->handle_write(ec);
+                }));
         }
       } else if (!done) {
         response_ =
             basic_response<Tag>::stock_reply(basic_response<Tag>::bad_request);
+          auto self = this->shared_from_this();
         boost::asio::async_write(
             socket_, response_.to_buffers(),
-            wrapper_.wrap(
-                boost::bind(&sync_connection<Tag, Handler>::handle_write,
-                            sync_connection<Tag, Handler>::shared_from_this(),
-                            boost::asio::placeholders::error)));
+            wrapper_.wrap([=] (boost::system::error_code const &ec) {
+                self->handle_write(ec);
+              }));
       } else {
+        auto self = this->shared_from_this();
         socket_.async_read_some(
             boost::asio::buffer(buffer_),
-            wrapper_.wrap(
-                boost::bind(&sync_connection<Tag, Handler>::handle_read_headers,
-                            sync_connection<Tag, Handler>::shared_from_this(),
-                            boost::asio::placeholders::error,
-                            boost::asio::placeholders::bytes_transferred)));
+            wrapper_.wrap([=] (boost::system::error_code const &ec,
+                               std::size_t bytes_transferred) {
+                            self->handle_read_headers(ec, bytes_transferred);
+                          }));
       }
     }
     // TODO Log the error?
@@ -183,20 +182,20 @@ struct sync_connection
       request_.body.append(buffer_.begin(), past_end);
       if (difference == 0) {
         handler_(request_, response_);
+        auto self = this->shared_from_this();
         boost::asio::async_write(
             socket_, response_.to_buffers(),
-            wrapper_.wrap(
-                boost::bind(&sync_connection<Tag, Handler>::handle_write,
-                            sync_connection<Tag, Handler>::shared_from_this(),
-                            boost::asio::placeholders::error)));
+            wrapper_.wrap([=] (boost::system::error_code const &ec) {
+                self->handle_write(ec);
+              }));
       } else {
+        auto self = this->shared_from_this();
         socket_.async_read_some(
             boost::asio::buffer(buffer_),
-            wrapper_.wrap(boost::bind(
-                &sync_connection<Tag, Handler>::handle_read_body_contents,
-                sync_connection<Tag, Handler>::shared_from_this(),
-                boost::asio::placeholders::error, difference,
-                boost::asio::placeholders::bytes_transferred)));
+            wrapper_.wrap([=] (boost::system::error_code const &ec,
+                               std::size_t bytes_transferred) {
+                            self->handle_read_body_contents(ec, difference, bytes_transferred);
+                          }));
       }
     }
     // TODO Log the error?
@@ -215,7 +214,7 @@ struct sync_connection
   boost::asio::ip::tcp::socket socket_;
   boost::asio::io_service::strand wrapper_;
 
-  typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
+  typedef std::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
       buffer_type;
   buffer_type buffer_;
   typedef basic_request_parser<Tag> request_parser;

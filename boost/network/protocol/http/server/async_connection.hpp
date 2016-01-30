@@ -8,11 +8,18 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iterator>
+#include <list>
+#include <vector>
+#include <memory>
+#include <mutex>
+#include <array>
+#include <functional>
+#include <tuple>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/asio/streambuf.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/network/protocol/stream_handler.hpp>
@@ -23,14 +30,9 @@
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/scope_exit.hpp>
-#include <boost/thread/locks.hpp>
-#include <boost/thread/recursive_mutex.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/typed_in_place_factory.hpp>
-#include <iterator>
-#include <list>
-#include <vector>
 
 #ifndef BOOST_NETWORK_HTTP_SERVER_CONNECTION_HEADER_BUFFER_MAX_SIZE
 /** Here we define a page's worth of header connection buffer data.
@@ -61,14 +63,14 @@ namespace http {
 
 #ifndef BOOST_NETWORK_NO_LIB
 extern void parse_version(std::string const& partial_parsed,
-                          fusion::tuple<uint8_t, uint8_t>& version_pair);
+                          std::tuple<std::uint8_t, std::uint8_t>& version_pair);
 extern void parse_headers(std::string const& input,
                           std::vector<request_header_narrow>& container);
 #endif
 
 template <class Tag, class Handler>
 struct async_connection
-    : boost::enable_shared_from_this<async_connection<Tag, Handler> > {
+    : std::enable_shared_from_this<async_connection<Tag, Handler> > {
 
   enum status_t {
     ok = 200,
@@ -98,7 +100,7 @@ struct async_connection
 
   typedef typename string<Tag>::type string_type;
   typedef basic_request<Tag> request;
-  typedef shared_ptr<async_connection> connection_ptr;
+  typedef std::shared_ptr<async_connection> connection_ptr;
 
  private:
   static char const* status_message(status_t status) {
@@ -180,8 +182,8 @@ struct async_connection
  public:
   async_connection(asio::io_service& io_service, Handler& handler,
                    utils::thread_pool& thread_pool,
-                   boost::shared_ptr<ssl_context> ctx =
-                       boost::shared_ptr<ssl_context>())
+                   std::shared_ptr<ssl_context> ctx =
+                       std::shared_ptr<ssl_context>())
       : strand(io_service),
         handler(handler),
         thread_pool_(thread_pool),
@@ -288,12 +290,12 @@ struct async_connection
   }
 
  private:
-  typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
+  typedef std::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
       buffer_type;
 
  public:
   typedef iterator_range<buffer_type::const_iterator> input_range;
-  typedef boost::function<
+  typedef std::function<
       void(input_range, boost::system::error_code, std::size_t, connection_ptr)>
       read_callback_function;
 
@@ -345,14 +347,14 @@ struct async_connection
     if (ec) error_encountered = in_place<boost::system::system_error>(ec);
   }
 
-  typedef boost::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
+  typedef std::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
       array;
-  typedef std::list<shared_ptr<array> > array_list;
-  typedef boost::shared_ptr<array_list> shared_array_list;
-  typedef boost::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
+  typedef std::list<std::shared_ptr<array> > array_list;
+  typedef std::shared_ptr<array_list> shared_array_list;
+  typedef std::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
   typedef request_parser<Tag> request_parser_type;
-  typedef boost::lock_guard<boost::recursive_mutex> lock_guard;
-  typedef std::list<boost::function<void()> > pending_actions_list;
+  typedef std::lock_guard<std::recursive_mutex> lock_guard;
+  typedef std::list<std::function<void()> > pending_actions_list;
 
   asio::io_service::strand strand;
   Handler& handler;
@@ -362,7 +364,7 @@ struct async_connection
   bool handshake_done;
   volatile bool headers_already_sent, headers_in_progress;
 
-  boost::recursive_mutex headers_mutex;
+  std::recursive_mutex headers_mutex;
   buffer_type read_buffer_;
   status_t status;
   request_parser_type parser;
@@ -422,90 +424,90 @@ struct async_connection
       switch (state) {
         case method:
           input_range = boost::make_iterator_range(new_start, data_end);
-          fusion::tie(parsed_ok, result_range) =
+          std::tie(parsed_ok, result_range) =
               parser.parse_until(request_parser_type::method_done, input_range);
           if (!parsed_ok) {
             client_error();
             break;
           } else if (parsed_ok == true) {
             swap(partial_parsed, request_.method);
-            request_.method.append(boost::begin(result_range),
-                                   boost::end(result_range));
+            request_.method.append(std::begin(result_range),
+                                   std::end(result_range));
             trim(request_.method);
-            new_start = boost::end(result_range);
+            new_start = std::end(result_range);
           } else {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             new_start = read_buffer_.begin();
             read_more(method);
             break;
           }
         case uri:
           input_range = boost::make_iterator_range(new_start, data_end);
-          fusion::tie(parsed_ok, result_range) =
+          std::tie(parsed_ok, result_range) =
               parser.parse_until(request_parser_type::uri_done, input_range);
           if (!parsed_ok) {
             client_error();
             break;
           } else if (parsed_ok == true) {
             swap(partial_parsed, request_.destination);
-            request_.destination.append(boost::begin(result_range),
-                                        boost::end(result_range));
+            request_.destination.append(std::begin(result_range),
+                                        std::end(result_range));
             trim(request_.destination);
-            new_start = boost::end(result_range);
+            new_start = std::end(result_range);
           } else {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             new_start = read_buffer_.begin();
             read_more(uri);
             break;
           }
         case version:
           input_range = boost::make_iterator_range(new_start, data_end);
-          fusion::tie(parsed_ok, result_range) = parser.parse_until(
+          std::tie(parsed_ok, result_range) = parser.parse_until(
               request_parser_type::version_done, input_range);
           if (!parsed_ok) {
             client_error();
             break;
           } else if (parsed_ok == true) {
-            fusion::tuple<uint8_t, uint8_t> version_pair;
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            std::tuple<std::uint8_t, std::uint8_t> version_pair;
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             parse_version(partial_parsed, version_pair);
-            request_.http_version_major = fusion::get<0>(version_pair);
-            request_.http_version_minor = fusion::get<1>(version_pair);
-            new_start = boost::end(result_range);
+            request_.http_version_major = std::get<0>(version_pair);
+            request_.http_version_minor = std::get<1>(version_pair);
+            new_start = std::end(result_range);
             partial_parsed.clear();
           } else {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             new_start = read_buffer_.begin();
             read_more(version);
             break;
           }
         case headers:
           input_range = boost::make_iterator_range(new_start, data_end);
-          fusion::tie(parsed_ok, result_range) = parser.parse_until(
+          std::tie(parsed_ok, result_range) = parser.parse_until(
               request_parser_type::headers_done, input_range);
           if (!parsed_ok) {
             client_error();
             break;
           } else if (parsed_ok == true) {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             try {
               parse_headers(partial_parsed, request_.headers);
             } catch (...) {
               client_error();
               break;
             }
-            new_start = boost::end(result_range);
+            new_start = std::end(result_range);
             auto self = this->shared_from_this();
             thread_pool().post([this, self] { handler(request_, self); });
             return;
           } else {
-            partial_parsed.append(boost::begin(result_range),
-                                  boost::end(result_range));
+            partial_parsed.append(std::begin(result_range),
+                                  std::end(result_range));
             new_start = read_buffer_.begin();
             read_more(headers);
             break;
@@ -544,7 +546,7 @@ struct async_connection
     }
   }
 
-  void write_headers_only(boost::function<void()> callback) {
+  void write_headers_only(std::function<void()> callback) {
     if (headers_in_progress) return;
     headers_in_progress = true;
     auto self = this->shared_from_this();
@@ -555,7 +557,7 @@ struct async_connection
 	  }));
   }
 
-  void handle_write_headers(boost::function<void()> callback,
+  void handle_write_headers(std::function<void()> callback,
                             boost::system::error_code const& ec, std::size_t) {
     lock_guard lock(headers_mutex);
     if (!ec) {
@@ -573,7 +575,7 @@ struct async_connection
   }
 
   void handle_write(
-      boost::function<void(boost::system::error_code const&)> callback,
+      std::function<void(boost::system::error_code const&)> callback,
       shared_array_list, shared_buffers, boost::system::error_code const& ec,
       std::size_t) {
     // we want to forget the temporaries and buffers
@@ -582,7 +584,7 @@ struct async_connection
 
   template <class Range>
   void write_impl(Range range,
-                  boost::function<void(boost::system::error_code)> callback) {
+                  std::function<void(boost::system::error_code)> callback) {
     // linearize the whole range into a vector
     // of fixed-sized buffers, then schedule an asynchronous
     // write of these buffers -- make sure they are live
@@ -598,18 +600,18 @@ struct async_connection
 
     static std::size_t const connection_buffer_size =
         BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
-    shared_array_list temporaries = boost::make_shared<array_list>();
+    shared_array_list temporaries = std::make_shared<array_list>();
     shared_buffers buffers =
-        boost::make_shared<std::vector<asio::const_buffer> >(0);
+        std::make_shared<std::vector<asio::const_buffer> >(0);
 
     std::size_t range_size = boost::distance(range);
     buffers->reserve((range_size / connection_buffer_size) +
                      ((range_size % connection_buffer_size) ? 1 : 0));
     std::size_t slice_size = std::min(range_size, connection_buffer_size);
-    auto start = boost::begin(range), end = boost::end(range);
+    auto start = std::begin(range), end = std::end(range);
     while (slice_size != 0) {
       using boost::adaptors::sliced;
-      shared_ptr<array> new_array = make_shared<array>();
+      std::shared_ptr<array> new_array = std::make_shared<array>();
       boost::copy(range | sliced(0, slice_size), new_array->begin());
       temporaries->push_back(new_array);
       buffers->push_back(asio::buffer(new_array->data(), slice_size));

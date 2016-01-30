@@ -7,14 +7,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <mutex>
+#include <unordered_map>
+#include <cstdint>
+#include <utility>
+#include <functional>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/unordered_map.hpp>
-#include <utility>
 
 #ifndef BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT
 #define BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT 5
@@ -30,17 +31,17 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
   typedef typename string<Tag>::type string_type;
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
-  typedef function<typename resolver_base::resolver_iterator_pair(
+  typedef std::function<typename resolver_base::resolver_iterator_pair(
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
-  typedef function<void(iterator_range<char const*> const&,
+  typedef std::function<void(iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   void cleanup() { host_connection_map().swap(host_connections_); }
 
   struct connection_impl {
-    typedef function<shared_ptr<connection_impl>(
+    typedef std::function<std::shared_ptr<connection_impl>(
         resolver_type&, basic_request<Tag> const&, optional<string_type> const&,
         optional<string_type> const&, optional<string_type> const&,
         optional<string_type> const&, optional<string_type> const&)>
@@ -92,7 +93,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       // TODO(dberris): review parameter necessity.
       (void)callback;
 
-      boost::uint8_t count = 0;
+      std::uint8_t count = 0;
       bool retry = false;
       do {
         if (count >= BOOST_NETWORK_HTTP_MAXIMUM_REDIRECT_COUNT)
@@ -103,7 +104,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         // check if the socket is open first
         if (!pimpl->is_open()) {
           pimpl->init_socket(request_.host(),
-                             lexical_cast<string_type>(request_.port()));
+                             std::to_string(request_.port()));
         }
         response_ = basic_response<Tag>();
         response_ << ::boost::network::source(request_.host());
@@ -117,7 +118,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
           if (!retry && e.code() == boost::asio::error::eof) {
             retry = true;
             pimpl->init_socket(request_.host(),
-                               lexical_cast<string_type>(request_.port()));
+                               std::to_string(request_.port()));
             continue;
           }
           throw;  // it's a retry, and there's something wrong.
@@ -135,21 +136,21 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
             headers(response_)["Connection"];
         if (version_major == 1 && version_minor == 1 &&
             !boost::empty(connection_range) &&
-            boost::begin(connection_range)->second == string_type("close")) {
+            std::begin(connection_range)->second == string_type("close")) {
           pimpl->close_socket();
         } else if (version_major == 1 && version_minor == 0) {
           pimpl->close_socket();
         }
 
         if (connection_follow_redirect_) {
-          boost::uint16_t status = response_.status();
+          std::uint16_t status = response_.status();
           if (status >= 300 && status <= 307) {
             typename headers_range<basic_response<Tag> >::type location_range =
                 headers(response_)["Location"];
             typename range_iterator<
                 typename headers_range<basic_request<Tag> >::type>::type
-                location_header = boost::begin(location_range);
-            if (location_header != boost::end(location_range)) {
+                location_header = std::begin(location_range);
+            if (location_header != std::end(location_range)) {
               request_.uri(location_header->second);
               connection_ptr connection_;
               connection_ = get_connection_(
@@ -166,7 +167,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       } while (true);
     }
 
-    shared_ptr<http::impl::sync_connection_base<Tag, version_major,
+    std::shared_ptr<http::impl::sync_connection_base<Tag, version_major,
                                                 version_minor> > pimpl;
     resolver_type& resolver_;
     bool connection_follow_redirect_;
@@ -179,10 +180,10 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     long ssl_options_;
   };
 
-  typedef shared_ptr<connection_impl> connection_ptr;
+  typedef std::shared_ptr<connection_impl> connection_ptr;
 
-  typedef unordered_map<string_type, weak_ptr<connection_impl>> host_connection_map;
-  boost::mutex host_mutex_;
+  typedef std::unordered_map<string_type, std::weak_ptr<connection_impl>> host_connection_map;
+  std::mutex host_mutex_;
   host_connection_map host_connections_;
   bool follow_redirect_;
   int timeout_;
@@ -197,8 +198,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& private_key_file = optional<string_type>(),
       optional<string_type> const& ciphers = optional<string_type>()) {
     string_type index =
-        (request_.host() + ':') + lexical_cast<string_type>(request_.port());
-    boost::mutex::scoped_lock lock(host_mutex_);
+      (request_.host() + ':') + std::to_string(request_.port());
+    std::unique_lock<std::mutex> lock(host_mutex_);
     auto it = host_connections_.find(index);
     if (it != host_connections_.end()) {
       // We've found an existing connection; but we should check if that
@@ -207,19 +208,17 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       if (!result) return result;
     }
 
+    namespace ph = std::placeholders;
     connection_ptr connection(new connection_impl(
         resolver, follow_redirect_, request_.host(),
-        lexical_cast<string_type>(request_.port()),
+        std::to_string(request_.port()),
         // resolver function
-        boost::bind(&pooled_connection_policy<Tag, version_major,
-                                              version_minor>::resolve,
-                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
+        std::bind(&pooled_connection_policy<Tag, version_major,
+                  version_minor>::resolve, this, ph::_1, ph::_2, ph::_3),
         // connection factory
-        boost::bind(&pooled_connection_policy<Tag, version_major,
-                                              version_minor>::get_connection,
-                    this, boost::arg<1>(), boost::arg<2>(), always_verify_peer,
-                    boost::arg<3>(), boost::arg<4>(), boost::arg<5>(),
-                    boost::arg<6>(), boost::arg<7>()),
+        std::bind(&pooled_connection_policy<Tag, version_major,
+                                                 version_minor>::get_connection,
+                  this, ph::_1, ph::_2, always_verify_peer, ph::_3, ph::_4, ph::_5, ph::_6, ph::_7),
         boost::iequals(request_.protocol(), string_type("https")),
         always_verify_peer, timeout_, certificate_filename, verify_path,
         certificate_file, private_key_file, ciphers, 0));

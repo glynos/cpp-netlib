@@ -9,17 +9,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
+#include <functional>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/bind.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/function.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/network/protocol/http/client/connection/async_base.hpp>
 #include <boost/network/protocol/http/message/wrappers/protocol.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/version.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/tuple/tuple.hpp>
 
 namespace boost {
 namespace network {
@@ -32,9 +28,9 @@ struct async_connection_policy : resolver_policy<Tag>::type {
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename resolver_base::resolve_function resolve_function;
-  typedef function<void(iterator_range<char const*> const&,
+  typedef std::function<void(iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   struct connection_impl {
     connection_impl(bool follow_redirect, bool always_verify_peer,
@@ -63,11 +59,11 @@ struct async_connection_policy : resolver_policy<Tag>::type {
     }
 
    private:
-    shared_ptr<http::impl::async_connection_base<Tag, version_major,
+    std::shared_ptr<http::impl::async_connection_base<Tag, version_major,
                                                  version_minor> > pimpl;
   };
 
-  typedef boost::shared_ptr<connection_impl> connection_ptr;
+  typedef std::shared_ptr<connection_impl> connection_ptr;
   connection_ptr get_connection(
       resolver_type& resolver, basic_request<Tag> const& request_,
       bool always_verify_peer,
@@ -79,12 +75,11 @@ struct async_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& ciphers = optional<string_type>(),
       long ssl_options = 0) {
     string_type protocol_ = protocol(request_);
+    namespace ph = std::placeholders;
     connection_ptr connection_(new connection_impl(
         follow_redirect_, always_verify_peer,
-        boost::bind(&async_connection_policy<Tag, version_major,
-                                             version_minor>::resolve,
-                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>(),
-                    boost::arg<4>()),
+        std::bind(&async_connection_policy<Tag, version_major,
+                  version_minor>::resolve, this, ph::_1, ph::_2, ph::_3, ph::_4),
         resolver, boost::iequals(protocol_, string_type("https")), timeout_,
         certificate_filename, verify_path, certificate_file, private_key_file,
         ciphers, ssl_options));

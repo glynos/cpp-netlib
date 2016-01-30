@@ -8,13 +8,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <iterator>
+#include <functional>
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/traits/string.hpp>
-#include <iterator>
 
 namespace boost {
 namespace network {
@@ -31,18 +32,18 @@ template <class Tag, unsigned version_major, unsigned version_minor>
 struct http_sync_connection
     : public virtual sync_connection_base<Tag, version_major, version_minor>,
       sync_connection_base_impl<Tag, version_major, version_minor>,
-      boost::enable_shared_from_this<
+      std::enable_shared_from_this<
           http_sync_connection<Tag, version_major, version_minor> > {
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename string<Tag>::type string_type;
-  typedef function<typename resolver_base::resolver_iterator_pair(
+  typedef std::function<typename resolver_base::resolver_iterator_pair(
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
   typedef http_sync_connection<Tag, version_major, version_minor> this_type;
   typedef sync_connection_base_impl<Tag, version_major, version_minor>
       connection_base;
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   http_sync_connection(resolver_type& resolver, resolver_function_type resolve,
                        int timeout)
@@ -77,9 +78,10 @@ struct http_sync_connection
     }
     if (timeout_ > 0) {
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
-      timer_.async_wait(boost::bind(&this_type::handle_timeout,
-                                    this_type::shared_from_this(),
-                                    boost::arg<1>()));
+      auto self = this->shared_from_this();
+      timer_.async_wait([=] (boost::system::error_code const &ec) {
+          self->handle_timeout(ec);
+        });
     }
   }
 
@@ -100,7 +102,7 @@ struct http_sync_connection
         headers(response_)["Connection"];
     if (version_major == 1 && version_minor == 1 &&
         !boost::empty(connection_range) &&
-        boost::iequals(boost::begin(connection_range)->second, "close")) {
+        boost::iequals(std::begin(connection_range)->second, "close")) {
       close_socket();
     } else if (version_major == 1 && version_minor == 0) {
       close_socket();

@@ -7,10 +7,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/asio/io_service.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/optional/optional.hpp>
-#include <boost/smart_ptr/shared_ptr.hpp>
 
 namespace boost {
 namespace network {
@@ -107,7 +107,7 @@ class client_options {
     return *this;
   }
 
-  client_options& io_service(boost::shared_ptr<boost::asio::io_service> v) {
+  client_options& io_service(std::shared_ptr<boost::asio::io_service> v) {
     io_service_ = v;
     return *this;
   }
@@ -148,7 +148,7 @@ class client_options {
 
   long openssl_options() const { return openssl_options_; }
 
-  boost::shared_ptr<boost::asio::io_service> io_service() const {
+  std::shared_ptr<boost::asio::io_service> io_service() const {
     return io_service_;
   }
 
@@ -165,7 +165,7 @@ class client_options {
   boost::optional<string_type> openssl_private_key_file_;
   boost::optional<string_type> openssl_ciphers_;
   long openssl_options_;
-  boost::shared_ptr<boost::asio::io_service> io_service_;
+  std::shared_ptr<boost::asio::io_service> io_service_;
   bool always_verify_peer_;
   int timeout_;
 };

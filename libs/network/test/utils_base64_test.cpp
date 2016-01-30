@@ -3,12 +3,12 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/network/utils/base64/encode.hpp>
 #include <boost/network/utils/base64/encode-io.hpp>
-#include <boost/array.hpp>
 #include <algorithm>
 #include <iterator>
 #include <string>
 #include <vector>
 #include <sstream>
+#include <array>
 
 using namespace boost::network::utils;
 
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(interface_test) {
   BOOST_CHECK_EQUAL(base64::encode<char>(char_array), "YWJj");
 
   // check boost::array of chars
-  boost::array<char, 3> char_boost_array = {{'a', 'b', 'c'}};
+  std::array<char, 3> char_boost_array = {{'a', 'b', 'c'}};
 
   BOOST_CHECK_EQUAL(base64::encode<char>(char_boost_array), "YWJj");
 

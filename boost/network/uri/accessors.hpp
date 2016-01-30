@@ -6,6 +6,7 @@
 #ifndef BOOST_NETWORK_URI_URI_ACCESSORS_INC__
 #define BOOST_NETWORK_URI_URI_ACCESSORS_INC__
 
+#include <iterator>
 #include <boost/network/uri/encode.hpp>
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/decode.hpp>
@@ -41,31 +42,31 @@ template <class Map>
 inline Map &query_map(const uri &uri_, Map &map) {
   const uri::string_type range = uri_.query();
   details::key_value_sequence<Map> parser;
-  spirit::qi::parse(boost::begin(range), boost::end(range), parser, map);
+  spirit::qi::parse(std::begin(range), std::end(range), parser, map);
   return map;
 }
 
 inline uri::string_type username(const uri &uri_) {
   const uri::string_type user_info = uri_.user_info();
-  uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
+  uri::const_iterator it(std::begin(user_info)), end(std::end(user_info));
   for (; it != end; ++it) {
     if (*it == ':') {
       break;
     }
   }
-  return uri::string_type(boost::begin(user_info), it);
+  return uri::string_type(std::begin(user_info), it);
 }
 
 inline uri::string_type password(const uri &uri_) {
   const uri::string_type user_info = uri_.user_info();
-  uri::const_iterator it(boost::begin(user_info)), end(boost::end(user_info));
+  uri::const_iterator it(std::begin(user_info)), end(std::end(user_info));
   for (; it != end; ++it) {
     if (*it == ':') {
       ++it;
       break;
     }
   }
-  return uri::string_type(it, boost::end(user_info));
+  return uri::string_type(it, std::end(user_info));
 }
 
 inline uri::string_type decoded_path(const uri &uri_) {

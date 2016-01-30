@@ -10,6 +10,7 @@
 #pragma once
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
+#include <memory>
 #include <boost/asio.hpp>
 #include <boost/asio/async_result.hpp>
 #include <boost/asio/async_result.hpp>
@@ -21,7 +22,6 @@
 #include <boost/asio/detail/throw_error.hpp>
 #include <boost/asio/error.hpp>
 #include <boost/asio/stream_socket_service.hpp>
-#include <boost/make_shared.hpp>
 #include <cstddef>
 
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
@@ -43,23 +43,23 @@ typedef boost::asio::ssl::context ssl_context;
 
 struct stream_handler {
  public:
-  stream_handler(boost::shared_ptr<tcp_socket> socket)
+  stream_handler(std::shared_ptr<tcp_socket> socket)
       : tcp_sock_(std::move(socket)), ssl_enabled(false) {}
 
   ~stream_handler() = default;
 
-  stream_handler(boost::shared_ptr<ssl_socket> socket)
+  stream_handler(std::shared_ptr<ssl_socket> socket)
       : ssl_sock_(std::move(socket)), ssl_enabled(true) {}
 
   stream_handler(boost::asio::io_service& io,
-                 boost::shared_ptr<ssl_context> ctx =
-                     boost::shared_ptr<ssl_context>()) {
-    tcp_sock_ = boost::make_shared<tcp_socket>(boost::ref(io));
+                 std::shared_ptr<ssl_context> ctx =
+                     std::shared_ptr<ssl_context>()) {
+    tcp_sock_ = std::make_shared<tcp_socket>(boost::ref(io));
     ssl_enabled = false;
     if (ctx) {
       /// SSL is enabled
       ssl_sock_ =
-          boost::make_shared<ssl_socket>(boost::ref(io), boost::ref(*ctx));
+          std::make_shared<ssl_socket>(boost::ref(io), boost::ref(*ctx));
       ssl_enabled = true;
     }
   }
@@ -172,14 +172,14 @@ struct stream_handler {
       std::cerr << e.code() << ": " << e.what() << std::endl;
     }
   }
-  boost::shared_ptr<tcp_socket> get_tcp_socket() { return tcp_sock_; }
-  boost::shared_ptr<ssl_socket> get_ssl_socket() { return ssl_sock_; }
+  std::shared_ptr<tcp_socket> get_tcp_socket() { return tcp_sock_; }
+  std::shared_ptr<ssl_socket> get_ssl_socket() { return ssl_sock_; }
 
   bool is_ssl_enabled() { return ssl_enabled; }
 
  private:
-  boost::shared_ptr<tcp_socket> tcp_sock_;
-  boost::shared_ptr<ssl_socket> ssl_sock_;
+  std::shared_ptr<tcp_socket> tcp_sock_;
+  std::shared_ptr<ssl_socket> ssl_sock_;
   bool ssl_enabled;
 };
 #endif

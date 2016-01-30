@@ -7,7 +7,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_RESPONSE_CODE_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_TRAITS_RESPONSE_CODE_IPP
 
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <boost/network/tags.hpp>
 
 namespace boost {
@@ -23,17 +23,17 @@ namespace http {
  */
 template <class Tag>
 struct response_code {
-  static boost::uint16_t const RC_OK = 200u;
-  static boost::uint16_t const RC_CREATED = 201u;
-  static boost::uint16_t const RC_NO_CONTENT = 204u;
-  static boost::uint16_t const RC_UNAUTHORIZED = 401u;
-  static boost::uint16_t const RC_FORBIDDEN = 403u;
-  static boost::uint16_t const RC_NOT_FOUND = 404u;
-  static boost::uint16_t const RC_METHOD_NOT_ALLOWED = 405u;
-  static boost::uint16_t const RC_NOT_MODIFIED = 304u;
-  static boost::uint16_t const RC_BAD_REQUEST = 400u;
-  static boost::uint16_t const RC_SERVER_ERROR = 500u;
-  static boost::uint16_t const RC_NOT_IMPLEMENTED = 501u;
+  static std::uint16_t const RC_OK = 200u;
+  static std::uint16_t const RC_CREATED = 201u;
+  static std::uint16_t const RC_NO_CONTENT = 204u;
+  static std::uint16_t const RC_UNAUTHORIZED = 401u;
+  static std::uint16_t const RC_FORBIDDEN = 403u;
+  static std::uint16_t const RC_NOT_FOUND = 404u;
+  static std::uint16_t const RC_METHOD_NOT_ALLOWED = 405u;
+  static std::uint16_t const RC_NOT_MODIFIED = 304u;
+  static std::uint16_t const RC_BAD_REQUEST = 400u;
+  static std::uint16_t const RC_SERVER_ERROR = 500u;
+  static std::uint16_t const RC_NOT_IMPLEMENTED = 501u;
 };
 
 }  // namespace http

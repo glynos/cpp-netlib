@@ -83,8 +83,8 @@ TYPED_TEST(HTTPClientTest, TextContentTypeTest) {
   typename client::response response_ = client_.get(request_);
   ASSERT_NE(0, headers(response_).count("Content-type"));
   auto range = headers(response_)["Content-type"];
-  EXPECT_EQ("Content-type", boost::begin(range)->first);
-  EXPECT_EQ("text/html", boost::begin(range)->second);
+  EXPECT_EQ("Content-type", std::begin(range)->first);
+  EXPECT_EQ("text/html", std::begin(range)->second);
 }
 
 TYPED_TEST(HTTPClientTest, BinaryContentTypeTest) {
@@ -96,8 +96,8 @@ TYPED_TEST(HTTPClientTest, BinaryContentTypeTest) {
   typename client::response response_ = client_.get(request_);
   BOOST_REQUIRE(headers(response_).count("Content-type") != 0);
   auto range = headers(response_)["Content-type"];
-  EXPECT_EQ("Content-type", boost::begin(range)->first);
-  EXPECT_EQ("image/jpeg", boost::begin(range)->second);
+  EXPECT_EQ("Content-type", std::begin(range)->first);
+  EXPECT_EQ("image/jpeg", std::begin(range)->second);
 }
 
 TYPED_TEST(HTTPClientTest, ContentLengthHeaderTest) {
@@ -110,8 +110,8 @@ TYPED_TEST(HTTPClientTest, ContentLengthHeaderTest) {
   typename client::response response_ = client_.get(request_);
   BOOST_REQUIRE(headers(response_).count("Content-Length") != 0);
   auto range = headers(response_)["Content-Length"];
-  EXPECT_EQ("Content-Length", boost::begin(range)->first);
-  EXPECT_EQ("113", boost::begin(range)->second);
+  EXPECT_EQ("Content-Length", std::begin(range)->first);
+  EXPECT_EQ("113", std::begin(range)->second);
   EXPECT_NE(0, body(response_).size());
 }
 
@@ -207,7 +207,7 @@ TYPED_TEST(HTTPClientTest, HeadTest) {
   typename client::response response_ = client_.head(request_);
   ASSERT_NE(0, headers(response_).count("Content-Length"));
   auto range = headers(response_)["Content-Length"];
-  EXPECT_EQ("Content-Length", boost::begin(range)->first);
-  EXPECT_EQ("113", boost::begin(range)->second);
+  EXPECT_EQ("Content-Length", std::begin(range)->first);
+  EXPECT_EQ("113", std::begin(range)->second);
   EXPECT_EQ(0, body(response_).size());
 }

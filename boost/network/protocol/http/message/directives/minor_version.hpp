@@ -6,7 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <boost/network/protocol/http/support/is_server.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -18,8 +18,8 @@ template <class Tag>
 struct basic_request;
 
 struct minor_version_directive {
-  boost::uint8_t minor_version;
-  explicit minor_version_directive(boost::uint8_t minor_version)
+  std::uint8_t minor_version;
+  explicit minor_version_directive(std::uint8_t minor_version)
       : minor_version(minor_version) {}
   template <class Tag>
   void operator()(basic_request<Tag>& request) const {
@@ -27,7 +27,7 @@ struct minor_version_directive {
   }
 };
 
-inline minor_version_directive minor_version(boost::uint8_t minor_version_) {
+inline minor_version_directive minor_version(std::uint8_t minor_version_) {
   return minor_version_directive(minor_version_);
 }
 

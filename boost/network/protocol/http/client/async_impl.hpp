@@ -8,13 +8,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <thread>
+#include <memory>
+#include <functional>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
-#include <boost/bind.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/network/protocol/http/traits/connection_policy.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/thread/thread.hpp>
 
 namespace boost {
 namespace network {
@@ -32,14 +31,14 @@ struct async_client
   typedef typename resolver<Tag>::type resolver_type;
   typedef typename string<Tag>::type string_type;
 
-  typedef function<void(boost::iterator_range<char const*> const&,
+  typedef std::function<void(boost::iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
 
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   async_client(bool cache_resolved, bool follow_redirect,
                bool always_verify_peer, int timeout,
-               boost::shared_ptr<boost::asio::io_service> service,
+               std::shared_ptr<boost::asio::io_service> service,
                optional<string_type> certificate_filename,
                optional<string_type> verify_path,
                optional<string_type> certificate_file,
@@ -48,7 +47,7 @@ struct async_client
       : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get()
                         ? service
-                        : boost::make_shared<boost::asio::io_service>()),
+                        : std::make_shared<boost::asio::io_service>()),
         service_(*service_ptr),
         resolver_(service_),
         sentinel_(new boost::asio::io_service::work(service_)),
@@ -62,8 +61,7 @@ struct async_client
     connection_base::resolver_strand_.reset(
         new boost::asio::io_service::strand(service_));
     if (!service)
-      lifetime_thread_.reset(new boost::thread(
-          boost::bind(&boost::asio::io_service::run, &service_)));
+      lifetime_thread_.reset(new std::thread([this] () { service_.run(); }));
   }
 
   ~async_client() throw() = default;
@@ -89,11 +87,11 @@ struct async_client
                                      generator);
   }
 
-  boost::shared_ptr<boost::asio::io_service> service_ptr;
+  std::shared_ptr<boost::asio::io_service> service_ptr;
   boost::asio::io_service& service_;
   resolver_type resolver_;
-  boost::shared_ptr<boost::asio::io_service::work> sentinel_;
-  boost::shared_ptr<boost::thread> lifetime_thread_;
+  std::shared_ptr<boost::asio::io_service::work> sentinel_;
+  std::shared_ptr<std::thread> lifetime_thread_;
   optional<string_type> certificate_filename_;
   optional<string_type> verify_path_;
   optional<string_type> certificate_file_;

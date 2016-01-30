@@ -10,9 +10,9 @@
 
 #include <algorithm>
 #include <bitset>
+#include <cstdint>
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/concept/requires.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/network/message/wrappers/body.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
@@ -86,10 +86,8 @@ OutputIterator linearize(Request const& request,
   }
   *oi = consts::space_char();
   boost::copy(http_slash, oi);
-  string_type version_major_str =
-                  boost::lexical_cast<string_type>(version_major),
-              version_minor_str =
-                  boost::lexical_cast<string_type>(version_minor);
+  string_type version_major_str = std::to_string(version_major),
+              version_minor_str = std::to_string(version_minor);
   boost::copy(version_major_str, oi);
   *oi = consts::dot_char();
   boost::copy(version_minor_str, oi);
@@ -137,14 +135,14 @@ OutputIterator linearize(Request const& request,
     *oi = consts::colon_char();
     *oi = consts::space_char();
     boost::copy(request.host(), oi);
-    boost::optional<boost::uint16_t> port_ =
+    boost::optional<std::uint16_t> port_ =
 #if (_MSC_VER >= 1600 && BOOST_VERSION > 105500)
         port(request).as_optional();
 #else
         port(request);
 #endif
     if (port_) {
-      string_type port_str = boost::lexical_cast<string_type>(*port_);
+      string_type port_str = std::to_string(*port_);
       *oi = consts::colon_char();
       boost::copy(port_str, oi);
     }

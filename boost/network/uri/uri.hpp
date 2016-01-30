@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <iterator>
+#include <functional>
 #include <boost/network/uri/config.hpp>
 #include <boost/network/uri/detail/uri_parts.hpp>
 #include <boost/network/uri/schemes.hpp>
@@ -17,7 +19,6 @@
 #include <boost/utility/swap.hpp>
 #include <boost/range/as_literal.hpp>
 #include <boost/range/iterator_range.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
 #include <boost/functional/hash_fwd.hpp>
 
@@ -121,49 +122,49 @@ class BOOST_URI_DECL uri {
   string_type scheme() const {
     const_range_type range = scheme_range();
     CATCH_EMPTY_ITERATOR_RANGE
-    return range ? string_type(boost::begin(range), boost::end(range))
+    return range ? string_type(std::begin(range), std::end(range))
                  : string_type();
   }
 
   string_type user_info() const {
     const_range_type range = user_info_range();
     CATCH_EMPTY_ITERATOR_RANGE
-    return range ? string_type(boost::begin(range), boost::end(range))
+    return range ? string_type(std::begin(range), std::end(range))
                  : string_type();
   }
 
   string_type host() const {
     const_range_type range = host_range();
     CATCH_EMPTY_ITERATOR_RANGE
-    return range ? string_type(boost::begin(range), boost::end(range))
+    return range ? string_type(std::begin(range), std::end(range))
                  : string_type();
   }
 
   string_type port() const {
     const_range_type range = port_range();
     CATCH_EMPTY_ITERATOR_RANGE
-    return range ? string_type(boost::begin(range), boost::end(range))
+    return range ? string_type(std::begin(range), std::end(range))
                  : string_type();
   }
 
   string_type path() const {
     const_range_type range = path_range();
     CATCH_EMPTY_ITERATOR_RANGE
-    return range ? string_type(boost::begin(range), boost::end(range))
+    return range ? string_type(std::begin(range), std::end(range))
                  : string_type();
   }
 
   string_type query() const {
     const_range_type range = query_range();
     CATCH_EMPTY_ITERATOR_RANGE
-    return range ? string_type(boost::begin(range), boost::end(range))
+    return range ? string_type(std::begin(range), std::end(range))
                  : string_type();
   }
 
   string_type fragment() const {
     const_range_type range = fragment_range();
     CATCH_EMPTY_ITERATOR_RANGE
-    return range ? string_type(boost::begin(range), boost::end(range))
+    return range ? string_type(std::begin(range), std::end(range))
                  : string_type();
   }
 
@@ -195,12 +196,12 @@ class BOOST_URI_DECL uri {
 };
 
 inline void uri::parse() {
-  const_iterator first(boost::begin(uri_)), last(boost::end(uri_));
+  const_iterator first(std::begin(uri_)), last(std::end(uri_));
   is_valid_ = detail::parse(first, last, uri_parts_);
   if (is_valid_) {
     if (!uri_parts_.scheme) {
       uri_parts_.scheme =
-          const_range_type(boost::begin(uri_), boost::begin(uri_));
+          const_range_type(std::begin(uri_), std::begin(uri_));
     }
     uri_parts_.update();
   }
@@ -217,8 +218,7 @@ inline uri::string_type port(const uri &uri_) { return uri_.port(); }
 inline boost::optional<unsigned short> port_us(const uri &uri_) {
   uri::string_type port = uri_.port();
   return (port.empty()) ? boost::optional<unsigned short>()
-                        : boost::optional<unsigned short>(
-                              boost::lexical_cast<unsigned short>(port));
+                        : boost::optional<unsigned short>(std::stoi(port));
 }
 
 inline uri::string_type path(const uri &uri_) { return uri_.path(); }
@@ -234,16 +234,16 @@ inline uri::string_type hierarchical_part(const uri &uri_) {
   uri::const_range_type port = uri_.port_range();
   uri::const_range_type path = uri_.path_range();
   if (user_info) {
-    first = boost::begin(user_info);
+    first = std::begin(user_info);
   } else {
-    first = boost::begin(host);
+    first = std::begin(host);
   }
   if (path) {
-    last = boost::end(path);
+    last = std::end(path);
   } else if (port) {
-    last = boost::end(port);
+    last = std::end(port);
   } else {
-    last = boost::end(host);
+    last = std::end(host);
   }
   return uri::string_type(first, last);
 }
@@ -254,15 +254,15 @@ inline uri::string_type authority(const uri &uri_) {
   uri::const_range_type host = uri_.host_range();
   uri::const_range_type port = uri_.port_range();
   if (user_info) {
-    first = boost::begin(user_info);
+    first = std::begin(user_info);
   } else {
-    first = boost::begin(host);
+    first = std::begin(host);
   }
 
   if (port) {
-    last = boost::end(port);
+    last = std::end(port);
   } else {
-    last = boost::end(host);
+    last = std::end(host);
   }
   return uri::string_type(first, last);
 }
@@ -296,7 +296,29 @@ inline std::size_t hash_value(const uri &uri_) {
   }
   return seed;
 }
+} // namespace uri
+} // namespace network
+} // namespace boost
 
+namespace std {
+template <>
+struct hash<boost::network::uri::uri> {
+
+  std::size_t operator()(const boost::network::uri::uri &uri_) const {
+    std::size_t seed = 0;
+    std::for_each(std::begin(uri_), std::end(uri_),
+                  [&seed](boost::network::uri::uri::value_type v) {
+                    std::hash<boost::network::uri::uri::value_type> hasher;
+                    seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                  });
+    return seed;
+  }
+};
+}  // namespace std
+
+namespace boost {
+namespace network {
+namespace uri {
 inline bool operator==(const uri &lhs, const uri &rhs) {
   return boost::equal(lhs, rhs);
 }

@@ -7,13 +7,14 @@
  * http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <memory>
+#include <mutex>
+#include <functional>
 #include <boost/network/include/http/server.hpp>
 #include <boost/network/uri.hpp>
 
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <list>
 #include <signal.h>
@@ -33,7 +34,7 @@ struct request_data {
   const server::request req;
   server::connection_ptr conn;
 
-  typedef boost::shared_ptr<request_data> pointer;
+  typedef std::shared_ptr<request_data> pointer;
 
   request_data(server::request  req, server::connection_ptr  conn)
       : req(std::move(req)), conn(std::move(conn)) {}
@@ -46,16 +47,16 @@ struct work_queue {
   typedef std::list<request_data::pointer> list;
 
   list requests;
-  boost::mutex mutex;
+  std::mutex mutex;
 
   inline void put(const request_data::pointer& p_rd) {
-    boost::unique_lock<boost::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
     requests.push_back(p_rd);
     (void)lock;
   }
 
   inline request_data::pointer get() {
-    boost::unique_lock<boost::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutex);
 
     request_data::pointer p_ret;
     if (!requests.empty()) {
@@ -82,7 +83,7 @@ struct handler {
    */
   void operator()(server::request const& req,
                   const server::connection_ptr& conn) {
-    queue.put(boost::make_shared<request_data>(req, conn));
+    queue.put(std::make_shared<request_data>(req, conn));
   }
 };
 
@@ -94,7 +95,7 @@ struct handler {
  * @param p_server_instance
  */
 void shut_me_down(const boost::system::error_code& error, int,
-                  boost::shared_ptr<server> p_server_instance) {
+                  std::shared_ptr<server> p_server_instance) {
   if (!error) p_server_instance->stop();
 }
 
@@ -121,22 +122,21 @@ void process_request(work_queue& queue) {
 
 int main(void) try {
   // the thread group
-  boost::shared_ptr<boost::thread_group> p_threads(
-      boost::make_shared<boost::thread_group>());
+  std::shared_ptr<boost::thread_group> p_threads(
+      std::make_shared<boost::thread_group>());
 
   // setup asio::io_service
-  boost::shared_ptr<boost::asio::io_service> p_io_service(
-      boost::make_shared<boost::asio::io_service>());
-  boost::shared_ptr<boost::asio::io_service::work> p_work(
-      boost::make_shared<boost::asio::io_service::work>(
+  std::shared_ptr<boost::asio::io_service> p_io_service(
+      std::make_shared<boost::asio::io_service>());
+  std::shared_ptr<boost::asio::io_service::work> p_work(
+      std::make_shared<boost::asio::io_service::work>(
           boost::ref(*p_io_service)));
 
   // io_service threads
   {
     int n_threads = 5;
     while (0 < n_threads--) {
-      p_threads->create_thread(
-          boost::bind(&boost::asio::io_service::run, p_io_service));
+      p_threads->create_thread([=] () { p_io_service->run(); });
     }
   }
 
@@ -147,24 +147,26 @@ int main(void) try {
   {
     int n_threads = 5;
     while (0 < n_threads--) {
-      p_threads->create_thread(boost::bind(process_request, boost::ref(queue)));
+      p_threads->create_thread([&queue] () { process_request(queue); });
     }
   }
 
   // setup the async server
   handler request_handler(queue);
-  boost::shared_ptr<server> p_server_instance(boost::make_shared<server>(
+  std::shared_ptr<server> p_server_instance(std::make_shared<server>(
       server::options(request_handler)
           .address("0.0.0.0")
           .port("8800")
           .io_service(p_io_service)
           .reuse_address(true)
-          .thread_pool(boost::make_shared<boost::network::utils::thread_pool>(
+          .thread_pool(std::make_shared<boost::network::utils::thread_pool>(
                2, p_io_service, p_threads))));
 
   // setup clean shutdown
   boost::asio::signal_set signals(*p_io_service, SIGINT, SIGTERM);
-  signals.async_wait(boost::bind(shut_me_down, _1, _2, p_server_instance));
+  signals.async_wait([=] (boost::system::error_code const &ec, int signal) {
+      shut_me_down(ec, signal, p_server_instance);
+    });
 
   // run the async server
   p_server_instance->run();

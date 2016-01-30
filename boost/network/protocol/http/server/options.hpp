@@ -8,13 +8,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/socket_base.hpp>
 #include <boost/network/protocol/stream_handler.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/utils/thread_pool.hpp>
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace boost {
 namespace network {
@@ -81,11 +81,11 @@ struct server_options {
     swap(context_, other.context_);
   }
 
-  server_options &context(boost::shared_ptr<ssl_context> v) {
+  server_options &context(std::shared_ptr<ssl_context> v) {
     context_ = v;
     return *this;
   }
-  server_options &io_service(boost::shared_ptr<boost::asio::io_service> v) {
+  server_options &io_service(std::shared_ptr<boost::asio::io_service> v) {
     io_service_ = v;
     return *this;
   }
@@ -137,12 +137,12 @@ struct server_options {
     send_low_watermark_ = v;
     return *this;
   }
-  server_options &thread_pool(boost::shared_ptr<utils::thread_pool> v) {
+  server_options &thread_pool(std::shared_ptr<utils::thread_pool> v) {
     thread_pool_ = v;
     return *this;
   }
 
-  boost::shared_ptr<boost::asio::io_service> io_service() const {
+  std::shared_ptr<boost::asio::io_service> io_service() const {
     return io_service_;
   }
   string_type address() const { return address_; }
@@ -169,15 +169,15 @@ struct server_options {
   send_low_watermark() const {
     return send_low_watermark_;
   }
-  boost::shared_ptr<utils::thread_pool> thread_pool() const {
+  std::shared_ptr<utils::thread_pool> thread_pool() const {
     return thread_pool_;
   }
-  boost::shared_ptr<ssl_context> context() const {
+  std::shared_ptr<ssl_context> context() const {
     return context_;
   }
 
  private:
-  boost::shared_ptr<boost::asio::io_service> io_service_;
+  std::shared_ptr<boost::asio::io_service> io_service_;
   Handler &handler_;
   string_type address_;
   string_type port_;
@@ -193,8 +193,8 @@ struct server_options {
       receive_low_watermark_;
   boost::optional<boost::asio::socket_base::send_low_watermark>
       send_low_watermark_;
-  boost::shared_ptr<utils::thread_pool> thread_pool_;
-  boost::shared_ptr<ssl_context> context_;
+  std::shared_ptr<utils::thread_pool> thread_pool_;
+  std::shared_ptr<ssl_context> context_;
 };
 
 template <class Tag, class Handler>

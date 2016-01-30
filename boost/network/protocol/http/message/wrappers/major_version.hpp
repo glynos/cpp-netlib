@@ -6,7 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/cstdint.hpp>
+#include <cstdint>
 #include <boost/network/protocol/http/support/is_server.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -22,7 +22,7 @@ struct major_version_wrapper {
   basic_request<Tag> const& request;
   explicit major_version_wrapper(basic_request<Tag> const& request)
       : request(request) {}
-  operator boost::uint8_t() { return request.http_version_major; }
+  operator std::uint8_t() { return request.http_version_major; }
 };
 
 template <class Tag>

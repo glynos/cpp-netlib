@@ -19,6 +19,6 @@ TYPED_TEST(HTTPClientTest, GetDifferentPort) {
   typename TypeParam::request r("http://www.boost.org:80/");
   auto response_ = client.get(r);
   auto range = headers(response_)["Content-Type"];
-  EXPECT_TRUE(boost::begin(range) != boost::end(range));
+  EXPECT_TRUE(std::begin(range) != std::end(range));
   EXPECT_NE(0, body(response_).size());
 }

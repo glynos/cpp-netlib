@@ -6,17 +6,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
+#include <unordered_map>
+#include <cstdint>
+#include <functional>
 #include <boost/asio/placeholders.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/network/traits/string.hpp>
-#include <boost/unordered/unordered_map.hpp>
-#include <boost/function.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/fusion/tuple/tuple_tie.hpp>
-#include <boost/bind/bind.hpp>
 
 namespace boost {
 namespace network {
@@ -24,32 +22,32 @@ namespace http {
 namespace policies {
 
 template <class Tag>
-struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
+struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
   typedef typename resolver<Tag>::type resolver_type;
   typedef typename resolver_type::iterator resolver_iterator;
   typedef typename resolver_type::query resolver_query;
   typedef std::pair<resolver_iterator, resolver_iterator>
       resolver_iterator_pair;
   typedef typename string<Tag>::type string_type;
-  typedef boost::unordered_map<string_type, resolver_iterator_pair>
+  typedef std::unordered_map<string_type, resolver_iterator_pair>
       endpoint_cache;
-  typedef boost::function<
+  typedef std::function<
       void(boost::system::error_code const &, resolver_iterator_pair)>
       resolve_completion_function;
-  typedef boost::function<void(resolver_type &, string_type, boost::uint16_t,
-                               resolve_completion_function)> resolve_function;
+  typedef std::function<void(resolver_type &, string_type, std::uint16_t,
+                             resolve_completion_function)> resolve_function;
 
  protected:
   bool cache_resolved_;
   endpoint_cache endpoint_cache_;
-  boost::shared_ptr<boost::asio::io_service> service_;
-  boost::shared_ptr<boost::asio::io_service::strand> resolver_strand_;
+  std::shared_ptr<boost::asio::io_service> service_;
+  std::shared_ptr<boost::asio::io_service::strand> resolver_strand_;
 
   explicit async_resolver(bool cache_resolved)
       : cache_resolved_(cache_resolved), endpoint_cache_() {}
 
   void resolve(resolver_type &resolver_, string_type const &host,
-               boost::uint16_t port,
+               std::uint16_t port,
                resolve_completion_function once_resolved) {
     if (cache_resolved_) {
       typename endpoint_cache::iterator iter =
@@ -62,13 +60,14 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
     }
 
     typename resolver_type::query q(host,
-                                    lexical_cast<string_type>(port));
-    resolver_.async_resolve(q, resolver_strand_->wrap(boost::bind(
-                                   &async_resolver<Tag>::handle_resolve,
-                                   async_resolver<Tag>::shared_from_this(),
-                                   boost::to_lower_copy(host), once_resolved,
-                                   boost::asio::placeholders::error,
-                                   boost::asio::placeholders::iterator)));
+                                    std::to_string(port));
+    auto self = this->shared_from_this();
+    resolver_.async_resolve(q, resolver_strand_->wrap([=] (boost::system::error_code const &ec,
+                                                           resolver_iterator endpoint_iterator) {
+                                                        self->handle_resolve(boost::to_lower_copy(host),
+                                                                             once_resolved,
+                                                                             ec, endpoint_iterator);
+                                                      }));
   }
 
   void handle_resolve(string_type  /*unused*/const &host,
@@ -78,7 +77,7 @@ struct async_resolver : boost::enable_shared_from_this<async_resolver<Tag> > {
     typename endpoint_cache::iterator iter;
     bool inserted = false;
     if (!ec && cache_resolved_) {
-      boost::fusion::tie(iter, inserted) =
+      std::tie(iter, inserted) =
           endpoint_cache_.insert(std::make_pair(
               host, std::make_pair(endpoint_iterator, resolver_iterator())));
       once_resolved(ec, iter->second);

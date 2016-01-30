@@ -6,6 +6,7 @@
 #ifndef __BOOST_NETWORK_URI_ENCODE_INC__
 #define __BOOST_NETWORK_URI_ENCODE_INC__
 
+#include <iterator>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/range/begin.hpp>
@@ -140,7 +141,7 @@ OutputIterator encode(const InputIterator &in_begin,
 template <class SinglePassRange, class OutputIterator>
 inline OutputIterator encode(const SinglePassRange &range,
                              const OutputIterator &out) {
-  return encode(boost::begin(range), boost::end(range), out);
+  return encode(std::begin(range), std::end(range), out);
 }
 
 inline std::string encoded(const std::string &input) {

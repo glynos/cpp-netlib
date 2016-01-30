@@ -10,7 +10,6 @@
 #include <boost/mpl/if.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_sync.hpp>
-#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {

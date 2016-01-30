@@ -9,7 +9,6 @@
 #include <boost/network/protocol/http/support/client_or_server.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/concept/requires.hpp>
-#include <boost/thread/future.hpp>
 #include <boost/network/message/directives.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 

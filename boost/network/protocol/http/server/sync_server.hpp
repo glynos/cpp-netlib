@@ -8,9 +8,9 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 #define BOOST_NETWORK_PROTOCOL_HTTP_SERVER_SYNC_SERVER_HPP_20101025
 
+#include <memory>
+#include <mutex>
 #include <boost/network/detail/debug.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
@@ -19,7 +19,6 @@
 #include <boost/network/protocol/http/server/socket_options_base.hpp>
 #include <boost/network/protocol/http/server/options.hpp>
 #include <boost/network/traits/string.hpp>
-#include <boost/thread/mutex.hpp>
 
 namespace boost {
 namespace network {
@@ -58,7 +57,7 @@ struct sync_server_base : server_storage_base, socket_options_base {
   }
 
   void listen() {
-    boost::unique_lock<boost::mutex> listening_lock(listening_mutex_);
+    std::unique_lock<std::mutex> listening_lock(listening_mutex_);
     if (!listening_) start_listening();
   }
 
@@ -66,8 +65,8 @@ struct sync_server_base : server_storage_base, socket_options_base {
   Handler& handler_;
   string_type address_, port_;
   boost::asio::ip::tcp::acceptor acceptor_;
-  boost::shared_ptr<sync_connection<Tag, Handler> > new_connection;
-  boost::mutex listening_mutex_;
+  std::shared_ptr<sync_connection<Tag, Handler> > new_connection;
+  std::mutex listening_mutex_;
   bool listening_;
 
   void handle_accept(boost::system::error_code const& ec) {
@@ -76,10 +75,10 @@ struct sync_server_base : server_storage_base, socket_options_base {
     socket_options_base::socket_options(new_connection->socket());
     new_connection->start();
     new_connection.reset(new sync_connection<Tag, Handler>(service_, handler_));
+    auto self = this->shared_from_this();
     acceptor_.async_accept(
         new_connection->socket(),
-        boost::bind(&sync_server_base<Tag, Handler>::handle_accept, this,
-                    boost::asio::placeholders::error));
+        [=] (boost::system::error_code const &ec) { self->handle_accept(); });
   }
 
   void start_listening() {
@@ -117,10 +116,10 @@ struct sync_server_base : server_storage_base, socket_options_base {
       boost::throw_exception(std::runtime_error("Error listening on socket."));
     }
     new_connection.reset(new sync_connection<Tag, Handler>(service_, handler_));
+    auto self = this->shared_from_this();
     acceptor_.async_accept(
         new_connection->socket(),
-        boost::bind(&sync_server_base<Tag, Handler>::handle_accept, this,
-                    boost::asio::placeholders::error));
+        [=] (boost::system::error_code const &ec) { self->handle_accept(ec); });
     listening_ = true;
   }
 };

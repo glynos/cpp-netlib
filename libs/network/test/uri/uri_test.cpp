@@ -11,10 +11,10 @@
 #include <boost/network/uri/uri.hpp>
 #include <boost/network/uri/uri_io.hpp>
 #include <boost/range/algorithm/equal.hpp>
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 #include <map>
 #include <set>
-#include <boost/unordered_set.hpp>
+#include <unordered_set>
 
 using namespace boost::network;
 
@@ -75,7 +75,7 @@ TEST(URITest, basic_uri_range_scheme_test) {
   uri::uri instance("http://www.example.com/");
   ASSERT_TRUE(uri::valid(instance));
   EXPECT_TRUE(instance.scheme_range());
-  EXPECT_TRUE(instance.begin() == boost::begin(instance.scheme_range()));
+  EXPECT_TRUE(instance.begin() == std::begin(instance.scheme_range()));
   EXPECT_TRUE(boost::equal(instance.scheme_range(), boost::as_literal("http")));
 }
 
@@ -83,10 +83,10 @@ TEST(URITest, basic_uri_range_user_info_test) {
   uri::uri instance("http://www.example.com/");
   ASSERT_TRUE(uri::valid(instance));
   EXPECT_TRUE(!instance.user_info_range());
-  EXPECT_TRUE(boost::begin(instance.host_range()) ==
-              boost::begin(instance.user_info_range()));
-  EXPECT_TRUE(boost::begin(instance.host_range()) ==
-              boost::end(instance.user_info_range()));
+  EXPECT_TRUE(std::begin(instance.host_range()) ==
+              std::begin(instance.user_info_range()));
+  EXPECT_TRUE(std::begin(instance.host_range()) ==
+              std::end(instance.user_info_range()));
 }
 
 TEST(URITest, basic_uri_range_host_test) {
@@ -101,10 +101,10 @@ TEST(URITest, basic_uri_range_port_test) {
   uri::uri instance("http://www.example.com/");
   ASSERT_TRUE(uri::valid(instance));
   EXPECT_TRUE(!instance.port_range());
-  EXPECT_TRUE(boost::end(instance.host_range()) ==
-              boost::begin(instance.port_range()));
-  EXPECT_TRUE(boost::end(instance.host_range()) ==
-              boost::end(instance.port_range()));
+  EXPECT_TRUE(std::end(instance.host_range()) ==
+              std::begin(instance.port_range()));
+  EXPECT_TRUE(std::end(instance.host_range()) ==
+              std::end(instance.port_range()));
 }
 
 TEST(URITest, basic_uri_range_path_test) {
@@ -112,23 +112,23 @@ TEST(URITest, basic_uri_range_path_test) {
   ASSERT_TRUE(uri::valid(instance));
   EXPECT_TRUE(instance.path_range());
   EXPECT_TRUE(boost::equal(instance.path_range(), boost::as_literal("/")));
-  EXPECT_TRUE(instance.end() == boost::end(instance.path_range()));
+  EXPECT_TRUE(instance.end() == std::end(instance.path_range()));
 }
 
 TEST(URITest, basic_uri_range_query_test) {
   uri::uri instance("http://www.example.com/");
   ASSERT_TRUE(uri::valid(instance));
   EXPECT_TRUE(!instance.query_range());
-  EXPECT_TRUE(instance.end() == boost::begin(instance.query_range()));
-  EXPECT_TRUE(instance.end() == boost::end(instance.query_range()));
+  EXPECT_TRUE(instance.end() == std::begin(instance.query_range()));
+  EXPECT_TRUE(instance.end() == std::end(instance.query_range()));
 }
 
 TEST(URITest, basic_uri_range_fragment_test) {
   uri::uri instance("http://www.example.com/");
   ASSERT_TRUE(uri::valid(instance));
   EXPECT_TRUE(!instance.fragment_range());
-  EXPECT_TRUE(instance.end() == boost::begin(instance.fragment_range()));
-  EXPECT_TRUE(instance.end() == boost::end(instance.fragment_range()));
+  EXPECT_TRUE(instance.end() == std::begin(instance.fragment_range()));
+  EXPECT_TRUE(instance.end() == std::end(instance.fragment_range()));
 }
 
 TEST(URITest, full_uri_scheme_test) {
@@ -187,7 +187,7 @@ TEST(URITest, full_uri_range_scheme_test) {
       "http://user:password@www.example.com:80/path?query#fragment");
   ASSERT_TRUE(uri::valid(instance));
   EXPECT_TRUE(instance.scheme_range());
-  EXPECT_TRUE(instance.begin() == boost::begin(instance.scheme_range()));
+  EXPECT_TRUE(instance.begin() == std::begin(instance.scheme_range()));
   EXPECT_TRUE(boost::equal(instance.scheme_range(), boost::as_literal("http")));
 }
 
@@ -240,7 +240,7 @@ TEST(URITest, full_uri_range_fragment_test) {
   EXPECT_TRUE(instance.fragment_range());
   EXPECT_TRUE(
       boost::equal(instance.fragment_range(), boost::as_literal("fragment")));
-  EXPECT_TRUE(instance.end() == boost::end(instance.fragment_range()));
+  EXPECT_TRUE(instance.end() == std::end(instance.fragment_range()));
 }
 
 TEST(URITest, mailto_test) {
@@ -516,7 +516,7 @@ TEST(URITest, from_file) {
 
 TEST(URITest, issue_104_test) {
   // https://github.com/cpp-netlib/cpp-netlib/issues/104
-  boost::scoped_ptr<uri::uri> instance(new uri::uri("http://www.example.com/"));
+  std::unique_ptr<uri::uri> instance(new uri::uri("http://www.example.com/"));
   uri::uri copy = *instance;
   instance.reset();
   EXPECT_EQ("http", uri::scheme(copy));
@@ -530,7 +530,7 @@ TEST(URITest, uri_set_test) {
 }
 
 TEST(URITest, uri_unordered_set_test) {
-  boost::unordered_set<uri::uri> uri_set;
+  std::unordered_set<uri::uri> uri_set;
   uri_set.insert(uri::uri("http://www.example.com/"));
   ASSERT_TRUE(!uri_set.empty());
   EXPECT_EQ(uri::uri("http://www.example.com/"), (*uri_set.begin()));

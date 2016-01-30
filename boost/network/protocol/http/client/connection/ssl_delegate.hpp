@@ -7,14 +7,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
+#include <cstdint>
+#include <functional>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ssl.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
 #include <boost/optional.hpp>
-#include <memory>
 
 namespace boost {
 namespace network {
@@ -22,7 +23,7 @@ namespace http {
 namespace impl {
 
 struct ssl_delegate : connection_delegate,
-                      enable_shared_from_this<ssl_delegate> {
+                      std::enable_shared_from_this<ssl_delegate> {
   ssl_delegate(asio::io_service &service, bool always_verify_peer,
                optional<std::string> certificate_filename,
                optional<std::string> verify_path,
@@ -31,13 +32,13 @@ struct ssl_delegate : connection_delegate,
                optional<std::string> ciphers, long ssl_options);
 
   void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
-                       boost::uint16_t source_port,
-                       function<void(system::error_code const &)> handler) override;
+                       std::uint16_t source_port,
+                       std::function<void(system::error_code const &)> handler) override;
   void write(asio::streambuf &command_streambuf,
-             function<void(system::error_code const &, size_t)> handler)
+             std::function<void(system::error_code const &, size_t)> handler)
       override;
   void read_some(asio::mutable_buffers_1 const &read_buffer,
-                 function<void(system::error_code const &, size_t)> handler)
+                 std::function<void(system::error_code const &, size_t)> handler)
       override;
   void disconnect() override;
   ~ssl_delegate() override;
@@ -59,7 +60,7 @@ struct ssl_delegate : connection_delegate,
   ssl_delegate &operator=(ssl_delegate);  // = delete
 
   void handle_connected(system::error_code const &ec,
-                        function<void(system::error_code const &)> handler);
+                        std::function<void(system::error_code const &)> handler);
 };
 
 }  // namespace impl

@@ -7,19 +7,18 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/function.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/lexical_cast.hpp>
+#include <iterator>
+#include <memory>
+#include <cstdint>
+#include <functional>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/version.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/optional/optional.hpp>
-#include <boost/tuple/tuple.hpp>
 
 namespace boost {
 namespace network {
@@ -31,12 +30,12 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
   typedef typename string<Tag>::type string_type;
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
-  typedef function<typename resolver_base::resolver_iterator_pair(
+  typedef std::function<typename resolver_base::resolver_iterator_pair(
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
-  typedef function<void(iterator_range<char const*> const&,
+  typedef std::function<void(iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   struct connection_impl {
     connection_impl(
@@ -74,7 +73,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
       basic_response<Tag> response_;
       do {
         pimpl->init_socket(request_.host(),
-                           lexical_cast<string_type>(request_.port()));
+                           std::to_string(request_.port()));
         pimpl->send_request_impl(method, request_, generator);
 
         response_ = basic_response<Tag>();
@@ -86,14 +85,14 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
         if (get_body) pimpl->read_body(response_, response_buffer);
 
         if (follow_redirect_) {
-          boost::uint16_t status = response_.status();
+          std::uint16_t status = response_.status();
           if (status >= 300 && status <= 307) {
             typename headers_range<http::basic_response<Tag> >::type
                 location_range = headers(response_)["Location"];
             typename range_iterator<
                 typename headers_range<http::basic_response<Tag> >::type>::type
-                location_header = boost::begin(location_range);
-            if (location_header != boost::end(location_range)) {
+                location_header = std::begin(location_range);
+            if (location_header != std::end(location_range)) {
               request_.uri(location_header->second);
             } else
               throw std::runtime_error(
@@ -109,12 +108,12 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
     }
 
    private:
-    shared_ptr<http::impl::sync_connection_base<Tag, version_major,
+    std::shared_ptr<http::impl::sync_connection_base<Tag, version_major,
                                                 version_minor> > pimpl;
     bool follow_redirect_;
   };
 
-  typedef boost::shared_ptr<connection_impl> connection_ptr;
+  typedef std::shared_ptr<connection_impl> connection_ptr;
   connection_ptr get_connection(
       resolver_type& resolver, basic_request<Tag> const& request_,
       bool always_verify_peer,
@@ -125,12 +124,13 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& private_key_file = optional<string_type>(),
       optional<string_type> const& ciphers = optional<string_type>(),
       long ssl_options = 0) {
+    namespace ph = std::placeholders;
     connection_ptr connection_(new connection_impl(
         resolver, follow_redirect_, always_verify_peer, request_.host(),
-        lexical_cast<string_type>(request_.port()),
-        boost::bind(&simple_connection_policy<Tag, version_major,
-                                              version_minor>::resolve,
-                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
+        std::to_string(request_.port()),
+        std::bind(&simple_connection_policy<Tag, version_major,
+                                                 version_minor>::resolve,
+                  this, ph::_1, ph::_2, ph::_3),
         boost::iequals(request_.protocol(), string_type("https")), timeout_,
         certificate_filename, verify_path, certificate_file, private_key_file,
         ciphers, ssl_options));

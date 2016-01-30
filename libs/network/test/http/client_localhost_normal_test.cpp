@@ -72,7 +72,7 @@ std::map<std::string, std::string> parse_headers(std::string const& body) {
 }
 
 std::string get_content_length(std::string const& content) {
-  return boost::lexical_cast<std::string>(content.length());
+  return std::to_string(content.length());
 }
 }
 
@@ -108,8 +108,8 @@ TYPED_TEST(HTTPClientTest, TextContentTypeTest) {
   ASSERT_NO_THROW(response_ = client_.get(request_));
   ASSERT_NE(0, headers(response_).count("Content-type"));
   auto range = headers(response_)["Content-type"];
-  EXPECT_EQ("Content-type", boost::begin(range)->first);
-  EXPECT_EQ("text/html", boost::begin(range)->second);
+  EXPECT_EQ("Content-type", std::begin(range)->first);
+  EXPECT_EQ("text/html", std::begin(range)->second);
 }
 
 TYPED_TEST(HTTPClientTest, BinaryContentTypeTest) {
@@ -122,8 +122,8 @@ TYPED_TEST(HTTPClientTest, BinaryContentTypeTest) {
   ASSERT_NO_THROW(response_ = client_.get(request_));
   ASSERT_NE(0, headers(response_).count("Content-type"));
   auto range = headers(response_)["Content-type"];
-  EXPECT_EQ("Content-type", boost::begin(range)->first);
-  EXPECT_EQ("image/jpeg", boost::begin(range)->second);
+  EXPECT_EQ("Content-type", std::begin(range)->first);
+  EXPECT_EQ("image/jpeg", std::begin(range)->second);
 }
 
 TYPED_TEST(HTTPClientTest, ContentLengthHeaderTypest) {
@@ -137,8 +137,8 @@ TYPED_TEST(HTTPClientTest, ContentLengthHeaderTypest) {
   ASSERT_NO_THROW(response_ = client_.get(request_));
   ASSERT_NE(0, headers(response_).count("Content-Length"));
   auto range = headers(response_)["Content-Length"];
-  EXPECT_EQ("Content-Length", boost::begin(range)->first);
-  EXPECT_EQ("113", boost::begin(range)->second);
+  EXPECT_EQ("Content-Length", std::begin(range)->first);
+  EXPECT_EQ("113", std::begin(range)->second);
   EXPECT_NE(0, body(response_).size());
 }
 
@@ -239,10 +239,10 @@ TYPED_TEST(HTTPClientTest, CGIMultiLineHeaderTest) {
   EXPECT_NE(0, body(r).size());
   EXPECT_TRUE(boost::empty(headers(r)["Content-Type"]));
   auto range = headers(r)["X-CppNetlib-Test"];
-  ASSERT_TRUE(boost::begin(range) != boost::end(range));
+  ASSERT_TRUE(std::begin(range) != std::end(range));
   ASSERT_EQ(2, distance(range));
-  EXPECT_EQ("multi-line-header", boost::begin(range)->second);
-  EXPECT_EQ("that-should-concatenate", (++boost::begin(range))->second);
+  EXPECT_EQ("multi-line-header", std::begin(range)->second);
+  EXPECT_EQ("that-should-concatenate", (++std::begin(range))->second);
 }
 
 TYPED_TEST(HTTPClientTest, FileNotFoundTest) {
@@ -267,8 +267,8 @@ TYPED_TEST(HTTPClientTest, HeadTest) {
   ASSERT_NO_THROW(response_ = client_.head(request_));
   ASSERT_NE(0, headers(response_).count("Content-Length"));
   auto range = headers(response_)["Content-Length"];
-  EXPECT_EQ("Content-Length", boost::begin(range)->first);
-  EXPECT_EQ("113", boost::begin(range)->second);
+  EXPECT_EQ("Content-Length", std::begin(range)->first);
+  EXPECT_EQ("113", std::begin(range)->second);
   EXPECT_EQ(0, body(response_).size());
 }
 

@@ -11,7 +11,6 @@
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/pod_or_normal.hpp>
-#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {
@@ -49,4 +48,4 @@ inline void clear_headers(basic_request<Tag>& request) {
 }  // namespace network
 }  // namespace boost
 
-#endif  // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_CLEAR_HEADER_HPP_20101128 
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_MODIFIERS_CLEAR_HEADER_HPP_20101128

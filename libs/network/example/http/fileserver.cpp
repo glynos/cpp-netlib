@@ -3,9 +3,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
 #include <boost/network/include/http/server.hpp>
 #include <boost/thread.hpp>
-#include <boost/lexical_cast.hpp>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -67,7 +67,7 @@ struct file_cache {
         {"Content-Length", "0"}};
     std::vector<server::response_header> headers(common_headers,
                                                  common_headers + 3);
-    headers[2].value = boost::lexical_cast<std::string>(size);
+    headers[2].value = std::to_string(size);
     file_headers.insert(std::make_pair(real_filename, headers));
     return true;
   }
@@ -97,7 +97,7 @@ struct file_cache {
   }
 };
 
-struct connection_handler : boost::enable_shared_from_this<connection_handler> {
+struct connection_handler : std::enable_shared_from_this<connection_handler> {
   explicit connection_handler(file_cache &cache) : file_cache_(cache) {}
 
   void operator()(std::string const &path, server::connection_ptr connection,
@@ -131,13 +131,14 @@ struct connection_handler : boost::enable_shared_from_this<connection_handler> {
     // chunk it up page by page
     std::size_t adjusted_offset = offset + 4096;
     off_t rightmost_bound = std::min(mmaped_region.second, adjusted_offset);
+    auto self = this->shared_from_this();
     connection->write(
         boost::asio::const_buffers_1(
             static_cast<char const *>(mmaped_region.first) + offset,
             rightmost_bound - offset),
-        boost::bind(&connection_handler::handle_chunk,
-                    connection_handler::shared_from_this(), mmaped_region,
-                    rightmost_bound, connection, _1));
+        [=] (boost::system::error_code const &ec) {
+          self->handle_chunk(mmaped_region, rightmost_bound, connection, ec);
+        });
   }
 
   void handle_chunk(std::pair<void *, std::size_t> mmaped_region, off_t offset,
@@ -157,10 +158,10 @@ struct file_server {
   void operator()(server::request const &request,
                   server::connection_ptr connection) {
     if (request.method == "HEAD") {
-      boost::shared_ptr<connection_handler> h(new connection_handler(cache_));
+      std::shared_ptr<connection_handler> h(new connection_handler(cache_));
       (*h)(request.destination, connection, false);
     } else if (request.method == "GET") {
-      boost::shared_ptr<connection_handler> h(new connection_handler(cache_));
+      std::shared_ptr<connection_handler> h(new connection_handler(cache_));
       (*h)(request.destination, connection, true);
     } else {
       static server::response_header error_headers[] = {
@@ -179,7 +180,7 @@ int main(int, char *[]) {
   file_cache cache(".");
   file_server handler(cache);
   server::options options(handler);
-  server instance(options.thread_pool(boost::make_shared<utils::thread_pool>(4))
+  server instance(options.thread_pool(std::make_shared<utils::thread_pool>(4))
                       .address("0.0.0.0")
                       .port("8000"));
   instance.run();

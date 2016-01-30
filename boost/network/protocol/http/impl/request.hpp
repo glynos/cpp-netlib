@@ -16,8 +16,8 @@
   * object encapsulates a URI which is parsed at runtime.
   */
 
+#include <cstdint>
 #include <boost/algorithm/string.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
@@ -51,13 +51,13 @@ namespace http {
 template <class Tag>
 struct basic_request : public basic_message<Tag> {
   mutable boost::network::uri::uri uri_;
-  boost::uint16_t source_port_;
+  std::uint16_t source_port_;
   typedef basic_message<Tag> base_type;
 
  public:
   typedef Tag tag;
   typedef typename string<tag>::type string_type;
-  typedef boost::uint16_t port_type;
+  typedef std::uint16_t port_type;
 
   explicit basic_request(string_type const& uri_)
       : uri_(uri_), source_port_(0) {}
@@ -111,9 +111,9 @@ struct basic_request : public basic_message<Tag> {
 
   boost::network::uri::uri const& uri() const { return uri_; }
 
-  void source_port(const boost::uint16_t port) { source_port_ = port; }
+  void source_port(const std::uint16_t port) { source_port_ = port; }
 
-  boost::uint16_t source_port() const { return source_port_; }
+  std::uint16_t source_port() const { return source_port_; }
 };
 
 /** This is the implementation of a POD request type
@@ -133,13 +133,13 @@ struct not_quite_pod_request_base {
   typedef typename request_header<Tag>::type header_type;
   typedef typename vector<Tag>::template apply<header_type>::type vector_type;
   typedef vector_type headers_container_type;
-  typedef boost::uint16_t port_type;
+  typedef std::uint16_t port_type;
   mutable string_type source;
   mutable port_type source_port;
   mutable string_type method;
   mutable string_type destination;
-  mutable boost::uint8_t http_version_major;
-  mutable boost::uint8_t http_version_minor;
+  mutable std::uint8_t http_version_major;
+  mutable std::uint8_t http_version_minor;
   mutable vector_type headers;
   mutable string_type body;
 

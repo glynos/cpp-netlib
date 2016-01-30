@@ -8,6 +8,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <functional>
 #include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/delegate_factory.hpp>
@@ -29,10 +30,10 @@ struct async_connection_base {
   typedef basic_request<Tag> request;
   typedef basic_response<Tag> response;
   typedef iterator_range<char const *> char_const_range;
-  typedef function<void(char_const_range const &, system::error_code const &)>
+  typedef std::function<void(char_const_range const &, system::error_code const &)>
       body_callback_function_type;
-  typedef function<bool(string_type &)> body_generator_function_type;
-  typedef shared_ptr<this_type> connection_ptr;
+  typedef std::function<bool(string_type &)> body_generator_function_type;
+  typedef std::shared_ptr<this_type> connection_ptr;
 
   // This is the factory function which constructs the appropriate async
   // connection implementation with the correct delegate chosen based on the

@@ -87,7 +87,7 @@ class builder {
   builder &port(const string_type &port) { return set_port(port); }
 
   builder &port(uint16_t port) {
-    return set_port(boost::lexical_cast<string_type>(port));
+    return set_port(std::to_string(port));
   }
 
   builder &set_path(const string_type &path) {

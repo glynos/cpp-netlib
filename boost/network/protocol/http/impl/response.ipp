@@ -17,7 +17,6 @@
 #define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 
 #include <boost/asio/buffer.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/network/traits/vector.hpp>
 #include <boost/network/protocol/http/message/header.hpp>
 #include <boost/network/protocol/http/tags.hpp>
@@ -127,13 +126,12 @@ struct basic_response<tags::http_server> {
   /// Get a stock reply with custom plain text data.
   static basic_response<tags::http_server> stock_reply(status_type status,
                                                        string_type content) {
-    using boost::lexical_cast;
     basic_response<tags::http_server> rep;
     rep.status = status;
     rep.content = content;
     rep.headers.resize(2);
     rep.headers[0].name = "Content-Length";
-    rep.headers[0].value = lexical_cast<string_type>(rep.content.size());
+    rep.headers[0].value = std::to_string(rep.content.size());
     rep.headers[1].name = "Content-Type";
     rep.headers[1].value = "text/html";
     return rep;
@@ -151,25 +149,25 @@ struct basic_response<tags::http_server> {
     switch (status) {
       // 2xx Success
       case basic_response<tags::http_server>::ok:
-        return "";		
+        return "";
       case basic_response<tags::http_server>::created:
         return
           "<html>"
           "<head><title>Created</title></head>"
           "<body><h1>201 Created</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::accepted:
         return
           "<html>"
           "<head><title>Accepted</title></head>"
           "<body><h1>202 Accepted</h1></body>"
-          "</html>";	
+          "</html>";
       case basic_response<tags::http_server>::non_authoritative_information:
         return
           "<html>"
           "<head><title>Non-Authoritative Information</title></head>"
           "<body><h1>203 Non-Authoritative Information</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::no_content:
         return
           "<html>"
@@ -181,33 +179,33 @@ struct basic_response<tags::http_server> {
           "<html>"
           "<head><title>Reset Content</title></head>"
           "<body><h1>205 Reset Content</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::partial_content:
         return
           "<html>"
           "<head><title>Partial Content</title></head>"
           "<body><h1>206 Partial Content</h1></body>"
-          "</html>";	
-		
-      // 3xx Redirection		
+          "</html>";
+
+      // 3xx Redirection
       case basic_response<tags::http_server>::multiple_choices:
         return
           "<html>"
           "<head><title>Multiple Choices</title></head>"
           "<body><h1>300 Multiple Choices</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::moved_permanently:
         return
           "<html>"
           "<head><title>Moved Permanently</title></head>"
           "<body><h1>301 Moved Permanently</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::moved_temporarily:
         return
           "<html>"
           "<head><title>Moved Temporarily</title></head>"
           "<body><h1>302 Moved Temporarily</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::see_other:
         return
           "<html>"
@@ -219,20 +217,20 @@ struct basic_response<tags::http_server> {
           "<html>"
           "<head><title>Not Modified</title></head>"
           "<body><h1>304 Not Modified</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::use_proxy:
         return
           "<html>"
           "<head><title>Use Proxy</title></head>"
           "<body><h1>305 Use Proxy</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::temporary_redirect:
         return
           "<html>"
           "<head><title>Temporary Redirect</title></head>"
           "<body><h1>307 Temporary Redirect</h1></body>"
           "</html>";
-		
+
       // 4xx Client Error
       case basic_response<tags::http_server>::bad_request:
         return
@@ -245,13 +243,13 @@ struct basic_response<tags::http_server> {
           "<html>"
           "<head><title>Unauthorized</title></head>"
           "<body><h1>401 Unauthorized</h1></body>"
-          "</html>";			
+          "</html>";
       case basic_response<tags::http_server>::forbidden:
         return
           "<html>"
           "<head><title>Forbidden</title></head>"
           "<body><h1>403 Forbidden</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::not_found:
         return
           "<html>"
@@ -269,7 +267,7 @@ struct basic_response<tags::http_server> {
           "<html>"
           "<head><title>Not Acceptable\r\n</title></head>"
           "<body><h1>406 Not Acceptable</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::proxy_authentication_required:
         return
           "<html>"
@@ -287,100 +285,100 @@ struct basic_response<tags::http_server> {
           "<html>"
           "<head><title>Conflict</title></head>"
           "<body><h1>409 Conflict</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::gone:
         return
           "<html>"
           "<head><title>Gone</title></head>"
           "<body><h1>410 Gone</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::length_required:
         return
           "<html>"
           "<head><title>Length Required</title></head>"
           "<body><h1>411 Length Required</h1></body>"
-          "</html>";			
+          "</html>";
       case basic_response<tags::http_server>::precondition_failed:
         return
           "<html>"
           "<head><title>Precondition Failed</title></head>"
           "<body><h1>412 Precondition Failed</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::request_entity_too_large:
         return
           "<html>"
           "<head><title>Request Entity Too Large</title></head>"
           "<body><h1>413 Request Entity Too Large</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::request_uri_too_large:
         return
           "<html>"
           "<head><title>Request-URI Too Large</title></head>"
           "<body><h1>414 Request-URI Too Large</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::unsupported_media_type:
         return
           "<html>"
           "<head><title>Unsupported Media Type</title></head>"
           "<body><h1>415 Unsupported Media Type</h1></body>"
-          "</html>";			
+          "</html>";
       case basic_response<tags::http_server>::unsatisfiable_range:
         return
           "<html>"
           "<head><title>Unsatisfiable Range</title></head>"
           "<body><h1>416 Requested Range Not "
           "Satisfiable</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::expectation_failed:
         return
           "<html>"
           "<head><title>Expectation Failed</title></head>"
           "<body><h1>417 Expectation Failed</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::precondition_required:
         return
           "<html>"
           "<head><title>Precondition Required</title></head>"
           "<body><h1>428 Precondition Required</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::too_many_requests:
         return
           "<html>"
           "<head><title>Too Many Requests</title></head>"
           "<body><h1>429 Too Many Requests</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::request_header_fields_too_large:
         return
           "<html>"
           "<head><title>Request Header Fields Too Large</title></head>"
           "<body><h1>431 Request Header Fields Too Large</h1></body>"
-          "</html>";		
-		
-      // 5xx Server Error			
+          "</html>";
+
+      // 5xx Server Error
       case basic_response<tags::http_server>::internal_server_error:
         return
           "<html>"
           "<head><title>Internal Server Error</title></head>"
           "<body><h1>500 Internal Server Error</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::not_implemented:
         return
           "<html>"
           "<head><title>Not Implemented</title></head>"
           "<body><h1>501 Not Implemented</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::bad_gateway:
         return
           "<html>"
           "<head><title>Bad Gateway</title></head>"
           "<body><h1>502 Bad Gateway</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::service_unavailable:
         return
           "<html>"
           "<head><title>Service Unavailable</title></head>"
           "<body><h1>503 Service Unavailable</h1></body>"
-          "</html>";		
+          "</html>";
       case basic_response<tags::http_server>::gateway_timeout:
         return
           "<html>"
@@ -392,24 +390,24 @@ struct basic_response<tags::http_server> {
           "<html>"
           "<head><title>HTTP Version Not Supported</title></head>"
           "<body><h1>505 HTTP Version Not Supported</h1></body>"
-          "</html>";		  
+          "</html>";
       case basic_response<tags::http_server>::space_unavailable:
         return
           "<html>"
           "<head><title>Space Unavailable</title></head>"
           "<body><h1>507 Insufficient Space to Store "
           "Resource</h1></body>"
-          "</html>"; 		
-		
+          "</html>";
+
       default:
         return
           "<html>"
           "<head><title>Internal Server Error</title></head>"
           "<body><h1>500 Internal Server Error</h1></body>"
-          "</html>";	
+          "</html>";
     }
   }
-  
+
   boost::asio::const_buffer trim_null(boost::asio::const_buffer buffer) {
     std::size_t size = boost::asio::buffer_size(buffer);
     return boost::asio::buffer(buffer, size - 1);
@@ -417,7 +415,7 @@ struct basic_response<tags::http_server> {
 
   boost::asio::const_buffer to_buffer(status_type status) {
     using boost::asio::buffer;
-    switch (status) {      
+    switch (status) {
       // 2xx Success
       case basic_response<tags::http_server>::ok:
         return trim_null(buffer("HTTP/1.1 200 OK\r\n"));
@@ -426,15 +424,15 @@ struct basic_response<tags::http_server> {
       case basic_response<tags::http_server>::accepted:
         return trim_null(buffer("HTTP/1.1 202 Accepted\r\n"));
       case basic_response<tags::http_server>::non_authoritative_information:
-        return trim_null(buffer("HTTP/1.1 203 Non-Authoritative Information\r\n"));		
+        return trim_null(buffer("HTTP/1.1 203 Non-Authoritative Information\r\n"));
       case basic_response<tags::http_server>::no_content:
         return trim_null(buffer("HTTP/1.1 204 No Content\r\n"));
       case basic_response<tags::http_server>::reset_content:
-        return trim_null(buffer("HTTP/1.1 205 Reset Content\r\n"));		
+        return trim_null(buffer("HTTP/1.1 205 Reset Content\r\n"));
       case basic_response<tags::http_server>::partial_content:
-        return trim_null(buffer("HTTP/1.1 206 Partial Content\r\n"));		
-	
-      // 3xx Redirection	
+        return trim_null(buffer("HTTP/1.1 206 Partial Content\r\n"));
+
+      // 3xx Redirection
       case basic_response<tags::http_server>::multiple_choices:
         return trim_null(buffer("HTTP/1.1 300 Multiple Choices\r\n"));
       case basic_response<tags::http_server>::moved_permanently:
@@ -442,15 +440,15 @@ struct basic_response<tags::http_server> {
       case basic_response<tags::http_server>::moved_temporarily:
         return trim_null(buffer("HTTP/1.1 302 Moved Temporarily\r\n"));
       case basic_response<tags::http_server>::see_other:
-        return trim_null(buffer("HTTP/1.1 303 See Other\r\n"));		
+        return trim_null(buffer("HTTP/1.1 303 See Other\r\n"));
       case basic_response<tags::http_server>::not_modified:
         return trim_null(buffer("HTTP/1.1 304 Not Modified\r\n"));
       case basic_response<tags::http_server>::use_proxy:
         return trim_null(buffer("HTTP/1.1 305 Use Proxy\r\n"));
       case basic_response<tags::http_server>::temporary_redirect:
-        return trim_null(buffer("HTTP/1.1 307 Temporary Redirect\r\n"));		
+        return trim_null(buffer("HTTP/1.1 307 Temporary Redirect\r\n"));
 
-      // 4xx Client Error		
+      // 4xx Client Error
       case basic_response<tags::http_server>::bad_request:
         return trim_null(buffer("HTTP/1.1 400 Bad Request\r\n"));
       case basic_response<tags::http_server>::unauthorized:
@@ -466,13 +464,13 @@ struct basic_response<tags::http_server> {
       case basic_response<tags::http_server>::proxy_authentication_required:
         return trim_null(buffer("HTTP/1.1 407 Proxy Authentication Required\r\n"));
       case basic_response<tags::http_server>::request_timeout:
-        return trim_null(buffer("HTTP/1.1 408 Request Timeout\r\n"));		
+        return trim_null(buffer("HTTP/1.1 408 Request Timeout\r\n"));
       case basic_response<tags::http_server>::conflict:
         return trim_null(buffer("HTTP/1.1 409 Conflict\r\n"));
       case basic_response<tags::http_server>::gone:
         return trim_null(buffer("HTTP/1.1 410 Gone\r\n"));
       case basic_response<tags::http_server>::length_required:
-        return trim_null(buffer("HTTP/1.1 411 Length Required\r\n"));		
+        return trim_null(buffer("HTTP/1.1 411 Length Required\r\n"));
       case basic_response<tags::http_server>::precondition_failed:
         return trim_null(buffer("HTTP/1.1 412 Precondition Failed\r\n"));
       case basic_response<tags::http_server>::request_entity_too_large:
@@ -482,27 +480,27 @@ struct basic_response<tags::http_server> {
       case basic_response<tags::http_server>::unsupported_media_type:
         return trim_null(buffer("HTTP/1.1 415 Unsupported Media Type\r\n"));
       case basic_response<tags::http_server>::unsatisfiable_range:
-        return trim_null(buffer("HTTP/1.1 416 Requested Range Not Satisfiable\r\n"));	
+        return trim_null(buffer("HTTP/1.1 416 Requested Range Not Satisfiable\r\n"));
       case basic_response<tags::http_server>::precondition_required:
         return trim_null(buffer("HTTP/1.1 428 Precondition Required\r\n"));
       case basic_response<tags::http_server>::too_many_requests:
-        return trim_null(buffer("HTTP/1.1 429 Too Many Requests\r\n"));	
+        return trim_null(buffer("HTTP/1.1 429 Too Many Requests\r\n"));
       case basic_response<tags::http_server>::request_header_fields_too_large:
-        return trim_null(buffer("HTTP/1.1 431 Request Header Fields Too Large\r\n"));		
-	
-      // 5xx Server Error		
+        return trim_null(buffer("HTTP/1.1 431 Request Header Fields Too Large\r\n"));
+
+      // 5xx Server Error
       case basic_response<tags::http_server>::internal_server_error:
         return trim_null(buffer("HTTP/1.1 500 Internal Server Error\r\n"));
       case basic_response<tags::http_server>::not_implemented:
         return trim_null(buffer("HTTP/1.1 501 Not Implemented\r\n"));
       case basic_response<tags::http_server>::bad_gateway:
-        return trim_null(buffer("HTTP/1.1 502 Bad Gateway\r\n"));      
+        return trim_null(buffer("HTTP/1.1 502 Bad Gateway\r\n"));
       case basic_response<tags::http_server>::service_unavailable:
         return trim_null(buffer("HTTP/1.1 503 Service Unavailable\r\n"));
       case basic_response<tags::http_server>::gateway_timeout:
-        return trim_null(buffer("HTTP/1.1 504 Gateway Timeout\r\n"));      
+        return trim_null(buffer("HTTP/1.1 504 Gateway Timeout\r\n"));
       case basic_response<tags::http_server>::http_version_not_supported:
-        return trim_null(buffer("HTTP/1.1 505 HTTP Version Not Supported\r\n"));		
+        return trim_null(buffer("HTTP/1.1 505 HTTP Version Not Supported\r\n"));
       case basic_response<tags::http_server>::space_unavailable:
         return trim_null(buffer("HTTP/1.1 507 Insufficient Space to Store Resource\r\n"));
 

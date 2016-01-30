@@ -3,15 +3,15 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <unordered_set>
 #include <boost/network/uri/schemes.hpp>
-#include <boost/unordered_set.hpp>
 
 namespace boost {
 namespace network {
 namespace uri {
 namespace {
-static boost::unordered_set<std::string> hierarchical_schemes_;
-static boost::unordered_set<std::string> opaque_schemes_;
+static std::unordered_set<std::string> hierarchical_schemes_;
+static std::unordered_set<std::string> opaque_schemes_;
 
 bool register_hierarchical_schemes() {
   hierarchical_schemes_.insert("http");

@@ -10,13 +10,13 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_PARSER_HPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_PARSER_HPP
 
+#include <cstdint>
+#include <string>
 #include <boost/network/protocol/http/traits.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/network/message.hpp>
 #include <boost/logic/tribool.hpp>
-#include <boost/cstdint.hpp>
 #include <boost/noncopyable.hpp>
-#include <string>
 
 namespace boost {
 namespace network {
@@ -298,7 +298,7 @@ class basic_parser : private boost::noncopyable {
   chunked_content_parse_state_t m_chunked_content_parse_state;
 
   /// Used for parsing the HTTP response status code
-  boost::uint16_t m_status_code;
+  std::uint16_t m_status_code;
 
   /// Used for parsing the HTTP response status message
   string_type m_status_message;

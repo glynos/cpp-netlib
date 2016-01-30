@@ -6,11 +6,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
+#include <functional>
 #include <boost/asio/io_service.hpp>
 #include <boost/function.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/scope_exit.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
 #include <cstddef>
 
@@ -18,9 +19,9 @@ namespace boost {
 namespace network {
 namespace utils {
 
-typedef boost::shared_ptr<boost::asio::io_service> io_service_ptr;
-typedef boost::shared_ptr<boost::thread_group> worker_threads_ptr;
-typedef boost::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
+typedef std::shared_ptr<boost::asio::io_service> io_service_ptr;
+typedef std::shared_ptr<boost::thread_group> worker_threads_ptr;
+typedef std::shared_ptr<boost::asio::io_service::work> sentinel_ptr;
 
 template <class Tag>
 struct basic_thread_pool {
@@ -65,16 +66,16 @@ struct basic_thread_pool {
       sentinel_.reset(new boost::asio::io_service::work(*io_service_));
     }
 
-    for (std::size_t counter = 0; counter < threads_; ++counter)
-      worker_threads_->create_thread(
-          boost::bind(&boost::asio::io_service::run, io_service_));
+    for (std::size_t counter = 0; counter < threads_; ++counter) {
+      worker_threads_->create_thread([=] () { io_service_->run(); });
+    }
 
     commit = true;
   }
 
   std::size_t thread_count() const { return threads_; }
 
-  void post(boost::function<void()> f) { io_service_->post(f); }
+  void post(std::function<void()> f) { io_service_->post(f); }
 
   ~basic_thread_pool() throw() {
     sentinel_.reset();

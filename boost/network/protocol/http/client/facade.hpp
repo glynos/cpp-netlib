@@ -7,11 +7,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <memory>
+#include <functional>
 #include <boost/network/protocol/http/client/pimpl.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/function.hpp>
 
 namespace boost {
 namespace network {
@@ -44,7 +44,7 @@ class basic_client_facade {
    * body as it comes in. In case of errors, the second argument is an error
    * code.
    */
-  typedef function<void(iterator_range<char const*> const&,
+  typedef std::function<void(iterator_range<char const*> const&,
                         system::error_code const&)> body_callback_function_type;
 
   /**
@@ -55,7 +55,7 @@ class basic_client_facade {
    * Implementations should return `true` if there is more to the body of the
    * request, and `false` otherwise.
    */
-  typedef function<bool(string_type&)> body_generator_function_type;
+  typedef std::function<bool(string_type&)> body_generator_function_type;
 
   explicit basic_client_facade(client_options<Tag> const& options) {
     init_pimpl(options);
@@ -115,7 +115,7 @@ class basic_client_facade {
     if (body != string_type()) {
       request << remove_header("Content-Length")
               << header("Content-Length",
-                        boost::lexical_cast<string_type>(body.size()))
+                        std::to_string(body.size()))
               << boost::network::body(body);
     }
     typename headers_range<basic_request<Tag> >::type content_type_headers =
@@ -220,7 +220,7 @@ class basic_client_facade {
     if (body != string_type()) {
       request << remove_header("Content-Length")
               << header("Content-Length",
-                        boost::lexical_cast<string_type>(body.size()))
+                        std::to_string(body.size()))
               << boost::network::body(body);
     }
     typename headers_range<basic_request<Tag> >::type content_type_headers =
@@ -299,7 +299,7 @@ class basic_client_facade {
   void clear_resolved_cache() { pimpl->clear_resolved_cache(); }
 
  protected:
-  boost::shared_ptr<pimpl_type> pimpl;
+  std::shared_ptr<pimpl_type> pimpl;
 
   void init_pimpl(client_options<Tag> const& options) {
     pimpl.reset(new pimpl_type(

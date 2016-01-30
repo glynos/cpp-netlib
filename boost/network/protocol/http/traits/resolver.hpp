@@ -15,7 +15,6 @@
 #include <boost/network/support/is_tcp.hpp>
 #include <boost/network/support/is_udp.hpp>
 #include <boost/network/protocol/http/support/is_http.hpp>
-#include <boost/static_assert.hpp>
 
 namespace boost {
 namespace network {
@@ -31,8 +30,8 @@ struct resolver
                typename mpl::if_<mpl::and_<is_udp<Tag>, is_http<Tag> >,
                                  boost::asio::ip::udp::resolver,
                                  unsupported_tag<Tag> >::type> {
-  BOOST_STATIC_ASSERT(
-      (mpl::not_<mpl::and_<is_udp<Tag>, is_tcp<Tag> > >::value));
+  static_assert(mpl::not_<mpl::and_<is_udp<Tag>, is_tcp<Tag> > >::value,
+                "Transport protocol must be TCP or UDP");
 };
 
 }  // namespace http
