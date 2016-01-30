@@ -4,8 +4,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <memory>
+#include <thread>
 #include <boost/network/include/http/server.hpp>
-#include <boost/thread.hpp>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -28,7 +28,7 @@ struct file_cache {
   std::string doc_root_;
   region_map regions;
   meta_map file_headers;
-  boost::shared_mutex cache_mutex;
+  std::mutex cache_mutex;
 
   explicit file_cache(std::string doc_root) : doc_root_(std::move(doc_root)) {}
 
@@ -39,12 +39,12 @@ struct file_cache {
   }
 
   bool has(std::string const &path) {
-    boost::shared_lock<boost::shared_mutex> lock(cache_mutex);
+    std::unique_lock<std::mutex> lock(cache_mutex);
     return regions.find(doc_root_ + path) != regions.end();
   }
 
   bool add(std::string const &path) {
-    boost::upgrade_lock<boost::shared_mutex> lock(cache_mutex);
+    std::unique_lock<std::mutex> lock(cache_mutex);
     std::string real_filename = doc_root_ + path;
     if (regions.find(real_filename) != regions.end()) return true;
 #ifdef O_NOATIME
@@ -60,7 +60,6 @@ struct file_cache {
       return false;
     }
 
-    boost::upgrade_to_unique_lock<boost::shared_mutex> unique_lock(lock);
     regions.insert(std::make_pair(real_filename, std::make_pair(region, size)));
     static server::response_header common_headers[] = {
         {"Connection", "close"}, {"Content-Type", "x-application/octet-stream"},
@@ -73,7 +72,7 @@ struct file_cache {
   }
 
   std::pair<void *, std::size_t> get(std::string const &path) {
-    boost::shared_lock<boost::shared_mutex> lock(cache_mutex);
+    std::unique_lock<std::mutex> lock(cache_mutex);
     region_map::const_iterator region = regions.find(doc_root_ + path);
     if (region != regions.end())
       return region->second;
@@ -83,14 +82,12 @@ struct file_cache {
 
   boost::iterator_range<std::vector<server::response_header>::iterator> meta(
       std::string const &path) {
-    boost::shared_lock<boost::shared_mutex> lock(cache_mutex);
+    std::unique_lock<std::mutex> lock(cache_mutex);
     static std::vector<server::response_header> empty_vector;
     auto headers = file_headers.find(doc_root_ + path);
     if (headers != file_headers.end()) {
-      auto begin = headers->second
-                                                                 .begin(),
-                                                     end =
-                                                         headers->second.end();
+      auto begin = headers->second.begin(),
+           end = headers->second.end();
       return boost::make_iterator_range(begin, end);
     } else
       return boost::make_iterator_range(empty_vector);

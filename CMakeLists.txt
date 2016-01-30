@@ -47,7 +47,7 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 set(Boost_USE_MULTI_THREADED ON)
 
 find_package(Boost 1.57.0
-  REQUIRED system thread filesystem program_options)
+  REQUIRED system filesystem program_options)
 
 if (CPP-NETLIB_ENABLE_HTTPS)
     find_package( OpenSSL )

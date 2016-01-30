@@ -167,7 +167,7 @@ int main() {
     auto server(std::make_shared<server_data>(
         server::options(request_handler)
         .address("0.0.0.0")
-        .port("8800")
+        .port("8000")
         .io_service(io_service)
         .reuse_address(true)
         .thread_pool(std::make_shared<boost::network::utils::thread_pool>(
