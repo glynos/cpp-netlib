@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <cstdint>
 #include <utility>
+#include <functional>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/protocol/http/response.hpp>
@@ -207,19 +208,17 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       if (!result) return result;
     }
 
+    namespace ph = std::placeholders;
     connection_ptr connection(new connection_impl(
         resolver, follow_redirect_, request_.host(),
         std::to_string(request_.port()),
         // resolver function
-        boost::bind(&pooled_connection_policy<Tag, version_major,
-                                              version_minor>::resolve,
-                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
+        std::bind(&pooled_connection_policy<Tag, version_major,
+                  version_minor>::resolve, this, ph::_1, ph::_2, ph::_3),
         // connection factory
-        boost::bind(&pooled_connection_policy<Tag, version_major,
-                                              version_minor>::get_connection,
-                    this, boost::arg<1>(), boost::arg<2>(), always_verify_peer,
-                    boost::arg<3>(), boost::arg<4>(), boost::arg<5>(),
-                    boost::arg<6>(), boost::arg<7>()),
+        std::bind(&pooled_connection_policy<Tag, version_major,
+                                                 version_minor>::get_connection,
+                  this, ph::_1, ph::_2, always_verify_peer, ph::_3, ph::_4, ph::_5, ph::_6, ph::_7),
         boost::iequals(request_.protocol(), string_type("https")),
         always_verify_peer, timeout_, certificate_filename, verify_path,
         certificate_file, private_key_file, ciphers, 0));

@@ -12,13 +12,11 @@
 #include <iterator>
 #include <cstdint>
 #include <boost/algorithm/string/trim.hpp>
-#include <boost/array.hpp>
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/asio/streambuf.hpp>
 #include <boost/assert.hpp>
-#include <boost/bind/protect.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/network/detail/debug.hpp>
@@ -102,16 +100,19 @@ struct http_async_connection
     string_type host_ = host(request);
     std::uint16_t source_port = request.source_port();
 
+    auto self = this->shared_from_this();
     resolve_(resolver_, host_, port_,
-             request_strand_.wrap(boost::bind(
-                 &this_type::handle_resolved, this_type::shared_from_this(),
-                 host_, port_, source_port, get_body, callback, generator,
-                 boost::arg<1>(), boost::arg<2>())));
+             request_strand_.wrap(
+                                  [=] (boost::system::error_code const &ec,
+                                       resolver_iterator_pair endpoint_range) {
+                                    self->handle_resolved(host_, port_, source_port, get_body,
+                                                          callback, generator, ec, endpoint_range);
+                                  }));
     if (timeout_ > 0) {
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
-      timer_.async_wait(request_strand_.wrap(
-          boost::bind(&this_type::handle_timeout, this_type::shared_from_this(),
-                      boost::arg<1>())));
+      timer_.async_wait(request_strand_.wrap([=] (boost::system::error_code const &ec) {
+            self->handle_timeout(ec);
+          }));
     }
     return response_;
   }
@@ -145,13 +146,14 @@ struct http_async_connection
       // that there's still more endpoints to try connecting to.
       resolver_iterator iter = boost::begin(endpoint_range);
       asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
+      auto self = this->shared_from_this();
       delegate_->connect(
           endpoint, host, source_port,
-          request_strand_.wrap(boost::bind(
-              &this_type::handle_connected, this_type::shared_from_this(), host,
-              port, source_port, get_body, callback, generator,
-              std::make_pair(++iter, resolver_iterator()),
-              placeholders::error)));
+          request_strand_.wrap([=] (boost::system::error_code const &ec) {
+              auto iter_copy = iter;
+              self->handle_connected(host, port, source_port, get_body, callback,
+                                     generator, std::make_pair(++iter_copy, resolver_iterator()), ec);
+            }));
     } else {
       set_errors(ec ? ec : boost::asio::error::host_not_found);
       boost::iterator_range<const char*> range;
@@ -169,23 +171,27 @@ struct http_async_connection
       set_errors(asio::error::timed_out);
     } else if (!ec) {
       BOOST_ASSERT(delegate_.get() != 0);
+      auto self = this->shared_from_this();
       delegate_->write(
           command_streambuf,
-          request_strand_.wrap(boost::bind(
-              &this_type::handle_sent_request, this_type::shared_from_this(),
-              get_body, callback, generator, placeholders::error,
-              placeholders::bytes_transferred)));
+          request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                    std::size_t bytes_transferred) {
+                                 self->handle_sent_request(get_body, callback, generator,
+                                                           ec, bytes_transferred);
+                               }));
     } else {
       if (!boost::empty(endpoint_range)) {
         resolver_iterator iter = boost::begin(endpoint_range);
         asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
+        auto self = this->shared_from_this();
         delegate_->connect(
             endpoint, host, source_port,
-            request_strand_.wrap(boost::bind(
-                &this_type::handle_connected, this_type::shared_from_this(),
-                host, port, source_port, get_body, callback, generator,
-                std::make_pair(++iter, resolver_iterator()),
-                placeholders::error)));
+            request_strand_.wrap([=] (boost::system::error_code const &ec) {
+                auto iter_copy = iter;
+                self->handle_connected(host, port, source_port, get_body, callback,
+                                       generator, std::make_pair(++iter_copy, resolver_iterator()),
+                                       ec);
+              }));
       } else {
         set_errors(ec ? ec : boost::asio::error::host_not_found);
         boost::iterator_range<const char*> range;
@@ -211,22 +217,27 @@ struct http_async_connection
           std::copy(chunk.begin(), chunk.end(),
                     std::ostreambuf_iterator<typename char_<Tag>::type>(
                         &command_streambuf));
+          auto self = this->shared_from_this();
           delegate_->write(
               command_streambuf,
-              request_strand_.wrap(boost::bind(
-                  &this_type::handle_sent_request,
-                  this_type::shared_from_this(), get_body, callback, generator,
-                  placeholders::error, placeholders::bytes_transferred)));
+              request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                        std::size_t bytes_transferred) {
+                                     self->handle_sent_request(get_body, callback, generator,
+                                                               ec, bytes_transferred);
+                                   }));
           return;
         }
       }
+
+      auto self = this->shared_from_this();
       delegate_->read_some(
           boost::asio::mutable_buffers_1(this->part.data(),
                                          this->part.size()),
-          request_strand_.wrap(boost::bind(
-              &this_type::handle_received_data, this_type::shared_from_this(),
-              version, get_body, callback, placeholders::error,
-              placeholders::bytes_transferred)));
+          request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                    std::size_t bytes_transferred) {
+                                 self->handle_received_data(version, get_body, callback,
+                                                            ec, bytes_transferred);
+                               }));
     } else {
       set_errors(is_timedout_ ? asio::error::timed_out : ec);
     }
@@ -248,15 +259,17 @@ struct http_async_connection
         (!ec || ec == boost::asio::error::eof || is_ssl_short_read_error)) {
       logic::tribool parsed_ok;
       size_t remainder;
+      auto self = this->shared_from_this();
       switch (state) {
         case version:
           if (ec == boost::asio::error::eof) return;
           parsed_ok = this->parse_version(
               delegate_,
-              request_strand_.wrap(boost::bind(
-                  &this_type::handle_received_data,
-                  this_type::shared_from_this(), version, get_body, callback,
-                  placeholders::error, placeholders::bytes_transferred)),
+              request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                        std::size_t bytes_transferred) {
+                                     self->handle_received_data(version, get_body, callback,
+                                                                ec, bytes_transferred);
+                                   }),
               bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) {
             return;
@@ -265,10 +278,11 @@ struct http_async_connection
           if (ec == boost::asio::error::eof) return;
           parsed_ok = this->parse_status(
               delegate_,
-              request_strand_.wrap(boost::bind(
-                  &this_type::handle_received_data,
-                  this_type::shared_from_this(), status, get_body, callback,
-                  placeholders::error, placeholders::bytes_transferred)),
+              request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                        std::size_t bytes_transferred) {
+                                     self->handle_received_data(status, get_body, callback,
+                                                                ec, bytes_transferred);
+                                   }),
               bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) {
             return;
@@ -276,11 +290,11 @@ struct http_async_connection
         case status_message:
           if (ec == boost::asio::error::eof) return;
           parsed_ok = this->parse_status_message(
-              delegate_, request_strand_.wrap(boost::bind(
-                             &this_type::handle_received_data,
-                             this_type::shared_from_this(), status_message,
-                             get_body, callback, placeholders::error,
-                             placeholders::bytes_transferred)),
+              delegate_, request_strand_.wrap([=] (boost::system::error_code const &,
+                                                   std::size_t bytes_transferred) {
+                                                self->handle_received_data(status_message, get_body, callback,
+                                                                           ec, bytes_transferred);
+                                              }),
               bytes_transferred);
           if (!parsed_ok || indeterminate(parsed_ok)) {
             return;
@@ -293,10 +307,11 @@ struct http_async_connection
           // to get more data for the body is scheduled.
           fusion::tie(parsed_ok, remainder) = this->parse_headers(
               delegate_,
-              request_strand_.wrap(boost::bind(
-                  &this_type::handle_received_data,
-                  this_type::shared_from_this(), headers, get_body, callback,
-                  placeholders::error, placeholders::bytes_transferred)),
+              request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                        std::size_t bytes_transferred) {
+                                     self->handle_received_data(headers, get_body, callback,
+                                                                ec, bytes_transferred);
+                                   }),
               bytes_transferred);
 
           if (!parsed_ok || indeterminate(parsed_ok)) {
@@ -335,22 +350,26 @@ struct http_async_connection
             // wait before scheduling another read.
             callback(make_iterator_range(begin, end), ec);
 
+            auto self = this->shared_from_this();
             delegate_->read_some(
                 boost::asio::mutable_buffers_1(this->part.data(),
                                                this->part.size()),
-                request_strand_.wrap(boost::bind(
-                    &this_type::handle_received_data,
-                    this_type::shared_from_this(), body, get_body, callback,
-                    placeholders::error, placeholders::bytes_transferred)));
+                request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                          std::size_t bytes_transferred) {
+                                       self->handle_received_data(body, get_body, callback,
+                                                                  ec, bytes_transferred);
+                                     }));
           } else {
             // Here we handle the body data ourself and append to an
             // ever-growing string buffer.
+            auto self = this->shared_from_this();
             this->parse_body(
                 delegate_,
-                request_strand_.wrap(boost::bind(
-                    &this_type::handle_received_data,
-                    this_type::shared_from_this(), body, get_body, callback,
-                    placeholders::error, placeholders::bytes_transferred)),
+                request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                          std::size_t bytes_transferred) {
+                                       self->handle_received_data(body, get_body, callback,
+                                                                  ec, bytes_transferred);
+                                     }),
                 remainder);
           }
           return;
@@ -399,23 +418,26 @@ struct http_async_connection
               typename protocol_base::buffer_type::const_iterator end = begin;
               std::advance(end, bytes_transferred);
               callback(make_iterator_range(begin, end), ec);
+              auto self = this->shared_from_this();
               delegate_->read_some(
                   boost::asio::mutable_buffers_1(this->part.data(),
                                                  this->part.size()),
-                  request_strand_.wrap(boost::bind(
-                      &this_type::handle_received_data,
-                      this_type::shared_from_this(), body, get_body, callback,
-                      placeholders::error, placeholders::bytes_transferred)));
+                  request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                            std::size_t bytes_transferred) {
+                                         self->handle_received_data(body, get_body, callback,
+                                                                    ec, bytes_transferred);
+                                       }));
             } else {
               // Here we don't have a body callback. Let's make sure that we
               // deal with the remainder from the headers part in case we do
               // have data that's still in the buffer.
               this->parse_body(
                   delegate_,
-                  request_strand_.wrap(boost::bind(
-                      &this_type::handle_received_data,
-                      this_type::shared_from_this(), body, get_body, callback,
-                      placeholders::error, placeholders::bytes_transferred)),
+                  request_strand_.wrap([=] (boost::system::error_code const &ec,
+                                            std::size_t bytes_transferred) {
+                                         self->handle_received_data(body, get_body, callback,
+                                                                    ec, bytes_transferred);
+                                       }),
                   bytes_transferred);
             }
           }

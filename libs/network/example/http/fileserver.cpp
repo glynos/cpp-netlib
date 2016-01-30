@@ -131,13 +131,14 @@ struct connection_handler : std::enable_shared_from_this<connection_handler> {
     // chunk it up page by page
     std::size_t adjusted_offset = offset + 4096;
     off_t rightmost_bound = std::min(mmaped_region.second, adjusted_offset);
+    auto self = this->shared_from_this();
     connection->write(
         boost::asio::const_buffers_1(
             static_cast<char const *>(mmaped_region.first) + offset,
             rightmost_bound - offset),
-        boost::bind(&connection_handler::handle_chunk,
-                    connection_handler::shared_from_this(), mmaped_region,
-                    rightmost_bound, connection, _1));
+        [=] (boost::system::error_code const &ec) {
+          self->handle_chunk(mmaped_region, rightmost_bound, connection, ec);
+        });
   }
 
   void handle_chunk(std::pair<void *, std::size_t> mmaped_region, off_t offset,

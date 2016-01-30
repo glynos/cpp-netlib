@@ -65,9 +65,9 @@ struct basic_thread_pool {
       sentinel_.reset(new boost::asio::io_service::work(*io_service_));
     }
 
-    for (std::size_t counter = 0; counter < threads_; ++counter)
-      worker_threads_->create_thread(
-          boost::bind(&boost::asio::io_service::run, io_service_));
+    for (std::size_t counter = 0; counter < threads_; ++counter) {
+      worker_threads_->create_thread([=] () { io_service_->run(); });
+    }
 
     commit = true;
   }

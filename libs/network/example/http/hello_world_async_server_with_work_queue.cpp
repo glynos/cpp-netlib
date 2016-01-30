@@ -9,12 +9,12 @@
 
 #include <memory>
 #include <mutex>
+#include <functional>
 #include <boost/network/include/http/server.hpp>
 #include <boost/network/uri.hpp>
 
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
-#include <boost/bind.hpp>
 #include <iostream>
 #include <list>
 #include <signal.h>
@@ -136,8 +136,7 @@ int main(void) try {
   {
     int n_threads = 5;
     while (0 < n_threads--) {
-      p_threads->create_thread(
-          boost::bind(&boost::asio::io_service::run, p_io_service));
+      p_threads->create_thread([=] () { p_io_service->run(); });
     }
   }
 
@@ -148,7 +147,7 @@ int main(void) try {
   {
     int n_threads = 5;
     while (0 < n_threads--) {
-      p_threads->create_thread(boost::bind(process_request, boost::ref(queue)));
+      p_threads->create_thread([&queue] () { process_request(queue); });
     }
   }
 
@@ -165,7 +164,9 @@ int main(void) try {
 
   // setup clean shutdown
   boost::asio::signal_set signals(*p_io_service, SIGINT, SIGTERM);
-  signals.async_wait(boost::bind(shut_me_down, _1, _2, p_server_instance));
+  signals.async_wait([=] (boost::system::error_code const &ec, int signal) {
+      shut_me_down(ec, signal, p_server_instance);
+    });
 
   // run the async server
   p_server_instance->run();

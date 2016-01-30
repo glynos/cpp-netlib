@@ -11,7 +11,6 @@
 #include <memory>
 #include <mutex>
 #include <boost/network/detail/debug.hpp>
-#include <boost/bind.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
@@ -76,10 +75,10 @@ struct sync_server_base : server_storage_base, socket_options_base {
     socket_options_base::socket_options(new_connection->socket());
     new_connection->start();
     new_connection.reset(new sync_connection<Tag, Handler>(service_, handler_));
+    auto self = this->shared_from_this();
     acceptor_.async_accept(
         new_connection->socket(),
-        boost::bind(&sync_server_base<Tag, Handler>::handle_accept, this,
-                    boost::asio::placeholders::error));
+        [=] (boost::system::error_code const &ec) { self->handle_accept(); });
   }
 
   void start_listening() {
@@ -117,10 +116,10 @@ struct sync_server_base : server_storage_base, socket_options_base {
       boost::throw_exception(std::runtime_error("Error listening on socket."));
     }
     new_connection.reset(new sync_connection<Tag, Handler>(service_, handler_));
+    auto self = this->shared_from_this();
     acceptor_.async_accept(
         new_connection->socket(),
-        boost::bind(&sync_server_base<Tag, Handler>::handle_accept, this,
-                    boost::asio::placeholders::error));
+        [=] (boost::system::error_code const &ec) { self->handle_accept(ec); });
     listening_ = true;
   }
 };

@@ -10,9 +10,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <memory>
+#include <functional>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
 #include <boost/network/protocol/http/client/connection/async_base.hpp>
 #include <boost/network/protocol/http/message/wrappers/protocol.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
@@ -77,12 +76,11 @@ struct async_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& ciphers = optional<string_type>(),
       long ssl_options = 0) {
     string_type protocol_ = protocol(request_);
+    namespace ph = std::placeholders;
     connection_ptr connection_(new connection_impl(
         follow_redirect_, always_verify_peer,
-        boost::bind(&async_connection_policy<Tag, version_major,
-                                             version_minor>::resolve,
-                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>(),
-                    boost::arg<4>()),
+        std::bind(&async_connection_policy<Tag, version_major,
+                  version_minor>::resolve, this, ph::_1, ph::_2, ph::_3, ph::_4),
         resolver, boost::iequals(protocol_, string_type("https")), timeout_,
         certificate_filename, verify_path, certificate_file, private_key_file,
         ciphers, ssl_options));

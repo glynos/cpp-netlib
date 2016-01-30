@@ -10,7 +10,7 @@
 #include <iterator>
 #include <memory>
 #include <cstdint>
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
@@ -125,12 +125,13 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& private_key_file = optional<string_type>(),
       optional<string_type> const& ciphers = optional<string_type>(),
       long ssl_options = 0) {
+    namespace ph = std::placeholders;
     connection_ptr connection_(new connection_impl(
         resolver, follow_redirect_, always_verify_peer, request_.host(),
         std::to_string(request_.port()),
-        boost::bind(&simple_connection_policy<Tag, version_major,
-                                              version_minor>::resolve,
-                    this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),
+        std::bind(&simple_connection_policy<Tag, version_major,
+                                                 version_minor>::resolve,
+                  this, ph::_1, ph::_2, ph::_3),
         boost::iequals(request_.protocol(), string_type("https")), timeout_,
         certificate_filename, verify_path, certificate_file, private_key_file,
         ciphers, ssl_options));

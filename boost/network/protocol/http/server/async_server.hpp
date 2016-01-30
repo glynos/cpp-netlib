@@ -63,7 +63,7 @@ struct async_server_base : server_storage_base, socket_options_base {
       system::error_code ignored;
       acceptor.close(ignored);
       listening = false;
-      service_.post(boost::bind(&async_server_base::handle_stop, this));
+      service_.post([this] () { this->handle_stop(); });
     }
   }
 
@@ -126,8 +126,7 @@ struct async_server_base : server_storage_base, socket_options_base {
 #else
         new_connection->socket(),
 #endif
-        boost::bind(&async_server_base<Tag, Handler>::handle_accept, this,
-                    boost::asio::placeholders::error));
+        [this] (boost::system::error_code const &ec) { this->handle_accept(ec); });
   }
 
   void start_listening() {
@@ -169,8 +168,7 @@ struct async_server_base : server_storage_base, socket_options_base {
 #else
         new_connection->socket(),
 #endif
-        boost::bind(&async_server_base<Tag, Handler>::handle_accept, this,
-                    boost::asio::placeholders::error));
+        [this] (boost::system::error_code const &ec) { this->handle_accept(ec); });
     listening = true;
     scoped_mutex_lock stopping_lock(stopping_mutex_);
     stopping = false;  // if we were in the process of stopping, we revoke

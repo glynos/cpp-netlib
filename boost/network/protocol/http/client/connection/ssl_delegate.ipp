@@ -9,7 +9,6 @@
 
 #include <cstdint>
 #include <boost/asio/ssl.hpp>
-#include <boost/bind.hpp>
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
 
 boost::network::http::impl::ssl_delegate::ssl_delegate(
@@ -71,12 +70,12 @@ void boost::network::http::impl::ssl_delegate::connect(
 
   if (always_verify_peer_)
     socket_->set_verify_callback(boost::asio::ssl::rfc2818_verification(host));
+  auto self = this->shared_from_this();
   socket_->lowest_layer().async_connect(
       endpoint,
-      ::boost::bind(
-          &boost::network::http::impl::ssl_delegate::handle_connected,
-          boost::network::http::impl::ssl_delegate::shared_from_this(),
-          asio::placeholders::error, handler));
+      [=] (boost::system::error_code const &ec) {
+        self->handle_connected(ec, handler);
+      });
 }
 
 void boost::network::http::impl::ssl_delegate::handle_connected(

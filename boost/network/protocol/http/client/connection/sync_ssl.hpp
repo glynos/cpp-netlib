@@ -14,7 +14,6 @@
 #include <boost/asio/streambuf.hpp>
 #include <boost/function.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-#include <boost/bind.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 
@@ -120,9 +119,10 @@ struct https_sync_connection
     }
     if (timeout_ > 0) {
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
-      timer_.async_wait(boost::bind(&this_type::handle_timeout,
-                                    this_type::shared_from_this(),
-                                    boost::arg<1>()));
+      auto self = this->shared_from_this();
+      timer_.async_wait([=] (boost::system::error_code const &ec) {
+          self->handle_timeout(ec);
+        });
     }
   }
 

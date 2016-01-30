@@ -94,7 +94,9 @@ int main(void) try {
 
   // setup clean shutdown
   boost::asio::signal_set signals(*p_io_service, SIGINT, SIGTERM);
-  signals.async_wait(boost::bind(shut_me_down, _1, _2, p_server_instance));
+  signals.async_wait([=] (boost::system::error_code const &ec, int signal) {
+      shut_me_down(ec, signal, p_server_instance);
+    });
 
   // run the async server
   p_server_instance->run();

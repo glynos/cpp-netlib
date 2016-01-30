@@ -16,7 +16,6 @@
 #include <boost/function.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/fusion/tuple/tuple_tie.hpp>
-#include <boost/bind/bind.hpp>
 
 namespace boost {
 namespace network {
@@ -63,12 +62,13 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
 
     typename resolver_type::query q(host,
                                     std::to_string(port));
-    resolver_.async_resolve(q, resolver_strand_->wrap(boost::bind(
-                                   &async_resolver<Tag>::handle_resolve,
-                                   async_resolver<Tag>::shared_from_this(),
-                                   boost::to_lower_copy(host), once_resolved,
-                                   boost::asio::placeholders::error,
-                                   boost::asio::placeholders::iterator)));
+    auto self = this->shared_from_this();
+    resolver_.async_resolve(q, resolver_strand_->wrap([=] (boost::system::error_code const &ec,
+                                                           resolver_iterator endpoint_iterator) {
+                                                        self->handle_resolve(boost::to_lower_copy(host),
+                                                                             once_resolved,
+                                                                             ec, endpoint_iterator);
+                                                      }));
   }
 
   void handle_resolve(string_type  /*unused*/const &host,

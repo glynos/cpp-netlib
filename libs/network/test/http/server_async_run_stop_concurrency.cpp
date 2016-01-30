@@ -40,8 +40,7 @@ int main(int, char*[]) {
     async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
-    std::thread running_thread(
-        boost::bind(&async_server::run, &server_instance));
+    std::thread running_thread([&server_instance] () { server_instance.run(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
     server_instance.stop();
@@ -54,12 +53,10 @@ int main(int, char*[]) {
     async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
-    std::thread running_thread(
-        boost::bind(&async_server::run, &server_instance));
+    std::thread running_thread([&server_instance] () { server_instance.run(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
-    std::thread stopping_thread(
-        boost::bind(&async_server::stop, &server_instance));
+    std::thread stopping_thread([&server_instance] () { server_instance.stop(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
     stopping_thread.join();
@@ -72,20 +69,16 @@ int main(int, char*[]) {
     async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
-    std::thread running_thread(
-        boost::bind(&async_server::run, &server_instance));
+    std::thread running_thread([&server_instance] () { server_instance.run(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
-    std::thread stopping_thread(
-        boost::bind(&async_server::stop, &server_instance));
+    std::thread stopping_thread([&server_instance] () { server_instance.stop(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
-    std::thread second_running_thread(
-        boost::bind(&async_server::run, &server_instance));
+    std::thread second_running_thread([&server_instance] () { server_instance.run(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
-    std::thread second_stopping_thread(
-        boost::bind(&async_server::stop, &server_instance));
+    std::thread second_stopping_thread([&server_instance] () { server_instance.stop(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
     stopping_thread.join();
@@ -100,16 +93,13 @@ int main(int, char*[]) {
     async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
-    std::thread running_thread(
-        boost::bind(&async_server::run, &server_instance));
+    std::thread running_thread([&server_instance] () { server_instance.run(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
-    std::thread second_running_thread(
-        boost::bind(&async_server::run, &server_instance));
+    std::thread second_running_thread([&server_instance] () { server_instance.run(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
-    std::thread stopping_thread(
-        boost::bind(&async_server::stop, &server_instance));
+    std::thread stopping_thread([&server_instance] () { server_instance.stop(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
     stopping_thread.join();
@@ -123,16 +113,13 @@ int main(int, char*[]) {
     async_server::options options(async_handler);
     async_server server_instance(ASYNC_SERVER_TEST_CONFIG);
 
-    std::thread running_thread(
-        boost::bind(&async_server::run, &server_instance));
+    std::thread running_thread([&server_instance] () { server_instance.run(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
-    std::thread stopping_thread(
-        boost::bind(&async_server::stop, &server_instance));
+    std::thread stopping_thread([&server_instance] () { server_instance.stop(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
-    std::thread second_stopping_thread(
-        boost::bind(&async_server::stop, &server_instance));
+    std::thread second_stopping_thread([&server_instance] () { server_instance.stop(); });
     std::this_thread::sleep_for(ASYNC_SERVER_SLEEP_TIME);
 
     stopping_thread.join();
