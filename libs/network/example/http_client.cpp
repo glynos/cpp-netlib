@@ -73,7 +73,6 @@ int main(int argc, char* argv[]) {
 
   if (show_headers) {
     auto headers_ = response.headers();
-    typedef std::pair<std::string, std::string> header_type;
     for (auto const& header : headers_) {
       std::cout << header.first << ": " << header.second << std::endl;
     }
