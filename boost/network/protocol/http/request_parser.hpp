@@ -15,8 +15,8 @@
 #ifndef HTTP_SERVER3_REQUEST_PARSER_HPP
 #define HTTP_SERVER3_REQUEST_PARSER_HPP
 
+#include <tuple>
 #include <boost/logic/tribool.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <boost/network/protocol/http/request.hpp>
 
 namespace boost {
@@ -45,14 +45,14 @@ class basic_request_parser {
   /// of the
   /// input has been consumed.
   template <typename InputIterator>
-  boost::tuple<boost::tribool, InputIterator> parse_headers(
+  std::tuple<boost::tribool, InputIterator> parse_headers(
       basic_request<Tag>& req, InputIterator begin, InputIterator end) {
     while (begin != end) {
       boost::tribool result = consume(req, *begin++);
-      if (result || !result) return boost::make_tuple(result, begin);
+      if (result || !result) return std::make_tuple(result, begin);
     }
     boost::tribool result = boost::indeterminate;
-    return boost::make_tuple(result, begin);
+    return std::make_tuple(result, begin);
   }
 
  private:

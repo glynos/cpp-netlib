@@ -50,7 +50,6 @@
 
 namespace tags = boost::network::tags;
 namespace logic = boost::logic;
-namespace fusion = boost::fusion;
 using namespace boost::network::http;
 
 struct crlf {
@@ -81,7 +80,7 @@ TEST(IncrementalResponseParserTest, ParseHTTPVersion) {
   range_type result_range;
 
   std::string valid_http_version = "HTTP/1.0 ";
-  fusion::tie(parsed_ok, result_range) = p.parse_until(
+  std::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_version_done, valid_http_version);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
@@ -89,7 +88,7 @@ TEST(IncrementalResponseParserTest, ParseHTTPVersion) {
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
   p.reset();
   valid_http_version = "HTTP/1.1 ";
-  fusion::tie(parsed_ok, result_range) = p.parse_until(
+  std::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_version_done, valid_http_version);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
@@ -99,7 +98,7 @@ TEST(IncrementalResponseParserTest, ParseHTTPVersion) {
   p.reset();
   std::string invalid_http_version = "HTTP 1.0";
   parsed_ok = logic::indeterminate;
-  fusion::tie(parsed_ok, result_range) = p.parse_until(
+  std::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_version_done, invalid_http_version);
   EXPECT_EQ(false, parsed_ok);
   parsed.assign(std::begin(result_range), std::end(result_range));
@@ -108,7 +107,7 @@ TEST(IncrementalResponseParserTest, ParseHTTPVersion) {
   p.reset();
   valid_http_version = "HTTP/0.9 ";
   parsed_ok = logic::indeterminate;
-  fusion::tie(parsed_ok, result_range) = p.parse_until(
+  std::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_version_done, valid_http_version);
   EXPECT_EQ(true, parsed_ok);
   parsed.assign(std::begin(result_range), std::end(result_range));
@@ -136,7 +135,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatus) {
   std::string valid_status = "200 ";
   logic::tribool parsed_ok;
   range_type result_range;
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_status_done, valid_status);
   EXPECT_EQ(true, parsed_ok);
   std::string parsed =
@@ -145,14 +144,14 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatus) {
 
   p.reset(response_parser_type::http_version_done);
   std::string invalid_status = "200x ";
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_status_done, invalid_status);
   EXPECT_EQ(false, parsed_ok);
   parsed = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " state=" << p.state() << std::endl;
 
   valid_status = "200" + TypeParam::literal;
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_status_done, valid_status);
   EXPECT_EQ(true, parsed_ok);
   parsed = std::string(std::begin(result_range), std::end(result_range));
@@ -170,7 +169,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
   std::string valid_status_message = "OK" + TypeParam::literal + "Server: Foo";
   logic::tribool parsed_ok;
   range_type result_range;
-  fusion::tie(parsed_ok, result_range) = p.parse_until(
+  std::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
   std::string parsed =
@@ -179,7 +178,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
 
   p.reset(response_parser_type::http_status_done);
   valid_status_message = "OK" + TypeParam::literal;
-  fusion::tie(parsed_ok, result_range) = p.parse_until(
+  std::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
   parsed = std::string(std::begin(result_range), std::end(result_range));
@@ -187,7 +186,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
 
   p.reset(response_parser_type::http_status_done);
   valid_status_message = "Internal Server Error" + TypeParam::literal;
-  fusion::tie(parsed_ok, result_range) = p.parse_until(
+  std::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
   parsed = std::string(std::begin(result_range), std::end(result_range));
@@ -195,7 +194,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
 
   p.reset(response_parser_type::http_status_done);
   valid_status_message = TypeParam::literal;
-  fusion::tie(parsed_ok, result_range) = p.parse_until(
+  std::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
   parsed = std::string(std::begin(result_range), std::end(result_range));
@@ -203,7 +202,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseStatusMessage) {
 
   p.reset(response_parser_type::http_status_done);
   valid_status_message = "한글메시지" + TypeParam::literal;
-  fusion::tie(parsed_ok, result_range) = p.parse_until(
+  std::tie(parsed_ok, result_range) = p.parse_until(
       response_parser_type::http_status_message_done, valid_status_message);
   EXPECT_EQ(true, parsed_ok);
   parsed = std::string(std::begin(result_range), std::end(result_range));
@@ -223,7 +222,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
                               eol::literal;
   logic::tribool parsed_ok;
   range_type result_range;
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   std::string parsed1 =
@@ -232,7 +231,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   p.reset(response_parser_type::http_status_message_done);
   std::string::const_iterator end = valid_headers.end();
   valid_headers.assign(std::end(result_range), end);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   std::string parsed2 =
@@ -240,7 +239,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
   valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_NE(parsed1, parsed2);
@@ -249,7 +248,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   valid_headers = " Server: Foo" + eol::literal +
                   " Content-Type: application/json" + eol::literal +
                   eol::literal;
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed1 = std::string(std::begin(result_range), std::end(result_range));
@@ -257,14 +256,14 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
   valid_headers.assign(std::end(result_range), end);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
   valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_NE(parsed1, parsed2);
@@ -273,7 +272,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   valid_headers = "_Server: Foo" + eol::literal +
                   "_Content-Type: application/json" + eol::literal +
                   eol::literal;
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed1 = std::string(std::begin(result_range), std::end(result_range));
@@ -281,14 +280,14 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
   valid_headers.assign(std::end(result_range), end);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
   valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_NE(parsed1, parsed2);
@@ -296,7 +295,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   p.reset(response_parser_type::http_status_message_done);
   valid_headers = "Server: " + eol::literal + "Content-Type: application/json" +
                   eol::literal + eol::literal;
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed1 = std::string(std::begin(result_range), std::end(result_range));
@@ -304,14 +303,14 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
   valid_headers.assign(std::end(result_range), end);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
   valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_NE(parsed1, parsed2);
@@ -320,7 +319,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   valid_headers = "Server: 서버" + eol::literal +
                   "Content-Type: application/json" + eol::literal +
                   eol::literal;
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed1 = std::string(std::begin(result_range), std::end(result_range));
@@ -328,14 +327,14 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
   valid_headers.assign(std::end(result_range), end);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
   valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_NE(parsed1, parsed2);
@@ -343,7 +342,7 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   p.reset(response_parser_type::http_status_message_done);
   valid_headers = "Content-Type: text/html;" + eol::literal + "charset=utf-8" +
                   eol::literal + eol::literal;
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed1 = std::string(std::begin(result_range), std::end(result_range));
@@ -351,14 +350,14 @@ TYPED_TEST(IncrementalResponseEOLTypeTest, ParseHTTPHeaders) {
   p.reset(response_parser_type::http_status_message_done);
   end = valid_headers.end();
   valid_headers.assign(std::end(result_range), end);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_header_line_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   parsed2 = std::string(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed2 << " state=" << p.state() << std::endl;
   valid_headers.assign(std::end(result_range), end);
   p.reset(response_parser_type::http_status_message_done);
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(response_parser_type::http_headers_done, valid_headers);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_NE(parsed1, parsed2);

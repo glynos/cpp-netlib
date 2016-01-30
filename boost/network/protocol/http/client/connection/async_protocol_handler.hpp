@@ -11,8 +11,6 @@
 #include <iterator>
 #include <cstdint>
 #include <array>
-#include <boost/fusion/tuple/tuple.hpp>
-#include <boost/fusion/tuple/tuple_tie.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/network/detail/debug.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
@@ -110,7 +108,7 @@ struct http_async_protocol_handler {
     typename boost::iterator_range<typename buffer_type::const_iterator>
         result_range,
         input_range = boost::make_iterator_range(part_begin, part_end);
-    fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
+    std::tie(parsed_ok, result_range) = response_parser_.parse_until(
         response_parser_type::http_version_done, input_range);
     if (parsed_ok == true) {
       string_type version;
@@ -156,7 +154,7 @@ struct http_async_protocol_handler {
     typename boost::iterator_range<typename buffer_type::const_iterator>
         result_range,
         input_range = boost::make_iterator_range(part_begin, part_end);
-    fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
+    std::tie(parsed_ok, result_range) = response_parser_.parse_until(
         response_parser_type::http_status_done, input_range);
     if (parsed_ok == true) {
       string_type status;
@@ -202,7 +200,7 @@ struct http_async_protocol_handler {
     typename boost::iterator_range<typename buffer_type::const_iterator>
         result_range,
         input_range = boost::make_iterator_range(part_begin, part_end);
-    fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
+    std::tie(parsed_ok, result_range) = response_parser_.parse_until(
         response_parser_type::http_status_message_done, input_range);
     if (parsed_ok == true) {
       string_type status_message;
@@ -248,14 +246,14 @@ struct http_async_protocol_handler {
     typename headers_container<Tag>::type headers;
     std::pair<string_type, string_type> header_pair;
     while (!boost::empty(input_range)) {
-      fusion::tie(parsed_ok, result_range) = headers_parser.parse_until(
+      std::tie(parsed_ok, result_range) = headers_parser.parse_until(
           response_parser_type::http_header_colon, input_range);
       if (headers_parser.state() != response_parser_type::http_header_colon)
         break;
       header_pair.first =
           string_type(std::begin(result_range), std::end(result_range));
       input_range.advance_begin(boost::distance(result_range));
-      fusion::tie(parsed_ok, result_range) = headers_parser.parse_until(
+      std::tie(parsed_ok, result_range) = headers_parser.parse_until(
           response_parser_type::http_header_line_done, input_range);
       header_pair.second =
           string_type(std::begin(result_range), std::end(result_range));
@@ -279,16 +277,16 @@ struct http_async_protocol_handler {
   }
 
   template <class Delegate, class Callback>
-  fusion::tuple<logic::tribool, size_t> parse_headers(Delegate& delegate_,
-                                                      Callback callback,
-                                                      size_t bytes) {
+  std::tuple<logic::tribool, size_t> parse_headers(Delegate& delegate_,
+                                                   Callback callback,
+                                                   size_t bytes) {
     logic::tribool parsed_ok;
     typename buffer_type::const_iterator part_end = part.begin();
     std::advance(part_end, bytes);
     typename boost::iterator_range<typename buffer_type::const_iterator>
         result_range,
         input_range = boost::make_iterator_range(part_begin, part_end);
-    fusion::tie(parsed_ok, result_range) = response_parser_.parse_until(
+    std::tie(parsed_ok, result_range) = response_parser_.parse_until(
         response_parser_type::http_headers_done, input_range);
     if (parsed_ok == true) {
       string_type headers_string;
@@ -322,7 +320,7 @@ struct http_async_protocol_handler {
           boost::asio::mutable_buffers_1(part.data(), part.size()),
           callback);
     }
-    return fusion::make_tuple(
+    return std::make_tuple(
         parsed_ok, std::distance(std::end(result_range), part_end));
   }
 

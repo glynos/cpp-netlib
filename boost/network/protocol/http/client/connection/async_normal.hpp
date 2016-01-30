@@ -305,7 +305,7 @@ struct http_async_connection
           // the buffer. We need this in the body processing to make sure that
           // the data remaining in the buffer is dealt with before another call
           // to get more data for the body is scheduled.
-          fusion::tie(parsed_ok, remainder) = this->parse_headers(
+          std::tie(parsed_ok, remainder) = this->parse_headers(
               delegate_,
               request_strand_.wrap([=] (boost::system::error_code const &ec,
                                         std::size_t bytes_transferred) {

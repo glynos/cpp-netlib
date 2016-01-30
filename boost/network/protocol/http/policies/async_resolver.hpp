@@ -15,7 +15,6 @@
 #include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
-#include <boost/fusion/tuple/tuple_tie.hpp>
 
 namespace boost {
 namespace network {
@@ -78,7 +77,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
     typename endpoint_cache::iterator iter;
     bool inserted = false;
     if (!ec && cache_resolved_) {
-      boost::fusion::tie(iter, inserted) =
+      std::tie(iter, inserted) =
           endpoint_cache_.insert(std::make_pair(
               host, std::make_pair(endpoint_iterator, resolver_iterator())));
       once_resolved(ec, iter->second);

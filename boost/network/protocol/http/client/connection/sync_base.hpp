@@ -16,7 +16,6 @@
 #include <boost/asio/write.hpp>
 #include <boost/asio/read_until.hpp>
 #include <boost/network/protocol/http/response.hpp>
-#include <boost/tuple/tuple.hpp>
 
 #include <boost/network/protocol/http/client/connection/sync_normal.hpp>
 #ifdef BOOST_NETWORK_ENABLE_HTTPS

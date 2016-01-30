@@ -16,7 +16,6 @@
 #include <boost/network/protocol/http/message/wrappers/protocol.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/version.hpp>
-#include <boost/tuple/tuple.hpp>
 
 namespace boost {
 namespace network {

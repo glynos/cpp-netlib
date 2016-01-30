@@ -10,8 +10,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tuple>
+#include <boost/fusion/include/std_tuple.hpp>
 #include <boost/network/protocol/http/message/header.hpp>
-#include <boost/fusion/tuple.hpp>
 
 #ifdef BOOST_NETWORK_NO_LIB
 #ifndef BOOST_NETWORK_INLINE
@@ -47,7 +48,7 @@ namespace http {
 
 BOOST_NETWORK_INLINE void parse_version(
     std::string const& partial_parsed,
-    fusion::tuple<uint8_t, uint8_t>& version_pair) {
+    std::tuple<std::uint8_t, std::uint8_t>& version_pair) {
   using namespace boost::spirit::qi;
   parse(partial_parsed.begin(), partial_parsed.end(),
         (lit("HTTP/") >> ushort_ >> '.' >> ushort_), version_pair);

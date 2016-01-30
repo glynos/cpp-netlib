@@ -19,7 +19,6 @@
 #include <boost/network/protocol/http/client/connection/sync_base.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/optional/optional.hpp>
-#include <boost/tuple/tuple.hpp>
 
 namespace boost {
 namespace network {

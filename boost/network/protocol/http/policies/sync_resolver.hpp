@@ -7,11 +7,10 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <unordered_map>
-#include <boost/network/protocol/http/traits/resolver.hpp>
 #include <utility>
-#include <boost/fusion/adapted/std_pair.hpp>
-#include <boost/fusion/include/tuple.hpp>
+#include <tuple>
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/network/protocol/http/traits/resolver.hpp>
 #include <boost/network/traits/string.hpp>
 
 namespace boost {
@@ -45,7 +44,7 @@ struct sync_resolver {
           endpoint_cache_.find(hostname);
       if (cached_iterator == endpoint_cache_.end()) {
         bool inserted = false;
-        boost::fusion::tie(cached_iterator, inserted) =
+        std::tie(cached_iterator, inserted) =
             endpoint_cache_.insert(std::make_pair(
                 boost::to_lower_copy(hostname),
                 std::make_pair(

@@ -15,6 +15,7 @@
 #include <mutex>
 #include <array>
 #include <functional>
+#include <tuple>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/strand.hpp>
@@ -62,7 +63,7 @@ namespace http {
 
 #ifndef BOOST_NETWORK_NO_LIB
 extern void parse_version(std::string const& partial_parsed,
-                          fusion::tuple<uint8_t, uint8_t>& version_pair);
+                          std::tuple<std::uint8_t, std::uint8_t>& version_pair);
 extern void parse_headers(std::string const& input,
                           std::vector<request_header_narrow>& container);
 #endif
@@ -423,7 +424,7 @@ struct async_connection
       switch (state) {
         case method:
           input_range = boost::make_iterator_range(new_start, data_end);
-          fusion::tie(parsed_ok, result_range) =
+          std::tie(parsed_ok, result_range) =
               parser.parse_until(request_parser_type::method_done, input_range);
           if (!parsed_ok) {
             client_error();
@@ -443,7 +444,7 @@ struct async_connection
           }
         case uri:
           input_range = boost::make_iterator_range(new_start, data_end);
-          fusion::tie(parsed_ok, result_range) =
+          std::tie(parsed_ok, result_range) =
               parser.parse_until(request_parser_type::uri_done, input_range);
           if (!parsed_ok) {
             client_error();
@@ -463,18 +464,18 @@ struct async_connection
           }
         case version:
           input_range = boost::make_iterator_range(new_start, data_end);
-          fusion::tie(parsed_ok, result_range) = parser.parse_until(
+          std::tie(parsed_ok, result_range) = parser.parse_until(
               request_parser_type::version_done, input_range);
           if (!parsed_ok) {
             client_error();
             break;
           } else if (parsed_ok == true) {
-            fusion::tuple<uint8_t, uint8_t> version_pair;
+            std::tuple<std::uint8_t, std::uint8_t> version_pair;
             partial_parsed.append(std::begin(result_range),
                                   std::end(result_range));
             parse_version(partial_parsed, version_pair);
-            request_.http_version_major = fusion::get<0>(version_pair);
-            request_.http_version_minor = fusion::get<1>(version_pair);
+            request_.http_version_major = std::get<0>(version_pair);
+            request_.http_version_minor = std::get<1>(version_pair);
             new_start = std::end(result_range);
             partial_parsed.clear();
           } else {
@@ -486,7 +487,7 @@ struct async_connection
           }
         case headers:
           input_range = boost::make_iterator_range(new_start, data_end);
-          fusion::tie(parsed_ok, result_range) = parser.parse_until(
+          std::tie(parsed_ok, result_range) = parser.parse_until(
               request_parser_type::headers_done, input_range);
           if (!parsed_ok) {
             client_error();

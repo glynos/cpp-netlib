@@ -9,8 +9,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <iterator>
+#include <tuple>
 #include <boost/algorithm/string/classification.hpp>
-#include <boost/fusion/tuple.hpp>
 #include <boost/logic/tribool.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/network/traits/string.hpp>
@@ -64,7 +64,7 @@ struct response_parser {
   }
 
   template <class Range>
-  fusion::tuple<logic::tribool, iterator_range<typename Range::const_iterator> >
+  std::tuple<logic::tribool, iterator_range<typename Range::const_iterator> >
   parse_until(state_t stop_state, Range& range_) {
     logic::tribool parsed_ok(logic::indeterminate);
     typename Range::const_iterator start = std::begin(range_),
@@ -293,8 +293,8 @@ struct response_parser {
     }
     if (state_ == stop_state) { parsed_ok = true;
 }
-    return fusion::make_tuple(parsed_ok,
-                              boost::make_iterator_range(start, current));
+    return std::make_tuple(parsed_ok,
+                           boost::make_iterator_range(start, current));
   }
 
   state_t state() { return state_; }

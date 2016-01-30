@@ -26,7 +26,6 @@
 
 namespace tags = boost::network::tags;
 namespace logic = boost::logic;
-namespace fusion = boost::fusion;
 using namespace boost::network::http;
 
 TEST(IncrementalRequestParserTest, Constructor) {
@@ -41,7 +40,7 @@ TEST(IncrementalRequestParserTest, ParseMethod) {
   range_type result_range;
 
   std::string valid_http_method = "GET ";
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::method_done, valid_http_method);
   EXPECT_TRUE(parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
@@ -51,7 +50,7 @@ TEST(IncrementalRequestParserTest, ParseMethod) {
 
   std::string invalid_http_method = "get ";
   p.reset();
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::method_done, invalid_http_method);
   EXPECT_EQ(false, parsed_ok);
   parsed.assign(std::begin(result_range), std::end(result_range));
@@ -67,7 +66,7 @@ TEST(IncrementalRequestParserTest, ParseURI) {
   range_type result_range;
 
   std::string valid_http_request = "GET / HTTP/1.1\r\n";
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::uri_done, valid_http_request);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
@@ -77,7 +76,7 @@ TEST(IncrementalRequestParserTest, ParseURI) {
 
   std::string invalid_http_request = "GET /\t HTTP/1.1\r\n";
   p.reset();
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::uri_done, invalid_http_request);
   EXPECT_EQ(false, parsed_ok);
   parsed.assign(std::begin(result_range), std::end(result_range));
@@ -93,7 +92,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPVersion) {
   range_type result_range;
 
   std::string valid_http_request = "GET / HTTP/1.1\r\n";
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::version_done, valid_http_request);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
@@ -103,7 +102,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPVersion) {
 
   std::string invalid_http_request = "GET / HTTP 1.1\r\n";
   p.reset();
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::version_done, invalid_http_request);
   EXPECT_EQ(false, parsed_ok);
   parsed.assign(std::begin(result_range), std::end(result_range));
@@ -120,7 +119,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPHeaders) {
 
   std::string valid_http_request =
       "GET / HTTP/1.1\r\nHost: cpp-netlib.org\r\n\r\n";
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::headers_done, valid_http_request);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
@@ -131,7 +130,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPHeaders) {
   valid_http_request =
       "GET / HTTP/1.1\r\nHost: cpp-netlib.org\r\nConnection: close\r\n\r\n";
   p.reset();
-  fusion::tie(parsed_ok, result_range) =
+  std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::headers_done, valid_http_request);
   EXPECT_EQ(true, parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
