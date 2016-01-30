@@ -13,7 +13,6 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/network/protocol/http/client/connection/async_base.hpp>
 #include <boost/network/protocol/http/message/wrappers/protocol.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>

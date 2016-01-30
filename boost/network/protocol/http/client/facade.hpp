@@ -116,7 +116,7 @@ class basic_client_facade {
     if (body != string_type()) {
       request << remove_header("Content-Length")
               << header("Content-Length",
-                        boost::lexical_cast<string_type>(body.size()))
+                        std::to_string(body.size()))
               << boost::network::body(body);
     }
     typename headers_range<basic_request<Tag> >::type content_type_headers =
@@ -221,7 +221,7 @@ class basic_client_facade {
     if (body != string_type()) {
       request << remove_header("Content-Length")
               << header("Content-Length",
-                        boost::lexical_cast<string_type>(body.size()))
+                        std::to_string(body.size()))
               << boost::network::body(body);
     }
     typename headers_range<basic_request<Tag> >::type content_type_headers =

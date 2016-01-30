@@ -163,7 +163,7 @@ struct http_async_protocol_handler {
       std::swap(status, partial_parsed);
       status.append(std::begin(result_range), std::end(result_range));
       trim(status);
-      std::uint16_t status_int = lexical_cast<std::uint16_t>(status);
+      std::uint16_t status_int = std::stoi(status);
       status_promise.set_value(status_int);
       part_begin = std::end(result_range);
     } else if (parsed_ok == false) {

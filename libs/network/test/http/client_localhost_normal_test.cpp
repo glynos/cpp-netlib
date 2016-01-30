@@ -72,7 +72,7 @@ std::map<std::string, std::string> parse_headers(std::string const& body) {
 }
 
 std::string get_content_length(std::string const& content) {
-  return boost::lexical_cast<std::string>(content.length());
+  return std::to_string(content.length());
 }
 }
 

@@ -195,8 +195,7 @@ struct sync_connection_base_impl {
     } else {
       size_t already_read = response_buffer.size();
       if (already_read) body_stream << &response_buffer;
-      size_t length =
-          lexical_cast<size_t>(std::begin(content_length_range)->second) -
+      size_t length = std::stoul(std::begin(content_length_range)->second) -
           already_read;
       if (length == 0) { return;
 }

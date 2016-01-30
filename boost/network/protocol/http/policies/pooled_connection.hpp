@@ -103,7 +103,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         // check if the socket is open first
         if (!pimpl->is_open()) {
           pimpl->init_socket(request_.host(),
-                             lexical_cast<string_type>(request_.port()));
+                             std::to_string(request_.port()));
         }
         response_ = basic_response<Tag>();
         response_ << ::boost::network::source(request_.host());
@@ -117,7 +117,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
           if (!retry && e.code() == boost::asio::error::eof) {
             retry = true;
             pimpl->init_socket(request_.host(),
-                               lexical_cast<string_type>(request_.port()));
+                               std::to_string(request_.port()));
             continue;
           }
           throw;  // it's a retry, and there's something wrong.
@@ -197,7 +197,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& private_key_file = optional<string_type>(),
       optional<string_type> const& ciphers = optional<string_type>()) {
     string_type index =
-        (request_.host() + ':') + lexical_cast<string_type>(request_.port());
+      (request_.host() + ':') + std::to_string(request_.port());
     std::unique_lock<std::mutex> lock(host_mutex_);
     auto it = host_connections_.find(index);
     if (it != host_connections_.end()) {
@@ -209,7 +209,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
 
     connection_ptr connection(new connection_impl(
         resolver, follow_redirect_, request_.host(),
-        lexical_cast<string_type>(request_.port()),
+        std::to_string(request_.port()),
         // resolver function
         boost::bind(&pooled_connection_policy<Tag, version_major,
                                               version_minor>::resolve,

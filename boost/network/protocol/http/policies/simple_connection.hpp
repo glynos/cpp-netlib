@@ -11,7 +11,6 @@
 #include <memory>
 #include <cstdint>
 #include <boost/function.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/tags.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
@@ -75,7 +74,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
       basic_response<Tag> response_;
       do {
         pimpl->init_socket(request_.host(),
-                           lexical_cast<string_type>(request_.port()));
+                           std::to_string(request_.port()));
         pimpl->send_request_impl(method, request_, generator);
 
         response_ = basic_response<Tag>();
@@ -128,7 +127,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
       long ssl_options = 0) {
     connection_ptr connection_(new connection_impl(
         resolver, follow_redirect_, always_verify_peer, request_.host(),
-        lexical_cast<string_type>(request_.port()),
+        std::to_string(request_.port()),
         boost::bind(&simple_connection_policy<Tag, version_major,
                                               version_minor>::resolve,
                     this, boost::arg<1>(), boost::arg<2>(), boost::arg<3>()),

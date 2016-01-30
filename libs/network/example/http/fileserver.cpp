@@ -6,7 +6,6 @@
 #include <memory>
 #include <boost/network/include/http/server.hpp>
 #include <boost/thread.hpp>
-#include <boost/lexical_cast.hpp>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -68,7 +67,7 @@ struct file_cache {
         {"Content-Length", "0"}};
     std::vector<server::response_header> headers(common_headers,
                                                  common_headers + 3);
-    headers[2].value = boost::lexical_cast<std::string>(size);
+    headers[2].value = std::to_string(size);
     file_headers.insert(std::make_pair(real_filename, headers));
     return true;
   }

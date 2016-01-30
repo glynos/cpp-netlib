@@ -15,7 +15,6 @@
 #include <boost/network/traits/string.hpp>
 #include <boost/function.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/fusion/tuple/tuple_tie.hpp>
 #include <boost/bind/bind.hpp>
 
@@ -63,7 +62,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
     }
 
     typename resolver_type::query q(host,
-                                    lexical_cast<string_type>(port));
+                                    std::to_string(port));
     resolver_.async_resolve(q, resolver_strand_->wrap(boost::bind(
                                    &async_resolver<Tag>::handle_resolve,
                                    async_resolver<Tag>::shared_from_this(),

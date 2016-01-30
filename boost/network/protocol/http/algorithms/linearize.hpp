@@ -13,7 +13,6 @@
 #include <cstdint>
 #include <boost/algorithm/string/compare.hpp>
 #include <boost/concept/requires.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/network/constants.hpp>
 #include <boost/network/message/wrappers/body.hpp>
 #include <boost/network/protocol/http/message/header/name.hpp>
@@ -87,10 +86,8 @@ OutputIterator linearize(Request const& request,
   }
   *oi = consts::space_char();
   boost::copy(http_slash, oi);
-  string_type version_major_str =
-                  boost::lexical_cast<string_type>(version_major),
-              version_minor_str =
-                  boost::lexical_cast<string_type>(version_minor);
+  string_type version_major_str = std::to_string(version_major),
+              version_minor_str = std::to_string(version_minor);
   boost::copy(version_major_str, oi);
   *oi = consts::dot_char();
   boost::copy(version_minor_str, oi);
@@ -145,7 +142,7 @@ OutputIterator linearize(Request const& request,
         port(request);
 #endif
     if (port_) {
-      string_type port_str = boost::lexical_cast<string_type>(*port_);
+      string_type port_str = std::to_string(*port_);
       *oi = consts::colon_char();
       boost::copy(port_str, oi);
     }

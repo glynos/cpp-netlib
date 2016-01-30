@@ -24,7 +24,6 @@
 #include <boost/asio/read.hpp>
 #include <boost/asio/strand.hpp>
 #include <boost/asio/placeholders.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/bind.hpp>
 
@@ -102,7 +101,7 @@ struct sync_connection
           size_t content_length = 0;
 
           try {
-            content_length = boost::lexical_cast<size_t>(it->value);
+            content_length = std::stoul(it->value);
           }
           catch (...) {
             response_ = basic_response<Tag>::stock_reply(

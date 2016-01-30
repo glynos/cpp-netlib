@@ -15,7 +15,6 @@
 #include <boost/function.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/bind.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 

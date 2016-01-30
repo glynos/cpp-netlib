@@ -10,7 +10,6 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_MESSAGE_IPP
 
-#include <boost/lexical_cast.hpp>
 #include <boost/network/protocol/http/message.hpp>
 #include <cstdio>
 #include <cstdlib>
@@ -121,7 +120,7 @@ message_impl<Tag>::make_query_string(
            query_params.begin();
        i != query_params.end(); ++i) {
     if (i != query_params.begin()) { query_string += '&';
-    
+
 }query_string += url_encode(i->first);
     query_string += '=';
     query_string += url_encode(i->second);
@@ -147,8 +146,7 @@ message_impl<Tag>::make_set_cookie_header(
   }
   if (has_max_age) {
     set_cookie_header += "; Max-Age=\"";
-    set_cookie_header +=
-        boost::lexical_cast<message_impl<Tag>::string_type>(max_age);
+    set_cookie_header += std::to_string(max_age);
     set_cookie_header += '\"';
   }
   return set_cookie_header;

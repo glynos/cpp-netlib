@@ -19,7 +19,6 @@
 #include <boost/utility/swap.hpp>
 #include <boost/range/as_literal.hpp>
 #include <boost/range/iterator_range.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
 #include <boost/functional/hash_fwd.hpp>
 
@@ -219,8 +218,7 @@ inline uri::string_type port(const uri &uri_) { return uri_.port(); }
 inline boost::optional<unsigned short> port_us(const uri &uri_) {
   uri::string_type port = uri_.port();
   return (port.empty()) ? boost::optional<unsigned short>()
-                        : boost::optional<unsigned short>(
-                              boost::lexical_cast<unsigned short>(port));
+                        : boost::optional<unsigned short>(std::stoi(port));
 }
 
 inline uri::string_type path(const uri &uri_) { return uri_.path(); }
