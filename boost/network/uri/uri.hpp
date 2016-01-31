@@ -400,18 +400,4 @@ inline uri from_parts(const uri::string_type &base_uri,
 }  // namespace network
 }  // namespace boost
 
-#include <boost/filesystem/path.hpp>
-
-namespace boost {
-namespace network {
-namespace uri {
-inline uri from_file(const filesystem::path &path_) {
-  uri uri_;
-  builder(uri_).scheme("file").path(path_.string());
-  return uri_;
-}
-}  // namespace uri
-}  // namespace network
-}  // namespace boost
-
 #endif  // BOOST_NETWORK_URI_INC__

@@ -25,67 +25,42 @@ add_dependencies(simple_wget cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(atom_reader cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(rss_reader cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(trivial_google cppnetlib-uri cppnetlib-client-connections)
-set(BOOST_CLIENT_LIBS
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${Boost_THREAD_LIBRARY}
-    ${Boost_DATE_TIME_LIBRARY}
-    ${Boost_REGEX_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_CHRONO_LIBRARY})
-
-set(BOOST_SERVER_LIBS
-    ${Boost_THREAD_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
-    ${Boost_DATE_TIME_LIBRARY}
-    ${Boost_REGEX_LIBRARY}
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_CHRONO_LIBRARY})
 
 target_link_libraries(http_client
-    ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(simple_wget
-    ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(atom_reader
-    ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(rss_reader
-    ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(trivial_google
-  ${BOOST_CLIENT_LIBS}
   ${CMAKE_THREAD_LIBS_INIT}
   cppnetlib-uri
   cppnetlib-client-connections)
 
 target_link_libraries(hello_world_server
-    ${BOOST_SERVER_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-server-parsers)
 
 target_link_libraries(hello_world_client
-    ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(hello_world_async_server_with_work_queue
-    ${BOOST_CLIENT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections
@@ -126,8 +101,6 @@ endif()
 
 if (UNIX)
   target_link_libraries(fileserver
-    ${BOOST_SERVER_LIBS}
-    ${Boost_FILESYSTEM_LIBRARY}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-server-parsers)
   if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
