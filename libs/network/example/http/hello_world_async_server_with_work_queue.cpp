@@ -9,23 +9,37 @@
 
 #include <memory>
 #include <mutex>
+#include <chrono>
 #include <functional>
+#include <boost/network/utils/thread_group.hpp>
 #include <boost/network/include/http/server.hpp>
 #include <boost/network/uri.hpp>
-
 #include <boost/asio.hpp>
-#include <boost/thread.hpp>
 #include <iostream>
 #include <list>
 #include <signal.h>
 
-#define Log(line)                   \
-  do {                              \
-    std::cout << line << std::endl; \
-  } while (false)
+// This is needed to terminate the worker queue, and must be visible to the signal handler.
+bool running = true;
 
 struct handler;
 typedef boost::network::http::server<handler> server;
+
+struct server_data {
+  boost::network::http::server<handler> server;
+
+  server_data(const server::options &options)
+    : server(options) {}
+
+  void run() {
+    server.run();
+  }
+
+  void stop() {
+    running = false;
+    server.stop();
+  }
+};
 
 /**
  * request + connection encapsulation (work item)
@@ -36,7 +50,7 @@ struct request_data {
 
   typedef std::shared_ptr<request_data> pointer;
 
-  request_data(server::request  req, server::connection_ptr  conn)
+  request_data(server::request req, server::connection_ptr  conn)
       : req(std::move(req)), conn(std::move(conn)) {}
 };
 
@@ -49,24 +63,24 @@ struct work_queue {
   list requests;
   std::mutex mutex;
 
-  inline void put(const request_data::pointer& p_rd) {
+  inline void put(const request_data::pointer& request) {
     std::unique_lock<std::mutex> lock(mutex);
-    requests.push_back(p_rd);
+    requests.push_back(request);
     (void)lock;
   }
 
   inline request_data::pointer get() {
     std::unique_lock<std::mutex> lock(mutex);
 
-    request_data::pointer p_ret;
+    request_data::pointer request;
     if (!requests.empty()) {
-      p_ret = requests.front();
+      request = requests.front();
       requests.pop_front();
     }
 
     (void)lock;
 
-    return p_ret;
+    return request;
   }
 };
 
@@ -92,11 +106,11 @@ struct handler {
  *
  * @param error
  * @param signal
- * @param p_server_instance
+ * @param server
  */
-void shut_me_down(const boost::system::error_code& error, int,
-                  std::shared_ptr<server> p_server_instance) {
-  if (!error) p_server_instance->stop();
+void shut_me_down(const boost::system::error_code& error, int signal,
+                  std::shared_ptr<server_data> server) {
+  if (!error) server->stop();
 }
 
 /**
@@ -105,85 +119,79 @@ void shut_me_down(const boost::system::error_code& error, int,
  * @param queue
  */
 void process_request(work_queue& queue) {
-  while (!boost::this_thread::interruption_requested()) {
-    request_data::pointer p_req(queue.get());
-    if (p_req) {
+  while (running) {
+    request_data::pointer request(queue.get());
+    if (request) {
 
       // some heavy work!
-      boost::this_thread::sleep(boost::posix_time::seconds(10));
+      std::this_thread::sleep_for(std::chrono::seconds(10));
 
-      p_req->conn->set_status(server::connection::ok);
-      p_req->conn->write("Hello, world!");
+      request->conn->set_status(server::connection::ok);
+      request->conn->write("Hello, world!");
     }
 
-    boost::this_thread::sleep(boost::posix_time::microseconds(1000));
+    std::this_thread::sleep_for(std::chrono::microseconds(1000));
   }
 }
 
-int main(void) try {
-  // the thread group
-  std::shared_ptr<boost::thread_group> p_threads(
-      std::make_shared<boost::thread_group>());
+int main() {
+  try {
+    // the thread group
+    auto threads(std::make_shared<boost::network::utils::thread_group>());
 
-  // setup asio::io_service
-  std::shared_ptr<boost::asio::io_service> p_io_service(
-      std::make_shared<boost::asio::io_service>());
-  std::shared_ptr<boost::asio::io_service::work> p_work(
-      std::make_shared<boost::asio::io_service::work>(
-          boost::ref(*p_io_service)));
+    // setup asio::io_service
+    auto io_service(std::make_shared<boost::asio::io_service>());
+    auto work(std::make_shared<boost::asio::io_service::work>(std::ref(*io_service)));
 
-  // io_service threads
-  {
-    int n_threads = 5;
-    while (0 < n_threads--) {
-      p_threads->create_thread([=] () { p_io_service->run(); });
+    // io_service threads
+    {
+      int n_threads = 5;
+      while (0 < n_threads--) {
+        threads->create_thread([=] () { io_service->run(); });
+      }
     }
-  }
 
-  // the shared work queue
-  work_queue queue;
+    // the shared work queue
+    work_queue queue;
 
-  // worker threads that will process the request; off the queue
-  {
-    int n_threads = 5;
-    while (0 < n_threads--) {
-      p_threads->create_thread([&queue] () { process_request(queue); });
+    // worker threads that will process the request; off the queue
+    {
+      int n_threads = 5;
+      while (0 < n_threads--) {
+        threads->create_thread([&queue] () { process_request(queue); });
+      }
     }
+
+    // setup the async server
+    handler request_handler(queue);
+    auto server(std::make_shared<server_data>(
+        server::options(request_handler)
+        .address("0.0.0.0")
+        .port("8000")
+        .io_service(io_service)
+        .reuse_address(true)
+        .thread_pool(std::make_shared<boost::network::utils::thread_pool>(
+             2, io_service, threads))));
+
+    // setup clean shutdown
+    boost::asio::signal_set signals(*io_service, SIGINT, SIGTERM);
+    signals.async_wait([=] (boost::system::error_code const &ec, int signal) {
+        shut_me_down(ec, signal, server);
+      });
+
+    // run the async server
+    server->run();
+
+    work.reset();
+    io_service->stop();
+
+    threads->join_all();
+
+    std::cout << "Terminated normally" << std::endl;
+    exit(EXIT_SUCCESS);
   }
-
-  // setup the async server
-  handler request_handler(queue);
-  std::shared_ptr<server> p_server_instance(std::make_shared<server>(
-      server::options(request_handler)
-          .address("0.0.0.0")
-          .port("8800")
-          .io_service(p_io_service)
-          .reuse_address(true)
-          .thread_pool(std::make_shared<boost::network::utils::thread_pool>(
-               2, p_io_service, p_threads))));
-
-  // setup clean shutdown
-  boost::asio::signal_set signals(*p_io_service, SIGINT, SIGTERM);
-  signals.async_wait([=] (boost::system::error_code const &ec, int signal) {
-      shut_me_down(ec, signal, p_server_instance);
-    });
-
-  // run the async server
-  p_server_instance->run();
-
-  // we are stopped - shutting down
-
-  p_threads->interrupt_all();
-
-  p_work.reset();
-  p_io_service->stop();
-
-  p_threads->join_all();
-
-  Log("Terminated normally");
-  exit(EXIT_SUCCESS);
-}
-catch (const std::exception& e) {
-  Log("Abnormal termination - exception:" << e.what());
-  exit(EXIT_FAILURE);
+  catch (const std::exception& e) {
+    std::cerr << "Abnormal termination - exception:" << e.what() << std::endl;
+    exit(EXIT_FAILURE);
+  }
 }

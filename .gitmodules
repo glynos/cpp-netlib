@@ -7,3 +7,6 @@
 [submodule "libs/network/doc/_ext/breathe"]
 	path = libs/network/doc/_ext/breathe
 	url = https://github.com/michaeljones/breathe.git
+[submodule "deps/cxxopts"]
+	path = deps/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git

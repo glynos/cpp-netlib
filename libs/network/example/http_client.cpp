@@ -15,48 +15,36 @@
 #include <string>
 #include <utility>
 #include <iostream>
-
-namespace po = boost::program_options;
+#include "cxxopts.hpp"
 
 int main(int argc, char* argv[]) {
   using namespace boost::network;
-  po::options_description options("Allowed options");
-  std::string output_filename, source;
-  bool show_headers;
-  options.add_options()("help,h", "produce help message")(
-      "headers,H", "print headers")("status,S", "print status and message")(
-      "source,s", po::value<std::string>(&source), "source URL");
 
-  po::positional_options_description positional_options;
-  positional_options.add("source", 1);
-  po::variables_map vm;
-  try {
-    po::store(po::command_line_parser(argc, argv)
-                  .options(options)
-                  .positional(positional_options)
-                  .run(),
-              vm);
-    po::notify(vm);
-  }
-  catch (std::exception& e) {
-    std::cout << "Error: " << e.what() << std::endl;
-    std::cout << options << std::endl;
-    return EXIT_FAILURE;
-  }
+  cxxopts::Options options(argv[0], "Allowed options");
+  options.add_options()
+    ("h,help", "produce help message")
+    ("H,headers", "print headers")
+    ("S,status", "print status and message")
+    ("s,source", "source URL", cxxopts::value<std::string>())
+    ;
 
-  if (vm.count("help")) {
-    std::cout << options << std::endl;
+  options.parse_positional(std::vector<std::string>{"source"});
+  options.parse(argc, argv);
+
+  if (options.count("help")) {
+    std::cout << options.help({"", "Group"}) << std::endl;
     return EXIT_SUCCESS;
   }
 
-  if (vm.count("source") < 1) {
+  if (options.count("source") < 1) {
     std::cout << "Error: Source URL required." << std::endl;
-    std::cout << options << std::endl;
+    std::cout << options.help({"", "Group"}) << std::endl;
     return EXIT_FAILURE;
   }
 
-  show_headers = vm.count("headers") ? true : false;
-  bool show_status = vm.count("status") ? true : false;
+  std::string source = options["source"].as<std::string>();
+  bool show_headers = options.count("headers") ? true : false;
+  bool show_status = options.count("status") ? true : false;
 
   http::client::request request(source);
   http::client::string_type destination_ = host(request);
