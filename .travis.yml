@@ -30,8 +30,8 @@ install:
 - mkdir -p ${HOME}/bin
 - if [ "${CC}" = "gcc" ]; then export TOOLSET="gcc"; ln -s `which g++-4.8` ${HOME}/bin/g++;
   ln -s `which gcc-4.8` ${HOME}/bin/gcc; fi
-- if [ "${CC}" = "clang" ]; then export TOOLSET="clang"; ln -s `which clang-3.7` ${HOME}/bin/clang;
-  ln -s `which clang++-3.7` ${HOME}/bin/clang++; fi
+- if [ "${CC}" = "clang" ]; then export TOOLSET="clang"; ln -s `which clang-3.6` ${HOME}/bin/clang;
+  ln -s `which clang++-3.6` ${HOME}/bin/clang++; fi
 - export BOOST_VERSION=${BOOST_VER//./_}
 - export PATH=${HOME}/bin:${PATH}
 - travis_wait ./install-boost.sh
@@ -49,12 +49,12 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.7
+    - llvm-toolchain-precise-3.6
     - kalakris-cmake
     packages:
     - gcc-4.8
     - g++-4.8
-    - clang-3.7
+    - clang-3.6
     - cmake
 notifications:
   slack:
