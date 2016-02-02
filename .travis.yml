@@ -13,16 +13,16 @@ env:
 - BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON"
 - BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF"
 # Support the sanitizers in clang only
-- BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=thread"
-- BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=address"
+# - BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=thread"
+# - BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=address"
 # TODO(deanberris): It seems Boost is not msan-clean yet; report bugs and maybe fix?
 #- BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2"
-matrix:
-  exclude:
-    - compiler: g++
-      env: BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=thread"
-    - compiler: g++
-      env: BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=address"
+# matrix:
+#   exclude:
+#     - compiler: g++
+#       env: BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=thread"
+#     - compiler: g++
+#       env: BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=address"
 # TODO(deanberris): It seems Boost is not msan-clean yet; report bugs and maybe fix?
 #    - compiler: g++
 #      env: BOOST_VER=1.59.0 BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2"
