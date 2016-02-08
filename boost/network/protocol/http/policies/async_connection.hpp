@@ -28,29 +28,30 @@ struct async_connection_policy : resolver_policy<Tag>::type {
   typedef typename resolver_policy<Tag>::type resolver_base;
   typedef typename resolver_base::resolver_type resolver_type;
   typedef typename resolver_base::resolve_function resolve_function;
+  typedef typename resolver_base::resolve_completion_function
+      resolve_completion_function;
   typedef std::function<void(iterator_range<char const*> const&,
-                        std::error_code const&)> body_callback_function_type;
+                             std::error_code const&)>
+      body_callback_function_type;
   typedef std::function<bool(string_type&)> body_generator_function_type;
 
   struct connection_impl {
-    connection_impl(bool follow_redirect, bool always_verify_peer,
-                    resolve_function resolve, resolver_type& resolver,
-                    bool https, int timeout,
-                    optional<string_type>  /*unused*/const& certificate_filename,
-                    optional<string_type> const& verify_path,
-                    optional<string_type> const& certificate_file,
-                    optional<string_type> const& private_key_file,
-                    optional<string_type> const& ciphers, long ssl_options) {
-      pimpl = impl::async_connection_base<
-          Tag, version_major,
-          version_minor>::new_connection(resolve, resolver, follow_redirect,
-                                         always_verify_peer, https, timeout,
-                                         certificate_filename, verify_path,
-                                         certificate_file, private_key_file,
-                                         ciphers, ssl_options);
+    connection_impl(
+        bool follow_redirect, bool always_verify_peer, resolve_function resolve,
+        resolver_type& resolver, bool https, int timeout,
+        optional<string_type> /*unused*/ const& certificate_filename,
+        optional<string_type> const& verify_path,
+        optional<string_type> const& certificate_file,
+        optional<string_type> const& private_key_file,
+        optional<string_type> const& ciphers, long ssl_options) {
+      pimpl = impl::async_connection_base<Tag, version_major, version_minor>::
+          new_connection(resolve, resolver, follow_redirect, always_verify_peer,
+                         https, timeout, certificate_filename, verify_path,
+                         certificate_file, private_key_file, ciphers,
+                         ssl_options);
     }
 
-    basic_response<Tag> send_request(string_type  /*unused*/const& method,
+    basic_response<Tag> send_request(string_type /*unused*/ const& method,
                                      basic_request<Tag> const& request_,
                                      bool get_body,
                                      body_callback_function_type callback,
@@ -60,14 +61,14 @@ struct async_connection_policy : resolver_policy<Tag>::type {
 
    private:
     std::shared_ptr<http::impl::async_connection_base<Tag, version_major,
-                                                 version_minor> > pimpl;
+                                                      version_minor> > pimpl;
   };
 
   typedef std::shared_ptr<connection_impl> connection_ptr;
   connection_ptr get_connection(
       resolver_type& resolver, basic_request<Tag> const& request_,
       bool always_verify_peer,
-      optional<string_type>  /*unused*/const& certificate_filename =
+      optional<string_type> const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
@@ -76,14 +77,15 @@ struct async_connection_policy : resolver_policy<Tag>::type {
       long ssl_options = 0) {
     string_type protocol_ = protocol(request_);
     namespace ph = std::placeholders;
-    connection_ptr connection_(new connection_impl(
+    return std::make_shared<connection_impl>(
         follow_redirect_, always_verify_peer,
-        std::bind(&async_connection_policy<Tag, version_major,
-                  version_minor>::resolve, this, ph::_1, ph::_2, ph::_3, ph::_4),
+        [this](resolver_type& resolver, string_type const& host,
+               std::uint16_t port, resolve_completion_function once_resolved) {
+          this->resolve(resolver, host, port, once_resolved);
+        },
         resolver, boost::iequals(protocol_, string_type("https")), timeout_,
         certificate_filename, verify_path, certificate_file, private_key_file,
-        ciphers, ssl_options));
-    return connection_;
+        ciphers, ssl_options);
   }
 
   void cleanup() {}
