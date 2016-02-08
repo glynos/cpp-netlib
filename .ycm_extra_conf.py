@@ -34,6 +34,9 @@ flags = [
     '-I', 'deps/googletest/googletest/include',
     '-I', 'deps/googletest/googlemock/include',
 
+    # add dependency to asio
+    '-I', 'deps/asio/asio/include',
+
     # Always enable debugging for the project when building for semantic
     # completion.
     '-DBOOST_NETWORK_DEBUG',
