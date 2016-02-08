@@ -17,7 +17,7 @@ if (Boost_FOUND)
         add_executable(cpp-netlib-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-${test} cppnetlib-uri gtest_main)
         target_link_libraries(cpp-netlib-${test}
-            ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri
+            ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri
 	    gtest_main)
         if (OPENSSL_FOUND)
           target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})

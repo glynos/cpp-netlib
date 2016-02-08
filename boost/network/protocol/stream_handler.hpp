@@ -11,35 +11,32 @@
 #endif  // defined(_MSC_VER) && (_MSC_VER >= 1200)
 
 #include <memory>
-#include <boost/asio.hpp>
-#include <boost/asio/async_result.hpp>
-#include <boost/asio/async_result.hpp>
-#include <boost/asio/basic_socket.hpp>
-#include <boost/asio/detail/config.hpp>
-#include <boost/asio/detail/config.hpp>
-#include <boost/asio/detail/handler_type_requirements.hpp>
-#include <boost/asio/detail/push_options.hpp>
-#include <boost/asio/detail/throw_error.hpp>
-#include <boost/asio/error.hpp>
-#include <boost/asio/stream_socket_service.hpp>
+#include <asio/async_result.hpp>
+#include <asio/basic_socket.hpp>
+#include <asio/detail/config.hpp>
+#include <asio/detail/handler_type_requirements.hpp>
+#include <asio/detail/push_options.hpp>
+#include <asio/detail/throw_error.hpp>
+#include <asio/error.hpp>
+#include <asio/stream_socket_service.hpp>
 #include <cstddef>
 
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-#include <boost/asio/ssl.hpp>
+#include <asio/ssl.hpp>
 #endif
 
 namespace boost {
 namespace network {
 
-typedef boost::asio::ip::tcp::socket tcp_socket;
+typedef asio::ip::tcp::socket tcp_socket;
 
 #ifndef BOOST_NETWORK_ENABLE_HTTPS
 typedef tcp_socket stream_handler;
 typedef void ssl_context;
 #else
 
-typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
-typedef boost::asio::ssl::context ssl_context;
+typedef asio::ssl::stream<asio::ip::tcp::socket> ssl_socket;
+typedef asio::ssl::context ssl_context;
 
 struct stream_handler {
  public:
@@ -51,7 +48,7 @@ struct stream_handler {
   stream_handler(std::shared_ptr<ssl_socket> socket)
       : ssl_sock_(std::move(socket)), ssl_enabled(true) {}
 
-  stream_handler(boost::asio::io_service& io,
+  stream_handler(asio::io_service& io,
                  std::shared_ptr<ssl_context> ctx =
                      std::shared_ptr<ssl_context>()) {
     tcp_sock_ = std::make_shared<tcp_socket>(boost::ref(io));
@@ -65,10 +62,10 @@ struct stream_handler {
   }
 
   template <typename ConstBufferSequence, typename WriteHandler>
-  BOOST_ASIO_INITFN_RESULT_TYPE(WriteHandler,
-                                void(boost::system::error_code, std::size_t))
+  ASIO_INITFN_RESULT_TYPE(WriteHandler,
+                                void(std::error_code, std::size_t))
       async_write_some(const ConstBufferSequence& buffers,
-                       BOOST_ASIO_MOVE_ARG(WriteHandler) handler) {
+                       ASIO_MOVE_ARG(WriteHandler) handler) {
     try {
       if (ssl_enabled) {
         ssl_sock_->async_write_some(buffers, handler);
@@ -76,19 +73,19 @@ struct stream_handler {
         tcp_sock_->async_write_some(buffers, handler);
       }
     }
-    catch (const boost::system::error_code& e) {
+    catch (const std::error_code& e) {
       std::cerr << e.message() << std::endl;
     }
-    catch (const boost::system::system_error& e) {
+    catch (const std::system_error& e) {
       std::cerr << e.code() << ": " << e.what() << std::endl;
     }
   }
 
   template <typename MutableBufferSequence, typename ReadHandler>
-  BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
-                                void(boost::system::error_code, std::size_t))
+  ASIO_INITFN_RESULT_TYPE(ReadHandler,
+                                void(std::error_code, std::size_t))
       async_read_some(const MutableBufferSequence& buffers,
-                      BOOST_ASIO_MOVE_ARG(ReadHandler) handler) {
+                      ASIO_MOVE_ARG(ReadHandler) handler) {
     try {
       if (ssl_enabled) {
         ssl_sock_->async_read_some(buffers, handler);
@@ -96,15 +93,15 @@ struct stream_handler {
         tcp_sock_->async_read_some(buffers, handler);
       }
     }
-    catch (const boost::system::error_code& e) {
+    catch (const std::error_code& e) {
       std::cerr << e.message() << std::endl;
     }
-    catch (const boost::system::system_error& e) {
+    catch (const std::system_error& e) {
       std::cerr << e.code() << ": " << e.what() << std::endl;
     }
   }
 
-  void close(boost::system::error_code& e) {
+  void close(std::error_code& e) {
     if (ssl_enabled) {
       ssl_sock_->next_layer().close();
     } else {
@@ -120,19 +117,19 @@ struct stream_handler {
     }
   }
 
-  void shutdown(boost::asio::socket_base::shutdown_type st,
-                boost::system::error_code& e) {
+  void shutdown(asio::socket_base::shutdown_type st,
+                std::error_code& e) {
     try {
       if (ssl_enabled) {
         ssl_sock_->shutdown(e);
       } else {
-        tcp_sock_->shutdown(boost::asio::ip::tcp::socket::shutdown_send, e);
+        tcp_sock_->shutdown(asio::ip::tcp::socket::shutdown_send, e);
       }
     }
-    catch (const boost::system::error_code& e) {
+    catch (const std::error_code& e) {
       std::cerr << e.message() << std::endl;
     }
-    catch (const boost::system::system_error& e) {
+    catch (const std::system_error& e) {
       std::cerr << e.code() << ": " << e.what() << std::endl;
     }
   }
@@ -154,10 +151,10 @@ struct stream_handler {
   }
 
   template <typename HandshakeHandler>
-  BOOST_ASIO_INITFN_RESULT_TYPE(HandshakeHandler,
-                                void(boost::system::error_code))
+  ASIO_INITFN_RESULT_TYPE(HandshakeHandler,
+                                void(std::error_code))
       async_handshake(ssl_socket::handshake_type type,
-                      BOOST_ASIO_MOVE_ARG(HandshakeHandler) handler) {
+                      ASIO_MOVE_ARG(HandshakeHandler) handler) {
     try {
       if (ssl_enabled) {
         return ssl_sock_->async_handshake(type, handler);
@@ -165,10 +162,10 @@ struct stream_handler {
         // NOOP
       }
     }
-    catch (const boost::system::error_code& e) {
+    catch (const std::error_code& e) {
       std::cerr << e.message() << std::endl;
     }
-    catch (const boost::system::system_error& e) {
+    catch (const std::system_error& e) {
       std::cerr << e.code() << ": " << e.what() << std::endl;
     }
   }

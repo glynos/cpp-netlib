@@ -19,7 +19,7 @@ TYPED_TEST(HTTPClientTest, Constructors) {
   typename TypeParam::options options;
   TypeParam instance;
   TypeParam instance2(
-      options.io_service(std::make_shared<boost::asio::io_service>()));
+      options.io_service(std::make_shared<asio::io_service>()));
 }
 
 TYPED_TEST(HTTPClientTest, ConstructorsWithOptions) {
@@ -31,6 +31,6 @@ TYPED_TEST(HTTPClientTest, ConstructorsWithOptions) {
       options.openssl_certificate_file("foo").openssl_private_key_file("bar"));
   TypeParam instance4(
       options.follow_redirects(true)
-          .io_service(std::make_shared<boost::asio::io_service>())
+          .io_service(std::make_shared<asio::io_service>())
           .cache_resolved(true));
 }

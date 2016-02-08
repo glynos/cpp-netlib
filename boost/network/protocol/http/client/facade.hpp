@@ -45,7 +45,7 @@ class basic_client_facade {
    * code.
    */
   typedef std::function<void(iterator_range<char const*> const&,
-                        system::error_code const&)> body_callback_function_type;
+                        std::error_code const&)> body_callback_function_type;
 
   /**
    * Functions that model this signature will be used to generate part of the

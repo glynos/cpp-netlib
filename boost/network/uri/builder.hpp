@@ -6,7 +6,7 @@
 #ifndef __BOOST_NETWORK_URI_BUILDER_INC__
 #define __BOOST_NETWORK_URI_BUILDER_INC__
 
-#include <boost/asio/ip/address.hpp>
+#include <asio/ip/address.hpp>
 #include <boost/network/uri/uri.hpp>
 
 namespace boost {

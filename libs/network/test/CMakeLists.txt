@@ -20,9 +20,7 @@ if (Boost_FOUND)
       endif()
       add_executable(cpp-netlib-${test} ${test}.cpp)
       add_dependencies(cpp-netlib-${test} cppnetlib-uri gtest_main)
-      target_link_libraries(cpp-netlib-${test}
-	${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY}
-	${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri gtest_main)
+      target_link_libraries(cpp-netlib-${test} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri gtest_main)
       if (OPENSSL_FOUND)
 	target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
       endif()
@@ -41,4 +39,3 @@ if (Boost_FOUND)
     # Also copy the server directory to the root of the build directory.
     file(COPY server DESTINATION ${CPP-NETLIB_BINARY_DIR}/libs/network/test/)
 endif()
-

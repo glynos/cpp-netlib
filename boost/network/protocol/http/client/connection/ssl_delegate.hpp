@@ -10,8 +10,8 @@
 #include <memory>
 #include <cstdint>
 #include <functional>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/ssl.hpp>
+#include <asio/io_service.hpp>
+#include <asio/ssl.hpp>
 #include <boost/network/protocol/http/client/connection/connection_delegate.hpp>
 #include <boost/network/support/is_default_string.hpp>
 #include <boost/network/support/is_default_wstring.hpp>
@@ -33,12 +33,12 @@ struct ssl_delegate : connection_delegate,
 
   void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
                        std::uint16_t source_port,
-                       std::function<void(system::error_code const &)> handler) override;
+                       std::function<void(std::error_code const &)> handler) override;
   void write(asio::streambuf &command_streambuf,
-             std::function<void(system::error_code const &, size_t)> handler)
+             std::function<void(std::error_code const &, size_t)> handler)
       override;
   void read_some(asio::mutable_buffers_1 const &read_buffer,
-                 std::function<void(system::error_code const &, size_t)> handler)
+                 std::function<void(std::error_code const &, size_t)> handler)
       override;
   void disconnect() override;
   ~ssl_delegate() override;
@@ -59,8 +59,8 @@ struct ssl_delegate : connection_delegate,
   ssl_delegate(ssl_delegate const &);     // = delete
   ssl_delegate &operator=(ssl_delegate);  // = delete
 
-  void handle_connected(system::error_code const &ec,
-                        std::function<void(system::error_code const &)> handler);
+  void handle_connected(std::error_code const &ec,
+                        std::function<void(std::error_code const &)> handler);
 };
 
 }  // namespace impl

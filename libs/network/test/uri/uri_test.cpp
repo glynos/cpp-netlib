@@ -508,12 +508,6 @@ TEST(URITest, from_parts_4) {
                     uri::from_parts("http://www.example.com", "/path"));
 }
 
-TEST(URITest, from_file) {
-  boost::filesystem::path path("/a/path/to/a/file.txt");
-  EXPECT_EQ(uri::uri("file:///a/path/to/a/file.txt"),
-                    uri::from_file(path));
-}
-
 TEST(URITest, issue_104_test) {
   // https://github.com/cpp-netlib/cpp-netlib/issues/104
   std::unique_ptr<uri::uri> instance(new uri::uri("http://www.example.com/"));

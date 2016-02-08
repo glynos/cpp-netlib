@@ -10,8 +10,8 @@
 
 #include <memory>
 #include <mutex>
+#include <asio/ip/tcp.hpp>
 #include <boost/network/detail/debug.hpp>
-#include <boost/asio/ip/tcp.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/server/sync_connection.hpp>
@@ -51,7 +51,7 @@ struct sync_server_base : server_storage_base, socket_options_base {
   void stop() {
     // stop accepting new connections and let all the existing handlers
     // finish.
-    system::error_code ignored;
+    std::error_code ignored;
     acceptor_.close(ignored);
     service_.stop();
   }
@@ -64,12 +64,12 @@ struct sync_server_base : server_storage_base, socket_options_base {
  private:
   Handler& handler_;
   string_type address_, port_;
-  boost::asio::ip::tcp::acceptor acceptor_;
+  asio::ip::tcp::acceptor acceptor_;
   std::shared_ptr<sync_connection<Tag, Handler> > new_connection;
   std::mutex listening_mutex_;
   bool listening_;
 
-  void handle_accept(boost::system::error_code const& ec) {
+  void handle_accept(std::error_code const& ec) {
     if (ec) {
     }
     socket_options_base::socket_options(new_connection->socket());
@@ -78,12 +78,12 @@ struct sync_server_base : server_storage_base, socket_options_base {
     auto self = this->shared_from_this();
     acceptor_.async_accept(
         new_connection->socket(),
-        [=] (boost::system::error_code const &ec) { self->handle_accept(); });
+        [=] (std::error_code const &ec) { self->handle_accept(); });
   }
 
   void start_listening() {
-    using boost::asio::ip::tcp;
-    system::error_code error;
+    using asio::ip::tcp;
+    std::error_code error;
     tcp::resolver resolver(service_);
     tcp::resolver::query query(address_, port_);
     tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
@@ -119,7 +119,7 @@ struct sync_server_base : server_storage_base, socket_options_base {
     auto self = this->shared_from_this();
     acceptor_.async_accept(
         new_connection->socket(),
-        [=] (boost::system::error_code const &ec) { self->handle_accept(ec); });
+        [=] (std::error_code const &ec) { self->handle_accept(ec); });
     listening_ = true;
   }
 };

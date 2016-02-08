@@ -45,7 +45,7 @@ if (OPENSSL_FOUND)
     target_link_libraries(cppnetlib-client-connections ${OPENSSL_LIBRARIES})
 endif ()
 if (Boost_FOUND)
-    target_link_libraries(cppnetlib-client-connections ${Boost_LIBRARIES})
+    target_link_libraries(cppnetlib-client-connections)
 endif ()
 install(TARGETS cppnetlib-client-connections
     EXPORT cppnetlibTargets

@@ -16,7 +16,7 @@
 #ifndef BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 #define BOOST_NETWORK_PROTOCOL_HTTP_IMPL_RESPONSE_RESPONSE_IPP
 
-#include <boost/asio/buffer.hpp>
+#include <asio/buffer.hpp>
 #include <boost/network/traits/vector.hpp>
 #include <boost/network/protocol/http/message/header.hpp>
 #include <boost/network/protocol/http/tags.hpp>
@@ -100,9 +100,9 @@ struct basic_response<tags::http_server> {
   /// underlying memory blocks, therefore the reply object must remain
   /// valid and
   /// not be changed until the write operation has completed.
-  std::vector<boost::asio::const_buffer> to_buffers() {
-    using boost::asio::const_buffer;
-    using boost::asio::buffer;
+  std::vector<asio::const_buffer> to_buffers() {
+    using asio::const_buffer;
+    using asio::buffer;
     static const char name_value_separator[] = {':', ' '};
     static const char crlf[] = {'\r', '\n'};
     std::vector<const_buffer> buffers;
@@ -408,13 +408,13 @@ struct basic_response<tags::http_server> {
     }
   }
 
-  boost::asio::const_buffer trim_null(boost::asio::const_buffer buffer) {
-    std::size_t size = boost::asio::buffer_size(buffer);
-    return boost::asio::buffer(buffer, size - 1);
+  asio::const_buffer trim_null(asio::const_buffer buffer) {
+    std::size_t size = asio::buffer_size(buffer);
+    return asio::buffer(buffer, size - 1);
   }
 
-  boost::asio::const_buffer to_buffer(status_type status) {
-    using boost::asio::buffer;
+  asio::const_buffer to_buffer(status_type status) {
+    using asio::buffer;
     switch (status) {
       // 2xx Success
       case basic_response<tags::http_server>::ok:

@@ -15,16 +15,17 @@
 
 #include <memory>
 #include <array>
+#include <asio/io_service.hpp>
+#include <asio/ip/tcp.hpp>
+#include <asio/buffer.hpp>
+#include <asio/write.hpp>
+#include <asio/read.hpp>
+#include <asio/strand.hpp>
+#include <asio/placeholders.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 #include <boost/network/protocol/http/request_parser.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/response.hpp>
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/buffer.hpp>
-#include <boost/asio/write.hpp>
-#include <boost/asio/read.hpp>
-#include <boost/asio/strand.hpp>
-#include <boost/asio/placeholders.hpp>
-#include <boost/algorithm/string/case_conv.hpp>
 
 namespace boost {
 namespace network {
@@ -34,13 +35,13 @@ template <class Tag, class Handler>
 struct sync_connection
     : std::enable_shared_from_this<sync_connection<Tag, Handler> > {
 
-  sync_connection(boost::asio::io_service &service, Handler &handler)
+  sync_connection(asio::io_service &service, Handler &handler)
       : service_(service),
         handler_(handler),
         socket_(service_),
         wrapper_(service_) {}
 
-  boost::asio::ip::tcp::socket &socket() { return socket_; }
+  asio::ip::tcp::socket &socket() { return socket_; }
 
   void start() {
     // This is HTTP so we really want to just
@@ -48,15 +49,15 @@ struct sync_connection
     // and then pass that request object to the
     // handler_ instance.
     //
-    using boost::asio::ip::tcp;
-    boost::system::error_code option_error;
+    using asio::ip::tcp;
+    std::error_code option_error;
     socket_.set_option(tcp::no_delay(true), option_error);
     if (option_error)
-      handler_.log(boost::system::system_error(option_error).what());
+      handler_.log(std::system_error(option_error).what());
     auto self = this->shared_from_this();
     socket_.async_read_some(
-        boost::asio::buffer(buffer_),
-        wrapper_.wrap([=] (boost::system::error_code const &ec,
+        asio::buffer(buffer_),
+        wrapper_.wrap([=] (std::error_code const &ec,
                            std::size_t bytes_transferred) {
                         self->handle_read_headers(ec, bytes_transferred);
                       }));
@@ -70,7 +71,7 @@ struct sync_connection
     }
   };
 
-  void handle_read_headers(boost::system::error_code const &ec,
+  void handle_read_headers(std::error_code const &ec,
                            size_t bytes_transferred) {
     if (!ec) {
       request_.source = socket_.remote_endpoint().address().to_string();
@@ -89,9 +90,9 @@ struct sync_connection
             response_ = basic_response<Tag>::stock_reply(
                 basic_response<Tag>::bad_request);
             auto self = this->shared_from_this();
-            boost::asio::async_write(
+            asio::async_write(
                 socket_, response_.to_buffers(),
-                wrapper_.wrap([=] (boost::system::error_code const &ec) {
+                wrapper_.wrap([=] (std::error_code const &ec) {
                     self->handle_write(ec);
                   }));
             return;
@@ -106,9 +107,9 @@ struct sync_connection
             response_ = basic_response<Tag>::stock_reply(
                 basic_response<Tag>::bad_request);
             auto self = this->shared_from_this();
-            boost::asio::async_write(
+            asio::async_write(
                 socket_, response_.to_buffers(),
-                wrapper_.wrap([=] (boost::system::error_code const &ec) {
+                wrapper_.wrap([=] (std::error_code const &ec) {
                     self->handle_write(ec);
                   }));
             return;
@@ -124,8 +125,8 @@ struct sync_connection
             if (content_length > 0) {
               auto self = this->shared_from_this();
               socket_.async_read_some(
-                  boost::asio::buffer(buffer_),
-                  wrapper_.wrap([=] (boost::system::error_code const &ec,
+                  asio::buffer(buffer_),
+                  wrapper_.wrap([=] (std::error_code const &ec,
                                      std::size_t bytes_transferred) {
                                   self->handle_read_body_contents(ec, content_length,
                                                                   bytes_transferred);
@@ -136,17 +137,17 @@ struct sync_connection
 
           handler_(request_, response_);
           auto self = this->shared_from_this();
-          boost::asio::async_write(
+          asio::async_write(
               socket_, response_.to_buffers(),
-              wrapper_.wrap([=] (boost::system::error_code const &ec) {
+              wrapper_.wrap([=] (std::error_code const &ec) {
                   self->handle_write(ec);
                 }));
         } else {
           handler_(request_, response_);
           auto self = this->shared_from_this();
-          boost::asio::async_write(
+          asio::async_write(
               socket_, response_.to_buffers(),
-              wrapper_.wrap([=] (boost::system::error_code const &ec) {
+              wrapper_.wrap([=] (std::error_code const &ec) {
                   self->handle_write(ec);
                 }));
         }
@@ -154,16 +155,16 @@ struct sync_connection
         response_ =
             basic_response<Tag>::stock_reply(basic_response<Tag>::bad_request);
           auto self = this->shared_from_this();
-        boost::asio::async_write(
+        asio::async_write(
             socket_, response_.to_buffers(),
-            wrapper_.wrap([=] (boost::system::error_code const &ec) {
+            wrapper_.wrap([=] (std::error_code const &ec) {
                 self->handle_write(ec);
               }));
       } else {
         auto self = this->shared_from_this();
         socket_.async_read_some(
-            boost::asio::buffer(buffer_),
-            wrapper_.wrap([=] (boost::system::error_code const &ec,
+            asio::buffer(buffer_),
+            wrapper_.wrap([=] (std::error_code const &ec,
                                std::size_t bytes_transferred) {
                             self->handle_read_headers(ec, bytes_transferred);
                           }));
@@ -172,7 +173,7 @@ struct sync_connection
     // TODO Log the error?
   }
 
-  void handle_read_body_contents(boost::system::error_code const &ec,
+  void handle_read_body_contents(std::error_code const &ec,
                                  size_t bytes_to_read,
                                  size_t bytes_transferred) {
     if (!ec) {
@@ -183,16 +184,16 @@ struct sync_connection
       if (difference == 0) {
         handler_(request_, response_);
         auto self = this->shared_from_this();
-        boost::asio::async_write(
+        asio::async_write(
             socket_, response_.to_buffers(),
-            wrapper_.wrap([=] (boost::system::error_code const &ec) {
+            wrapper_.wrap([=] (std::error_code const &ec) {
                 self->handle_write(ec);
               }));
       } else {
         auto self = this->shared_from_this();
         socket_.async_read_some(
-            boost::asio::buffer(buffer_),
-            wrapper_.wrap([=] (boost::system::error_code const &ec,
+            asio::buffer(buffer_),
+            wrapper_.wrap([=] (std::error_code const &ec,
                                std::size_t bytes_transferred) {
                             self->handle_read_body_contents(ec, difference, bytes_transferred);
                           }));
@@ -201,18 +202,18 @@ struct sync_connection
     // TODO Log the error?
   }
 
-  void handle_write(boost::system::error_code const &ec) {
+  void handle_write(std::error_code const &ec) {
     if (!ec) {
-      using boost::asio::ip::tcp;
-      boost::system::error_code ignored_ec;
+      using asio::ip::tcp;
+      std::error_code ignored_ec;
       socket_.shutdown(tcp::socket::shutdown_receive, ignored_ec);
     }
   }
 
-  boost::asio::io_service &service_;
+  asio::io_service &service_;
   Handler &handler_;
-  boost::asio::ip::tcp::socket socket_;
-  boost::asio::io_service::strand wrapper_;
+  asio::ip::tcp::socket socket_;
+  asio::io_service::strand wrapper_;
 
   typedef std::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
       buffer_type;

@@ -60,7 +60,7 @@ struct async_server_base : server_storage_base, socket_options_base {
                       // listening
       scoped_mutex_lock stopping_lock(stopping_mutex_);
       stopping = true;
-      system::error_code ignored;
+      std::error_code ignored;
       acceptor.close(ignored);
       listening = false;
       service_.post([this] () { this->handle_stop(); });
@@ -99,7 +99,7 @@ struct async_server_base : server_storage_base, socket_options_base {
                         // the stop command is reached
   }
 
-  void handle_accept(boost::system::error_code const &ec) {
+  void handle_accept(std::error_code const &ec) {
     {
       scoped_mutex_lock stopping_lock(stopping_mutex_);
       if (stopping)
@@ -126,12 +126,12 @@ struct async_server_base : server_storage_base, socket_options_base {
 #else
         new_connection->socket(),
 #endif
-        [this] (boost::system::error_code const &ec) { this->handle_accept(ec); });
+        [this] (std::error_code const &ec) { this->handle_accept(ec); });
   }
 
   void start_listening() {
-    using boost::asio::ip::tcp;
-    system::error_code error;
+    using asio::ip::tcp;
+    std::error_code error;
     // this allows repeated cycles of run -> stop -> run
     service_.reset();
     tcp::resolver resolver(service_);
@@ -168,7 +168,7 @@ struct async_server_base : server_storage_base, socket_options_base {
 #else
         new_connection->socket(),
 #endif
-        [this] (boost::system::error_code const &ec) { this->handle_accept(ec); });
+        [this] (std::error_code const &ec) { this->handle_accept(ec); });
     listening = true;
     scoped_mutex_lock stopping_lock(stopping_mutex_);
     stopping = false;  // if we were in the process of stopping, we revoke
