@@ -50,14 +50,13 @@ struct async_connection_base {
     typedef http_async_connection<Tag, version_major, version_minor>
         async_connection;
     typedef typename delegate_factory<Tag>::type delegate_factory_type;
-    connection_ptr temp;
-    temp.reset(new async_connection(
-        resolver, resolve, follow_redirect, timeout,
-        delegate_factory_type::new_connection_delegate(
-            resolver.get_io_service(), https, always_verify_peer,
-            certificate_filename, verify_path, certificate_file,
-            private_key_file, ciphers, ssl_options)));
-    BOOST_ASSERT(temp.get() != 0);
+    auto delegate = delegate_factory_type::new_connection_delegate(
+        resolver.get_io_service(), https, always_verify_peer,
+        certificate_filename, verify_path, certificate_file, private_key_file,
+        ciphers, ssl_options);
+    auto temp = std::make_shared<async_connection>(
+        resolver, resolve, follow_redirect, timeout, std::move(delegate));
+    BOOST_ASSERT(temp != nullptr);
     return temp;
   }
 
