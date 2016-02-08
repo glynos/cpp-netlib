@@ -22,8 +22,8 @@ namespace network {
 namespace http {
 namespace impl {
 
-struct ssl_delegate : connection_delegate,
-                      std::enable_shared_from_this<ssl_delegate> {
+struct ssl_delegate : public connection_delegate,
+                      public std::enable_shared_from_this<ssl_delegate> {
   ssl_delegate(asio::io_service &service, bool always_verify_peer,
                optional<std::string> certificate_filename,
                optional<std::string> verify_path,
@@ -32,14 +32,14 @@ struct ssl_delegate : connection_delegate,
                optional<std::string> ciphers, long ssl_options);
 
   void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
-                       std::uint16_t source_port,
-                       std::function<void(std::error_code const &)> handler) override;
-  void write(asio::streambuf &command_streambuf,
-             std::function<void(std::error_code const &, size_t)> handler)
-      override;
-  void read_some(asio::mutable_buffers_1 const &read_buffer,
-                 std::function<void(std::error_code const &, size_t)> handler)
-      override;
+               std::uint16_t source_port,
+               std::function<void(std::error_code const &)> handler) override;
+  void write(
+      asio::streambuf &command_streambuf,
+      std::function<void(std::error_code const &, size_t)> handler) override;
+  void read_some(
+      asio::mutable_buffers_1 const &read_buffer,
+      std::function<void(std::error_code const &, size_t)> handler) override;
   void disconnect() override;
   ~ssl_delegate() override;
 
@@ -68,9 +68,4 @@ struct ssl_delegate : connection_delegate,
 }  // namespace network
 }  // namespace boost
 
-#ifdef BOOST_NETWORK_NO_LIB
-#include <boost/network/protocol/http/client/connection/ssl_delegate.ipp>
-#endif /* BOOST_NETWORK_NO_LIB */
-
-#endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819 \
-          */
+#endif  // BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_SSL_DELEGATE_20110819

@@ -44,9 +44,6 @@ set_target_properties(cppnetlib-client-connections
 if (OPENSSL_FOUND)
     target_link_libraries(cppnetlib-client-connections ${OPENSSL_LIBRARIES})
 endif ()
-if (Boost_FOUND)
-    target_link_libraries(cppnetlib-client-connections)
-endif ()
 install(TARGETS cppnetlib-client-connections
     EXPORT cppnetlibTargets
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}

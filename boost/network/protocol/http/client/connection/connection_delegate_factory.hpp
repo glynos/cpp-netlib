@@ -31,8 +31,7 @@ struct connection_delegate_factory {
   typedef std::shared_ptr<connection_delegate> connection_delegate_ptr;
   typedef typename string<Tag>::type string_type;
 
-  // This is the factory method that actually returns the delegate
-  // instance.
+  // This is the factory method that actually returns the delegate instance.
   // TODO(dberris): Support passing in proxy settings when crafting connections.
   static connection_delegate_ptr new_connection_delegate(
       asio::io_service& service, bool https, bool always_verify_peer,
@@ -43,27 +42,23 @@ struct connection_delegate_factory {
     connection_delegate_ptr delegate;
     if (https) {
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-      delegate.reset(new ssl_delegate(
+      delegate = std::make_shared<ssl_delegate>(
           service, always_verify_peer, certificate_filename, verify_path,
-          certificate_file, private_key_file, ciphers, ssl_options));
+          certificate_file, private_key_file, ciphers, ssl_options);
 #else
       BOOST_THROW_EXCEPTION(std::runtime_error("HTTPS not supported."));
 #endif /* BOOST_NETWORK_ENABLE_HTTPS */
     } else {
-      delegate.reset(new normal_delegate(service));
+      delegate = std::make_shared<normal_delegate>(service);
     }
     return delegate;
   }
 };
 
 }  // namespace impl
- /* impl */
-} // namespace http
- /* http */
-} // namespace network
- /* network */
-} // namespace boost
- /* boost */
+}  // namespace http
+}  // namespace network
+}  // namespace boost
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_CONNECTION_DELEGATE_FACTORY_HPP_20110819 \
           */
