@@ -31,8 +31,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
   typedef typename string<Tag>::type string_type;
   typedef std::unordered_map<string_type, resolver_iterator_pair>
       endpoint_cache;
-  typedef std::function<
-      void(std::error_code const &, resolver_iterator_pair)>
+  typedef std::function<void(std::error_code const &, resolver_iterator_pair)>
       resolve_completion_function;
   typedef std::function<void(resolver_type &, string_type, std::uint16_t,
                              resolve_completion_function)> resolve_function;
@@ -47,8 +46,7 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
       : cache_resolved_(cache_resolved), endpoint_cache_() {}
 
   void resolve(resolver_type &resolver_, string_type const &host,
-               std::uint16_t port,
-               resolve_completion_function once_resolved) {
+               std::uint16_t port, resolve_completion_function once_resolved) {
     if (cache_resolved_) {
       typename endpoint_cache::iterator iter =
           endpoint_cache_.find(boost::to_lower_copy(host));
@@ -59,27 +57,25 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
       }
     }
 
-    typename resolver_type::query q(host,
-                                    std::to_string(port));
+    typename resolver_type::query q(host, std::to_string(port));
     auto self = this->shared_from_this();
-    resolver_.async_resolve(q, resolver_strand_->wrap([=] (std::error_code const &ec,
-                                                           resolver_iterator endpoint_iterator) {
-                                                        self->handle_resolve(boost::to_lower_copy(host),
-                                                                             once_resolved,
-                                                                             ec, endpoint_iterator);
-                                                      }));
+    resolver_.async_resolve(
+        q, resolver_strand_->wrap([=](std::error_code const &ec,
+                                      resolver_iterator endpoint_iterator) {
+          self->handle_resolve(boost::to_lower_copy(host), once_resolved, ec,
+                               endpoint_iterator);
+        }));
   }
 
-  void handle_resolve(string_type  /*unused*/const &host,
+  void handle_resolve(string_type /*unused*/ const &host,
                       resolve_completion_function once_resolved,
                       std::error_code const &ec,
                       resolver_iterator endpoint_iterator) {
     typename endpoint_cache::iterator iter;
     bool inserted = false;
     if (!ec && cache_resolved_) {
-      std::tie(iter, inserted) =
-          endpoint_cache_.insert(std::make_pair(
-              host, std::make_pair(endpoint_iterator, resolver_iterator())));
+      std::tie(iter, inserted) = endpoint_cache_.insert(std::make_pair(
+          host, std::make_pair(endpoint_iterator, resolver_iterator())));
       once_resolved(ec, iter->second);
     } else {
       once_resolved(ec, std::make_pair(endpoint_iterator, resolver_iterator()));

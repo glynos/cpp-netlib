@@ -33,14 +33,17 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
   typedef std::function<typename resolver_base::resolver_iterator_pair(
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
+  typedef typename resolver_base::resolver_completion_function
+      resolver_completion_function;
   typedef std::function<void(iterator_range<char const*> const&,
-                        std::error_code const&)> body_callback_function_type;
+                             std::error_code const&)>
+      body_callback_function_type;
   typedef std::function<bool(string_type&)> body_generator_function_type;
 
   struct connection_impl {
     connection_impl(
         resolver_type& resolver, bool follow_redirect, bool always_verify_peer,
-        string_type  /*unused*/const& hostname, string_type const& port,
+        string_type /*unused*/ const& hostname, string_type const& port,
         resolver_function_type resolve, bool https, int timeout,
         optional<string_type> const& certificate_filename =
             optional<string_type>(),
@@ -54,16 +57,15 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
       (void)hostname;
       (void)port;
 
-      pimpl.reset(impl::sync_connection_base<
-          Tag, version_major,
-          version_minor>::new_connection(resolver, resolve, https,
-                                         always_verify_peer, timeout,
-                                         certificate_filename, verify_path,
-                                         certificate_file, private_key_file,
-                                         ciphers, ssl_options));
+      pimpl.reset(
+          impl::sync_connection_base<Tag, version_major, version_minor>::
+              new_connection(resolver, resolve, https, always_verify_peer,
+                             timeout, certificate_filename, verify_path,
+                             certificate_file, private_key_file, ciphers,
+                             ssl_options));
     }
 
-    basic_response<Tag> send_request(string_type  /*unused*/const& method,
+    basic_response<Tag> send_request(string_type /*unused*/ const& method,
                                      basic_request<Tag> request_, bool get_body,
                                      body_callback_function_type callback,
                                      body_generator_function_type generator) {
@@ -72,8 +74,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
 
       basic_response<Tag> response_;
       do {
-        pimpl->init_socket(request_.host(),
-                           std::to_string(request_.port()));
+        pimpl->init_socket(request_.host(), std::to_string(request_.port()));
         pimpl->send_request_impl(method, request_, generator);
 
         response_ = basic_response<Tag>();
@@ -99,17 +100,17 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
                   "Location header not defined in redirect response.");
           } else {
             break;
-}
+          }
         } else {
           break;
-}
+        }
       } while (true);
       return response_;
     }
 
    private:
     std::shared_ptr<http::impl::sync_connection_base<Tag, version_major,
-                                                version_minor> > pimpl;
+                                                     version_minor> > pimpl;
     bool follow_redirect_;
   };
 
@@ -117,7 +118,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
   connection_ptr get_connection(
       resolver_type& resolver, basic_request<Tag> const& request_,
       bool always_verify_peer,
-      optional<string_type>  /*unused*/const& certificate_filename =
+      optional<string_type> /*unused*/ const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
@@ -128,9 +129,10 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
     connection_ptr connection_(new connection_impl(
         resolver, follow_redirect_, always_verify_peer, request_.host(),
         std::to_string(request_.port()),
-        std::bind(&simple_connection_policy<Tag, version_major,
-                                                 version_minor>::resolve,
-                  this, ph::_1, ph::_2, ph::_3),
+        [this](resolver_type& resolver, string_type const& host,
+               std::uint16_t port, resolver_completion_function once_resolved) {
+          this->resolve(resolver, host, port, once_resolved);
+        },
         boost::iequals(request_.protocol(), string_type("https")), timeout_,
         certificate_filename, verify_path, certificate_file, private_key_file,
         ciphers, ssl_options));

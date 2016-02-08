@@ -35,7 +35,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
   typedef std::function<void(iterator_range<char const*> const&,
-                        std::error_code const&)> body_callback_function_type;
+                             std::error_code const&)>
+      body_callback_function_type;
   typedef std::function<bool(string_type&)> body_generator_function_type;
 
   void cleanup() { host_connection_map().swap(host_connections_); }
@@ -103,8 +104,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         basic_response<Tag> response_;
         // check if the socket is open first
         if (!pimpl->is_open()) {
-          pimpl->init_socket(request_.host(),
-                             std::to_string(request_.port()));
+          pimpl->init_socket(request_.host(), std::to_string(request_.port()));
         }
         response_ = basic_response<Tag>();
         response_ << ::boost::network::source(request_.host());
@@ -132,7 +132,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
           pimpl->read_body(response_, response_buffer);
         }
 
-        typename headers_range<basic_response<Tag> >::type connection_range =
+        typename headers_range<basic_response<Tag>>::type connection_range =
             headers(response_)["Connection"];
         if (version_major == 1 && version_minor == 1 &&
             !boost::empty(connection_range) &&
@@ -145,10 +145,10 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         if (connection_follow_redirect_) {
           std::uint16_t status = response_.status();
           if (status >= 300 && status <= 307) {
-            typename headers_range<basic_response<Tag> >::type location_range =
+            typename headers_range<basic_response<Tag>>::type location_range =
                 headers(response_)["Location"];
             typename range_iterator<
-                typename headers_range<basic_request<Tag> >::type>::type
+                typename headers_range<basic_request<Tag>>::type>::type
                 location_header = std::begin(location_range);
             if (location_header != std::end(location_range)) {
               request_.uri(location_header->second);
@@ -168,7 +168,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     }
 
     std::shared_ptr<http::impl::sync_connection_base<Tag, version_major,
-                                                version_minor> > pimpl;
+                                                     version_minor>> pimpl;
     resolver_type& resolver_;
     bool connection_follow_redirect_;
     get_connection_function get_connection_;
@@ -182,7 +182,8 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
 
   typedef std::shared_ptr<connection_impl> connection_ptr;
 
-  typedef std::unordered_map<string_type, std::weak_ptr<connection_impl>> host_connection_map;
+  typedef std::unordered_map<string_type, std::weak_ptr<connection_impl>>
+      host_connection_map;
   std::mutex host_mutex_;
   host_connection_map host_connections_;
   bool follow_redirect_;
@@ -198,7 +199,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& private_key_file = optional<string_type>(),
       optional<string_type> const& ciphers = optional<string_type>()) {
     string_type index =
-      (request_.host() + ':') + std::to_string(request_.port());
+        (request_.host() + ':') + std::to_string(request_.port());
     std::unique_lock<std::mutex> lock(host_mutex_);
     auto it = host_connections_.find(index);
     if (it != host_connections_.end()) {
@@ -209,19 +210,30 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
     }
 
     namespace ph = std::placeholders;
-    connection_ptr connection(new connection_impl(
+    auto connection = std::make_shared<connection_impl>(
         resolver, follow_redirect_, request_.host(),
         std::to_string(request_.port()),
         // resolver function
-        std::bind(&pooled_connection_policy<Tag, version_major,
-                  version_minor>::resolve, this, ph::_1, ph::_2, ph::_3),
+        [this](
+            resolver_type& resolver, string_type const& host,
+            std::uint16_t port,
+            typename resolver_type::resolve_completion_function once_resolved) {
+          this->resolve(resolver, host, port, once_resolved);
+        },
         // connection factory
-        std::bind(&pooled_connection_policy<Tag, version_major,
-                                                 version_minor>::get_connection,
-                  this, ph::_1, ph::_2, always_verify_peer, ph::_3, ph::_4, ph::_5, ph::_6, ph::_7),
+        [this, always_verify_peer](
+            resolver_type& resolver, basic_request<Tag> const& request, bool,
+            optional<string_type> const& certificate_filename,
+            optional<string_type> const& verify_path,
+            optional<string_type> const& private_key_file,
+            optional<string_type> const& ciphers) {
+          return this->get_connection(resolver, request, always_verify_peer,
+                                      certificate_filename, verify_path,
+                                      private_key_file, ciphers);
+        },
         boost::iequals(request_.protocol(), string_type("https")),
         always_verify_peer, timeout_, certificate_filename, verify_path,
-        certificate_file, private_key_file, ciphers, 0));
+        certificate_file, private_key_file, ciphers, 0);
     host_connections_.insert(std::make_pair(index, connection));
     return connection;
   }
