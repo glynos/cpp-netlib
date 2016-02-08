@@ -79,6 +79,7 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     # Use libc++ only in OS X.
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lc++")
   endif()
 endif()
 
