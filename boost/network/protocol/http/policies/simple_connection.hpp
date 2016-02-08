@@ -130,7 +130,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
         resolver, follow_redirect_, always_verify_peer, request_.host(),
         std::to_string(request_.port()),
         [this](resolver_type& resolver, string_type const& host,
-               std::uint16_t port, resolve_completion_function once_resolved) {
+               std::uint16_t port, resolver_completion_function once_resolved) {
           this->resolve(resolver, host, port, once_resolved);
         },
         boost::iequals(request_.protocol(), string_type("https")), timeout_,
