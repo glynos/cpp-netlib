@@ -33,7 +33,7 @@ struct file_cache {
   explicit file_cache(std::string doc_root) : doc_root_(std::move(doc_root)) {}
 
   ~file_cache() throw() {
-    BOOST_FOREACH(region_map::value_type const & region, regions) {
+    for (auto &region : regions) {
       munmap(region.second.first, region.second.second);
     }
   }
@@ -53,7 +53,11 @@ struct file_cache {
     int fd = open(real_filename.c_str(), O_RDONLY | O_NONBLOCK);
 #endif
     if (fd == -1) return false;
-    std::size_t size = lseek(fd, 0, SEEK_END);
+    off_t size = lseek(fd, 0, SEEK_END);
+    if (size == -1) {
+      close(fd);
+      return false;
+    }
     void *region = mmap(0, size, PROT_READ, MAP_PRIVATE, fd, 0);
     if (region == MAP_FAILED) {
       close(fd);
@@ -68,6 +72,7 @@ struct file_cache {
                                                  common_headers + 3);
     headers[2].value = std::to_string(size);
     file_headers.insert(std::make_pair(real_filename, headers));
+    close(fd);
     return true;
   }
 
@@ -174,11 +179,16 @@ struct file_server {
 };
 
 int main(int, char *[]) {
-  file_cache cache(".");
-  file_server handler(cache);
-  server::options options(handler);
-  server instance(options.thread_pool(std::make_shared<utils::thread_pool>(4))
-                      .address("0.0.0.0")
-                      .port("8000"));
-  instance.run();
+  try {
+    file_cache cache(".");
+    file_server handler(cache);
+    server::options options(handler);
+    server instance(options.thread_pool(std::make_shared<utils::thread_pool>(4))
+                    .address("0.0.0.0")
+                    .port("8000"));
+    instance.run();
+  }
+  catch (std::exception &e) {
+    std::cerr << e.what() << std::endl;
+  }
 }

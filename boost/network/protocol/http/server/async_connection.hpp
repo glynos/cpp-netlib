@@ -199,6 +199,7 @@ struct async_connection
         headers_in_progress(false) {
     (void)ctx;
     new_start = read_buffer_.begin();
+    data_end = read_buffer_.begin();
   }
 
   ~async_connection() throw() {
