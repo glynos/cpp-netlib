@@ -46,6 +46,7 @@ struct async_connection_base {
       optional<string_type> certificate_file = optional<string_type>(),
       optional<string_type> private_key_file = optional<string_type>(),
       optional<string_type> ciphers = optional<string_type>(),
+      optional<string_type> sni_hostname = optional<string_type>(),
       long ssl_options = 0) {
     typedef http_async_connection<Tag, version_major, version_minor>
         async_connection;
@@ -53,7 +54,7 @@ struct async_connection_base {
     auto delegate = delegate_factory_type::new_connection_delegate(
         resolver.get_io_service(), https, always_verify_peer,
         certificate_filename, verify_path, certificate_file, private_key_file,
-        ciphers, ssl_options);
+        ciphers, sni_hostname, ssl_options);
     auto temp = std::make_shared<async_connection>(
         resolver, resolve, follow_redirect, timeout, std::move(delegate));
     BOOST_ASSERT(temp != nullptr);

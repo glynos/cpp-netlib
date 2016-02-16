@@ -39,8 +39,8 @@ struct sync_connection_base_impl {
 
   template <class Socket>
   void init_socket(Socket& socket_, resolver_type& resolver_,
-                   string_type  /*unused*/const& hostname, string_type const& port,
-                   resolver_function_type resolve_) {
+                   string_type /*unused*/ const& hostname,
+                   string_type const& port, resolver_function_type resolve_) {
     using asio::ip::tcp;
     std::error_code error = asio::error::host_not_found;
     typename resolver_type::iterator endpoint_iterator, end;
@@ -100,7 +100,7 @@ struct sync_connection_base_impl {
   }
 
   template <class Socket>
-  void send_request_impl(Socket& socket_, string_type  /*unused*/const& method,
+  void send_request_impl(Socket& socket_, string_type /*unused*/ const& method,
                          asio::streambuf& request_buffer) {
     // TODO(dberris): review parameter necessity.
     (void)method;
@@ -118,8 +118,8 @@ struct sync_connection_base_impl {
     std::error_code error;
     if (response_buffer.size() > 0) body_stream << &response_buffer;
 
-    while (asio::read(socket_, response_buffer,
-                             asio::transfer_at_least(1), error)) {
+    while (asio::read(socket_, response_buffer, asio::transfer_at_least(1),
+                      error)) {
       body_stream << &response_buffer;
     }
   }
@@ -171,8 +171,7 @@ struct sync_connection_base_impl {
                     read(socket_, response_buffer,
                          asio::transfer_at_least(bytes_to_read), error);
                 if (chunk_bytes_read == 0) {
-                  if (error != asio::error::eof)
-                    throw std::system_error(error);
+                  if (error != asio::error::eof) throw std::system_error(error);
                   stopping_inner = true;
                 }
               }
@@ -195,14 +194,14 @@ struct sync_connection_base_impl {
     } else {
       size_t already_read = response_buffer.size();
       if (already_read) body_stream << &response_buffer;
-      size_t length = std::stoul(std::begin(content_length_range)->second) -
-          already_read;
-      if (length == 0) { return;
-}
+      size_t length =
+          std::stoul(std::begin(content_length_range)->second) - already_read;
+      if (length == 0) {
+        return;
+      }
       size_t bytes_read = 0;
       while ((bytes_read = asio::read(socket_, response_buffer,
-                                             asio::transfer_at_least(1),
-                                             error))) {
+                                      asio::transfer_at_least(1), error))) {
         body_stream << &response_buffer;
         length -= bytes_read;
         if ((length <= 0) || error) break;
@@ -223,7 +222,7 @@ struct sync_connection_base_impl {
       } else {
         read_body_transfer_chunk_encoding(socket_, response_, response_buffer,
                                           body_stream);
-}
+      }
     } else {
       throw std::runtime_error("Unsupported HTTP version number.");
     }
@@ -249,7 +248,7 @@ struct sync_connection_base {
       new_connection(
           resolver_type& resolver, resolver_function_type resolve, bool https,
           bool always_verify_peer, int timeout,
-          optional<string_type>  /*unused*/const& certificate_filename =
+          optional<string_type> /*unused*/ const& certificate_filename =
               optional<string_type>(),
           optional<string_type> const& verify_path = optional<string_type>(),
           optional<string_type> const& certificate_file =
@@ -257,6 +256,7 @@ struct sync_connection_base {
           optional<string_type> const& private_key_file =
               optional<string_type>(),
           optional<string_type> const& ciphers = optional<string_type>(),
+          optional<string_type> const& sni_hostname = optional<string_type>(),
           long ssl_options = 0) {
     if (https) {
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
@@ -265,7 +265,7 @@ struct sync_connection_base {
           new https_sync_connection<Tag, version_major, version_minor>(
               resolver, resolve, always_verify_peer, timeout,
               certificate_filename, verify_path, certificate_file,
-              private_key_file, ciphers, ssl_options));
+              private_key_file, ciphers, sni_hostname, ssl_options));
 #else
       throw std::runtime_error("HTTPS not supported.");
 #endif

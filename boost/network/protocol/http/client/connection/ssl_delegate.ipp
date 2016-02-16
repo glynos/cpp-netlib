@@ -17,13 +17,14 @@ boost::network::http::impl::ssl_delegate::ssl_delegate(
     optional<std::string> certificate_filename,
     optional<std::string> verify_path, optional<std::string> certificate_file,
     optional<std::string> private_key_file, optional<std::string> ciphers,
-    long ssl_options)
+    optional<std::string> sni_hostname, long ssl_options)
     : service_(service),
       certificate_filename_(std::move(certificate_filename)),
       verify_path_(std::move(verify_path)),
       certificate_file_(std::move(certificate_file)),
       private_key_file_(std::move(private_key_file)),
       ciphers_(std::move(ciphers)),
+      sni_hostname_(std::move(sni_hostname)),
       ssl_options_(ssl_options),
       always_verify_peer_(always_verify_peer) {}
 
@@ -58,25 +59,23 @@ void boost::network::http::impl::ssl_delegate::connect(
     }
   }
   if (certificate_file_)
-    context_->use_certificate_file(*certificate_file_,
-                                   asio::ssl::context::pem);
+    context_->use_certificate_file(*certificate_file_, asio::ssl::context::pem);
   if (private_key_file_)
-    context_->use_private_key_file(*private_key_file_,
-                                   asio::ssl::context::pem);
+    context_->use_private_key_file(*private_key_file_, asio::ssl::context::pem);
 
   tcp_socket_.reset(new asio::ip::tcp::socket(
       service_, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), source_port)));
   socket_.reset(new asio::ssl::stream<asio::ip::tcp::socket &>(
       *(tcp_socket_.get()), *context_));
 
+  if (sni_hostname_)
+    SSL_set_tlsext_host_name(socket_->native_handle(), sni_hostname_->c_str());
   if (always_verify_peer_)
     socket_->set_verify_callback(asio::ssl::rfc2818_verification(host));
   auto self = this->shared_from_this();
   socket_->lowest_layer().async_connect(
       endpoint,
-      [=] (std::error_code const &ec) {
-        self->handle_connected(ec, handler);
-      });
+      [=](std::error_code const &ec) { self->handle_connected(ec, handler); });
 }
 
 void boost::network::http::impl::ssl_delegate::handle_connected(
@@ -104,8 +103,8 @@ void boost::network::http::impl::ssl_delegate::read_some(
 void boost::network::http::impl::ssl_delegate::disconnect() {
   if (socket_.get() && socket_->lowest_layer().is_open()) {
     std::error_code ignored;
-    socket_->lowest_layer().shutdown(
-        asio::ip::tcp::socket::shutdown_both, ignored);
+    socket_->lowest_layer().shutdown(asio::ip::tcp::socket::shutdown_both,
+                                     ignored);
     if (!ignored) {
       socket_->lowest_layer().close(ignored);
     }

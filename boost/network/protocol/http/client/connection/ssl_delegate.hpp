@@ -29,7 +29,8 @@ struct ssl_delegate : public connection_delegate,
                optional<std::string> verify_path,
                optional<std::string> certificate_file,
                optional<std::string> private_key_file,
-               optional<std::string> ciphers, long ssl_options);
+               optional<std::string> ciphers,
+               optional<std::string> sni_hostname, long ssl_options);
 
   void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
                std::uint16_t source_port,
@@ -50,6 +51,7 @@ struct ssl_delegate : public connection_delegate,
   optional<std::string> certificate_file_;
   optional<std::string> private_key_file_;
   optional<std::string> ciphers_;
+  optional<std::string> sni_hostname_;
   long ssl_options_;
   std::unique_ptr<asio::ssl::context> context_;
   std::unique_ptr<asio::ip::tcp::socket> tcp_socket_;
