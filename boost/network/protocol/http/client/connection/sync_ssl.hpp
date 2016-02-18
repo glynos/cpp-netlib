@@ -50,20 +50,20 @@ struct https_sync_connection
   https_sync_connection(
       resolver_type& resolver, resolver_function_type resolve,
       bool always_verify_peer, int timeout,
-      optional<string_type>  /*unused*/const& certificate_filename =
+      optional<string_type> /*unused*/ const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
       optional<string_type> const& private_key_file = optional<string_type>(),
       optional<string_type> const& ciphers = optional<string_type>(),
+      optional<string_type> const& sni_hostname = optional<string_type>(),
       long ssl_options = 0)
       : connection_base(),
         timeout_(timeout),
         timer_(resolver.get_io_service()),
         resolver_(resolver),
         resolve_(std::move(resolve)),
-        context_(resolver.get_io_service(),
-                 asio::ssl::context::sslv23_client),
+        context_(resolver.get_io_service(), asio::ssl::context::sslv23_client),
         socket_(resolver.get_io_service(), context_) {
     if (ciphers) {
       ::SSL_CTX_set_cipher_list(context_.native_handle(), ciphers->c_str());
@@ -86,20 +86,21 @@ struct https_sync_connection
         context_.set_verify_mode(asio::ssl::context_base::verify_none);
     }
     if (certificate_file)
-      context_.use_certificate_file(*certificate_file,
-                                    asio::ssl::context::pem);
+      context_.use_certificate_file(*certificate_file, asio::ssl::context::pem);
     if (private_key_file)
-      context_.use_private_key_file(*private_key_file,
-                                    asio::ssl::context::pem);
+      context_.use_private_key_file(*private_key_file, asio::ssl::context::pem);
+    if (sni_hostname)
+      SSL_set_tlsext_host_name(socket_.native_handle(), sni_hostname->c_str());
   }
 
-  void init_socket(string_type  /*unused*/const& hostname, string_type const& port) {
+  void init_socket(string_type /*unused*/ const& hostname,
+                   string_type const& port) {
     connection_base::init_socket(socket_.lowest_layer(), resolver_, hostname,
                                  port, resolve_);
     socket_.handshake(asio::ssl::stream_base::client);
   }
 
-  void send_request_impl(string_type  /*unused*/const& method,
+  void send_request_impl(string_type /*unused*/ const& method,
                          basic_request<Tag> const& request_,
                          body_generator_function_type generator) {
     asio::streambuf request_buffer;
@@ -120,9 +121,8 @@ struct https_sync_connection
     if (timeout_ > 0) {
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
       auto self = this->shared_from_this();
-      timer_.async_wait([=] (std::error_code const &ec) {
-          self->handle_timeout(ec);
-        });
+      timer_.async_wait(
+          [=](std::error_code const& ec) { self->handle_timeout(ec); });
     }
   }
 
@@ -141,7 +141,8 @@ struct https_sync_connection
     connection_base::read_body(socket_, response_, response_buffer);
     typename headers_range<basic_response<Tag> >::type connection_range =
         headers(response_)["Connection"];
-    if (version_major == 1 && version_minor == 1 && !boost::empty(connection_range) &&
+    if (version_major == 1 && version_minor == 1 &&
+        !boost::empty(connection_range) &&
         boost::iequals(std::begin(connection_range)->second, "close")) {
       close_socket();
     } else if (version_major == 1 && version_minor == 0) {
@@ -156,7 +157,9 @@ struct https_sync_connection
     std::error_code ignored;
     socket_.lowest_layer().shutdown(asio::ip::tcp::socket::shutdown_both,
                                     ignored);
-    if (ignored) { return; }
+    if (ignored) {
+      return;
+    }
     socket_.lowest_layer().close(ignored);
   }
 
@@ -164,8 +167,9 @@ struct https_sync_connection
 
  private:
   void handle_timeout(std::error_code const& ec) {
-    if (!ec) { close_socket();
-}
+    if (!ec) {
+      close_socket();
+    }
   }
 
   int timeout_;

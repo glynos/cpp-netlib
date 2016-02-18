@@ -26,6 +26,7 @@ struct basic_response;
 template <class Tag, unsigned version_major, unsigned version_minor>
 class basic_client_facade {
   typedef basic_client_impl<Tag, version_major, version_minor> pimpl_type;
+
  public:
   /**
    * The type to use for strings associated with this client. Typically resolves
@@ -45,7 +46,8 @@ class basic_client_facade {
    * code.
    */
   typedef std::function<void(iterator_range<char const*> const&,
-                        std::error_code const&)> body_callback_function_type;
+                             std::error_code const&)>
+      body_callback_function_type;
 
   /**
    * Functions that model this signature will be used to generate part of the
@@ -106,16 +108,15 @@ class basic_client_facade {
    * @throws std::exception May throw exceptions on errors, derived from
    *   `std::exception`.
    */
-  response post(request request, string_type const& body = string_type(),
-                string_type const& content_type = string_type(),
-                body_callback_function_type body_handler =
-                    body_callback_function_type(),
-                body_generator_function_type body_generator =
-                    body_generator_function_type()) {
+  response post(
+      request request, string_type const& body = string_type(),
+      string_type const& content_type = string_type(),
+      body_callback_function_type body_handler = body_callback_function_type(),
+      body_generator_function_type body_generator =
+          body_generator_function_type()) {
     if (body != string_type()) {
       request << remove_header("Content-Length")
-              << header("Content-Length",
-                        std::to_string(body.size()))
+              << header("Content-Length", std::to_string(body.size()))
               << boost::network::body(body);
     }
     typename headers_range<basic_request<Tag> >::type content_type_headers =
@@ -152,7 +153,7 @@ class basic_client_facade {
                 body_callback_function_type body_handler =
                     body_callback_function_type()) {
     return pimpl->request_skeleton(request, "POST", true, body_handler,
-	body_generator);
+                                   body_generator);
   }
 
   /**
@@ -167,11 +168,12 @@ class basic_client_facade {
    * @throws std::exception May throw exceptions derived from std::exception in
    *   case of errors.
    */
-  response post(request const& request, body_callback_function_type body_handler,
+  response post(request const& request,
+                body_callback_function_type body_handler,
                 body_generator_function_type body_generator =
                     body_generator_function_type()) {
     return post(request, string_type(), string_type(), body_handler,
-	body_generator);
+                body_generator);
   }
 
   /**
@@ -211,16 +213,15 @@ class basic_client_facade {
    * @throws std::exception May throw exceptions on errors, derived from
    *   `std::exception`.
    */
-  response put(request request, string_type const& body = string_type(),
-               string_type const& content_type = string_type(),
-               body_callback_function_type body_handler =
-                   body_callback_function_type(),
-               body_generator_function_type body_generator =
-                   body_generator_function_type()) {
+  response put(
+      request request, string_type const& body = string_type(),
+      string_type const& content_type = string_type(),
+      body_callback_function_type body_handler = body_callback_function_type(),
+      body_generator_function_type body_generator =
+          body_generator_function_type()) {
     if (body != string_type()) {
       request << remove_header("Content-Length")
-              << header("Content-Length",
-                        std::to_string(body.size()))
+              << header("Content-Length", std::to_string(body.size()))
               << boost::network::body(body);
     }
     typename headers_range<basic_request<Tag> >::type content_type_headers =
@@ -307,7 +308,8 @@ class basic_client_facade {
         options.always_verify_peer(), options.openssl_certificate(),
         options.openssl_verify_path(), options.openssl_certificate_file(),
         options.openssl_private_key_file(), options.openssl_ciphers(),
-        options.openssl_options(), options.io_service(), options.timeout()));
+        options.openssl_sni_hostname(), options.openssl_options(),
+        options.io_service(), options.timeout()));
   }
 };
 

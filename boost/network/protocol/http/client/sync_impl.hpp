@@ -32,7 +32,8 @@ struct sync_client
       connection_base;
   typedef typename resolver<Tag>::type resolver_type;
   typedef std::function<void(iterator_range<char const*> const&,
-                        std::error_code const&)> body_callback_function_type;
+                             std::error_code const&)>
+      body_callback_function_type;
   typedef std::function<bool(string_type&)> body_generator_function_type;
   friend struct basic_client_impl<Tag, version_major, version_minor>;
 
@@ -44,22 +45,23 @@ struct sync_client
   optional<string_type> certificate_file_;
   optional<string_type> private_key_file_;
   optional<string_type> ciphers_;
+  optional<string_type> sni_hostname_;
   long ssl_options_;
   bool always_verify_peer_;
 
   sync_client(
       bool cache_resolved, bool follow_redirect, bool always_verify_peer,
       int timeout, std::shared_ptr<asio::io_service> service,
-      optional<string_type>  certificate_filename =
-          optional<string_type>(),
-      optional<string_type>  verify_path = optional<string_type>(),
-      optional<string_type>  certificate_file = optional<string_type>(),
-      optional<string_type>  private_key_file = optional<string_type>(),
-      optional<string_type>  ciphers = optional<string_type>(),
+      optional<string_type> certificate_filename = optional<string_type>(),
+      optional<string_type> verify_path = optional<string_type>(),
+      optional<string_type> certificate_file = optional<string_type>(),
+      optional<string_type> private_key_file = optional<string_type>(),
+      optional<string_type> ciphers = optional<string_type>(),
+      optional<string_type> sni_hostname = optional<string_type>(),
       long ssl_options = 0)
       : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get() ? service
-                    : std::make_shared<asio::io_service>()),
+                                  : std::make_shared<asio::io_service>()),
         service_(*service_ptr),
         resolver_(service_),
         certificate_filename_(std::move(certificate_filename)),
@@ -67,6 +69,7 @@ struct sync_client
         certificate_file_(std::move(certificate_file)),
         private_key_file_(std::move(private_key_file)),
         ciphers_(std::move(ciphers)),
+        sni_hostname_(std::move(sni_hostname)),
         ssl_options_(ssl_options),
         always_verify_peer_(always_verify_peer) {}
 
@@ -81,7 +84,8 @@ struct sync_client
     typename connection_base::connection_ptr connection_;
     connection_ = connection_base::get_connection(
         resolver_, request_, always_verify_peer_, certificate_filename_,
-        verify_path_, certificate_file_, private_key_file_, ciphers_);
+        verify_path_, certificate_file_, private_key_file_, ciphers_,
+        sni_hostname_);
     return connection_->send_request(method, request_, get_body, callback,
                                      generator);
   }

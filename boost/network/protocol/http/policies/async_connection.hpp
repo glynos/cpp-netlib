@@ -43,12 +43,13 @@ struct async_connection_policy : resolver_policy<Tag>::type {
         optional<string_type> const& verify_path,
         optional<string_type> const& certificate_file,
         optional<string_type> const& private_key_file,
-        optional<string_type> const& ciphers, long ssl_options) {
+        optional<string_type> const& ciphers,
+        optional<string_type> const& sni_hostname, long ssl_options) {
       pimpl = impl::async_connection_base<Tag, version_major, version_minor>::
           new_connection(resolve, resolver, follow_redirect, always_verify_peer,
                          https, timeout, certificate_filename, verify_path,
                          certificate_file, private_key_file, ciphers,
-                         ssl_options);
+                         sni_hostname, ssl_options);
     }
 
     basic_response<Tag> send_request(string_type /*unused*/ const& method,
@@ -74,6 +75,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
       optional<string_type> const& certificate_file = optional<string_type>(),
       optional<string_type> const& private_key_file = optional<string_type>(),
       optional<string_type> const& ciphers = optional<string_type>(),
+      optional<string_type> const& sni_hostname = optional<string_type>(),
       long ssl_options = 0) {
     string_type protocol_ = protocol(request_);
     namespace ph = std::placeholders;
@@ -85,7 +87,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
         },
         resolver, boost::iequals(protocol_, string_type("https")), timeout_,
         certificate_filename, verify_path, certificate_file, private_key_file,
-        ciphers, ssl_options);
+        ciphers, sni_hostname, ssl_options);
   }
 
   void cleanup() {}
