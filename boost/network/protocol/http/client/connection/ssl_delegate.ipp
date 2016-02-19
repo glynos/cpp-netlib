@@ -16,13 +16,14 @@ boost::network::http::impl::ssl_delegate::ssl_delegate(
     optional<std::string> certificate_filename,
     optional<std::string> verify_path, optional<std::string> certificate_file,
     optional<std::string> private_key_file, optional<std::string> ciphers,
-    long ssl_options)
+    optional<std::string> sni_hostname, long ssl_options)
     : service_(service),
       certificate_filename_(std::move(certificate_filename)),
       verify_path_(std::move(verify_path)),
       certificate_file_(std::move(certificate_file)),
       private_key_file_(std::move(private_key_file)),
       ciphers_(std::move(ciphers)),
+      sni_hostname_(std::move(sni_hostname)),
       ssl_options_(ssl_options),
       always_verify_peer_(always_verify_peer) {}
 
@@ -68,6 +69,8 @@ void boost::network::http::impl::ssl_delegate::connect(
   socket_.reset(new asio::ssl::stream<asio::ip::tcp::socket &>(
       *(tcp_socket_.get()), *context_));
 
+  if (sni_hostname_)
+    SSL_set_tlsext_host_name(socket_->native_handle(), sni_hostname_->c_str());
   if (always_verify_peer_)
     socket_->set_verify_callback(boost::asio::ssl::rfc2818_verification(host));
   socket_->lowest_layer().async_connect(
