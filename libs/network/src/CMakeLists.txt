@@ -10,7 +10,7 @@ include_directories(${CPP-NETLIB_SOURCE_DIR})
 
 file(GLOB_RECURSE CPP-NETLIB_HEADERS
     "${CPP-NETLIB_SOURCE_DIR}/boost/" "*.hpp")
-
+set(CMAKE_CXX_FLAGS "/DBOOST_SPIRIT_THREADSAFE")
 set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp)
 add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
 set_target_properties(cppnetlib-uri

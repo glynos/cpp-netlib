@@ -86,12 +86,12 @@ If you want to run the tests that come with cpp-netlib, there are a few things
 you will need. These are:
 
   * A compiler (GCC 4.x, Clang 2.8, MSVC 2008)
-  * A build tool (CMake [#]_ recommended, Boost.Build also an option)
+  * A build tool (CMake_ recommended, Boost.Build also an option)
   * OpenSSL headers (optional)
 
 .. note:: This assumes that you have cpp-netlib at the top-level of
           your home directory.
-  [#] http://www.cmake.org/
+.. _CMake: https://cmake.org/
 
 Hacking on cpp-netlib
 ---------------------
