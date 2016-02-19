@@ -28,6 +28,7 @@ struct client_options {
         openssl_certificate_file_(),
         openssl_private_key_file_(),
         openssl_ciphers_(),
+        openssl_sni_hostname_(),
         openssl_options_(0),
         io_service_(),
         always_verify_peer_(false),
@@ -41,6 +42,7 @@ struct client_options {
         openssl_certificate_file_(other.openssl_certificate_file_),
         openssl_private_key_file_(other.openssl_private_key_file_),
         openssl_ciphers_(other.openssl_ciphers_),
+        openssl_sni_hostname_(other.openssl_sni_hostname_),
         openssl_options_(other.openssl_options_),
         io_service_(other.io_service_),
         always_verify_peer_(other.always_verify_peer_),
@@ -60,6 +62,7 @@ struct client_options {
     swap(openssl_certificate_file_, other.openssl_certificate_file_);
     swap(openssl_private_key_file_, other.openssl_private_key_file_);
     swap(openssl_ciphers_, other.openssl_ciphers_);
+    swap(openssl_sni_hostname_, other.openssl_sni_hostname_);
     swap(openssl_options_, other.openssl_options_);
     swap(io_service_, other.io_service_);
     swap(always_verify_peer_, other.always_verify_peer_);
@@ -98,6 +101,11 @@ struct client_options {
 
   client_options& openssl_ciphers(string_type const& v) {
     openssl_ciphers_ = v;
+    return *this;
+  }
+
+  client_options& openssl_sni_hostname(string_type const& v) {
+    openssl_sni_hostname_ = v;
     return *this;
   }
 
@@ -145,6 +153,10 @@ struct client_options {
     return openssl_ciphers_;
   }
 
+  boost::optional<string_type> openssl_sni_hostname() const {
+    return openssl_sni_hostname_;
+  }
+
   long openssl_options() const { return openssl_options_; }
 
   boost::shared_ptr<boost::asio::io_service> io_service() const {
@@ -163,6 +175,7 @@ struct client_options {
   boost::optional<string_type> openssl_certificate_file_;
   boost::optional<string_type> openssl_private_key_file_;
   boost::optional<string_type> openssl_ciphers_;
+  boost::optional<string_type> openssl_sni_hostname_;
   long openssl_options_;
   boost::shared_ptr<boost::asio::io_service> io_service_;
   bool always_verify_peer_;

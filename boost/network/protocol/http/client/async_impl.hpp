@@ -44,7 +44,8 @@ struct async_client
                optional<string_type> verify_path,
                optional<string_type> certificate_file,
                optional<string_type> private_key_file,
-               optional<string_type> ciphers, long ssl_options)
+               optional<string_type> ciphers,
+               optional<string_type> sni_hostname, long ssl_options)
       : connection_base(cache_resolved, follow_redirect, timeout),
         service_ptr(service.get()
                         ? service
@@ -57,6 +58,7 @@ struct async_client
         certificate_file_(std::move(certificate_file)),
         private_key_file_(std::move(private_key_file)),
         ciphers_(std::move(ciphers)),
+        sni_hostname_(std::move(sni_hostname)),
         ssl_options_(ssl_options),
         always_verify_peer_(always_verify_peer) {
     connection_base::resolver_strand_.reset(
@@ -84,7 +86,7 @@ struct async_client
     connection_ = connection_base::get_connection(
         resolver_, request_, always_verify_peer_, certificate_filename_,
         verify_path_, certificate_file_, private_key_file_, ciphers_,
-        ssl_options_);
+        sni_hostname_, ssl_options_);
     return connection_->send_request(method, request_, get_body, callback,
                                      generator);
   }
@@ -99,6 +101,7 @@ struct async_client
   optional<string_type> certificate_file_;
   optional<string_type> private_key_file_;
   optional<string_type> ciphers_;
+  optional<string_type> sni_hostname_;
   long ssl_options_;
   bool always_verify_peer_;
 };

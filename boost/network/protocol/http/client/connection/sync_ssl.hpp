@@ -52,12 +52,13 @@ struct https_sync_connection
   https_sync_connection(
       resolver_type& resolver, resolver_function_type resolve,
       bool always_verify_peer, int timeout,
-      optional<string_type>  /*unused*/const& certificate_filename =
+      optional<string_type> /*unused*/ const& certificate_filename =
           optional<string_type>(),
       optional<string_type> const& verify_path = optional<string_type>(),
       optional<string_type> const& certificate_file = optional<string_type>(),
       optional<string_type> const& private_key_file = optional<string_type>(),
       optional<string_type> const& ciphers = optional<string_type>(),
+      optional<string_type> const& sni_hostname = optional<string_type>(),
       long ssl_options = 0)
       : connection_base(),
         timeout_(timeout),
@@ -93,15 +94,18 @@ struct https_sync_connection
     if (private_key_file)
       context_.use_private_key_file(*private_key_file,
                                     boost::asio::ssl::context::pem);
+    if (sni_hostname)
+      SSL_set_tlsext_host_name(socket_.native_handle(), sni_hostname->c_str());
   }
 
-  void init_socket(string_type  /*unused*/const& hostname, string_type const& port) {
+  void init_socket(string_type /*unused*/ const& hostname,
+                   string_type const& port) {
     connection_base::init_socket(socket_.lowest_layer(), resolver_, hostname,
                                  port, resolve_);
     socket_.handshake(boost::asio::ssl::stream_base::client);
   }
 
-  void send_request_impl(string_type  /*unused*/const& method,
+  void send_request_impl(string_type /*unused*/ const& method,
                          basic_request<Tag> const& request_,
                          body_generator_function_type generator) {
     boost::asio::streambuf request_buffer;
@@ -142,7 +146,8 @@ struct https_sync_connection
     connection_base::read_body(socket_, response_, response_buffer);
     typename headers_range<basic_response<Tag> >::type connection_range =
         headers(response_)["Connection"];
-    if (version_major == 1 && version_minor == 1 && !boost::empty(connection_range) &&
+    if (version_major == 1 && version_minor == 1 &&
+        !boost::empty(connection_range) &&
         boost::iequals(boost::begin(connection_range)->second, "close")) {
       close_socket();
     } else if (version_major == 1 && version_minor == 0) {
@@ -157,8 +162,9 @@ struct https_sync_connection
     boost::system::error_code ignored;
     socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both,
                                     ignored);
-    if (ignored != nullptr) { return;
-}
+    if (ignored != nullptr) {
+      return;
+    }
     socket_.lowest_layer().close(ignored);
   }
 
@@ -166,8 +172,9 @@ struct https_sync_connection
 
  private:
   void handle_timeout(boost::system::error_code const& ec) {
-    if (!ec) { close_socket();
-}
+    if (!ec) {
+      close_socket();
+    }
   }
 
   int timeout_;

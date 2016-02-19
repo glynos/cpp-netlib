@@ -25,7 +25,6 @@ struct basic_response;
 
 template <class Tag, unsigned version_major, unsigned version_minor>
 struct basic_client_facade {
-
   typedef typename string<Tag>::type string_type;
   typedef basic_request<Tag> request;
   typedef basic_response<Tag> response;
@@ -53,12 +52,12 @@ struct basic_client_facade {
                                    body_generator_function_type());
   }
 
-  response post(request request, string_type const& body = string_type(),
-                string_type const& content_type = string_type(),
-                body_callback_function_type body_handler =
-                    body_callback_function_type(),
-                body_generator_function_type body_generator =
-                    body_generator_function_type()) {
+  response post(
+      request request, string_type const& body = string_type(),
+      string_type const& content_type = string_type(),
+      body_callback_function_type body_handler = body_callback_function_type(),
+      body_generator_function_type body_generator =
+          body_generator_function_type()) {
     if (body != string_type()) {
       request << remove_header("Content-Length")
               << header("Content-Length",
@@ -82,10 +81,9 @@ struct basic_client_facade {
                                    body_generator);
   }
 
-  response post(request const& request,
-                body_generator_function_type body_generator,
-                body_callback_function_type callback =
-                    body_generator_function_type()) {
+  response post(
+      request const& request, body_generator_function_type body_generator,
+      body_callback_function_type callback = body_generator_function_type()) {
     return pimpl->request_skeleton(request, "POST", true, callback,
                                    body_generator);
   }
@@ -104,12 +102,12 @@ struct basic_client_facade {
     return post(request, body, string_type(), callback, body_generator);
   }
 
-  response put(request request, string_type const& body = string_type(),
-               string_type const& content_type = string_type(),
-               body_callback_function_type body_handler =
-                   body_callback_function_type(),
-               body_generator_function_type body_generator =
-                   body_generator_function_type()) {
+  response put(
+      request request, string_type const& body = string_type(),
+      string_type const& content_type = string_type(),
+      body_callback_function_type body_handler = body_callback_function_type(),
+      body_generator_function_type body_generator =
+          body_generator_function_type()) {
     if (body != string_type()) {
       request << remove_header("Content-Length")
               << header("Content-Length",
@@ -164,7 +162,8 @@ struct basic_client_facade {
         options.always_verify_peer(), options.openssl_certificate(),
         options.openssl_verify_path(), options.openssl_certificate_file(),
         options.openssl_private_key_file(), options.openssl_ciphers(),
-        options.openssl_options(), options.io_service(), options.timeout()));
+        options.openssl_sni_hostname(), options.openssl_options(),
+        options.io_service(), options.timeout()));
   }
 };
 

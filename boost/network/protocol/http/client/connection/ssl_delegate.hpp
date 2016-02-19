@@ -28,17 +28,18 @@ struct ssl_delegate : connection_delegate,
                optional<std::string> verify_path,
                optional<std::string> certificate_file,
                optional<std::string> private_key_file,
-               optional<std::string> ciphers, long ssl_options);
+               optional<std::string> ciphers,
+               optional<std::string> sni_hostname, long ssl_options);
 
   void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
-                       boost::uint16_t source_port,
-                       function<void(system::error_code const &)> handler) override;
-  void write(asio::streambuf &command_streambuf,
-             function<void(system::error_code const &, size_t)> handler)
-      override;
-  void read_some(asio::mutable_buffers_1 const &read_buffer,
-                 function<void(system::error_code const &, size_t)> handler)
-      override;
+               boost::uint16_t source_port,
+               function<void(system::error_code const &)> handler) override;
+  void write(
+      asio::streambuf &command_streambuf,
+      function<void(system::error_code const &, size_t)> handler) override;
+  void read_some(
+      asio::mutable_buffers_1 const &read_buffer,
+      function<void(system::error_code const &, size_t)> handler) override;
   void disconnect() override;
   ~ssl_delegate() override;
 
@@ -49,6 +50,7 @@ struct ssl_delegate : connection_delegate,
   optional<std::string> certificate_file_;
   optional<std::string> private_key_file_;
   optional<std::string> ciphers_;
+  optional<std::string> sni_hostname_;
   long ssl_options_;
   std::unique_ptr<asio::ssl::context> context_;
   std::unique_ptr<asio::ip::tcp::socket> tcp_socket_;
