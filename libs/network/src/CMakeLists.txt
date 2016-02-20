@@ -12,6 +12,7 @@ file(GLOB_RECURSE CPP-NETLIB_HEADERS
     "${CPP-NETLIB_SOURCE_DIR}/boost/" "*.hpp")
 
 set(CPP-NETLIB_URI_SRCS uri/uri.cpp uri/schemes.cpp)
+add_definitions("-DBOOST_SPIRIT_THREADSAFE")
 add_library(cppnetlib-uri ${CPP-NETLIB_URI_SRCS})
 set_target_properties(cppnetlib-uri
     PROPERTIES VERSION ${CPPNETLIB_VERSION_STRING}
