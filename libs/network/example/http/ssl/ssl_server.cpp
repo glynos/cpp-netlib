@@ -19,7 +19,7 @@
 #include <signal.h>
 
 struct handler;
-typedef boost::network::http::async_server<handler> server;
+typedef boost::network::http::server<handler> server;
 
 std::string password_callback(
     std::size_t max_length,
@@ -78,7 +78,7 @@ int main(void) try {
   ctx->set_password_callback(password_callback);
   ctx->use_certificate_chain_file("server.pem");
   ctx->use_private_key_file("server.pem", asio::ssl::context::pem);
-  ctx->use_tmp_dh_file("dh512.pem");
+  ctx->use_tmp_dh_file("dh2048.pem");
 
   // setup the async server
   handler request_handler;
