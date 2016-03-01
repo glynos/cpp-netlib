@@ -25,6 +25,7 @@ add_dependencies(http_client cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(simple_wget cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(atom_reader cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(rss_reader cppnetlib-uri cppnetlib-client-connections)
+add_dependencies(ssl_server cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(trivial_google cppnetlib-uri cppnetlib-client-connections)
 
 target_link_libraries(http_client
