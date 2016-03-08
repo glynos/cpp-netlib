@@ -19,7 +19,6 @@ simple response to any HTTP request.
 .. code-block:: c++
 
     #include <boost/network/protocol/http/server.hpp>
-    #include <string>
     #include <iostream>
 
     namespace http = boost::network::http;
@@ -28,16 +27,19 @@ simple response to any HTTP request.
     typedef http::server<hello_world> server;
 
     struct hello_world {
-        void operator() (server::request const &request,
-                         server::response &response) {
-            std::string ip = source(request);
-            response = server::response::stock_reply(
-                server::response::ok, std::string("Hello, ") + ip + "!");
+        void operator()(server::request const &request, server::response &response) {
+            server::string_type ip = source(request);
+            unsigned int port = request.source_port;
+            std::ostringstream data;
+            data << "Hello, " << ip << ':' << port << '!';
+            response = server::response::stock_reply(server::response::ok, data.str());
+        }
+        void log(const server::string_type& message) {
+            std::cerr << "ERROR: " << message << std::endl;
         }
     };
 
-    int
-    main(int argc, char * argv[]) {
+    int main(int argc, char *argv[]) {
 
         if (argc != 3) {
             std::cerr << "Usage: " << argv[0] << " address port" << std::endl;
@@ -46,7 +48,8 @@ simple response to any HTTP request.
 
         try {
             hello_world handler;
-            server server_(argv[1], argv[2], handler);
+            server::options options(handler);
+            server server_(options.address(argv[1]).port(argv[2]));
             server_.run();
         }
         catch (std::exception &e) {
@@ -100,34 +103,39 @@ This header contains all the code needed to develop an HTTP server with
     typedef http::server<hello_world> server;
 
     struct hello_world {
-        void operator () (server::request const &request,
-                          server::response &response) {
-            std::string ip = source(request);
-            response = server::response::stock_reply(
-                server::response::ok, std::string("Hello, ") + ip + "!");
+        void operator()(server::request const &request, server::response &response) {
+            server::string_type ip = source(request);
+            unsigned int port = request.source_port;
+            std::ostringstream data;
+            data << "Hello, " << ip << ':' << port << '!';
+            response = server::response::stock_reply(server::response::ok, data.str());
+        }
+        void log(const server::string_type& message) {
+            std::cerr << "ERROR: " << message << std::endl;
         }
     };
 
-``hello_world`` is a functor class which handles HTTP requests.  All
-the operator does here is return an HTTP response with HTTP code 200
-and the body ``"Hello, <ip>!"``. The ``<ip>`` in this case would be
-the IP address of the client that made the request.
+``hello_world`` is a functor class which handles HTTP requests.
+All the operator does here is return an HTTP response with HTTP code 200
+and the body ``"Hello, <ip>:<port>!"``. The ``<ip>`` in this case would be
+the IP address of the client that made the request and ``<port>`` the clients port.
 
 There are a number of pre-defined stock replies differentiated by
 status code with configurable bodies.
-
 All the supported enumeration values for the response status codes can be found
 in ``boost/network/protocol/http/impl/response.ipp``.
 
 .. code-block:: c++
 
     hello_world handler;
-    server server_(argv[1], argv[2], handler);
+    server::options options(handler);
+    server server_(options.address(argv[1]).port(argv[2]));
     server_.run();
 
-The first two arguments to the ``server`` constructor are the host and
-the port on which the server will listen.  The third argument is the
-the handler object defined previously.
+The ``server`` constructor requires an object of the ``options`` class,
+this object stores all needed options, especially the host and
+the port on which the server will listen.
+The ``options`` constructor's single argument is the handler object defined previously.
 
 .. note:: In this example, the server is specifically made to be single-threaded.
    In a multi-threaded server, you would invoke the ``hello_world::run`` member

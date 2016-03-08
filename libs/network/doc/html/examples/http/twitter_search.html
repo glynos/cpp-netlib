@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.11.2" href="../../index.html" />
+    <link rel="top" title="cpp-netlib v0.11.2" href="../../contents.html" />
     <link rel="up" title="Examples" href="../../examples.html" />
     <link rel="next" title="An in-depth look at the cpp-netlib" href="../../in_depth.html" />
     <link rel="prev" title="Atom feed reader" href="atom_reader.html" />
@@ -34,9 +34,9 @@
 <![endif]-->
 
   </head>
-  <body>
+  <body role="document">
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,27 +45,27 @@
         <li class="right" >
           <a href="atom_reader.html" title="Atom feed reader"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
-          <li><a href="../../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../examples.html" accesskey="U">Examples</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="twitter-search">
 <span id="id1"></span><h1>Twitter search<a class="headerlink" href="#twitter-search" title="Permalink to this headline">¶</a></h1>
 <p>This example uses <a class="reference external" href="https://dev.twitter.com/docs/using-search">Twitter&#8217;s search API</a> to list recent tweets given
 a user query.  New features introduced here include the URI builder
-and <tt class="docutils literal"><span class="pre">uri::encoded</span></tt> function.</p>
+and <code class="docutils literal"><span class="pre">uri::encoded</span></code> function.</p>
 <div class="section" id="the-code">
 <h2>The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
-<span class="cp">#include &quot;rapidjson/rapidjson.h&quot;</span>
-<span class="cp">#include &quot;rapidjson/document.h&quot;</span>
-<span class="cp">#include &lt;iostream&gt;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;boost/network/protocol/http/client.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;rapidjson/rapidjson.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;rapidjson/document.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
     <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
@@ -76,7 +76,7 @@ and <tt class="docutils literal"><span class="pre">uri::encoded</span></tt> func
         <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="n">try</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
 
         <span class="n">uri</span><span class="o">::</span><span class="n">uri</span> <span class="n">base_uri</span><span class="p">(</span><span class="s">&quot;http://search.twitter.com/search.json&quot;</span><span class="p">);</span>
@@ -111,27 +111,27 @@ and <tt class="docutils literal"><span class="pre">uri::encoded</span></tt> func
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">To parse the results of these queries, this example uses
-<a class="reference external" href="http://code.google.com/p/rapidjson/">rapidjson</a>, a header-only library that is released under
+<a class="reference external" href="https://github.com/miloyip/rapidjson">rapidjson</a>, a header-only library that is released under
 the <a class="reference external" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</p>
 </div>
 </div>
 <div class="section" id="building-and-running-twitter-search">
-<h2>Building and running <tt class="docutils literal"><span class="pre">twitter_search</span></tt><a class="headerlink" href="#building-and-running-twitter-search" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/cpp-netlib-build
-<span class="nv">$ </span>make twitter_search
+<h2>Building and running <code class="docutils literal"><span class="pre">twitter_search</span></code><a class="headerlink" href="#building-and-running-twitter-search" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ~/cpp-netlib-build
+$ make twitter_search
 </pre></div>
 </div>
 <p>Twitter provides a powerful set of operators to modify the behaviour
 of search queries.  Some examples are provided below:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./example/twitter_search <span class="s2">&quot;Lady Gaga&quot;</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./example/twitter_search <span class="s2">&quot;Lady Gaga&quot;</span>
 </pre></div>
 </div>
 <p>Returns any results that contain the exact phrase &#8220;Lady Gaga&#8221;.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./example/twitter_search <span class="s2">&quot;#olympics&quot;</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./example/twitter_search <span class="s2">&quot;#olympics&quot;</span>
 </pre></div>
 </div>
 <p>Returns any results with the #olympics hash tag.</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./example/twitter_search <span class="s2">&quot;flight :(&quot;</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./example/twitter_search <span class="s2">&quot;flight :(&quot;</span>
 </pre></div>
 </div>
 <p>Returns any results that contain &#8220;flight&#8221; and have a negative
@@ -140,18 +140,18 @@ attitude.</p>
 </div>
 <div class="section" id="diving-into-the-code">
 <h2>Diving into the code<a class="headerlink" href="#diving-into-the-code" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c++"><div class="highlight"><pre><span class="n">uri</span><span class="o">::</span><span class="n">uri</span> <span class="n">base_uri</span><span class="p">(</span><span class="s">&quot;http://search.twitter.com/search.json&quot;</span><span class="p">);</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">uri</span><span class="o">::</span><span class="n">uri</span> <span class="n">base_uri</span><span class="p">(</span><span class="s">&quot;http://search.twitter.com/search.json&quot;</span><span class="p">);</span>
 
 <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Searching Twitter for query: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 <span class="n">uri</span><span class="o">::</span><span class="n">uri</span> <span class="n">search</span><span class="p">;</span>
 <span class="n">search</span> <span class="o">&lt;&lt;</span> <span class="n">base_uri</span> <span class="o">&lt;&lt;</span> <span class="n">uri</span><span class="o">::</span><span class="n">query</span><span class="p">(</span><span class="s">&quot;q&quot;</span><span class="p">,</span> <span class="n">uri</span><span class="o">::</span><span class="n">encoded</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]));</span>
 </pre></div>
 </div>
-<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> URI builder uses a stream-like syntax to allow
+<p>The <code class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></code> URI builder uses a stream-like syntax to allow
 developers to construct more complex URIs.  The example above re-uses
 the same base URI and allows the command line argument to be used as
 part of the URI query.  The builder also supports percent encoding
-using the <tt class="docutils literal"><span class="pre">encoded</span></tt> directive.</p>
+using the <code class="docutils literal"><span class="pre">encoded</span></code> directive.</p>
 </div>
 </div>
 
@@ -159,13 +159,13 @@ using the <tt class="docutils literal"><span class="pre">encoded</span></tt> dir
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Twitter search</a><ul>
 <li><a class="reference internal" href="#the-code">The code</a></li>
-<li><a class="reference internal" href="#building-and-running-twitter-search">Building and running <tt class="docutils literal"><span class="pre">twitter_search</span></tt></a></li>
+<li><a class="reference internal" href="#building-and-running-twitter-search">Building and running <code class="docutils literal"><span class="pre">twitter_search</span></code></a></li>
 <li><a class="reference internal" href="#diving-into-the-code">Diving into the code</a></li>
 </ul>
 </li>
@@ -176,8 +176,8 @@ using the <tt class="docutils literal"><span class="pre">encoded</span></tt> dir
                         title="previous chapter">Atom feed reader</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../../in_depth.html"
-                        title="next chapter">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a></p>
-<div id="searchbox" style="display: none">
+                        title="next chapter">An in-depth look at the <code class="docutils literal"><span class="pre">cpp-netlib</span></code></a></p>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -194,7 +194,7 @@ using the <tt class="docutils literal"><span class="pre">encoded</span></tt> dir
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -203,14 +203,14 @@ using the <tt class="docutils literal"><span class="pre">encoded</span></tt> dir
         <li class="right" >
           <a href="atom_reader.html" title="Atom feed reader"
              >previous</a> |</li>
-        <li><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
-          <li><a href="../../examples.html" >Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../examples.html" >Examples</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Aug 27, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Last updated on Mar 07, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
     </div>
   </body>
 </html>

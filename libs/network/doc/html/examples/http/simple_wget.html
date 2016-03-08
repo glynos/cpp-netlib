@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.11.2" href="../../index.html" />
+    <link rel="top" title="cpp-netlib v0.11.2" href="../../contents.html" />
     <link rel="up" title="Examples" href="../../examples.html" />
     <link rel="next" title="“Hello world” HTTP server" href="hello_world_server.html" />
     <link rel="prev" title="HTTP client" href="http_client.html" />
@@ -34,9 +34,9 @@
 <![endif]-->
 
   </head>
-  <body>
+  <body role="document">
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,28 +45,28 @@
         <li class="right" >
           <a href="http_client.html" title="HTTP client"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
-          <li><a href="../../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../examples.html" accesskey="U">Examples</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="simple-wget">
 <span id="id1"></span><h1>Simple <cite>wget</cite><a class="headerlink" href="#simple-wget" title="Permalink to this headline">¶</a></h1>
-<p>This example is a very simple implementation of a <tt class="docutils literal"><span class="pre">wget</span></tt> style
+<p>This example is a very simple implementation of a <code class="docutils literal"><span class="pre">wget</span></code> style
 clone.  It&#8217;s very similar to the previous example, but introduces the
-<tt class="docutils literal"><span class="pre">uri</span></tt> class.</p>
+<code class="docutils literal"><span class="pre">uri</span></code> class.</p>
 <div class="section" id="the-code">
 <h2>The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
-<span class="cp">#include &lt;boost/network/uri.hpp&gt;</span>
-<span class="cp">#include &lt;string&gt;</span>
-<span class="cp">#include &lt;fstream&gt;</span>
-<span class="cp">#include &lt;iostream&gt;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;boost/network/protocol/http/client.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;boost/network/uri.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;fstream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
 <span class="k">namespace</span> <span class="n">http</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
 <span class="k">namespace</span> <span class="n">uri</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">uri</span><span class="p">;</span>
@@ -87,7 +87,7 @@ clone.  It&#8217;s very similar to the previous example, but introduces the
         <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="n">try</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
@@ -110,29 +110,29 @@ clone.  It&#8217;s very similar to the previous example, but introduces the
 <div class="section" id="running-the-example">
 <h2>Running the example<a class="headerlink" href="#running-the-example" title="Permalink to this headline">¶</a></h2>
 <p>You can then run this to copy the <a class="reference external" href="http://www.boost.org/">Boost</a> website:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/cpp-netlib-build
-<span class="nv">$ </span>make simple_wget
-<span class="nv">$ </span>./example/simple_wget http://www.boost.org/
-<span class="nv">$ </span>cat index.html
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ~/cpp-netlib-build
+$ make simple_wget
+$ ./example/simple_wget http://www.boost.org/
+$ cat index.html
 </pre></div>
 </div>
 </div>
 <div class="section" id="diving-into-the-code">
 <h2>Diving into the code<a class="headerlink" href="#diving-into-the-code" title="Permalink to this headline">¶</a></h2>
-<p>As with <tt class="docutils literal"><span class="pre">wget</span></tt>, this example simply makes an HTTP request to the
+<p>As with <code class="docutils literal"><span class="pre">wget</span></code>, this example simply makes an HTTP request to the
 specified resource, and saves it on the filesystem.  If the file name
-is not specified, it names the resultant file as <tt class="docutils literal"><span class="pre">index.html</span></tt>.</p>
-<p>The new thing to note here is use of the <tt class="docutils literal"><span class="pre">uri</span></tt> class.  The <tt class="docutils literal"><span class="pre">uri</span></tt>
-takes a string as a constructor argument and parses it.  The <tt class="docutils literal"><span class="pre">uri</span></tt>
+is not specified, it names the resultant file as <code class="docutils literal"><span class="pre">index.html</span></code>.</p>
+<p>The new thing to note here is use of the <code class="docutils literal"><span class="pre">uri</span></code> class.  The <code class="docutils literal"><span class="pre">uri</span></code>
+takes a string as a constructor argument and parses it.  The <code class="docutils literal"><span class="pre">uri</span></code>
 parser is fully-compliant with <a class="reference external" href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>.  The URI is provided in
 the following header:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &lt;boost/network/uri.hpp&gt;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;boost/network/uri.hpp&gt;</span><span class="cp"></span>
 </pre></div>
 </div>
 <p>Most of the rest of the code is familiar from the previous example.
 To retrieve the URI resource&#8217;s file name, the following function is
 provided:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">get_filename</span><span class="p">(</span><span class="k">const</span> <span class="n">uri</span><span class="o">::</span><span class="n">uri</span> <span class="o">&amp;</span><span class="n">url</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">get_filename</span><span class="p">(</span><span class="k">const</span> <span class="n">uri</span><span class="o">::</span><span class="n">uri</span> <span class="o">&amp;</span><span class="n">url</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">path</span> <span class="o">=</span> <span class="n">uri</span><span class="o">::</span><span class="n">path</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
     <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">index</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">find_last_of</span><span class="p">(</span><span class="sc">&#39;/&#39;</span><span class="p">);</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">path</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
@@ -140,12 +140,12 @@ provided:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The <tt class="docutils literal"><span class="pre">uri</span></tt> interface provides access to its different components:
-<tt class="docutils literal"><span class="pre">scheme</span></tt>, <tt class="docutils literal"><span class="pre">user_info</span></tt>, <tt class="docutils literal"><span class="pre">host</span></tt>, <tt class="docutils literal"><span class="pre">port</span></tt>, <tt class="docutils literal"><span class="pre">path</span></tt>, <tt class="docutils literal"><span class="pre">query</span></tt> and
-<tt class="docutils literal"><span class="pre">fragment</span></tt>.  The code above takes the URI path to determine the
+<p>The <code class="docutils literal"><span class="pre">uri</span></code> interface provides access to its different components:
+<code class="docutils literal"><span class="pre">scheme</span></code>, <code class="docutils literal"><span class="pre">user_info</span></code>, <code class="docutils literal"><span class="pre">host</span></code>, <code class="docutils literal"><span class="pre">port</span></code>, <code class="docutils literal"><span class="pre">path</span></code>, <code class="docutils literal"><span class="pre">query</span></code> and
+<code class="docutils literal"><span class="pre">fragment</span></code>.  The code above takes the URI path to determine the
 resource name.</p>
 <p>Next we&#8217;ll develop a simple client/server application using
-<tt class="docutils literal"><span class="pre">http::server</span></tt> and <tt class="docutils literal"><span class="pre">http::client</span></tt>.</p>
+<code class="docutils literal"><span class="pre">http::server</span></code> and <code class="docutils literal"><span class="pre">http::client</span></code>.</p>
 </div>
 </div>
 
@@ -153,7 +153,7 @@ resource name.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../contents.html">Table Of Contents</a></h3>
   <ul>
@@ -171,7 +171,7 @@ resource name.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="hello_world_server.html"
                         title="next chapter">&#8220;Hello world&#8221; HTTP server</a></p>
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -188,7 +188,7 @@ resource name.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -197,14 +197,14 @@ resource name.</p>
         <li class="right" >
           <a href="http_client.html" title="HTTP client"
              >previous</a> |</li>
-        <li><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
-          <li><a href="../../examples.html" >Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../examples.html" >Examples</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Aug 27, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Last updated on Mar 07, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
     </div>
   </body>
 </html>

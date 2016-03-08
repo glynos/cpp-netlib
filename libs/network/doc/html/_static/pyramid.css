@@ -4,7 +4,7 @@
  *
  * Sphinx stylesheet -- pylons theme.
  *
- * :copyright: Copyright 2007-2014 by the Sphinx team, see AUTHORS.
+ * :copyright: Copyright 2007-2016 by the Sphinx team, see AUTHORS.
  * :license: BSD, see LICENSE for details.
  *
  */
@@ -295,7 +295,7 @@ pre {
     border-left-style: none;
 }
  
-tt {
+code {
     background-color: transparent;
     color: #222;
     font-size: 1.1em;
@@ -336,7 +336,12 @@ a:hover em.std-term {
     font-style: normal;
 }
 
-tt.xref {
+code.xref {
     font-weight: normal;
     font-style: normal;
+}
+
+div.code-block-caption {
+    background-color: #ddd;
+    color: #222;
 }

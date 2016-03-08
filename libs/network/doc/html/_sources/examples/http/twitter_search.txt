@@ -64,7 +64,7 @@ The code
           `rapidjson`_, a header-only library that is released under
           the `MIT License`_.
 
-.. _`rapidjson`: http://code.google.com/p/rapidjson/
+.. _`rapidjson`: https://github.com/miloyip/rapidjson
 .. _`MIT License`: http://www.opensource.org/licenses/mit-license.php
 
 Building and running ``twitter_search``

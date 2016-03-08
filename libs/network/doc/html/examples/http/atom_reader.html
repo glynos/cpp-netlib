@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.11.2" href="../../index.html" />
+    <link rel="top" title="cpp-netlib v0.11.2" href="../../contents.html" />
     <link rel="up" title="Examples" href="../../examples.html" />
     <link rel="next" title="Twitter search" href="twitter_search.html" />
     <link rel="prev" title="“Hello world” HTTP client" href="hello_world_client.html" />
@@ -34,9 +34,9 @@
 <![endif]-->
 
   </head>
-  <body>
+  <body role="document">
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,15 +45,15 @@
         <li class="right" >
           <a href="hello_world_client.html" title="“Hello world” HTTP client"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
-          <li><a href="../../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../examples.html" accesskey="U">Examples</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="atom-feed-reader">
 <span id="atom-reader"></span><h1>Atom feed reader<a class="headerlink" href="#atom-feed-reader" title="Permalink to this headline">¶</a></h1>
@@ -62,10 +62,10 @@ the HTTP client.  The first one reads a simple <a class="reference external" hre
 the titles of each entry to the console.</p>
 <div class="section" id="the-code">
 <h2>The code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &quot;atom.hpp&quot;</span>
-<span class="cp">#include &lt;boost/network/protocol/http/client.hpp&gt;</span>
-<span class="cp">#include &lt;boost/foreach.hpp&gt;</span>
-<span class="cp">#include &lt;iostream&gt;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;atom.hpp&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;boost/network/protocol/http/client.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;boost/foreach.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
     <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
@@ -75,7 +75,7 @@ the titles of each entry to the console.</p>
         <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="n">try</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
         <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
         <span class="n">request</span> <span class="o">&lt;&lt;</span> <span class="n">header</span><span class="p">(</span><span class="s">&quot;Connection&quot;</span><span class="p">,</span> <span class="s">&quot;close&quot;</span><span class="p">);</span>
@@ -99,25 +99,25 @@ the titles of each entry to the console.</p>
 </div>
 </div>
 <div class="section" id="building-and-running-atom-reader">
-<h2>Building and running <tt class="docutils literal"><span class="pre">atom_reader</span></tt><a class="headerlink" href="#building-and-running-atom-reader" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> ~/cpp-netlib-build
-<span class="nv">$ </span>make atom_reader
+<h2>Building and running <code class="docutils literal"><span class="pre">atom_reader</span></code><a class="headerlink" href="#building-and-running-atom-reader" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ~/cpp-netlib-build
+$ make atom_reader
 </pre></div>
 </div>
 <p>And to run the example from the command line to access the feed that
 lists of all the commits on cpp-netlib&#8217;s master branch:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>./example/atom_reader https://github.com/cpp-netlib/cpp-netlib/commits/master.atom
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ ./example/atom_reader https://github.com/cpp-netlib/cpp-netlib/commits/master.atom
 </pre></div>
 </div>
 </div>
 <div class="section" id="diving-into-the-code">
 <h2>Diving into the code<a class="headerlink" href="#diving-into-the-code" title="Permalink to this headline">¶</a></h2>
 <p>Most of this will now be familiar.  The response is passed to the
-constructor to the <tt class="docutils literal"><span class="pre">atom::feed</span></tt> class, which parses the resultant
+constructor to the <code class="docutils literal"><span class="pre">atom::feed</span></code> class, which parses the resultant
 XML.  To keep this example as simple as possible, <a class="reference external" href="http://rapidxml.sourceforge.net/">rapidxml</a>, a
 header-only XML parser library, was used to parse the response.</p>
 <p>A similar example using RSS feeds exists in
-<tt class="docutils literal"><span class="pre">libs/network/example/rss</span></tt>.</p>
+<code class="docutils literal"><span class="pre">libs/network/example/rss</span></code>.</p>
 </div>
 </div>
 
@@ -125,13 +125,13 @@ header-only XML parser library, was used to parse the response.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../contents.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Atom feed reader</a><ul>
 <li><a class="reference internal" href="#the-code">The code</a></li>
-<li><a class="reference internal" href="#building-and-running-atom-reader">Building and running <tt class="docutils literal"><span class="pre">atom_reader</span></tt></a></li>
+<li><a class="reference internal" href="#building-and-running-atom-reader">Building and running <code class="docutils literal"><span class="pre">atom_reader</span></code></a></li>
 <li><a class="reference internal" href="#diving-into-the-code">Diving into the code</a></li>
 </ul>
 </li>
@@ -143,7 +143,7 @@ header-only XML parser library, was used to parse the response.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="twitter_search.html"
                         title="next chapter">Twitter search</a></p>
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -160,7 +160,7 @@ header-only XML parser library, was used to parse the response.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -169,14 +169,14 @@ header-only XML parser library, was used to parse the response.</p>
         <li class="right" >
           <a href="hello_world_client.html" title="“Hello world” HTTP client"
              >previous</a> |</li>
-        <li><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
-          <li><a href="../../examples.html" >Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../examples.html" >Examples</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Aug 27, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Last updated on Mar 07, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
     </div>
   </body>
 </html>

@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.11.2" href="#" />
+    <link rel="top" title="cpp-netlib v0.11.2" href="contents.html" />
     <link rel="next" title="What’s New" href="whats_new.html" />
     <link rel="prev" title="Contents" href="contents.html" />
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
@@ -33,9 +33,9 @@
 <![endif]-->
 
   </head>
-  <body>
+  <body role="document">
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -44,26 +44,26 @@
         <li class="right" >
           <a href="contents.html" title="Contents"
              accesskey="P">previous</a> |</li>
-        <li><a href="contents.html">cpp-netlib v0.11.2</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="contents.html">cpp-netlib v0.11.2</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <p class="rubric" id="index">Straightforward network programming in modern C++</p>
 <div class="section" id="getting-cpp-netlib">
 <h1>Getting cpp-netlib<a class="headerlink" href="#getting-cpp-netlib" title="Permalink to this headline">¶</a></h1>
-<p>You can find out more about the <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> project at
+<p>You can find out more about the <code class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></code> project at
 <a class="reference external" href="http://cpp-netlib.org/">http://cpp-netlib.org/</a>.</p>
 <p><strong>Download</strong></p>
 <p>You can get the latest official version of the library from the official
 project website at:</p>
 <blockquote>
 <div><a class="reference external" href="http://cpp-netlib.org/">http://cpp-netlib.org/</a></div></blockquote>
-<p>This version of <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is tagged as cpp-netlib-0.11.0 in the <a class="reference external" href="http://github.com/">GitHub</a>
+<p>This version of <code class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></code> is tagged as cpp-netlib-0.11.0 in the <a class="reference external" href="http://github.com/">GitHub</a>
 repository. You can find more information about the progress of the development
 by checking our <a class="reference external" href="http://github.com/">GitHub</a> project page at:</p>
 <blockquote>
@@ -81,17 +81,17 @@ contributions and ideas.</p>
 </div>
 <div class="section" id="c-network-library">
 <h1>C++ Network Library<a class="headerlink" href="#c-network-library" title="Permalink to this headline">¶</a></h1>
-<p><tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> is a library collection that provides application layer
+<p><code class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></code> is a library collection that provides application layer
 protocol support using modern C++ techniques.  It is light-weight, fast,
 portable and is intended to be as easy to configure as possible.</p>
 </div>
 <div class="section" id="hello-world">
 <h1>Hello, world!<a class="headerlink" href="#hello-world" title="Permalink to this headline">¶</a></h1>
-<p>The <tt class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></tt> allows developers to write fast, portable
+<p>The <code class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></code> allows developers to write fast, portable
 network applications with the minimum of fuss.</p>
 <p>An HTTP server-client example can be written in tens of lines of code.
 The client is as simple as this:</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="p">;</span>
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
 
 <span class="n">client</span><span class="o">::</span><span class="n">request</span> <span class="n">request_</span><span class="p">(</span><span class="s">&quot;http://127.0.0.1:8000/&quot;</span><span class="p">);</span>
@@ -102,7 +102,7 @@ The client is as simple as this:</p>
 </pre></div>
 </div>
 <p>And the corresponding server code is listed below:</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span class="k">namespace</span> <span class="n">http</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">namespace</span> <span class="n">http</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span>
 
 <span class="k">struct</span> <span class="n">handler</span><span class="p">;</span>
 <span class="k">typedef</span> <span class="n">http</span><span class="o">::</span><span class="n">server</span><span class="o">&lt;</span><span class="n">handler</span><span class="o">&gt;</span> <span class="n">http_server</span><span class="p">;</span>
@@ -134,12 +134,12 @@ The client is as simple as this:</p>
 <h1>Want to learn more?<a class="headerlink" href="#want-to-learn-more" title="Permalink to this headline">¶</a></h1>
 <blockquote>
 <div><ul class="simple">
-<li><a class="reference internal" href="getting_started.html#getting-started"><em>Take a look at the getting started guide</em></a></li>
-<li><a class="reference internal" href="examples.html#examples"><em>Learn from some simple examples</em></a></li>
-<li><a class="reference internal" href="whats_new.html#whats-new"><em>Find out what&#8217;s new</em></a></li>
-<li><a class="reference internal" href="in_depth.html#in-depth"><em>Study the library in more depth</em></a></li>
-<li><a class="reference internal" href="reference.html#reference"><em>Discover more through the full reference</em></a></li>
-<li><a class="reference internal" href="contents.html#contents"><em>Full table of contents</em></a></li>
+<li><a class="reference internal" href="getting_started.html#getting-started"><span>Take a look at the getting started guide</span></a></li>
+<li><a class="reference internal" href="examples.html#examples"><span>Learn from some simple examples</span></a></li>
+<li><a class="reference internal" href="whats_new.html#whats-new"><span>Find out what&#8217;s new</span></a></li>
+<li><a class="reference internal" href="in_depth.html#in-depth"><span>Study the library in more depth</span></a></li>
+<li><a class="reference internal" href="reference.html#reference"><span>Discover more through the full reference</span></a></li>
+<li><a class="reference internal" href="contents.html#contents"><span>Full table of contents</span></a></li>
 </ul>
 </div></blockquote>
 <div class="admonition warning">
@@ -156,7 +156,7 @@ other network protocols.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="contents.html">Table Of Contents</a></h3>
   <ul>
@@ -172,7 +172,7 @@ other network protocols.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="whats_new.html"
                         title="next chapter">What&#8217;s New</a></p>
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -189,7 +189,7 @@ other network protocols.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -198,13 +198,13 @@ other network protocols.</p>
         <li class="right" >
           <a href="contents.html" title="Contents"
              >previous</a> |</li>
-        <li><a href="contents.html">cpp-netlib v0.11.2</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="contents.html">cpp-netlib v0.11.2</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Aug 27, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Last updated on Mar 07, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
     </div>
   </body>
 </html>
