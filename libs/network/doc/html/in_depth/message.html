@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="cpp-netlib v0.11.2" href="../index.html" />
+    <link rel="top" title="cpp-netlib v0.11.2" href="../contents.html" />
     <link rel="up" title="An in-depth look at the cpp-netlib" href="../in_depth.html" />
     <link rel="next" title="The URI class" href="uri.html" />
     <link rel="prev" title="An in-depth look at the cpp-netlib" href="../in_depth.html" />
@@ -34,9 +34,9 @@
 <![endif]-->
 
   </head>
-  <body>
+  <body role="document">
 
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,15 +45,15 @@
         <li class="right" >
           <a href="../in_depth.html" title="An in-depth look at the cpp-netlib"
              accesskey="P">previous</a> |</li>
-        <li><a href="../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
-          <li><a href="../in_depth.html" accesskey="U">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../in_depth.html" accesskey="U">An in-depth look at the <code class="docutils literal"><span class="pre">cpp-netlib</span></code></a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="the-message-template">
 <h1>The message template<a class="headerlink" href="#the-message-template" title="Permalink to this headline">¶</a></h1>
@@ -131,85 +131,85 @@ properties of messages.</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">typename</span> <span class="pre">M::tag</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">typename</span> <span class="pre">M::tag</span></code></td>
 <td>T</td>
 <td>The nested tag type.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">M()</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">M()</span></code></td>
 <td>Instance of M</td>
 <td>Default constructible.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">M(m)</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">M(m)</span></code></td>
 <td>Instance of M</td>
 <td>Copy constructible.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">n;</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">m</span> <span class="pre">=</span> <span class="pre">n;</span></code></td>
 <td>Reference to m</td>
 <td>Assignable.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">swap(m,</span> <span class="pre">n);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">void</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">swap(m,</span> <span class="pre">n);</span></code></td>
+<td><code class="docutils literal"><span class="pre">void</span></code></td>
 <td>Swappable.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">source(m);</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">source(m);</span></code></td>
 <td>Convertible to O</td>
-<td>Retrieve the source of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<td>Retrieve the source of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">destination(m);</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">destination(m);</span></code></td>
 <td>Convertible to D</td>
-<td>Retrieve the destination of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<td>Retrieve the destination of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">headers(m);</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">headers(m);</span></code></td>
 <td>Convertible to H</td>
-<td>Retrieve the headers of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<td>Retrieve the headers of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">body(m);</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">body(m);</span></code></td>
 <td>Convertible to B</td>
-<td>Retrieve the body of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<td>Retrieve the body of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">source(s);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
-<td>Set the source of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">source(s);</span></code></td>
+<td><code class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></code></td>
+<td>Set the source of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">destination(s);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
-<td>Set the destination of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">destination(s);</span></code></td>
+<td><code class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></code></td>
+<td>Set the destination of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">header(k,</span> <span class="pre">v);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
-<td>Add a header to <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">header(k,</span> <span class="pre">v);</span></code></td>
+<td><code class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></code></td>
+<td>Add a header to <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">remove_header(k);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
-<td>Remove a header from <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">remove_header(k);</span></code></td>
+<td><code class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></code></td>
+<td>Remove a header from <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">body(s);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
-<td>Set the body of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">m</span> <span class="pre">&lt;&lt;</span> <span class="pre">body(s);</span></code></td>
+<td><code class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></code></td>
+<td>Set the body of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">source(m,s);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">void</span></tt></td>
-<td>Set the source of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">source(m,s);</span></code></td>
+<td><code class="docutils literal"><span class="pre">void</span></code></td>
+<td>Set the source of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">destination(m,s);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">void</span></tt></td>
-<td>Set the destination of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">destination(m,s);</span></code></td>
+<td><code class="docutils literal"><span class="pre">void</span></code></td>
+<td>Set the destination of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">add_header(m,</span> <span class="pre">k,</span> <span class="pre">v);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">void</span></tt></td>
-<td>Add a header to <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">add_header(m,</span> <span class="pre">k,</span> <span class="pre">v);</span></code></td>
+<td><code class="docutils literal"><span class="pre">void</span></code></td>
+<td>Add a header to <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">remove_header(m,</span> <span class="pre">k);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">void</span></tt></td>
-<td>Remove a header from <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">remove_header(m,</span> <span class="pre">k);</span></code></td>
+<td><code class="docutils literal"><span class="pre">void</span></code></td>
+<td>Remove a header from <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">clear_headers(m);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">void</span></tt></td>
-<td>Clear the headers of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">clear_headers(m);</span></code></td>
+<td><code class="docutils literal"><span class="pre">void</span></code></td>
+<td>Clear the headers of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">body(m,s);</span></tt></td>
-<td><tt class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></tt></td>
-<td>Set the body of <tt class="docutils literal"><span class="pre">m</span></tt>.</td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">body(m,s);</span></code></td>
+<td><code class="docutils literal"><span class="pre">M</span> <span class="pre">&amp;</span></code></td>
+<td>Set the body of <code class="docutils literal"><span class="pre">m</span></code>.</td>
 </tr>
 </tbody>
 </table>
@@ -233,9 +233,9 @@ for a Directive is that it should apply these operations on a message.</p>
 <p>A directive may dispatch on the type of the message passed to it at the point of
 the function call. Typically, directives are generated using a factory function
 that returns the correct directive type.</p>
-<p>For a given directive <tt class="docutils literal"><span class="pre">foo_directive</span></tt> a generator function called <tt class="docutils literal"><span class="pre">foo</span></tt> is
+<p>For a given directive <code class="docutils literal"><span class="pre">foo_directive</span></code> a generator function called <code class="docutils literal"><span class="pre">foo</span></code> is
 typically implemented:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span class="k">struct</span> <span class="n">foo_directive</span> <span class="p">{</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">foo_directive</span> <span class="p">{</span>
     <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Message</span><span class="o">&gt;</span>
     <span class="n">Message</span> <span class="o">&amp;</span> <span class="k">operator</span><span class="p">()(</span><span class="n">Message</span> <span class="o">&amp;</span> <span class="n">m</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
         <span class="c1">// do something to m</span>
@@ -258,7 +258,7 @@ typically implemented:</p>
 <p>A modifier is generally defined as a free function that takes a reference to a
 non-const lvalue message as the first parameter, and any number of parameters.
 In the concept definition of the Message Concept, a modifier follows the form:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span class="n">modifier</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="p">...)</span>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">modifier</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="p">...)</span>
 </pre></div>
 </div>
 <p>Modifiers are meant to imply modifications on a message, which also allows for
@@ -272,10 +272,10 @@ vice versa, although that is not required nor specified.</p>
 message, when wrapped, can be converted to the associated part of the message. A
 wrapper has a type that encapsulates the conversion logic from a message to a
 given type.</p>
-<p>An example of a Wrapper would be <tt class="docutils literal"><span class="pre">source_wrapper</span></tt> which would be returned by a
-call to the wrapper generator function <tt class="docutils literal"><span class="pre">source</span></tt>. An example implementation of
-the <tt class="docutils literal"><span class="pre">source_wrapper</span></tt> would look like:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="p">,</span> <span class="k">template</span> <span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Message</span><span class="o">&gt;</span>
+<p>An example of a Wrapper would be <code class="docutils literal"><span class="pre">source_wrapper</span></code> which would be returned by a
+call to the wrapper generator function <code class="docutils literal"><span class="pre">source</span></code>. An example implementation of
+the <code class="docutils literal"><span class="pre">source_wrapper</span></code> would look like:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="p">,</span> <span class="k">template</span> <span class="o">&lt;</span><span class="n">class</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">Message</span><span class="o">&gt;</span>
 <span class="k">struct</span> <span class="n">source_wrapper</span> <span class="p">{</span>
     <span class="n">Message</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">m</span><span class="p">;</span>
     <span class="k">explicit</span> <span class="nf">source_wrapper</span><span class="p">(</span><span class="n">Message</span><span class="o">&lt;</span><span class="n">Tag</span><span class="o">&gt;</span> <span class="k">const</span> <span class="o">&amp;</span> <span class="n">m</span><span class="p">)</span>
@@ -302,23 +302,23 @@ the <tt class="docutils literal"><span class="pre">source_wrapper</span></tt> wo
 <p>This pattern is similar to an adapter, but the specific notion of wrapping a
 data type (in this case, an object of a type that models the Message Concept)
 using an intermediary wrapper is what is pertained to by the Wrapper pattern.
-In this case, the Wrapper is <tt class="docutils literal"><span class="pre">source_wrapper</span></tt> while <tt class="docutils literal"><span class="pre">source</span></tt> is merely a
+In this case, the Wrapper is <code class="docutils literal"><span class="pre">source_wrapper</span></code> while <code class="docutils literal"><span class="pre">source</span></code> is merely a
 wrapper generator function.</p>
 </div>
 </div>
 <div class="section" id="basic-message">
-<h2><tt class="docutils literal"><span class="pre">basic_message</span></tt><a class="headerlink" href="#basic-message" title="Permalink to this headline">¶</a></h2>
+<h2><code class="docutils literal"><span class="pre">basic_message</span></code><a class="headerlink" href="#basic-message" title="Permalink to this headline">¶</a></h2>
 <p>The default implementation of a simple type that models the Message
 Concept is available in cpp-netlib. This default implementation is
-named <tt class="docutils literal"><span class="pre">basic_message</span></tt> which supports a <tt class="docutils literal"><span class="pre">Tag</span></tt> template
-parameter. The definition of <tt class="docutils literal"><span class="pre">basic_message</span></tt> looks like this:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span>
+named <code class="docutils literal"><span class="pre">basic_message</span></code> which supports a <code class="docutils literal"><span class="pre">Tag</span></code> template
+parameter. The definition of <code class="docutils literal"><span class="pre">basic_message</span></code> looks like this:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">basic_message</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>The <tt class="docutils literal"><span class="pre">basic_message</span></tt> template requires that the following
-tag-dispatched metafunctions are defined for the type <tt class="docutils literal"><span class="pre">Tag</span></tt>:</p>
-<div class="highlight-c++"><div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span>
+<p>The <code class="docutils literal"><span class="pre">basic_message</span></code> template requires that the following
+tag-dispatched metafunctions are defined for the type <code class="docutils literal"><span class="pre">Tag</span></code>:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span>
 <span class="k">struct</span> <span class="n">string</span><span class="p">;</span>
 
 <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Tag</span><span class="o">&gt;</span>
@@ -337,7 +337,7 @@ POD type.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../contents.html">Table Of Contents</a></h3>
   <ul>
@@ -349,18 +349,18 @@ POD type.</p>
 <li><a class="reference internal" href="#wrappers">Wrappers</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#basic-message"><tt class="docutils literal"><span class="pre">basic_message</span></tt></a></li>
+<li><a class="reference internal" href="#basic-message"><code class="docutils literal"><span class="pre">basic_message</span></code></a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="../in_depth.html"
-                        title="previous chapter">An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a></p>
+                        title="previous chapter">An in-depth look at the <code class="docutils literal"><span class="pre">cpp-netlib</span></code></a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="uri.html"
                         title="next chapter">The URI class</a></p>
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -377,7 +377,7 @@ POD type.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -386,14 +386,14 @@ POD type.</p>
         <li class="right" >
           <a href="../in_depth.html" title="An in-depth look at the cpp-netlib"
              >previous</a> |</li>
-        <li><a href="../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
-          <li><a href="../in_depth.html" >An in-depth look at the <tt class="docutils literal"><span class="pre">cpp-netlib</span></tt></a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../contents.html">cpp-netlib v0.11.2</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../in_depth.html" >An in-depth look at the <code class="docutils literal"><span class="pre">cpp-netlib</span></code></a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2008-2014, Glyn Matthews, Dean Michael Berris; 2013 Google, Inc..
-      Last updated on Aug 27, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Last updated on Mar 07, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
     </div>
   </body>
 </html>

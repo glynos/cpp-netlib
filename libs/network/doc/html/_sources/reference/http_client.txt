@@ -25,6 +25,8 @@ asynchronous.
 As of 0.11 the `Synchronous Clients`_ are now *DEPRECATED* and will be removed
 in subsequent releases.
 
+In 0.12.x the `Synchronous Clients`_ have been removed.
+
 Features
 --------
 
@@ -473,3 +475,19 @@ to create a function object.
 
 The ``BOOST_NETWORK_HTTP_BODY_CALLBACK`` macro is defined in
 ``boost/network/protocol/http/client/macros.hpp``.
+
+Generated Documentation
+-----------------------
+
+.. doxygenclass:: boost::network::http::client_options
+   :project: cppnetlib
+   :members:
+   :undoc-members:
+
+.. doxygenclass:: boost::network::http::basic_client
+   :project: cppnetlib
+   :members:
+   :undoc-members:
+
+.. doxygentypedef:: boost::network::http::client
+   :project: cppnetlib

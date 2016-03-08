@@ -7,6 +7,14 @@
 :mod:`cpp-netlib` 0.12
 ----------------------
 
+* Added a code of conduct.
+* Add TLS SNI hostname support in the HTTP Client options.
+* Changes based on Coverity reports.
+* Replace std::bind with lambdas.
+* Use std::shared_ptr instead of boost::shared_ptr.
+* Use standalone Asio instead of Boost.Asio.
+* No Boost library (shared or static) dependencies.
+* Use doxygen for documentation, integrated with Breathe to Sphinx.
 * Require C++11 for builds, removes support for non-C++11 compilers.
 * Update documentation for hello_world_server
 * Use googletest for tests
