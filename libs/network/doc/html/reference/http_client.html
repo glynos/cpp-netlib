@@ -74,11 +74,6 @@ implementations.</li>
 <p>The HTTP clients all share the same API, but the internals are documented in
 terms of what is different and what to expect with the different
 implementations.</p>
-<p>As of 0.9.1 the default implementation for the <code class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></code> HTTP client is
-asynchronous.</p>
-<p>As of 0.11 the <a class="reference internal" href="#synchronous-clients">Synchronous Clients</a> are now <em>DEPRECATED</em> and will be removed
-in subsequent releases.</p>
-<p>In 0.12.x the <a class="reference internal" href="#synchronous-clients">Synchronous Clients</a> have been removed.</p>
 </div>
 <div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
@@ -104,8 +99,8 @@ do the following:</p>
 <p>This forces HTTPS support to be enabled and forces a dependency on <a class="reference external" href="http://www.openssl.org/">OpenSSL</a>.
 This dependency is imposed by <a class="reference external" href="http://www.boost.org/libs/asio">Boost.Asio</a></p>
 </div>
-<div class="section" id="implementations">
-<h2>Implementations<a class="headerlink" href="#implementations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="client-implementation">
+<h2>Client Implementation<a class="headerlink" href="#client-implementation" title="Permalink to this headline">¶</a></h2>
 <p>There is a single user-facing template class named <code class="docutils literal"><span class="pre">basic_client</span></code> which takes
 three template parameters:</p>
 <blockquote>
@@ -117,12 +112,6 @@ number, this directly affects the HTTP messages sent by the client.</li>
 number.</li>
 </ul>
 </div></blockquote>
-<p>There are two major different class of implementations of the <code class="docutils literal"><span class="pre">basic_client</span></code>
-template that depend on which tag you choose: <a class="reference internal" href="#synchronous-clients">Synchronous Clients</a> and
-<a class="reference internal" href="#asynchronous-clients">Asynchronous Clients</a>. These two different classes are described in their own
-sections following this one. What follows is a table of all tags supported by
-the HTTP client implementation provided by <code class="xref py py-mod docutils literal"><span class="pre">cpp-netlib</span></code>.</p>
-<hr class="docutils" />
 <table border="1" class="docutils">
 <colgroup>
 <col width="42%" />
@@ -185,64 +174,23 @@ introduced by the tags. This pattern is shown below:</p>
 <p>For example, the tag <code class="docutils literal"><span class="pre">http_default_8bit_tcp_resolve</span></code> indicates the protocol
 <code class="docutils literal"><span class="pre">http</span></code>, a modifier <code class="docutils literal"><span class="pre">default</span></code>, a character width of <code class="docutils literal"><span class="pre">8bit</span></code>, and a resolve
 strategy of <code class="docutils literal"><span class="pre">tcp_resolve</span></code>.</p>
-<div class="section" id="synchronous-clients">
-<h3>Synchronous Clients<a class="headerlink" href="#synchronous-clients" title="Permalink to this headline">¶</a></h3>
-<p>Of the client tags shown in the table, the following makes the <code class="docutils literal"><span class="pre">basic_client</span></code>
-behave as a fully synchronous client.</p>
-<blockquote>
-<div><ul class="simple">
-<li><strong>http_default_8bit_tcp_resolve</strong></li>
-<li><strong>http_default_8bit_udp_resolve</strong></li>
-<li><strong>http_keepalive_8bit_tcp_resolve</strong></li>
-<li><strong>http_keepalive_8bit_udp_resolve</strong></li>
-</ul>
-</div></blockquote>
-<p>The synchronous client implements all the operations of the client underneath
-the interface all block to wait for I/O to finish. All the member methods are
-synchronous and will block until the response object is ready or throws if errors
-are encountered in the performance of the HTTP requests.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">The synchronous clients are <strong>NOT</strong> thread safe. You will need to do
-external synchronization to use synchronous client implementations.</p>
-</div>
+<p>The  client is implemented as an <a class="reference external" href="http://en.wikipedia.org/wiki/Active_object">Active Object</a>. This means that the client
+has and manages its own lifetime thread, and returns values that are
+asynchronously filled in. The response object encapsulates futures which get
+filled in once the values are available.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">As of version 0.11, all the synchronous client implementations are
-deprecated. They will be removed in the next version of the library.</p>
+<p class="last">The client objects are thread safe, and can be shared across many
+threads. Each request starts a sequence of asynchronous operations dedicated
+to that request. The client does not re-cycle connections and uses a
+one-request-one-connection model.</p>
 </div>
-</div>
-<div class="section" id="asynchronous-clients">
-<h3>Asynchronous Clients<a class="headerlink" href="#asynchronous-clients" title="Permalink to this headline">¶</a></h3>
-<p>The following tags specify the <code class="docutils literal"><span class="pre">basic_client</span></code> to behave in an asynchronous
-manner:</p>
-<blockquote>
-<div><ul class="simple">
-<li><strong>http_async_8bit_tcp_resolve</strong></li>
-<li><strong>http_async_8bit_udp_resolve</strong></li>
-</ul>
-</div></blockquote>
-<p>An asynchronous client implementation means that``basic_client&lt;...&gt;`` is an
-<a class="reference external" href="http://en.wikipedia.org/wiki/Active_object">Active Object</a>. This means that the client has and manages its own lifetime
-thread, and returns values that are asynchronously filled in. The response
-object encapsulates <a class="reference external" href="http://www.boost.org/libs/thread">Boost.Thread</a> futures which get filled in once the values
-are available.</p>
-<p>The asynchronous clients implement all operations asynchronously which are hidden
-from the user. The interface is still synchronous but the fetching of data
-happens on a different thread.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The asynchronous clients are thread safe, and can be shared across
-many threads. Each request starts a sequence of asynchronous operations
-dedicated to that request. The client does not re-cycle connections and uses
-a one-request-one-connection model.</p>
-</div>
-<p>When an asynchronous client object is destroyed, it waits for all pending
-asynchronous operations to finish. Errors encountered during operations on
-retrieving data from the response objects cause exceptions to be thrown &#8211;
-therefore it is best that if a client object is constructed, it should outlive
-the response object or be outside the try-catch block handling the errors from
-operations on responses. In code, usage should look like the following:</p>
+<p>When a client object is destroyed, it waits for all pending asynchronous
+operations to finish. Errors encountered during operations on retrieving data
+from the response objects cause exceptions to be thrown &#8211; therefore it is best
+that if a client object is constructed, it should outlive the response object
+or be outside the try-catch block handling the errors from operations on
+responses. In code, usage should look like the following:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="n">http</span><span class="o">::</span><span class="n">client</span> <span class="n">client</span><span class="p">;</span>
 <span class="k">try</span> <span class="p">{</span>
   <span class="n">http</span><span class="o">::</span><span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://www.example.com/&quot;</span><span class="p">);</span>
@@ -257,7 +205,6 @@ undefined behavior when errors arise from the handling of response objects.
 Previous examples cited by the documentation showed the short version of the
 code which didn&#8217;t bother moving the <code class="docutils literal"><span class="pre">http::client</span></code> object outside of the same
 <code class="docutils literal"><span class="pre">try</span></code> block where the request/response objects are being used.</p>
-</div>
 </div>
 <div class="section" id="member-functions">
 <h2>Member Functions<a class="headerlink" href="#member-functions" title="Permalink to this headline">¶</a></h2>
@@ -274,19 +221,6 @@ code which didn&#8217;t bother moving the <code class="docutils literal"><span c
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;boost/network/include/http/client.hpp&gt;</span><span class="cp"></span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Starting version 0.9, cpp-netlib clients and server implementations
-by default now have an externally-linked component. This is a breaking change
-for code that used to rely on cpp-netlib being a header-only library, but can
-inhibited by defining the <code class="docutils literal"><span class="pre">BOOST_NETWORK_NO_LIB</span></code> preprocessor macro before
-including any cpp-netlib header.</p>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Starting version 0.11, cpp-netlib clients and server implementations
-no longer support the <code class="docutils literal"><span class="pre">BOOST_NETWORK_NO_LIB</span></code> option.</p>
-</div>
 <div class="section" id="constructors">
 <h3>Constructors<a class="headerlink" href="#constructors" title="Permalink to this headline">¶</a></h3>
 <p>The client implementation can be default constructed, or customized at
@@ -298,85 +232,100 @@ initialization.</p>
 <dd>Constructor taking a <code class="docutils literal"><span class="pre">client_options&lt;Tag&gt;</span></code> object. The following table
 shows the options you can set on a <code class="docutils literal"><span class="pre">client_options&lt;Tag&gt;</span></code> instance.</dd>
 </dl>
-<table border="1" class="docutils">
-<colgroup>
-<col width="33%" />
-<col width="35%" />
-<col width="33%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Parameter Name</th>
-<th class="head">Type</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>follow_redirects</td>
-<td><code class="docutils literal"><span class="pre">bool</span></code></td>
-<td>Boolean to specify
-whether the client
-should follow HTTP
-redirects. Default is
-<code class="docutils literal"><span class="pre">false</span></code>.</td>
-</tr>
-<tr class="row-odd"><td>cache_resolved</td>
-<td><code class="docutils literal"><span class="pre">bool</span></code></td>
-<td>Boolean to specify
-whether the client
-should cache resolved
-endpoints. The default
-is <code class="docutils literal"><span class="pre">false</span></code>.</td>
-</tr>
-<tr class="row-even"><td>io_service</td>
-<td><code class="docutils literal"><span class="pre">shared_ptr&lt;io_service&gt;</span></code></td>
-<td>Shared pointer to a
-Boost.Asio
-<code class="docutils literal"><span class="pre">io_service</span></code>.</td>
-</tr>
-<tr class="row-odd"><td>openssl_certificate</td>
-<td><code class="docutils literal"><span class="pre">string</span></code></td>
-<td>The filename of the
-certificate to load for
-the SSL connection for
-verification.</td>
-</tr>
-<tr class="row-even"><td>openssl_verify_path</td>
-<td><code class="docutils literal"><span class="pre">string</span></code></td>
-<td>The directory from
-which the certificate
-authority files are
-located.</td>
-</tr>
-<tr class="row-odd"><td>always_verify_peer</td>
-<td><code class="docutils literal"><span class="pre">bool</span></code></td>
-<td>Boolean to specify
-whether the client
-should always verify
-peers in SSL connections</td>
-</tr>
-<tr class="row-even"><td>openssl_certificate_file</td>
-<td><code class="docutils literal"><span class="pre">string</span></code></td>
-<td>Filename of the
-certificate to use for
-client-side SSL session
-establishment.</td>
-</tr>
-<tr class="row-odd"><td>openssl_private_key_file</td>
-<td><code class="docutils literal"><span class="pre">string</span></code></td>
-<td>Filename of the
-private key to use for
-client-side SSL session
-establishment.</td>
-</tr>
-<tr class="row-even"><td>timeout</td>
-<td><code class="docutils literal"><span class="pre">int</span></code></td>
-<td>Number of seconds to
-wait for client requests
-before considering a
-timeout has occurred.</td>
-</tr>
-</tbody>
-</table>
+</div>
+<div class="section" id="client-options">
+<h3>Client Options<a class="headerlink" href="#client-options" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt>
+<span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options"></span><em class="property">template </em>&lt;class <em>Tag</em>&gt;</dt>
+<dt id="_CPPv2N5boost7network4http14client_optionsE">
+<span id="boost::network::http::client_options"></span><em class="property">class </em><code class="descclassname">boost::network::http::</code><code class="descname">client_options</code><a class="headerlink" href="#_CPPv2N5boost7network4http14client_optionsE" title="Permalink to this definition">¶</a></dt>
+<dd><div class="breathe-sectiondef container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options14client_optionsEv">
+<span id="boost::network::http::client_options::client_options"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1a86694f2abd05ea19710356b2316521db"></span><code class="descname">client_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set all the options to default. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options14cache_resolvedEb">
+<span id="boost::network::http::client_options::cache_resolved__b"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1aba352b068fa1c56d5523579b3a6c95b7"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">cache_resolved</code><span class="sig-paren">(</span>bool <em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options14cache_resolvedEb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify whether the client should cache resolved endpoints.</p>
+<p>Default: false. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options16follow_redirectsEb">
+<span id="boost::network::http::client_options::follow_redirects__b"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1abf23a249d6452a1c01aefa5442dc6169"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">follow_redirects</code><span class="sig-paren">(</span>bool <em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options16follow_redirectsEb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify whether the client should follow redirects.</p>
+<p>Default: false. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options19openssl_certificateER11string_type">
+<span id="boost::network::http::client_options::openssl_certificate__string_typeCR"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1a82bc1d5a8ea7a3afbd0fee4b9f4ed036"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">openssl_certificate</code><span class="sig-paren">(</span>string_type <em class="property">const</em> &amp;<em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options19openssl_certificateER11string_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the filename of the certificate to load for the SSL connection for verification. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options19openssl_verify_pathER11string_type">
+<span id="boost::network::http::client_options::openssl_verify_path__string_typeCR"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1a1ff45cc952acd9602a1a3dd55785645e"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">openssl_verify_path</code><span class="sig-paren">(</span>string_type <em class="property">const</em> &amp;<em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options19openssl_verify_pathER11string_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the directory for which the certificate authority files are located. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options24openssl_certificate_fileER11string_type">
+<span id="boost::network::http::client_options::openssl_certificate_file__string_typeCR"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1ada9794a5f1811fa0aac203a0d63b5bba"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">openssl_certificate_file</code><span class="sig-paren">(</span>string_type <em class="property">const</em> &amp;<em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options24openssl_certificate_fileER11string_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the filename of the certificate to use for client-side SSL session establishment. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options24openssl_private_key_fileER11string_type">
+<span id="boost::network::http::client_options::openssl_private_key_file__string_typeCR"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1a452eb90ab82b64e3bf19283c7d67014a"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">openssl_private_key_file</code><span class="sig-paren">(</span>string_type <em class="property">const</em> &amp;<em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options24openssl_private_key_fileER11string_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the filename of the private key to use for client-side SSL session establishment. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options15openssl_ciphersER11string_type">
+<span id="boost::network::http::client_options::openssl_ciphers__string_typeCR"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1afb67676c01d280c98734aba73a99fabf"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">openssl_ciphers</code><span class="sig-paren">(</span>string_type <em class="property">const</em> &amp;<em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options15openssl_ciphersER11string_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the ciphers to support for SSL negotiation. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options20openssl_sni_hostnameER11string_type">
+<span id="boost::network::http::client_options::openssl_sni_hostname__string_typeCR"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1afce001d16222b4100cfd8807dbc9938f"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">openssl_sni_hostname</code><span class="sig-paren">(</span>string_type <em class="property">const</em> &amp;<em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options20openssl_sni_hostnameER11string_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the hostname for SSL SNI hostname support. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options15openssl_optionsEl">
+<span id="boost::network::http::client_options::openssl_options__l"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1a8ac8cb6c6ee4a8f40cab38918c6c111a"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">openssl_options</code><span class="sig-paren">(</span>long <em>o</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options15openssl_optionsEl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the raw OpenSSL options to use for HTTPS requests. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options10io_serviceENSt10shared_ptrIN4asio10io_serviceEEE">
+<span id="boost::network::http::client_options::io_service__std::shared_ptr:asio::io_service:"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1aed3966637aa1a8008d1f4a0b2a0c72f7"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">io_service</code><span class="sig-paren">(</span>std::shared_ptr&lt;asio::io_service&gt; <em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options10io_serviceENSt10shared_ptrIN4asio10io_serviceEEE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide an <code class="docutils literal"><span class="pre">asio::io_service</span></code> hosted in a shared pointer. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options18always_verify_peerEb">
+<span id="boost::network::http::client_options::always_verify_peer__b"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1afe678ecb12a05ea5c1b7ba24dcc7286d"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">always_verify_peer</code><span class="sig-paren">(</span>bool <em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options18always_verify_peerEb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set whether we always verify the peer on the other side of the HTTPS connection.</p>
+<p>Default: true. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http14client_options7timeoutEi">
+<span id="boost::network::http::client_options::timeout__i"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1client__options_1a93127811abd1fe2d6e5f39e05d697c29"></span><a class="reference internal" href="#_CPPv2N5boost7network4http14client_options14client_optionsEv" title="boost::network::http::client_options::client_options">client_options</a> &amp;<code class="descname">timeout</code><span class="sig-paren">(</span>int <em>v</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http14client_options7timeoutEi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an overall timeout for HTTP requests. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
 <p>To use the above supported named parameters, you&#8217;ll have code that looks like
 the following:</p>
 <div class="highlight-c++"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">boost</span><span class="o">::</span><span class="n">network</span><span class="o">::</span><span class="n">http</span><span class="p">;</span> <span class="c1">// parameters are in this namespace</span>
@@ -405,146 +354,357 @@ and that there is an appropriately constructed response object named
 <span class="n">client</span><span class="o">::</span><span class="n">response</span> <span class="n">response_</span><span class="p">;</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.get(request_)</span></code></dt>
-<dd>Perform an HTTP GET request.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.get(request_,</span> <span class="pre">callback)</span></code></dt>
-<dd>Perform an HTTP GET request, and have the body chunks be handled by the
-<code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of <code class="docutils literal"><span class="pre">callback</span></code> should be the following:
-<code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span>
-<span class="pre">&amp;)</span></code>.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.head(request_)</span></code></dt>
-<dd>Perform an HTTP HEAD request.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_)</span></code></dt>
-<dd>Perform an HTTP POST, use the data already set in the request object which
-includes the headers, and the body.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">callback)</span></code></dt>
-<dd>Perform an HTTP POST request, and have the body chunks be handled by the
-<code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of <code class="docutils literal"><span class="pre">callback</span></code> should be the following:
-<code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span>
-<span class="pre">&amp;)</span></code>.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">body)</span></code></dt>
-<dd>Body is a string of type <code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code>
-is the HTTP Client&#8217;s <code class="docutils literal"><span class="pre">Tag</span></code>. The default content-type used is
-<code class="docutils literal"><span class="pre">x-application/octet-stream</span></code>.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">body,</span> <span class="pre">callback)</span></code></dt>
-<dd>Body is a string of type <code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code>
-is the HTTP Client&#8217;s <code class="docutils literal"><span class="pre">Tag</span></code>. The default content-type used is
-<code class="docutils literal"><span class="pre">x-application/octet-stream</span></code>. Have the response body chunks be handled by
-the <code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of <code class="docutils literal"><span class="pre">callback</span></code> should be the
-following: <code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
-<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></code>.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">body,</span> <span class="pre">content_type)</span></code></dt>
-<dd>The body and content_type parameters are of type
-<code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code> is the HTTP Client&#8217;s
-<code class="docutils literal"><span class="pre">Tag</span></code>. This uses the request object&#8217;s other headers.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">body,</span> <span class="pre">content_type,</span> <span class="pre">callback)</span></code></dt>
-<dd>The body and content_type parameters are of type
-<code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code> is the HTTP Client&#8217;s
-<code class="docutils literal"><span class="pre">Tag</span></code>. This uses the request object&#8217;s other headers. Have the response
-body chunks be handled by the <code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of
-<code class="docutils literal"><span class="pre">callback</span></code> should be the following: <code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
-<span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></code>.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">body,</span> <span class="pre">content_type,</span> <span class="pre">callback,</span> <span class="pre">streaming_callback)</span></code></dt>
-<dd>The body and content_type parameters are of type
-<code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code> is the HTTP Client&#8217;s
-<code class="docutils literal"><span class="pre">Tag</span></code>. This uses the request object&#8217;s other headers. Have the response
-body chunks be handled by the <code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of
-<code class="docutils literal"><span class="pre">callback</span></code> should be the following: <code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
-<span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></code>. The <code class="docutils literal"><span class="pre">streaming_callback</span></code>
-argument should have a which has a signature of the form:
-<code class="docutils literal"><span class="pre">bool(string_type&amp;)</span></code>. The provided <code class="docutils literal"><span class="pre">string_type&amp;</span></code> will be streamed as
-soon as the function returns. A return value of <code class="docutils literal"><span class="pre">false</span></code> signals the
-client that the most recent invocation is the last chunk to be sent.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">streaming_callback)</span></code></dt>
-<dd>Perform and HTTP POST request, and have the request&#8217;s body chunks be
-generated by the <code class="docutils literal"><span class="pre">streaming_callback</span></code> which has a signature of the form:
-<code class="docutils literal"><span class="pre">bool(string_type&amp;)</span></code>. The provided <code class="docutils literal"><span class="pre">string_type&amp;</span></code> will be streamed as
-soon as the function returns. A return value of <code class="docutils literal"><span class="pre">false</span></code> signals the client
-that the most recent invocation is the last chunk to be sent.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.post(request_,</span> <span class="pre">callback,</span> <span class="pre">streaming_callback)</span></code></dt>
-<dd>Perform an HTTP POST request, and have the body chunks be handled by the
-<code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of <code class="docutils literal"><span class="pre">callback</span></code> should be the
-following: <code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
-<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></code>. This form also has the request&#8217;s body
-chunks be generated by the <code class="docutils literal"><span class="pre">streaming_callback</span></code> which has a signature of
-the form: <code class="docutils literal"><span class="pre">bool(string_type&amp;)</span></code>. The provided <code class="docutils literal"><span class="pre">string_type&amp;</span></code> will be
-streamed as soon as the function returns. A return value of <code class="docutils literal"><span class="pre">false</span></code>
-signals the client that the most recent invocation is the last chunk to be
-sent.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_)</span></code></dt>
-<dd>Perform an HTTP PUT, use the data already set in the request object which
-includes the headers, and the body.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">callback)</span></code></dt>
-<dd>Perform an HTTP PUT request, and have the body chunks be handled by the
-<code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of <code class="docutils literal"><span class="pre">callback</span></code> should be the following:
-<code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span>
-<span class="pre">&amp;)</span></code>.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body)</span></code></dt>
-<dd>Body is a string of type <code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code>
-is the HTTP Client&#8217;s <code class="docutils literal"><span class="pre">Tag</span></code>. The default content-type used is
-<code class="docutils literal"><span class="pre">x-application/octet-stream</span></code>.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body,</span> <span class="pre">callback)</span></code></dt>
-<dd>Body is a string of type <code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code>
-is the HTTP Client&#8217;s <code class="docutils literal"><span class="pre">Tag</span></code>. The default content-type used is
-<code class="docutils literal"><span class="pre">x-application/octet-stream</span></code>. Have the response body chunks be handled by
-the <code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of <code class="docutils literal"><span class="pre">callback</span></code> should be the
-following: <code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
-<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></code>.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body,</span> <span class="pre">content_type)</span></code></dt>
-<dd>The body and content_type parameters are of type
-<code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code> is the HTTP Client&#8217;s
-<code class="docutils literal"><span class="pre">Tag</span></code>. This uses the request object&#8217;s other headers.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body,</span> <span class="pre">content_type,</span> <span class="pre">callback)</span></code></dt>
-<dd>The body and content_type parameters are of type
-<code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code> is the HTTP Client&#8217;s
-<code class="docutils literal"><span class="pre">Tag</span></code>. This uses the request object&#8217;s other headers. Have the response
-body chunks be handled by the <code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of
-<code class="docutils literal"><span class="pre">callback</span></code> should be the following: <code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
-<span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></code>.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">body,</span> <span class="pre">content_type,</span> <span class="pre">callback,</span> <span class="pre">streaming_callback)</span></code></dt>
-<dd>The body and content_type parameters are of type
-<code class="docutils literal"><span class="pre">boost::network::string&lt;Tag&gt;::type</span></code> where <code class="docutils literal"><span class="pre">Tag</span></code> is the HTTP Client&#8217;s
-<code class="docutils literal"><span class="pre">Tag</span></code>. This uses the request object&#8217;s other headers. Have the response
-body chunks be handled by the <code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of
-<code class="docutils literal"><span class="pre">callback</span></code> should be the following: <code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span>
-<span class="pre">&amp;,</span> <span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></code>. This form also has the request&#8217;s body
-chunks be generated by the <code class="docutils literal"><span class="pre">streaming_callback</span></code> which has a signature of
-the form: <code class="docutils literal"><span class="pre">bool(string_type&amp;)</span></code>. The provided <code class="docutils literal"><span class="pre">string_type&amp;</span></code> will be
-streamed as soon as the function returns. A return value of <code class="docutils literal"><span class="pre">false</span></code>
-signals the client that the most recent invocation is the last chunk to be
-sent</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">streaming_callback)</span></code></dt>
-<dd>Perform and HTTP PUT request, and have the request&#8217;s body chunks be
-generated by the <code class="docutils literal"><span class="pre">streaming_callback</span></code> which has a signature of the form:
-<code class="docutils literal"><span class="pre">bool(string_type&amp;)</span></code>. The provided <code class="docutils literal"><span class="pre">string_type&amp;</span></code> will be streamed as
-soon as the function returns. A return value of <code class="docutils literal"><span class="pre">false</span></code> signals the client
-that the most recent invocation is the last chunk to be sent.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.put(request_,</span> <span class="pre">callback,</span> <span class="pre">streaming_callback)</span></code></dt>
-<dd>Perform an HTTP PUT request, and have the body chunks be handled by the
-<code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of <code class="docutils literal"><span class="pre">callback</span></code> should be the
-following: <code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
-<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></code>. This form also has the request&#8217;s body
-chunks be generated by the <code class="docutils literal"><span class="pre">streaming_callback</span></code> which has a signature of
-the form: <code class="docutils literal"><span class="pre">bool(string_type&amp;)</span></code>. The provided <code class="docutils literal"><span class="pre">string_type&amp;</span></code> will be
-streamed as soon as the function returns. A return value of <code class="docutils literal"><span class="pre">false</span></code>
-signals the client that the most recent invocation is the last chunk to be
-sent.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.delete_(request_)</span></code></dt>
-<dd>Perform an HTTP DELETE request.</dd>
-<dt><code class="docutils literal"><span class="pre">response_</span> <span class="pre">=</span> <span class="pre">client_.delete_(request_,</span> <span class="pre">body_handler=callback)</span></code></dt>
-<dd>Perform an HTTP DELETE request, and have the response body chunks be handled
-by the <code class="docutils literal"><span class="pre">callback</span></code> parameter. The signature of <code class="docutils literal"><span class="pre">callback</span></code> should be the
-following: <code class="docutils literal"><span class="pre">void(iterator_range&lt;char</span> <span class="pre">const</span> <span class="pre">*&gt;</span> <span class="pre">const</span> <span class="pre">&amp;,</span>
-<span class="pre">boost::system::error_code</span> <span class="pre">const</span> <span class="pre">&amp;)</span></code>.</dd>
+<dl class="class">
+<dt>
+<span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client"></span><em class="property">template </em>&lt;<em class="property">class</em> Tag, unsigned <em>version_major</em>, unsigned <em>version_minor</em>&gt;</dt>
+<dt id="_CPPv2N5boost7network4http12basic_clientE">
+<span id="boost::network::http::basic_client"></span><em class="property">class </em><code class="descclassname">boost::network::http::</code><code class="descname">basic_client</code><a class="headerlink" href="#_CPPv2N5boost7network4http12basic_clientE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic Client API.</p>
+<p>This template defines an HTTP client object that is non-copyable and is implemented depending on the <code class="docutils literal"><span class="pre">Tag</span></code> parameter. It also hard-codes the version of HTTP to support.</p>
+<p><dl class="docutils">
+<dt><strong>Template Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">Tag</span></code> - <p>The Tag type used to determine certain traits of the implementation. We use the Tag as an input to other template metafunctions to determine things like the string type, whether to use TCP or UDP for the resolver, etc. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">version_major</span></code> - <p>The HTTP major version. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">version_minor</span></code> - <p>The HTTP minor version. </p>
+</li>
+</ul>
+</dd>
 </dl>
+</p>
+<p>Inherits from boost::network::http::basic_client_facade&lt; Tag, version_major, version_minor &gt;</p>
+<div class="breathe-sectiondef container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="type">
+<dt id="_CPPv2N5boost7network4http12basic_client8tag_typeE">
+<span id="boost::network::http::basic_client::tag_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client_1a483ed2fd706b2c8b6b9e2f094a751566"></span><em class="property">typedef </em>Tag <code class="descname">tag_type</code><a class="headerlink" href="#_CPPv2N5boost7network4http12basic_client8tag_typeE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="type">
+<dt id="_CPPv2N5boost7network4http12basic_client7optionsE">
+<span id="boost::network::http::basic_client::options"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client_1af467cac98f0d5c36968c4797790cdc6e"></span><em class="property">typedef </em><a class="reference internal" href="#_CPPv2N5boost7network4http14client_optionsE" title="boost::network::http::client_options">client_options</a>&lt;Tag&gt; <code class="descname">options</code><a class="headerlink" href="#_CPPv2N5boost7network4http12basic_client7optionsE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="type">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade11string_typeE">
+<span id="boost::network::http::basic_client_facade::string_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a76c78d521b58d2abad39db9363e55d9a"></span><em class="property">typedef </em>string&lt;Tag&gt;::type <code class="descname">string_type</code><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade11string_typeE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type to use for strings associated with this client. Typically resolves to <code class="docutils literal"><span class="pre">std::string</span></code>. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade7requestE">
+<span id="boost::network::http::basic_client_facade::request"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a467d347dfe2fd9f2e7fd4cd0db593236"></span><em class="property">typedef </em>basic_request&lt;Tag&gt; <code class="descname">request</code><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The request type. This models the HTTP Request concept. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade8responseE">
+<span id="boost::network::http::basic_client_facade::response"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a938acb3c2000ca0da774d0cc6ebccf45"></span><em class="property">typedef </em>basic_response&lt;Tag&gt; <code class="descname">response</code><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The response type. This models the HTTP Response concept. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE">
+<span id="boost::network::http::basic_client_facade::body_callback_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1ade75b031a45f27cbf65c67579cb75e2c"></span><em class="property">typedef </em>std::function&lt;void<span class="sig-paren">(</span>iterator_range&lt;char <em class="property">const</em> *&gt; <em class="property">const</em>&amp;, std::error_code <em class="property">const</em>&amp;<span class="sig-paren">)</span>&gt; <code class="descname">body_callback_function_type</code><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="Permalink to this definition">¶</a></dt>
+<dd><p>This callback is invoked with a range representing part of the response&#8217;s body as it comes in. In case of errors, the second argument is an error code. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade28body_generator_function_typeE">
+<span id="boost::network::http::basic_client_facade::body_generator_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a072d6ad63d747c62a9f99a8af77aae90"></span><em class="property">typedef </em>std::function&lt;bool<span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade11string_typeE" title="boost::network::http::basic_client_facade::string_type">string_type</a>&amp;<span class="sig-paren">)</span>&gt; <code class="descname">body_generator_function_type</code><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade28body_generator_function_typeE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functions that model this signature will be used to generate part of the body while the request is being performed. This allows users to provide a generator function that will generate the body of the request piece-wise.</p>
+<p>Implementations should return <code class="docutils literal"><span class="pre">true</span></code> if there is more to the body of the request, and <code class="docutils literal"><span class="pre">false</span></code> otherwise. </p>
+</dd></dl>
+
 </div>
-<div class="section" id="client-specific">
-<h3>Client-Specific<a class="headerlink" href="#client-specific" title="Permalink to this headline">¶</a></h3>
-<dl class="docutils">
-<dt><code class="docutils literal"><span class="pre">client_.clear_resolved_cache()</span></code></dt>
-<dd>Clear the cache of resolved endpoints.</dd>
+<div class="breathe-sectiondef container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http12basic_client12basic_clientER7options">
+<span id="boost::network::http::basic_client::basic_client__optionsCR"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client_1ab9dd2f520d3134a162147f021a89eee4"></span><code class="descname">basic_client</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http12basic_client7optionsE" title="boost::network::http::basic_client::options">options</a> <em class="property">const</em> &amp;<em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http12basic_client12basic_clientER7options" title="Permalink to this definition">¶</a></dt>
+<dd><p>This constructor takes a single options argument of type <a class="reference internal" href="#cppnetlibclassboost_1_1network_1_1http_1_1client__options"><span>client_options</span></a>. See boost/network/protocol/http/client/options.hpp for more details. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http12basic_client12basic_clientEv">
+<span id="boost::network::http::basic_client::basic_client"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client_1a6b2c55e5ed7b909832118f11ec81b39f"></span><code class="descname">basic_client</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http12basic_client12basic_clientEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>This default constructor sets up the default options. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade4headER7request">
+<span id="boost::network::http::basic_client_facade::head__requestCR"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a32cf25ea4bcc8ff108b96f41a769bfe2"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">head</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em class="property">const</em> &amp;<em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade4headER7request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a HEAD request. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade3getER7request27body_callback_function_type">
+<span id="boost::network::http::basic_client_facade::get__requestCR.body_callback_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a0f5bb208454697b056444b0c4f413120"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">get</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em class="property">const</em> &amp;<em>request</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="boost::network::http::basic_client_facade::body_callback_function_type">body_callback_function_type</a> <em>body_handler</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade3getER7request27body_callback_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a GET request.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A response object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">request</span></code> - <p>The request object including the URI and headers. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_handler</span></code> - <p>If provided, a callback invoked for parts of the response&#8217;s body. </p>
+</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">std::exception</span></code> - <p>May throw exceptions on errors, derived from <code class="docutils literal"><span class="pre">std::exception</span></code>. </p>
+</li>
+</ul>
+</dd>
 </dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade4postE7requestR11string_typeR11string_type27body_callback_function_type28body_generator_function_type">
+<span id="boost::network::http::basic_client_facade::post__request.string_typeCR.string_typeCR.body_callback_function_type.body_generator_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a00c4a3923f313c9ec06c54cce9747d2e"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">post</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em>request</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade11string_typeE" title="boost::network::http::basic_client_facade::string_type">string_type</a> <em class="property">const</em> &amp;<em>body</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade11string_typeE" title="boost::network::http::basic_client_facade::string_type">string_type</a> <em class="property">const</em> &amp;<em>content_type</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="boost::network::http::basic_client_facade::body_callback_function_type">body_callback_function_type</a> <em>body_handler</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade28body_generator_function_typeE" title="boost::network::http::basic_client_facade::body_generator_function_type">body_generator_function_type</a> <em>body_generator</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade4postE7requestR11string_typeR11string_type27body_callback_function_type28body_generator_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a POST request.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A response object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">request</span></code> - <p>A copy of the request object including the URI and headers. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body</span></code> - <p>The whole contents of the body. If provided, this overrides the body in the <code class="docutils literal"><span class="pre">request</span></code>. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">content_type</span></code> - <p>The content type for the request. This overrides the content type in the <code class="docutils literal"><span class="pre">request</span></code>. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_handler</span></code> - <p>The callback invoked for parts of the response body as they come in. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_generator</span></code> - <p>If provided, is invoked to generate parts of the request&#8217;s body as it is being sent. </p>
+</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">std::exception</span></code> - <p>May throw exceptions on errors, derived from <code class="docutils literal"><span class="pre">std::exception</span></code>. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade4postER7request28body_generator_function_type27body_callback_function_type">
+<span id="boost::network::http::basic_client_facade::post__requestCR.body_generator_function_type.body_callback_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a65534f48fd4fc2f59a1849fbfaf85700"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">post</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em class="property">const</em> &amp;<em>request</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade28body_generator_function_typeE" title="boost::network::http::basic_client_facade::body_generator_function_type">body_generator_function_type</a> <em>body_generator</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="boost::network::http::basic_client_facade::body_callback_function_type">body_callback_function_type</a> <em>body_handler</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade4postER7request28body_generator_function_type27body_callback_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a POST request.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A response object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">request</span></code> - <p>The request including the URI and headers. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_generator</span></code> - <p>The function to call to generate part of the body while the request is being performed. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">callback</span></code> - <p>If provided, the function to call for parts of the response&#8217;s body as they come in. </p>
+</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">std::exception</span></code> - <p>May throw exceptions derived from std::exception in case of errors. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade4postER7request27body_callback_function_type28body_generator_function_type">
+<span id="boost::network::http::basic_client_facade::post__requestCR.body_callback_function_type.body_generator_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a848ceb7014c9ba5c5e7d11ad64c7110d"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">post</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em class="property">const</em> &amp;<em>request</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="boost::network::http::basic_client_facade::body_callback_function_type">body_callback_function_type</a> <em>body_handler</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade28body_generator_function_typeE" title="boost::network::http::basic_client_facade::body_generator_function_type">body_generator_function_type</a> <em>body_generator</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade4postER7request27body_callback_function_type28body_generator_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a POST request.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A response object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">request</span></code> - <p>The request including the URI and headers. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_generator</span></code> - <p>The function to call to generate part of the body while the request is being performed. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">callback</span></code> - <p>If provided, the function to call for parts of the response&#8217;s body as they come in. </p>
+</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">std::exception</span></code> - <p>May throw exceptions derived from std::exception in case of errors. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade4postER7requestR11string_type27body_callback_function_type28body_generator_function_type">
+<span id="boost::network::http::basic_client_facade::post__requestCR.string_typeCR.body_callback_function_type.body_generator_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1ab92a0133f3a4836b1e95d8babc39663a"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">post</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em class="property">const</em> &amp;<em>request</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade11string_typeE" title="boost::network::http::basic_client_facade::string_type">string_type</a> <em class="property">const</em> &amp;<em>body</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="boost::network::http::basic_client_facade::body_callback_function_type">body_callback_function_type</a> <em>body_handler</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade28body_generator_function_typeE" title="boost::network::http::basic_client_facade::body_generator_function_type">body_generator_function_type</a> <em>body_generator</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade4postER7requestR11string_type27body_callback_function_type28body_generator_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a POST request.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A response object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">request</span></code> - <p>The request object including the URI and headers. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body</span></code> - <p>The whole contents of the body. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_handler</span></code> - <p>The callback invoked for parts of the response body as they come in. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_generator</span></code> - <p>If provided, is invoked to generate parts of the request&#8217;s body as it is being sent. </p>
+</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">std::exception</span></code> - <p>May throw exceptions on errors, derived from <code class="docutils literal"><span class="pre">std::exception</span></code>. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade3putE7requestR11string_typeR11string_type27body_callback_function_type28body_generator_function_type">
+<span id="boost::network::http::basic_client_facade::put__request.string_typeCR.string_typeCR.body_callback_function_type.body_generator_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1ab50f01d265ed427e6d09be61a3202da7"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">put</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em>request</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade11string_typeE" title="boost::network::http::basic_client_facade::string_type">string_type</a> <em class="property">const</em> &amp;<em>body</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade11string_typeE" title="boost::network::http::basic_client_facade::string_type">string_type</a> <em class="property">const</em> &amp;<em>content_type</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="boost::network::http::basic_client_facade::body_callback_function_type">body_callback_function_type</a> <em>body_handler</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade28body_generator_function_typeE" title="boost::network::http::basic_client_facade::body_generator_function_type">body_generator_function_type</a> <em>body_generator</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade3putE7requestR11string_typeR11string_type27body_callback_function_type28body_generator_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a PUT request.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A response object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">request</span></code> - <p>A copy of the request object including the URI and headers. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body</span></code> - <p>The whole contents of the body. If provided, this overrides the body in the <code class="docutils literal"><span class="pre">request</span></code>. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">content_type</span></code> - <p>The content type for the request. This overrides the content type in the <code class="docutils literal"><span class="pre">request</span></code>. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_handler</span></code> - <p>The callback invoked for parts of the response body as they come in. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_generator</span></code> - <p>If provided, is invoked to generate parts of the request&#8217;s body as it is being sent. </p>
+</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">std::exception</span></code> - <p>May throw exceptions on errors, derived from <code class="docutils literal"><span class="pre">std::exception</span></code>. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade3putER7request27body_callback_function_type28body_generator_function_type">
+<span id="boost::network::http::basic_client_facade::put__requestCR.body_callback_function_type.body_generator_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a190dc9aec44d5e02bb2983b848fd639c"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">put</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em class="property">const</em> &amp;<em>request</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="boost::network::http::basic_client_facade::body_callback_function_type">body_callback_function_type</a> <em>callback</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade28body_generator_function_typeE" title="boost::network::http::basic_client_facade::body_generator_function_type">body_generator_function_type</a> <em>body_generator</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade3putER7request27body_callback_function_type28body_generator_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a PUT request.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A response object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">request</span></code> - <p>The request including the URI and headers. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">callback</span></code> - <p>If provided, the function to call for parts of the response&#8217;s body as they come in. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_generator</span></code> - <p>The function to call to generate part of the body while the request is being performed. </p>
+</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">std::exception</span></code> - <p>May throw exceptions derived from std::exception in case of errors. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade3putER7request11string_type27body_callback_function_type28body_generator_function_type">
+<span id="boost::network::http::basic_client_facade::put__requestCR.string_type.body_callback_function_type.body_generator_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1a261a3012fbee4237ca631ad17407af8b"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">put</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em class="property">const</em> &amp;<em>request</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade11string_typeE" title="boost::network::http::basic_client_facade::string_type">string_type</a> <em>body</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="boost::network::http::basic_client_facade::body_callback_function_type">body_callback_function_type</a> <em>body_handler</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade28body_generator_function_typeE" title="boost::network::http::basic_client_facade::body_generator_function_type">body_generator_function_type</a> <em>body_generator</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade3putER7request11string_type27body_callback_function_type28body_generator_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a POST request.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A response object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">request</span></code> - <p>The request object including the URI and headers. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body</span></code> - <p>The whole contents of the body. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_handler</span></code> - <p>The callback invoked for parts of the response body as they come in. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_generator</span></code> - <p>If provided, is invoked to generate parts of the request&#8217;s body as it is being sent. </p>
+</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">std::exception</span></code> - <p>May throw exceptions on errors, derived from <code class="docutils literal"><span class="pre">std::exception</span></code>. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade7delete_ER7request27body_callback_function_type">
+<span id="boost::network::http::basic_client_facade::delete___requestCR.body_callback_function_type"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1ababa4526386fb237c957d69a4137fc27"></span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade8responseE" title="boost::network::http::basic_client_facade::response">response</a> <code class="descname">delete_</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade7requestE" title="boost::network::http::basic_client_facade::request">request</a> <em class="property">const</em> &amp;<em>request</em>, <a class="reference internal" href="#_CPPv2N5boost7network4http19basic_client_facade27body_callback_function_typeE" title="boost::network::http::basic_client_facade::body_callback_function_type">body_callback_function_type</a> <em>body_handler</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade7delete_ER7request27body_callback_function_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a DELETE request.</p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>A response object. </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">request</span></code> - <p>The request object including the URI and the headers. </p>
+</li>
+<li><code class="first docutils literal"><span class="pre">body_handler</span></code> - <p>The callback invoked for parts of the response body as they come in, if provided. </p>
+</li>
+</ul>
+</dd>
+<dt><strong>Exceptions</strong></dt>
+<dd><ul class="breatheparameterlist first last">
+<li><code class="first docutils literal"><span class="pre">std::exception</span></code> - <p>May throw exceptions on errors, derived from <code class="docutils literal"><span class="pre">std::exception</span></code>. </p>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv2N5boost7network4http19basic_client_facade20clear_resolved_cacheEv">
+<span id="boost::network::http::basic_client_facade::clear_resolved_cache"></span><span class="target" id="cppnetlibclassboost_1_1network_1_1http_1_1basic__client__facade_1ab1be5f08266664c6f967d70ccf29ff4d"></span>void <code class="descname">clear_resolved_cache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv2N5boost7network4http19basic_client_facade20clear_resolved_cacheEv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the cache of resolved endpoints. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv2N5boost7network4http6clientE">
+<span id="boost::network::http::client"></span><span class="target" id="cppnetlibprotocol_2http_2client_8hpp_1a0bafd7b8229c83638dc38eb646ce9ed0"></span><em class="property">typedef </em><a class="reference internal" href="#_CPPv2N5boost7network4http12basic_clientE" title="boost::network::http::basic_client">basic_client</a>&lt;BOOST_NETWORK_HTTP_CLIENT_DEFAULT_TAG, 1, 1&gt; <code class="descclassname">boost::network::http::</code><code class="descname">client</code><a class="headerlink" href="#_CPPv2N5boost7network4http6clientE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default HTTP client type is an asynchronous UDP-resolving HTTP/1.1 client. </p>
+</dd></dl>
+
 </div>
 <div class="section" id="streaming-body-handler">
 <h3>Streaming Body Handler<a class="headerlink" href="#streaming-body-handler" title="Permalink to this headline">¶</a></h3>
@@ -594,21 +754,6 @@ to create a function object.</p>
 <code class="docutils literal"><span class="pre">boost/network/protocol/http/client/macros.hpp</span></code>.</p>
 </div>
 </div>
-<div class="section" id="generated-documentation">
-<h2>Generated Documentation<a class="headerlink" href="#generated-documentation" title="Permalink to this headline">¶</a></h2>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">doxygenclass: Cannot find file: /Users/dberris/Source/cpp-netlib/libs/network/doc/doxygen/xml/index.xml</p>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">doxygenclass: Cannot find file: /Users/dberris/Source/cpp-netlib/libs/network/doc/doxygen/xml/index.xml</p>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">doxygentypedef: Cannot find file: /Users/dberris/Source/cpp-netlib/libs/network/doc/doxygen/xml/index.xml</p>
-</div>
-</div>
 </div>
 
 
@@ -622,19 +767,14 @@ to create a function object.</p>
 <li><a class="reference internal" href="#">HTTP Client API</a><ul>
 <li><a class="reference internal" href="#general">General</a></li>
 <li><a class="reference internal" href="#features">Features</a></li>
-<li><a class="reference internal" href="#implementations">Implementations</a><ul>
-<li><a class="reference internal" href="#synchronous-clients">Synchronous Clients</a></li>
-<li><a class="reference internal" href="#asynchronous-clients">Asynchronous Clients</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#client-implementation">Client Implementation</a></li>
 <li><a class="reference internal" href="#member-functions">Member Functions</a><ul>
 <li><a class="reference internal" href="#constructors">Constructors</a></li>
+<li><a class="reference internal" href="#client-options">Client Options</a></li>
 <li><a class="reference internal" href="#http-methods">HTTP Methods</a></li>
-<li><a class="reference internal" href="#client-specific">Client-Specific</a></li>
 <li><a class="reference internal" href="#streaming-body-handler">Streaming Body Handler</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#generated-documentation">Generated Documentation</a></li>
 </ul>
 </li>
 </ul>
