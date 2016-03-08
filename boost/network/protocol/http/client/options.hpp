@@ -33,7 +33,7 @@ class client_options {
         openssl_sni_hostname_(),
         openssl_options_(0),
         io_service_(),
-        always_verify_peer_(false),
+        always_verify_peer_(true),
         timeout_(0) {}
 
   client_options(client_options const& other)
@@ -141,6 +141,8 @@ class client_options {
 
   /// Set whether we always verify the peer on the other side of the HTTPS
   /// connection.
+  ///
+  /// Default: true.
   client_options& always_verify_peer(bool v) {
     always_verify_peer_ = v;
     return *this;
