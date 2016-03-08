@@ -21,6 +21,7 @@ class client_options {
  public:
   typedef typename string<Tag>::type string_type;
 
+  /// Set all the options to default.
   client_options()
       : cache_resolved_(false),
         follow_redirects_(false),
@@ -70,61 +71,82 @@ class client_options {
     swap(timeout_, other.timeout_);
   }
 
+  /// Specify whether the client should cache resolved endpoints.
+  ///
+  /// Default: false.
   client_options& cache_resolved(bool v) {
     cache_resolved_ = v;
     return *this;
   }
 
+  /// Specify whether the client should follow redirects.
+  ///
+  /// Default: false.
+  /// \deprecated Not supported by asynchronous client implementation.
   client_options& follow_redirects(bool v) {
     follow_redirects_ = v;
     return *this;
   }
 
+  /// Set the filename of the certificate to load for the SSL connection for
+  /// verification.
   client_options& openssl_certificate(string_type const& v) {
     openssl_certificate_ = v;
     return *this;
   }
 
+  /// Set the directory for which the certificate authority files are located.
   client_options& openssl_verify_path(string_type const& v) {
     openssl_verify_path_ = v;
     return *this;
   }
 
+  /// Set the filename of the certificate to use for client-side SSL session
+  /// establishment.
   client_options& openssl_certificate_file(string_type const& v) {
     openssl_certificate_file_ = v;
     return *this;
   }
 
+  /// Set the filename of the private key to use for client-side SSL session
+  /// establishment.
   client_options& openssl_private_key_file(string_type const& v) {
     openssl_private_key_file_ = v;
     return *this;
   }
 
+  /// Set the ciphers to support for SSL negotiation.
   client_options& openssl_ciphers(string_type const& v) {
     openssl_ciphers_ = v;
     return *this;
   }
 
+  /// Set the hostname for SSL SNI hostname support.
   client_options& openssl_sni_hostname(string_type const& v) {
     openssl_sni_hostname_ = v;
     return *this;
   }
 
+  /// Set the raw OpenSSL options to use for HTTPS requests.
   client_options& openssl_options(long o) {
     openssl_options_ = o;
     return *this;
   }
 
+  /// Provide an `asio::io_service` hosted in a shared pointer.
   client_options& io_service(std::shared_ptr<asio::io_service> v) {
     io_service_ = v;
     return *this;
   }
 
+  /// Set whether we always verify the peer on the other side of the HTTPS
+  /// connection.
   client_options& always_verify_peer(bool v) {
     always_verify_peer_ = v;
     return *this;
   }
 
+  /// Set an overall timeout for HTTP requests.
   client_options& timeout(int v) {
     timeout_ = v;
     return *this;
