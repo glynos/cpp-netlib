@@ -387,7 +387,7 @@ struct async_connection
 
   void start() {
     typename ostringstream<Tag>::type ip_stream;
-    ip_stream << socket_.remote_endpoint().address().to_v4().to_string() << ':'
+    ip_stream << socket_.remote_endpoint().address().to_string() << ':'
               << socket_.remote_endpoint().port();
     request_.source = ip_stream.str();
     read_more(method);
