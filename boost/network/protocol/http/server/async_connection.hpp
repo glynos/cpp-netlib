@@ -20,6 +20,7 @@
 #include <asio/ip/tcp.hpp>
 #include <asio/strand.hpp>
 #include <asio/streambuf.hpp>
+#include <asio/write.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/network/protocol/stream_handler.hpp>
