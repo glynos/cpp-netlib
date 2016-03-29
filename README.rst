@@ -13,6 +13,21 @@ Join us on Slack: http://slack.cpp-netlib.org/
 
 Subscribe to the mailing list: https://groups.google.com/forum/#!forum/cpp-netlib
 
+Downloading cpp-netlib
+----------------------
+
+You can find official release packages of the library at::
+
+    http://github.com/cpp-netlib/cpp-netlib/downloads
+
+If you want the latest code from the master branch of the project, you can
+follow these instructions for cloning the project repository::
+
+    $ git clone https://github.com/cpp-netlib/cpp-netlib
+    $ cd cpp-netlib
+    $ git submodule init
+    $ git submodule update
+
 Introduction
 ------------
 
@@ -35,41 +50,31 @@ This library is released under the Boost Software License (please see
 http://boost.org/LICENSE_1_0.txt or the accompanying LICENSE_1_0.txt file
 for the full text.
 
-Downloading cpp-netlib
-----------------------
-
-You can find official release packages of the library at::
-
-    http://github.com/cpp-netlib/cpp-netlib/downloads
-
 Building and Installing
 -----------------------
 
-Building with CMake
-~~~~~~~~~~~~~~~~~~~
-
-To build the libraries and run the tests with CMake, you will need to
-have CMake version 2.8 or higher installed appropriately in your
-system.
+To build the libraries you will need to have CMake version 2.8 or higher
+installed appropriately in your system.
 
 ::
 
     $ cmake --version
     cmake version 2.8.1
 
-Inside the cpp-netlib directory, you can issue the following statements to
-configure and generate the Makefiles, and build the tests::
+It is recommended that you build cpp-netlib outside of the source directory, to
+avoid having issues with CMake generated files polluting the source directory::
 
-    $ cd ~/cpp-netlib      # we're assuming it's where cpp-netlib is
+    $ mkdir ~/cpp-netlib-build
+    $ cd ~/cpp-netlib-build
     $ cmake -DCMAKE_BUILD_TYPE=Debug     \
     >       -DCMAKE_C_COMPILER=clang     \
     >       -DCMAKE_CXX_COMPILER=clang++ \
-    >    .
+    >       $HOME/cpp-netlib    # we're assuming this is where cpp-netlib is.
 
 Once CMake is done with generating the Makefiles and configuring the project,
 you can now build the tests and run them::
 
-    $ cd ~/cpp-netlib
+    $ cd ~/cpp-netlib-build
     $ make
     $ make test
 
@@ -85,8 +90,8 @@ Running Tests
 If you want to run the tests that come with cpp-netlib, there are a few things
 you will need. These are:
 
-  * A compiler (GCC 4.x, Clang 2.8, MSVC 2008)
-  * A build tool (CMake_ recommended, Boost.Build also an option)
+  * A compiler (GCC 4.x, Clang 3.6, MSVC 2008)
+  * A build tool (CMake_ is required)
   * OpenSSL headers (optional)
 
 .. note:: This assumes that you have cpp-netlib at the top-level of
@@ -96,11 +101,13 @@ you will need. These are:
 Hacking on cpp-netlib
 ---------------------
 
-cpp-netlib is being developed with the git_ distributed SCM system.
+cpp-netlib uses git_ for tracking work, and is hosted on GitHub_. 
 cpp-netlib is hosted on GitHub_ following the GitHub recommended practice of
 forking the repository and submitting pull requests to the source repository.
 You can read more about the forking_ process and submitting `pull requests`_ if
-you're not familiar with either process yet.
+you're not familiar with either process yet. cpp-netib follows the GitHub pull
+request model for accepting patches. You can read more about the process at
+http://cpp-netlib.org/process.html#pull-requests. 
 
 .. _git: http://git-scm.com/
 .. _GitHub: http://github.com/
@@ -114,19 +121,10 @@ copyright notices are at the top of each file in the project.
 
 .. _`Boost Software License`: http://www.boost.org/LICENSE_1_0.txt
 
-At the time of writing, there are no coding conventions being followed but if
-you write in the general style that is already existing in the project that
-would be greatly appreciated. Copious amounts of comments will be called out,
-but code that is not self-explanatory typically at least requires a rationale
-documentation in comments explaining "why" the code is written that way.
+You can read about the cpp-netlib style guide at
+http://cpp-netlib.org/style-guide.html.
 
-The main "upstream" repository is the one hosted by the original maintainer of
-the project (Dean Michael Berris) at http://github.com/deanberris/cpp-netlib.
-The "official" release repository is maintained at
-http://github.com/cpp-netlib/cpp-netlib -- which is a fork of the upstream
-repository. It is recommended that forks be made against the upstream repostory
-and pull requests be submitted against the upstream repository so that patches
-and other implementations can be curated by the original maintainer.
+The main "upstream" repository is at http://github.com/cpp-netlib/cpp-netlib.
 
 Contact and Support
 -------------------
