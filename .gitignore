@@ -13,3 +13,4 @@ _build
 build/
 libs/network/doc/doxygen/
 .DS_Store
+*.swo

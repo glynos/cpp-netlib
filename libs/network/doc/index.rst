@@ -108,7 +108,6 @@ Want to learn more?
     * :ref:`Take a look at the getting started guide <getting_started>`
     * :ref:`Learn from some simple examples <examples>`
     * :ref:`Find out what's new <whats_new>`
-    * :ref:`Study the library in more depth <in_depth>`
     * :ref:`Discover more through the full reference <reference>`
     * :ref:`Full table of contents <contents>`
 

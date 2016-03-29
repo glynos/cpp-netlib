@@ -21,15 +21,21 @@ namespace http {
 
 template <class Tag, class Handler>
 struct async_server_base : server_storage_base, socket_options_base {
+  /// The request type for this server.
   typedef basic_request<Tag> request;
-  typedef basic_response<Tag> response;
   typedef typename string<Tag>::type string_type;
-  typedef typename boost::network::http::response_header<Tag>::type
-      response_header;
-  typedef async_connection<Tag, Handler> connection;
-  typedef std::shared_ptr<connection> connection_ptr;
-  typedef std::unique_lock<std::mutex> scoped_mutex_lock;
 
+  /// The header type for this server.
+  typedef
+      typename boost::network::http::response_header<Tag>::type response_header;
+
+  /// The connection type for this server.
+  typedef async_connection<Tag, Handler> connection;
+
+  /// Defines the type for the connection pointer.
+  typedef std::shared_ptr<connection> connection_ptr;
+
+  /// Constructs and initializes the asynchronous server core.
   explicit async_server_base(server_options<Tag, Handler> const &options)
       : server_storage_base(options),
         socket_options_base(options),
@@ -47,11 +53,31 @@ struct async_server_base : server_storage_base, socket_options_base {
         listening(false),
         ctx_(options.context()) {}
 
+  /**
+   * Listens to the correct port and runs the server's event loop. This can be
+   * run on multiple threads, as in the example below:
+   *
+   * Example:
+   *    handler_type handler;
+   *    http_server::options options(handler);
+   *    options.thread_pool(
+   *        std::make_shared<boost::network::utils::thread_pool>());
+   *    http_server server(options.address("localhost").port("8000"));
+   *
+   *    // Run in three threads including the current thread.
+   *    std::thread t1([&server] { server.run() });
+   *    std::thread t2([&server] { server.run() });
+   *    server.run();
+   *    t1.join();
+   *    t2.join();
+   */
   void run() {
     listen();
     service_.run();
   };
 
+  /// Stops the HTTP server acceptor and waits for all pending request handlers
+  /// to finish.
   void stop() {
     // stop accepting new requests and let all the existing
     // handlers finish.
@@ -63,10 +89,12 @@ struct async_server_base : server_storage_base, socket_options_base {
       std::error_code ignored;
       acceptor.close(ignored);
       listening = false;
-      service_.post([this] () { this->handle_stop(); });
+      service_.post([this]() { this->handle_stop(); });
     }
   }
 
+  /// Explicitly listens on the configured host and port. May be called
+  /// multiple times but only takes effect once.
   void listen() {
     scoped_mutex_lock listening_lock(listening_mutex_);
     BOOST_NETWORK_MESSAGE("Listening on " << address_ << ':' << port_);
@@ -81,6 +109,8 @@ struct async_server_base : server_storage_base, socket_options_base {
   }
 
  private:
+  typedef std::unique_lock<std::mutex> scoped_mutex_lock;
+
   Handler &handler;
   string_type address_, port_;
   std::shared_ptr<utils::thread_pool> thread_pool;
@@ -126,7 +156,7 @@ struct async_server_base : server_storage_base, socket_options_base {
 #else
         new_connection->socket(),
 #endif
-        [this] (std::error_code const &ec) { this->handle_accept(ec); });
+        [this](std::error_code const &ec) { this->handle_accept(ec); });
   }
 
   void start_listening() {
@@ -168,7 +198,7 @@ struct async_server_base : server_storage_base, socket_options_base {
 #else
         new_connection->socket(),
 #endif
-        [this] (std::error_code const &ec) { this->handle_accept(ec); });
+        [this](std::error_code const &ec) { this->handle_accept(ec); });
     listening = true;
     scoped_mutex_lock stopping_lock(stopping_mutex_);
     stopping = false;  // if we were in the process of stopping, we revoke
