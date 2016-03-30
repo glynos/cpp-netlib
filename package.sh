@@ -41,7 +41,7 @@ TAG="cpp-netlib-$VERSION"
 git tag $TAG
 echo "Tagged $TAG."
 
-git archive --prefix=cpp-netlib-$VERSION/ --format=zip $TAG >cpp-netlib-$VERSION.zip
-git archive --prefix=cpp-netlib-$VERSION/ --format=tar $TAG | gzip >cpp-netlib-$VERSION.tar.gz
-git archive --prefix=cpp-netlib-$VERSION/ --format=tar $TAG | bzip2 >cpp-netlib-$VERSION.tar.bz2
+git-archive-all --prefix=cpp-netlib-$VERSION/ --force-submodules cpp-netlib-$VERSION.zip
+git-archive-all --prefix=cpp-netlib-$VERSION/ --force-submodules cpp-netlib-$VERSION.tar.gz
+git-archive-all --prefix=cpp-netlib-$VERSION/ --force-submodules cpp-netlib-$VERSION.tar.bz2
 echo "Packaged $TAG."
