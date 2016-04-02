@@ -7,7 +7,10 @@
 
 #include <gtest/gtest.h>
 #include <algorithm>
-#include <boost/network/include/message.hpp>
+#include <boost/network/message.hpp>
+#include <boost/network/message/directives.hpp>
+#include <boost/network/message/transformers.hpp>
+#include <boost/network/message/wrappers.hpp>
 
 TEST(MessageTransformTest, TransformToUpper) {
   using namespace boost::network;
