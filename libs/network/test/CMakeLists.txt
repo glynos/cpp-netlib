@@ -10,7 +10,7 @@ add_subdirectory(uri)
 add_subdirectory(http)
 
 if (Boost_FOUND)
-    set(TESTS message_test message_transform_test utils_thread_pool
+    set(TESTS utils_thread_pool
 	# utils_base64_test -- turn on when ready.
         )
     foreach (test ${TESTS})
