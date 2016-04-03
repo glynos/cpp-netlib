@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 #include <tuple>
 #include "tag_types.hpp"
-#include <boost/network/include/http/client.hpp>
+#include <boost/network/protocol/http/client.hpp>
 
 // HTTPClientTest is a re-usable fixture for client tests that need to test
 // various variations of the client. This is to be used with googletest's
@@ -22,7 +22,7 @@
 //
 // We also already provide ClientTypes as a convenience in this header for all
 // known and supported client type implementations in the library.
-// 
+//
 // T must be a tuple in the form: <tag, http version major, http version minor>.
 template <class T>
 class HTTPClientTest : public ::testing::Test {

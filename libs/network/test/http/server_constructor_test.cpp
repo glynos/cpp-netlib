@@ -7,7 +7,7 @@
 
 #include <memory>
 #include <gtest/gtest.h>
-#include <boost/network/include/http/server.hpp>
+#include <boost/network/protocol/http/server.hpp>
 
 namespace http = boost::network::http;
 namespace util = boost::network::utils;

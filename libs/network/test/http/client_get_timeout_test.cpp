@@ -7,7 +7,7 @@
 
 #include <gtest/gtest.h>
 #include <cstdlib>
-#include <boost/network/include/http/client.hpp>
+#include <boost/network/protocol/http/client.hpp>
 #include "client_types.hpp"
 #include "http_test_server.hpp"
 

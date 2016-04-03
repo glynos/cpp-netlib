@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 #include <boost/config/warning_disable.hpp>
 #include <boost/config.hpp>
-#include <boost/network/include/http/client.hpp>
+#include <boost/network/protocol/http/client.hpp>
 #include <boost/range.hpp>
 #include <boost/cast.hpp>
 #include <string>
