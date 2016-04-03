@@ -5,7 +5,7 @@
 
 #include <memory>
 #include <thread>
-#include <boost/network/include/http/server.hpp>
+#include <boost/network/protocol/http/server.hpp>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>

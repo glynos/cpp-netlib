@@ -9,54 +9,30 @@
 
 #include <thread>
 #include <mutex>
-#include <memory>
-#include <list>
-#include <algorithm>
+#include <vector>
 
 namespace boost {
 namespace network {
 namespace utils {
 class thread_group {
- private:
-  thread_group(thread_group const&);
-  thread_group& operator=(thread_group const&);
-
  public:
-  thread_group() {}
-  ~thread_group() {}
+  thread_group() = default;
+  ~thread_group() = default;
+  thread_group(thread_group const&) = delete;
+  thread_group& operator=(thread_group const&) = delete;
 
   template <typename F>
-  std::thread* create_thread(F threadfunc) {
+  std::thread &create_thread(F threadfunc) {
     std::lock_guard<std::mutex> guard(m);
-    std::unique_ptr<std::thread> new_thread(new std::thread(threadfunc));
-    threads.push_back(std::move(new_thread));
-    return threads.back().get();
-  }
-
-  void add_thread(std::thread* thrd) {
-    if (thrd) {
-      std::lock_guard<std::mutex> guard(m);
-      threads.push_back(std::unique_ptr<std::thread>(thrd));
-    }
-  }
-
-  void remove_thread(std::thread* thrd) {
-    std::lock_guard<std::mutex> guard(m);
-    auto const it = std::find_if(threads.begin(), threads.end(),
-                                 [&thrd] (std::unique_ptr<std::thread> &arg) {
-                                   return arg.get() == thrd;
-                                 });
-    if (it != threads.end()) {
-      threads.erase(it);
-    }
+    threads.emplace_back(threadfunc);
+    return threads.back();
   }
 
   void join_all() {
     std::unique_lock<std::mutex> guard(m);
-
-    for (auto &thread : threads) {
-      if (thread->joinable()) {
-        thread->join();
+    for (auto& thread : threads) {
+      if (thread.joinable()) {
+        thread.join();
       }
     }
   }
@@ -67,7 +43,7 @@ class thread_group {
   }
 
  private:
-  std::list<std::unique_ptr<std::thread>> threads;
+  std::vector<std::thread> threads;
   mutable std::mutex m;
 };
 

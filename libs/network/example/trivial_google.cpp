@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include <boost/network/include/http/client.hpp>
+#include <boost/network/protocol/http/client.hpp>
 
 namespace http = boost::network::http;
 
