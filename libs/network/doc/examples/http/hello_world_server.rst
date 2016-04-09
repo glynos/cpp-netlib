@@ -27,15 +27,12 @@ simple response to any HTTP request.
     typedef http::server<hello_world> server;
 
     struct hello_world {
-        void operator()(server::request const &request, server::response &response) {
+        void operator()(server::request const &request, server::connection_ptr connection) {
             server::string_type ip = source(request);
             unsigned int port = request.source_port;
             std::ostringstream data;
             data << "Hello, " << ip << ':' << port << '!';
-            response = server::response::stock_reply(server::response::ok, data.str());
-        }
-        void log(const server::string_type& message) {
-            std::cerr << "ERROR: " << message << std::endl;
+            connection->write(data.str());
         }
     };
 
@@ -103,15 +100,12 @@ This header contains all the code needed to develop an HTTP server with
     typedef http::server<hello_world> server;
 
     struct hello_world {
-        void operator()(server::request const &request, server::response &response) {
+        void operator()(server::request const &request, server::connection_ptr connection) {
             server::string_type ip = source(request);
             unsigned int port = request.source_port;
             std::ostringstream data;
             data << "Hello, " << ip << ':' << port << '!';
-            response = server::response::stock_reply(server::response::ok, data.str());
-        }
-        void log(const server::string_type& message) {
-            std::cerr << "ERROR: " << message << std::endl;
+            connection->write(data.str());
         }
     };
 
@@ -119,6 +113,8 @@ This header contains all the code needed to develop an HTTP server with
 All the operator does here is return an HTTP response with HTTP code 200
 and the body ``"Hello, <ip>:<port>!"``. The ``<ip>`` in this case would be
 the IP address of the client that made the request and ``<port>`` the clients port.
+If you like to send an other status have a look at the function
+``set_status(status_t status)`` from connection.
 
 There are a number of pre-defined stock replies differentiated by
 status code with configurable bodies.
