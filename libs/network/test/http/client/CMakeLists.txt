@@ -7,6 +7,7 @@
 set(
   TESTS
   request_test
+  response_test
   )
 
 foreach(test ${TESTS})
