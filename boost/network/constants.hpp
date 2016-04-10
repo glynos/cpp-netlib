@@ -18,80 +18,75 @@ template <class Tag>
 struct constants_narrow {
 
   static char const* crlf() {
-    static char crlf_[] = {'\r', '\n', 0};
+    static char crlf_[] = "\r\n";
     return crlf_;
   }
 
   static char const* dot() {
-    static char dot_[] = {'.', 0};
+    static char dot_[] = ".";
     return dot_;
   }
 
   static char dot_char() { return '.'; }
 
   static char const* http_slash() {
-    static char http_slash_[] = {'H', 'T', 'T', 'P', '/', 0};
+    static char http_slash_[] = "HTTP/";
     return http_slash_;
   }
 
   static char const* space() {
-    static char space_[] = {' ', 0};
+    static char space_[] = " ";
     return space_;
   }
 
   static char space_char() { return ' '; }
 
   static char const* slash() {
-    static char slash_[] = {'/', 0};
+    static char slash_[] = "/";
     return slash_;
   }
 
   static char slash_char() { return '/'; }
 
   static char const* host() {
-    static char host_[] = {'H', 'o', 's', 't', 0};
+    static char host_[] = "Host";
     return host_;
   }
 
   static char const* colon() {
-    static char colon_[] = {':', 0};
+    static char colon_[] = ":";
     return colon_;
   }
 
   static char colon_char() { return ':'; }
 
   static char const* accept() {
-    static char accept_[] = {'A', 'c', 'c', 'e', 'p', 't', 0};
+    static char accept_[] = "Accept";
     return accept_;
   }
 
   static char const* default_accept_mime() {
-    static char mime_[] = {'*', '/', '*', 0};
+    static char mime_[] = "*/*";
     return mime_;
   }
 
   static char const* accept_encoding() {
-    static char accept_encoding_[] = {'A', 'c', 'c', 'e', 'p', 't', '-', 'E',
-                                      'n', 'c', 'o', 'd', 'i', 'n', 'g', 0};
+    static char accept_encoding_[] = "Accept-Encoding";
     return accept_encoding_;
   }
 
   static char const* default_accept_encoding() {
-    static char default_accept_encoding_[] = {
-        'i', 'd', 'e', 'n', 't', 'i', 't', 'y', ';', 'q', '=',
-        '1', '.', '0', ',', ' ', '*', ';', 'q', '=', '0', 0};
+    static char default_accept_encoding_[] = "identity;q=1.0, *;q=0";
     return default_accept_encoding_;
   }
 
   static char const* user_agent() {
-    static char user_agent_[] = {'U', 's', 'e', 'r', '-', 'A',
-                                 'g', 'e', 'n', 't', 0};
+    static char user_agent_[] = "User-Agent";
     return user_agent_;
   }
 
   static char const* cpp_netlib_slash() {
-    static char cpp_netlib_slash_[] = {'c', 'p', 'p', '-', 'n', 'e',
-                                       't', 'l', 'i', 'b', '/', 0};
+    static char cpp_netlib_slash_[] = "cpp-netlib/";
     return cpp_netlib_slash_;
   }
 
@@ -100,13 +95,12 @@ struct constants_narrow {
   static char hash_char() { return '#'; }
 
   static char const* connection() {
-    static char connection_[] = {'C', 'o', 'n', 'n', 'e', 'c',
-                                 't', 'i', 'o', 'n', 0};
+    static char connection_[] = "Connection";
     return connection_;
   }
 
   static char const* close() {
-    static char close_[] = {'C', 'l', 'o', 's', 'e', 0};
+    static char close_[] = "Close";
     return close_;
   }
 
