@@ -35,7 +35,6 @@ if (Boost_FOUND)
             ${CPP-NETLIB_BINARY_DIR}/tests/cpp-netlib-http-${test})
     endforeach (test)
     set(TESTS
-      http_client_request_test
       client_constructor_test
       client_get_test
       client_get_different_port_test

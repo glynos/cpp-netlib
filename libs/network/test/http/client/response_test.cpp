@@ -3,14 +3,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-
 #include <gtest/gtest.h>
-// #include <boost/network/protocol/http/client/response.hpp>
-#include <boost/network/protocol/http/client.hpp>
+#include <boost/network/protocol/http/client/response.hpp>
 
-
-using client_response = boost::network::http::client::response;
-
+using client_response = boost::network::http::client_response;
 
 TEST(http_client_response, construct) {
   ASSERT_NO_THROW(client_response());
