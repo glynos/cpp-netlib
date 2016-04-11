@@ -9,7 +9,7 @@
 #include <vector>
 
 #include <boost/config/warning_disable.hpp>
-#include <boost/network/include/http/server.hpp>
+#include <boost/network/protocol/http/server.hpp>
 #include <boost/network/utils/thread_pool.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 

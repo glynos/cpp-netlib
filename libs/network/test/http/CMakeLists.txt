@@ -12,6 +12,8 @@ if (OPENSSL_FOUND)
 endif()
 
 if (Boost_FOUND)
+    add_subdirectory(client)
+
     set(TESTS response_incremental_parser_test request_incremental_parser_test
       request_linearize_test)
     foreach ( test ${TESTS} )

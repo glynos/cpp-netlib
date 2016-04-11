@@ -6,7 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include <boost/network/include/http/client.hpp>
+#include <boost/network/protocol/http/client.hpp>
 #include "client_types.hpp"
 
 namespace net = boost::network;

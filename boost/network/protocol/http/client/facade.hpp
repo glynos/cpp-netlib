@@ -10,18 +10,12 @@
 #include <memory>
 #include <functional>
 #include <boost/network/protocol/http/client/pimpl.hpp>
-#include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/response.hpp>
+#include <boost/network/protocol/http/client/request.hpp>
+#include <boost/network/protocol/http/client/response.hpp>
 
 namespace boost {
 namespace network {
 namespace http {
-
-template <class Tag>
-struct basic_request;
-
-template <class Tag>
-struct basic_response;
 
 template <class Tag, unsigned version_major, unsigned version_minor>
 class basic_client_facade {

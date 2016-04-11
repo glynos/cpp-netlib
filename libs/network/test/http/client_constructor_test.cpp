@@ -8,7 +8,7 @@
 // Migrated from using Boost.Test to using googletest intead.
 #include <gtest/gtest.h>
 
-#include <boost/network/include/http/client.hpp>
+#include <boost/network/protocol/http/client.hpp>
 #include "client_types.hpp"
 
 namespace http = boost::network::http;

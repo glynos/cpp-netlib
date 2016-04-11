@@ -50,7 +50,7 @@ namespace http {
  */
 template <class Tag>
 struct basic_request : public basic_message<Tag> {
-  mutable boost::network::uri::uri uri_;
+  boost::network::uri::uri uri_;
   std::uint16_t source_port_;
   typedef basic_message<Tag> base_type;
 
@@ -64,10 +64,6 @@ struct basic_request : public basic_message<Tag> {
 
   explicit basic_request(boost::network::uri::uri const& uri_)
       : uri_(uri_), source_port_(0) {}
-
-  void uri(string_type const& new_uri) { uri_ = new_uri; }
-
-  void uri(boost::network::uri::uri const& new_uri) { uri_ = new_uri; }
 
   basic_request() : base_type(), source_port_(0) {}
 

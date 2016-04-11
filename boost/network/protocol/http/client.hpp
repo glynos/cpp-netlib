@@ -9,7 +9,7 @@
 #include <boost/config.hpp>
 #include <boost/network/protocol/http/message.hpp>
 #include <boost/network/protocol/http/request.hpp>
-#include <boost/network/protocol/http/response.hpp>
+#include <boost/network/protocol/http/client/response.hpp>
 #include <boost/network/traits/ostringstream.hpp>
 
 #include <boost/algorithm/string/classification.hpp>
