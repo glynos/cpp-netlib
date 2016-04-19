@@ -21,7 +21,6 @@ struct file_server;
 typedef http::server<file_server> server;
 
 struct file_cache {
-
   typedef std::map<std::string, std::pair<void *, std::size_t> > region_map;
   typedef std::map<std::string, std::vector<server::response_header> > meta_map;
 
@@ -66,7 +65,8 @@ struct file_cache {
 
     regions.insert(std::make_pair(real_filename, std::make_pair(region, size)));
     static server::response_header common_headers[] = {
-        {"Connection", "close"}, {"Content-Type", "x-application/octet-stream"},
+        {"Connection", "close"},
+        {"Content-Type", "x-application/octet-stream"},
         {"Content-Length", "0"}};
     std::vector<server::response_header> headers(common_headers,
                                                  common_headers + 3);
@@ -91,8 +91,7 @@ struct file_cache {
     static std::vector<server::response_header> empty_vector;
     auto headers = file_headers.find(doc_root_ + path);
     if (headers != file_headers.end()) {
-      auto begin = headers->second.begin(),
-           end = headers->second.end();
+      auto begin = headers->second.begin(), end = headers->second.end();
       return boost::make_iterator_range(begin, end);
     } else
       return boost::make_iterator_range(empty_vector);
@@ -138,7 +137,7 @@ struct connection_handler : std::enable_shared_from_this<connection_handler> {
         asio::const_buffers_1(
             static_cast<char const *>(mmaped_region.first) + offset,
             rightmost_bound - offset),
-        [=] (std::error_code const &ec) {
+        [=](std::error_code const &ec) {
           self->handle_chunk(mmaped_region, rightmost_bound, connection, ec);
         });
   }
@@ -146,12 +145,65 @@ struct connection_handler : std::enable_shared_from_this<connection_handler> {
   void handle_chunk(std::pair<void *, std::size_t> mmaped_region, off_t offset,
                     server::connection_ptr connection,
                     std::error_code const &ec) {
-    assert(offset>=0);
+    assert(offset >= 0);
     if (!ec && static_cast<std::size_t>(offset) < mmaped_region.second)
       send_file(mmaped_region, offset, connection);
   }
 
   file_cache &file_cache_;
+};
+
+struct input_consumer : public std::enable_shared_from_this<input_consumer> {
+  // Maximum size for incoming request bodies.
+  static constexpr std::size_t MAX_INPUT_BODY_SIZE = 2 << 16;
+
+  explicit input_consumer(std::shared_ptr<connection_handler> h,
+                          server::request r)
+      : request_(std::move(r)), handler_(std::move(h)), content_length_{0} {
+    for (const auto &header : request_.headers) {
+      if (boost::iequals(header.name, "content-length")) {
+        content_length_ = std::stoul(header.value);
+        std::cerr << "Content length: " << content_length_ << '\n';
+        break;
+      }
+    }
+  }
+
+  void operator()(server::connection::input_range input, std::error_code ec,
+                  std::size_t bytes_transferred,
+                  server::connection_ptr connection) {
+    std::cerr << "Callback: " << bytes_transferred << "; ec = " << ec << '\n';
+    if (ec == asio::error::eof) return;
+    if (!ec) {
+      if (empty(input))
+        return (*handler_)(request_.destination, connection, true);
+      request_.body.insert(request_.body.end(), boost::begin(input),
+                           boost::end(input));
+      if (request_.body.size() > MAX_INPUT_BODY_SIZE) {
+        connection->set_status(server::connection::bad_request);
+        static server::response_header error_headers[] = {
+            {"Connection", "close"}};
+        connection->set_headers(
+            boost::make_iterator_range(error_headers, error_headers + 1));
+        connection->write("Body too large.");
+        return;
+      }
+      std::cerr << "Body: " << request_.body << '\n';
+      if (request_.body.size() == content_length_)
+        return (*handler_)(request_.destination, connection, true);
+      std::cerr << "Scheduling another read...\n";
+      auto self = this->shared_from_this();
+      connection->read([self](server::connection::input_range input,
+                              std::error_code ec, std::size_t bytes_transferred,
+                              server::connection_ptr connection) {
+        (*self)(input, ec, bytes_transferred, connection);
+      });
+    }
+  }
+
+  server::request request_;
+  std::shared_ptr<connection_handler> handler_;
+  size_t content_length_;
 };
 
 struct file_server {
@@ -165,6 +217,14 @@ struct file_server {
     } else if (request.method == "GET") {
       std::shared_ptr<connection_handler> h(new connection_handler(cache_));
       (*h)(request.destination, connection, true);
+    } else if (request.method == "PUT" || request.method == "POST") {
+      auto h = std::make_shared<connection_handler>(cache_);
+      auto c = std::make_shared<input_consumer>(h, request);
+      connection->read([c](server::connection::input_range input,
+                           std::error_code ec, std::size_t bytes_transferred,
+                           server::connection_ptr connection) {
+        (*c)(input, ec, bytes_transferred, connection);
+      });
     } else {
       static server::response_header error_headers[] = {
           {"Connection", "close"}};
@@ -184,11 +244,10 @@ int main(int, char *[]) {
     file_server handler(cache);
     server::options options(handler);
     server instance(options.thread_pool(std::make_shared<utils::thread_pool>(4))
-                    .address("0.0.0.0")
-                    .port("8000"));
+                        .address("0.0.0.0")
+                        .port("8000"));
     instance.run();
-  }
-  catch (std::exception &e) {
+  } catch (std::exception &e) {
     std::cerr << e.what() << std::endl;
   }
 }
