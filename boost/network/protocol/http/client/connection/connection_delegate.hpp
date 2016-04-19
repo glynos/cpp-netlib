@@ -18,14 +18,14 @@ namespace http {
 namespace impl {
 
 struct connection_delegate {
-  virtual void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
+  virtual void connect(::asio::ip::tcp::endpoint &endpoint, std::string host,
                        std::uint16_t source_port,
                        std::function<void(std::error_code const &)> handler) = 0;
   virtual void write(
-      asio::streambuf &command_streambuf,
+      ::asio::streambuf &command_streambuf,
       std::function<void(std::error_code const &, size_t)> handler) = 0;
   virtual void read_some(
-      asio::mutable_buffers_1 const &read_buffer,
+      ::asio::mutable_buffers_1 const &read_buffer,
       std::function<void(std::error_code const &, size_t)> handler) = 0;
   virtual void disconnect() = 0;
   virtual ~connection_delegate() = default;

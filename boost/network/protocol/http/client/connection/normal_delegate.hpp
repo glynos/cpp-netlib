@@ -22,15 +22,15 @@ namespace http {
 namespace impl {
 
 struct normal_delegate : connection_delegate {
-  explicit normal_delegate(asio::io_service &service);
+  explicit normal_delegate(::asio::io_service &service);
 
-  void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
+  void connect(::asio::ip::tcp::endpoint &endpoint, std::string host,
                std::uint16_t source_port,
                std::function<void(std::error_code const &)> handler) override;
-  void write(asio::streambuf &command_streambuf,
+  void write(::asio::streambuf &command_streambuf,
              std::function<void(std::error_code const &, size_t)> handler)
       override;
-  void read_some(asio::mutable_buffers_1 const &read_buffer,
+  void read_some(::asio::mutable_buffers_1 const &read_buffer,
                  std::function<void(std::error_code const &, size_t)> handler)
       override;
   void disconnect() override;
@@ -40,8 +40,8 @@ struct normal_delegate : connection_delegate {
   normal_delegate &operator=(normal_delegate) = delete;
 
  private:
-  asio::io_service &service_;
-  std::unique_ptr<asio::ip::tcp::socket> socket_;
+  ::asio::io_service &service_;
+  std::unique_ptr<::asio::ip::tcp::socket> socket_;
 };
 
 }  // namespace impl

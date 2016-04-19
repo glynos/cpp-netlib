@@ -13,7 +13,7 @@
 #include <boost/network/protocol/http/client/connection/ssl_delegate.hpp>
 
 boost::network::http::impl::ssl_delegate::ssl_delegate(
-    asio::io_service &service, bool always_verify_peer,
+    ::asio::io_service &service, bool always_verify_peer,
     optional<std::string> certificate_filename,
     optional<std::string> verify_path, optional<std::string> certificate_file,
     optional<std::string> private_key_file, optional<std::string> ciphers,
@@ -29,11 +29,11 @@ boost::network::http::impl::ssl_delegate::ssl_delegate(
       always_verify_peer_(always_verify_peer) {}
 
 void boost::network::http::impl::ssl_delegate::connect(
-    asio::ip::tcp::endpoint &endpoint, std::string host,
+    ::asio::ip::tcp::endpoint &endpoint, std::string host,
     std::uint16_t source_port,
     std::function<void(std::error_code const &)> handler) {
   context_.reset(
-      new asio::ssl::context(asio::ssl::context::method::sslv23_client));
+      new ::asio::ssl::context(::asio::ssl::context::method::sslv23_client));
   if (ciphers_) {
     ::SSL_CTX_set_cipher_list(context_->native_handle(), ciphers_->c_str());
   }
@@ -41,37 +41,37 @@ void boost::network::http::impl::ssl_delegate::connect(
     context_->set_options(ssl_options_);
   } else {
     // By default, disable v3 support.
-    context_->set_options(asio::ssl::context::no_sslv3);
+    context_->set_options(::asio::ssl::context::no_sslv3);
   }
   if (certificate_filename_ || verify_path_) {
-    context_->set_verify_mode(asio::ssl::context::verify_peer);
+    context_->set_verify_mode(::asio::ssl::context::verify_peer);
     if (certificate_filename_)
       context_->load_verify_file(*certificate_filename_);
     if (verify_path_) context_->add_verify_path(*verify_path_);
   } else {
     if (always_verify_peer_) {
-      context_->set_verify_mode(asio::ssl::context::verify_peer);
+      context_->set_verify_mode(::asio::ssl::context::verify_peer);
       // use openssl default verify paths.  uses openssl environment variables
       // SSL_CERT_DIR, SSL_CERT_FILE
       context_->set_default_verify_paths();
     } else {
-      context_->set_verify_mode(asio::ssl::context::verify_none);
+      context_->set_verify_mode(::asio::ssl::context::verify_none);
     }
   }
   if (certificate_file_)
-    context_->use_certificate_file(*certificate_file_, asio::ssl::context::pem);
+    context_->use_certificate_file(*certificate_file_, ::asio::ssl::context::pem);
   if (private_key_file_)
-    context_->use_private_key_file(*private_key_file_, asio::ssl::context::pem);
+    context_->use_private_key_file(*private_key_file_, ::asio::ssl::context::pem);
 
-  tcp_socket_.reset(new asio::ip::tcp::socket(
-      service_, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), source_port)));
-  socket_.reset(new asio::ssl::stream<asio::ip::tcp::socket &>(
+  tcp_socket_.reset(new ::asio::ip::tcp::socket(
+      service_, ::asio::ip::tcp::endpoint(::asio::ip::tcp::v4(), source_port)));
+  socket_.reset(new ::asio::ssl::stream<::asio::ip::tcp::socket &>(
       *(tcp_socket_.get()), *context_));
 
   if (sni_hostname_)
     SSL_set_tlsext_host_name(socket_->native_handle(), sni_hostname_->c_str());
   if (always_verify_peer_)
-    socket_->set_verify_callback(asio::ssl::rfc2818_verification(host));
+    socket_->set_verify_callback(::asio::ssl::rfc2818_verification(host));
   auto self = this->shared_from_this();
   socket_->lowest_layer().async_connect(
       endpoint,
@@ -82,20 +82,20 @@ void boost::network::http::impl::ssl_delegate::handle_connected(
     std::error_code const &ec,
     std::function<void(std::error_code const &)> handler) {
   if (!ec) {
-    socket_->async_handshake(asio::ssl::stream_base::client, handler);
+    socket_->async_handshake(::asio::ssl::stream_base::client, handler);
   } else {
     handler(ec);
   }
 }
 
 void boost::network::http::impl::ssl_delegate::write(
-    asio::streambuf &command_streambuf,
+    ::asio::streambuf &command_streambuf,
     std::function<void(std::error_code const &, size_t)> handler) {
-  asio::async_write(*socket_, command_streambuf, handler);
+  ::asio::async_write(*socket_, command_streambuf, handler);
 }
 
 void boost::network::http::impl::ssl_delegate::read_some(
-    asio::mutable_buffers_1 const &read_buffer,
+    ::asio::mutable_buffers_1 const &read_buffer,
     std::function<void(std::error_code const &, size_t)> handler) {
   socket_->async_read_some(read_buffer, handler);
 }
@@ -103,7 +103,7 @@ void boost::network::http::impl::ssl_delegate::read_some(
 void boost::network::http::impl::ssl_delegate::disconnect() {
   if (socket_.get() && socket_->lowest_layer().is_open()) {
     std::error_code ignored;
-    socket_->lowest_layer().shutdown(asio::ip::tcp::socket::shutdown_both,
+    socket_->lowest_layer().shutdown(::asio::ip::tcp::socket::shutdown_both,
                                      ignored);
     if (!ignored) {
       socket_->lowest_layer().close(ignored);

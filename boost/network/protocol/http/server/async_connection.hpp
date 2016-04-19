@@ -183,7 +183,7 @@ struct async_connection
 
  public:
   async_connection(
-      asio::io_service& io_service, Handler& handler,
+      ::asio::io_service& io_service, Handler& handler,
       utils::thread_pool& thread_pool,
       std::shared_ptr<ssl_context> ctx = std::shared_ptr<ssl_context>())
       : strand(io_service),
@@ -206,7 +206,7 @@ struct async_connection
 
   ~async_connection() throw() {
     std::error_code ignored;
-    socket_.shutdown(asio::ip::tcp::socket::shutdown_receive, ignored);
+    socket_.shutdown(::asio::ip::tcp::socket::shutdown_receive, ignored);
   }
 
   /**
@@ -321,7 +321,7 @@ struct async_connection
    */
   template <class Range, class Callback>
   typename disable_if<
-      is_base_of<asio::const_buffer, typename Range::value_type>, void>::type
+      is_base_of<::asio::const_buffer, typename Range::value_type>, void>::type
       write(Range const& range, Callback const& callback) {
     lock_guard lock(headers_mutex);
     if (error_encountered)
@@ -330,15 +330,15 @@ struct async_connection
   }
 
   /**
-   * Writes a given set of `asio::const_buffer`s out using a more efficient
+   * Writes a given set of `::asio::const_buffer`s out using a more efficient
    * implementation.
    *
-   * @param[in] seq A sequence of `asio::const_buffer` objects.
+   * @param[in] seq A sequence of `::asio::const_buffer` objects.
    * @param[in] callback A function of type `void(std::error_code)`.
    */
   template <class ConstBufferSeq, class Callback>
   typename enable_if<
-      is_base_of<asio::const_buffer, typename ConstBufferSeq::value_type>,
+      is_base_of<::asio::const_buffer, typename ConstBufferSeq::value_type>,
       void>::type
       write(ConstBufferSeq const& seq, Callback const& callback) {
     write_vec_impl(seq, callback, shared_array_list(), shared_buffers());
@@ -389,7 +389,7 @@ struct async_connection
     }
 
     auto self = this->shared_from_this();
-    socket().async_read_some(asio::buffer(read_buffer_),
+    socket().async_read_some(::asio::buffer(read_buffer_),
                              strand.wrap([this, self, callback](
                                  std::error_code ec, size_t bytes_transferred) {
                                callback(ec, bytes_transferred);
@@ -432,15 +432,15 @@ struct async_connection
       array;
   typedef std::list<std::shared_ptr<array> > array_list;
   typedef std::shared_ptr<array_list> shared_array_list;
-  typedef std::shared_ptr<std::vector<asio::const_buffer> > shared_buffers;
+  typedef std::shared_ptr<std::vector<::asio::const_buffer> > shared_buffers;
   typedef request_parser<Tag> request_parser_type;
   typedef std::lock_guard<std::recursive_mutex> lock_guard;
   typedef std::list<std::function<void()> > pending_actions_list;
 
-  asio::io_service::strand strand;
+  ::asio::io_service::strand strand;
   Handler& handler;
   utils::thread_pool& thread_pool_;
-  asio::streambuf headers_buffer;
+  ::asio::streambuf headers_buffer;
   boost::network::stream_handler socket_;
   bool handshake_done;
   volatile bool headers_already_sent, headers_in_progress;
@@ -472,14 +472,14 @@ struct async_connection
     auto self = this->shared_from_this();
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
     if (socket_.is_ssl_enabled() && !handshake_done) {
-      socket_.async_handshake(asio::ssl::stream_base::server,
+      socket_.async_handshake(::asio::ssl::stream_base::server,
                               [this, self, state](std::error_code ec) {
                                 handle_handshake(ec, state);
                               });
     } else {
 #endif
       socket_.async_read_some(
-          asio::buffer(read_buffer_),
+          ::asio::buffer(read_buffer_),
           strand.wrap([this, self, state](std::error_code ec,
                                           size_t bytes_transferred) {
             handle_read_data(state, ec, bytes_transferred);
@@ -604,8 +604,8 @@ struct async_connection
         "text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
 
     auto self = this->shared_from_this();
-    asio::async_write(
-        socket(), asio::buffer(bad_request, strlen(bad_request)),
+    ::asio::async_write(
+        socket(), ::asio::buffer(bad_request, strlen(bad_request)),
         strand.wrap([this, self](std::error_code ec, size_t bytes_transferred) {
           client_error_sent(ec, bytes_transferred);
         }));
@@ -614,7 +614,7 @@ struct async_connection
   void client_error_sent(std::error_code const& ec, std::size_t) {
     if (!ec) {
       std::error_code ignored;
-      socket().shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
+      socket().shutdown(::asio::ip::tcp::socket::shutdown_both, ignored);
       socket().close(ignored);
     } else {
       error_encountered = in_place<std::system_error>(ec);
@@ -625,7 +625,7 @@ struct async_connection
     if (headers_in_progress) return;
     headers_in_progress = true;
     auto self = this->shared_from_this();
-    asio::async_write(socket(), headers_buffer,
+    ::asio::async_write(socket(), headers_buffer,
                       strand.wrap([this, self, callback](
                           std::error_code ec, size_t bytes_transferred) {
                         handle_write_headers(callback, ec, bytes_transferred);
@@ -675,7 +675,7 @@ struct async_connection
         BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
     shared_array_list temporaries = std::make_shared<array_list>();
     shared_buffers buffers =
-        std::make_shared<std::vector<asio::const_buffer> >(0);
+        std::make_shared<std::vector<::asio::const_buffer> >(0);
 
     std::size_t range_size = boost::distance(range);
     buffers->reserve((range_size / connection_buffer_size) +
@@ -687,7 +687,7 @@ struct async_connection
       std::shared_ptr<array> new_array = std::make_shared<array>();
       boost::copy(range | sliced(0, slice_size), new_array->begin());
       temporaries->push_back(new_array);
-      buffers->push_back(asio::buffer(new_array->data(), slice_size));
+      buffers->push_back(::asio::buffer(new_array->data(), slice_size));
       std::advance(start, slice_size);
       range = boost::make_iterator_range(start, end);
       range_size = boost::distance(range);
@@ -717,7 +717,7 @@ struct async_connection
       pending_actions.push_back(continuation);
       return;
     }
-    asio::async_write(
+    ::asio::async_write(
         socket_, seq, [this, self, callback, temporaries, buffers](
                           std::error_code ec, size_t bytes_transferred) {
           handle_write(callback, temporaries, buffers, ec, bytes_transferred);
