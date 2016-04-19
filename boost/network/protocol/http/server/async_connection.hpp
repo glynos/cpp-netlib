@@ -378,7 +378,7 @@ struct async_connection
       boost::throw_exception(std::system_error(*error_encountered));
     if (new_start != read_buffer_.begin()) {
       input_range input =
-          boost::make_iterator_range(new_start, read_buffer_.end());
+          boost::make_iterator_range(new_start, data_end);
       buffer_type::iterator start_tmp = new_start;
       new_start = read_buffer_.begin();
       auto self = this->shared_from_this();
@@ -389,11 +389,12 @@ struct async_connection
     }
 
     auto self = this->shared_from_this();
-    socket().async_read_some(asio::buffer(read_buffer_),
-                             strand.wrap([this, self, callback](
-                                 std::error_code ec, size_t bytes_transferred) {
-                               callback(ec, bytes_transferred);
-                             }));
+    socket().async_read_some(
+        asio::buffer(read_buffer_),
+        strand.wrap([this, self, callback](std::error_code ec,
+                                           size_t bytes_transferred) {
+          this->wrap_read_handler(callback, ec, bytes_transferred);
+        }));
   }
 
   /// Returns a reference to the underlying socket.
