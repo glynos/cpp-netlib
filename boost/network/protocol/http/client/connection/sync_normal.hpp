@@ -61,7 +61,7 @@ struct http_sync_connection
   void send_request_impl(string_type const& method,
                          basic_request<Tag> const& request_,
                          body_generator_function_type generator) {
-    asio::streambuf request_buffer;
+    ::asio::streambuf request_buffer;
     linearize(
         request_, method, version_major, version_minor,
         std::ostreambuf_iterator<typename char_<Tag>::type>(&request_buffer));
@@ -86,17 +86,17 @@ struct http_sync_connection
   }
 
   void read_status(basic_response<Tag>& response_,
-                   asio::streambuf& response_buffer) {
+                   ::asio::streambuf& response_buffer) {
     connection_base::read_status(socket_, response_, response_buffer);
   }
 
   void read_headers(basic_response<Tag>& response,
-                    asio::streambuf& response_buffer) {
+                    ::asio::streambuf& response_buffer) {
     connection_base::read_headers(socket_, response, response_buffer);
   }
 
   void read_body(basic_response<Tag>& response_,
-                 asio::streambuf& response_buffer) {
+                 ::asio::streambuf& response_buffer) {
     connection_base::read_body(socket_, response_, response_buffer);
     typename headers_range<basic_response<Tag> >::type connection_range =
         headers(response_)["Connection"];
@@ -117,7 +117,7 @@ struct http_sync_connection
       return;
     }
     std::error_code ignored;
-    socket_.shutdown(asio::ip::tcp::socket::shutdown_both, ignored);
+    socket_.shutdown(::asio::ip::tcp::socket::shutdown_both, ignored);
     if (ignored) {
       return;
     }
@@ -132,10 +132,10 @@ struct http_sync_connection
   }
 
   int timeout_;
-  asio::deadline_timer timer_;
+  ::asio::deadline_timer timer_;
   resolver_type& resolver_;
   resolver_function_type resolve_;
-  asio::ip::tcp::socket socket_;
+  ::asio::ip::tcp::socket socket_;
 };
 
 }  // namespace impl

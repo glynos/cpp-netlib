@@ -74,7 +74,7 @@ struct basic_client_impl
                     optional<string_type> const& private_key_file,
                     optional<string_type> const& ciphers,
                     optional<string_type> const& sni_hostname, long ssl_options,
-                    std::shared_ptr<asio::io_service> service, int timeout)
+                    std::shared_ptr<::asio::io_service> service, int timeout)
       : base_type(cache_resolved, follow_redirect, always_verify_peer, timeout,
                   service, certificate_filename, verify_path, certificate_file,
                   private_key_file, ciphers, sni_hostname, ssl_options) {}

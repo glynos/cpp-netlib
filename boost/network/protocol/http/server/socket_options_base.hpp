@@ -14,15 +14,15 @@ namespace http {
 
 struct socket_options_base {
  protected:
-  asio::socket_base::reuse_address acceptor_reuse_address;
-  asio::socket_base::enable_connection_aborted acceptor_report_aborted;
-  boost::optional<asio::socket_base::receive_buffer_size> receive_buffer_size;
-  boost::optional<asio::socket_base::send_buffer_size> send_buffer_size;
-  boost::optional<asio::socket_base::receive_low_watermark>
+  ::asio::socket_base::reuse_address acceptor_reuse_address;
+  ::asio::socket_base::enable_connection_aborted acceptor_report_aborted;
+  boost::optional<::asio::socket_base::receive_buffer_size> receive_buffer_size;
+  boost::optional<::asio::socket_base::send_buffer_size> send_buffer_size;
+  boost::optional<::asio::socket_base::receive_low_watermark>
       receive_low_watermark;
-  boost::optional<asio::socket_base::send_low_watermark> send_low_watermark;
+  boost::optional<::asio::socket_base::send_low_watermark> send_low_watermark;
   bool non_blocking_io;
-  asio::socket_base::linger linger;
+  ::asio::socket_base::linger linger;
 
   template <class Tag, class Handler>
   explicit socket_options_base(server_options<Tag, Handler> const &options)
@@ -35,12 +35,12 @@ struct socket_options_base {
         non_blocking_io(options.non_blocking_io()),
         linger(options.linger(), options.linger_timeout()) {}
 
-  void acceptor_options(asio::ip::tcp::acceptor &acceptor) {
+  void acceptor_options(::asio::ip::tcp::acceptor &acceptor) {
     acceptor.set_option(acceptor_reuse_address);
     acceptor.set_option(acceptor_report_aborted);
   }
 
-  void socket_options(asio::ip::tcp::socket &socket) {
+  void socket_options(::asio::ip::tcp::socket &socket) {
     std::error_code ignored;
     socket.non_blocking(non_blocking_io);
     socket.set_option(linger, ignored);

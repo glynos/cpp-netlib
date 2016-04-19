@@ -19,9 +19,9 @@ namespace boost {
 namespace network {
 namespace utils {
 
-typedef std::shared_ptr<asio::io_service> io_service_ptr;
+typedef std::shared_ptr<::asio::io_service> io_service_ptr;
 typedef std::shared_ptr<utils::thread_group> worker_threads_ptr;
-typedef std::shared_ptr<asio::io_service::work> sentinel_ptr;
+typedef std::shared_ptr<::asio::io_service::work> sentinel_ptr;
 
 template <class Tag>
 struct basic_thread_pool {
@@ -55,7 +55,7 @@ struct basic_thread_pool {
     BOOST_SCOPE_EXIT_END
 
     if (!io_service_.get()) {
-      io_service_.reset(new asio::io_service);
+      io_service_.reset(new ::asio::io_service);
     }
 
     if (!worker_threads_.get()) {
@@ -63,7 +63,7 @@ struct basic_thread_pool {
     }
 
     if (!sentinel_.get()) {
-      sentinel_.reset(new asio::io_service::work(*io_service_));
+      sentinel_.reset(new ::asio::io_service::work(*io_service_));
     }
 
     for (std::size_t counter = 0; counter < threads_; ++counter) {
