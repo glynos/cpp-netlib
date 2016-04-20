@@ -118,7 +118,7 @@ struct http_async_connection
   }
 
  private:
-  void set_errors(std::error_code const& ec) {
+  void set_errors(std::error_code const& ec, body_callback_function_type callback) {
     std::system_error error(ec);
     this->version_promise.set_exception(std::make_exception_ptr(error));
     this->status_promise.set_exception(std::make_exception_ptr(error));
@@ -127,6 +127,8 @@ struct http_async_connection
     this->source_promise.set_exception(std::make_exception_ptr(error));
     this->destination_promise.set_exception(std::make_exception_ptr(error));
     this->body_promise.set_exception(std::make_exception_ptr(error));
+    if ( callback )
+      callback( boost::iterator_range<const char*>(), ec );
     this->timer_.cancel();
   }
 
@@ -155,9 +157,7 @@ struct http_async_connection
                                      generator, std::make_pair(++iter_copy, resolver_iterator()), ec);
             }));
     } else {
-      set_errors(ec ? ec : ::asio::error::host_not_found);
-      boost::iterator_range<const char*> range;
-      if (callback) callback(range, ec);
+      set_errors((ec ? ec : ::asio::error::host_not_found), callback);
     }
   }
 
@@ -168,7 +168,7 @@ struct http_async_connection
                         resolver_iterator_pair endpoint_range,
                         std::error_code const& ec) {
     if (is_timedout_) {
-      set_errors(::asio::error::timed_out);
+      set_errors(::asio::error::timed_out, callback);
     } else if (!ec) {
       BOOST_ASSERT(delegate_.get() != 0);
       auto self = this->shared_from_this();
@@ -193,9 +193,7 @@ struct http_async_connection
                                        ec);
               }));
       } else {
-        set_errors(ec ? ec : ::asio::error::host_not_found);
-        boost::iterator_range<const char*> range;
-        if (callback) callback(range, ec);
+        set_errors((ec ? ec : ::asio::error::host_not_found), callback);
       }
     }
   }
@@ -239,7 +237,7 @@ struct http_async_connection
                                                             ec, bytes_transferred);
                                }));
     } else {
-      set_errors(is_timedout_ ? ::asio::error::timed_out : ec);
+      set_errors((is_timedout_ ? ::asio::error::timed_out : ec), callback);
     }
   }
 
@@ -322,6 +320,8 @@ struct http_async_connection
             // We short-circuit here because the user does not want to get the
             // body (in the case of a HEAD request).
             this->body_promise.set_value("");
+            if ( callback )
+              callback( boost::iterator_range<const char*>(), ::asio::error::eof );
             this->destination_promise.set_value("");
             this->source_promise.set_value("");
             // this->part.assign('\0');
@@ -446,8 +446,8 @@ struct http_async_connection
           BOOST_ASSERT(false && "Bug, report this to the developers!");
       }
     } else {
-      std::system_error error(is_timedout_ ? ::asio::error::timed_out
-                              : ec);
+      std::error_code report_code = is_timedout_ ? ::asio::error::timed_out : ec;
+      std::system_error error(report_code);
       this->source_promise.set_exception(std::make_exception_ptr(error));
       this->destination_promise.set_exception(std::make_exception_ptr(error));
       switch (state) {
@@ -467,6 +467,8 @@ struct http_async_connection
             // so no exception should be set
             this->body_promise.set_exception(std::make_exception_ptr(error));
           }
+          else
+            callback( boost::iterator_range<const char*>(), report_code );
           break;
         default:
           BOOST_ASSERT(false && "Bug, report this to the developers!");
