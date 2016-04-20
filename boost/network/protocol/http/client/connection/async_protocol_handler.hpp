@@ -139,7 +139,7 @@ struct http_async_protocol_handler {
                             std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
-          asio::mutable_buffers_1(part.data(), part.size()),
+          ::asio::mutable_buffers_1(part.data(), part.size()),
           callback);
     }
     return parsed_ok;
@@ -185,7 +185,7 @@ struct http_async_protocol_handler {
                             std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
-          asio::mutable_buffers_1(part.data(), part.size()),
+          ::asio::mutable_buffers_1(part.data(), part.size()),
           callback);
     }
     return parsed_ok;
@@ -230,7 +230,7 @@ struct http_async_protocol_handler {
                             std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
-          asio::mutable_buffers_1(part.data(), part.size()),
+          ::asio::mutable_buffers_1(part.data(), part.size()),
           callback);
     }
     return parsed_ok;
@@ -317,7 +317,7 @@ struct http_async_protocol_handler {
                             std::end(result_range));
       part_begin = part.begin();
       delegate_->read_some(
-          asio::mutable_buffers_1(part.data(), part.size()),
+          ::asio::mutable_buffers_1(part.data(), part.size()),
           callback);
     }
     return std::make_tuple(
@@ -331,7 +331,7 @@ struct http_async_protocol_handler {
     partial_parsed.append(part_begin, bytes);
     part_begin = part.begin();
     delegate_->read_some(
-        asio::mutable_buffers_1(part.data(), part.size()), callback);
+        ::asio::mutable_buffers_1(part.data(), part.size()), callback);
   }
 
   typedef response_parser<Tag> response_parser_type;

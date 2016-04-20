@@ -22,11 +22,11 @@ struct server_storage_base {
   explicit server_storage_base(server_options<Tag, Handler> const& options)
       : self_service_(options.io_service()
                           ? options.io_service()
-                          : std::make_shared<asio::io_service>()),
+                          : std::make_shared<::asio::io_service>()),
         service_(*self_service_) {}
 
-  std::shared_ptr<asio::io_service> self_service_;
-  asio::io_service& service_;
+  std::shared_ptr<::asio::io_service> self_service_;
+  ::asio::io_service& service_;
 };
 
 } /* http */

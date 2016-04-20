@@ -110,12 +110,12 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         response_ << ::boost::network::source(request_.host());
 
         pimpl->send_request_impl(method, request_, generator);
-        asio::streambuf response_buffer;
+        ::asio::streambuf response_buffer;
 
         try {
           pimpl->read_status(response_, response_buffer);
         } catch (std::system_error& e) {
-          if (!retry && e.code() == asio::error::eof) {
+          if (!retry && e.code() == ::asio::error::eof) {
             retry = true;
             pimpl->init_socket(request_.host(),
                                std::to_string(request_.port()));

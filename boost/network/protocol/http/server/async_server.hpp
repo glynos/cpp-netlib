@@ -114,7 +114,7 @@ struct async_server_base : server_storage_base, socket_options_base {
   Handler &handler;
   string_type address_, port_;
   std::shared_ptr<utils::thread_pool> thread_pool;
-  asio::ip::tcp::acceptor acceptor;
+  ::asio::ip::tcp::acceptor acceptor;
   bool stopping;
   connection_ptr new_connection;
   std::mutex listening_mutex_;
@@ -160,7 +160,7 @@ struct async_server_base : server_storage_base, socket_options_base {
   }
 
   void start_listening() {
-    using asio::ip::tcp;
+    using ::asio::ip::tcp;
     std::error_code error;
     // this allows repeated cycles of run -> stop -> run
     service_.reset();
@@ -185,7 +185,7 @@ struct async_server_base : server_storage_base, socket_options_base {
                                                      << port_);
       return;
     }
-    acceptor.listen(asio::socket_base::max_connections, error);
+    acceptor.listen(::asio::socket_base::max_connections, error);
     if (error) {
       BOOST_NETWORK_MESSAGE("Error listening on socket: '"
                             << error << "' on " << address_ << ":" << port_);
