@@ -28,15 +28,15 @@
 namespace boost {
 namespace network {
 
-typedef asio::ip::tcp::socket tcp_socket;
+typedef ::asio::ip::tcp::socket tcp_socket;
 
 #ifndef BOOST_NETWORK_ENABLE_HTTPS
 typedef tcp_socket stream_handler;
 typedef void ssl_context;
 #else
 
-typedef asio::ssl::stream<asio::ip::tcp::socket> ssl_socket;
-typedef asio::ssl::context ssl_context;
+typedef ::asio::ssl::stream<::asio::ip::tcp::socket> ssl_socket;
+typedef ::asio::ssl::context ssl_context;
 
 struct stream_handler {
  public:
@@ -48,7 +48,7 @@ struct stream_handler {
   stream_handler(std::shared_ptr<ssl_socket> socket)
       : ssl_sock_(std::move(socket)), ssl_enabled(true) {}
 
-  stream_handler(asio::io_service& io,
+  stream_handler(::asio::io_service& io,
                  std::shared_ptr<ssl_context> ctx =
                      std::shared_ptr<ssl_context>()) {
     tcp_sock_ = std::make_shared<tcp_socket>(boost::ref(io));
@@ -117,13 +117,13 @@ struct stream_handler {
     }
   }
 
-  void shutdown(asio::socket_base::shutdown_type st,
+  void shutdown(::asio::socket_base::shutdown_type st,
                 std::error_code& e) {
     try {
       if (ssl_enabled) {
         ssl_sock_->shutdown(e);
       } else {
-        tcp_sock_->shutdown(asio::ip::tcp::socket::shutdown_send, e);
+        tcp_sock_->shutdown(::asio::ip::tcp::socket::shutdown_send, e);
       }
     }
     catch (const std::error_code& e) {

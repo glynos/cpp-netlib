@@ -39,8 +39,8 @@ struct async_resolver : std::enable_shared_from_this<async_resolver<Tag> > {
  protected:
   bool cache_resolved_;
   endpoint_cache endpoint_cache_;
-  std::shared_ptr<asio::io_service> service_;
-  std::shared_ptr<asio::io_service::strand> resolver_strand_;
+  std::shared_ptr<::asio::io_service> service_;
+  std::shared_ptr<::asio::io_service::strand> resolver_strand_;
 
   explicit async_resolver(bool cache_resolved)
       : cache_resolved_(cache_resolved), endpoint_cache_() {}

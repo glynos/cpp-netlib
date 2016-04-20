@@ -24,7 +24,7 @@ namespace impl {
 
 struct ssl_delegate : public connection_delegate,
                       public std::enable_shared_from_this<ssl_delegate> {
-  ssl_delegate(asio::io_service &service, bool always_verify_peer,
+  ssl_delegate(::asio::io_service &service, bool always_verify_peer,
                optional<std::string> certificate_filename,
                optional<std::string> verify_path,
                optional<std::string> certificate_file,
@@ -32,20 +32,20 @@ struct ssl_delegate : public connection_delegate,
                optional<std::string> ciphers,
                optional<std::string> sni_hostname, long ssl_options);
 
-  void connect(asio::ip::tcp::endpoint &endpoint, std::string host,
+  void connect(::asio::ip::tcp::endpoint &endpoint, std::string host,
                std::uint16_t source_port,
                std::function<void(std::error_code const &)> handler) override;
   void write(
-      asio::streambuf &command_streambuf,
+      ::asio::streambuf &command_streambuf,
       std::function<void(std::error_code const &, size_t)> handler) override;
   void read_some(
-      asio::mutable_buffers_1 const &read_buffer,
+      ::asio::mutable_buffers_1 const &read_buffer,
       std::function<void(std::error_code const &, size_t)> handler) override;
   void disconnect() override;
   ~ssl_delegate() override;
 
  private:
-  asio::io_service &service_;
+  ::asio::io_service &service_;
   optional<std::string> certificate_filename_;
   optional<std::string> verify_path_;
   optional<std::string> certificate_file_;
@@ -53,9 +53,9 @@ struct ssl_delegate : public connection_delegate,
   optional<std::string> ciphers_;
   optional<std::string> sni_hostname_;
   long ssl_options_;
-  std::unique_ptr<asio::ssl::context> context_;
-  std::unique_ptr<asio::ip::tcp::socket> tcp_socket_;
-  std::unique_ptr<asio::ssl::stream<asio::ip::tcp::socket &> > socket_;
+  std::unique_ptr<::asio::ssl::context> context_;
+  std::unique_ptr<::asio::ip::tcp::socket> tcp_socket_;
+  std::unique_ptr<::asio::ssl::stream<::asio::ip::tcp::socket &> > socket_;
   bool always_verify_peer_;
 
   ssl_delegate(ssl_delegate const &);     // = delete

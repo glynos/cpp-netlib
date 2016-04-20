@@ -26,9 +26,9 @@ struct unsupported_tag;
 template <class Tag>
 struct resolver
     : mpl::if_<mpl::and_<is_tcp<Tag>, is_http<Tag> >,
-               asio::ip::tcp::resolver,
+               ::asio::ip::tcp::resolver,
                typename mpl::if_<mpl::and_<is_udp<Tag>, is_http<Tag> >,
-                                 asio::ip::udp::resolver,
+                                 ::asio::ip::udp::resolver,
                                  unsupported_tag<Tag> >::type> {
   static_assert(mpl::not_<mpl::and_<is_udp<Tag>, is_tcp<Tag> > >::value,
                 "Transport protocol must be TCP or UDP");

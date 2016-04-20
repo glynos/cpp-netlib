@@ -80,7 +80,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
         response_ = basic_response<Tag>();
         response_ << network::source(request_.host());
 
-        asio::streambuf response_buffer;
+        ::asio::streambuf response_buffer;
         pimpl->read_status(response_, response_buffer);
         pimpl->read_headers(response_, response_buffer);
         if (get_body) pimpl->read_body(response_, response_buffer);

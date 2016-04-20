@@ -40,7 +40,7 @@ namespace impl {
 template <class Tag, unsigned version_major, unsigned version_minor>
 struct async_connection_base;
 
-namespace placeholders = asio::placeholders;
+namespace placeholders = ::asio::placeholders;
 
 template <class Tag, unsigned version_major, unsigned version_minor>
 struct http_async_connection
@@ -145,7 +145,7 @@ struct http_async_connection
       // Here we deal with the case that there was an error encountered and
       // that there's still more endpoints to try connecting to.
       resolver_iterator iter = boost::begin(endpoint_range);
-      asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
+      ::asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
       auto self = this->shared_from_this();
       delegate_->connect(
           endpoint, host, source_port,
@@ -155,7 +155,7 @@ struct http_async_connection
                                      generator, std::make_pair(++iter_copy, resolver_iterator()), ec);
             }));
     } else {
-      set_errors(ec ? ec : asio::error::host_not_found);
+      set_errors(ec ? ec : ::asio::error::host_not_found);
       boost::iterator_range<const char*> range;
       if (callback) callback(range, ec);
     }
@@ -168,7 +168,7 @@ struct http_async_connection
                         resolver_iterator_pair endpoint_range,
                         std::error_code const& ec) {
     if (is_timedout_) {
-      set_errors(asio::error::timed_out);
+      set_errors(::asio::error::timed_out);
     } else if (!ec) {
       BOOST_ASSERT(delegate_.get() != 0);
       auto self = this->shared_from_this();
@@ -182,7 +182,7 @@ struct http_async_connection
     } else {
       if (!boost::empty(endpoint_range)) {
         resolver_iterator iter = boost::begin(endpoint_range);
-        asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
+        ::asio::ip::tcp::endpoint endpoint(iter->endpoint().address(), port);
         auto self = this->shared_from_this();
         delegate_->connect(
             endpoint, host, source_port,
@@ -193,7 +193,7 @@ struct http_async_connection
                                        ec);
               }));
       } else {
-        set_errors(ec ? ec : asio::error::host_not_found);
+        set_errors(ec ? ec : ::asio::error::host_not_found);
         boost::iterator_range<const char*> range;
         if (callback) callback(range, ec);
       }
@@ -231,7 +231,7 @@ struct http_async_connection
 
       auto self = this->shared_from_this();
       delegate_->read_some(
-          asio::mutable_buffers_1(this->part.data(),
+          ::asio::mutable_buffers_1(this->part.data(),
                                          this->part.size()),
           request_strand_.wrap([=] (std::error_code const &ec,
                                     std::size_t bytes_transferred) {
@@ -239,7 +239,7 @@ struct http_async_connection
                                                             ec, bytes_transferred);
                                }));
     } else {
-      set_errors(is_timedout_ ? asio::error::timed_out : ec);
+      set_errors(is_timedout_ ? ::asio::error::timed_out : ec);
     }
   }
 
@@ -250,19 +250,19 @@ struct http_async_connection
     static const long short_read_error = 335544539;
     bool is_ssl_short_read_error =
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
-        ec.category() == asio::error::ssl_category &&
+        ec.category() == ::asio::error::ssl_category &&
         ec.value() == short_read_error;
 #else
         false && short_read_error;
 #endif
     if (!is_timedout_ &&
-        (!ec || ec == asio::error::eof || is_ssl_short_read_error)) {
+        (!ec || ec == ::asio::error::eof || is_ssl_short_read_error)) {
       logic::tribool parsed_ok;
       size_t remainder;
       auto self = this->shared_from_this();
       switch (state) {
         case version:
-          if (ec == asio::error::eof) return;
+          if (ec == ::asio::error::eof) return;
           parsed_ok = this->parse_version(
               delegate_,
               request_strand_.wrap([=] (std::error_code const &ec,
@@ -275,7 +275,7 @@ struct http_async_connection
             return;
           }
         case status:
-          if (ec == asio::error::eof) return;
+          if (ec == ::asio::error::eof) return;
           parsed_ok = this->parse_status(
               delegate_,
               request_strand_.wrap([=] (std::error_code const &ec,
@@ -288,7 +288,7 @@ struct http_async_connection
             return;
           }
         case status_message:
-          if (ec == asio::error::eof) return;
+          if (ec == ::asio::error::eof) return;
           parsed_ok = this->parse_status_message(
               delegate_, request_strand_.wrap([=] (std::error_code const &,
                                                    std::size_t bytes_transferred) {
@@ -300,7 +300,7 @@ struct http_async_connection
             return;
           }
         case headers:
-          if (ec == asio::error::eof) return;
+          if (ec == ::asio::error::eof) return;
           // In the following, remainder is the number of bytes that remain in
           // the buffer. We need this in the body processing to make sure that
           // the data remaining in the buffer is dealt with before another call
@@ -352,7 +352,7 @@ struct http_async_connection
 
             auto self = this->shared_from_this();
             delegate_->read_some(
-                asio::mutable_buffers_1(this->part.data(),
+                ::asio::mutable_buffers_1(this->part.data(),
                                                this->part.size()),
                 request_strand_.wrap([=] (std::error_code const &ec,
                                           std::size_t bytes_transferred) {
@@ -374,7 +374,7 @@ struct http_async_connection
           }
           return;
         case body:
-          if (ec == asio::error::eof || is_ssl_short_read_error) {
+          if (ec == ::asio::error::eof || is_ssl_short_read_error) {
             // Here we're handling the case when the connection has been closed
             // from the server side, or at least that the end of file has been
             // reached while reading the socket. This signals the end of the
@@ -420,7 +420,7 @@ struct http_async_connection
               callback(make_iterator_range(begin, end), ec);
               auto self = this->shared_from_this();
               delegate_->read_some(
-                  asio::mutable_buffers_1(this->part.data(),
+                  ::asio::mutable_buffers_1(this->part.data(),
                                                  this->part.size()),
                   request_strand_.wrap([=] (std::error_code const &ec,
                                             std::size_t bytes_transferred) {
@@ -446,7 +446,7 @@ struct http_async_connection
           BOOST_ASSERT(false && "Bug, report this to the developers!");
       }
     } else {
-      std::system_error error(is_timedout_ ? asio::error::timed_out
+      std::system_error error(is_timedout_ ? ::asio::error::timed_out
                               : ec);
       this->source_promise.set_exception(std::make_exception_ptr(error));
       this->destination_promise.set_exception(std::make_exception_ptr(error));
@@ -506,14 +506,14 @@ struct http_async_connection
   }
 
   int timeout_;
-  asio::deadline_timer timer_;
+  ::asio::deadline_timer timer_;
   bool is_timedout_;
   bool follow_redirect_;
   resolver_type& resolver_;
   resolve_function resolve_;
-  asio::io_service::strand request_strand_;
+  ::asio::io_service::strand request_strand_;
   connection_delegate_ptr delegate_;
-  asio::streambuf command_streambuf;
+  ::asio::streambuf command_streambuf;
   string_type method;
 };
 
