@@ -98,7 +98,8 @@ class thread_pool {
   sentinel_ptr sentinel_;
 };
 
-void swap(thread_pool &a, thread_pool &b) { a.swap(b); }
+inline void swap(thread_pool &a, thread_pool &b) { a.swap(b); }
+
 }  // namespace utils
 }  // namespace network
 }  // namespace boost
