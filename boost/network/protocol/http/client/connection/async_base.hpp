@@ -9,11 +9,13 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <functional>
+#include <array>
 #include <boost/network/protocol/http/client/connection/connection_delegate_factory.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/delegate_factory.hpp>
 #include <boost/network/protocol/http/client/connection/async_normal.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
+#include <boost/network/traits/string.hpp>
 
 namespace boost {
 namespace network {
@@ -29,7 +31,8 @@ struct async_connection_base {
   typedef typename string<Tag>::type string_type;
   typedef basic_request<Tag> request;
   typedef basic_response<Tag> response;
-  typedef iterator_range<char const *> char_const_range;
+  typedef typename std::array<typename char_<Tag>::type, 1024>::const_iterator const_iterator;
+  typedef iterator_range<const_iterator> char_const_range;
   typedef std::function<void(char_const_range const &, std::error_code const &)>
       body_callback_function_type;
   typedef std::function<bool(string_type &)> body_generator_function_type;
