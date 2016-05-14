@@ -13,3 +13,6 @@
 [submodule "deps/asio"]
 	path = deps/asio
 	url = https://github.com/chriskohlhoff/asio.git
+[submodule "deps/uri"]
+	path = deps/uri
+	url = https://github.com/cpp-netlib/uri.git
