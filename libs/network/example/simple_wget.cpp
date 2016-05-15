@@ -13,17 +13,16 @@
 */
 
 #include <boost/network/protocol/http/client.hpp>
-#include <boost/network/uri.hpp>
+#include <network/uri.hpp>
 #include <string>
 #include <fstream>
 #include <iostream>
 
 namespace http = boost::network::http;
-namespace uri = boost::network::uri;
 
 namespace {
-std::string get_filename(const uri::uri &url) {
-  std::string path = uri::path(url);
+std::string get_filename(const ::network::uri &url) {
+  std::string path = url.path().to_string();
   std::size_t index = path.find_last_of('/');
   std::string filename = path.substr(index + 1);
   return filename.empty() ? "index.html" : filename;
