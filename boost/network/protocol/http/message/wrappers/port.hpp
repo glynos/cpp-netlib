@@ -10,7 +10,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cstdint>
-#include <boost/network/uri/accessors.hpp>
+#include <network/uri/uri.hpp>
 #include <boost/optional.hpp>
 #include <boost/version.hpp>
 
@@ -38,13 +38,14 @@ struct port_wrapper {
   // conversions no longer work correctly with MSVC. The conversion therefore
   // has to be done explicitly with as_optional().
   boost::optional<std::uint16_t> as_optional() const {
-    return uri::port_us(message_.uri());
-  }
 #else
   operator boost::optional<std::uint16_t>() const {
-    return uri::port_us(message_.uri());
-  }
 #endif
+    if (message_.uri().has_port()) {
+      return message_.uri().template port<std::uint16_t>();
+    }
+    return boost::optional<std::uint16_t>();
+  }
 
 };
 

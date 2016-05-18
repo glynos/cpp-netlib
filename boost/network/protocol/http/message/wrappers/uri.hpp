@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/network/uri/uri.hpp>
+#include <network/uri/uri.hpp>
 
 namespace boost {
 namespace network {
@@ -22,8 +22,8 @@ struct uri_wrapper {
   basic_request<Tag> const& message_;
   explicit uri_wrapper(basic_request<Tag> const& message) : message_(message) {}
   typedef typename basic_request<Tag>::string_type string_type;
-  operator string_type() { return message_.uri().raw(); }
-  operator boost::network::uri::uri() { return message_.uri(); }
+  operator string_type() { return message_.uri().to_string(); }
+  operator ::network::uri() { return message_.uri(); }
 };
 } // namespace impl
 

@@ -73,11 +73,8 @@ struct stream_handler {
         tcp_sock_->async_write_some(buffers, handler);
       }
     }
-    catch (const std::error_code& e) {
-      std::cerr << e.message() << std::endl;
-    }
-    catch (const std::system_error& e) {
-      std::cerr << e.code() << ": " << e.what() << std::endl;
+    catch (const std::system_error&) {
+      // print system error
     }
   }
 
@@ -93,11 +90,8 @@ struct stream_handler {
         tcp_sock_->async_read_some(buffers, handler);
       }
     }
-    catch (const std::error_code& e) {
-      std::cerr << e.message() << std::endl;
-    }
     catch (const std::system_error& e) {
-      std::cerr << e.code() << ": " << e.what() << std::endl;
+      // print system error
     }
   }
 
@@ -126,11 +120,8 @@ struct stream_handler {
         tcp_sock_->shutdown(::asio::ip::tcp::socket::shutdown_send, e);
       }
     }
-    catch (const std::error_code& e) {
-      std::cerr << e.message() << std::endl;
-    }
     catch (const std::system_error& e) {
-      std::cerr << e.code() << ": " << e.what() << std::endl;
+
     }
   }
 
@@ -162,11 +153,8 @@ struct stream_handler {
         // NOOP
       }
     }
-    catch (const std::error_code& e) {
-      std::cerr << e.message() << std::endl;
-    }
     catch (const std::system_error& e) {
-      std::cerr << e.code() << ": " << e.what() << std::endl;
+
     }
   }
   std::shared_ptr<tcp_socket> get_tcp_socket() { return tcp_sock_; }

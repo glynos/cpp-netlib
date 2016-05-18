@@ -19,10 +19,10 @@ if (Boost_FOUND)
     foreach ( test ${TESTS} )
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test} gtest_main
-            cppnetlib-uri)
+            network-uri)
         target_link_libraries(cpp-netlib-http-${test}
             ${CMAKE_THREAD_LIBS_INIT} gtest_main
-            cppnetlib-uri)
+            network-uri)
 	if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU AND ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
           target_link_libraries(cpp-netlib-http-${test} ws2_32)
         endif()
@@ -42,10 +42,10 @@ if (Boost_FOUND)
       client_get_streaming_test)
     foreach ( test ${TESTS} )
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
-        add_dependencies(cpp-netlib-http-${test} cppnetlib-uri
+        add_dependencies(cpp-netlib-http-${test} network-uri
 	  cppnetlib-client-connections gtest_main)
         target_link_libraries(cpp-netlib-http-${test}
-	  ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri gtest_main cppnetlib-client-connections)
+	  ${CMAKE_THREAD_LIBS_INIT} network-uri gtest_main cppnetlib-client-connections)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()

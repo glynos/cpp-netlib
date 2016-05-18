@@ -21,35 +21,35 @@ add_executable(trivial_google trivial_google.cpp)
 if (UNIX)
   add_executable(fileserver http/fileserver.cpp)
 endif (UNIX)
-add_dependencies(http_client cppnetlib-uri cppnetlib-client-connections)
-add_dependencies(simple_wget cppnetlib-uri cppnetlib-client-connections)
-add_dependencies(atom_reader cppnetlib-uri cppnetlib-client-connections)
-add_dependencies(rss_reader cppnetlib-uri cppnetlib-client-connections)
-add_dependencies(trivial_google cppnetlib-uri cppnetlib-client-connections)
+add_dependencies(http_client network-uri cppnetlib-client-connections)
+add_dependencies(simple_wget network-uri cppnetlib-client-connections)
+add_dependencies(atom_reader network-uri cppnetlib-client-connections)
+add_dependencies(rss_reader network-uri cppnetlib-client-connections)
+add_dependencies(trivial_google network-uri cppnetlib-client-connections)
 
 target_link_libraries(http_client
     ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-uri
+    network-uri
     cppnetlib-client-connections)
 
 target_link_libraries(simple_wget
     ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-uri
+    network-uri
     cppnetlib-client-connections)
 
 target_link_libraries(atom_reader
     ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-uri
+    network-uri
     cppnetlib-client-connections)
 
 target_link_libraries(rss_reader
     ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-uri
+    network-uri
     cppnetlib-client-connections)
 
 target_link_libraries(trivial_google
   ${CMAKE_THREAD_LIBS_INIT}
-  cppnetlib-uri
+  network-uri
   cppnetlib-client-connections)
 
 target_link_libraries(hello_world_server
@@ -58,22 +58,22 @@ target_link_libraries(hello_world_server
 
 target_link_libraries(hello_world_client
     ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-uri
+    network-uri
     cppnetlib-client-connections)
 
 target_link_libraries(hello_world_async_server_with_work_queue
     ${CMAKE_THREAD_LIBS_INIT}
-    cppnetlib-uri
+    network-uri
     cppnetlib-client-connections
     cppnetlib-server-parsers)
 
 if (OPENSSL_FOUND)
     add_executable(ssl_server http/ssl/ssl_server.cpp)
-    add_dependencies(ssl_server cppnetlib-uri cppnetlib-client-connections)
+    add_dependencies(ssl_server network-uri cppnetlib-client-connections)
     target_link_libraries(ssl_server
         ${CMAKE_THREAD_LIBS_INIT}
         cppnetlib-server-parsers
-        cppnetlib-uri
+        network-uri
         cppnetlib-client-connections)
 endif (OPENSSL_FOUND)
 
@@ -139,7 +139,7 @@ set_target_properties(hello_world_async_server_with_work_queue PROPERTIES RUNTIM
 if (OPENSSL_FOUND)
   set_target_properties(ssl_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 endif (OPENSSL_FOUND)
-  
+
 if (UNIX)
   set_target_properties(fileserver PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 endif (UNIX)

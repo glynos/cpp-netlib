@@ -13,7 +13,6 @@
 #include <functional>
 #include <boost/network/utils/thread_group.hpp>
 #include <boost/network/protocol/http/server.hpp>
-#include <boost/network/uri.hpp>
 #include <asio.hpp>
 #include <iostream>
 #include <list>

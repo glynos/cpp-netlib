@@ -6,7 +6,7 @@
 
 include_directories(${CPP-NETLIB_SOURCE_DIR} ${gtest_SOURCE_DIR}/include)
 
-add_subdirectory(uri)
+# add_subdirectory(uri)
 add_subdirectory(http)
 
 if (Boost_FOUND)
@@ -19,8 +19,8 @@ if (Boost_FOUND)
 	  PROPERTIES COMPILE_FLAGS "-Wall")
       endif()
       add_executable(cpp-netlib-${test} ${test}.cpp)
-      add_dependencies(cpp-netlib-${test} cppnetlib-uri gtest_main)
-      target_link_libraries(cpp-netlib-${test} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri gtest_main)
+      add_dependencies(cpp-netlib-${test} network-uri gtest_main)
+      target_link_libraries(cpp-netlib-${test} ${CMAKE_THREAD_LIBS_INIT} network-uri gtest_main)
       if (OPENSSL_FOUND)
 	target_link_libraries(cpp-netlib-${test} ${OPENSSL_LIBRARIES})
       endif()

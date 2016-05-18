@@ -17,6 +17,7 @@
   */
 
 #include <cstdint>
+#include <network/uri/uri.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
@@ -29,7 +30,6 @@
 #include <boost/network/protocol/http/message/wrappers/headers.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/traits/vector.hpp>
-#include <boost/network/uri/uri.hpp>
 
 namespace boost {
 namespace network {
@@ -50,7 +50,7 @@ namespace http {
  */
 template <class Tag>
 struct basic_request : public basic_message<Tag> {
-  boost::network::uri::uri uri_;
+  ::network::uri uri_;
   std::uint16_t source_port_;
   typedef basic_message<Tag> base_type;
 
@@ -62,7 +62,7 @@ struct basic_request : public basic_message<Tag> {
   explicit basic_request(string_type const& uri_)
       : uri_(uri_), source_port_(0) {}
 
-  explicit basic_request(boost::network::uri::uri const& uri_)
+  explicit basic_request(::network::uri const& uri_)
       : uri_(uri_), source_port_(0) {}
 
   basic_request() : base_type(), source_port_(0) {}
@@ -83,29 +83,29 @@ struct basic_request : public basic_message<Tag> {
     boost::swap(other.source_port_, this->source_port_);
   }
 
-  string_type const host() const { return uri_.host(); }
+  string_type const host() const { return uri_.host().to_string(); }
 
   port_type port() const {
-    boost::optional<port_type> port = uri::port_us(uri_);
-    if (!port) {
-      typedef constants<Tag> consts;
-      return boost::iequals(uri_.scheme(), string_type(consts::https())) ? 443
-                                                                         : 80;
+    if (uri_.has_port()) {
+      return uri_.port<std::uint16_t>();
     }
-    return *port;
+    else {
+      typedef constants<Tag> consts;
+      return boost::iequals(uri_.scheme(), string_type(consts::https())) ? 443 : 80;
+    }
   }
 
-  string_type const path() const { return uri_.path(); }
+  string_type const path() const { return uri_.path().to_string(); }
 
-  string_type const query() const { return uri_.query(); }
+  string_type const query() const { return uri_.query().to_string(); }
 
-  string_type const anchor() const { return uri_.fragment(); }
+  string_type const anchor() const { return uri_.fragment().to_string(); }
 
-  string_type const protocol() const { return uri_.scheme(); }
+  string_type const protocol() const { return uri_.scheme().to_string(); }
 
   void uri(string_type const& new_uri) const { uri_ = new_uri; }
 
-  boost::network::uri::uri const& uri() const { return uri_; }
+  ::network::uri const& uri() const { return uri_; }
 
   void source_port(const std::uint16_t port) { source_port_ = port; }
 
