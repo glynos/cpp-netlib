@@ -10,7 +10,7 @@
 
 #include <iterator>
 #include <functional>
-#include <asio/deadline_timer.hpp>
+#include <asio/steady_timer.hpp>
 #include <asio/streambuf.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/response.hpp>
@@ -77,7 +77,7 @@ struct http_sync_connection
       }
     }
     if (timeout_ > 0) {
-      timer_.expires_from_now(boost::posix_time::seconds(timeout_));
+      timer_.expires_from_now(std::chrono::seconds(timeout_));
       auto self = this->shared_from_this();
       timer_.async_wait([=] (std::error_code const &ec) {
           self->handle_timeout(ec);
@@ -132,7 +132,7 @@ struct http_sync_connection
   }
 
   int timeout_;
-  ::asio::deadline_timer timer_;
+  ::asio::steady_timer timer_;
   resolver_type& resolver_;
   resolver_function_type resolve_;
   ::asio::ip::tcp::socket socket_;

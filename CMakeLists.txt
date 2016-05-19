@@ -98,7 +98,7 @@ if (Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
 
     # Asio
-    add_definitions(-DASIO_HEADER_ONLY)
+    add_definitions(-DASIO_STANDALONE)
     include_directories(deps/asio/asio/include)
 
     enable_testing()
