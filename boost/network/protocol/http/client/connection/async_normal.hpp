@@ -12,7 +12,7 @@
 #include <iterator>
 #include <cstdint>
 #include <boost/algorithm/string/trim.hpp>
-#include <asio/deadline_timer.hpp>
+#include <asio/steady_timer.hpp>
 #include <asio/placeholders.hpp>
 #include <asio/strand.hpp>
 #include <asio/streambuf.hpp>
@@ -109,7 +109,7 @@ struct http_async_connection
                                                           callback, generator, ec, endpoint_range);
                                   }));
     if (timeout_ > 0) {
-      timer_.expires_from_now(boost::posix_time::seconds(timeout_));
+      timer_.expires_from_now(std::chrono::seconds(timeout_));
       timer_.async_wait(request_strand_.wrap([=] (std::error_code const &ec) {
             self->handle_timeout(ec);
           }));
@@ -508,7 +508,7 @@ struct http_async_connection
   }
 
   int timeout_;
-  ::asio::deadline_timer timer_;
+  ::asio::steady_timer timer_;
   bool is_timedout_;
   bool follow_redirect_;
   resolver_type& resolver_;
