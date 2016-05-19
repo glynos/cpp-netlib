@@ -508,7 +508,7 @@ struct http_async_connection
   }
 
   int timeout_;
-  ::asio::deadline_timer timer_;
+  ::asio::steady_timer timer_;
   bool is_timedout_;
   bool follow_redirect_;
   resolver_type& resolver_;
