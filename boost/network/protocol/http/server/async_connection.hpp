@@ -16,11 +16,11 @@
 #include <array>
 #include <functional>
 #include <tuple>
-#include <asio/buffer.hpp>
-#include <asio/ip/tcp.hpp>
-#include <asio/strand.hpp>
-#include <asio/streambuf.hpp>
-#include <asio/write.hpp>
+#include <boost/asio/buffer.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/strand.hpp>
+#include <boost/asio/streambuf.hpp>
+#include <boost/asio/write.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/server/request_parser.hpp>
 #include <boost/network/protocol/stream_handler.hpp>
@@ -183,7 +183,7 @@ struct async_connection
 
  public:
   async_connection(
-      ::asio::io_service& io_service, Handler& handler,
+      boost::asio::io_service& io_service, Handler& handler,
       utils::thread_pool& thread_pool,
       std::shared_ptr<ssl_context> ctx = std::shared_ptr<ssl_context>())
       : strand(io_service),
@@ -205,8 +205,8 @@ struct async_connection
   }
 
   ~async_connection() throw() {
-    std::error_code ignored;
-    socket_.shutdown(::asio::ip::tcp::socket::shutdown_receive, ignored);
+    boost::system::error_code ignored;
+    socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_receive, ignored);
   }
 
   /**
@@ -228,7 +228,7 @@ struct async_connection
           std::logic_error("Headers have already been sent."));
 
     if (error_encountered)
-      boost::throw_exception(std::system_error(*error_encountered));
+      boost::throw_exception(boost::system::system_error(*error_encountered));
 
     typedef constants<Tag> consts;
     {
@@ -264,7 +264,7 @@ struct async_connection
       boost::throw_exception(std::logic_error(
           "Headers have already been sent, cannot reset status."));
     if (error_encountered)
-      boost::throw_exception(std::system_error(*error_encountered));
+      boost::throw_exception(boost::system::system_error(*error_encountered));
 
     status = new_status;
   }
@@ -289,7 +289,7 @@ struct async_connection
    * set_status and/or set_headers before any calls to write.
    *
    * @param[in] range A Boost.Range ``Single Pass Range`` of char's for writing.
-   * @throw std::system_error The encountered underlying error in previous
+   * @throw boost::system::system_error The encountered underlying error in previous
    *     operations.
    * @post Status and headers have been sent, contents in the range have been
    *     serialized.
@@ -298,9 +298,9 @@ struct async_connection
   void write(Range const& range) {
     lock_guard lock(headers_mutex);
     if (error_encountered)
-      boost::throw_exception(std::system_error(*error_encountered));
+      boost::throw_exception(boost::system::system_error(*error_encountered));
     auto self = this->shared_from_this();
-    auto f = [this, self](std::error_code ec) { this->default_error(ec); };
+    auto f = [this, self](boost::system::error_code ec) { this->default_error(ec); };
     write_impl(boost::make_iterator_range(range), f);
   }
 
@@ -313,32 +313,32 @@ struct async_connection
    * memory at once.
    *
    * @param[in] range A Boost.Range ``Single Pass Range`` of char's for writing.
-   * @param[in] callback A function of type `void(std::error_code)`.
-   * @throw std::system_error The encountered underlying error in previous
+   * @param[in] callback A function of type `void(boost::system::error_code)`.
+   * @throw boost::system::system_error The encountered underlying error in previous
    *     operations.
    * @post Status and headers have been sent, contents in the range have been
    *     serialized and scheduled for writing through the socket.
    */
   template <class Range, class Callback>
   typename disable_if<
-      is_base_of<::asio::const_buffer, typename Range::value_type>, void>::type
+      is_base_of<boost::asio::const_buffer, typename Range::value_type>, void>::type
       write(Range const& range, Callback const& callback) {
     lock_guard lock(headers_mutex);
     if (error_encountered)
-      boost::throw_exception(std::system_error(*error_encountered));
+      boost::throw_exception(boost::system::system_error(*error_encountered));
     write_impl(boost::make_iterator_range(range), callback);
   }
 
   /**
-   * Writes a given set of `::asio::const_buffer`s out using a more efficient
+   * Writes a given set of `boost::asio::const_buffer`s out using a more efficient
    * implementation.
    *
-   * @param[in] seq A sequence of `::asio::const_buffer` objects.
-   * @param[in] callback A function of type `void(std::error_code)`.
+   * @param[in] seq A sequence of `boost::asio::const_buffer` objects.
+   * @param[in] callback A function of type `void(boost::system::error_code)`.
    */
   template <class ConstBufferSeq, class Callback>
   typename enable_if<
-      is_base_of<::asio::const_buffer, typename ConstBufferSeq::value_type>,
+      is_base_of<boost::asio::const_buffer, typename ConstBufferSeq::value_type>,
       void>::type
       write(ConstBufferSeq const& seq, Callback const& callback) {
     write_vec_impl(seq, callback, shared_array_list(), shared_buffers());
@@ -355,7 +355,7 @@ struct async_connection
 
   /// Type required for ``read`` callbacks. Takes an input range, an error
   /// code, the number of bytes read, and a connection pointer.
-  typedef std::function<void(input_range, std::error_code, std::size_t,
+  typedef std::function<void(input_range, boost::system::error_code, std::size_t,
                              connection_ptr)> read_callback_function;
 
   /**
@@ -370,12 +370,12 @@ struct async_connection
    *     void(input_range, error_code, size_t, connection_ptr)
    *
    * @param[in] callback Invoked when the read has data ready for processing.
-   * @throw std::system_error The underlying error encountered in previous
+   * @throw boost::system::system_error The underlying error encountered in previous
    *     operations.
    */
   void read(read_callback_function callback) {
     if (error_encountered)
-      boost::throw_exception(std::system_error(*error_encountered));
+      boost::throw_exception(boost::system::system_error(*error_encountered));
     if (new_start != read_buffer_.begin()) {
       input_range input =
           boost::make_iterator_range(new_start, data_end);
@@ -390,8 +390,8 @@ struct async_connection
 
     auto self = this->shared_from_this();
     socket().async_read_some(
-        ::asio::buffer(read_buffer_),
-        strand.wrap([this, self, callback](std::error_code ec,
+        boost::asio::buffer(read_buffer_),
+        strand.wrap([this, self, callback](boost::system::error_code ec,
                                            size_t bytes_transferred) {
           this->wrap_read_handler(callback, ec, bytes_transferred);
         }));
@@ -408,13 +408,13 @@ struct async_connection
   bool has_error() { return (!!error_encountered); }
 
   /// Returns the most recent error encountered.
-  optional<std::system_error> error() { return error_encountered; }
+  optional<boost::system::system_error> error() { return error_encountered; }
 
  private:
   void wrap_read_handler(read_callback_function callback,
-                         std::error_code const& ec,
+                         boost::system::error_code const& ec,
                          std::size_t bytes_transferred) {
-    if (ec) error_encountered = in_place<std::system_error>(ec);
+    if (ec) error_encountered = in_place<boost::system::system_error>(ec);
     buffer_type::const_iterator data_start = read_buffer_.begin(),
                                 data_end = read_buffer_.begin();
     std::advance(data_end, bytes_transferred);
@@ -425,23 +425,23 @@ struct async_connection
     });
   }
 
-  void default_error(std::error_code const& ec) {
-    if (ec) error_encountered = in_place<std::system_error>(ec);
+  void default_error(boost::system::error_code const& ec) {
+    if (ec) error_encountered = in_place<boost::system::system_error>(ec);
   }
 
   typedef std::array<char, BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE>
       array;
   typedef std::list<std::shared_ptr<array> > array_list;
   typedef std::shared_ptr<array_list> shared_array_list;
-  typedef std::shared_ptr<std::vector<::asio::const_buffer> > shared_buffers;
+  typedef std::shared_ptr<std::vector<boost::asio::const_buffer> > shared_buffers;
   typedef request_parser<Tag> request_parser_type;
   typedef std::lock_guard<std::recursive_mutex> lock_guard;
   typedef std::list<std::function<void()> > pending_actions_list;
 
-  ::asio::io_service::strand strand;
+  boost::asio::io_service::strand strand;
   Handler& handler;
   utils::thread_pool& thread_pool_;
-  ::asio::streambuf headers_buffer;
+  boost::asio::streambuf headers_buffer;
   boost::network::stream_handler socket_;
   bool handshake_done;
   volatile bool headers_already_sent, headers_in_progress;
@@ -453,7 +453,7 @@ struct async_connection
   request request_;
   buffer_type::iterator new_start, data_end;
   string_type partial_parsed;
-  optional<std::system_error> error_encountered;
+  optional<boost::system::system_error> error_encountered;
   pending_actions_list pending_actions;
 
   template <class, class>
@@ -473,15 +473,15 @@ struct async_connection
     auto self = this->shared_from_this();
 #ifdef BOOST_NETWORK_ENABLE_HTTPS
     if (socket_.is_ssl_enabled() && !handshake_done) {
-      socket_.async_handshake(::asio::ssl::stream_base::server,
-                              [this, self, state](std::error_code ec) {
+      socket_.async_handshake(boost::asio::ssl::stream_base::server,
+                              [this, self, state](boost::system::error_code ec) {
                                 handle_handshake(ec, state);
                               });
     } else {
 #endif
       socket_.async_read_some(
-          ::asio::buffer(read_buffer_),
-          strand.wrap([this, self, state](std::error_code ec,
+          boost::asio::buffer(read_buffer_),
+          strand.wrap([this, self, state](boost::system::error_code ec,
                                           size_t bytes_transferred) {
             handle_read_data(state, ec, bytes_transferred);
           }));
@@ -490,7 +490,7 @@ struct async_connection
 #endif
   }
 
-  void handle_read_data(state_t state, std::error_code const& ec,
+  void handle_read_data(state_t state, boost::system::error_code const& ec,
                         std::size_t bytes_transferred) {
     if (!ec) {
       logic::tribool parsed_ok;
@@ -595,7 +595,7 @@ struct async_connection
           std::abort();
       }
     } else {
-      error_encountered = in_place<std::system_error>(ec);
+      error_encountered = in_place<boost::system::system_error>(ec);
     }
   }
 
@@ -605,20 +605,20 @@ struct async_connection
         "text/plain\r\nContent-Length: 12\r\n\r\nBad Request.";
 
     auto self = this->shared_from_this();
-    ::asio::async_write(
-        socket(), ::asio::buffer(bad_request, strlen(bad_request)),
-        strand.wrap([this, self](std::error_code ec, size_t bytes_transferred) {
+    boost::asio::async_write(
+        socket(), boost::asio::buffer(bad_request, strlen(bad_request)),
+        strand.wrap([this, self](boost::system::error_code ec, size_t bytes_transferred) {
           client_error_sent(ec, bytes_transferred);
         }));
   }
 
-  void client_error_sent(std::error_code const& ec, std::size_t) {
+  void client_error_sent(boost::system::error_code const& ec, std::size_t) {
     if (!ec) {
-      std::error_code ignored;
-      socket().shutdown(::asio::ip::tcp::socket::shutdown_both, ignored);
+      boost::system::error_code ignored;
+      socket().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
       socket().close(ignored);
     } else {
-      error_encountered = in_place<std::system_error>(ec);
+      error_encountered = in_place<boost::system::system_error>(ec);
     }
   }
 
@@ -626,15 +626,15 @@ struct async_connection
     if (headers_in_progress) return;
     headers_in_progress = true;
     auto self = this->shared_from_this();
-    ::asio::async_write(socket(), headers_buffer,
+    boost::asio::async_write(socket(), headers_buffer,
                       strand.wrap([this, self, callback](
-                          std::error_code ec, size_t bytes_transferred) {
+                          boost::system::error_code ec, size_t bytes_transferred) {
                         handle_write_headers(callback, ec, bytes_transferred);
                       }));
   }
 
   void handle_write_headers(std::function<void()> callback,
-                            std::error_code const& ec, std::size_t) {
+                            boost::system::error_code const& ec, std::size_t) {
     lock_guard lock(headers_mutex);
     if (!ec) {
       headers_buffer.consume(headers_buffer.size());
@@ -646,19 +646,19 @@ struct async_connection
       }
       pending_actions_list().swap(pending_actions);
     } else {
-      error_encountered = in_place<std::system_error>(ec);
+      error_encountered = in_place<boost::system::system_error>(ec);
     }
   }
 
-  void handle_write(std::function<void(std::error_code const&)> callback,
+  void handle_write(std::function<void(boost::system::error_code const&)> callback,
                     shared_array_list, shared_buffers,
-                    std::error_code const& ec, std::size_t) {
+                    boost::system::error_code const& ec, std::size_t) {
     // we want to forget the temporaries and buffers
     thread_pool().post([callback, ec] { callback(ec); });
   }
 
   template <class Range>
-  void write_impl(Range range, std::function<void(std::error_code)> callback) {
+  void write_impl(Range range, std::function<void(boost::system::error_code)> callback) {
     // linearize the whole range into a vector
     // of fixed-sized buffers, then schedule an asynchronous
     // write of these buffers -- make sure they are live
@@ -676,7 +676,7 @@ struct async_connection
         BOOST_NETWORK_HTTP_SERVER_CONNECTION_BUFFER_SIZE;
     shared_array_list temporaries = std::make_shared<array_list>();
     shared_buffers buffers =
-        std::make_shared<std::vector<::asio::const_buffer> >(0);
+        std::make_shared<std::vector<boost::asio::const_buffer> >(0);
 
     std::size_t range_size = boost::distance(range);
     buffers->reserve((range_size / connection_buffer_size) +
@@ -688,7 +688,7 @@ struct async_connection
       std::shared_ptr<array> new_array = std::make_shared<array>();
       boost::copy(range | sliced(0, slice_size), new_array->begin());
       temporaries->push_back(new_array);
-      buffers->push_back(::asio::buffer(new_array->data(), slice_size));
+      buffers->push_back(boost::asio::buffer(new_array->data(), slice_size));
       std::advance(start, slice_size);
       range = boost::make_iterator_range(start, end);
       range_size = boost::distance(range);
@@ -705,7 +705,7 @@ struct async_connection
                       shared_array_list temporaries, shared_buffers buffers) {
     lock_guard lock(headers_mutex);
     if (error_encountered)
-      boost::throw_exception(std::system_error(*error_encountered));
+      boost::throw_exception(boost::system::system_error(*error_encountered));
     auto self = this->shared_from_this();
     auto continuation = [this, self, seq, callback, temporaries, buffers] {
       write_vec_impl(seq, callback, temporaries, buffers);
@@ -718,19 +718,19 @@ struct async_connection
       pending_actions.push_back(continuation);
       return;
     }
-    ::asio::async_write(
+    boost::asio::async_write(
         socket_, seq, [this, self, callback, temporaries, buffers](
-                          std::error_code ec, size_t bytes_transferred) {
+                          boost::system::error_code ec, size_t bytes_transferred) {
           handle_write(callback, temporaries, buffers, ec, bytes_transferred);
         });
   }
 
-  void handle_handshake(const std::error_code& ec, state_t state) {
+  void handle_handshake(const boost::system::error_code& ec, state_t state) {
     if (!ec) {
       handshake_done = true;
       read_more(state);
     } else {
-      error_encountered = in_place<std::system_error>(ec);
+      error_encountered = in_place<boost::system::system_error>(ec);
     }
   }
 };

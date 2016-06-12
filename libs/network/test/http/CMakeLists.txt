@@ -19,6 +19,7 @@ if (Boost_FOUND)
         add_dependencies(cpp-netlib-http-${test} gtest_main
             cppnetlib-uri)
         target_link_libraries(cpp-netlib-http-${test}
+            ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} gtest_main
             ${CMAKE_THREAD_LIBS_INIT} gtest_main
             cppnetlib-uri)
 	if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU AND ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -43,7 +44,7 @@ if (Boost_FOUND)
         add_dependencies(cpp-netlib-http-${test} cppnetlib-uri
 	  cppnetlib-client-connections gtest_main)
         target_link_libraries(cpp-netlib-http-${test}
-	  ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri gtest_main cppnetlib-client-connections)
+	  ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-uri gtest_main cppnetlib-client-connections)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()
@@ -65,7 +66,7 @@ if (Boost_FOUND)
         add_executable(cpp-netlib-http-${test} ${test}.cpp)
         add_dependencies(cpp-netlib-http-${test} cppnetlib-server-parsers)
 	target_link_libraries(cpp-netlib-http-${test}
-	  ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers gtest_main)
+	  ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers gtest_main)
         if (OPENSSL_FOUND)
             target_link_libraries(cpp-netlib-http-${test} ${OPENSSL_LIBRARIES})
         endif()
@@ -87,7 +88,7 @@ if (Boost_FOUND)
     add_dependencies(cpp-netlib-http-server_async_run_stop_concurrency
       cppnetlib-server-parsers)
     target_link_libraries(cpp-netlib-http-server_async_run_stop_concurrency
-      ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
+      ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} cppnetlib-server-parsers)
     if (OPENSSL_FOUND)
       target_link_libraries(cpp-netlib-http-server_async_run_stop_concurrency
 	${OPENSSL_LIBRARIES})

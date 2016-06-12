@@ -28,40 +28,48 @@ add_dependencies(rss_reader cppnetlib-uri cppnetlib-client-connections)
 add_dependencies(trivial_google cppnetlib-uri cppnetlib-client-connections)
 
 target_link_libraries(http_client
+    ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(simple_wget
+    ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(atom_reader
+    ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(rss_reader
+    ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(trivial_google
-  ${CMAKE_THREAD_LIBS_INIT}
-  cppnetlib-uri
-  cppnetlib-client-connections)
+    ${Boost_LIBRARIES}
+    ${CMAKE_THREAD_LIBS_INIT}
+    cppnetlib-uri
+    cppnetlib-client-connections)
 
 target_link_libraries(hello_world_server
+    ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-server-parsers)
 
 target_link_libraries(hello_world_client
+    ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections)
 
 target_link_libraries(hello_world_async_server_with_work_queue
+    ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-uri
     cppnetlib-client-connections
@@ -71,6 +79,7 @@ if (OPENSSL_FOUND)
     add_executable(ssl_server http/ssl/ssl_server.cpp)
     add_dependencies(ssl_server cppnetlib-uri cppnetlib-client-connections)
     target_link_libraries(ssl_server
+        ${Boost_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
         cppnetlib-server-parsers
         cppnetlib-uri
@@ -118,6 +127,7 @@ endif()
 
 if (UNIX)
   target_link_libraries(fileserver
+    ${Boost_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     cppnetlib-server-parsers)
   if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -139,7 +149,7 @@ set_target_properties(hello_world_async_server_with_work_queue PROPERTIES RUNTIM
 if (OPENSSL_FOUND)
   set_target_properties(ssl_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 endif (OPENSSL_FOUND)
-  
+
 if (UNIX)
   set_target_properties(fileserver PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/example)
 endif (UNIX)

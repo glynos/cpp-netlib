@@ -134,17 +134,17 @@ struct connection_handler : std::enable_shared_from_this<connection_handler> {
     off_t rightmost_bound = std::min(mmaped_region.second, adjusted_offset);
     auto self = this->shared_from_this();
     connection->write(
-        asio::const_buffers_1(
+        boost::asio::const_buffers_1(
             static_cast<char const *>(mmaped_region.first) + offset,
             rightmost_bound - offset),
-        [=](std::error_code const &ec) {
+        [=](boost::system::error_code const &ec) {
           self->handle_chunk(mmaped_region, rightmost_bound, connection, ec);
         });
   }
 
   void handle_chunk(std::pair<void *, std::size_t> mmaped_region, off_t offset,
                     server::connection_ptr connection,
-                    std::error_code const &ec) {
+                    boost::system::error_code const &ec) {
     assert(offset >= 0);
     if (!ec && static_cast<std::size_t>(offset) < mmaped_region.second)
       send_file(mmaped_region, offset, connection);
@@ -169,11 +169,11 @@ struct input_consumer : public std::enable_shared_from_this<input_consumer> {
     }
   }
 
-  void operator()(server::connection::input_range input, std::error_code ec,
+  void operator()(server::connection::input_range input, boost::system::error_code ec,
                   std::size_t bytes_transferred,
                   server::connection_ptr connection) {
     std::cerr << "Callback: " << bytes_transferred << "; ec = " << ec << '\n';
-    if (ec == asio::error::eof) return;
+    if (ec == boost::asio::error::eof) return;
     if (!ec) {
       if (empty(input))
         return (*handler_)(request_.destination, connection, true);
@@ -194,7 +194,7 @@ struct input_consumer : public std::enable_shared_from_this<input_consumer> {
       std::cerr << "Scheduling another read...\n";
       auto self = this->shared_from_this();
       connection->read([self](server::connection::input_range input,
-                              std::error_code ec, std::size_t bytes_transferred,
+                              boost::system::error_code ec, std::size_t bytes_transferred,
                               server::connection_ptr connection) {
         (*self)(input, ec, bytes_transferred, connection);
       });
@@ -221,7 +221,7 @@ struct file_server {
       auto h = std::make_shared<connection_handler>(cache_);
       auto c = std::make_shared<input_consumer>(h, request);
       connection->read([c](server::connection::input_range input,
-                           std::error_code ec, std::size_t bytes_transferred,
+                           boost::system::error_code ec, std::size_t bytes_transferred,
                            server::connection_ptr connection) {
         (*c)(input, ec, bytes_transferred, connection);
       });

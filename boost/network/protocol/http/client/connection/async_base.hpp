@@ -33,7 +33,7 @@ struct async_connection_base {
   typedef basic_response<Tag> response;
   typedef typename std::array<typename char_<Tag>::type, 1024>::const_iterator const_iterator;
   typedef iterator_range<const_iterator> char_const_range;
-  typedef std::function<void(char_const_range const &, std::error_code const &)>
+  typedef std::function<void(char_const_range const &, boost::system::error_code const &)>
       body_callback_function_type;
   typedef std::function<bool(string_type &)> body_generator_function_type;
   typedef std::shared_ptr<this_type> connection_ptr;

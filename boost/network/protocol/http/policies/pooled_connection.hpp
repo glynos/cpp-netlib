@@ -35,7 +35,7 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
       resolver_type&, string_type const&, string_type const&)>
       resolver_function_type;
   typedef std::function<void(iterator_range<char const*> const&,
-                             std::error_code const&)>
+                             boost::system::error_code const&)>
       body_callback_function_type;
   typedef std::function<bool(string_type&)> body_generator_function_type;
 
@@ -110,12 +110,12 @@ struct pooled_connection_policy : resolver_policy<Tag>::type {
         response_ << ::boost::network::source(request_.host());
 
         pimpl->send_request_impl(method, request_, generator);
-        ::asio::streambuf response_buffer;
+        boost::asio::streambuf response_buffer;
 
         try {
           pimpl->read_status(response_, response_buffer);
-        } catch (std::system_error& e) {
-          if (!retry && e.code() == ::asio::error::eof) {
+        } catch (boost::system::system_error& e) {
+          if (!retry && e.code() == boost::asio::error::eof) {
             retry = true;
             pimpl->init_socket(request_.host(),
                                std::to_string(request_.port()));

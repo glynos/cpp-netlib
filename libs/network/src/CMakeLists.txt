@@ -42,7 +42,7 @@ set_target_properties(cppnetlib-client-connections
     PROPERTIES VERSION ${CPPNETLIB_VERSION_STRING}
     SOVERSION ${CPPNETLIB_VERSION_MAJOR}
     PUBLIC_HEADER "${CPP-NETLIB_HEADERS}")
-target_link_libraries(cppnetlib-client-connections ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(cppnetlib-client-connections ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 if (OPENSSL_FOUND)
     target_link_libraries(cppnetlib-client-connections ${OPENSSL_LIBRARIES})
 endif ()

@@ -14,7 +14,7 @@
 #include <boost/network/utils/thread_group.hpp>
 #include <boost/network/include/http/server.hpp>
 #include <boost/network/uri.hpp>
-#include <asio.hpp>
+#include <boost/asio.hpp>
 #include <iostream>
 #include <list>
 #include <signal.h>
@@ -108,7 +108,7 @@ struct handler {
  * @param signal
  * @param server
  */
-void shut_me_down(const std::error_code& error, int signal,
+void shut_me_down(const boost::system::error_code& error, int signal,
                   std::shared_ptr<server_data> server) {
   if (!error) server->stop();
 }
@@ -122,11 +122,15 @@ void process_request(work_queue& queue) {
   while (running) {
     request_data::pointer request(queue.get());
     if (request) {
-
       // some heavy work!
       std::this_thread::sleep_for(std::chrono::seconds(10));
 
+      std::map<std::string, std::string> headers = {
+        {"Content-Type", "text/plain"},
+      };
+
       request->conn->set_status(server::connection::ok);
+      request->conn->set_headers(headers);
       request->conn->write("Hello, world!");
     }
 
@@ -140,8 +144,8 @@ int main() {
     auto threads(std::make_shared<boost::network::utils::thread_group>());
 
     // setup asio::io_service
-    auto io_service(std::make_shared<asio::io_service>());
-    auto work(std::make_shared<asio::io_service::work>(std::ref(*io_service)));
+    auto io_service(std::make_shared<boost::asio::io_service>());
+    auto work(std::make_shared<boost::asio::io_service::work>(std::ref(*io_service)));
 
     // io_service threads
     {
@@ -174,8 +178,8 @@ int main() {
              2, io_service, threads))));
 
     // setup clean shutdown
-    asio::signal_set signals(*io_service, SIGINT, SIGTERM);
-    signals.async_wait([=] (std::error_code const &ec, int signal) {
+    boost::asio::signal_set signals(*io_service, SIGINT, SIGTERM);
+    signals.async_wait([=] (boost::system::error_code const &ec, int signal) {
         shut_me_down(ec, signal, server);
       });
 

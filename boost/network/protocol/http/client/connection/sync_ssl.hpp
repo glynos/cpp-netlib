@@ -9,10 +9,10 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <functional>
-#include <asio/ssl.hpp>
-#include <asio/ssl/context.hpp>
-#include <asio/ssl/context_base.hpp>
-#include <asio/streambuf.hpp>
+#include <boost/asio/ssl.hpp>
+#include <boost/asio/ssl/context.hpp>
+#include <boost/asio/ssl/context_base.hpp>
+#include <boost/asio/streambuf.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/network/protocol/http/request.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
@@ -63,7 +63,7 @@ struct https_sync_connection
         timer_(resolver.get_io_service()),
         resolver_(resolver),
         resolve_(std::move(resolve)),
-        context_(resolver.get_io_service(), ::asio::ssl::context::sslv23_client),
+        context_(resolver.get_io_service(), boost::asio::ssl::context::sslv23_client),
         socket_(resolver.get_io_service(), context_) {
     if (ciphers) {
       ::SSL_CTX_set_cipher_list(context_.native_handle(), ciphers->c_str());
@@ -72,7 +72,7 @@ struct https_sync_connection
       context_.set_options(ssl_options);
     }
     if (certificate_filename || verify_path) {
-      context_.set_verify_mode(::asio::ssl::context::verify_peer);
+      context_.set_verify_mode(boost::asio::ssl::context::verify_peer);
       // FIXME make the certificate filename and verify path parameters
       // be
       // optional ranges
@@ -81,14 +81,14 @@ struct https_sync_connection
       if (verify_path) context_.add_verify_path(*verify_path);
     } else {
       if (always_verify_peer)
-        context_.set_verify_mode(::asio::ssl::context_base::verify_peer);
+        context_.set_verify_mode(boost::asio::ssl::context_base::verify_peer);
       else
-        context_.set_verify_mode(::asio::ssl::context_base::verify_none);
+        context_.set_verify_mode(boost::asio::ssl::context_base::verify_none);
     }
     if (certificate_file)
-      context_.use_certificate_file(*certificate_file, ::asio::ssl::context::pem);
+      context_.use_certificate_file(*certificate_file, boost::asio::ssl::context::pem);
     if (private_key_file)
-      context_.use_private_key_file(*private_key_file, ::asio::ssl::context::pem);
+      context_.use_private_key_file(*private_key_file, boost::asio::ssl::context::pem);
     if (sni_hostname)
       SSL_set_tlsext_host_name(socket_.native_handle(), sni_hostname->c_str());
   }
@@ -97,13 +97,13 @@ struct https_sync_connection
                    string_type const& port) {
     connection_base::init_socket(socket_.lowest_layer(), resolver_, hostname,
                                  port, resolve_);
-    socket_.handshake(::asio::ssl::stream_base::client);
+    socket_.handshake(boost::asio::ssl::stream_base::client);
   }
 
   void send_request_impl(string_type /*unused*/ const& method,
                          basic_request<Tag> const& request_,
                          body_generator_function_type generator) {
-    ::asio::streambuf request_buffer;
+    boost::asio::streambuf request_buffer;
     linearize(
         request_, method, version_major, version_minor,
         std::ostreambuf_iterator<typename char_<Tag>::type>(&request_buffer));
@@ -122,22 +122,22 @@ struct https_sync_connection
       timer_.expires_from_now(boost::posix_time::seconds(timeout_));
       auto self = this->shared_from_this();
       timer_.async_wait(
-          [=](std::error_code const& ec) { self->handle_timeout(ec); });
+          [=](boost::system::error_code const& ec) { self->handle_timeout(ec); });
     }
   }
 
   void read_status(basic_response<Tag>& response_,
-                   ::asio::streambuf& response_buffer) {
+                   boost::asio::streambuf& response_buffer) {
     connection_base::read_status(socket_, response_, response_buffer);
   }
 
   void read_headers(basic_response<Tag>& response_,
-                    ::asio::streambuf& response_buffer) {
+                    boost::asio::streambuf& response_buffer) {
     connection_base::read_headers(socket_, response_, response_buffer);
   }
 
   void read_body(basic_response<Tag>& response_,
-                 ::asio::streambuf& response_buffer) {
+                 boost::asio::streambuf& response_buffer) {
     connection_base::read_body(socket_, response_, response_buffer);
     typename headers_range<basic_response<Tag> >::type connection_range =
         headers(response_)["Connection"];
@@ -154,8 +154,8 @@ struct https_sync_connection
 
   void close_socket() {
     timer_.cancel();
-    std::error_code ignored;
-    socket_.lowest_layer().shutdown(::asio::ip::tcp::socket::shutdown_both,
+    boost::system::error_code ignored;
+    socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both,
                                     ignored);
     if (ignored) {
       return;
@@ -166,18 +166,18 @@ struct https_sync_connection
   ~https_sync_connection() { close_socket(); }
 
  private:
-  void handle_timeout(std::error_code const& ec) {
+  void handle_timeout(boost::system::error_code const& ec) {
     if (!ec) {
       close_socket();
     }
   }
 
   int timeout_;
-  ::asio::deadline_timer timer_;
+  boost::asio::steady_timer timer_;
   resolver_type& resolver_;
   resolver_function_type resolve_;
-  ::asio::ssl::context context_;
-  ::asio::ssl::stream<::asio::ip::tcp::socket> socket_;
+  boost::asio::ssl::context context_;
+  boost::asio::ssl::stream<boost::asio::ip::tcp::socket> socket_;
 };
 
 }  // namespace impl

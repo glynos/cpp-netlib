@@ -46,7 +46,7 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 # Always use multi-threaded Boost libraries.
 set(Boost_USE_MULTI_THREADED ON)
 
-find_package(Boost 1.57.0 REQUIRED)
+find_package(Boost 1.57.0 REQUIRED COMPONENTS system)
 
 if (CPP-NETLIB_ENABLE_HTTPS)
     find_package( OpenSSL )
@@ -92,10 +92,6 @@ if (Boost_FOUND)
       add_definitions(-D_WIN32_WINNT=0x0501)
     endif(WIN32)
     include_directories(${Boost_INCLUDE_DIRS})
-
-    # Asio
-    add_definitions(-DASIO_HEADER_ONLY)
-    include_directories(deps/asio/asio/include)
 
     enable_testing()
     add_subdirectory(libs/network/src)
