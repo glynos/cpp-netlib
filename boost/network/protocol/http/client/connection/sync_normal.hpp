@@ -10,8 +10,8 @@
 
 #include <iterator>
 #include <functional>
-#include <asio/steady_timer.hpp>
-#include <asio/streambuf.hpp>
+#include <boost/asio/steady_timer.hpp>
+#include <boost/asio/streambuf.hpp>
 #include <boost/network/protocol/http/algorithms/linearize.hpp>
 #include <boost/network/protocol/http/response.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
@@ -61,7 +61,7 @@ struct http_sync_connection
   void send_request_impl(string_type const& method,
                          basic_request<Tag> const& request_,
                          body_generator_function_type generator) {
-    ::asio::streambuf request_buffer;
+    boost::asio::streambuf request_buffer;
     linearize(
         request_, method, version_major, version_minor,
         std::ostreambuf_iterator<typename char_<Tag>::type>(&request_buffer));
@@ -79,24 +79,24 @@ struct http_sync_connection
     if (timeout_ > 0) {
       timer_.expires_from_now(std::chrono::seconds(timeout_));
       auto self = this->shared_from_this();
-      timer_.async_wait([=] (std::error_code const &ec) {
+      timer_.async_wait([=] (boost::system::error_code const &ec) {
           self->handle_timeout(ec);
         });
     }
   }
 
   void read_status(basic_response<Tag>& response_,
-                   ::asio::streambuf& response_buffer) {
+                   boost::asio::streambuf& response_buffer) {
     connection_base::read_status(socket_, response_, response_buffer);
   }
 
   void read_headers(basic_response<Tag>& response,
-                    ::asio::streambuf& response_buffer) {
+                    boost::asio::streambuf& response_buffer) {
     connection_base::read_headers(socket_, response, response_buffer);
   }
 
   void read_body(basic_response<Tag>& response_,
-                 ::asio::streambuf& response_buffer) {
+                 boost::asio::streambuf& response_buffer) {
     connection_base::read_body(socket_, response_, response_buffer);
     typename headers_range<basic_response<Tag> >::type connection_range =
         headers(response_)["Connection"];
@@ -116,8 +116,8 @@ struct http_sync_connection
     if (!is_open()) {
       return;
     }
-    std::error_code ignored;
-    socket_.shutdown(::asio::ip::tcp::socket::shutdown_both, ignored);
+    boost::system::error_code ignored;
+    socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored);
     if (ignored) {
       return;
     }
@@ -125,17 +125,17 @@ struct http_sync_connection
   }
 
  private:
-  void handle_timeout(std::error_code const& ec) {
+  void handle_timeout(boost::system::error_code const& ec) {
     if (!ec) {
       close_socket();
     }
   }
 
   int timeout_;
-  ::asio::steady_timer timer_;
+  boost::asio::steady_timer timer_;
   resolver_type& resolver_;
   resolver_function_type resolve_;
-  ::asio::ip::tcp::socket socket_;
+  boost::asio::ip::tcp::socket socket_;
 };
 
 }  // namespace impl

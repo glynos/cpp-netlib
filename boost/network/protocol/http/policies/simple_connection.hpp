@@ -36,7 +36,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
   typedef typename resolver_base::resolver_completion_function
       resolver_completion_function;
   typedef std::function<void(iterator_range<char const*> const&,
-                             std::error_code const&)>
+                             boost::system::error_code const&)>
       body_callback_function_type;
   typedef std::function<bool(string_type&)> body_generator_function_type;
 
@@ -80,7 +80,7 @@ struct simple_connection_policy : resolver_policy<Tag>::type {
         response_ = basic_response<Tag>();
         response_ << network::source(request_.host());
 
-        ::asio::streambuf response_buffer;
+        boost::asio::streambuf response_buffer;
         pimpl->read_status(response_, response_buffer);
         pimpl->read_headers(response_, response_buffer);
         if (get_body) pimpl->read_body(response_, response_buffer);
