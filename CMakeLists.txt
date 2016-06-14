@@ -99,12 +99,6 @@ if (Boost_FOUND)
       add_subdirectory(deps/googletest)
       add_subdirectory(libs/network/test)
     endif (CPP-NETLIB_BUILD_TESTS)
-    # if (CPP-NETLIB_BUILD_EXPERIMENTS)
-    #   add_subdirectory(libs/network/experiment)
-    # endif (CPP-NETLIB_BUILD_EXPERIMENTS)
-    # if (NOT MSVC AND CPP-NETLIB_BUILD_TESTS)
-    #   add_subdirectory(libs/mime/test)
-    # endif(NOT MSVC AND CPP-NETLIB_BUILD_TESTS)
     if (CPP-NETLIB_BUILD_EXAMPLES)
       add_subdirectory(libs/network/example)
     endif (CPP-NETLIB_BUILD_EXAMPLES)
@@ -115,6 +109,8 @@ if (MSVC)
 endif()
 
 enable_testing()
+
+set(CPP-NETLIB_LIBRARIES ${Boost_LIBRARIES} CACHE INTERNAL "Dependent libraries for header-only use")
 
 install(DIRECTORY boost DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
