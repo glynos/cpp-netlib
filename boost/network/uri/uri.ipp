@@ -246,7 +246,7 @@ struct uri_grammar
 bool parse(std::string::const_iterator first, std::string::const_iterator last,
            uri_parts<std::string::const_iterator> &parts) {
   namespace qi = boost::spirit::qi;
-  static detail::uri_grammar<std::string> grammar;
+  detail::uri_grammar<std::string> grammar;
   bool is_valid = qi::parse(first, last, grammar, parts);
   return is_valid && (first == last);
 }
