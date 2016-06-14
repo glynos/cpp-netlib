@@ -34,7 +34,7 @@ struct connection_delegate_factory {
   // This is the factory method that actually returns the delegate instance.
   // TODO(dberris): Support passing in proxy settings when crafting connections.
   static connection_delegate_ptr new_connection_delegate(
-      ::asio::io_service& service, bool https, bool always_verify_peer,
+      boost::asio::io_service& service, bool https, bool always_verify_peer,
       optional<string_type> certificate_filename,
       optional<string_type> verify_path, optional<string_type> certificate_file,
       optional<string_type> private_key_file, optional<string_type> ciphers,

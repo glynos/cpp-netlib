@@ -40,7 +40,7 @@ class basic_client_facade {
    * code.
    */
   typedef std::function<void(iterator_range<char const*> const&,
-                             std::error_code const&)>
+                             boost::system::error_code const&)>
       body_callback_function_type;
 
   /**

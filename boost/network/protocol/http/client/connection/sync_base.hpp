@@ -8,10 +8,10 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <functional>
-#include <asio/streambuf.hpp>
-#include <asio/read.hpp>
-#include <asio/write.hpp>
-#include <asio/read_until.hpp>
+#include <boost/asio/streambuf.hpp>
+#include <boost/asio/read.hpp>
+#include <boost/asio/write.hpp>
+#include <boost/asio/read_until.hpp>
 #include <boost/network/protocol/http/traits/resolver_policy.hpp>
 #include <boost/network/traits/istringstream.hpp>
 #include <boost/network/traits/ostringstream.hpp>
@@ -41,8 +41,8 @@ struct sync_connection_base_impl {
   void init_socket(Socket& socket_, resolver_type& resolver_,
                    string_type /*unused*/ const& hostname,
                    string_type const& port, resolver_function_type resolve_) {
-    using ::asio::ip::tcp;
-    std::error_code error = ::asio::error::host_not_found;
+    using boost::asio::ip::tcp;
+    boost::system::error_code error = boost::asio::error::host_not_found;
     typename resolver_type::iterator endpoint_iterator, end;
     boost::tie(endpoint_iterator, end) = resolve_(resolver_, hostname, port);
     while (error && endpoint_iterator != end) {
@@ -53,13 +53,13 @@ struct sync_connection_base_impl {
       ++endpoint_iterator;
     }
 
-    if (error) throw std::system_error(error);
+    if (error) throw boost::system::system_error(error);
   }
 
   template <class Socket>
   void read_status(Socket& socket_, basic_response<Tag>& response_,
-                   ::asio::streambuf& response_buffer) {
-    ::asio::read_until(socket_, response_buffer, "\r\n");
+                   boost::asio::streambuf& response_buffer) {
+    boost::asio::read_until(socket_, response_buffer, "\r\n");
     std::istream response_stream(&response_buffer);
     string_type http_version;
     unsigned int status_code;
@@ -78,8 +78,8 @@ struct sync_connection_base_impl {
 
   template <class Socket>
   void read_headers(Socket& socket_, basic_response<Tag>& response_,
-                    ::asio::streambuf& response_buffer) {
-    ::asio::read_until(socket_, response_buffer, "\r\n\r\n");
+                    boost::asio::streambuf& response_buffer) {
+    boost::asio::read_until(socket_, response_buffer, "\r\n\r\n");
     std::istream response_stream(&response_buffer);
     string_type header_line, name;
     while (std::getline(response_stream, header_line) && header_line != "\r") {
@@ -101,7 +101,7 @@ struct sync_connection_base_impl {
 
   template <class Socket>
   void send_request_impl(Socket& socket_, string_type /*unused*/ const& method,
-                         ::asio::streambuf& request_buffer) {
+                         boost::asio::streambuf& request_buffer) {
     // TODO(dberris): review parameter necessity.
     (void)method;
 
@@ -110,15 +110,15 @@ struct sync_connection_base_impl {
 
   template <class Socket>
   void read_body_normal(Socket& socket_, basic_response<Tag>& response_,
-                        ::asio::streambuf& response_buffer,
+                        boost::asio::streambuf& response_buffer,
                         typename ostringstream<Tag>::type& body_stream) {
     // TODO(dberris): review parameter necessity.
     (void)response_;
 
-    std::error_code error;
+    boost::system::error_code error;
     if (response_buffer.size() > 0) body_stream << &response_buffer;
 
-    while (::asio::read(socket_, response_buffer, ::asio::transfer_at_least(1),
+    while (boost::asio::read(socket_, response_buffer, boost::asio::transfer_at_least(1),
                       error)) {
       body_stream << &response_buffer;
     }
@@ -127,9 +127,9 @@ struct sync_connection_base_impl {
   template <class Socket>
   void read_body_transfer_chunk_encoding(
       Socket& socket_, basic_response<Tag>& response_,
-      ::asio::streambuf& response_buffer,
+      boost::asio::streambuf& response_buffer,
       typename ostringstream<Tag>::type& body_stream) {
-    std::error_code error;
+    boost::system::error_code error;
     // look for the content-length header
     typename headers_range<basic_response<Tag> >::type content_length_range =
         headers(response_)["Content-Length"];
@@ -146,8 +146,8 @@ struct sync_connection_base_impl {
         do {
           std::size_t chunk_size_line =
               read_until(socket_, response_buffer, "\r\n", error);
-          if ((chunk_size_line == 0) && (error != ::asio::error::eof))
-            throw std::system_error(error);
+          if ((chunk_size_line == 0) && (error != boost::asio::error::eof))
+            throw boost::system::system_error(error);
           std::size_t chunk_size = 0;
           string_type data;
           {
@@ -159,8 +159,8 @@ struct sync_connection_base_impl {
           if (chunk_size == 0) {
             stopping = true;
             if (!read_until(socket_, response_buffer, "\r\n", error) &&
-                (error != ::asio::error::eof))
-              throw std::system_error(error);
+                (error != boost::asio::error::eof))
+              throw boost::system::system_error(error);
           } else {
             bool stopping_inner = false;
             do {
@@ -169,9 +169,9 @@ struct sync_connection_base_impl {
                     (chunk_size + 2) - response_buffer.size();
                 std::size_t chunk_bytes_read =
                     read(socket_, response_buffer,
-                         ::asio::transfer_at_least(bytes_to_read), error);
+                         boost::asio::transfer_at_least(bytes_to_read), error);
                 if (chunk_bytes_read == 0) {
-                  if (error != ::asio::error::eof) throw std::system_error(error);
+                  if (error != boost::asio::error::eof) throw boost::system::system_error(error);
                   stopping_inner = true;
                 }
               }
@@ -200,8 +200,8 @@ struct sync_connection_base_impl {
         return;
       }
       size_t bytes_read = 0;
-      while ((bytes_read = ::asio::read(socket_, response_buffer,
-                                      ::asio::transfer_at_least(1), error))) {
+      while ((bytes_read = boost::asio::read(socket_, response_buffer,
+                                      boost::asio::transfer_at_least(1), error))) {
         body_stream << &response_buffer;
         length -= bytes_read;
         if ((length <= 0) || error) break;
@@ -211,7 +211,7 @@ struct sync_connection_base_impl {
 
   template <class Socket>
   void read_body(Socket& socket_, basic_response<Tag>& response_,
-                 ::asio::streambuf& response_buffer) {
+                 boost::asio::streambuf& response_buffer) {
     typename ostringstream<Tag>::type body_stream;
     // TODO(dberris): tag dispatch based on whether it's HTTP 1.0 or HTTP 1.1
     if (version_major == 1 && version_minor == 0) {
@@ -282,11 +282,11 @@ struct sync_connection_base {
                                  basic_request<Tag> const& request_,
                                  body_generator_function_type generator) = 0;
   virtual void read_status(basic_response<Tag>& response_,
-                           ::asio::streambuf& response_buffer) = 0;
+                           boost::asio::streambuf& response_buffer) = 0;
   virtual void read_headers(basic_response<Tag>& response_,
-                            ::asio::streambuf& response_buffer) = 0;
+                            boost::asio::streambuf& response_buffer) = 0;
   virtual void read_body(basic_response<Tag>& response_,
-                         ::asio::streambuf& response_buffer) = 0;
+                         boost::asio::streambuf& response_buffer) = 0;
   virtual bool is_open() = 0;
   virtual void close_socket() = 0;
   virtual ~sync_connection_base() = default;

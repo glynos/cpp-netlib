@@ -8,7 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <memory>
-#include <asio/io_service.hpp>
+#include <boost/asio/io_service.hpp>
 #include <boost/network/traits/string.hpp>
 #include <boost/optional/optional.hpp>
 
@@ -133,8 +133,8 @@ class client_options {
     return *this;
   }
 
-  /// Provide an `::asio::io_service` hosted in a shared pointer.
-  client_options& io_service(std::shared_ptr<::asio::io_service> v) {
+  /// Provide an `boost::asio::io_service` hosted in a shared pointer.
+  client_options& io_service(std::shared_ptr<boost::asio::io_service> v) {
     io_service_ = v;
     return *this;
   }
@@ -184,7 +184,7 @@ class client_options {
 
   long openssl_options() const { return openssl_options_; }
 
-  std::shared_ptr<::asio::io_service> io_service() const { return io_service_; }
+  std::shared_ptr<boost::asio::io_service> io_service() const { return io_service_; }
 
   bool always_verify_peer() const { return always_verify_peer_; }
 
@@ -200,7 +200,7 @@ class client_options {
   boost::optional<string_type> openssl_ciphers_;
   boost::optional<string_type> openssl_sni_hostname_;
   long openssl_options_;
-  std::shared_ptr<::asio::io_service> io_service_;
+  std::shared_ptr<boost::asio::io_service> io_service_;
   bool always_verify_peer_;
   int timeout_;
 };

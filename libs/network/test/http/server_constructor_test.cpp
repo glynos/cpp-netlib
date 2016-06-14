@@ -31,7 +31,7 @@ TEST(HTTPServerTest, MinimalConstructor) {
 TEST(HTTPServerTest, WithIOServiceParameter) {
   dummy_async_handler async_handler;
   std::shared_ptr<util::thread_pool> thread_pool;
-  std::shared_ptr<asio::io_service> io_service;
+  std::shared_ptr<boost::asio::io_service> io_service;
   async_server::options async_options(async_handler);
 
   ASSERT_NO_THROW(async_server async_instance(async_options.address("127.0.0.1")
@@ -43,7 +43,7 @@ TEST(HTTPServerTest, WithIOServiceParameter) {
 TEST(HTTPServerTes, ThrowsOnFailure) {
   dummy_async_handler async_handler;
   std::shared_ptr<util::thread_pool> thread_pool;
-  std::shared_ptr<asio::io_service> io_service;
+  std::shared_ptr<boost::asio::io_service> io_service;
   async_server::options async_options(async_handler);
   async_server async_instance(async_options.address("127.0.0.1")
                                   .port("80")
