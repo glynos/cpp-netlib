@@ -98,10 +98,10 @@ still requires linking with `Boost.System`_, `Boost.Date_time`_, and
 Getting CMake
 =============
 
-The :mod:`cpp-netlib` uses CMake_ to generate platform-specific build files. If
-you intend to run the test suite, you can follow the instructions below.
-Otherwise, you don't need CMake to use :mod:`cpp-netlib` in your project. The
-:mod:`cpp-netlib` requires CMake version 2.8 or higher.
+The :mod:`cpp-netlib` uses CMake_ to generate platform-specific build
+files. If you intend to run the test suite, you can follow the
+instructions below. The :mod:`cpp-netlib` requires CMake version 2.8
+or higher.
 
 .. _CMake: http://www.cmake.org/
 
