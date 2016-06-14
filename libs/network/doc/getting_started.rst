@@ -70,7 +70,7 @@ Getting Boost
 =============
 
 :mod:`cpp-netlib` depends on Boost_.  It should work for any version
-of Boost above 1.50.0.  If Boost is not installed on your system, the
+of Boost above 1.58.0.  If Boost is not installed on your system, the
 latest package can be found on the `Boost web-site`_.  The environment
 variable ``BOOST_ROOT`` must be defined, which must be the full path
 name of the top directory of the Boost distribution.  Although Boost
@@ -259,4 +259,3 @@ for the project at http://github.com/cpp-netlib/cpp-netlib/issues.
 You can also opt to join the developers mailing list for a more personal
 interaction with the developers of the project. You can join the mailing list
 through http://groups.google.com/forum/#!forum/cpp-netlib.
-
