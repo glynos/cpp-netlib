@@ -32,6 +32,7 @@ simple response to any HTTP request.
             unsigned int port = request.source_port;
             std::ostringstream data;
             data << "Hello, " << ip << ':' << port << '!';
+            connection->set_status(server::connection::ok);
             connection->write(data.str());
         }
     };
@@ -140,4 +141,3 @@ The ``options`` constructor's single argument is the handler object defined prev
    resources across threads. The handler is passed by reference to the server
    constructor and you should ensure that any calls to the ``operator()`` overload
    are thread-safe.
-
