@@ -40,12 +40,15 @@ class basic_client_facade {
   /** The response type. This models the HTTP Response concept.*/
   typedef basic_response<Tag> response;
 
+  typedef typename std::array<typename char_<Tag>::type, 1024>::const_iterator const_iterator;
+  typedef iterator_range<const_iterator> char_const_range;
+
   /**
    * This callback is invoked with a range representing part of the response's
    * body as it comes in. In case of errors, the second argument is an error
    * code.
    */
-  typedef std::function<void(iterator_range<char const*> const&,
+  typedef std::function<void(char_const_range,
                              boost::system::error_code const&)>
       body_callback_function_type;
 

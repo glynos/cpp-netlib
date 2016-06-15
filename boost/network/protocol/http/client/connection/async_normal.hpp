@@ -61,6 +61,7 @@ struct http_async_connection
   typedef typename base::string_type string_type;
   typedef typename base::request request;
   typedef typename base::resolver_base::resolve_function resolve_function;
+  typedef typename base::char_const_range char_const_range;
   typedef
       typename base::body_callback_function_type body_callback_function_type;
   typedef
@@ -128,7 +129,7 @@ struct http_async_connection
     this->destination_promise.set_exception(std::make_exception_ptr(error));
     this->body_promise.set_exception(std::make_exception_ptr(error));
     if ( callback )
-      callback( boost::iterator_range<const char*>(), ec );
+      callback( char_const_range(), ec );
     this->timer_.cancel();
   }
 
@@ -321,7 +322,7 @@ struct http_async_connection
             // body (in the case of a HEAD request).
             this->body_promise.set_value("");
             if ( callback )
-              callback( boost::iterator_range<const char*>(), boost::asio::error::eof );
+              callback( char_const_range(), boost::asio::error::eof );
             this->destination_promise.set_value("");
             this->source_promise.set_value("");
             // this->part.assign('\0');
@@ -392,7 +393,9 @@ struct http_async_connection
             } else {
               string_type body_string;
               std::swap(body_string, this->partial_parsed);
-              body_string.append(this->part.begin(), bytes_transferred);
+			  auto it = this->part.begin();
+			  std::advance(it, bytes_transferred);
+              body_string.append(this->part.begin(), it);
               if (this->is_chunk_encoding) {
                 this->body_promise.set_value(parse_chunk_encoding(body_string));
               } else {
@@ -468,7 +471,7 @@ struct http_async_connection
             this->body_promise.set_exception(std::make_exception_ptr(error));
           }
           else
-            callback( boost::iterator_range<const char*>(), report_code );
+            callback( char_const_range(), report_code );
           break;
         default:
           BOOST_ASSERT(false && "Bug, report this to the developers!");

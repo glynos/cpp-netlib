@@ -10,7 +10,6 @@
 #include <memory>
 #include <functional>
 #include <boost/asio/io_service.hpp>
-#include <asio/io_service.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/scope_exit.hpp>
 #include <boost/network/utils/thread_group.hpp>

@@ -579,7 +579,7 @@ struct async_connection
             }
             new_start = std::end(result_range);
             auto self = this->shared_from_this();
-            thread_pool().post([this, self] { handler(request_, self); });
+            thread_pool().post([self] () { self->handler(self->request_, self); });
             return;
           } else {
             partial_parsed.append(std::begin(result_range),

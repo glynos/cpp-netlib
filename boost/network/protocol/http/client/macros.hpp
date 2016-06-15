@@ -7,12 +7,13 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/range/iterator_range.hpp>
+#include <array>
 #include <system_error>
 
 #ifndef BOOST_NETWORK_HTTP_BODY_CALLBACK
 #define BOOST_NETWORK_HTTP_BODY_CALLBACK(function_name, range_name,        \
                                          error_name)                       \
-  void function_name(boost::iterator_range<const char*> const& (range_name), \
+  void function_name(boost::iterator_range<std::array<char, 1024>::const_iterator> (range_name), \
                      boost::system::error_code const& (error_name))
 #endif
 

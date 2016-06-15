@@ -120,7 +120,7 @@ struct stream_handler {
         tcp_sock_->shutdown(boost::asio::ip::tcp::socket::shutdown_send, e);
       }
     }
-    catch (const boost::system::system_error& e) {
+    catch (const boost::system::system_error&) {
 
     }
   }
