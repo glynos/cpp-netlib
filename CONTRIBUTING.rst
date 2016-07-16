@@ -73,42 +73,37 @@ When you've determined the branch to which you'd like to send a PR to
 you can follow these steps to prepare your change for inclusion in the
 library.
 
-# Create an integration branch. This integration branch should be
-  rooted off the branch you intend to send a PR to. For example, if
-  you're sending a PR to cpp-netlib/master and your fork is
-  user/master, you should create a user/master-integration branch.
-
-# Create a topic branch. From the integration branch, you can then
-  create as many topic branches as you want. It's recommended that you
-  isolate all experimentation to branches — once you're resonably sure
-  that your work is good to go, merge your topic branch into the
-  integration branch in your local repo, then push the changes to your
-  GitHub repo.
-
-# Make sure your integration branch is up to date. To do this you
-  should first pull changes to your local master (assuming that's where
-  you'd like to send a pull request to), rebase your integration branch
-  to the tip of master, then make sure all merge conflicts are dealt
-  with. Proceed only when your integration branch is up-to-date with the
-  official branch you're going to send your PR to.
-
-# Send the PR. Once you're reasonably happy with the state of your
-  integration branch, send off a PR to the official repo and set the
-  destination branch as the branch you intend to send the change to.
-
-# Address Comments The maintainers will be reviewing your changes, and
-  sometimes they may have comments they will ask you to address in
-  your PR. You can do this by going back to the second step of this
-  process, but you don't need to send another PR -- all you have to do
-  is push your changes to your GitHub hosted integration branch and
-  your PR will be updated automatically. That said, don't forget to
-  update the discussion on the PR that you're ready for the PR to be
-  reviewed again.
-
-# Your PR is merged. If you've done everything correctly up to this
-  point, your PR should be cleanly merge-able into the branch you sent
-  the PR to. A maintiner will merge you change into the project and
-  you're now officially a contributor to the project!
+1. Create an integration branch. This integration branch should be
+   rooted off the branch you intend to send a PR to. For example, if
+   you're sending a PR to cpp-netlib/master and your fork is
+   user/master, you should create a user/master-integration branch.
+2. Create a topic branch. From the integration branch, you can then
+   create as many topic branches as you want. It's recommended that you
+   isolate all experimentation to branches — once you're resonably sure
+   that your work is good to go, merge your topic branch into the
+   integration branch in your local repo, then push the changes to your
+   GitHub repo.
+3. Make sure your integration branch is up to date. To do this you
+   should first pull changes to your local master (assuming that's where
+   you'd like to send a pull request to), rebase your integration branch
+   to the tip of master, then make sure all merge conflicts are dealt
+   with. Proceed only when your integration branch is up-to-date with the
+   official branch you're going to send your PR to.
+4. Send the PR. Once you're reasonably happy with the state of your
+   integration branch, send off a PR to the official repo and set the
+   destination branch as the branch you intend to send the change to.
+5. Address Comments The maintainers will be reviewing your changes, and
+   sometimes they may have comments they will ask you to address in
+   your PR. You can do this by going back to the second step of this
+   process, but you don't need to send another PR -- all you have to do
+   is push your changes to your GitHub hosted integration branch and
+   your PR will be updated automatically. That said, don't forget to
+   update the discussion on the PR that you're ready for the PR to be
+   reviewed again.
+6. Your PR is merged. If you've done everything correctly up to this
+   point, your PR should be cleanly merge-able into the branch you sent
+   the PR to. A maintiner will merge you change into the project and
+   you're now officially a contributor to the project!
 
 
 In case you have multiple PR's in flight, you may want to have
