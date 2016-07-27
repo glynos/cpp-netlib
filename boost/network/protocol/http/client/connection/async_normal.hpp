@@ -321,7 +321,7 @@ struct http_async_connection
             // body (in the case of a HEAD request).
             this->body_promise.set_value("");
             if ( callback )
-              callback(boost::iterator_range<typename std::array<typename char_<Tag>::type, 1024>::const_iterator>(), ::asio::error::eof);
+              callback(boost::iterator_range<typename std::array<typename char_<Tag>::type, 1024>::const_iterator>(), boost::asio::error::eof);
             this->destination_promise.set_value("");
             this->source_promise.set_value("");
             // this->part.assign('\0');
