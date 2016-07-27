@@ -10,10 +10,12 @@
 #include <system_error>
 
 #ifndef BOOST_NETWORK_HTTP_BODY_CALLBACK
-#define BOOST_NETWORK_HTTP_BODY_CALLBACK(function_name, range_name,        \
-                                         error_name)                       \
-  void function_name(boost::iterator_range<const char*> const& (range_name), \
-                     boost::system::error_code const& (error_name))
+#define BOOST_NETWORK_HTTP_BODY_CALLBACK(function_name, range_name, error_name)        \
+  void function_name(                                                                  \
+    boost::iterator_range<typename std::array<char, 1024>::const_iterator> const &(    \
+      range_name),                                                                     \
+    boost::system::error_code const &(error_name))
 #endif
 
 #endif /* BOOST_NETWORK_PROTOCOL_HTTP_CLIENT_MACROS_HPP_20110430 */
+
