@@ -130,7 +130,7 @@ void process_request(work_queue& queue) {
       };
 
       request->conn->set_status(server::connection::ok);
-      request->conn->set_header(headers);
+      request->conn->set_headers(headers);
       request->conn->write("Hello, world!");
     }
 

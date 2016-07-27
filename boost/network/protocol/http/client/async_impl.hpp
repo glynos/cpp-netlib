@@ -31,7 +31,7 @@ struct async_client
   typedef typename resolver<Tag>::type resolver_type;
   typedef typename string<Tag>::type string_type;
 
-  typedef std::function<void(boost::iterator_range<char const*> const&,
+  typedef std::function<void(boost::iterator_range<typename std::array<typename char_<Tag>::type, 1024>::const_iterator> const&,
                              boost::system::error_code const&)>
       body_callback_function_type;
 
