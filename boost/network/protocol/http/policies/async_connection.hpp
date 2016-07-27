@@ -30,7 +30,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
   typedef typename resolver_base::resolve_function resolve_function;
   typedef typename resolver_base::resolve_completion_function
       resolve_completion_function;
-  typedef std::function<void(iterator_range<char const*> const&,
+  typedef std::function<void(iterator_range<typename std::array<typename char_<Tag>::type, 1024>::const_iterator> const&,
                              boost::system::error_code const&)>
       body_callback_function_type;
   typedef std::function<bool(string_type&)> body_generator_function_type;

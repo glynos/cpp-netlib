@@ -328,7 +328,7 @@ struct http_async_protocol_handler {
   void parse_body(Delegate& delegate_, Callback callback, size_t bytes) {
     // TODO(dberris): we should really not use a string for the partial body
     // buffer.
-    partial_parsed.append(part_begin, bytes);
+    partial_parsed.append(part_begin, part_begin + bytes);
     part_begin = part.begin();
     delegate_->read_some(
         boost::asio::mutable_buffers_1(part.data(), part.size()), callback);

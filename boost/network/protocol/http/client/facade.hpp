@@ -39,7 +39,7 @@ class basic_client_facade {
    * body as it comes in. In case of errors, the second argument is an error
    * code.
    */
-  typedef std::function<void(iterator_range<char const*> const&,
+  typedef std::function<void(iterator_range<typename std::array<typename char_<Tag>::type, 1024>::const_iterator> const&,
                              boost::system::error_code const&)>
       body_callback_function_type;
 
