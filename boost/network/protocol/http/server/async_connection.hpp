@@ -462,11 +462,18 @@ struct async_connection
   enum state_t { method, uri, version, headers };
 
   void start() {
-    typename ostringstream<Tag>::type ip_stream;
-    ip_stream << socket_.remote_endpoint().address().to_string() << ':'
-              << socket_.remote_endpoint().port();
-    request_.source = ip_stream.str();
-    read_more(method);
+    boost::system::error_code ec;
+    auto remote_endpoint = socket_.remote_endpoint(ec);
+    
+    if (ec) {
+      error_encountered = in_place<boost::system::system_error>(ec);
+    } else {
+      typename ostringstream<Tag>::type ip_stream;
+      ip_stream << remote_endpoint.address().to_string() << ':'
+                << remote_endpoint.port();
+      request_.source = ip_stream.str();
+      read_more(method);
+    }
   }
 
   void read_more(state_t state) {
