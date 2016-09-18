@@ -17,6 +17,7 @@
 #include <boost/network/protocol/http/parser/incremental.hpp>
 #include <boost/network/protocol/http/request_parser.hpp>
 #include <boost/network/traits/string.hpp>
+#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {
@@ -57,30 +58,30 @@ struct http_async_protocol_handler {
     // TODO(dberris): review parameter necessity.
     (void)get_body;
 
-    std::shared_future<string_type> source_future(
+    boost::shared_future<string_type> source_future(
         source_promise.get_future());
     source(response_, source_future);
 
-    std::shared_future<string_type> destination_future(
+    boost::shared_future<string_type> destination_future(
         destination_promise.get_future());
     destination(response_, destination_future);
 
-    std::shared_future<typename headers_container<Tag>::type> headers_future(
+    boost::shared_future<typename headers_container<Tag>::type> headers_future(
         headers_promise.get_future());
     headers(response_, headers_future);
 
-    std::shared_future<string_type> body_future(body_promise.get_future());
+    boost::shared_future<string_type> body_future(body_promise.get_future());
     body(response_, body_future);
 
-    std::shared_future<string_type> version_future(
+    boost::shared_future<string_type> version_future(
         version_promise.get_future());
     version(response_, version_future);
 
-    std::shared_future<std::uint16_t> status_future(
+    boost::shared_future<std::uint16_t> status_future(
         status_promise.get_future());
     status(response_, status_future);
 
-    std::shared_future<string_type> status_message_future(
+    boost::shared_future<string_type> status_message_future(
         status_message_promise.get_future());
     status_message(response_, status_message_future);
   }
@@ -339,13 +340,13 @@ struct http_async_protocol_handler {
   typedef std::array<typename char_<Tag>::type, 1024> buffer_type;
 
   response_parser_type response_parser_;
-  std::promise<string_type> version_promise;
-  std::promise<std::uint16_t> status_promise;
-  std::promise<string_type> status_message_promise;
-  std::promise<typename headers_container<Tag>::type> headers_promise;
-  std::promise<string_type> source_promise;
-  std::promise<string_type> destination_promise;
-  std::promise<string_type> body_promise;
+  boost::promise<string_type> version_promise;
+  boost::promise<std::uint16_t> status_promise;
+  boost::promise<string_type> status_message_promise;
+  boost::promise<typename headers_container<Tag>::type> headers_promise;
+  boost::promise<string_type> source_promise;
+  boost::promise<string_type> destination_promise;
+  boost::promise<string_type> body_promise;
   buffer_type part;
   typename buffer_type::const_iterator part_begin;
   string_type partial_parsed;

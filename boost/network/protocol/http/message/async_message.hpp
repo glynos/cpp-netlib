@@ -9,13 +9,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <future>
 #include <cstdint>
 #include <boost/optional.hpp>
 
 // FIXME move this out to a trait
 #include <set>
 #include <boost/network/detail/wrapper_base.hpp>
+#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {
@@ -56,31 +56,31 @@ struct async_message {
 
   string_type const status_message() const { return status_message_.get(); }
 
-  void status_message(std::shared_future<string_type> const& future) const {
+  void status_message(boost::shared_future<string_type> const& future) const {
     status_message_ = future;
   }
 
   string_type const version() const { return version_.get(); }
 
-  void version(std::shared_future<string_type> const& future) const {
+  void version(boost::shared_future<string_type> const& future) const {
     version_ = future;
   }
 
   std::uint16_t status() const { return status_.get(); }
 
-  void status(std::shared_future<uint16_t> const& future) const {
+  void status(boost::shared_future<uint16_t> const& future) const {
     status_ = future;
   }
 
   string_type const source() const { return source_.get(); }
 
-  void source(std::shared_future<string_type> const& future) const {
+  void source(boost::shared_future<string_type> const& future) const {
     source_ = future;
   }
 
   string_type const destination() const { return destination_.get(); }
 
-  void destination(std::shared_future<string_type> const& future) const {
+  void destination(boost::shared_future<string_type> const& future) const {
     destination_ = future;
   }
 
@@ -95,7 +95,7 @@ struct async_message {
     return *retrieved_headers_;
   }
 
-  void headers(std::shared_future<headers_container_type> const& future)
+  void headers(boost::shared_future<headers_container_type> const& future)
       const {
     headers_ = future;
   }
@@ -112,7 +112,7 @@ struct async_message {
 
   string_type const body() const { return body_.get(); }
 
-  void body(std::shared_future<string_type> const& future) const {
+  void body(boost::shared_future<string_type> const& future) const {
     body_ = future;
   }
 
@@ -132,13 +132,13 @@ struct async_message {
   }
 
  private:
-  mutable std::shared_future<string_type> status_message_, version_, source_,
+  mutable boost::shared_future<string_type> status_message_, version_, source_,
       destination_;
-  mutable std::shared_future<std::uint16_t> status_;
-  mutable std::shared_future<headers_container_type> headers_;
+  mutable boost::shared_future<std::uint16_t> status_;
+  mutable boost::shared_future<headers_container_type> headers_;
   mutable headers_container_type added_headers;
   mutable std::set<string_type> removed_headers;
-  mutable std::shared_future<string_type> body_;
+  mutable boost::shared_future<string_type> body_;
   mutable boost::optional<headers_container_type> retrieved_headers_;
 
   friend struct boost::network::http::impl::ready_wrapper<Tag>;
