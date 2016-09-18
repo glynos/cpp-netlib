@@ -307,3 +307,7 @@ effect:
 ``template <class Tag>`` *unspecified* ``status_message(basic_response<Tag> const & response)``
     Returns a wrapper convertible to ``typename string<Tag>::type`` that
     provides the status message of the given response.
+``template <class Tag>`` *unspecified* ``ready(basic_response<Tag> const & response)``
+    Returns a wrapper convertible to ``bool``.  The return value is equivalent
+    to ``true`` if all the response parts have been fetched and it is guaranteed
+    that a successive call to any wrapper will not block.
