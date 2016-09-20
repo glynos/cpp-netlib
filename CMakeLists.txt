@@ -46,7 +46,7 @@ add_definitions(-DBOOST_TEST_DYN_LINK)
 # Always use multi-threaded Boost libraries.
 set(Boost_USE_MULTI_THREADED ON)
 
-find_package(Boost 1.58.0 REQUIRED COMPONENTS system)
+find_package(Boost 1.58.0 REQUIRED COMPONENTS system thread)
 
 if (CPP-NETLIB_ENABLE_HTTPS)
     find_package( OpenSSL )
