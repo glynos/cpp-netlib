@@ -90,7 +90,7 @@ Running Tests
 If you want to run the tests that come with cpp-netlib, there are a few things
 you will need. These are:
 
-  * A compiler (GCC 4.x, Clang 3.6, MSVC 2008)
+  * A compiler (GCC 5.x, Clang 3.7, MSVC 2015)
   * A build tool (CMake_ is required)
   * OpenSSL headers (optional)
 
@@ -101,13 +101,13 @@ you will need. These are:
 Hacking on cpp-netlib
 ---------------------
 
-cpp-netlib uses git_ for tracking work, and is hosted on GitHub_. 
+cpp-netlib uses git_ for tracking work, and is hosted on GitHub_.
 cpp-netlib is hosted on GitHub_ following the GitHub recommended practice of
 forking the repository and submitting pull requests to the source repository.
 You can read more about the forking_ process and submitting `pull requests`_ if
 you're not familiar with either process yet. cpp-netib follows the GitHub pull
 request model for accepting patches. You can read more about the process at
-http://cpp-netlib.org/process.html#pull-requests. 
+http://cpp-netlib.org/process.html#pull-requests.
 
 .. _git: http://git-scm.com/
 .. _GitHub: http://github.com/

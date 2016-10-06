@@ -4,6 +4,12 @@
  What's New
 ************
 
+:mod:`cpp-netlib` 0.13
+----------------------
+
+* Added Visual Studio 2015 support.
+* Update minimum Boost to 1.58. Always use shared libs from Boost.
+
 :mod:`cpp-netlib` 0.12
 ----------------------
 
@@ -71,15 +77,15 @@ v0.11.0
 * Support streaming body chunks for PUT/POST client requests (`#27`_)
 * Fix non-case-sensitive header parsing for some client tags (`#313`_)
 * Remove unsupported Jamfiles from the whole project (`#316`_)
-* Add ``make install`` for Linux and OS X (`#285`_) 
+* Add ``make install`` for Linux and OS X (`#285`_)
 * Fix incorrect Body processing (`#69`_)
 * Support chunked transfer encoding from HTTP responses (`#86`_)
-* Make OS X Clang builds use C++11 and libc++. 
+* Make OS X Clang builds use C++11 and libc++.
 * Update Boost requirement to 1.54.0.
 * Experimental Base64 encoding/decoding library (`#287`_)
 * *Known test failure:* OS X Xcode Clang 5.0 + Boost 1.54.0 + libc++ don't play
   well with Boost.Serialization issues, mitigate test breakage but
-  ``cpp-netlib-utils_base64_test`` still fails in this platform. (`#287`_) 
+  ``cpp-netlib-utils_base64_test`` still fails in this platform. (`#287`_)
 * Provide a client option to always validate peers for HTTPS requests made by
   the client. (`#349`_)
 * Back-port fix for `#163`_ for improved URI parsing.

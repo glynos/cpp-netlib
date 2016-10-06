@@ -24,4 +24,3 @@ embedded into larger applications.
    examples/http/hello_world_server
    examples/http/hello_world_client
    examples/http/atom_reader
-   examples/http/twitter_search
