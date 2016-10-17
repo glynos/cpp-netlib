@@ -100,6 +100,11 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
 endif()
 
 
+if (MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+    set(gtest_force_shared_crt true)
+endif()
+
 if (Boost_FOUND)
     if (MSVC)
       add_definitions(-D_SCL_SECURE_NO_WARNINGS)
@@ -108,6 +113,7 @@ if (Boost_FOUND)
       add_definitions(-D_WIN32_WINNT=0x0501)
     endif(WIN32)
     include_directories(${Boost_INCLUDE_DIRS})
+    link_directories(${Boost_LIBRARY_DIRS})
 
     enable_testing()
     add_subdirectory(libs/network/src)
@@ -119,10 +125,6 @@ if (Boost_FOUND)
       add_subdirectory(libs/network/example)
     endif (CPP-NETLIB_BUILD_EXAMPLES)
 endif(Boost_FOUND)
-
-if (MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-endif()
 
 enable_testing()
 
