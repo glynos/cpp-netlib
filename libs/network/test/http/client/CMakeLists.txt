@@ -16,7 +16,7 @@ foreach(test ${TESTS})
   add_executable(${test_name} ${test}.cpp)
   add_dependencies(${test_name} network-uri gtest_main)
   target_link_libraries(${test_name}
-    ${CMAKE_THREAD_LIBS_INIT} network-uri gtest_main)
+    ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} network-uri gtest_main)
   set_target_properties(${test_name}
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CPP-NETLIB_BINARY_DIR}/tests)
   add_test(${test_name}
