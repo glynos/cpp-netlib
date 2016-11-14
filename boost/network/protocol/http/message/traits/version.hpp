@@ -6,12 +6,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <future>
 #include <boost/mpl/or.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_sync.hpp>
 #include <boost/network/tags.hpp>
 #include <boost/network/traits/string.hpp>
+#include <boost/thread/future.hpp>
 
 namespace boost {
 namespace network {
@@ -30,7 +30,7 @@ struct version {
 template <class Message>
 struct version<Message,
                typename enable_if<is_async<typename Message::tag> >::type> {
-  typedef std::shared_future<typename string<typename Message::tag>::type>
+  typedef boost::shared_future<typename string<typename Message::tag>::type>
       type;
 };
 

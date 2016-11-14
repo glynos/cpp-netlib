@@ -6,11 +6,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <future>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/network/support/is_async.hpp>
 #include <boost/network/support/is_pod.hpp>
+#include <boost/thread/future.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost {
@@ -34,8 +34,8 @@ template <class Message, class Tag>
 inline typename enable_if<mpl::and_<mpl::not_<is_pod<Tag> >, is_async<Tag> >,
                           void>::type
 clear_headers(Message const &message, Tag const &) {
-  std::promise<typename Message::headers_container_type> header_promise;
-  std::shared_future<typename Message::headers_container_type> headers_future(
+  boost::promise<typename Message::headers_container_type> header_promise;
+  boost::shared_future<typename Message::headers_container_type> headers_future(
       header_promise.get_future());
   message.headers(headers_future);
   header_promise.set_value(typename Message::headers_container_type());
