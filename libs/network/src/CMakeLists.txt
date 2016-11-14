@@ -46,6 +46,10 @@ target_link_libraries(cppnetlib-client-connections ${Boost_LIBRARIES} ${CMAKE_TH
 if (OPENSSL_FOUND)
     target_link_libraries(cppnetlib-client-connections ${OPENSSL_LIBRARIES})
 endif ()
+if (MINGW)
+    target_link_libraries(cppnetlib-client-connections ws2_32)
+endif ()
+
 install(TARGETS cppnetlib-client-connections
     EXPORT cppnetlibTargets
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}
