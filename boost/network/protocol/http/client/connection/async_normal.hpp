@@ -204,7 +204,7 @@ struct http_async_connection
   void handle_sent_request(bool get_body, body_callback_function_type callback,
                            body_generator_function_type generator,
                            boost::system::error_code const& ec,
-                           std::size_t bytes_transferred) {
+                           std::size_t /*bytes_transferred*/) {  // TODO(unassigned): use-case?
     if (!is_timedout_ && !ec) {
       if (generator) {
         // Here we write some more data that the generator provides, before we
