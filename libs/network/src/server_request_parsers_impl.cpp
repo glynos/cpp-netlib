@@ -6,6 +6,8 @@
 
 #include <tuple>
 #include <vector>
+#include <cstdint>
+
 #define BOOST_SPIRIT_UNICODE
 #include <boost/spirit/include/qi.hpp>
 #include <boost/fusion/include/std_tuple.hpp>
