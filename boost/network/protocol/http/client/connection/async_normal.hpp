@@ -363,7 +363,17 @@ struct http_async_connection
             // Here we handle the body data ourself and append to an
             // ever-growing string buffer.
             auto self = this->shared_from_this();
-            this->parse_body(
+            typename protocol_base::buffer_type::const_iterator begin =
+                this->part_begin;
+            typename protocol_base::buffer_type::const_iterator end = begin;
+            std::advance(end, remainder);
+            string_type body_string(begin, end);
+            if (check_parse_body_complete(body_string)) {
+              this->append_body(remainder);
+              handle_received_data(body, get_body, callback,
+                                   boost::asio::error::eof, bytes_transferred);
+            } else {
+              this->parse_body(
                 delegate_,
                 request_strand_.wrap([=] (boost::system::error_code const &ec,
                                           std::size_t bytes_transferred) {
@@ -371,6 +381,7 @@ struct http_async_connection
                                                                   ec, bytes_transferred);
                                      }),
                 remainder);
+            }
           }
           return;
         case body:
@@ -428,10 +439,17 @@ struct http_async_connection
                                                                     ec, bytes_transferred);
                                        }));
             } else {
-              // Here we don't have a body callback. Let's make sure that we
-              // deal with the remainder from the headers part in case we do
-              // have data that's still in the buffer.
-              this->parse_body(
+              string_type body_string(this->partial_parsed);
+              body_string.append(this->part.begin(), bytes_transferred);
+              if (check_parse_body_complete (body_string)) {
+                this->append_body(bytes_transferred);
+                handle_received_data(body, get_body, callback,
+                                     boost::asio::error::eof, bytes_transferred);
+              } else {
+                // Here we don't have a body callback. Let's make sure that we
+                // deal with the remainder from the headers part in case we do
+                // have data that's still in the buffer.
+                this->parse_body(
                   delegate_,
                   request_strand_.wrap([=] (boost::system::error_code const &ec,
                                             std::size_t bytes_transferred) {
@@ -439,6 +457,7 @@ struct http_async_connection
                                                                     ec, bytes_transferred);
                                        }),
                   bytes_transferred);
+              }
             }
           }
           return;
@@ -474,6 +493,50 @@ struct http_async_connection
           BOOST_ASSERT(false && "Bug, report this to the developers!");
       }
     }
+  }
+
+  inline bool check_parse_body_complete(string_type& body_string)
+  {
+    if (this->is_chunk_encoding) {
+      return parse_chunk_encoding_complete(body_string);
+    }
+    if (this->is_content_length && this->content_length >= 0) {
+      return parse_content_length_complete(body_string, this->content_length);
+    }
+    return false;
+  }
+
+  inline bool parse_content_length_complete(string_type& body_string, size_t content_length){
+    return body_string.length() >= content_length;
+  }
+
+  bool parse_chunk_encoding_complete(string_type& body_string) {
+    string_type body;
+    string_type crlf = "\r\n";
+
+    typename string_type::iterator begin = body_string.begin();
+    for (typename string_type::iterator iter =
+             std::search(begin, body_string.end(), crlf.begin(), crlf.end());
+         iter != body_string.end();
+         iter =
+             std::search(begin, body_string.end(), crlf.begin(), crlf.end())) {
+      string_type line(begin, iter);
+      if (line.empty()) {
+          std::advance(iter, 2);
+          begin = iter;
+          continue;
+      }
+      std::stringstream stream(line);
+      int len;
+      stream >> std::hex >> len;
+      std::advance(iter, 2);
+      if (!len) return true;
+      if (len <= body_string.end() - iter) {
+        std::advance(iter, len + 2);
+      }
+      begin = iter;
+    }
+    return false;
   }
 
   string_type parse_chunk_encoding(string_type& body_string) {
