@@ -246,6 +246,10 @@ struct http_async_protocol_handler {
         response_parser_type::http_header_line_done);
     typename headers_container<Tag>::type headers;
     std::pair<string_type, string_type> header_pair;
+    //init params
+    is_content_length = false;
+    content_length = -1;
+    is_chunk_end = false;
     while (!boost::empty(input_range)) {
       std::tie(parsed_ok, result_range) = headers_parser.parse_until(
           response_parser_type::http_header_colon, input_range);
@@ -266,6 +270,10 @@ struct http_async_protocol_handler {
       }
       trim(header_pair.second);
       headers.insert(header_pair);
+      if (boost::iequals(header_pair.first, "Content-Length")) {
+        is_content_length = true;
+        content_length = std::stoi(header_pair.second);
+      }
     }
     // determine if the body parser will need to handle chunked encoding
     typename headers_range<basic_response<Tag> >::type transfer_encoding_range =
@@ -325,14 +333,61 @@ struct http_async_protocol_handler {
         parsed_ok, std::distance(std::end(result_range), part_end));
   }
 
+  inline bool check_parse_body_complete() const {
+    if (this->is_chunk_encoding) {
+      return parse_chunk_encoding_complete();
+    }
+    if (this->is_content_length && this->content_length >= 0) {
+      return parse_content_length_complete();
+    }
+    return false;
+  }
+  
+  inline bool parse_content_length_complete() const {
+    return this->partial_parsed.length() >= this-> content_length;
+  }
+
+  bool parse_chunk_encoding_complete() const {
+    string_type body;
+    string_type crlf = "\r\n";
+
+    typename string_type::const_iterator begin = partial_parsed.begin();
+    for (typename string_type::const_iterator iter =
+             std::search(begin, partial_parsed.end(), crlf.begin(), crlf.end());
+         iter != partial_parsed.end();
+         iter =
+             std::search(begin, partial_parsed.end(), crlf.begin(), crlf.end())) {
+      string_type line(begin, iter);
+      if (line.empty()) {
+          std::advance(iter, 2);
+          begin = iter;
+          continue;
+      }
+      std::stringstream stream(line);
+      int len;
+      stream >> std::hex >> len;
+      std::advance(iter, 2);
+      if (!len) return true;
+      if (len <= partial_parsed.end() - iter) {
+        std::advance(iter, len + 2);
+      }
+      begin = iter;
+    }
+    return false;
+  }
+
   template <class Delegate, class Callback>
   void parse_body(Delegate& delegate_, Callback callback, size_t bytes) {
     // TODO(dberris): we should really not use a string for the partial body
     // buffer.
     partial_parsed.append(part_begin, part_begin + bytes);
     part_begin = part.begin();
-    delegate_->read_some(
-        boost::asio::mutable_buffers_1(part.data(), part.size()), callback);
+    if (check_parse_body_complete()) {
+      callback(boost::asio::error::eof, bytes);
+    } else {
+      delegate_->read_some(
+          boost::asio::mutable_buffers_1(part.data(), part.size()), callback);
+    }
   }
 
   typedef response_parser<Tag> response_parser_type;
@@ -351,6 +406,9 @@ struct http_async_protocol_handler {
   typename buffer_type::const_iterator part_begin;
   string_type partial_parsed;
   bool is_chunk_encoding;
+  bool is_chunk_end;
+  bool is_content_length;
+  std::size_t content_length;
 };
 
 }  // namespace impl
