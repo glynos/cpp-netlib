@@ -333,9 +333,47 @@ struct http_async_protocol_handler {
         parsed_ok, std::distance(std::end(result_range), part_end));
   }
 
-  void append_body(size_t bytes) {
-    partial_parsed.append(part_begin, part_begin + bytes);
-    part_begin = part.begin();
+  inline bool check_parse_body_complete() const {
+    if (this->is_chunk_encoding) {
+      return parse_chunk_encoding_complete();
+    }
+    if (this->is_content_length && this->content_length >= 0) {
+      return parse_content_length_complete();
+    }
+    return false;
+  }
+  
+  inline bool parse_content_length_complete() const {
+    return this->partial_parsed.length() >= this-> content_length;
+  }
+
+  bool parse_chunk_encoding_complete() const {
+    string_type body;
+    string_type crlf = "\r\n";
+
+    typename string_type::const_iterator begin = partial_parsed.begin();
+    for (typename string_type::const_iterator iter =
+             std::search(begin, partial_parsed.end(), crlf.begin(), crlf.end());
+         iter != partial_parsed.end();
+         iter =
+             std::search(begin, partial_parsed.end(), crlf.begin(), crlf.end())) {
+      string_type line(begin, iter);
+      if (line.empty()) {
+          std::advance(iter, 2);
+          begin = iter;
+          continue;
+      }
+      std::stringstream stream(line);
+      int len;
+      stream >> std::hex >> len;
+      std::advance(iter, 2);
+      if (!len) return true;
+      if (len <= partial_parsed.end() - iter) {
+        std::advance(iter, len + 2);
+      }
+      begin = iter;
+    }
+    return false;
   }
 
   template <class Delegate, class Callback>
@@ -344,8 +382,12 @@ struct http_async_protocol_handler {
     // buffer.
     partial_parsed.append(part_begin, part_begin + bytes);
     part_begin = part.begin();
-    delegate_->read_some(
-        boost::asio::mutable_buffers_1(part.data(), part.size()), callback);
+    if (check_parse_body_complete()) {
+      callback(boost::asio::error::eof, bytes);
+    } else {
+      delegate_->read_some(
+          boost::asio::mutable_buffers_1(part.data(), part.size()), callback);
+    }
   }
 
   typedef response_parser<Tag> response_parser_type;
