@@ -32,7 +32,10 @@ TYPED_TEST(HTTPClientTest, GetStreamingTest) {
   typename TypeParam::string_type dummy_body;
   body_handler handler_instance(body_string);
   {
-    TypeParam client_;
+    using client = TypeParam;    
+    typename client::options options;
+    options.remove_chunk_markers(true);
+    client client_(options);
     ASSERT_NO_THROW(response = client_.get(request, handler_instance));
     auto range = headers(response)["Content-Type"];
     ASSERT_TRUE(!boost::empty(range));
