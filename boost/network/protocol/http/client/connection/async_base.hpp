@@ -43,7 +43,7 @@ struct async_connection_base {
   // tag.
   static connection_ptr new_connection(
       resolve_function resolve, resolver_type &resolver, bool follow_redirect,
-      bool always_verify_peer, bool https, int timeout,
+      bool always_verify_peer, bool https, int timeout, bool remove_chunk_markers,
       optional<string_type> certificate_filename = optional<string_type>(),
       optional<string_type> const &verify_path = optional<string_type>(),
       optional<string_type> certificate_file = optional<string_type>(),
@@ -59,7 +59,7 @@ struct async_connection_base {
         certificate_filename, verify_path, certificate_file, private_key_file,
         ciphers, sni_hostname, ssl_options);
     auto temp = std::make_shared<async_connection>(
-        resolver, resolve, follow_redirect, timeout, std::move(delegate));
+        resolver, resolve, follow_redirect, timeout, remove_chunk_markers, std::move(delegate));
     BOOST_ASSERT(temp != nullptr);
     return temp;
   }

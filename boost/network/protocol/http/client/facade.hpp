@@ -303,7 +303,8 @@ class basic_client_facade {
         options.openssl_verify_path(), options.openssl_certificate_file(),
         options.openssl_private_key_file(), options.openssl_ciphers(),
         options.openssl_sni_hostname(), options.openssl_options(),
-        options.io_service(), options.timeout()));
+        options.io_service(), options.timeout(),
+        options.remove_chunk_markers()));
   }
 };
 

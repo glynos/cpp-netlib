@@ -39,6 +39,7 @@ struct async_client
 
   async_client(bool cache_resolved, bool follow_redirect,
                bool always_verify_peer, int timeout,
+               bool remove_chunk_markers,
                std::shared_ptr<boost::asio::io_service> service,
                optional<string_type> certificate_filename,
                optional<string_type> verify_path,
@@ -46,7 +47,7 @@ struct async_client
                optional<string_type> private_key_file,
                optional<string_type> ciphers,
                optional<string_type> sni_hostname, long ssl_options)
-      : connection_base(cache_resolved, follow_redirect, timeout),
+      : connection_base(cache_resolved, follow_redirect, timeout, remove_chunk_markers),
         service_ptr(service.get() ? service
                                   : std::make_shared<boost::asio::io_service>()),
         service_(*service_ptr),

@@ -38,7 +38,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
   struct connection_impl {
     connection_impl(
         bool follow_redirect, bool always_verify_peer, resolve_function resolve,
-        resolver_type& resolver, bool https, int timeout,
+        resolver_type& resolver, bool https, int timeout, bool remove_chunk_markers,
         optional<string_type> /*unused*/ const& certificate_filename,
         optional<string_type> const& verify_path,
         optional<string_type> const& certificate_file,
@@ -47,8 +47,8 @@ struct async_connection_policy : resolver_policy<Tag>::type {
         optional<string_type> const& sni_hostname, long ssl_options) {
       pimpl = impl::async_connection_base<Tag, version_major, version_minor>::
           new_connection(resolve, resolver, follow_redirect, always_verify_peer,
-                         https, timeout, certificate_filename, verify_path,
-                         certificate_file, private_key_file, ciphers,
+                         https, timeout, remove_chunk_markers, certificate_filename,
+                         verify_path, certificate_file, private_key_file, ciphers,
                          sni_hostname, ssl_options);
     }
 
@@ -85,7 +85,7 @@ struct async_connection_policy : resolver_policy<Tag>::type {
                std::uint16_t port, resolve_completion_function once_resolved) {
           this->resolve(resolver, host, port, once_resolved);
         },
-        resolver, boost::iequals(protocol_, string_type("https")), timeout_,
+        resolver, boost::iequals(protocol_, string_type("https")), timeout_, remove_chunk_markers_,
         certificate_filename, verify_path, certificate_file, private_key_file,
         ciphers, sni_hostname, ssl_options);
   }
@@ -93,13 +93,15 @@ struct async_connection_policy : resolver_policy<Tag>::type {
   void cleanup() {}
 
   async_connection_policy(bool cache_resolved, bool follow_redirect,
-                          int timeout)
+                          int timeout, bool remove_chunk_markers)
       : resolver_base(cache_resolved),
         follow_redirect_(follow_redirect),
-        timeout_(timeout) {}
+        timeout_(timeout),
+        remove_chunk_markers_(remove_chunk_markers) {}
 
   bool follow_redirect_;
   int timeout_;
+  bool remove_chunk_markers_;
 };
 
 }  // namespace http
