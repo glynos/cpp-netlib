@@ -42,7 +42,7 @@ template <class Tag>
 struct chunk_encoding_parser {
   chunk_encoding_parser() : state(state_t::header), chunk_size(0) {}
 
-  enum state_t { header, header_end, data, data_end };
+  enum class state_t { header, header_end, data, data_end };
 
   state_t state;
   size_t chunk_size;
