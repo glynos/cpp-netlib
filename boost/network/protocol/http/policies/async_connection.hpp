@@ -85,9 +85,9 @@ struct async_connection_policy : resolver_policy<Tag>::type {
                std::uint16_t port, resolve_completion_function once_resolved) {
           this->resolve(resolver, host, port, once_resolved);
         },
-        resolver, boost::iequals(protocol_, string_type("https")), timeout_, remove_chunk_markers_,
-        certificate_filename, verify_path, certificate_file, private_key_file,
-        ciphers, sni_hostname, ssl_options);
+        resolver, boost::iequals(protocol_, string_type("https")), timeout_,
+        remove_chunk_markers_, certificate_filename, verify_path,
+        certificate_file, private_key_file, ciphers, sni_hostname, ssl_options);
   }
 
   void cleanup() {}

@@ -40,7 +40,6 @@ namespace impl {
 
 template <class Tag>
 struct chunk_encoding_parser {
-
   chunk_encoding_parser() : state(state_t::header), chunk_size(0) {}
 
   enum state_t { header, header_end, data, data_end };
@@ -49,23 +48,27 @@ struct chunk_encoding_parser {
   size_t chunk_size;
   std::array<typename char_<Tag>::type, 1024> buffer;
 
-  void update_chunk_size(boost::iterator_range<typename std::array<typename char_<Tag>::type, 1024>::const_iterator> const& range) {
-    if (range.empty())
-        return;
+  void update_chunk_size(boost::iterator_range<typename std::array<
+    typename char_<Tag>::type, 1024>::const_iterator> const &range) {
+    if (range.empty()) 
+      return;
     std::stringstream ss;
     ss << std::hex << range;
     size_t size;
     ss >> size;
-    chunk_size = (chunk_size << (range.size()*4)) + size;
+    chunk_size = (chunk_size << (range.size() * 4)) + size;
   }
 
-  boost::iterator_range<typename std::array<typename char_<Tag>::type, 1024>::const_iterator> operator()(boost::iterator_range<typename std::array<typename char_<Tag>::type, 1024>::const_iterator> const& range) {
+  boost::iterator_range<
+    typename std::array<typename char_<Tag>::type, 1024>::const_iterator>
+  operator()(boost::iterator_range<typename std::array<
+               typename char_<Tag>::type, 1024>::const_iterator> const &range) {
     auto iter = boost::begin(range);
     auto begin = iter;
     auto pos = boost::begin(buffer);
 
-    while (iter != boost::end(range))
-      switch(state) {
+    while (iter != boost::end(range)) 
+      switch (state) {
         case state_t::header:
           iter = std::find(iter, boost::end(range), '\r');
           update_chunk_size(boost::make_iterator_range(begin, iter));
@@ -87,7 +90,8 @@ struct chunk_encoding_parser {
             ++iter;
             state = state_t::data_end;
           } else {
-            auto len = std::min(chunk_size, (size_t)std::distance(iter, boost::end(range)));
+            auto len = std::min(chunk_size,
+                                (size_t)std::distance(iter, boost::end(range)));
             begin = iter;
             iter = std::next(iter, len);
             pos = std::copy(begin, iter, pos);
@@ -96,7 +100,7 @@ struct chunk_encoding_parser {
           break;
 
         case state_t::data_end:
-          BOOST_ASSERT (*iter == '\n');
+          BOOST_ASSERT(*iter == '\n');
           ++iter;
           begin = iter;
           state = state_t::header;
