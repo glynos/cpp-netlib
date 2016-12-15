@@ -270,9 +270,15 @@ struct http_async_protocol_handler {
       }
       trim(header_pair.second);
       headers.insert(header_pair);
-      if (boost::iequals(header_pair.first, "Content-Length")) {
-        is_content_length = true;
-        content_length = std::stoi(header_pair.second);
+      if (!is_content_length && 
+          boost::iequals(header_pair.first, "Content-Length")) {
+        try {
+          content_length = std::stoll(header_pair.second);
+          is_content_length = true;
+        }
+        catch (std::exception&) {
+          //is_content_length = false;
+        }
       }
     }
     // determine if the body parser will need to handle chunked encoding
@@ -410,7 +416,7 @@ struct http_async_protocol_handler {
   bool is_chunk_encoding;
   bool is_chunk_end;
   bool is_content_length;
-  std::size_t content_length;
+  long long content_length;
 };
 
 }  // namespace impl
