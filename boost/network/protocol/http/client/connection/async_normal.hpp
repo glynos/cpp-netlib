@@ -56,7 +56,8 @@ struct chunk_encoding_parser {
     ss << std::hex << range;
     size_t size;
     ss >> size;
-    chunk_size = (chunk_size << (range.size() * 4)) + size;
+    // New digits are appended as LSBs
+    chunk_size = (chunk_size << (range.size() * 4)) | size;
   }
 
   boost::iterator_range<
