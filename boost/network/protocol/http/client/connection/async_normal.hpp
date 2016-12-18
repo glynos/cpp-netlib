@@ -576,37 +576,6 @@ struct http_async_connection
     }
   }
 
-  // string_type parse_chunk_encoding(string_type& body_string) {
-  //   string_type body;
-  //   string_type crlf = "\r\n";
-
-  //   typename string_type::iterator begin = body_string.begin();
-  //   for (typename string_type::iterator iter =
-  //            std::search(begin, body_string.end(), crlf.begin(), crlf.end());
-  //        iter != body_string.end();
-  //        iter =
-  //            std::search(begin, body_string.end(), crlf.begin(), crlf.end())) {
-  //     string_type line(begin, iter);
-  //     if (line.empty()) {
-  //       break;
-  //     }
-  //     std::stringstream stream(line);
-  //     int len;
-  //     stream >> std::hex >> len;
-  //     std::advance(iter, 2);
-  //     if (len == 0) {
-  //       break;
-  //     }
-  //     if (len <= body_string.end() - iter) {
-  //       body.insert(body.end(), iter, iter + len);
-  //       std::advance(iter, len + 2);
-  //     }
-  //     begin = iter;
-  //   }
-
-  //   return body;
-  // }
-
   int timeout_;
   bool remove_chunk_markers_;
   boost::asio::steady_timer timer_;
