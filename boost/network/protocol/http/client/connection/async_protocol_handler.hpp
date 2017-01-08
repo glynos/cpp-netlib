@@ -416,7 +416,7 @@ struct http_async_protocol_handler {
   bool is_chunk_encoding;
   bool is_chunk_end;
   bool is_content_length;
-  long long content_length;
+  long long unsigned content_length;
 };
 
 }  // namespace impl
