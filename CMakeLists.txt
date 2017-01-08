@@ -11,6 +11,8 @@ option( CPP-NETLIB_BUILD_SHARED_LIBS "Build cpp-netlib as shared libraries." OFF
 option( CPP-NETLIB_BUILD_TESTS "Build the cpp-netlib project tests." ON)
 option( CPP-NETLIB_BUILD_EXAMPLES "Build the cpp-netlib project examples." ON)
 option( CPP-NETLIB_ENABLE_HTTPS "Build cpp-netlib with support for https if OpenSSL is found." ON)
+option( CPP-NETLIB_STATIC_OPENSSL "Build cpp-netlib using static OpenSSL" OFF)
+option( CPP-NETLIB_STATIC_BOOST "Build cpp-netlib using static Boost" OFF)
 
 include(GNUInstallDirs)
 
@@ -36,8 +38,10 @@ else()
   set(BUILD_SHARED_LIBS OFF)
 endif()
 
-# Always use Boost's shared libraries.
-set(Boost_USE_STATIC_LIBS OFF)
+# Use Boost's static libraries
+if (CPP-NETLIB_STATIC_BOOST)
+  set(Boost_USE_STATIC_LIBS ON)
+endif()
 
 # We need this for all tests to use the dynamic version.
 add_definitions(-DBOOST_TEST_DYN_LINK)
@@ -64,6 +68,9 @@ if (CPP-NETLIB_ENABLE_HTTPS)
       endif()
     endif()
   endif()
+ if (CPP-NETLIB_STATIC_OPENSSL)
+   set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+ endif()
   find_package(OpenSSL)
 endif()
 
