@@ -45,6 +45,11 @@ set_target_properties(cppnetlib-client-connections
 target_link_libraries(cppnetlib-client-connections ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 if (OPENSSL_FOUND)
     target_link_libraries(cppnetlib-client-connections ${OPENSSL_LIBRARIES})
+    if (CPP-NETLIB_STATIC_OPENSSL)
+      if (NOT MSVC AND NOT MINGW AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD") # dynlinker functions are built into libc on FreeBSD
+        target_link_libraries(cppnetlib-client-connections "-ldl")
+      endif()
+    endif()
 endif ()
 if (MINGW)
     target_link_libraries(cppnetlib-client-connections ws2_32)
