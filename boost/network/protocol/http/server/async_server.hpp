@@ -35,13 +35,17 @@ struct async_server_base : server_storage_base, socket_options_base {
   /// Defines the type for the connection pointer.
   typedef std::shared_ptr<connection> connection_ptr;
 
+  /// Defines the type for the options.
+  typedef server_options<Tag, Handler> options;
+
   /// Constructs and initializes the asynchronous server core.
-  explicit async_server_base(server_options<Tag, Handler> const &options)
+  explicit async_server_base(options const &options)
       : server_storage_base(options),
         socket_options_base(options),
         handler(options.handler()),
         address_(options.address()),
         port_(options.port()),
+        protocol_family(options.protocol_family()),
         thread_pool(options.thread_pool()
                         ? options.thread_pool()
                         : std::make_shared<utils::thread_pool>()),
@@ -108,11 +112,19 @@ struct async_server_base : server_storage_base, socket_options_base {
     }
   }
 
+  /// Returns the server socket address, either IPv4 or IPv6 depending on
+  /// options.protocol_family()
+  const string_type& address() const { return address_; }
+
+  /// Returns the server socket port
+  const string_type& port() const { return port_; }
+
  private:
   typedef std::unique_lock<std::mutex> scoped_mutex_lock;
 
   Handler &handler;
   string_type address_, port_;
+  typename options::protocol_family_t protocol_family;
   std::shared_ptr<utils::thread_pool> thread_pool;
   boost::asio::ip::tcp::acceptor acceptor;
   bool stopping;
@@ -165,7 +177,15 @@ struct async_server_base : server_storage_base, socket_options_base {
     // this allows repeated cycles of run -> stop -> run
     service_.reset();
     tcp::resolver resolver(service_);
-    tcp::resolver::query query(address_, port_);
+    tcp::resolver::query query( [&]{
+        switch(protocol_family) {
+        case options::ipv4:
+            return tcp::resolver::query(tcp::v4(), address_, port_);
+        case options::ipv6:
+            return tcp::resolver::query(tcp::v6(), address_, port_);
+        default:
+            return tcp::resolver::query(address_, port_);
+        }}());
     tcp::resolver::iterator endpoint_iterator = resolver.resolve(query, error);
     if (error) {
       BOOST_NETWORK_MESSAGE("Error resolving '" << address_ << ':' << port_);
@@ -185,6 +205,8 @@ struct async_server_base : server_storage_base, socket_options_base {
                                                      << port_);
       return;
     }
+    address_ = acceptor.local_endpoint().address().to_string();
+    port_ = std::to_string(acceptor.local_endpoint().port());
     acceptor.listen(boost::asio::socket_base::max_connections, error);
     if (error) {
       BOOST_NETWORK_MESSAGE("Error listening on socket: '"
