@@ -91,39 +91,39 @@ class client_options {
   /// Set the filename of the certificate to load for the SSL connection for
   /// verification.
   client_options& openssl_certificate(string_type const& v) {
-    openssl_certificate_ = v;
+    openssl_certificate_ = make_optional(v);
     return *this;
   }
 
   /// Set the directory for which the certificate authority files are located.
   client_options& openssl_verify_path(string_type const& v) {
-    openssl_verify_path_ = v;
+    openssl_verify_path_ = make_optional(v);
     return *this;
   }
 
   /// Set the filename of the certificate to use for client-side SSL session
   /// establishment.
   client_options& openssl_certificate_file(string_type const& v) {
-    openssl_certificate_file_ = v;
+    openssl_certificate_file_ = make_optional(v);
     return *this;
   }
 
   /// Set the filename of the private key to use for client-side SSL session
   /// establishment.
   client_options& openssl_private_key_file(string_type const& v) {
-    openssl_private_key_file_ = v;
+    openssl_private_key_file_ = make_optional(v);
     return *this;
   }
 
   /// Set the ciphers to support for SSL negotiation.
   client_options& openssl_ciphers(string_type const& v) {
-    openssl_ciphers_ = v;
+    openssl_ciphers_ = make_optional(v);
     return *this;
   }
 
   /// Set the hostname for SSL SNI hostname support.
   client_options& openssl_sni_hostname(string_type const& v) {
-    openssl_sni_hostname_ = v;
+    openssl_sni_hostname_ = make_optional(v);
     return *this;
   }
 
