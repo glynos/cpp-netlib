@@ -34,6 +34,7 @@ struct server_options {
         handler_(handler),
         address_("localhost"),
         port_("80"),
+        protocol_family_(undefined),
         reuse_address_(false),
         report_aborted_(false),
         non_blocking_io_(true),
@@ -85,6 +86,14 @@ struct server_options {
   /// Set the port to listen to for the server. Default is 80.
   server_options &port(string_type const &v) {
     port_ = v;
+    return *this;
+  }
+
+  enum protocol_family_t { ipv4, ipv6, undefined };
+
+  /// Set the protocol family for address resolving. Default is AF_UNSPEC.
+  server_options &protocol_family(protocol_family_t v) {
+    protocol_family_ = v;
     return *this;
   }
 
@@ -159,6 +168,9 @@ struct server_options {
   /// Returns the port to listen on.
   string_type port() const { return port_; }
 
+  /// Returns the protocol family used for address resolving.
+  protocol_family_t protocol_family() const { return protocol_family_; }
+
   /// Returns a reference to the provided handler.
   Handler &handler() const { return handler_; }
 
@@ -215,6 +227,7 @@ struct server_options {
     swap(io_service_, other.io_service_);
     swap(address_, other.address_);
     swap(port_, other.port_);
+    swap(protocol_family_, other.protocol_family_);
     swap(reuse_address_, other.reuse_address_);
     swap(report_aborted_, other.report_aborted_);
     swap(non_blocking_io_, other.non_blocking_io_);
@@ -233,6 +246,7 @@ struct server_options {
   Handler &handler_;
   string_type address_;
   string_type port_;
+  protocol_family_t protocol_family_;
   bool reuse_address_;
   bool report_aborted_;
   bool non_blocking_io_;
