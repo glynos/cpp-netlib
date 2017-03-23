@@ -11,7 +11,6 @@
 
 #include <iterator>
 #include <cstdint>
-#include <iostream>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/asio/steady_timer.hpp>
 #include <boost/asio/placeholders.hpp>
@@ -48,10 +47,10 @@ struct chunk_encoding_parser {
   size_t chunk_size;
   std::array<typename char_<Tag>::type, 1024> buffer;
 
-  void update_chunk_size(boost::iterator_range<typename std::array<
-    typename char_<Tag>::type, 1024>::const_iterator> const &range) {
-    if (range.empty()) 
-      return;
+  void update_chunk_size(
+      boost::iterator_range<typename std::array<
+          typename char_<Tag>::type, 1024>::const_iterator> const &range) {
+    if (range.empty()) return;
     std::stringstream ss;
     ss << std::hex << range;
     size_t size;
@@ -61,15 +60,15 @@ struct chunk_encoding_parser {
   }
 
   boost::iterator_range<
-    typename std::array<typename char_<Tag>::type, 1024>::const_iterator>
-  operator()(boost::iterator_range<typename std::array<
-               typename char_<Tag>::type, 1024>::const_iterator> const &range) {
+      typename std::array<typename char_<Tag>::type, 1024>::const_iterator>
+      operator()(
+          boost::iterator_range<typename std::array<
+              typename char_<Tag>::type, 1024>::const_iterator> const &range) {
     auto iter = boost::begin(range);
     auto begin = iter;
     auto pos = boost::begin(buffer);
 
-    while (iter != boost::end(range)) 
-      switch (state) {
+    while (iter != boost::end(range)) switch (state) {
         case state_t::header:
           iter = std::find(iter, boost::end(range), '\r');
           update_chunk_size(boost::make_iterator_range(begin, iter));
@@ -479,19 +478,22 @@ struct http_async_connection
               string_type body_string;
               if (this->is_chunk_encoding && remove_chunk_markers_) {
                 for (size_t i = 0; i < this->partial_parsed.size(); i += 1024) {
-                  auto range = parse_chunk_encoding(
-                    boost::make_iterator_range(this->partial_parsed.data() + i, 
-                                               this->partial_parsed.data() + std::min(i+1024, this->partial_parsed.size())));
+                  auto range = parse_chunk_encoding(boost::make_iterator_range(
+                      this->partial_parsed.data() + i,
+                      this->partial_parsed.data() +
+                          std::min(i + 1024, this->partial_parsed.size())));
                   body_string.append(boost::begin(range), boost::end(range));
                 }
                 this->partial_parsed.clear();
-                auto range = parse_chunk_encoding(boost::make_iterator_range(this->part.begin(), 
-                                                                             this->part.begin() + bytes_transferred));
+                auto range = parse_chunk_encoding(boost::make_iterator_range(
+                    this->part.begin(),
+                    this->part.begin() + bytes_transferred));
                 body_string.append(boost::begin(range), boost::end(range));
                 this->body_promise.set_value(body_string);
               } else {
                 std::swap(body_string, this->partial_parsed);
-                body_string.append(this->part.begin(), this->part.begin() + bytes_transferred);
+                body_string.append(this->part.begin(),
+                                   this->part.begin() + bytes_transferred);
                 this->body_promise.set_value(body_string);
               }
             }

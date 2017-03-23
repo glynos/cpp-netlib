@@ -47,9 +47,9 @@ struct async_connection_policy : resolver_policy<Tag>::type {
         optional<string_type> const& sni_hostname, long ssl_options) {
       pimpl = impl::async_connection_base<Tag, version_major, version_minor>::
           new_connection(resolve, resolver, follow_redirect, always_verify_peer,
-                         https, timeout, remove_chunk_markers, certificate_filename,
-                         verify_path, certificate_file, private_key_file, ciphers,
-                         sni_hostname, ssl_options);
+                         https, timeout, remove_chunk_markers,
+                         certificate_filename, verify_path, certificate_file,
+                         private_key_file, ciphers, sni_hostname, ssl_options);
     }
 
     basic_response<Tag> send_request(string_type /*unused*/ const& method,
