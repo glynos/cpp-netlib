@@ -34,7 +34,8 @@ class client_options {
         openssl_options_(0),
         io_service_(),
         always_verify_peer_(true),
-        timeout_(0) {}
+        timeout_(0),
+        remove_chunk_markers_(false) {}
 
   client_options(client_options const& other)
       : cache_resolved_(other.cache_resolved_),
@@ -48,7 +49,8 @@ class client_options {
         openssl_options_(other.openssl_options_),
         io_service_(other.io_service_),
         always_verify_peer_(other.always_verify_peer_),
-        timeout_(other.timeout_) {}
+        timeout_(other.timeout_),
+        remove_chunk_markers_(other.remove_chunk_markers) {}
 
   client_options& operator=(client_options other) {
     other.swap(*this);
@@ -69,6 +71,7 @@ class client_options {
     swap(io_service_, other.io_service_);
     swap(always_verify_peer_, other.always_verify_peer_);
     swap(timeout_, other.timeout_);
+    swap(remove_chunk_markers_, other.remove_chunk_markers_);
   }
 
   /// Specify whether the client should cache resolved endpoints.
@@ -154,6 +157,12 @@ class client_options {
     return *this;
   }
 
+  /// Set an overall timeout for HTTP requests.
+  client_options& remove_chunk_markers(bool v) {
+    remove_chunk_markers_ = v;
+    return *this;
+  }
+
   bool cache_resolved() const { return cache_resolved_; }
 
   bool follow_redirects() const { return follow_redirects_; }
@@ -190,6 +199,8 @@ class client_options {
 
   int timeout() const { return timeout_; }
 
+  bool remove_chunk_markers() const { return remove_chunk_markers_; }
+
  private:
   bool cache_resolved_;
   bool follow_redirects_;
@@ -203,6 +214,7 @@ class client_options {
   std::shared_ptr<boost::asio::io_service> io_service_;
   bool always_verify_peer_;
   int timeout_;
+  bool remove_chunk_markers_;
 };
 
 template <class Tag>
