@@ -10,7 +10,7 @@
 
 #define BOOST_SPIRIT_UNICODE
 #include <boost/spirit/include/qi.hpp>
-#include <boost/fusion/include/std_tuple.hpp>
+#include <boost/fusion/adapted/std_tuple.hpp>
 #include <boost/network/protocol/http/message/header.hpp>
 
 namespace boost {
