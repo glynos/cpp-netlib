@@ -97,11 +97,16 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
 elseif (${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   # We want to link in C++11 mode in Clang too, but also set a high enough
   # template depth for the template metaprogramming.
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -ftemplate-depth=256 -std=c++11")
+  set (CMAKE_CXX_FLAGS
+    "${CMAKE_CXX_FLAGS} -Wall -ftemplate-depth=256 -std=c++11 -DBOOST_ASIO_HAS_STD_CHRONO -DBOOST_ASIO_HAS_STD_ARRAY -DBOOST_ASIO_HAS_STD_SHARED_PTR -DBOOST_ASIO_HAS_STD_ATOMIC -DBOOST_ASIO_HAS_VARIADIC_TEMPLATES -DBOOST_ASIO_HAS_MOVE -DBOOST_THREAD_VERSION=3")
   if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     # Use libc++ only in OS X.
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lc++")
+  elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    # Use libstdc++ for Linux.
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lstdc++")
   endif()
 endif()
 
@@ -139,6 +144,13 @@ endif(Boost_FOUND)
 if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
 endif()
+
+# See whether we can find the ccache program -- if we can, then use it for the build.
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif(CCACHE_FOUND)
 
 enable_testing()
 

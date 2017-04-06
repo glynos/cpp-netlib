@@ -147,7 +147,7 @@ struct http_async_connection
       connection_delegate_ptr;
 
   http_async_connection(resolver_type& resolver, resolve_function resolve,
-                        bool follow_redirect, int timeout,
+                        bool follow_redirect, int64_t timeout,
                         bool remove_chunk_markers,
                         connection_delegate_ptr delegate)
       : timeout_(timeout),
@@ -578,7 +578,7 @@ struct http_async_connection
     }
   }
 
-  int timeout_;
+  int64_t timeout_;
   bool remove_chunk_markers_;
   boost::asio::steady_timer timer_;
   bool is_timedout_;

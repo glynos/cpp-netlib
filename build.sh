@@ -13,6 +13,6 @@ cmake -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE \
   -DUri_DISABLE_LIBCXX=$Uri_DISABLE_LIBCXX \
   -DCMAKE_CXX_FLAGS="-std=c++11 ${CMAKE_CXX_FLAGS}" \
   ..
-make -j8
+make
 make test
 cd ..

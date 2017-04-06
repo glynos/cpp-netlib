@@ -52,7 +52,7 @@ TEST(IncrementalRequestParserTest, ParseMethod) {
   p.reset();
   std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::method_done, invalid_http_method);
-  EXPECT_EQ(false, parsed_ok);
+  EXPECT_FALSE(parsed_ok);
   parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
@@ -68,7 +68,7 @@ TEST(IncrementalRequestParserTest, ParseURI) {
   std::string valid_http_request = "GET / HTTP/1.1\r\n";
   std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::uri_done, valid_http_request);
-  EXPECT_EQ(true, parsed_ok);
+  EXPECT_TRUE(parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
   std::string parsed(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
@@ -78,7 +78,7 @@ TEST(IncrementalRequestParserTest, ParseURI) {
   p.reset();
   std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::uri_done, invalid_http_request);
-  EXPECT_EQ(false, parsed_ok);
+  EXPECT_FALSE(parsed_ok);
   parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
@@ -104,7 +104,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPVersion) {
   p.reset();
   std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::version_done, invalid_http_request);
-  EXPECT_EQ(false, parsed_ok);
+  EXPECT_FALSE(parsed_ok);
   parsed.assign(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
             << std::endl;
@@ -121,7 +121,7 @@ TEST(IncrementalRequestParserTest, ParseHTTPHeaders) {
       "GET / HTTP/1.1\r\nHost: cpp-netlib.org\r\n\r\n";
   std::tie(parsed_ok, result_range) =
       p.parse_until(request_parser_type::headers_done, valid_http_request);
-  EXPECT_EQ(true, parsed_ok);
+  EXPECT_TRUE(parsed_ok);
   EXPECT_FALSE(boost::empty(result_range));
   std::string parsed(std::begin(result_range), std::end(result_range));
   std::cout << "PARSED: " << parsed << " [state:" << p.state() << "] "
