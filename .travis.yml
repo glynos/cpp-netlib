@@ -34,8 +34,6 @@ install:
   ln -s `which clang++-3.6` ${HOME}/bin/clang++; fi
 - export BOOST_VERSION=${BOOST_VER//./_}
 - export PATH=${HOME}/bin:${PATH}
-- travis_wait ./install-boost.sh
-- export BOOST_ROOT=${HOME}/${CC}-boost_${BOOST_VER//./_}
 - "${CXX} --version"
 cache:
   directories:
@@ -48,14 +46,16 @@ after_failure:
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.6
-    - kalakris-cmake
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
+      - kalakris-cmake
+      - boost-latest
     packages:
-    - gcc-4.8
-    - g++-4.8
-    - clang-3.6
-    - cmake
+      - libboost1.55-all-dev
+      - gcc-4.8
+      - g++-4.8
+      - clang-3.6
+      - cmake
 notifications:
   slack:
     secure: Y7lLjqZ83+b/jaJ5+EKwvgCDeERi4bVbDn9tLp8sieTdu+ENsPI+JmLYSXZXPpe7JrItrXW6uJJXN2wG1h7au4mpVVTghd31HBzuzrqVxDphWPhp16NYzvbAgQQRBXvFVvfSdW/Kb/n2fX6xDApY0t6vNREb/GKg0GyzESb4ZjU=
