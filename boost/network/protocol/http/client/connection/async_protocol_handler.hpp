@@ -348,9 +348,9 @@ struct http_async_protocol_handler {
     }
     return false;
   }
-  
+
   inline bool parse_content_length_complete() const {
-    return this->partial_parsed.length() >= this-> content_length;
+    return static_cast<std::ptrdiff_t>(this->partial_parsed.length()) >= this->content_length;
   }
 
   bool parse_chunk_encoding_complete() const {
