@@ -1,4 +1,5 @@
 // Copyright 2010 Dean Michael Berris.
+// Copyright 2017 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -70,4 +71,14 @@ TYPED_TEST(HTTPClientTest, TemporaryClientObjectTest) {
   EXPECT_EQ("HTTP/1.", response.version().substr(0, 7));
   EXPECT_TRUE(response.status() == 200u ||
               (response.status() >= 300 && response.status() < 400));
+}
+
+TYPED_TEST(HTTPClientTest, PropagatesResolutionErrorsTest) {
+  using client = TypeParam;
+  typename client::request request("http://malformed.google.comq");
+  typename client::response response;
+  typename client::options options;
+  typename client::string_type response_body;
+  ASSERT_NO_THROW(response = client(options).get(request));
+  EXPECT_THROW(response_body = body(response), std::exception);
 }

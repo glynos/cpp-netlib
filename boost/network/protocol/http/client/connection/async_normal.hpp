@@ -160,11 +160,9 @@ struct http_async_connection
         request_strand_(resolver.get_io_service()),
         delegate_(std::move(delegate)) {}
 
-  // This is the main entry point for the connection/request pipeline.
-  // We're
-  // overriding async_connection_base<...>::start(...) here which is
-  // called
-  // by the client.
+  // This is the main entry point for the connection/request pipeline.  We're
+  // overriding async_connection_base<...>::start(...) here which is called by
+  // the client.
   virtual response start(request const& request, string_type const& method,
                          bool get_body, body_callback_function_type callback,
                          body_generator_function_type generator) {
@@ -198,13 +196,13 @@ struct http_async_connection
  private:
   void set_errors(boost::system::error_code const& ec, body_callback_function_type callback) {
     boost::system::system_error error(ec);
-    this->version_promise.set_exception(std::make_exception_ptr(error));
-    this->status_promise.set_exception(std::make_exception_ptr(error));
-    this->status_message_promise.set_exception(std::make_exception_ptr(error));
-    this->headers_promise.set_exception(std::make_exception_ptr(error));
-    this->source_promise.set_exception(std::make_exception_ptr(error));
-    this->destination_promise.set_exception(std::make_exception_ptr(error));
-    this->body_promise.set_exception(std::make_exception_ptr(error));
+    this->version_promise.set_exception(boost::copy_exception(error));
+    this->status_promise.set_exception(boost::copy_exception(error));
+    this->status_message_promise.set_exception(boost::copy_exception(error));
+    this->headers_promise.set_exception(boost::copy_exception(error));
+    this->source_promise.set_exception(boost::copy_exception(error));
+    this->destination_promise.set_exception(boost::copy_exception(error));
+    this->body_promise.set_exception(boost::copy_exception(error));
     if ( callback )
       callback( boost::iterator_range<typename std::array<typename char_<Tag>::type, 1024>::const_iterator>(), ec );
     this->timer_.cancel();

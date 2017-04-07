@@ -9,13 +9,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <cstdint>
 #include <boost/optional.hpp>
+#include <cstdint>
 
 // FIXME move this out to a trait
-#include <set>
 #include <boost/network/detail/wrapper_base.hpp>
 #include <boost/thread/future.hpp>
+#include <set>
 
 namespace boost {
 namespace network {
@@ -26,12 +26,11 @@ namespace impl {
 template <class Tag>
 struct ready_wrapper;
 
-} // namespace impl
- /* impl */
+}  // namespace impl
+   /* impl */
 
 template <class Tag>
 struct async_message {
-
   typedef typename string<Tag>::type string_type;
   typedef typename headers_container<Tag>::type headers_container_type;
   typedef typename headers_container_type::value_type header_type;
@@ -54,31 +53,56 @@ struct async_message {
         headers_(other.headers_),
         body_(other.body_) {}
 
-  string_type const status_message() const { return status_message_.get(); }
+  string_type status_message() const {
+    status_message_.wait();
+    if (status_message_.has_exception())
+      boost::rethrow_exception(status_message_.get_exception_ptr());
+    return status_message_.get();
+  }
 
   void status_message(boost::shared_future<string_type> const& future) const {
     status_message_ = future;
   }
 
-  string_type const version() const { return version_.get(); }
+  string_type version() const {
+    version_.wait();
+    if (version_.has_exception())
+      boost::rethrow_exception(version_.get_exception_ptr());
+    return version_.get();
+  }
 
   void version(boost::shared_future<string_type> const& future) const {
     version_ = future;
   }
 
-  std::uint16_t status() const { return status_.get(); }
+  std::uint16_t status() const {
+    status_.wait();
+    if (status_.has_exception())
+      boost::rethrow_exception(status_.get_exception_ptr());
+    return status_.get();
+  }
 
   void status(boost::shared_future<uint16_t> const& future) const {
     status_ = future;
   }
 
-  string_type const source() const { return source_.get(); }
+  string_type source() const {
+    source_.wait();
+    if (source_.has_exception())
+      boost::rethrow_exception(source_.get_exception_ptr());
+    return source_.get();
+  }
 
   void source(boost::shared_future<string_type> const& future) const {
     source_ = future;
   }
 
-  string_type const destination() const { return destination_.get(); }
+  string_type destination() const {
+    destination_.wait();
+    if (destination_.has_exception())
+      boost::rethrow_exception(source_.get_exception_ptr());
+    return destination_.get();
+  }
 
   void destination(boost::shared_future<string_type> const& future) const {
     destination_ = future;
@@ -86,31 +110,38 @@ struct async_message {
 
   headers_container_type const& headers() const {
     if (retrieved_headers_) return *retrieved_headers_;
+    if (headers_.has_exception())
+      boost::rethrow_exception(headers_.get_exception_ptr());
     headers_container_type raw_headers = headers_.get();
     raw_headers.insert(added_headers.begin(), added_headers.end());
-    for (string_type const & key : removed_headers) {
+    for (string_type const& key : removed_headers) {
       raw_headers.erase(key);
     }
     retrieved_headers_ = raw_headers;
     return *retrieved_headers_;
   }
 
-  void headers(boost::shared_future<headers_container_type> const& future)
-      const {
+  void headers(
+      boost::shared_future<headers_container_type> const& future) const {
     headers_ = future;
   }
 
-  void add_header(typename headers_container_type::value_type const& pair_)
-      const {
+  void add_header(
+      typename headers_container_type::value_type const& pair_) const {
     added_headers.insert(added_headers.end(), pair_);
   }
 
-  void remove_header(typename headers_container_type::key_type const& key_)
-      const {
+  void remove_header(
+      typename headers_container_type::key_type const& key_) const {
     removed_headers.insert(key_);
   }
 
-  string_type const body() const { return body_.get(); }
+  string_type body() const {
+    body_.wait();
+    if (body_.has_exception())
+      boost::rethrow_exception(body_.get_exception_ptr());
+    return body_.get();
+  }
 
   void body(boost::shared_future<string_type> const& future) const {
     body_ = future;
