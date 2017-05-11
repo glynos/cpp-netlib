@@ -361,13 +361,12 @@ struct http_async_protocol_handler {
     for (typename string_type::const_iterator iter =
              std::search(begin, partial_parsed.end(), crlf.begin(), crlf.end());
          iter != partial_parsed.end();
-         iter =
-             std::search(begin, partial_parsed.end(), crlf.begin(), crlf.end())) {
+         iter = std::search(begin, partial_parsed.end(), crlf.begin(), crlf.end())) {
       string_type line(begin, iter);
       if (line.empty()) {
-          std::advance(iter, 2);
-          begin = iter;
-          continue;
+        std::advance(iter, 2);
+        begin = iter;
+        continue;
       }
       std::stringstream stream(line);
       int len;
@@ -375,8 +374,10 @@ struct http_async_protocol_handler {
       std::advance(iter, 2);
       if (!len) return true;
       if (len <= partial_parsed.end() - iter) {
-        std::advance(iter, len + 2);
-      }
+        std::advance(iter, len);
+	  } else {
+		return false;
+	  }
       begin = iter;
     }
     return false;
