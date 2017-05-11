@@ -391,7 +391,7 @@ struct http_async_protocol_handler {
     partial_parsed.append(part_begin, it);
     part_begin = part.begin();
     if (check_parse_body_complete()) {
-      callback(boost::asio::error::eof, bytes);
+      callback(boost::asio::error::eof, 0);
     } else {
       delegate_->read_some(
           boost::asio::mutable_buffers_1(part.data(), part.size()), callback);
