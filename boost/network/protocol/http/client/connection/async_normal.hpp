@@ -177,6 +177,12 @@ struct http_async_connection
     std::uint16_t source_port = request.source_port();
 
     auto self = this->shared_from_this();
+    if (timeout_ > 0) {
+      timer_.expires_from_now(std::chrono::seconds(timeout_));
+      timer_.async_wait(request_strand_.wrap([=] (boost::system::error_code const &ec) {
+            self->handle_timeout(ec);
+          }));
+    }
     resolve_(resolver_, host_, port_,
              request_strand_.wrap(
                                   [=] (boost::system::error_code const &ec,
@@ -184,12 +190,6 @@ struct http_async_connection
                                     self->handle_resolved(host_, port_, source_port, get_body,
                                                           callback, generator, ec, endpoint_range);
                                   }));
-    if (timeout_ > 0) {
-      timer_.expires_from_now(std::chrono::seconds(timeout_));
-      timer_.async_wait(request_strand_.wrap([=] (boost::system::error_code const &ec) {
-            self->handle_timeout(ec);
-          }));
-    }
     return response_;
   }
 
