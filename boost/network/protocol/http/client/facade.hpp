@@ -122,7 +122,7 @@ class basic_client_facade {
     } else {
       if (boost::empty(content_type_headers)) {
         typedef typename char_<Tag>::type char_type;
-        static char_type content_type[] = "x-application/octet-stream";
+        static char_type* content_type = "x-application/octet-stream";
         request << header("Content-Type", content_type);
       }
     }
@@ -227,7 +227,7 @@ class basic_client_facade {
     } else {
       if (boost::empty(content_type_headers)) {
         typedef typename char_<Tag>::type char_type;
-        static char_type content_type[] = "x-application/octet-stream";
+        static char_type* content_type = "x-application/octet-stream";
         request << header("Content-Type", content_type);
       }
     }
