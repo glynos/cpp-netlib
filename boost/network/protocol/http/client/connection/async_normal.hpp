@@ -30,6 +30,7 @@
 #include <boost/network/traits/ostream_iterator.hpp>
 #include <boost/network/version.hpp>
 #include <boost/range/algorithm/transform.hpp>
+#include <boost/range/iterator_range.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -477,8 +478,10 @@ struct http_async_connection
               if (this->is_chunk_encoding && remove_chunk_markers_) {
                 for (size_t i = 0; i < this->partial_parsed.size(); i += 1024) {
                   auto range = parse_chunk_encoding(boost::make_iterator_range(
-                      this->partial_parsed.data() + i,
-                      this->partial_parsed.data() +
+                      static_cast<typename std::array<typename char_<Tag>::type, 1024>::const_iterator>(
+                          this->partial_parsed.data()) + i,
+                      static_cast<typename std::array<typename char_<Tag>::type, 1024>::const_iterator>(
+                          this->partial_parsed.data()) +
                           std::min(i + 1024, this->partial_parsed.size())));
                   body_string.append(boost::begin(range), boost::end(range));
                 }
