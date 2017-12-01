@@ -77,7 +77,13 @@ struct http_sync_connection
       }
     }
     if (timeout_ > 0) {
+#if defined(BOOST_ASIO_HAS_STD_CHRONO)
       timer_.expires_from_now(std::chrono::seconds(timeout_));
+#elif defined(BOOST_ASIO_HAS_BOOST_CHRONO)
+      timer_.expires_from_now(boost::chrono::seconds(timeout_));
+#else
+#error Need a chrono implementation
+#endif
       auto self = this->shared_from_this();
       timer_.async_wait([=] (boost::system::error_code const &ec) {
           self->handle_timeout(ec);
