@@ -35,7 +35,7 @@ Goals
  *  Implement an efficient easy to use URI class/parser.
 
  *  Implement a fully compliant cross-platform asynchronous DNS resolver
-    either as a wrapper to external (C) libraries, or as hand-rolled
+    either as a wrapper to external (C) libraries or as hand-rolled
     implementation.
 
  *  Implement a MIME handler which builds message objects from either
