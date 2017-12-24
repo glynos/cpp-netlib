@@ -34,7 +34,7 @@ follow these instructions for cloning the project repository::
 Introduction
 ------------
 
-cpp-netlib is a collection of network related routines/implementations
+cpp-netlib is a collection of network-related routines/implementations
 geared towards providing a robust cross-platform networking library.
 cpp-netlib offers the following implementations:
 
