@@ -39,7 +39,7 @@ geared towards providing a robust cross-platform networking library.
 cpp-netlib offers the following implementations:
 
   *  Common Message Type -- A generic message type which can be used
-     to encapsulate and store message related information, used by all
+     to encapsulate and store message-related information, used by all
      network implementations as the primary means of data exchange.
   *  Network protocol message parsers -- A collection of parsers which
      generate message objects from strings.
