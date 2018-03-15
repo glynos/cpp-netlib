@@ -35,7 +35,7 @@ class client_options {
         io_service_(),
         always_verify_peer_(true),
         timeout_(0),
-        remove_chunk_markers_(false) {}
+        remove_chunk_markers_(true) {}
 
   client_options(client_options const& other)
       : cache_resolved_(other.cache_resolved_),
@@ -50,7 +50,7 @@ class client_options {
         io_service_(other.io_service_),
         always_verify_peer_(other.always_verify_peer_),
         timeout_(other.timeout_),
-        remove_chunk_markers_(other.remove_chunk_markers) {}
+        remove_chunk_markers_(other.remove_chunk_markers_) {}
 
   client_options& operator=(client_options other) {
     other.swap(*this);
@@ -157,7 +157,7 @@ class client_options {
     return *this;
   }
 
-  /// Set an overall timeout for HTTP requests.
+  /// Set whether we process chunked-encoded streams.
   client_options& remove_chunk_markers(bool v) {
     remove_chunk_markers_ = v;
     return *this;
