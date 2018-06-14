@@ -12,26 +12,26 @@ cache:
 matrix:
   include:
     # GCC configurations
-    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES CC=gcc-4.9 CXX=g++-4.9
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBNEWCXX=YES NEWCC=gcc-4.9 NEWCXX=g++-4.9
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9", "libboost1.55-all-dev"] } }
-    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES CC=gcc-4.9 CXX=g++-4.9
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBNEWCXX=YES NEWCC=gcc-4.9 NEWCXX=g++-4.9
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9", "libboost1.55-all-dev"] } }
-    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES CC=gcc-4.9 CXX=g++-4.9
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBNEWCXX=YES NEWCC=gcc-4.9 NEWCXX=g++-4.9
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9", "libboost1.55-all-dev"] } }
-    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES CC=gcc-4.9 CXX=g++-4.9
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBNEWCXX=YES NEWCC=gcc-4.9 NEWCXX=g++-4.9
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9", "libboost1.55-all-dev"] } }
-    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES CC=gcc-4.9 CXX=g++-4.9
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBNEWCXX=YES NEWCC=gcc-4.9 NEWCXX=g++-4.9
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9", "libboost1.55-all-dev"] } }
-    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES CC=gcc-4.9 CXX=g++-4.9
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBNEWCXX=YES NEWCC=gcc-4.9 NEWCXX=g++-4.9
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9", "libboost1.55-all-dev"] } }
-    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES CC=gcc-4.9 CXX=g++-4.9
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBNEWCXX=YES NEWCC=gcc-4.9 NEWCXX=g++-4.9
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9", "libboost1.55-all-dev"] } }
-    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES CC=gcc-4.9 CXX=g++-4.9
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBNEWCXX=YES NEWCC=gcc-4.9 NEWCXX=g++-4.9
       addons: { apt: { sources: ["ubuntu-toolchain-r-test"], packages: ["g++-4.9", "libboost1.55-all-dev"] } }
 
 install:
-  - if [[ "${CXX}" != "" ]]; then export CXX=${CXX}; fi
-  - if [[ "${CC}" != "" ]]; then export CC=${CC}; fi
+  - if [[ "${CXX}" != "" ]]; then export CXX=${NEWCXX}; fi
+  - if [[ "${CC}" != "" ]]; then export CC=${NEWCC}; fi
   - "${CXX} --version"
   - "${CC} --version"
   - pwd
