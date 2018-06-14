@@ -117,17 +117,8 @@ after_failure:
 - cat build/Testing/Temporary/LastTest.log
 addons:
   apt:
-    sources:
-      - kalakris-cmake
-      - boost-latest
-      - george-edison55-precise-backports
     packages:
       - libboost-all-dev
-      - gcc-4.9
-      - g++-4.9
-      - clang-3.8
-      - cmake
-      - cmake-data
 notifications:
   slack:
     secure: Y7lLjqZ83+b/jaJ5+EKwvgCDeERi4bVbDn9tLp8sieTdu+ENsPI+JmLYSXZXPpe7JrItrXW6uJJXN2wG1h7au4mpVVTghd31HBzuzrqVxDphWPhp16NYzvbAgQQRBXvFVvfSdW/Kb/n2fX6xDApY0t6vNREb/GKg0GyzESb4ZjU=
