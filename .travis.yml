@@ -34,7 +34,7 @@ matrix:
           packages:
             - g++-4.9
       env:
-        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+        - MATRIX_EVAL="CC=gcc-4.9 CXX=g++-4.9"
     - os: linux
       addons:
         apt:
@@ -43,7 +43,7 @@ matrix:
           packages:
             - g++-5
       env:
-        - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+        - MATRIX_EVAL="CC=gcc-5 CXX=g++-5"
     - os: linux
       addons:
         apt:
@@ -52,7 +52,7 @@ matrix:
           packages:
             - g++-6
       env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+        - MATRIX_EVAL="CC=gcc-6 CXX=g++-6"
     # Clang configurations
     - os: linux
       addons:
@@ -63,7 +63,7 @@ matrix:
           packages:
             - clang-3.8
       env:
-        - MATRIX_EVAL="CC=clang-3.8 && CXX=clang++-3.8"
+        - MATRIX_EVAL="CC=clang-3.8 CXX=clang++-3.8"
     - os: linux
       addons:
         apt:
@@ -72,7 +72,7 @@ matrix:
           packages:
             - clang-3.9
       env:
-        - MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
+        - MATRIX_EVAL="CC=clang-3.9 CXX=clang++-3.9"
     - os: linux
       addons:
         apt:
@@ -81,7 +81,7 @@ matrix:
           packages:
             - clang-4.0
       env:
-        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
+        - MATRIX_EVAL="CC=clang-4.0 CXX=clang++-4.0"
     - os: linux
       addons:
         apt:
@@ -90,7 +90,7 @@ matrix:
           packages:
             - clang-5.0
       env:
-        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+        - MATRIX_EVAL="CC=clang-5.0 CXX=clang++-5.0"
   exclude:
     - compiler: g++
       env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" CMAKE_CXX_FLAGS="-fsanitize=thread" Uri_BUILD_TEST=OFF Uri_DISABLE_LIBCXX=YES
@@ -118,7 +118,7 @@ after_failure:
 addons:
   apt:
     packages:
-      - libboost-all-dev
+      - libboost1.60-all-dev
 notifications:
   slack:
     secure: Y7lLjqZ83+b/jaJ5+EKwvgCDeERi4bVbDn9tLp8sieTdu+ENsPI+JmLYSXZXPpe7JrItrXW6uJJXN2wG1h7au4mpVVTghd31HBzuzrqVxDphWPhp16NYzvbAgQQRBXvFVvfSdW/Kb/n2fX6xDApY0t6vNREb/GKg0GyzESb4ZjU=
