@@ -9,6 +9,10 @@ cache:
   - apt
   - ccache
 
+env:
+  global:
+    - CCACHE_CPP2=yes
+
 matrix:
   include:
     # GCC 4.9 configurations
