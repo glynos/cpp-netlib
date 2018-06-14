@@ -62,6 +62,57 @@ matrix:
       addons: { apt: { sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"], packages: ["clang-3.8", "libboost1.55-all-dev"] } }
     - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-3.8 NEWCXX=clang++-3.8
       addons: { apt: { sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"], packages: ["clang-3.8", "libboost1.55-all-dev"] } }
+    # Clang 3.9 configurations
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-3.9 NEWCXX=clang++-3.9
+      addons: { apt: { sources: ["llvm-toolchain-trusty-3.9"], packages: ["clang-3.9", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-3.9 NEWCXX=clang++-3.9
+      addons: { apt: { sources: ["llvm-toolchain-trusty-3.9"], packages: ["clang-3.9", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-3.9 NEWCXX=clang++-3.9
+      addons: { apt: { sources: ["llvm-toolchain-trusty-3.9"], packages: ["clang-3.9", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-3.9 NEWCXX=clang++-3.9
+      addons: { apt: { sources: ["llvm-toolchain-trusty-3.9"], packages: ["clang-3.9", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-3.9 NEWCXX=clang++-3.9
+      addons: { apt: { sources: ["llvm-toolchain-trusty-3.9"], packages: ["clang-3.9", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-3.9 NEWCXX=clang++-3.9
+      addons: { apt: { sources: ["llvm-toolchain-trusty-3.9"], packages: ["clang-3.9", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-3.9 NEWCXX=clang++-3.9
+      addons: { apt: { sources: ["llvm-toolchain-trusty-3.9"], packages: ["clang-3.9", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-3.9 NEWCXX=clang++-3.9
+      addons: { apt: { sources: ["llvm-toolchain-trusty-3.9"], packages: ["clang-3.9", "libboost1.55-all-dev"] } }
+    # Clang 4.0 configurations
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-4.0 NEWCXX=clang++-4.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-4.0"], packages: ["clang-4.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-4.0 NEWCXX=clang++-4.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-4.0"], packages: ["clang-4.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-4.0 NEWCXX=clang++-4.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-4.0"], packages: ["clang-4.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-4.0 NEWCXX=clang++-4.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-4.0"], packages: ["clang-4.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-4.0 NEWCXX=clang++-4.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-4.0"], packages: ["clang-4.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-4.0 NEWCXX=clang++-4.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-4.0"], packages: ["clang-4.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-4.0 NEWCXX=clang++-4.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-4.0"], packages: ["clang-4.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-4.0 NEWCXX=clang++-4.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-4.0"], packages: ["clang-4.0", "libboost1.55-all-dev"] } }
+    # Clang 5.0 configurations
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-5.0 NEWCXX=clang++-5.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-5.0"], packages: ["clang-5.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-5.0 NEWCXX=clang++-5.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-5.0"], packages: ["clang-5.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-5.0 NEWCXX=clang++-5.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-5.0"], packages: ["clang-5.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-5.0 NEWCXX=clang++-5.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-5.0"], packages: ["clang-5.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-5.0 NEWCXX=clang++-5.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-5.0"], packages: ["clang-5.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Release" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-5.0 NEWCXX=clang++-5.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-5.0"], packages: ["clang-5.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="ON" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-5.0 NEWCXX=clang++-5.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-5.0"], packages: ["clang-5.0", "libboost1.55-all-dev"] } }
+    - env: BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug" ENABLE_HTTPS="OFF" Uri_BUILD_TESTS=OFF Uri_DISABLE_LIBCXX=YES NEWCC=clang-5.0 NEWCXX=clang++-5.0
+      addons: { apt: { sources: ["llvm-toolchain-trusty-5.0"], packages: ["clang-5.0", "libboost1.55-all-dev"] } }
 
 install:
   - if [[ "${CXX}" != "" ]]; then export CXX=${NEWCXX}; fi
