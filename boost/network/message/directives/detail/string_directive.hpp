@@ -34,8 +34,8 @@
 #define BOOST_NETWORK_STRING_DIRECTIVE(name, value, body, pod_body)         \
   template <class ValueType>                                                \
   struct name##_directive {                                                 \
-    ValueType const&((value));                                              \
-    explicit name##_directive(ValueType const& value_) : value(value_) {}   \
+    ValueType const& value;                                              \
+    explicit name##_directive(ValueType const& v) : value(v) {}   \
     name##_directive(name##_directive const& other) : value(other.value) {} \
     template <class Tag, template <class> class Message>                    \
     typename enable_if<is_pod<Tag>, void>::type operator()(                 \
