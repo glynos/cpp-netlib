@@ -224,16 +224,21 @@ int main() {
     auto io_service = std::make_shared<boost::asio::io_service>();
     echo_server server(
         echo_server::options(handler).io_service(io_service).port("8000"));
-    server.run();
 
     // Clean shutdown when pressing Ctrl+C.
     boost::asio::signal_set signals(*io_service, SIGINT, SIGTERM);
     signals.async_wait([&server](const boost::system::error_code& ec,
                                  int /* signal_number */) {
       if (!ec) {
+        std::cout << "Stopping server... ";
         server.stop();
+        std::cout << "done.\n";
       }
     });
+
+    std::cout << "Press Ctrl+C to stop the server.\n";
+    server.run();
+
     return EXIT_SUCCESS;
   } catch (const std::exception& error) {
     std::cerr << error.what() << std::endl;
