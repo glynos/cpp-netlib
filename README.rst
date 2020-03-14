@@ -81,6 +81,19 @@ you can now build the tests and run them::
     $ make
     $ make test
 
+You can also download and install cpp-netlib using the ` vcpkg`_ dependency manager:
+    
+    $ git clone https://github.com/Microsoft/vcpkg.git
+    $ cd vcpkg
+    $ ./bootstrap-vcpkg.sh
+    $ ./vcpkg integrate install
+    $ vcpkg install cpp-netlib
+    
+The cpp-netlib port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please create an issue or pull request on the ` vcpkg`_ repository.
+
+.. _`vcpkg`: https://github.com/Microsoft/vcpkg
+
+
 If for some reason some of the tests fail, you can send the files in
 ``Testing/Temporary/`` as attachments to the cpp-netlib `developers mailing
 list`_.
