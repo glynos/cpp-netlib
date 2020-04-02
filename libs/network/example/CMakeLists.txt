@@ -4,7 +4,8 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 include_directories(${CPP-NETLIB_SOURCE_DIR})
-include_directories(${CPP-NETLIB_SOURCE_DIR}/deps/cxxopts/src)
+include_directories(${CPP-NETLIB_SOURCE_DIR}/deps/cxxopts/include)
+#include_directories(${CPP-NETLIB_SOURCE_DIR}/deps/cxxopts/src)
 if (OPENSSL_FOUND)
   include_directories(${OPENSSL_INCLUDE_DIR})
 endif (OPENSSL_FOUND)
